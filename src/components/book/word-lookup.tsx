@@ -1,13 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { X, Star, BookOpen, SearchX } from "lucide-react";
+import { X, Star, BookOpen, SearchX, GraduationCap, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DICTIONARY } from "@/data/dictionary";
 import { ALL_VOCAB } from "@/data/vocab";
 import type { DictEntry, VocabWord } from "@/data/types";
 import { SpeakButton } from "./speak-button";
 import { useStarredWords, toggleStar } from "@/lib/star-store";
+import { useSRSData, SRS_MAX_BOX } from "@/lib/srs-store";
+import { useLearnedWords } from "@/lib/learned-store";
+import { setPracticeIntent } from "@/lib/practice-intent";
+import { requestView } from "@/lib/nav-store";
 
 /**
  * Word lookup — کلیک روی هر واژهٔ انگلیسی در متن‌ها، معنی و دیکشنری همان واژه را نشان می‌دهد.
@@ -173,6 +177,8 @@ export function ClickableEnText({ text, className }: { text: string; className?:
 function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: number }; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const starred = useStarredWords();
+  const srs = useSRSData();
+  const { learned, toggle: toggleLearnedWord } = useLearnedWords();
   const { hit } = sel;
 
   // بستن با کلیک بیرون، Escape و اسکرول
@@ -201,6 +207,16 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
   const top = Math.min(sel.y + 8, vh - 200);
 
   const isStarred = starred.has(hit.word);
+  const srsItem = srs[hit.word];
+  const srsBox = srsItem?.box ?? 0;
+  const isLearned = learned.has(hit.word);
+
+  function startStarredPractice() {
+    if (starred.count === 0) return;
+    setPracticeIntent({ tab: "cards", starredOnly: true, weakOnly: false });
+    onClose();
+    requestView("flashcards");
+  }
 
   return (
     <div
@@ -253,6 +269,47 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
         </p>
       )}
 
+      {/* وضعیت SRS و «یاد گرفتم» — فقط برای واژه‌های جزوه */}
+      {hit.vocab && (
+        <div className="mt-2.5 flex items-center justify-between gap-2 rounded-xl border bg-muted/40 px-2.5 py-2">
+          <button
+            type="button"
+            onClick={() => toggleLearnedWord(hit.word)}
+            aria-pressed={isLearned}
+            className={cn(
+              "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-black transition-all active:scale-95",
+              isLearned
+                ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
+                : "border border-primary/40 text-primary hover:bg-primary/10",
+            )}
+          >
+            <CheckCircle2 size={12} />
+            {isLearned ? "یاد گرفتم" : "یاد نگرفتم"}
+          </button>
+          <span
+            className="flex items-center gap-1.5"
+            title={
+              srsItem
+                ? `سطح مرور SRS: ${srsBox.toLocaleString("fa-IR")} از ${SRS_MAX_BOX.toLocaleString("fa-IR")}`
+                : "این واژه هنوز در فلاش‌کارت‌ها دیده نشده"
+            }
+          >
+            <span className="text-[10px] font-bold text-muted-foreground">مرور SRS</span>
+            <span className="flex items-center gap-0.5">
+              {Array.from({ length: SRS_MAX_BOX }).map((_, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    "h-1.5 w-3 rounded-full transition-colors",
+                    i < srsBox ? "bg-amber-500" : "bg-muted-foreground/20",
+                  )}
+                />
+              ))}
+            </span>
+          </span>
+        </div>
+      )}
+
       {hit.dict ? (
         <div className="mt-2 space-y-1.5">
           <p className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground">
@@ -275,6 +332,18 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
           این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد.
         </p>
       ) : null}
+
+      {/* میان‌بر تمرین واژه‌های ستاره‌دار */}
+      {starred.count > 0 && (
+        <button
+          type="button"
+          onClick={startStarredPractice}
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-[11.5px] font-black text-yellow-700 transition-all hover:bg-yellow-500/20 dark:text-yellow-300"
+        >
+          <GraduationCap size={14} />
+          تمرین {starred.count.toLocaleString("fa-IR")} واژهٔ ستاره‌دار
+        </button>
+      )}
     </div>
   );
 }

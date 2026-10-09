@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { VOCAB_LESSONS, vocabOfLesson, ALL_VOCAB, type VocabEntry } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
+import { usePracticeIntent, clearPracticeIntent } from "@/lib/practice-intent";
 import { recordSRS, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
 import { touchStreak } from "@/lib/streak-store";
 import { SpeakButton } from "./speak-button";
@@ -71,7 +72,13 @@ function pickSession(pool: VocabEntry[], learned: Set<string>, srs: Record<strin
 
 /** Tabbed practice view: SRS flashcards + word-match mini game. */
 export function FlashcardView() {
-  const [tab, setTab] = useState<"cards" | "match">("cards");
+  const intent = usePracticeIntent();
+  const [tab, setTab] = useState<"cards" | "match">(intent.tab === "match" ? "match" : "cards");
+
+  // مصرف یک‌بارِ هدف تمرین (پس از مقداردهی اولیهٔ نماها) — بدون setState در effect
+  useEffect(() => {
+    clearPracticeIntent();
+  }, []);
 
   return (
     <div className="space-y-5">
@@ -118,10 +125,11 @@ export function FlashcardView() {
 }
 
 function FlashcardGame() {
+  const intent = usePracticeIntent();
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
-  const [weakOnly, setWeakOnly] = useState(false);
-  const [starredOnly, setStarredOnly] = useState(false);
+  const [weakOnly, setWeakOnly] = useState(() => intent.tab === "cards" && intent.weakOnly);
+  const [starredOnly, setStarredOnly] = useState(() => intent.tab === "cards" && intent.starredOnly);
   const { learned, toggle } = useLearnedWords();
   const srs = useSRSData();
   const starred = useStarredWords();

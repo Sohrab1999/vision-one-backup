@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, CheckCircle2, LayoutGrid, Rows3, Star } from "lucide-react";
+import { Search, CheckCircle2, LayoutGrid, Rows3, Star, GraduationCap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -49,9 +49,12 @@ function StarToggle({ active, onClick }: { active: boolean; onClick: () => void 
 export function VocabCardGrid({
   words,
   showLessonBadge = false,
+  onPracticeStarred,
 }: {
   words: VocabEntry[];
   showLessonBadge?: boolean;
+  /** میان‌بر «تمرین ستاره‌دارها» — وقتی ستاره‌ای وجود دارد کنار چیپ ستاره نمایش داده می‌شود */
+  onPracticeStarred?: () => void;
 }) {
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState<"cards" | "table">("cards");
@@ -111,6 +114,17 @@ export function VocabCardGrid({
             <Star size={11} className={cn(starredOnly && "fill-amber-500 text-amber-500")} />
             {starCount.toLocaleString("fa-IR")}
           </button>
+          {onPracticeStarred && starCount > 0 && (
+            <button
+              type="button"
+              onClick={onPracticeStarred}
+              title="شروع فلاش‌کارت با واژه‌های ستاره‌دار"
+              className="flex h-7 shrink-0 items-center gap-1 rounded-full border border-yellow-500/50 bg-yellow-500/10 px-2.5 text-[11px] font-black text-yellow-700 transition-all hover:bg-yellow-500/20 dark:text-yellow-300"
+            >
+              <GraduationCap size={12} />
+              تمرین ستاره‌دارها
+            </button>
+          )}
           <div className="flex rounded-lg border bg-card p-0.5 shrink-0">
             <Button
               size="icon"

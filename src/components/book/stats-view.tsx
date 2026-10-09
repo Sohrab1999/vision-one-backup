@@ -97,6 +97,8 @@ const CATEGORY_FA: Record<string, string> = {
   all: "ترکیبی",
   review: "مرور اشتباهات",
   daily: "چالش روزانه",
+  starred: "تمرین ستاره‌دار",
+  combined: "مرور ترکیبی",
 };
 
 const ACHIEVEMENTS: {

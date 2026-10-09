@@ -24,6 +24,7 @@ import { recordSRS } from "@/lib/srs-store";
 import { touchStreak } from "@/lib/streak-store";
 import { recordStudySession } from "@/lib/goal-store";
 import { useStarredWords } from "@/lib/star-store";
+import { usePracticeIntent } from "@/lib/practice-intent";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { useVoiceSpeed } from "@/lib/voice-store";
 
@@ -76,10 +77,11 @@ function pickPairs(pool: VocabEntry[], n: number): VocabEntry[] {
 }
 
 export function MatchGame() {
+  const intent = usePracticeIntent();
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
   const [pairCount, setPairCount] = useState(6);
-  const [starredOnly, setStarredOnly] = useState(false);
+  const [starredOnly, setStarredOnly] = useState(() => intent.tab === "match" && intent.starredOnly);
   const starred = useStarredWords();
 
   const [deck, setDeck] = useState<VocabEntry[]>([]);

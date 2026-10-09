@@ -21,6 +21,8 @@ import {
   Hourglass,
   CalendarCheck,
   Gauge,
+  Star,
+  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,6 +36,7 @@ import { useUserName } from "@/lib/name-store";
 import { touchStreak } from "@/lib/streak-store";
 import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
 import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
+import { useQuestionStars, toggleQuestionStar } from "@/lib/question-star-store";
 import { recordStudySession } from "@/lib/goal-store";
 import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
 import { useDailyPulse } from "@/lib/use-daily-pulse";
@@ -52,7 +55,7 @@ interface Question {
 }
 
 type Phase = "setup" | "playing" | "result";
-type Mode = "normal" | "review" | "daily";
+type Mode = "normal" | "review" | "daily" | "starred" | "combined";
 
 const CATEGORY_OPTIONS = [
   { value: "all", label: "همه سؤال‌ها" },
@@ -172,7 +175,13 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const userName = useUserName();
   const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
   const { ids: practiceIds } = usePracticeIds();
+  const { ids: starredQIds, count: starredQCount, has: hasQStar, toggle: toggleQStar } = useQuestionStars();
   const daily = useDailyInfo();
+  /** مرور ترکیبی: اشتباهات + ستاره‌دارها (بدون تکرار، حداکثر ۸۰ سؤال) */
+  const combinedIds = useMemo(
+    () => Array.from(new Set([...mistakeIds, ...starredQIds])).slice(0, 80),
+    [mistakeIds, starredQIds],
+  );
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const deadlineRef = useRef(0);
   const answeredLeftRef = useRef(0);
@@ -360,7 +369,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     });
     if (current) {
       if (optIdx === current.answer) {
-        if (mode === "review") resolveMistake(current.id);
+        // در مرور اشتباهات و مرور ترکیبی، پاسخ درست سؤال را از دفتر اشتباهات حذف می‌کند
+        if (mode === "review" || mode === "combined") resolveMistake(current.id);
       } else {
         recordMistake(current.id);
       }
@@ -438,7 +448,16 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        category: mode === "review" ? "review" : mode === "daily" ? "daily" : category,
+        category:
+          mode === "review"
+            ? "review"
+            : mode === "daily"
+              ? "daily"
+              : mode === "starred"
+                ? "starred"
+                : mode === "combined"
+                  ? "combined"
+                  : category,
         lesson: lesson === "all" ? 0 : Number(lesson),
         total: questions.length,
         correct: correctCount,
@@ -453,7 +472,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             ? `چالش امروز ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ${scorePct >= 80 ? "🏆" : "💪"}`
             : mode === "review"
               ? `دور مرور تمام شد! ${mistakeCount.toLocaleString("fa-IR")} سؤال دیگر در دفتر اشتباهات مانده`
-              : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
+              : mode === "starred"
+                ? `تمرین ستاره‌دارها ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ⭐`
+                : mode === "combined"
+                  ? `مرور ترکیبی ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ 🧩`
+                  : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
         ),
       )
       .catch(() => undefined);
@@ -607,6 +630,68 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 >
                   {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
                   شروع تمرین
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* تمرین سؤال‌های ستاره‌دار */}
+          {starredQCount > 0 && (
+            <div className="relative overflow-hidden rounded-2xl border border-yellow-500/40 bg-gradient-to-l from-yellow-500/10 via-yellow-500/5 to-transparent p-4">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-500/15 text-yellow-600 dark:text-yellow-400">
+                  <Star size={19} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2 text-[13px] font-black">
+                    تمرین سؤال‌های ستاره‌دار
+                    <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[10px] text-yellow-700 dark:text-yellow-300">
+                      {starredQCount.toLocaleString("fa-IR")} سؤال
+                    </Badge>
+                  </p>
+                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                    نکته‌هایی که خودت حین آزمون ستاره زدی — مرور هدفمند سؤال‌های سخت.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => startPracticeRound(starredQIds.slice(0, 60), "starred")}
+                  disabled={loading}
+                  className="shrink-0 gap-1.5 bg-yellow-500 text-white hover:bg-yellow-600"
+                >
+                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                  شروع تمرین
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* مرور ترکیبی — اشتباهات + ستاره‌دارها */}
+          {mistakeCount > 0 && starredQCount > 0 && combinedIds.length > Math.max(mistakeCount, 0) && (
+            <div className="relative overflow-hidden rounded-2xl border border-teal-500/40 bg-gradient-to-l from-teal-500/10 via-teal-500/5 to-transparent p-4">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
+                  <Layers size={19} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2 text-[13px] font-black">
+                    مرور ترکیبی
+                    <Badge className="border-teal-500/40 bg-teal-500/15 text-[10px] text-teal-700 dark:text-teal-300">
+                      {combinedIds.length.toLocaleString("fa-IR")} سؤال
+                    </Badge>
+                  </p>
+                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                    اشتباه‌های دفتر + سؤال‌های ستاره‌دار در یک دور — پاسخ درست از دفتر اشتباهات حذف می‌کند.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => startPracticeRound(combinedIds, "combined")}
+                  disabled={loading}
+                  className="shrink-0 gap-1.5 bg-teal-600 text-white hover:bg-teal-700"
+                >
+                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                  شروع مرور
                 </Button>
               </div>
             </div>
@@ -865,6 +950,16 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                   <CalendarCheck size={13} /> چالش روزانه {new Date().toLocaleDateString("fa-IR", { month: "short", day: "numeric" })}
                 </span>
               )}
+              {mode === "starred" && (
+                <span className="flex items-center gap-1 font-bold text-yellow-600 dark:text-yellow-400">
+                  <Star size={13} /> تمرین ستاره‌دارها
+                </span>
+              )}
+              {mode === "combined" && (
+                <span className="flex items-center gap-1 font-bold text-teal-600 dark:text-teal-400">
+                  <Layers size={13} /> مرور ترکیبی
+                </span>
+              )}
               {mode === "normal" && level !== "all" && (
                 <span className="flex items-center gap-1 font-bold">
                   <Gauge size={13} /> سطح {level}
@@ -929,9 +1024,24 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 {questions.map((q, i) =>
                   answers[i] === q.answer ? null : (
                     <div key={q.id} className="rounded-xl border bg-card p-3">
-                      <p dir="ltr" className="font-en text-[12px] font-semibold leading-6">
-                        {q.text}
-                      </p>
+                      <div className="flex items-start justify-between gap-2">
+                        <p dir="ltr" className="font-en flex-1 text-[12px] font-semibold leading-6">
+                          {q.text}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => toggleQStar(q.id)}
+                          aria-label={hasQStar(q.id) ? "حذف ستاره سؤال" : "ستاره‌دار کردن سؤال"}
+                          aria-pressed={hasQStar(q.id)}
+                          title={hasQStar(q.id) ? "حذف از سؤال‌های ستاره‌دار" : "ستاره‌دار کن تا در تمرین بعدی بیاید"}
+                          className={cn(
+                            "flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all hover:scale-110",
+                            hasQStar(q.id) ? "text-yellow-500" : "text-muted-foreground/50 hover:text-yellow-500",
+                          )}
+                        >
+                          <Star size={14} className={cn(hasQStar(q.id) && "fill-yellow-500 star-pop")} />
+                        </button>
+                      </div>
                       <div className="mt-2 flex flex-wrap items-center gap-2 text-[12px]">
                         <Badge variant="destructive" className="text-[10px]">
                           پاسخ شما:
@@ -1072,6 +1182,18 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 دور مرور
               </Badge>
             )}
+            {mode === "starred" && (
+              <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[11px] text-yellow-700 dark:text-yellow-300">
+                <Star size={11} />
+                تمرین ستاره‌دارها
+              </Badge>
+            )}
+            {mode === "combined" && (
+              <Badge className="border-teal-500/40 bg-teal-500/15 text-[11px] text-teal-700 dark:text-teal-300">
+                <Layers size={11} />
+                مرور ترکیبی
+              </Badge>
+            )}
             {mode === "daily" && (
               <Badge className="border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
                 <CalendarCheck size={11} />
@@ -1093,6 +1215,20 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 زمان‌دار
               </Badge>
             )}
+            {/* ستاره‌دار کردن سؤال جاری — حتی قبل از پاسخ */}
+            <button
+              type="button"
+              onClick={() => toggleQStar(current.id)}
+              aria-label={hasQStar(current.id) ? "حذف ستاره سؤال" : "ستاره‌دار کردن این سؤال"}
+              aria-pressed={hasQStar(current.id)}
+              title={hasQStar(current.id) ? "حذف از سؤال‌های ستاره‌دار" : "این سؤال را برای مرور بعدی ستاره‌دار کن"}
+              className={cn(
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all hover:scale-110",
+                hasQStar(current.id) ? "text-yellow-500" : "text-muted-foreground/50 hover:text-yellow-500",
+              )}
+            >
+              <Star size={15} className={cn(hasQStar(current.id) && "fill-yellow-500 star-pop")} />
+            </button>
             <span className="mr-auto flex items-center gap-1 text-[12px] font-bold text-primary">
               <CheckCircle2 size={13} />
               {correctCount.toLocaleString("fa-IR")} صحیح

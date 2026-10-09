@@ -23,6 +23,7 @@ import {
   NotebookPen,
   CheckCircle2,
   CalendarCheck,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,6 +44,7 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { useUserName } from "@/lib/name-store";
 import { useStreak } from "@/lib/streak-store";
 import { useMistakes } from "@/lib/mistakes-store";
+import { useQuestionStars } from "@/lib/question-star-store";
 import { useDailyGoal } from "@/lib/goal-store";
 import { useDailyInfo } from "@/lib/daily-store";
 import { useDailyPulse } from "@/lib/use-daily-pulse";
@@ -94,6 +96,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const userName = useUserName();
   const streak = useStreak();
   const { count: mistakeCount } = useMistakes();
+  const { count: starredQCount } = useQuestionStars();
   const daily = useDailyGoal();
   const dailyInfo = useDailyInfo();
   const pulse = useDailyPulse();
@@ -503,6 +506,31 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
             </span>
           </span>
           <ArrowLeft size={17} className="shrink-0 text-amber-600 transition-transform group-hover:-translate-x-1 dark:text-amber-400" />
+        </button>
+      )}
+
+      {/* ── سؤال‌های ستاره‌دار ─────────────────────────── */}
+      {starredQCount > 0 && (
+        <button
+          type="button"
+          onClick={() => onNavigate("quiz")}
+          className="rise-in group flex w-full flex-wrap items-center gap-3 rounded-2xl border border-yellow-500/40 bg-gradient-to-l from-yellow-500/12 via-yellow-500/5 to-transparent p-4 text-right transition-all hover:border-yellow-500/70 hover:shadow-lg hover:shadow-yellow-500/10"
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-yellow-500/15 text-yellow-600 transition-transform group-hover:scale-105 dark:text-yellow-400">
+            <Star size={20} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2 text-[13.5px] font-black">
+              سؤال‌های ستاره‌دار تو
+              <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[10px] text-yellow-700 dark:text-yellow-300">
+                {starredQCount.toLocaleString("fa-IR")} سؤال
+              </Badge>
+            </span>
+            <span className="mt-0.5 block truncate text-[11.5px] text-muted-foreground">
+              نکته‌های سختی که خودت نشانه‌گذاری کردی — از تنظیمات آزمون با «تمرین ستاره‌دارها» مرورشون کن.
+            </span>
+          </span>
+          <ArrowLeft size={17} className="shrink-0 text-yellow-600 transition-transform group-hover:-translate-x-1 dark:text-yellow-400" />
         </button>
       )}
 

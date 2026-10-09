@@ -7,8 +7,10 @@ import { BOOK_STATS } from "@/data/book-meta";
 import { VocabCardGrid } from "./vocab-card-grid";
 import { cn } from "@/lib/utils";
 import { useVoiceSpeed, VOICE_SPEED_OPTIONS } from "@/lib/voice-store";
+import { setPracticeIntent } from "@/lib/practice-intent";
+import type { ViewId } from "./app-header";
 
-export function VocabularyView() {
+export function VocabularyView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) {
   const [lesson, setLesson] = useState<number | undefined>(undefined);
   const words = lesson === undefined ? [...vocabOfLesson(1), ...vocabOfLesson(2), ...vocabOfLesson(3), ...vocabOfLesson(4)] : vocabOfLesson(lesson);
 
@@ -39,7 +41,18 @@ export function VocabularyView() {
         ))}
       </div>
 
-      <VocabCardGrid words={words} showLessonBadge={lesson === undefined} />
+      <VocabCardGrid
+        words={words}
+        showLessonBadge={lesson === undefined}
+        onPracticeStarred={
+          onNavigate
+            ? () => {
+                setPracticeIntent({ tab: "cards", starredOnly: true, weakOnly: false });
+                onNavigate("flashcards");
+              }
+            : undefined
+        }
+      />
     </div>
   );
 }

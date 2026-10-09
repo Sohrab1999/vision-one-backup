@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppHeader, type ViewId } from "@/components/book/app-header";
 import { AppFooter } from "@/components/book/app-footer";
 import { HomeView } from "@/components/book/home-view";
@@ -15,10 +15,14 @@ import { VerbsView } from "@/components/book/verbs-view";
 import { FlashcardView } from "@/components/book/flashcard-view";
 import { TutorView } from "@/components/book/tutor-view";
 import { StatsView } from "@/components/book/stats-view";
+import { registerNavHandler } from "@/lib/nav-store";
 
 export default function Page() {
   const [view, setView] = useState<ViewId>("home");
   const [chapterId, setChapterId] = useState(1);
+
+  // درخواست‌های ناوبری از عمق درخت (مثل پاپ‌اور واژه) — setView در کانتکست رویداد اجرا می‌شود
+  useEffect(() => registerNavHandler((v) => setView(v)), []);
 
   function navigate(v: ViewId) {
     setView(v);
@@ -39,7 +43,7 @@ export default function Page() {
           {view === "home" && <HomeView onNavigate={navigate} />}
           {view === "contents" && <ContentsView onOpenChapter={openChapter} />}
           {view === "chapter" && <ChapterView chapterId={chapterId} onNavigate={navigate} />}
-          {view === "vocab" && <VocabularyView />}
+          {view === "vocab" && <VocabularyView onNavigate={navigate} />}
           {view === "grammar" && <GrammarView />}
           {view === "quiz" && <QuizView />}
           {view === "texts" && <TextsView />}
