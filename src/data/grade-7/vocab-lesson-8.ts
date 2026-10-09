@@ -1,7 +1,7 @@
 import type { VocabWord } from "../types";
 
 /** واژگان درس هشتم پایه هفتم (My Favorite Food) — صفحات ۹۸ و ۹۹ جزوه (ستاره‌های قرمز حذف شد)
- *  نکته: معنی «آبستنی» برای ice-cream عیناً از جزوه نقل شده است (غلط تایپی جزوه برای «بستنی»).
+ *  اصلاحیه: غلط چاپی جزوه اصلاح شد — معنی ice-cream از «آبستنی» به «بستنی» تصحیح شد.
  */
 export const VOCAB_LESSON_8: VocabWord[] = [
   { word: "food", meaning: "غذا، خوراک، طعام", lesson: 8, grade: 7, pos: "n." },
@@ -61,7 +61,7 @@ export const VOCAB_LESSON_8: VocabWord[] = [
   { word: "bean", meaning: "باقال، لوبیا، حبه", lesson: 8, grade: 7, pos: "n." },
   { word: "pineapple", meaning: "آناناس", lesson: 8, grade: 7, pos: "n." },
   { word: "plenty of", meaning: "فراوانی، بسیاری", lesson: 8, grade: 7, pos: "phr." },
-  { word: "ice-cream", meaning: "آبستنی", lesson: 8, grade: 7, pos: "n." },
+  { word: "ice-cream", meaning: "بستنی", lesson: 8, grade: 7, pos: "n." },
   { word: "too many", meaning: "خیلی زیاد، بسیار زیاد", lesson: 8, grade: 7, pos: "phr." },
   { word: "sugar", meaning: "شکر، شیرینی، قند", lesson: 8, grade: 7, pos: "n." },
   { word: "lots (of)", meaning: "بسیار، فراوان، خیلی", lesson: 8, grade: 7, pos: "phr." },

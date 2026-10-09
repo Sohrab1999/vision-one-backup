@@ -1,7 +1,7 @@
 import type { VocabWord } from "../types";
 
 /** واژگان درس سوم پایه هفتم (My Age) — صفحه ۵۷ جزوه (ستاره‌های قرمز حذف شد)
- *  نکته: در جدول جزوه ماه August میان July و September چاپ نشده است (خلا جزوه) و عیناً حفظ شده.
+ *  اصلاحیه: جدول ماه‌های جزوه فاقد August بود (پرش July → September)؛ واژه August با معنی «اوت، آگوست ماه هشتم» میان July و September افزوده شد.
  */
 export const VOCAB_LESSON_3: VocabWord[] = [
   { word: "age", meaning: "سن", lesson: 3, grade: 7, pos: "n." },
@@ -45,6 +45,7 @@ export const VOCAB_LESSON_3: VocabWord[] = [
   { word: "nurse", meaning: "پرستار، پرستاری کردن", lesson: 3, grade: 7, pos: "n." },
   { word: "July", meaning: "ژوئیه", lesson: 3, grade: 7, pos: "n." },
   { word: "dentist", meaning: "دندان پزشک، دندان ساز", lesson: 3, grade: 7, pos: "n." },
+  { word: "August", meaning: "اوت، آگوست ماه هشتم", lesson: 3, grade: 7, pos: "n." },
   { word: "September", meaning: "سپتامبر ماه نهم", lesson: 3, grade: 7, pos: "n." },
   { word: "bank", meaning: "بانک، ساحل", lesson: 3, grade: 7, pos: "n." },
   { word: "October", meaning: "اکتبر", lesson: 3, grade: 7, pos: "n." },

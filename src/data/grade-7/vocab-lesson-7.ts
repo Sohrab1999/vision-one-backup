@@ -1,7 +1,7 @@
 import type { VocabWord } from "../types";
 
 /** واژگان درس هفتم پایه هفتم (My Address) — صفحه ۹۱ جزوه (ستاره‌های قرمز حذف شد)
- *  نکته: معنی‌های «پش از» (after) و «بعدازطهر» (p.m.) عیناً از جزوه نقل شده‌اند (غلط تایپی جزوه برای «پس از» و «بعدازظهر»).
+ *  اصلاحیه: غلط‌های چاپی جزوه اصلاح شدند — «پش از» → «پس از» و «بعدازطهر» → «بعدازظهر».
  */
 export const VOCAB_LESSON_7: VocabWord[] = [
   { word: "understand", meaning: "فهمیدن، درک کردن", lesson: 7, grade: 7, pos: "v." },
@@ -20,7 +20,7 @@ export const VOCAB_LESSON_7: VocabWord[] = [
   { word: "married", meaning: "متاهل", lesson: 7, grade: 7, pos: "adj." },
   { word: "before", meaning: "قبل از، پیش از", lesson: 7, grade: 7, pos: "prep." },
   { word: "alley", meaning: "کوچه، خیابان کوچک", lesson: 7, grade: 7, pos: "n." },
-  { word: "after", meaning: "پش از، بعد از", lesson: 7, grade: 7, pos: "prep." },
+  { word: "after", meaning: "پس از، بعد از", lesson: 7, grade: 7, pos: "prep." },
   { word: "conference", meaning: "کنفرانس، مذاکره، سخنرانی", lesson: 7, grade: 7, pos: "n." },
   { word: "bye", meaning: "خداحافظ، خدانگه دار", lesson: 7, grade: 7, pos: "interj." },
   { word: "language", meaning: "زبان، لسان، کلام", lesson: 7, grade: 7, pos: "n." },
@@ -34,7 +34,7 @@ export const VOCAB_LESSON_7: VocabWord[] = [
   { word: "X-ray", meaning: "اشعه ایکس", lesson: 7, grade: 7, pos: "n." },
   { word: "a.m.", meaning: "قبل از ظهر", lesson: 7, grade: 7, pos: "adv." },
   { word: "give", meaning: "دادن به، ارایه دادن", lesson: 7, grade: 7, pos: "v." },
-  { word: "p.m.", meaning: "بعدازطهر", lesson: 7, grade: 7, pos: "adv." },
+  { word: "p.m.", meaning: "بعدازظهر", lesson: 7, grade: 7, pos: "adv." },
   { word: "information", meaning: "اطلاعات، اخبار، معلومات", lesson: 7, grade: 7, pos: "n." },
   { word: "morning", meaning: "صبح", lesson: 7, grade: 7, pos: "n." },
   { word: "e-mail", meaning: "پست الکترونیکی", lesson: 7, grade: 7, pos: "n." },
