@@ -6,12 +6,14 @@
 
 import { PrismaClient } from "@prisma/client";
 import { QUIZ_SEED as VISION_ONE_QUIZ } from "../src/data/vision-one/quiz-seed";
+import { QUIZ_SEED as GRADE_SEVEN_QUIZ } from "../src/data/grade-7/quiz-seed";
 import { QUIZ_SEED as GRADE_NINE_QUIZ } from "../src/data/grade-9/quiz-seed";
 
 const db = new PrismaClient();
 
 const SOURCES: { book: string; rows: typeof VISION_ONE_QUIZ }[] = [
   { book: "vision-one", rows: VISION_ONE_QUIZ },
+  { book: "grade-7", rows: GRADE_SEVEN_QUIZ as typeof VISION_ONE_QUIZ },
   { book: "grade-9", rows: GRADE_NINE_QUIZ as typeof VISION_ONE_QUIZ },
 ];
 

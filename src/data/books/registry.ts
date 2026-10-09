@@ -4,6 +4,7 @@
 
 import type { BookId, BookData, BookMeta } from "./types";
 import { VISION_ONE_BOOK } from "../vision-one";
+import { GRADE_SEVEN_BOOK } from "../grade-7";
 import { GRADE_NINE_BOOK } from "../grade-9";
 
 export const BOOKS: BookMeta[] = [
@@ -21,11 +22,11 @@ export const BOOKS: BookMeta[] = [
     id: "grade-7",
     title: "زبان انگلیسی هفتم",
     gradeLabel: "پایه هفتم",
-    author: "—",
-    tagline: "در انتظار آپلود فایل جزوه",
+    author: "دکتر حسن لطفی",
+    tagline: "جزوه کامل Prospect 1 — ۸ درس، واژگان، درسنامه، مکالمه و تست امتحانی",
     color: "amber",
     emoji: "📙",
-    available: false,
+    available: true,
   },
   {
     id: "grade-8",
@@ -78,9 +79,11 @@ export function getBookData(id: BookId): BookData | null {
   switch (id) {
     case "vision-one":
       return VISION_ONE_BOOK;
+    case "grade-7":
+      return GRADE_SEVEN_BOOK;
     case "grade-9":
       return GRADE_NINE_BOOK;
-    // فازهای بعدی: case "grade-7": return GRADE_SEVEN_BOOK; و به همین ترتیب
+    // فازهای بعدی: case "grade-8" / "grade-11" / "grade-12" و به همین ترتیب
     default:
       return null;
   }

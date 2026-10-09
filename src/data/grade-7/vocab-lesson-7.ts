@@ -1,0 +1,43 @@
+import type { VocabWord } from "../types";
+
+/** واژگان درس هفتم پایه هفتم (My Address) — صفحه ۹۱ جزوه (ستاره‌های قرمز حذف شد)
+ *  نکته: معنی‌های «پش از» (after) و «بعدازطهر» (p.m.) عیناً از جزوه نقل شده‌اند (غلط تایپی جزوه برای «پس از» و «بعدازظهر»).
+ */
+export const VOCAB_LESSON_7: VocabWord[] = [
+  { word: "understand", meaning: "فهمیدن، درک کردن", lesson: 7, grade: 7, pos: "v." },
+  { word: "address", meaning: "آدرس، نشانی", lesson: 7, grade: 7, pos: "n." },
+  { word: "suppose", meaning: "فرض، تصور، گمان کردن", lesson: 7, grade: 7, pos: "v." },
+  { word: "well", meaning: "بسیار خوب، تندرست، سالم", lesson: 7, grade: 7, pos: "adv." },
+  { word: "be going to", meaning: "قصد داشتن، خیال داشتن", lesson: 7, grade: 7, pos: "phr." },
+  { word: "contact", meaning: "تماس، ارتباط", lesson: 7, grade: 7, pos: "n." },
+  { word: "visit", meaning: "مالقات کردن، عیادت، دیدار", lesson: 7, grade: 7, pos: "v." },
+  { word: "mobile", meaning: "تلفن همراه", lesson: 7, grade: 7, pos: "n." },
+  { word: "what time", meaning: "ساعت چند، چه ساعتی", lesson: 7, grade: 7, pos: "phr." },
+  { word: "mobile / cell phone", meaning: "موبایل", lesson: 7, grade: 7, pos: "n." },
+  { word: "try", meaning: "تلاش، سعی", lesson: 7, grade: 7, pos: "v." },
+  { word: "cell", meaning: "سلول، خانه، حفره", lesson: 7, grade: 7, pos: "n." },
+  { word: "street", meaning: "خیابان، راه، جاده", lesson: 7, grade: 7, pos: "n." },
+  { word: "married", meaning: "متاهل", lesson: 7, grade: 7, pos: "adj." },
+  { word: "before", meaning: "قبل از، پیش از", lesson: 7, grade: 7, pos: "prep." },
+  { word: "alley", meaning: "کوچه، خیابان کوچک", lesson: 7, grade: 7, pos: "n." },
+  { word: "after", meaning: "پش از، بعد از", lesson: 7, grade: 7, pos: "prep." },
+  { word: "conference", meaning: "کنفرانس، مذاکره، سخنرانی", lesson: 7, grade: 7, pos: "n." },
+  { word: "bye", meaning: "خداحافظ، خدانگه دار", lesson: 7, grade: 7, pos: "interj." },
+  { word: "language", meaning: "زبان، لسان، کلام", lesson: 7, grade: 7, pos: "n." },
+  { word: "OK.", meaning: "بسیارخوب، صحیح است", lesson: 7, grade: 7, pos: "interj." },
+  { word: "association", meaning: "انجمن، اجتماع، شرکت", lesson: 7, grade: 7, pos: "n." },
+  { word: "but", meaning: "اما، ولی", lesson: 7, grade: 7, pos: "conj." },
+  { word: "Application Form", meaning: "برگ درخواست", lesson: 7, grade: 7, pos: "n." },
+  { word: "come back", meaning: "برگشتن، بازگشتن", lesson: 7, grade: 7, pos: "phr." },
+  { word: "metro", meaning: "مترو، قطار شهری", lesson: 7, grade: 7, pos: "n." },
+  { word: "leave", meaning: "ترک کردن، عازم شدن", lesson: 7, grade: 7, pos: "v." },
+  { word: "X-ray", meaning: "اشعه ایکس", lesson: 7, grade: 7, pos: "n." },
+  { word: "a.m.", meaning: "قبل از ظهر", lesson: 7, grade: 7, pos: "adv." },
+  { word: "give", meaning: "دادن به، ارایه دادن", lesson: 7, grade: 7, pos: "v." },
+  { word: "p.m.", meaning: "بعدازطهر", lesson: 7, grade: 7, pos: "adv." },
+  { word: "information", meaning: "اطلاعات، اخبار، معلومات", lesson: 7, grade: 7, pos: "n." },
+  { word: "morning", meaning: "صبح", lesson: 7, grade: 7, pos: "n." },
+  { word: "e-mail", meaning: "پست الکترونیکی", lesson: 7, grade: 7, pos: "n." },
+  { word: "noon", meaning: "ظهر، نیمروز", lesson: 7, grade: 7, pos: "n." },
+  { word: "afternoon", meaning: "بعدازظهر، عصر", lesson: 7, grade: 7, pos: "n." },
+];
