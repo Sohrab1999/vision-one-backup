@@ -23,6 +23,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useUserName } from "@/lib/name-store";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -79,6 +80,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [aiExplaining, setAiExplaining] = useState(false);
   const [aiExplanation, setAiExplanation] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
+  const userName = useUserName();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -186,9 +188,10 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         total: questions.length,
         correct: correctCount,
         duration: elapsed,
+        name: userName || undefined,
       }),
     })
-      .then(() => toast.success("نتیجه آزمون ذخیره شد 🎉"))
+      .then(() => toast.success(`نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}`))
       .catch(() => undefined);
   }
 

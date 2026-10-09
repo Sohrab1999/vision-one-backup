@@ -12,6 +12,7 @@ import { QuizView } from "@/components/book/quiz-view";
 import { TextsView } from "@/components/book/texts-view";
 import { DictionaryView } from "@/components/book/dictionary-view";
 import { VerbsView } from "@/components/book/verbs-view";
+import { FlashcardView } from "@/components/book/flashcard-view";
 import { TutorView } from "@/components/book/tutor-view";
 
 export default function Page() {
@@ -42,6 +43,7 @@ export default function Page() {
         {view === "texts" && <TextsView />}
         {view === "dict" && <DictionaryView />}
         {view === "verbs" && <VerbsView />}
+        {view === "flashcards" && <FlashcardView />}
         {view === "tutor" && <TutorView />}
       </main>
 

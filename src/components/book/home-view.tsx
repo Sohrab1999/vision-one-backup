@@ -18,14 +18,25 @@ import {
   Trophy,
   Target,
   Flame,
+  Layers,
+  TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip as ChartTooltip,
+} from "recharts";
 import { BOOK_INFO, BOOK_STATS, CHAPTERS } from "@/data/book-meta";
 import { ALL_VOCAB } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
+import { useUserName } from "@/lib/name-store";
 import type { ViewId } from "./app-header";
 import { SpeakButton } from "./speak-button";
 
@@ -33,6 +44,13 @@ interface AttemptStats {
   attempts: number;
   accuracy: number;
   best: number;
+}
+
+interface ChartPoint {
+  id: string;
+  accuracy: number;
+  category: string;
+  idx: number;
 }
 
 const FEATURE_CARDS: {
@@ -44,7 +62,8 @@ const FEATURE_CARDS: {
 }[] = [
   { view: "contents", title: "فهرست فصل‌ها", desc: "مسیر یادگیری گام‌به‌گام کتاب", icon: ListOrdered },
   { view: "vocab", title: "واژگان تعاملی", desc: "جستجو، کارت فلپ و علامت‌گذاری واژه‌های یادگرفته", icon: BookOpen, stat: `${BOOK_STATS.words} واژه` },
-  { view: "grammar", title: "درسنامه گرامر", desc: "۹ درسنامه با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: `${BOOK_STATS.grammarLessons} درسنامه` },
+  { view: "flashcards", title: "تمرین فلاش‌کارت", desc: "دور ۱۲ واژه‌ای با میان‌بر کیبورد و مرور هوشمند", icon: Layers, stat: "SRS" },
+  { view: "grammar", title: "درسنامه گرامر", desc: "۱۱ درسنامه با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: "۱۱ درسنامه" },
   { view: "quiz", title: "آزمون تعاملی", desc: "بانک سؤال واقعی جزوه با توضیح هوشمند", icon: ClipboardList, stat: `${BOOK_STATS.questions} تست` },
   { view: "texts", title: "متن و مکالمه", desc: "ریدینگ‌ها و مکالمه‌ها با روایت صوتی", icon: FileText, stat: `${BOOK_STATS.readings + BOOK_STATS.conversations} متن` },
   { view: "dict", title: "دیکشنری", desc: "تعریف انگلیسی به انگلیسی با تلفظ و مثال", icon: Library, stat: `${BOOK_STATS.dictionary} مدخل` },
@@ -62,14 +81,25 @@ function useWordOfDay() {
 export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const wordOfDay = useWordOfDay();
   const { count: learned } = useLearnedWords();
+  const userName = useUserName();
   const [stats, setStats] = useState<AttemptStats | null>(null);
+  const [chart, setChart] = useState<ChartPoint[]>([]);
 
   useEffect(() => {
     let cancelled = false;
     fetch("/api/attempts")
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (!cancelled && d?.stats) setStats(d.stats);
+        if (cancelled || !d) return;
+        if (d.stats) setStats(d.stats);
+        if (Array.isArray(d.chart)) {
+          setChart(
+            d.chart.map((c: Omit<ChartPoint, "idx">, i: number) => ({
+              ...c,
+              idx: i + 1,
+            })),
+          );
+        }
       })
       .catch(() => undefined);
     return () => {
@@ -99,6 +129,10 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
               Vision One
             </Badge>
           </div>
+
+          <p className="rise-in text-[12px] font-bold text-primary">
+            {userName ? `سلام ${userName}! 👋 خوش برگشتی` : "به کتاب وب ویژن وان خوش آمدی 👋"}
+          </p>
 
           <h1 className="rise-in rise-in-1 text-3xl sm:text-5xl font-black leading-[1.25] tracking-tight">
             جزوه جامع{" "}
@@ -193,6 +227,59 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
             <Button variant="outline" size="sm" className="w-full" onClick={() => onNavigate("vocab")}>
               ادامه یادگیری واژه‌ها
             </Button>
+
+            {/* نمودار روند دقت */}
+            {chart.length >= 2 && (
+              <div className="rounded-xl border bg-card/60 p-3">
+                <p className="mb-1 flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground">
+                  <TrendingUp size={12} className="text-primary" />
+                  روند دقت {chart.length.toLocaleString("fa-IR")} آزمون آخر (٪)
+                </p>
+                <div className="h-28" dir="ltr">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chart} margin={{ top: 4, right: 4, bottom: 0, left: -22 }}>
+                      <defs>
+                        <linearGradient id="acc" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#10b981" stopOpacity={0.45} />
+                          <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis
+                        dataKey="idx"
+                        tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis
+                        domain={[0, 100]}
+                        tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <ChartTooltip
+                        contentStyle={{
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: 12,
+                          fontSize: 12,
+                          fontFamily: "inherit",
+                        }}
+                        formatter={(v: number) => [`${v}٪`, "دقت"]}
+                        labelFormatter={(l: number) => `آزمون ${l}`}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="accuracy"
+                        stroke="#10b981"
+                        strokeWidth={2.5}
+                        fill="url(#acc)"
+                        dot={{ r: 3, fill: "#10b981" }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 

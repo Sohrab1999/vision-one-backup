@@ -13,7 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CHAPTERS, BOOK_STATS } from "@/data/book-meta";
-import { VOCAB_COUNT_BY_LESSON } from "@/data/vocab";
+import { VOCAB_COUNT_BY_LESSON, vocabOfLesson } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
 import { cn } from "@/lib/utils";
 import type { ViewId } from "./app-header";
@@ -33,6 +33,13 @@ export function ContentsView({
 }) {
   const { learned } = useLearnedWords();
 
+  const learnedPct = (chapterId: number): number => {
+    const words = vocabOfLesson(chapterId);
+    if (words.length === 0) return 0;
+    const learnedCount = words.filter((w) => learned.has(w.word)).length;
+    return Math.round((learnedCount / words.length) * 100);
+  };
+
   return (
     <div className="space-y-5">
       <div className="text-center space-y-2 rise-in">
@@ -46,11 +53,7 @@ export function ContentsView({
         {CHAPTERS.map((ch, idx) => {
           const c = COLOR_MAP[ch.color] ?? COLOR_MAP.emerald;
           const total = VOCAB_COUNT_BY_LESSON[ch.id] ?? 0;
-          const learnedCount = [...learned].filter((w) =>
-            // واژه‌های درس با جستجو در آرایه کامل بررسی می‌شوند
-            true,
-          ).length;
-          void learnedCount;
+          const pct = learnedPct(ch.id);
           return (
             <Card
               key={ch.id}
@@ -108,7 +111,10 @@ export function ContentsView({
                     <GraduationCap size={12} />
                     {ch.grammarTopics.length.toLocaleString("fa-IR")} گرامر
                   </span>
-                  <Progress value={ch.id === 0 ? 0 : Math.min(100, ch.minutes * 2)} className="mr-auto h-1.5 w-20" />
+                  <div className="mr-auto flex items-center gap-2">
+                    <Progress value={pct} className="h-1.5 w-16" />
+                    <span className="text-[10px] font-bold text-primary">{pct.toLocaleString("fa-IR")}٪</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>

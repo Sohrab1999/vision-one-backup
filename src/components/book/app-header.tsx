@@ -12,10 +12,12 @@ import {
   ListOrdered,
   Moon,
   Sun,
+  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useIsDark, setDark } from "@/lib/theme-store";
+import { ProfileButton } from "./profile-button";
 
 export type ViewId =
   | "home"
@@ -27,6 +29,7 @@ export type ViewId =
   | "texts"
   | "dict"
   | "verbs"
+  | "flashcards"
   | "tutor";
 
 interface NavItem {
@@ -39,6 +42,7 @@ const NAV: NavItem[] = [
   { id: "home", label: "جلد", icon: Home },
   { id: "contents", label: "فهرست", icon: ListOrdered },
   { id: "vocab", label: "واژگان", icon: BookOpen },
+  { id: "flashcards", label: "تمرین", icon: Layers },
   { id: "grammar", label: "گرامر", icon: GraduationCap },
   { id: "quiz", label: "آزمون", icon: ClipboardList },
   { id: "texts", label: "متن‌ها", icon: FileText },
@@ -104,6 +108,9 @@ export function AppHeader({
         </nav>
 
         <div className="flex-1 md:hidden" />
+
+        {/* پروفایل */}
+        <ProfileButton />
 
         {/* تغییر پوسته */}
         <Button

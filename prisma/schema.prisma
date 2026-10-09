@@ -43,6 +43,8 @@ model Attempt {
   correct   Int
   /// مدت آزمون به ثانیه
   duration  Int
+  /// نام کاربر (اختیاری)
+  name      String?
   /// جزئیات پاسخ‌ها به صورت JSON
   detail    String?
   createdAt DateTime @default(now())

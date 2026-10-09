@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
       total?: number;
       correct?: number;
       duration?: number;
+      name?: string;
       detail?: unknown;
     };
 
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest) {
         total,
         correct,
         duration: Number(body.duration ?? 0),
+        name: body.name ? String(body.name).slice(0, 40) : null,
         detail: body.detail ? JSON.stringify(body.detail) : null,
       },
     });
@@ -40,13 +42,18 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const [recent, agg, last60] = await Promise.all([
+    const [recent, agg, last60, chart] = await Promise.all([
       db.attempt.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
       db.attempt.aggregate({
         _count: { _all: true },
         _sum: { total: true, correct: true },
       }),
       db.attempt.findMany({ orderBy: { createdAt: "desc" }, take: 60 }),
+      db.attempt.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 20,
+        select: { id: true, correct: true, total: true, category: true, createdAt: true },
+      }),
     ]);
 
     const sumTotal = agg._sum.total ?? 0;
@@ -65,8 +72,17 @@ export async function GET() {
         total: a.total,
         correct: a.correct,
         duration: a.duration,
+        name: a.name,
         createdAt: a.createdAt,
       })),
+      chart: chart
+        .map((a) => ({
+          id: a.id,
+          accuracy: a.total > 0 ? Math.round((a.correct / a.total) * 100) : 0,
+          category: a.category,
+          createdAt: a.createdAt,
+        }))
+        .reverse(),
       stats: {
         attempts: agg._count._all,
         sumTotal,
