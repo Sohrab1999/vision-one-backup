@@ -1,0 +1,52 @@
+import type { VocabWord } from "../types";
+
+/**
+ * واژگان درس اول پایه هشتم (My Nationality) — صفحه ۹ جزوه (ستاره‌های قرمز حذف شد)
+ * شامل سطر «کلمات مربوط به آخر کتاب (دیکشنری تصاویر)»
+ * اصلاحیه: ترمیم اعراب «اصالتاً» (لایه متن جزوه تنوین را حذف کرده بود)
+ */
+export const VOCAB_LESSON_1: VocabWord[] = [
+  { word: "a little", meaning: "یک مقدار", lesson: 1, grade: 8, pos: "phr." },
+  { word: "Persian", meaning: "فارسی(زبان)", lesson: 1, grade: 8, pos: "n." },
+  { word: "Are you from ...?", meaning: "آیا شما اهل .... هستید؟", lesson: 1, grade: 8, pos: "phr." },
+  { word: "shoes", meaning: "کفش ها", lesson: 1, grade: 8, pos: "n." },
+  { word: "beautiful", meaning: "زیبا", lesson: 1, grade: 8, pos: "adj." },
+  { word: "Spain", meaning: "اسپانیا", lesson: 1, grade: 8, pos: "n." },
+  { word: "Brazil", meaning: "برزیل", lesson: 1, grade: 8, pos: "n." },
+  { word: "Spanish", meaning: "اسپانیایی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "Brazilian", meaning: "برزیلی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "speak", meaning: "صحبت کردن", lesson: 1, grade: 8, pos: "v." },
+  { word: "British", meaning: "انگلیسی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "welcome", meaning: "خوش آمدید", lesson: 1, grade: 8, pos: "interj." },
+  { word: "but", meaning: "اما", lesson: 1, grade: 8, pos: "conj." },
+  { word: "originally", meaning: "اصالتاً", lesson: 1, grade: 8, pos: "adv." },
+  { word: "chick", meaning: "جوجه", lesson: 1, grade: 8, pos: "n." },
+  { word: "China", meaning: "چین", lesson: 1, grade: 8, pos: "n." },
+  { word: "Africa", meaning: "آفریقا", lesson: 1, grade: 8, pos: "n." },
+  { word: "Chinese", meaning: "چینی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "African", meaning: "آفریقایی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "correct", meaning: "صحیح", lesson: 1, grade: 8, pos: "adj." },
+  { word: "Asia", meaning: "آسیا", lesson: 1, grade: 8, pos: "n." },
+  { word: "country", meaning: "کشور", lesson: 1, grade: 8, pos: "n." },
+  { word: "Asian", meaning: "آسیایی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "cousin", meaning: "پسر - دخترعمو(دایی، عمه، خاله)", lesson: 1, grade: 8, pos: "n." },
+  { word: "Australia", meaning: "استرالیا", lesson: 1, grade: 8, pos: "n." },
+  { word: "England", meaning: "انگلیس", lesson: 1, grade: 8, pos: "n." },
+  { word: "Australian", meaning: "استرالیایی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "fish", meaning: "ماهی", lesson: 1, grade: 8, pos: "n." },
+  { word: "continent", meaning: "قاره", lesson: 1, grade: 8, pos: "n." },
+  { word: "France", meaning: "فرانسه", lesson: 1, grade: 8, pos: "n." },
+  { word: "Europe", meaning: "اروپا", lesson: 1, grade: 8, pos: "n." },
+  { word: "French", meaning: "فرانسوی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "European", meaning: "اروپایی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "fruit", meaning: "میوه", lesson: 1, grade: 8, pos: "n." },
+  { word: "North America", meaning: "آمریکای شمالی", lesson: 1, grade: 8, pos: "n." },
+  { word: "great", meaning: "عالی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "South America", meaning: "آمریکای جنوبی", lesson: 1, grade: 8, pos: "n." },
+  { word: "Iran", meaning: "ایران", lesson: 1, grade: 8, pos: "n." },
+  { word: "Iranian", meaning: "ایرانی", lesson: 1, grade: 8, pos: "adj." },
+  { word: "live", meaning: "زندگی کردن", lesson: 1, grade: 8, pos: "v." },
+  { word: "love", meaning: "دوست داشتن", lesson: 1, grade: 8, pos: "v." },
+  { word: "nationality", meaning: "ملیت", lesson: 1, grade: 8, pos: "n." },
+  { word: "or", meaning: "یا", lesson: 1, grade: 8, pos: "conj." },
+];

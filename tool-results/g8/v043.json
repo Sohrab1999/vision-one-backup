@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "tourist* ::: موزه ::: museum* :::\ntrain station* ::: نزدیک ::: near* :::\nrestaurant* ::: جدید ::: new* :::\nsee ::: شمال ::: north* :::\npalace* ::: قدیمی، کهنه ::: old* :::",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1791570847,
+  "id": "2026101002340318f1e64fdd144f8a",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "2026101002340318f1e64fdd144f8a",
+  "usage": {
+    "completion_tokens": 55,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 3134,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 3189
+  }
+}
