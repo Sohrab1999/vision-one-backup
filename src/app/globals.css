@@ -305,6 +305,57 @@
   transform-origin: 50% 10%;
 }
 
+/* ─── انیمیشن جابه‌جایی نماها ─── */
+@keyframes view-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.view-in {
+  animation: view-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── حلقه‌های تزئینی جلد ─── */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.hero-ring {
+  border: 1.5px dashed rgb(16 185 129 / 0.3);
+  border-radius: 9999px;
+  animation: spin-slow 26s linear infinite;
+}
+.hero-ring-reverse {
+  border: 1.5px dotted rgb(245 158 11 / 0.25);
+  border-radius: 9999px;
+  animation: spin-slow 34s linear infinite reverse;
+}
+
+/* ─── بازی تطبیق واژه‌ها ─── */
+@keyframes match-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+.match-pop {
+  animation: match-pop 0.35s ease;
+}
+@keyframes match-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+.match-shake {
+  animation: match-shake 0.42s ease;
+}
+
+/* ─── جزئیات ریز ─── */
+::selection {
+  background: rgb(16 185 129 / 0.32);
+  color: inherit;
+}
+
+
 /* ─── کارنامه قابل چاپ ─── */
 @media print {
   html,

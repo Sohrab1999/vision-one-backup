@@ -35,18 +35,20 @@ export default function Page() {
       <AppHeader view={view} onNavigate={navigate} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-3 py-6 sm:px-4">
-        {view === "home" && <HomeView onNavigate={navigate} />}
-        {view === "contents" && <ContentsView onOpenChapter={openChapter} />}
-        {view === "chapter" && <ChapterView chapterId={chapterId} onNavigate={navigate} />}
-        {view === "vocab" && <VocabularyView />}
-        {view === "grammar" && <GrammarView />}
-        {view === "quiz" && <QuizView />}
-        {view === "texts" && <TextsView />}
-        {view === "dict" && <DictionaryView />}
-        {view === "verbs" && <VerbsView />}
-        {view === "flashcards" && <FlashcardView />}
-        {view === "stats" && <StatsView onNavigate={navigate} />}
-        {view === "tutor" && <TutorView />}
+        <div key={view} className="view-in">
+          {view === "home" && <HomeView onNavigate={navigate} />}
+          {view === "contents" && <ContentsView onOpenChapter={openChapter} />}
+          {view === "chapter" && <ChapterView chapterId={chapterId} onNavigate={navigate} />}
+          {view === "vocab" && <VocabularyView />}
+          {view === "grammar" && <GrammarView />}
+          {view === "quiz" && <QuizView />}
+          {view === "texts" && <TextsView />}
+          {view === "dict" && <DictionaryView />}
+          {view === "verbs" && <VerbsView />}
+          {view === "flashcards" && <FlashcardView />}
+          {view === "stats" && <StatsView onNavigate={navigate} />}
+          {view === "tutor" && <TutorView />}
+        </div>
       </main>
 
       <AppFooter />

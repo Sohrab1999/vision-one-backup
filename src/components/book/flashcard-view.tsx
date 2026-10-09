@@ -13,6 +13,7 @@ import {
   Sprout,
   Flame,
   Target,
+  Puzzle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,6 +26,7 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { recordSRS, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
 import { touchStreak } from "@/lib/streak-store";
 import { SpeakButton } from "./speak-button";
+import { MatchGame } from "./match-game";
 
 type Phase = "setup" | "playing" | "done";
 
@@ -65,7 +67,55 @@ function pickSession(pool: VocabEntry[], learned: Set<string>, srs: Record<strin
   return weightedPool.sort(() => Math.random() - 0.5);
 }
 
+/** Tabbed practice view: SRS flashcards + word-match mini game. */
 export function FlashcardView() {
+  const [tab, setTab] = useState<"cards" | "match">("cards");
+
+  return (
+    <div className="space-y-5">
+      <div
+        className="mx-auto grid max-w-xl grid-cols-2 gap-1.5 rounded-2xl border bg-muted/50 p-1.5"
+        role="tablist"
+        aria-label="حالت تمرین"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === "cards"}
+          onClick={() => setTab("cards")}
+          className={cn(
+            "flex h-10 items-center justify-center gap-2 rounded-xl text-[13px] font-black transition-all",
+            tab === "cards"
+              ? "bg-card text-primary shadow-md shadow-primary/10"
+              : "text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <Layers size={15} />
+          فلاش‌کارت SRS
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === "match"}
+          onClick={() => setTab("match")}
+          className={cn(
+            "flex h-10 items-center justify-center gap-2 rounded-xl text-[13px] font-black transition-all",
+            tab === "match"
+              ? "bg-card text-amber-600 shadow-md shadow-amber-500/10 dark:text-amber-400"
+              : "text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <Puzzle size={15} />
+          بازی تطبیق
+        </button>
+      </div>
+
+      {tab === "cards" ? <FlashcardGame /> : <MatchGame />}
+    </div>
+  );
+}
+
+function FlashcardGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
   const [weakOnly, setWeakOnly] = useState(false);

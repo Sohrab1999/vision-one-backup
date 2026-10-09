@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { recordWordLearned } from "./goal-store";
 
 /**
  * External store for "learned words" persisted in localStorage.
@@ -35,6 +36,7 @@ function subscribe(cb: () => void) {
 
 export function toggleLearned(word: string) {
   const next = new Set(read());
+  const wasNew = !next.has(word);
   if (next.has(word)) next.delete(word);
   else next.add(word);
   cache = next;
@@ -43,6 +45,7 @@ export function toggleLearned(word: string) {
   } catch {
     /* noop */
   }
+  if (wasNew) recordWordLearned(word); // feed the daily-goal counter
   listeners.forEach((l) => l());
 }
 

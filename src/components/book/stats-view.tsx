@@ -40,6 +40,7 @@ import { BOOK_STATS } from "@/data/book-meta";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStreak } from "@/lib/streak-store";
 import { useUserName } from "@/lib/name-store";
+import { useDailyGoal } from "@/lib/goal-store";
 import { setPracticeIds } from "@/lib/practice-store";
 import { toast } from "sonner";
 import type { ViewId } from "./app-header";
@@ -207,6 +208,14 @@ const ACHIEVEMENTS: {
     check: (c) => c.streakBest >= 7,
     progress: (c) => [Math.min(c.streakBest, 7), 7],
   },
+  {
+    id: "daily-goal",
+    icon: "🌱",
+    title: "هدف‌مند",
+    desc: "به هدف روزانه واژگان برس",
+    check: (c) => c.goalHit,
+    progress: (c) => [c.goalHit ? 1 : 0, 1],
+  },
 ];
 
 interface AchContext {
@@ -215,6 +224,7 @@ interface AchContext {
   sumTotal: number;
   learned: number;
   streakBest: number;
+  goalHit: boolean;
 }
 
 function fmtDuration(sec: number): string {
@@ -238,10 +248,12 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
   const { count: learned } = useLearnedWords();
   const streak = useStreak();
   const userName = useUserName();
+  const daily = useDailyGoal();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [recent, setRecent] = useState<RecentAttempt[]>([]);
   const [leaders, setLeaders] = useState<LeaderRow[]>([]);
+  const [leaderSort, setLeaderSort] = useState<"best" | "avg" | "quizzes">("best");
   const [topMisses, setTopMisses] = useState<TopMiss[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -273,8 +285,9 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
       sumTotal: stats?.sumTotal ?? 0,
       learned,
       streakBest: streak.best,
+      goalHit: daily.goal > 0 && daily.todayCount >= daily.goal,
     }),
-    [stats, learned, streak.best],
+    [stats, learned, streak.best, daily.goal, daily.todayCount],
   );
 
   const unlocked = useMemo(
@@ -298,6 +311,20 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
   const totalMinutes = Math.round(
     recent.reduce((acc, a) => acc + a.duration, 0) / 60,
   );
+
+  const sortedLeaders = useMemo(() => {
+    const arr = [...leaders];
+    if (leaderSort === "best") arr.sort((a, b) => b.best - a.best || b.accuracy - a.accuracy);
+    else if (leaderSort === "avg") arr.sort((a, b) => b.accuracy - a.accuracy || b.best - a.best);
+    else arr.sort((a, b) => b.quizzes - a.quizzes || b.best - a.best);
+    return arr;
+  }, [leaders, leaderSort]);
+
+  const leaderMetric = (row: LeaderRow): { value: string; label: string } => {
+    if (leaderSort === "avg") return { value: `${row.accuracy.toLocaleString("fa-IR")}٪`, label: "میانگین دقت" };
+    if (leaderSort === "quizzes") return { value: row.quizzes.toLocaleString("fa-IR"), label: "آزمون برگزارشده" };
+    return { value: `${row.best.toLocaleString("fa-IR")}٪`, label: "بهترین رکورد" };
+  };
 
   const kpis = [
     { icon: ClipboardList, label: "آزمون برگزارشده", value: (stats?.attempts ?? 0).toLocaleString("fa-IR"), color: "text-primary", bg: "bg-primary/10" },
@@ -449,12 +476,31 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                 <Users size={17} className="text-primary" />
                 لیدربورد کلاس
               </h2>
-              <span className="text-[11px] text-muted-foreground">
-                بر اساس آزمون‌های ثبت‌شده با نام دانش‌آموز
-              </span>
+              <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="ترتیب لیدربورد">
+                {([
+                  { id: "best", label: "بهترین رکورد" },
+                  { id: "avg", label: "میانگین دقت" },
+                  { id: "quizzes", label: "تعداد آزمون" },
+                ] as const).map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setLeaderSort(s.id)}
+                    aria-pressed={leaderSort === s.id}
+                    className={cn(
+                      "h-7 rounded-full border px-2.5 text-[11px] font-black transition-all",
+                      leaderSort === s.id
+                        ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+                        : "text-muted-foreground hover:bg-muted",
+                    )}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {leaders.length === 0 ? (
+            {sortedLeaders.length === 0 ? (
               <Card className="border-dashed">
                 <CardContent className="flex flex-col items-center gap-2 p-6 text-center text-xs text-muted-foreground">
                   <Users size={24} className="opacity-40" />
@@ -466,7 +512,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                 {/* سکوی قهرمانی — سه نفر اول */}
                 <div className="grid grid-cols-3 items-end gap-2 sm:gap-3">
                   {[1, 0, 2].map((slot) => {
-                    const row = leaders[slot];
+                    const row = sortedLeaders[slot];
                     if (!row) return <div key={slot} />;
                     const place = slot + 1;
                     const heights = ["sm:pb-0", "sm:pb-6", "sm:pb-2"];
@@ -495,6 +541,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                               h: "text-xl",
                             };
                     const isMe = userName && row.name === userName;
+                    const metric = leaderMetric(row);
                     return (
                       <Card
                         key={row.name}
@@ -515,10 +562,10 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                             {isMe && <span className="text-[9px] font-bold text-primary">(تو)</span>}
                           </p>
                           <p className={cn("mt-1 font-black leading-none", styles.h)}>
-                            {row.best.toLocaleString("fa-IR")}٪
+                            {metric.value}
                           </p>
                           <p className="mt-1 text-[10px] text-muted-foreground">
-                            بهترین رکورد • {row.quizzes.toLocaleString("fa-IR")} آزمون
+                            {metric.label} • {row.quizzes.toLocaleString("fa-IR")} آزمون
                           </p>
                         </CardContent>
                       </Card>
@@ -527,11 +574,11 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                 </div>
 
                 {/* بقیه جدول */}
-                {leaders.length > 3 && (
+                {sortedLeaders.length > 3 && (
                   <Card>
                     <CardContent className="p-0">
                       <ul className="divide-y">
-                        {leaders.slice(3).map((row, i) => {
+                        {sortedLeaders.slice(3).map((row, i) => {
                           const isMe = userName && row.name === userName;
                           return (
                             <li
@@ -548,16 +595,22 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                                 {row.name}
                                 {isMe && <span className="mr-1 text-[9px] font-bold text-primary">(تو)</span>}
                               </p>
-                              <span className="shrink-0 text-muted-foreground">
+                              <span className={cn("shrink-0", leaderSort === "quizzes" ? "font-black text-primary" : "text-muted-foreground")}>
                                 {row.quizzes.toLocaleString("fa-IR")} آزمون
                               </span>
-                              <span className="shrink-0 text-muted-foreground">
+                              <span className={cn("hidden shrink-0 sm:inline", leaderSort === "avg" ? "font-black text-primary" : "text-muted-foreground")}>
                                 میانگین {row.accuracy.toLocaleString("fa-IR")}٪
                               </span>
                               <span
                                 className={cn(
                                   "w-12 shrink-0 text-left font-black",
-                                  row.best >= 80 ? "text-primary" : row.best >= 50 ? "text-amber-500" : "text-muted-foreground",
+                                  leaderSort === "best" || leaderSort === "avg"
+                                    ? row.best >= 80
+                                      ? "text-primary"
+                                      : row.best >= 50
+                                        ? "text-amber-500"
+                                        : "text-muted-foreground"
+                                    : "text-muted-foreground",
                                 )}
                               >
                                 {row.best.toLocaleString("fa-IR")}٪
