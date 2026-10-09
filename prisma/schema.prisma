@@ -1,0 +1,51 @@
+// Prisma schema for the "Vision One" interactive web book.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// سؤالات آزمون استخراج‌شده از جزوه (گرامر و واژگان)
+model Question {
+  id          String   @id @default(cuid())
+  /// "grammar" | "vocabulary"
+  category    String
+  /// 0 = جمع‌بندی, 1..4 = شماره درس
+  lesson      Int
+  /// محدوده سؤال مثل "درس اول" یا "جمع‌بندی درس ۱ تا ۴"
+  scope       String
+  /// متن سؤال انگلیسی
+  text        String
+  /// آرایه JSON چهار گزینه
+  options     String
+  /// اندیس گزینه صحیح (0-3)
+  answer      Int
+  /// سطح سؤال: "آموزشی" | "متوسط" | "استاندارد" | "کنکوری"
+  level       String
+  /// توضیح کوتاه اختیاری
+  explanation String?
+  createdAt   DateTime @default(now())
+
+  @@index([category, lesson])
+}
+
+/// نتیجه یک آزمون کامل‌شده توسط کاربر
+model Attempt {
+  id        String   @id @default(cuid())
+  /// "grammar" | "vocabulary" | "all"
+  category  String
+  lesson    Int
+  total     Int
+  correct   Int
+  /// مدت آزمون به ثانیه
+  duration  Int
+  /// جزئیات پاسخ‌ها به صورت JSON
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([category])
+}

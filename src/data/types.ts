@@ -1,0 +1,94 @@
+// Shared content types for the "Vision One" interactive web book.
+// Every data file under src/data must import its types from here.
+
+export interface VocabWord {
+  /** English word exactly as printed in the book (pos markers like "(n, v)" kept inline) */
+  word: string;
+  /** Persian meaning exactly as printed in the book */
+  meaning: string;
+  /** 0 = پایه هفتم تا نهم (مرور), 1..4 = درس‌های پایه دهم */
+  lesson: number;
+  /** برای واژگان پایه ۷ تا ۹: 7 | 8 | 9 */
+  grade?: number;
+  /** optional part of speech, e.g. "n.", "v.", "adj.", "prep.", "phr." */
+  pos?: string;
+}
+
+export interface QuizQuestionSeed {
+  /** "grammar" | "vocabulary" */
+  category: "grammar" | "vocabulary";
+  /** 0 = جمع‌بندی کل کتاب, 1..4 = شماره درس */
+  lesson: number;
+  /** بخش/محدوده سؤال، مثلاً "جمع‌بندی درس ۱ تا ۴" یا "درس اول" */
+  scope: string;
+  /** متن سؤال انگلیسی (جای خالی با "________" نمایش داده شود) */
+  text: string;
+  /** دقیقاً ۴ گزینه بدون پیشوند a./b./c./d. */
+  options: string[];
+  /** اندیس گزینه صحیح (0-3) */
+  answer: number;
+  /** "آموزشی" | "متوسط" | "استاندارد" | "کنکوری" */
+  level: string;
+  /** توضیح کوتاه اختیاری (فارسی) */
+  explanation?: string;
+}
+
+export interface ReadingParagraph {
+  /** پاراگراف انگلیسی */
+  en: string;
+  /** ترجمه فارسی روان از جزوه */
+  fa: string;
+}
+
+export interface Reading {
+  id: string;
+  lesson: number;
+  /** عنوان انگلیسی */
+  title: string;
+  /** عنوان فارسی */
+  titleFa: string;
+  /** منبع، مثلاً "کتاب درسی — صفحه ۲۲" */
+  source: string;
+  paragraphs: ReadingParagraph[];
+}
+
+export interface ConversationLine {
+  /** نام گوینده انگلیسی */
+  speaker: string;
+  /** جمله انگلیسی */
+  en: string;
+  /** ترجمه فارسی */
+  fa: string;
+}
+
+export interface Conversation {
+  id: string;
+  lesson: number;
+  title: string;
+  titleFa: string;
+  /** منبع، مثلاً "کتاب درسی — صفحه ۱۹" */
+  source: string;
+  /** مقدمه مکالمه */
+  intro?: ReadingParagraph;
+  lines: ConversationLine[];
+}
+
+export interface DictEntry {
+  word: string;
+  /** تلفظ IPA مثل / əˈlaɪv / */
+  phonetic: string;
+  /** pos مثل "adj." / "n." / "v." / "prep." / "adv." */
+  pos: string;
+  /** تعریف انگلیسی به انگلیسی */
+  definition: string;
+  /** یک یا دو مثال انگلیسی */
+  examples: string[];
+  lesson: number;
+}
+
+export interface IrregularVerb {
+  base: string;
+  past: string;
+  participle: string;
+  meaning: string;
+}
