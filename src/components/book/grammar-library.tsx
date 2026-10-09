@@ -73,8 +73,8 @@ function BlockRenderer({ block }: { block: GrammarBlock }) {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/70">
-                {block.headers.map((h) => (
-                  <TableHead key={h} className="text-[12px] font-black">
+                {block.headers.map((h, hi) => (
+                  <TableHead key={`${hi}-${h}`} className="text-[12px] font-black">
                     {h}
                   </TableHead>
                 ))}

@@ -78,7 +78,7 @@ function weekIndexOf(now = new Date()): number {
   return Math.floor(dayOfYear / 7) + 1;
 }
 
-const LEVEL_KEYS = ["آموزشی", "متوسط", "کنکوری"] as const;
+const LEVEL_KEYS = ["آموزشی", "متوسط", "استاندارد", "کنکوری"] as const;
 
 export async function GET(req: NextRequest) {
   try {

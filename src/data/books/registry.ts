@@ -7,6 +7,7 @@ import { VISION_ONE_BOOK } from "../vision-one";
 import { GRADE_SEVEN_BOOK } from "../grade-7";
 import { GRADE_EIGHT_BOOK } from "../grade-8";
 import { GRADE_NINE_BOOK } from "../grade-9";
+import { GRADE_ELEVEN_BOOK } from "../grade-11";
 
 export const BOOKS: BookMeta[] = [
   {
@@ -53,11 +54,11 @@ export const BOOKS: BookMeta[] = [
     id: "grade-11",
     title: "زبان انگلیسی یازدهم",
     gradeLabel: "پایه یازدهم",
-    author: "—",
-    tagline: "در انتظار آپلود فایل جزوه",
+    author: "جمال احمدی و همکاران",
+    tagline: "جزوه جامع Vision Two — ۳ درس، واژگان، درسنامه، مکالمه و بانک تست",
     color: "orange",
     emoji: "📒",
-    available: false,
+    available: true,
   },
   {
     id: "grade-12",
@@ -86,7 +87,9 @@ export function getBookData(id: BookId): BookData | null {
       return GRADE_EIGHT_BOOK;
     case "grade-9":
       return GRADE_NINE_BOOK;
-    // فازهای بعدی: case "grade-11" / "grade-12" و به همین ترتیب
+    case "grade-11":
+      return GRADE_ELEVEN_BOOK;
+    // فاز بعدی: case "grade-12" و به همین ترتیب
     default:
       return null;
   }

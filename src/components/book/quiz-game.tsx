@@ -71,6 +71,7 @@ const LEVEL_OPTIONS = [
   { value: "all", label: "همه سطوح" },
   { value: "آموزشی", label: "آموزشی" },
   { value: "متوسط", label: "متوسط" },
+  { value: "استاندارد", label: "استاندارد" },
   { value: "کنکوری", label: "کنکوری" },
 ];
 
