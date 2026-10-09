@@ -4,23 +4,26 @@ import { useSyncExternalStore } from "react";
 import { touchStreak } from "./streak-store";
 
 /**
- * Daily goal store — user picks a daily word-learning goal (e.g. 10 words)
+ * Daily goal + activity store — user picks a daily word-learning goal (e.g. 10 words)
  * and every word marked as "learned" is logged per epoch-day.
+ * Quiz/match sessions are logged too, feeding the activity heatmap.
  * Persisted in localStorage: visionone:goal
  */
 
 const GOAL_KEY = "visionone:goal";
-/** keep only the last N days of the log */
-const LOG_KEEP = 30;
+/** keep only the last N days of the log (۱۲ هفته + حاشیه) */
+const LOG_KEEP = 90;
 
 export interface GoalData {
   /** target words per day (default 10) */
   goal: number;
   /** epochDay -> words marked learned that day */
   log: Record<number, string[]>;
+  /** epochDay -> number of study sessions (quiz / match game) that day */
+  sessionLog: Record<number, number>;
 }
 
-const EMPTY: GoalData = { goal: 10, log: {} };
+const EMPTY: GoalData = { goal: 10, log: {}, sessionLog: {} };
 
 let cache: GoalData | null = null;
 const listeners = new Set<() => void>();
@@ -38,6 +41,7 @@ function read(): GoalData {
       cache = {
         goal: typeof parsed.goal === "number" && parsed.goal > 0 ? parsed.goal : 10,
         log: parsed.log && typeof parsed.log === "object" ? parsed.log : {},
+        sessionLog: parsed.sessionLog && typeof parsed.sessionLog === "object" ? parsed.sessionLog : {},
       };
     } else {
       cache = EMPTY;
@@ -73,23 +77,42 @@ export function setDailyGoal(n: number) {
   write({ ...cur, goal: n });
 }
 
+/** Trim any log-shaped object to the newest LOG_KEEP days. */
+function trimLog<T>(obj: Record<number, T>): Record<number, T> {
+  const entries = Object.entries(obj);
+  if (entries.length <= LOG_KEEP) return obj;
+  entries.sort((a, b) => Number(b[0]) - Number(a[0]));
+  return Object.fromEntries(entries.slice(0, LOG_KEEP));
+}
+
 /** Register a word as learned "today" for the daily-goal counter. */
 export function recordWordLearned(word: string) {
   const day = epochDay();
   const cur = read();
   const today = cur.log[day] ?? [];
   if (today.includes(word)) return;
-  let nextLog: Record<number, string[]> = { ...cur.log, [day]: [...today, word] };
-  // trim old days
-  const entries = Object.entries(nextLog);
-  if (entries.length > LOG_KEEP) {
-    entries.sort((a, b) => Number(b[0]) - Number(a[0]));
-    nextLog = Object.fromEntries(entries.slice(0, LOG_KEEP));
-  }
+  const nextLog = trimLog({ ...cur.log, [day]: [...today, word] });
   const next: GoalData = { ...cur, log: nextLog };
   write(next);
   // reaching the daily goal keeps the streak alive too (fires once per day)
   if (next.log[day].length === next.goal) touchStreak();
+}
+
+/** Register a finished study session (quiz / match game) for today. */
+export function recordStudySession() {
+  const day = epochDay();
+  const cur = read();
+  const sessionLog = trimLog({ ...cur.sessionLog, [day]: (cur.sessionLog[day] ?? 0) + 1 });
+  write({ ...cur, sessionLog });
+}
+
+/** Raw goal-data hook — consumed by the activity heatmap in stats view. */
+export function useGoalData(): GoalData {
+  return useSyncExternalStore(
+    subscribe,
+    () => read(),
+    () => EMPTY,
+  );
 }
 
 export function useDailyGoal() {

@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { VOCAB_LESSONS, vocabOfLesson, ALL_VOCAB, type VocabEntry } from "@/data/vocab";
 import { recordSRS } from "@/lib/srs-store";
 import { touchStreak } from "@/lib/streak-store";
+import { recordStudySession } from "@/lib/goal-store";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { useVoiceSpeed } from "@/lib/voice-store";
 
@@ -139,6 +140,7 @@ export function MatchGame() {
   const finish = useCallback(
     (finalAttempts: number) => {
       touchStreak();
+      recordStudySession();
       const acc = Math.round((deck.length / Math.max(finalAttempts, deck.length)) * 100);
       try {
         const key = bestKey(pairCount);

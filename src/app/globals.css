@@ -349,6 +349,26 @@
   animation: match-shake 0.42s ease;
 }
 
+/* ─── شمارنده معکوس زمان‌دار — ضربان هنگام کمبود وقت ─── */
+@keyframes timer-urgent-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgb(239 68 68 / 35%); }
+  50% { transform: scale(1.06); box-shadow: 0 0 0 4px rgb(239 68 68 / 14%); }
+}
+.timer-urgent {
+  animation: timer-urgent-pulse 0.9s ease-in-out infinite;
+}
+
+/* ─── تقویم حرارتی فعالیت ─── */
+.hm-cell {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.hm-cell:hover {
+  transform: scale(1.35);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+  position: relative;
+  z-index: 2;
+}
+
 /* ─── جزئیات ریز ─── */
 ::selection {
   background: rgb(16 185 129 / 0.32);

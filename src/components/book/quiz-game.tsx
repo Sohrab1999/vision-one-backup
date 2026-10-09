@@ -17,6 +17,8 @@ import {
   NotebookPen,
   Printer,
   Trash2,
+  Download,
+  Hourglass,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,6 +32,7 @@ import { useUserName } from "@/lib/name-store";
 import { touchStreak } from "@/lib/streak-store";
 import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
 import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
+import { recordStudySession } from "@/lib/goal-store";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -63,6 +66,13 @@ const LESSON_OPTIONS = [
 ];
 
 const COUNT_OPTIONS = [5, 10, 20, 40];
+
+const TIMED_OPTIONS = [
+  { value: 0, label: "بدون زمان" },
+  { value: 15, label: "۱۵ ثانیه" },
+  { value: 30, label: "۳۰ ثانیه" },
+  { value: 60, label: "۶۰ ثانیه" },
+];
 
 const LETTERS = ["A", "B", "C", "D"];
 
@@ -128,10 +138,16 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [aiExplaining, setAiExplaining] = useState(false);
   const [aiExplanation, setAiExplanation] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
+  const [timed, setTimed] = useState(0);
+  const [, setQTick] = useState(0);
+  const [exporting, setExporting] = useState(false);
   const userName = useUserName();
   const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
   const { ids: practiceIds } = usePracticeIds();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const deadlineRef = useRef(0);
+  const answeredLeftRef = useRef(0);
+  const advanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   async function startPracticeRound(ids: string[], nextMode: Mode = "normal") {
     setLoading(true);
@@ -151,6 +167,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       setSelected(null);
       setAiExplanation(null);
       setElapsed(0);
+      deadlineRef.current = Date.now() + timed * 1000;
+      if (advanceRef.current) clearTimeout(advanceRef.current);
       setPhase("playing");
       clearPracticeIds();
     } catch {
@@ -174,6 +192,12 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   }, [phase]);
 
   const current = questions[index];
+  /** ثانیه‌های باقی‌ماندهٔ سؤال جاری در حالت زمان‌دار — پس از پاسخ‌دادن منجمد می‌شود */
+  const qLeft =
+    timed > 0 && phase === "playing" && deadlineRef.current > 0
+      ? Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000))
+      : 0;
+  const shownLeft = selected === null ? qLeft : selected === -1 ? 0 : answeredLeftRef.current;
   const correctCount = useMemo(
     () => questions.reduce((acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0), 0),
     [questions, answers],
@@ -204,6 +228,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       setSelected(null);
       setAiExplanation(null);
       setElapsed(0);
+      deadlineRef.current = Date.now() + timed * 1000;
+      if (advanceRef.current) clearTimeout(advanceRef.current);
       setPhase("playing");
     } catch {
       toast.error("خطا در دریافت سؤالات");
@@ -212,8 +238,43 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     }
   }
 
+  /** هنگام اتمام زمان یک سؤال: بدون پاسخ ثبت و اشتباه، سپس نمایش پاسخ و رفتن خودکار */
+  function handleTimeout() {
+    if (!current || selected !== null) return;
+    toast.info("وقت این سؤال تمام شد ⏰", { duration: 1900 });
+    recordMistake(current.id);
+    setSelected(-1);
+    setAnswers((prev) => {
+      const next = [...prev];
+      next[index] = -1;
+      return next;
+    });
+    setAiExplanation(null);
+    advanceRef.current = setTimeout(() => nextQuestion(), 1900);
+  }
+
+  // شمارش معکوس حالت زمان‌دار — دی‌دلاین هر سؤال با تغییر سؤال/فاز بازنشانی می‌شود
+  useEffect(() => {
+    if (phase !== "playing" || timed <= 0 || selected !== null) return;
+    if (deadlineRef.current === 0 || deadlineRef.current < Date.now() - timed * 1000) {
+      deadlineRef.current = Date.now() + timed * 1000;
+    }
+    const iv = setInterval(() => {
+      if (Date.now() >= deadlineRef.current) {
+        clearInterval(iv);
+        handleTimeout();
+      } else {
+        setQTick((t) => t + 1);
+      }
+    }, 1000);
+    return () => clearInterval(iv);
+  }, [phase, timed, selected, index]);
+
   function chooseOption(optIdx: number) {
     if (selected !== null) return;
+    if (timed > 0 && deadlineRef.current > 0) {
+      answeredLeftRef.current = Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000));
+    }
     setSelected(optIdx);
     setAnswers((prev) => {
       const next = [...prev];
@@ -253,6 +314,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   }
 
   function nextQuestion() {
+    if (advanceRef.current) clearTimeout(advanceRef.current);
     if (index + 1 >= questions.length) {
       finish();
       return;
@@ -260,11 +322,14 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setIndex((i) => i + 1);
     setSelected(answers[index + 1]);
     setAiExplanation(null);
+    deadlineRef.current = Date.now() + timed * 1000;
   }
 
   function finish() {
     if (timerRef.current) clearInterval(timerRef.current);
+    if (advanceRef.current) clearTimeout(advanceRef.current);
     setPhase("result");
+    recordStudySession();
     const streak = touchStreak();
     const detail = questions.map((q, i) => ({ id: q.id, chosen: answers[i], answer: q.answer }));
     fetch("/api/attempts", {
@@ -290,7 +355,52 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       .catch(() => undefined);
   }
 
+  /** خروجی CSV از دفتر اشتباهات — فایل UTF-8 با BOM برای اکسل */
+  async function exportMistakesCsv() {
+    if (!mistakeIds.length || exporting) return;
+    setExporting(true);
+    try {
+      const res = await fetch(`/api/questions?count=${mistakeIds.length}&ids=${mistakeIds.join(",")}`);
+      const data = await res.json();
+      const qs = (data.questions ?? []) as Question[];
+      if (!qs.length) {
+        toast.error("سؤالی برای خروجی یافت نشد.");
+        return;
+      }
+      const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
+      const rows = [
+        ["ردیف", "متن سؤال", "پاسخ صحیح", "دسته", "مبحث", "سطح"].join(","),
+        ...qs.map((q, i) =>
+          [
+            i + 1,
+            esc(q.text),
+            esc(q.options[q.answer] ?? ""),
+            q.category === "grammar" ? "گرامر" : "واژگان",
+            esc(q.scope),
+            esc(q.level),
+          ].join(","),
+        ),
+      ];
+      const blob = new Blob(["\uFEFF" + rows.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vision-one-mistakes.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success(`فایل CSV با ${qs.length.toLocaleString("fa-IR")} سؤال دانلود شد.`);
+    } catch {
+      toast.error("خطا در ساخت فایل CSV");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   function reset() {
+    if (advanceRef.current) clearTimeout(advanceRef.current);
+    deadlineRef.current = 0;
     setPhase("setup");
     setQuestions([]);
     setAnswers([]);
@@ -375,17 +485,28 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                   شروع مرور
                 </Button>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  clearMistakes();
-                  toast.info("دفتر اشتباهات پاک شد.");
-                }}
-                className="absolute bottom-1.5 left-2 flex items-center gap-1 text-[10px] text-muted-foreground/70 transition-colors hover:text-destructive"
-              >
-                <Trash2 size={11} />
-                پاک‌کردن دفتر
-              </button>
+              <div className="absolute bottom-1.5 left-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={exportMistakesCsv}
+                  disabled={exporting}
+                  className="flex items-center gap-1 text-[10px] text-muted-foreground/70 transition-colors hover:text-primary disabled:opacity-50"
+                >
+                  {exporting ? <Loader2 size={11} className="animate-spin" /> : <Download size={11} />}
+                  خروجی CSV
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearMistakes();
+                    toast.info("دفتر اشتباهات پاک شد.");
+                  }}
+                  className="flex items-center gap-1 text-[10px] text-muted-foreground/70 transition-colors hover:text-destructive"
+                >
+                  <Trash2 size={11} />
+                  پاک‌کردن دفتر
+                </button>
+              </div>
             </div>
           )}
 
@@ -452,6 +573,42 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 ))}
               </div>
             </div>
+
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+                ۴. حالت زمان‌دار (کنکوری)
+                {timed > 0 && (
+                  <Badge className="gap-1 border-amber-500/40 bg-amber-500/15 text-[9.5px] text-amber-700 dark:text-amber-300">
+                    <Hourglass size={10} />
+                    فعال
+                  </Badge>
+                )}
+              </p>
+              <div className="grid grid-cols-4 gap-2">
+                {TIMED_OPTIONS.map((o) => (
+                  <button
+                    key={o.value}
+                    type="button"
+                    onClick={() => setTimed(o.value)}
+                    aria-pressed={timed === o.value}
+                    className={cn(
+                      "rounded-xl border p-2.5 text-[12px] font-black transition-all",
+                      timed === o.value
+                        ? "border-amber-500 bg-amber-500/10 text-amber-600 shadow-sm dark:text-amber-400"
+                        : "text-muted-foreground hover:bg-muted",
+                    )}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+              {timed > 0 && (
+                <p className="mt-2 flex items-start gap-1.5 rounded-xl bg-amber-500/10 p-2.5 text-[11px] leading-5 text-amber-700 dark:text-amber-300">
+                  <Hourglass size={13} className="mt-0.5 shrink-0" />
+                  برای هر سؤال فقط {timed.toLocaleString("fa-IR")} ثانیه وقت داری؛ وقت که تمام شود، سؤال بدون پاسخ در دفتر اشتباهات ثبت می‌شود و پاسخ درست نمایش داده می‌شود.
+                </p>
+              )}
+            </div>
           </div>
 
           <Button size="lg" className="w-full gap-2 h-12 text-base" onClick={() => startQuiz()} disabled={loading}>
@@ -505,7 +662,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
               </div>
             </div>
             <p className="text-sm font-bold">{message}</p>
-            <div className="flex gap-3 text-[12px] text-muted-foreground">
+            <div className="flex flex-wrap justify-center gap-3 text-[12px] text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Timer size={13} /> {fmtTime(elapsed)}
               </span>
@@ -515,6 +672,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
               <span className="flex items-center gap-1">
                 <Trophy size={13} /> {correctCount.toLocaleString("fa-IR")} صحیح
               </span>
+              {timed > 0 && (
+                <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
+                  <Hourglass size={13} /> حالت زمان‌دار ({timed.toLocaleString("fa-IR")} ثانیه‌ای)
+                </span>
+              )}
             </div>
             <div className="flex flex-wrap justify-center gap-2 no-print">
               <Button onClick={reset} className="gap-2">
@@ -574,11 +736,14 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                       </p>
                       <div className="mt-2 flex flex-wrap items-center gap-2 text-[12px]">
                         <Badge variant="destructive" className="text-[10px]">
-                          پاسخ شما: {answers[i] !== null ? q.options[answers[i] as number] : "—"}
+                          پاسخ شما:
+                          {answers[i] === -1
+                            ? " وقت تمام شد ⏰"
+                            : answers[i] !== null
+                              ? ` ${q.options[answers[i] as number]}`
+                              : " —"}
                         </Badge>
-                        <Badge className="text-[10px] bg-primary">
-                          صحیح: {q.options[q.answer]}
-                        </Badge>
+                        <Badge className="text-[10px] bg-primary">صحیح: {q.options[q.answer]}</Badge>
                       </div>
                     </div>
                   ),
@@ -625,9 +790,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                     <span dir="ltr" className="font-en block font-semibold">{q.text}</span>
                     <span className="print-muted">
                       پاسخ درست: <b dir="ltr" className="font-en">{q.options[q.answer]}</b>
-                      {answers[i] !== null && (
-                        <> — پاسخ شما: <span dir="ltr" className="font-en">{q.options[answers[i] as number]}</span></>
-                      )}
+                      {answers[i] === -1
+                        ? " — بدون پاسخ (وقت تمام شد)"
+                        : answers[i] !== null && (
+                            <> — پاسخ شما: <span dir="ltr" className="font-en">{q.options[answers[i] as number]}</span></>
+                          )}
                     </span>
                   </li>
                 ),
@@ -654,11 +821,49 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         <span className="shrink-0 text-[12px] font-bold text-muted-foreground">
           سؤال {(index + 1).toLocaleString("fa-IR")} از {questions.length.toLocaleString("fa-IR")}
         </span>
-        <Badge variant="secondary" className="gap-1 shrink-0 text-[11px]">
-          <Timer size={11} />
-          {fmtTime(elapsed)}
-        </Badge>
+        {timed > 0 ? (
+          <Badge
+            variant="outline"
+            className={cn(
+              "gap-1 shrink-0 text-[11px] font-black tabular-nums",
+              selected === -1
+                ? "border-destructive/50 bg-destructive/10 text-destructive"
+                : shownLeft <= 5
+                  ? "timer-urgent border-destructive/50 bg-destructive/10 text-destructive"
+                  : shownLeft <= 10
+                    ? "border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                    : "border-primary/40 bg-primary/10 text-primary",
+            )}
+          >
+            {selected === -1 ? <Hourglass size={11} /> : <Timer size={11} />}
+            {selected === -1 ? "وقت تمام" : `${shownLeft.toLocaleString("fa-IR")} ثانیه`}
+          </Badge>
+        ) : (
+          <Badge variant="secondary" className="gap-1 shrink-0 text-[11px]">
+            <Timer size={11} />
+            {fmtTime(elapsed)}
+          </Badge>
+        )}
       </div>
+
+      {/* نوار زمان باقی‌ماندهٔ سؤال در حالت زمان‌دار */}
+      {timed > 0 && (
+        <div aria-hidden className="h-1 overflow-hidden rounded-full bg-muted">
+          <div
+            className={cn(
+              "h-full rounded-full transition-[width] duration-1000 ease-linear",
+              selected === -1
+                ? "bg-destructive/60"
+                : shownLeft <= 5
+                  ? "bg-destructive"
+                  : shownLeft <= 10
+                    ? "bg-amber-500"
+                    : "bg-primary",
+            )}
+            style={{ width: `${Math.min(100, (shownLeft / timed) * 100)}%` }}
+          />
+        </div>
+      )}
 
       <Card>
         <CardContent className="space-y-5 p-5">
@@ -678,6 +883,12 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             <Badge variant="secondary" className="text-[11px]">
               {current.category === "grammar" ? "گرامر" : "واژگان"}
             </Badge>
+            {timed > 0 && (
+              <Badge variant="outline" className="gap-1 border-amber-500/40 text-[10.5px] text-amber-600 dark:text-amber-400">
+                <Hourglass size={10} />
+                زمان‌دار
+              </Badge>
+            )}
             <span className="mr-auto flex items-center gap-1 text-[12px] font-bold text-primary">
               <CheckCircle2 size={13} />
               {correctCount.toLocaleString("fa-IR")} صحیح

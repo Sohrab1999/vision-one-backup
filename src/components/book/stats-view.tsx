@@ -42,6 +42,7 @@ import { useStreak } from "@/lib/streak-store";
 import { useUserName } from "@/lib/name-store";
 import { useDailyGoal } from "@/lib/goal-store";
 import { setPracticeIds } from "@/lib/practice-store";
+import { ActivityHeatmap } from "./activity-heatmap";
 import { toast } from "sonner";
 import type { ViewId } from "./app-header";
 
@@ -468,6 +469,9 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
               </CardContent>
             </Card>
           </section>
+
+          {/* ── تقویم حرارتی فعالیت ── */}
+          <ActivityHeatmap />
 
           {/* ── لیدربورد محلی ── */}
           <section className="space-y-3">

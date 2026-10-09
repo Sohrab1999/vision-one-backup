@@ -1,0 +1,820 @@
+     1→"use client";
+     2→
+     3→import { useEffect, useMemo, useState } from "react";
+     4→import {
+     5→  BarChart3,
+     6→  Trophy,
+     7→  Target,
+     8→  ClipboardList,
+     9→  BookOpen,
+    10→  Flame,
+    11→  Timer,
+    12→  TrendingUp,
+    13→  Medal,
+    14→  Lock,
+    15→  Sparkles,
+    16→  History,
+    17→  Crown,
+    18→  Users,
+    19→  Play,
+    20→  Crosshair,
+    21→} from "lucide-react";
+    22→import { Card, CardContent } from "@/components/ui/card";
+    23→import { Badge } from "@/components/ui/badge";
+    24→import { Button } from "@/components/ui/button";
+    25→import { Progress } from "@/components/ui/progress";
+    26→import { cn } from "@/lib/utils";
+    27→import {
+    28→  ResponsiveContainer,
+    29→  AreaChart,
+    30→  Area,
+    31→  BarChart,
+    32→  Bar,
+    33→  XAxis,
+    34→  YAxis,
+    35→  CartesianGrid,
+    36→  Tooltip as ChartTooltip,
+    37→  Cell,
+    38→} from "recharts";
+    39→import { BOOK_STATS } from "@/data/book-meta";
+    40→import { useLearnedWords } from "@/lib/learned-store";
+    41→import { useStreak } from "@/lib/streak-store";
+    42→import { useUserName } from "@/lib/name-store";
+    43→import { useDailyGoal } from "@/lib/goal-store";
+    44→import { setPracticeIds } from "@/lib/practice-store";
+    45→import { toast } from "sonner";
+    46→import type { ViewId } from "./app-header";
+    47→
+    48→interface AttemptStats {
+    49→  attempts: number;
+    50→  sumTotal: number;
+    51→  sumCorrect: number;
+    52→  accuracy: number;
+    53→  best: number;
+    54→}
+    55→
+    56→interface ChartPoint {
+    57→  id: string;
+    58→  accuracy: number;
+    59→  category: string;
+    60→  createdAt: string;
+    61→  idx: number;
+    62→}
+    63→
+    64→interface RecentAttempt {
+    65→  id: string;
+    66→  category: string;
+    67→  total: number;
+    68→  correct: number;
+    69→  duration: number;
+    70→  name: string | null;
+    71→  createdAt: string;
+    72→}
+    73→
+    74→interface LeaderRow {
+    75→  name: string;
+    76→  quizzes: number;
+    77→  answered: number;
+    78→  accuracy: number;
+    79→  best: number;
+    80→  lastPlayed: string;
+    81→}
+    82→
+    83→interface TopMiss {
+    84→  id: string;
+    85→  text: string;
+    86→  options: string[];
+    87→  answer: number;
+    88→  category: string;
+    89→  misses: number;
+    90→}
+    91→
+    92→const CATEGORY_FA: Record<string, string> = {
+    93→  grammar: "گرامر",
+    94→  vocabulary: "واژگان",
+    95→  all: "ترکیبی",
+    96→  review: "مرور اشتباهات",
+    97→};
+    98→
+    99→const ACHIEVEMENTS: {
+   100→  id: string;
+   101→  icon: string;
+   102→  title: string;
+   103→  desc: string;
+   104→  check: (c: AchContext) => boolean;
+   105→  progress?: (c: AchContext) => [number, number];
+   106→}[] = [
+   107→  {
+   108→    id: "first-quiz",
+   109→    icon: "🎯",
+   110→    title: "اولین قدم",
+   111→    desc: "اولین آزمون را کامل کن",
+   112→    check: (c) => c.attempts >= 1,
+   113→    progress: (c) => [Math.min(c.attempts, 1), 1],
+   114→  },
+   115→  {
+   116→    id: "quiz-5",
+   117→    icon: "📚",
+   118→    title: "پنج‌تایی",
+   119→    desc: "۵ آزمون برگزار کن",
+   120→    check: (c) => c.attempts >= 5,
+   121→    progress: (c) => [Math.min(c.attempts, 5), 5],
+   122→  },
+   123→  {
+   124→    id: "quiz-10",
+   125→    icon: "🏆",
+   126→    title: "ده‌تایی",
+   127→    desc: "۱۰ آزمون برگزار کن",
+   128→    check: (c) => c.attempts >= 10,
+   129→    progress: (c) => [Math.min(c.attempts, 10), 10],
+   130→  },
+   131→  {
+   132→    id: "quiz-25",
+   133→    icon: "👑",
+   134→    title: "کهربایی",
+   135→    desc: "۲۵ آزمون برگزار کن",
+   136→    check: (c) => c.attempts >= 25,
+   137→    progress: (c) => [Math.min(c.attempts, 25), 25],
+   138→  },
+   139→  {
+   140→    id: "acc-60",
+   141→    icon: "⭐",
+   142→    title: "تیرانداز",
+   143→    desc: "رکورد ۶۰٪ یا بالاتر بگیر",
+   144→    check: (c) => c.best >= 60,
+   145→    progress: (c) => [Math.min(c.best, 60), 60],
+   146→  },
+   147→  {
+   148→    id: "acc-80",
+   149→    icon: "🌟",
+   150→    title: "عالی",
+   151→    desc: "رکورد ۸۰٪ یا بالاتر بگیر",
+   152→    check: (c) => c.best >= 80,
+   153→    progress: (c) => [Math.min(c.best, 80), 80],
+   154→  },
+   155→  {
+   156→    id: "acc-100",
+   157→    icon: "💯",
+   158→    title: "بی‌نقص",
+   159→    desc: "یک آزمون را ۱۰۰٪ جواب بزن",
+   160→    check: (c) => c.best >= 100,
+   161→    progress: (c) => [Math.min(c.best, 100), 100],
+   162→  },
+   163→  {
+   164→    id: "q-100",
+   165→    icon: "🧠",
+   166→    title: "پرسش‌پرداز",
+   167→    desc: "به ۱۰۰ سؤال پاسخ بده",
+   168→    check: (c) => c.sumTotal >= 100,
+   169→    progress: (c) => [Math.min(c.sumTotal, 100), 100],
+   170→  },
+   171→  {
+   172→    id: "w-50",
+   173→    icon: "🌱",
+   174→    title: "واژه‌آغاز",
+   175→    desc: "۵۰ واژه را یاد بگیر",
+   176→    check: (c) => c.learned >= 50,
+   177→    progress: (c) => [Math.min(c.learned, 50), 50],
+   178→  },
+   179→  {
+   180→    id: "w-150",
+   181→    icon: "🌿",
+   182→    title: "واژه‌ران",
+   183→    desc: "۱۵۰ واژه را یاد بگیر",
+   184→    check: (c) => c.learned >= 150,
+   185→    progress: (c) => [Math.min(c.learned, 150), 150],
+   186→  },
+   187→  {
+   188→    id: "w-500",
+   189→    icon: "🌳",
+   190→    title: "واژه‌استاد",
+   191→    desc: "۵۰۰ واژه را یاد بگیر",
+   192→    check: (c) => c.learned >= 500,
+   193→    progress: (c) => [Math.min(c.learned, 500), 500],
+   194→  },
+   195→  {
+   196→    id: "streak-3",
+   197→    icon: "🔥",
+   198→    title: "سه‌روز پیاپی",
+   199→    desc: "۳ روز متوالی فعال باش",
+   200→    check: (c) => c.streakBest >= 3,
+   201→    progress: (c) => [Math.min(c.streakBest, 3), 3],
+   202→  },
+   203→  {
+   204→    id: "streak-7",
+   205→    icon: "⚡",
+   206→    title: "هفت‌روز پیاپی",
+   207→    desc: "۷ روز متوالی فعال باش",
+   208→    check: (c) => c.streakBest >= 7,
+   209→    progress: (c) => [Math.min(c.streakBest, 7), 7],
+   210→  },
+   211→  {
+   212→    id: "daily-goal",
+   213→    icon: "🌱",
+   214→    title: "هدف‌مند",
+   215→    desc: "به هدف روزانه واژگان برس",
+   216→    check: (c) => c.goalHit,
+   217→    progress: (c) => [c.goalHit ? 1 : 0, 1],
+   218→  },
+   219→];
+   220→
+   221→interface AchContext {
+   222→  attempts: number;
+   223→  best: number;
+   224→  sumTotal: number;
+   225→  learned: number;
+   226→  streakBest: number;
+   227→  goalHit: boolean;
+   228→}
+   229→
+   230→function fmtDuration(sec: number): string {
+   231→  if (!sec) return "—";
+   232→  const fa = (v: number | string) => String(v).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
+   233→  const m = Math.floor(sec / 60);
+   234→  const s = sec % 60;
+   235→  if (m === 0) return `${fa(s)} ثانیه`;
+   236→  return `${fa(m)}:${fa(String(s).padStart(2, "0"))}`;
+   237→}
+   238→
+   239→function fmtDate(iso: string): string {
+   240→  try {
+   241→    return new Date(iso).toLocaleDateString("fa-IR", { month: "short", day: "numeric" });
+   242→  } catch {
+   243→    return "";
+   244→  }
+   245→}
+   246→
+   247→export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) {
+   248→  const { count: learned } = useLearnedWords();
+   249→  const streak = useStreak();
+   250→  const userName = useUserName();
+   251→  const daily = useDailyGoal();
+   252→  const [stats, setStats] = useState<AttemptStats | null>(null);
+   253→  const [chart, setChart] = useState<ChartPoint[]>([]);
+   254→  const [recent, setRecent] = useState<RecentAttempt[]>([]);
+   255→  const [leaders, setLeaders] = useState<LeaderRow[]>([]);
+   256→  const [leaderSort, setLeaderSort] = useState<"best" | "avg" | "quizzes">("best");
+   257→  const [topMisses, setTopMisses] = useState<TopMiss[]>([]);
+   258→  const [loading, setLoading] = useState(true);
+   259→
+   260→  useEffect(() => {
+   261→    let cancelled = false;
+   262→    fetch("/api/attempts")
+   263→      .then((r) => (r.ok ? r.json() : null))
+   264→      .then((d) => {
+   265→        if (cancelled || !d) return;
+   266→        if (d.stats) setStats(d.stats);
+   267→        if (Array.isArray(d.chart)) {
+   268→          setChart(d.chart.map((c: Omit<ChartPoint, "idx">, i: number) => ({ ...c, idx: i + 1 })));
+   269→        }
+   270→        if (Array.isArray(d.recent)) setRecent(d.recent);
+   271→        if (Array.isArray(d.leaderboard)) setLeaders(d.leaderboard);
+   272→        if (Array.isArray(d.topMisses)) setTopMisses(d.topMisses);
+   273→      })
+   274→      .catch(() => undefined)
+   275→      .finally(() => !cancelled && setLoading(false));
+   276→    return () => {
+   277→      cancelled = true;
+   278→    };
+   279→  }, []);
+   280→
+   281→  const achContext: AchContext = useMemo(
+   282→    () => ({
+   283→      attempts: stats?.attempts ?? 0,
+   284→      best: stats?.best ?? 0,
+   285→      sumTotal: stats?.sumTotal ?? 0,
+   286→      learned,
+   287→      streakBest: streak.best,
+   288→      goalHit: daily.goal > 0 && daily.todayCount >= daily.goal,
+   289→    }),
+   290→    [stats, learned, streak.best, daily.goal, daily.todayCount],
+   291→  );
+   292→
+   293→  const unlocked = useMemo(
+   294→    () => ACHIEVEMENTS.filter((a) => a.check(achContext)).length,
+   295→    [achContext],
+   296→  );
+   297→
+   298→  const byCategory = useMemo(() => {
+   299→    const groups: Record<string, { sum: number; n: number }> = {};
+   300→    for (const p of chart) {
+   301→      const g = (groups[p.category] ??= { sum: 0, n: 0 });
+   302→      g.sum += p.accuracy;
+   303→      g.n += 1;
+   304→    }
+   305→    return Object.entries(groups).map(([cat, g]) => ({
+   306→      category: CATEGORY_FA[cat] ?? cat,
+   307→      accuracy: g.n ? Math.round(g.sum / g.n) : 0,
+   308→    }));
+   309→  }, [chart]);
+   310→
+   311→  const totalMinutes = Math.round(
+   312→    recent.reduce((acc, a) => acc + a.duration, 0) / 60,
+   313→  );
+   314→
+   315→  const sortedLeaders = useMemo(() => {
+   316→    const arr = [...leaders];
+   317→    if (leaderSort === "best") arr.sort((a, b) => b.best - a.best || b.accuracy - a.accuracy);
+   318→    else if (leaderSort === "avg") arr.sort((a, b) => b.accuracy - a.accuracy || b.best - a.best);
+   319→    else arr.sort((a, b) => b.quizzes - a.quizzes || b.best - a.best);
+   320→    return arr;
+   321→  }, [leaders, leaderSort]);
+   322→
+   323→  const leaderMetric = (row: LeaderRow): { value: string; label: string } => {
+   324→    if (leaderSort === "avg") return { value: `${row.accuracy.toLocaleString("fa-IR")}٪`, label: "میانگین دقت" };
+   325→    if (leaderSort === "quizzes") return { value: row.quizzes.toLocaleString("fa-IR"), label: "آزمون برگزارشده" };
+   326→    return { value: `${row.best.toLocaleString("fa-IR")}٪`, label: "بهترین رکورد" };
+   327→  };
+   328→
+   329→  const kpis = [
+   330→    { icon: ClipboardList, label: "آزمون برگزارشده", value: (stats?.attempts ?? 0).toLocaleString("fa-IR"), color: "text-primary", bg: "bg-primary/10" },
+   331→    { icon: Target, label: "دقت کل پاسخ‌ها", value: `${(stats?.accuracy ?? 0).toLocaleString("fa-IR")}٪`, color: "text-teal-500", bg: "bg-teal-500/10" },
+   332→    { icon: Trophy, label: "بهترین رکورد", value: `${(stats?.best ?? 0).toLocaleString("fa-IR")}٪`, color: "text-amber-500", bg: "bg-amber-500/10" },
+   333→    { icon: BookOpen, label: "واژه یادگرفته", value: learned.toLocaleString("fa-IR"), color: "text-emerald-500", bg: "bg-emerald-500/10" },
+   334→    { icon: Flame, label: "زنجیره فعال", value: streak.count.toLocaleString("fa-IR") + " روز", color: "text-orange-500", bg: "bg-orange-500/10" },
+   335→    { icon: Medal, label: "نشان‌های باز‌شده", value: `${unlocked.toLocaleString("fa-IR")} از ${ACHIEVEMENTS.length.toLocaleString("fa-IR")}`, color: "text-violet-500", bg: "bg-violet-500/10" },
+   336→  ];
+   337→
+   338→  return (
+   339→    <div className="space-y-6">
+   340→      {/* ── هدر ── */}
+   341→      <div className="rise-in">
+   342→        <h1 className="flex items-center gap-2 text-xl font-black">
+   343→          <BarChart3 size={20} className="text-primary" />
+   344→          آمار و نشان‌ها
+   345→        </h1>
+   346→        <p className="mt-1 text-xs text-muted-foreground">
+   347→          کارنامه کامل یادگیری‌ات — روند آزمون‌ها، نشان‌های افتخار و پیشرفت واژگان در یک نگاه.
+   348→        </p>
+   349→      </div>
+   350→
+   351→      {loading && (
+   352→        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+   353→          {Array.from({ length: 6 }).map((_, i) => (
+   354→            <Card key={i} className="animate-pulse">
+   355→              <CardContent className="p-4">
+   356→                <div className="h-10 w-10 rounded-xl bg-muted" />
+   357→                <div className="mt-3 h-5 w-2/3 rounded bg-muted" />
+   358→                <div className="mt-2 h-3 w-1/2 rounded bg-muted" />
+   359→              </CardContent>
+   360→            </Card>
+   361→          ))}
+   362→        </div>
+   363→      )}
+   364→
+   365→      {!loading && (
+   366→        <>
+   367→          {/* ── کارت‌های آمار ── */}
+   368→          <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+   369→            {kpis.map((k, i) => (
+   370→              <Card key={k.label} className={`rise-in rise-in-${(i % 6) + 1} overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5`}>
+   371→                <CardContent className="p-4">
+   372→                  <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", k.bg, k.color)}>
+   373→                    <k.icon size={19} />
+   374→                  </span>
+   375→                  <p className="mt-2.5 text-lg font-black leading-none">{k.value}</p>
+   376→                  <p className="mt-1 text-[11px] text-muted-foreground">{k.label}</p>
+   377→                </CardContent>
+   378→              </Card>
+   379→            ))}
+   380→          </section>
+   381→
+   382→          {/* ── نمودارها ── */}
+   383→          <section className="grid gap-3 lg:grid-cols-5">
+   384→            <Card className="rise-in lg:col-span-3">
+   385→              <CardContent className="p-5">
+   386→                <p className="mb-3 flex items-center gap-2 text-sm font-bold">
+   387→                  <TrendingUp size={15} className="text-primary" />
+   388→                  روند دقت آزمون‌ها (٪)
+   389→                </p>
+   390→                {chart.length >= 2 ? (
+   391→                  <div className="h-56" dir="ltr">
+   392→                    <ResponsiveContainer width="100%" height="100%">
+   393→                      <AreaChart data={chart} margin={{ top: 6, right: 6, bottom: 0, left: -18 }}>
+   394→                        <defs>
+   395→                          <linearGradient id="statsAcc" x1="0" y1="0" x2="0" y2="1">
+   396→                            <stop offset="0%" stopColor="#10b981" stopOpacity={0.5} />
+   397→                            <stop offset="100%" stopColor="#10b981" stopOpacity={0.03} />
+   398→                          </linearGradient>
+   399→                        </defs>
+   400→                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+   401→                        <XAxis dataKey="idx" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+   402→                        <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+   403→                        <ChartTooltip
+   404→                          contentStyle={{
+   405→                            background: "var(--card)",
+   406→                            border: "1px solid var(--border)",
+   407→                            borderRadius: 12,
+   408→                            fontSize: 12,
+   409→                            fontFamily: "inherit",
+   410→                          }}
+   411→                          formatter={(v: number) => [`${v.toLocaleString("fa-IR")}٪`, "دقت"]}
+   412→                          labelFormatter={(l: number) => `آزمون شماره ${l.toLocaleString("fa-IR")}`}
+   413→                        />
+   414→                        <Area type="monotone" dataKey="accuracy" stroke="#10b981" strokeWidth={2.5} fill="url(#statsAcc)" dot={{ r: 3, fill: "#10b981" }} activeDot={{ r: 5 }} />
+   415→                      </AreaChart>
+   416→                    </ResponsiveContainer>
+   417→                  </div>
+   418→                ) : (
+   419→                  <div className="flex h-56 items-center justify-center text-center text-xs text-muted-foreground">
+   420→                    <div>
+   421→                      <BarChart3 size={26} className="mx-auto mb-2 opacity-40" />
+   422→                      برای دیدن روند، حداقل ۲ آزمون برگزار کن.
+   423→                    </div>
+   424→                  </div>
+   425→                )}
+   426→              </CardContent>
+   427→            </Card>
+   428→
+   429→            <Card className="rise-in rise-in-1 lg:col-span-2">
+   430→              <CardContent className="p-5">
+   431→                <p className="mb-3 flex items-center gap-2 text-sm font-bold">
+   432→                  <Target size={15} className="text-amber-500" />
+   433→                  میانگین دقت به تفکیک دسته
+   434→                </p>
+   435→                {byCategory.length > 0 ? (
+   436→                  <div className="h-56" dir="ltr">
+   437→                    <ResponsiveContainer width="100%" height="100%">
+   438→                      <BarChart data={byCategory} margin={{ top: 6, right: 6, bottom: 0, left: -18 }}>
+   439→                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+   440→                        <XAxis dataKey="category" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+   441→                        <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+   442→                        <ChartTooltip
+   443→                          contentStyle={{
+   444→                            background: "var(--card)",
+   445→                            border: "1px solid var(--border)",
+   446→                            borderRadius: 12,
+   447→                            fontSize: 12,
+   448→                            fontFamily: "inherit",
+   449→                          }}
+   450→                          formatter={(v: number) => [`${v.toLocaleString("fa-IR")}٪`, "میانگین دقت"]}
+   451→                        />
+   452→                        <Bar dataKey="accuracy" radius={[8, 8, 0, 0]} maxBarSize={64}>
+   453→                          {byCategory.map((_, i) => (
+   454→                            <Cell key={i} fill={i % 2 === 0 ? "#10b981" : "#f59e0b"} />
+   455→                          ))}
+   456→                        </Bar>
+   457→                      </BarChart>
+   458→                    </ResponsiveContainer>
+   459→                  </div>
+   460→                ) : (
+   461→                  <div className="flex h-56 items-center justify-center text-center text-xs text-muted-foreground">
+   462→                    <div>
+   463→                      <Target size={26} className="mx-auto mb-2 opacity-40" />
+   464→                      هنوز آزمونی ثبت نشده است.
+   465→                    </div>
+   466→                  </div>
+   467→                )}
+   468→              </CardContent>
+   469→            </Card>
+   470→          </section>
+   471→
+   472→          {/* ── لیدربورد محلی ── */}
+   473→          <section className="space-y-3">
+   474→            <div className="flex flex-wrap items-center justify-between gap-2">
+   475→              <h2 className="flex items-center gap-2 text-base font-black">
+   476→                <Users size={17} className="text-primary" />
+   477→                لیدربورد کلاس
+   478→              </h2>
+   479→              <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="ترتیب لیدربورد">
+   480→                {([
+   481→                  { id: "best", label: "بهترین رکورد" },
+   482→                  { id: "avg", label: "میانگین دقت" },
+   483→                  { id: "quizzes", label: "تعداد آزمون" },
+   484→                ] as const).map((s) => (
+   485→                  <button
+   486→                    key={s.id}
+   487→                    type="button"
+   488→                    onClick={() => setLeaderSort(s.id)}
+   489→                    aria-pressed={leaderSort === s.id}
+   490→                    className={cn(
+   491→                      "h-7 rounded-full border px-2.5 text-[11px] font-black transition-all",
+   492→                      leaderSort === s.id
+   493→                        ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+   494→                        : "text-muted-foreground hover:bg-muted",
+   495→                    )}
+   496→                  >
+   497→                    {s.label}
+   498→                  </button>
+   499→                ))}
+   500→              </div>
+   501→            </div>
+   502→
+   503→            {sortedLeaders.length === 0 ? (
+   504→              <Card className="border-dashed">
+   505→                <CardContent className="flex flex-col items-center gap-2 p-6 text-center text-xs text-muted-foreground">
+   506→                  <Users size={24} className="opacity-40" />
+   507→                  هنوز کسی با نام ثبت نکرده — از دکمه «نام من» در هدر اسمت را وارد کن تا در جدول جای بگیری.
+   508→                </CardContent>
+   509→              </Card>
+   510→            ) : (
+   511→              <>
+   512→                {/* سکوی قهرمانی — سه نفر اول */}
+   513→                <div className="grid grid-cols-3 items-end gap-2 sm:gap-3">
+   514→                  {[1, 0, 2].map((slot) => {
+   515→                    const row = sortedLeaders[slot];
+   516→                    if (!row) return <div key={slot} />;
+   517→                    const place = slot + 1;
+   518→                    const heights = ["sm:pb-0", "sm:pb-6", "sm:pb-2"];
+   519→                    const styles =
+   520→                      place === 1
+   521→                        ? {
+   522→                            ring: "ring-2 ring-amber-400/60",
+   523→                            grad: "from-amber-500/20 via-amber-500/5 to-transparent",
+   524→                            chip: "bg-amber-500 text-amber-950",
+   525→                            medal: "🥇",
+   526→                            h: "text-2xl",
+   527→                          }
+   528→                        : place === 2
+   529→                          ? {
+   530→                              ring: "ring-1 ring-slate-400/40",
+   531→                              grad: "from-slate-400/15 via-slate-400/5 to-transparent",
+   532→                              chip: "bg-slate-400 text-slate-950",
+   533→                              medal: "🥈",
+   534→                              h: "text-xl",
+   535→                            }
+   536→                          : {
+   537→                              ring: "ring-1 ring-orange-700/40",
+   538→                              grad: "from-orange-700/15 via-orange-700/5 to-transparent",
+   539→                              chip: "bg-orange-700 text-white",
+   540→                              medal: "🥉",
+   541→                              h: "text-xl",
+   542→                            };
+   543→                    const isMe = userName && row.name === userName;
+   544→                    const metric = leaderMetric(row);
+   545→                    return (
+   546→                      <Card
+   547→                        key={row.name}
+   548→                        className={cn(
+   549→                          `rise-in rise-in-${place} relative overflow-hidden bg-gradient-to-b ${styles.grad} ${styles.ring} podium-card ${heights[slot]}`,
+   550→                          isMe && "border-primary/60",
+   551→                        )}
+   552→                      >
+   553→                        {place === 1 && (
+   554→                          <Crown size={15} className="absolute left-2.5 top-2.5 text-amber-500 podium-crown" />
+   555→                        )}
+   556→                        <CardContent className="p-3 text-center">
+   557→                          <span className={cn("mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm", styles.chip)}>
+   558→                            {styles.medal}
+   559→                          </span>
+   560→                          <p className="mt-1.5 flex items-center justify-center gap-1 truncate text-[13px] font-black">
+   561→                            {row.name}
+   562→                            {isMe && <span className="text-[9px] font-bold text-primary">(تو)</span>}
+   563→                          </p>
+   564→                          <p className={cn("mt-1 font-black leading-none", styles.h)}>
+   565→                            {metric.value}
+   566→                          </p>
+   567→                          <p className="mt-1 text-[10px] text-muted-foreground">
+   568→                            {metric.label} • {row.quizzes.toLocaleString("fa-IR")} آزمون
+   569→                          </p>
+   570→                        </CardContent>
+   571→                      </Card>
+   572→                    );
+   573→                  })}
+   574→                </div>
+   575→
+   576→                {/* بقیه جدول */}
+   577→                {sortedLeaders.length > 3 && (
+   578→                  <Card>
+   579→                    <CardContent className="p-0">
+   580→                      <ul className="divide-y">
+   581→                        {sortedLeaders.slice(3).map((row, i) => {
+   582→                          const isMe = userName && row.name === userName;
+   583→                          return (
+   584→                            <li
+   585→                              key={row.name}
+   586→                              className={cn(
+   587→                                "flex items-center gap-3 px-4 py-2.5 text-[12px]",
+   588→                                isMe && "bg-primary/5",
+   589→                              )}
+   590→                            >
+   591→                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-muted text-[11px] font-black">
+   592→                                {(i + 4).toLocaleString("fa-IR")}
+   593→                              </span>
+   594→                              <p className="min-w-0 flex-1 truncate font-bold">
+   595→                                {row.name}
+   596→                                {isMe && <span className="mr-1 text-[9px] font-bold text-primary">(تو)</span>}
+   597→                              </p>
+   598→                              <span className={cn("shrink-0", leaderSort === "quizzes" ? "font-black text-primary" : "text-muted-foreground")}>
+   599→                                {row.quizzes.toLocaleString("fa-IR")} آزمون
+   600→                              </span>
+   601→                              <span className={cn("hidden shrink-0 sm:inline", leaderSort === "avg" ? "font-black text-primary" : "text-muted-foreground")}>
+   602→                                میانگین {row.accuracy.toLocaleString("fa-IR")}٪
+   603→                              </span>
+   604→                              <span
+   605→                                className={cn(
+   606→                                  "w-12 shrink-0 text-left font-black",
+   607→                                  leaderSort === "best" || leaderSort === "avg"
+   608→                                    ? row.best >= 80
+   609→                                      ? "text-primary"
+   610→                                      : row.best >= 50
+   611→                                        ? "text-amber-500"
+   612→                                        : "text-muted-foreground"
+   613→                                    : "text-muted-foreground",
+   614→                                )}
+   615→                              >
+   616→                                {row.best.toLocaleString("fa-IR")}٪
+   617→                              </span>
+   618→                            </li>
+   619→                          );
+   620→                        })}
+   621→                      </ul>
+   622→                    </CardContent>
+   623→                  </Card>
+   624→                )}
+   625→              </>
+   626→            )}
+   627→          </section>
+   628→
+   629→          {/* ── پرتکرارترین اشتباه‌ها ── */}
+   630→          {topMisses.length > 0 && (
+   631→            <section className="space-y-3">
+   632→              <div className="flex flex-wrap items-center justify-between gap-2">
+   633→                <h2 className="flex items-center gap-2 text-base font-black">
+   634→                  <Crosshair size={17} className="text-destructive" />
+   635→                  سؤال‌های پراشتباه تو
+   636→                </h2>
+   637→                <Button
+   638→                  size="sm"
+   639→                  className="gap-1.5"
+   640→                  onClick={() => {
+   641→                    setPracticeIds(topMisses.map((m) => m.id));
+   642→                    toast.success("دور تمرین آماده شد — در صفحه آزمون شروع کن.");
+   643→                    onNavigate?.("quiz");
+   644→                  }}
+   645→                >
+   646→                  <Play size={14} />
+   647→                  تمرین این سؤال‌ها
+   648→                </Button>
+   649→              </div>
+   650→              <Card>
+   651→                <CardContent className="p-0">
+   652→                  <ul className="divide-y">
+   653→                    {topMisses.map((m, i) => (
+   654→                      <li key={m.id} className="flex items-start gap-3 px-4 py-3">
+   655→                        <span
+   656→                          className={cn(
+   657→                            "mt-0.5 flex h-7 shrink-0 items-center justify-center rounded-lg px-2 text-[11px] font-black",
+   658→                            m.misses >= 3
+   659→                              ? "bg-destructive/15 text-destructive"
+   660→                              : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+   661→                          )}
+   662→                        >
+   663→                          ×{m.misses.toLocaleString("fa-IR")}
+   664→                        </span>
+   665→                        <div className="min-w-0 flex-1">
+   666→                          <p dir="ltr" className="font-en text-left text-[12px] font-semibold leading-6">
+   667→                            {m.text}
+   668→                          </p>
+   669→                          <p className="mt-1 text-[10.5px] text-muted-foreground">
+   670→                            {m.category === "grammar" ? "گرامر" : "واژگان"} — پاسخ درست:{" "}
+   671→                            <span dir="ltr" className="font-en font-bold text-primary">
+   672→                              {m.options[m.answer]}
+   673→                            </span>
+   674→                          </p>
+   675→                        </div>
+   676→                        <span className="shrink-0 text-[10px] text-muted-foreground">
+   677→                          {(i + 1).toLocaleString("fa-IR")}
+   678→                        </span>
+   679→                      </li>
+   680→                    ))}
+   681→                  </ul>
+   682→                </CardContent>
+   683→              </Card>
+   684→              <p className="text-center text-[11px] text-muted-foreground">
+   685→                بر اساس ۱۵۰ آزمون آخر — با هر مرور، شانس ظاهرشدن این سؤال‌ها بیشتر می‌شود.
+   686→              </p>
+   687→            </section>
+   688→          )}
+   689→
+   690→          {/* ── نشان‌ها ── */}
+   691→          <section className="space-y-3">
+   692→            <div className="flex items-center justify-between">
+   693→              <h2 className="flex items-center gap-2 text-base font-black">
+   694→                <Medal size={17} className="text-amber-500" />
+   695→                نشان‌های افتخار
+   696→              </h2>
+   697→              <Badge variant="secondary" className="text-[11px]">
+   698→                {unlocked.toLocaleString("fa-IR")} از {ACHIEVEMENTS.length.toLocaleString("fa-IR")} باز شده
+   699→              </Badge>
+   700→            </div>
+   701→            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+   702→              {ACHIEVEMENTS.map((a, i) => {
+   703→                const done = a.check(achContext);
+   704→                const [cur, max] = a.progress ? a.progress(achContext) : [1, 1];
+   705→                return (
+   706→                  <Card
+   707→                    key={a.id}
+   708→                    className={cn(
+   709→                      `rise-in rise-in-${(i % 4) + 1} relative overflow-hidden transition-all`,
+   710→                      done
+   711→                        ? "border-amber-500/40 bg-gradient-to-bl from-amber-500/10 to-transparent achievement-glow"
+   712→                        : "opacity-80",
+   713→                    )}
+   714→                  >
+   715→                    <CardContent className="p-4">
+   716→                      <div className="flex items-start justify-between">
+   717→                        <span className={cn("text-3xl leading-none", !done && "grayscale opacity-40")}>
+   718→                          {a.icon}
+   719→                        </span>
+   720→                        {done ? (
+   721→                          <Badge className="gap-1 bg-amber-500 text-amber-950 text-[10px] border-amber-400/50">
+   722→                            <Sparkles size={10} />
+   723→                            کسب شد
+   724→                          </Badge>
+   725→                        ) : (
+   726→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground">
+   727→                            <Lock size={12} />
+   728→                          </span>
+   729→                        )}
+   730→                      </div>
+   731→                      <h3 className={cn("mt-2.5 text-[13px] font-black", !done && "text-muted-foreground")}>
+   732→                        {a.title}
+   733→                      </h3>
+   734→                      <p className="mt-0.5 text-[11px] leading-4 text-muted-foreground">{a.desc}</p>
+   735→                      {!done && max > 1 && (
+   736→                        <div className="mt-2.5 space-y-1">
+   737→                          <Progress value={(cur / max) * 100} className="h-1.5" />
+   738→                          <p className="text-[10px] text-muted-foreground">
+   739→                            {cur.toLocaleString("fa-IR")} از {max.toLocaleString("fa-IR")}
+   740→                          </p>
+   741→                        </div>
+   742→                      )}
+   743→                    </CardContent>
+   744→                  </Card>
+   745→                );
+   746→              })}
+   747→            </div>
+   748→          </section>
+   749→
+   750→          {/* ── تاریخچه ── */}
+   751→          <section className="space-y-3">
+   752→            <h2 className="flex items-center gap-2 text-base font-black">
+   753→              <History size={17} className="text-primary" />
+   754→              تاریخچه آزمون‌ها
+   755→            </h2>
+   756→            {recent.length === 0 ? (
+   757→              <Card className="border-dashed">
+   758→                <CardContent className="p-8 text-center text-xs text-muted-foreground">
+   759→                  هنوز آزمونی ثبت نشده — از بخش «آزمون» شروع کن!
+   760→                </CardContent>
+   761→              </Card>
+   762→            ) : (
+   763→              <Card>
+   764→                <CardContent className="p-0">
+   765→                  <ul className="divide-y">
+   766→                    {recent.map((a, i) => {
+   767→                      const acc = a.total ? Math.round((a.correct / a.total) * 100) : 0;
+   768→                      return (
+   769→                        <li
+   770→                          key={a.id}
+   771→                          className={cn(
+   772→                            "flex flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-3 text-[12px]",
+   773→                            i === 0 && "bg-primary/5",
+   774→                          )}
+   775→                        >
+   776→                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted font-black">
+   777→                            {(recent.length - i).toLocaleString("fa-IR")}
+   778→                          </span>
+   779→                          <div className="min-w-24">
+   780→                            <p className="font-bold">{CATEGORY_FA[a.category] ?? a.category}</p>
+   781→                            <p className="text-[10px] text-muted-foreground">{fmtDate(a.createdAt)}</p>
+   782→                          </div>
+   783→                          <span className="flex items-center gap-1 text-muted-foreground">
+   784→                            <ClipboardList size={12} />
+   785→                            {a.correct.toLocaleString("fa-IR")} از {a.total.toLocaleString("fa-IR")}
+   786→                          </span>
+   787→                          <span className="flex items-center gap-1 text-muted-foreground">
+   788→                            <Timer size={12} />
+   789→                            {fmtDuration(a.duration)}
+   790→                          </span>
+   791→                          <div className="mr-auto flex w-28 items-center gap-2">
+   792→                            <Progress value={acc} className="h-1.5 flex-1" />
+   793→                            <span
+   794→                              className={cn(
+   795→                                "shrink-0 text-[11px] font-black",
+   796→                                acc >= 80 ? "text-primary" : acc >= 50 ? "text-amber-500" : "text-destructive",
+   797→                              )}
+   798→                            >
+   799→                              {acc.toLocaleString("fa-IR")}٪
+   800→                            </span>
+   801→                          </div>
+   802→                        </li>
+   803→                      );
+   804→                    })}
+   805→                  </ul>
+   806→                </CardContent>
+   807→              </Card>
+   808→            )}
+   809→            {totalMinutes > 0 && (
+   810→              <p className="text-center text-[11px] text-muted-foreground">
+   811→                مجموع زمان {recent.length.toLocaleString("fa-IR")} آزمون آخر: حدود {totalMinutes.toLocaleString("fa-IR")} دقیقه
+   812→              </p>
+   813→            )}
+   814→          </section>
+   815→        </>
+   816→      )}
+   817→    </div>
+   818→  );
+   819→}
+   820→
