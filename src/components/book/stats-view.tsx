@@ -14,9 +14,14 @@ import {
   Lock,
   Sparkles,
   History,
+  Crown,
+  Users,
+  Play,
+  Crosshair,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import {
@@ -34,6 +39,10 @@ import {
 import { BOOK_STATS } from "@/data/book-meta";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStreak } from "@/lib/streak-store";
+import { useUserName } from "@/lib/name-store";
+import { setPracticeIds } from "@/lib/practice-store";
+import { toast } from "sonner";
+import type { ViewId } from "./app-header";
 
 interface AttemptStats {
   attempts: number;
@@ -59,6 +68,24 @@ interface RecentAttempt {
   duration: number;
   name: string | null;
   createdAt: string;
+}
+
+interface LeaderRow {
+  name: string;
+  quizzes: number;
+  answered: number;
+  accuracy: number;
+  best: number;
+  lastPlayed: string;
+}
+
+interface TopMiss {
+  id: string;
+  text: string;
+  options: string[];
+  answer: number;
+  category: string;
+  misses: number;
 }
 
 const CATEGORY_FA: Record<string, string> = {
@@ -207,12 +234,15 @@ function fmtDate(iso: string): string {
   }
 }
 
-export function StatsView() {
+export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) {
   const { count: learned } = useLearnedWords();
   const streak = useStreak();
+  const userName = useUserName();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [recent, setRecent] = useState<RecentAttempt[]>([]);
+  const [leaders, setLeaders] = useState<LeaderRow[]>([]);
+  const [topMisses, setTopMisses] = useState<TopMiss[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -226,6 +256,8 @@ export function StatsView() {
           setChart(d.chart.map((c: Omit<ChartPoint, "idx">, i: number) => ({ ...c, idx: i + 1 })));
         }
         if (Array.isArray(d.recent)) setRecent(d.recent);
+        if (Array.isArray(d.leaderboard)) setLeaders(d.leaderboard);
+        if (Array.isArray(d.topMisses)) setTopMisses(d.topMisses);
       })
       .catch(() => undefined)
       .finally(() => !cancelled && setLoading(false));
@@ -308,7 +340,7 @@ export function StatsView() {
           {/* ── کارت‌های آمار ── */}
           <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
             {kpis.map((k, i) => (
-              <Card key={k.label} className={`rise-in rise-in-${(i % 6) + 1} overflow-hidden`}>
+              <Card key={k.label} className={`rise-in rise-in-${(i % 6) + 1} overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5`}>
                 <CardContent className="p-4">
                   <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", k.bg, k.color)}>
                     <k.icon size={19} />
@@ -409,6 +441,198 @@ export function StatsView() {
               </CardContent>
             </Card>
           </section>
+
+          {/* ── لیدربورد محلی ── */}
+          <section className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="flex items-center gap-2 text-base font-black">
+                <Users size={17} className="text-primary" />
+                لیدربورد کلاس
+              </h2>
+              <span className="text-[11px] text-muted-foreground">
+                بر اساس آزمون‌های ثبت‌شده با نام دانش‌آموز
+              </span>
+            </div>
+
+            {leaders.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="flex flex-col items-center gap-2 p-6 text-center text-xs text-muted-foreground">
+                  <Users size={24} className="opacity-40" />
+                  هنوز کسی با نام ثبت نکرده — از دکمه «نام من» در هدر اسمت را وارد کن تا در جدول جای بگیری.
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                {/* سکوی قهرمانی — سه نفر اول */}
+                <div className="grid grid-cols-3 items-end gap-2 sm:gap-3">
+                  {[1, 0, 2].map((slot) => {
+                    const row = leaders[slot];
+                    if (!row) return <div key={slot} />;
+                    const place = slot + 1;
+                    const heights = ["sm:pb-0", "sm:pb-6", "sm:pb-2"];
+                    const styles =
+                      place === 1
+                        ? {
+                            ring: "ring-2 ring-amber-400/60",
+                            grad: "from-amber-500/20 via-amber-500/5 to-transparent",
+                            chip: "bg-amber-500 text-amber-950",
+                            medal: "🥇",
+                            h: "text-2xl",
+                          }
+                        : place === 2
+                          ? {
+                              ring: "ring-1 ring-slate-400/40",
+                              grad: "from-slate-400/15 via-slate-400/5 to-transparent",
+                              chip: "bg-slate-400 text-slate-950",
+                              medal: "🥈",
+                              h: "text-xl",
+                            }
+                          : {
+                              ring: "ring-1 ring-orange-700/40",
+                              grad: "from-orange-700/15 via-orange-700/5 to-transparent",
+                              chip: "bg-orange-700 text-white",
+                              medal: "🥉",
+                              h: "text-xl",
+                            };
+                    const isMe = userName && row.name === userName;
+                    return (
+                      <Card
+                        key={row.name}
+                        className={cn(
+                          `rise-in rise-in-${place} relative overflow-hidden bg-gradient-to-b ${styles.grad} ${styles.ring} podium-card ${heights[slot]}`,
+                          isMe && "border-primary/60",
+                        )}
+                      >
+                        {place === 1 && (
+                          <Crown size={15} className="absolute left-2.5 top-2.5 text-amber-500 podium-crown" />
+                        )}
+                        <CardContent className="p-3 text-center">
+                          <span className={cn("mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm", styles.chip)}>
+                            {styles.medal}
+                          </span>
+                          <p className="mt-1.5 flex items-center justify-center gap-1 truncate text-[13px] font-black">
+                            {row.name}
+                            {isMe && <span className="text-[9px] font-bold text-primary">(تو)</span>}
+                          </p>
+                          <p className={cn("mt-1 font-black leading-none", styles.h)}>
+                            {row.best.toLocaleString("fa-IR")}٪
+                          </p>
+                          <p className="mt-1 text-[10px] text-muted-foreground">
+                            بهترین رکورد • {row.quizzes.toLocaleString("fa-IR")} آزمون
+                          </p>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+
+                {/* بقیه جدول */}
+                {leaders.length > 3 && (
+                  <Card>
+                    <CardContent className="p-0">
+                      <ul className="divide-y">
+                        {leaders.slice(3).map((row, i) => {
+                          const isMe = userName && row.name === userName;
+                          return (
+                            <li
+                              key={row.name}
+                              className={cn(
+                                "flex items-center gap-3 px-4 py-2.5 text-[12px]",
+                                isMe && "bg-primary/5",
+                              )}
+                            >
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-muted text-[11px] font-black">
+                                {(i + 4).toLocaleString("fa-IR")}
+                              </span>
+                              <p className="min-w-0 flex-1 truncate font-bold">
+                                {row.name}
+                                {isMe && <span className="mr-1 text-[9px] font-bold text-primary">(تو)</span>}
+                              </p>
+                              <span className="shrink-0 text-muted-foreground">
+                                {row.quizzes.toLocaleString("fa-IR")} آزمون
+                              </span>
+                              <span className="shrink-0 text-muted-foreground">
+                                میانگین {row.accuracy.toLocaleString("fa-IR")}٪
+                              </span>
+                              <span
+                                className={cn(
+                                  "w-12 shrink-0 text-left font-black",
+                                  row.best >= 80 ? "text-primary" : row.best >= 50 ? "text-amber-500" : "text-muted-foreground",
+                                )}
+                              >
+                                {row.best.toLocaleString("fa-IR")}٪
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+              </>
+            )}
+          </section>
+
+          {/* ── پرتکرارترین اشتباه‌ها ── */}
+          {topMisses.length > 0 && (
+            <section className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2 className="flex items-center gap-2 text-base font-black">
+                  <Crosshair size={17} className="text-destructive" />
+                  سؤال‌های پراشتباه تو
+                </h2>
+                <Button
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => {
+                    setPracticeIds(topMisses.map((m) => m.id));
+                    toast.success("دور تمرین آماده شد — در صفحه آزمون شروع کن.");
+                    onNavigate?.("quiz");
+                  }}
+                >
+                  <Play size={14} />
+                  تمرین این سؤال‌ها
+                </Button>
+              </div>
+              <Card>
+                <CardContent className="p-0">
+                  <ul className="divide-y">
+                    {topMisses.map((m, i) => (
+                      <li key={m.id} className="flex items-start gap-3 px-4 py-3">
+                        <span
+                          className={cn(
+                            "mt-0.5 flex h-7 shrink-0 items-center justify-center rounded-lg px-2 text-[11px] font-black",
+                            m.misses >= 3
+                              ? "bg-destructive/15 text-destructive"
+                              : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+                          )}
+                        >
+                          ×{m.misses.toLocaleString("fa-IR")}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p dir="ltr" className="font-en text-left text-[12px] font-semibold leading-6">
+                            {m.text}
+                          </p>
+                          <p className="mt-1 text-[10.5px] text-muted-foreground">
+                            {m.category === "grammar" ? "گرامر" : "واژگان"} — پاسخ درست:{" "}
+                            <span dir="ltr" className="font-en font-bold text-primary">
+                              {m.options[m.answer]}
+                            </span>
+                          </p>
+                        </div>
+                        <span className="shrink-0 text-[10px] text-muted-foreground">
+                          {(i + 1).toLocaleString("fa-IR")}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+              <p className="text-center text-[11px] text-muted-foreground">
+                بر اساس ۱۵۰ آزمون آخر — با هر مرور، شانس ظاهرشدن این سؤال‌ها بیشتر می‌شود.
+              </p>
+            </section>
+          )}
 
           {/* ── نشان‌ها ── */}
           <section className="space-y-3">

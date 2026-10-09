@@ -269,6 +269,42 @@
   animation: soft-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
+/* کاغذرنگی جشن نتیجه عالی آزمون */
+@keyframes confetti-fall {
+  0% { transform: translateY(-16px) rotate(0deg); opacity: 1; }
+  78% { opacity: 1; }
+  100% {
+    transform: translateY(340px) translateX(var(--confetti-drift, 0px)) rotate(520deg);
+    opacity: 0;
+  }
+}
+.confetti-piece {
+  animation-name: confetti-fall;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+/* درخشش ملایم سکوی قهرمانی لیدربورد */
+@keyframes podium-shine {
+  0%, 100% { box-shadow: 0 6px 18px -8px rgb(16 185 129 / 0.0); }
+  50% { box-shadow: 0 10px 26px -10px rgb(16 185 129 / 0.25); }
+}
+.podium-card {
+  animation: podium-shine 3.2s ease-in-out infinite;
+  transition: transform 0.25s ease;
+}
+.podium-card:hover {
+  transform: translateY(-3px);
+}
+@keyframes crown-swing {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(10deg); }
+}
+.podium-crown {
+  animation: crown-swing 2.4s ease-in-out infinite;
+  transform-origin: 50% 10%;
+}
+
 /* ─── کارنامه قابل چاپ ─── */
 @media print {
   html,

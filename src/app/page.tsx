@@ -45,7 +45,7 @@ export default function Page() {
         {view === "dict" && <DictionaryView />}
         {view === "verbs" && <VerbsView />}
         {view === "flashcards" && <FlashcardView />}
-        {view === "stats" && <StatsView />}
+        {view === "stats" && <StatsView onNavigate={navigate} />}
         {view === "tutor" && <TutorView />}
       </main>
 

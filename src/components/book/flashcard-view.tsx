@@ -12,6 +12,7 @@ import {
   PartyPopper,
   Sprout,
   Flame,
+  Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { VOCAB_LESSONS, vocabOfLesson, type VocabEntry } from "@/data/vocab";
+import { VOCAB_LESSONS, vocabOfLesson, ALL_VOCAB, type VocabEntry } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
 import { recordSRS, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
 import { touchStreak } from "@/lib/streak-store";
@@ -28,6 +29,13 @@ import { SpeakButton } from "./speak-button";
 type Phase = "setup" | "playing" | "done";
 
 const SESSION_SIZE = 12;
+const ALL_LESSONS = -1;
+
+/** A word is "weak" when it's unseen or still in the first two SRS boxes. */
+function isWeak(word: string, srs: Record<string, SrsItem>): boolean {
+  const item = srs[word];
+  return !item || item.box <= 1;
+}
 
 function pickSession(pool: VocabEntry[], learned: Set<string>, srs: Record<string, SrsItem>): VocabEntry[] {
   // Weighted sampling: unseen + low-box + unlearned words come up more often.
@@ -60,6 +68,7 @@ function pickSession(pool: VocabEntry[], learned: Set<string>, srs: Record<strin
 export function FlashcardView() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
+  const [weakOnly, setWeakOnly] = useState(false);
   const { learned, toggle } = useLearnedWords();
   const srs = useSRSData();
 
@@ -69,11 +78,22 @@ export function FlashcardView() {
   const [knownCount, setKnownCount] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
 
-  const pool = useMemo(() => vocabOfLesson(lesson), [lesson]);
+  const basePool = useMemo(
+    () => (lesson === ALL_LESSONS ? ALL_VOCAB : vocabOfLesson(lesson)),
+    [lesson],
+  );
+  const pool = useMemo(
+    () => (weakOnly ? basePool.filter((w) => isWeak(w.word, srs)) : basePool),
+    [basePool, weakOnly, srs],
+  );
 
   const start = useCallback(() => {
     if (pool.length === 0) {
-      toast.error("واژه‌ای برای این درس یافت نشد");
+      toast.error(
+        weakOnly
+          ? "واژه ضعیفی در این محدوده نیست — همه را بلدی! 🎉"
+          : "واژه‌ای برای این درس یافت نشد",
+      );
       return;
     }
     setDeck(pickSession(pool, learned, srs));
@@ -82,7 +102,7 @@ export function FlashcardView() {
     setKnownCount(0);
     setReviewCount(0);
     setPhase("playing");
-  }, [pool, learned, srs]);
+  }, [pool, learned, srs, weakOnly]);
 
   const current = deck[index];
 
@@ -127,6 +147,7 @@ export function FlashcardView() {
   // ── Setup ──
   if (phase === "setup") {
     const unlearned = pool.filter((w) => !learned.has(w.word)).length;
+    const weakCount = basePool.filter((w) => isWeak(w.word, srs)).length;
     return (
       <Card className="mx-auto max-w-xl rise-in">
         <CardContent className="space-y-6 p-6">
@@ -152,6 +173,18 @@ export function FlashcardView() {
           <div>
             <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
             <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setLesson(ALL_LESSONS)}
+                className={cn(
+                  "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                  lesson === ALL_LESSONS
+                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                    : "text-muted-foreground hover:bg-muted",
+                )}
+              >
+                کل کتاب (۱٬۴۸۸ واژه)
+              </button>
               {VOCAB_LESSONS.filter((l) => l.lesson > 0).map((l) => (
                 <button
                   key={l.lesson}
@@ -170,14 +203,67 @@ export function FlashcardView() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-center text-[12px]">
+          {/* حالت تمرین فقط واژه‌های ضعیف */}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={weakOnly}
+            onClick={() => setWeakOnly((v) => !v)}
+            className={cn(
+              "flex w-full items-center gap-3 rounded-2xl border p-3.5 text-right transition-all",
+              weakOnly
+                ? "border-amber-500/50 bg-amber-500/10 shadow-sm"
+                : "border-border bg-card hover:bg-muted/60",
+            )}
+          >
+            <span
+              className={cn(
+                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                weakOnly ? "bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground",
+              )}
+            >
+              <Target size={18} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-2 text-[13px] font-black">
+                فقط واژه‌های ضعیف
+                {weakOnly && (
+                  <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+                    فعال
+                  </Badge>
+                )}
+              </span>
+              <span className="mt-0.5 block text-[11px] text-muted-foreground">
+                فقط واژه‌های دیده‌نشده یا در دو مرحله اول SRS تمرین می‌شوند.
+              </span>
+            </span>
+            <span
+              className={cn(
+                "relative h-6 w-11 shrink-0 rounded-full transition-colors",
+                weakOnly ? "bg-amber-500" : "bg-muted-foreground/25",
+              )}
+            >
+              <span
+                className={cn(
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all",
+                  weakOnly ? "right-0.5" : "right-[22px]",
+                )}
+              />
+            </span>
+          </button>
+
+          <div className="grid grid-cols-3 gap-2 text-center text-[12px]">
             <div className="rounded-xl bg-primary/8 border border-primary/20 p-3">
               <p className="text-lg font-black text-primary">{unlearned.toLocaleString("fa-IR")}</p>
-              <p className="text-[11px] text-muted-foreground">واژه یادنگرفته در این درس</p>
+              <p className="text-[11px] text-muted-foreground">یادنگرفته</p>
+            </div>
+            <div className="rounded-xl bg-amber-500/8 border border-amber-500/20 p-3">
+              <p className="text-lg font-black text-amber-600 dark:text-amber-400">{weakCount.toLocaleString("fa-IR")}</p>
+              <p className="text-[11px] text-muted-foreground">واژه ضعیف</p>
             </div>
             <div className="rounded-xl bg-muted/60 p-3">
-              <p className="text-lg font-black">{(pool.length - unlearned).toLocaleString("fa-IR")}</p>
-              <p className="text-[11px] text-muted-foreground">واژه یادگرفته</p>
+              <p className="text-lg font-black">{pool.length.toLocaleString("fa-IR")}</p>
+              <p className="text-[11px] text-muted-foreground">{weakOnly ? "موجود در دور ضعیف" : "کل واژگان محدوده"}</p>
             </div>
           </div>
 

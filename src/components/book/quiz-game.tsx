@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useUserName } from "@/lib/name-store";
 import { touchStreak } from "@/lib/streak-store";
 import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
+import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -65,6 +66,46 @@ const COUNT_OPTIONS = [5, 10, 20, 40];
 
 const LETTERS = ["A", "B", "C", "D"];
 
+const CONFETTI_COLORS = ["#10b981", "#f59e0b", "#f97316", "#14b8a6", "#84cc16", "#eab308"];
+
+/** Lightweight CSS confetti — shown when the quiz score is ۸۰٪ or higher. */
+function Confetti() {
+  const pieces = useMemo(
+    () =>
+      Array.from({ length: 32 }, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        delay: Math.random() * 1.2,
+        duration: 2.4 + Math.random() * 1.6,
+        size: 6 + Math.random() * 6,
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        drift: Math.round((Math.random() - 0.5) * 120),
+        round: Math.random() > 0.5,
+      })),
+    [],
+  );
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      {pieces.map((p) => (
+        <span
+          key={p.id}
+          className="confetti-piece absolute top-[-14px] block"
+          style={{
+            left: `${p.left}%`,
+            width: p.size,
+            height: p.size * (p.round ? 1 : 0.45),
+            background: p.color,
+            borderRadius: p.round ? "50%" : 2,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+            "--confetti-drift": `${p.drift}px`,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
+
 function fmtTime(s: number) {
   const m = Math.floor(s / 60);
   const sec = s % 60;
@@ -89,7 +130,35 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [elapsed, setElapsed] = useState(0);
   const userName = useUserName();
   const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
+  const { ids: practiceIds } = usePracticeIds();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  async function startPracticeRound(ids: string[], nextMode: Mode = "normal") {
+    setLoading(true);
+    setMode(nextMode);
+    try {
+      const params = new URLSearchParams({ count: String(Math.max(ids.length, 1)) });
+      params.set("ids", ids.join(","));
+      const res = await fetch(`/api/questions?${params.toString()}`);
+      const data = await res.json();
+      if (!res.ok || !data.questions?.length) {
+        toast.error("سؤالی برای تمرین یافت نشد.");
+        return;
+      }
+      setQuestions(data.questions as Question[]);
+      setAnswers(new Array(data.questions.length).fill(null));
+      setIndex(0);
+      setSelected(null);
+      setAiExplanation(null);
+      setElapsed(0);
+      setPhase("playing");
+      clearPracticeIds();
+    } catch {
+      toast.error("خطا در دریافت سؤالات");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (lessonFilter !== undefined) setLesson(String(lessonFilter));
@@ -247,6 +316,37 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             </div>
           </div>
 
+          {/* دور تمرین سؤال‌های پراشتباه (ارسالی از آمار) */}
+          {practiceIds.length > 0 && (
+            <div className="relative overflow-hidden rounded-2xl border border-primary/40 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent p-4 rise-in">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                  <ListChecks size={19} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2 text-[13px] font-black">
+                    دور تمرین سؤال‌های پراشتباه
+                    <Badge className="bg-primary text-[10px] text-primary-foreground">
+                      {practiceIds.length.toLocaleString("fa-IR")} سؤال
+                    </Badge>
+                  </p>
+                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                    سؤال‌هایی که بیشترین اشتباه را داشتی — از بخش آمار انتخاب شده‌اند.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => startPracticeRound(practiceIds)}
+                  disabled={loading}
+                  className="shrink-0 gap-1.5"
+                >
+                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                  شروع تمرین
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* مرور هوشمند اشتباهات */}
           {mistakeCount > 0 && (
             <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/10 via-amber-500/5 to-transparent p-4">
@@ -354,7 +454,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             </div>
           </div>
 
-          <Button size="lg" className="w-full gap-2 h-12 text-base" onClick={startQuiz} disabled={loading}>
+          <Button size="lg" className="w-full gap-2 h-12 text-base" onClick={() => startQuiz()} disabled={loading}>
             {loading ? <Loader2 className="animate-spin" size={18} /> : <Play size={18} />}
             شروع آزمون
           </Button>
@@ -365,6 +465,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
 
   // ─────────── Result ───────────
   if (phase === "result") {
+    const wrongCount = questions.length - correctCount;
     const message =
       scorePct >= 90
         ? "فوق‌العاده بود! تو آماده‌ی کنکوری 🏆"
@@ -376,7 +477,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
 
     return (
       <div className="mx-auto max-w-2xl space-y-4 rise-in">
-        <Card className="result-pop border-primary/30 no-print">
+        <Card className="result-pop relative overflow-hidden border-primary/30 no-print">
+          {scorePct >= 80 && <Confetti />}
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
             <div className="relative h-36 w-36">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
@@ -414,7 +516,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 <Trophy size={13} /> {correctCount.toLocaleString("fa-IR")} صحیح
               </span>
             </div>
-            <div className="flex gap-2 no-print">
+            <div className="flex flex-wrap justify-center gap-2 no-print">
               <Button onClick={reset} className="gap-2">
                 <RotateCcw size={16} />
                 آزمون جدید
@@ -426,6 +528,34 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             </div>
           </CardContent>
         </Card>
+
+        {/* پیشنهاد مرور اشتباهات همین آزمون */}
+        {mode === "normal" && wrongCount > 0 && (
+          <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/10 via-amber-500/5 to-transparent p-4 no-print rise-in">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                <NotebookPen size={19} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[13px] font-black">
+                  {wrongCount.toLocaleString("fa-IR")} سؤال در دفتر اشتباهات ثبت شد
+                </p>
+                <p className="mt-0.5 text-[11px] text-muted-foreground">
+                  همین حالا فقط اشتباه‌هایت را مرور کن؛ با هر پاسخ درست از دفتر حذف می‌شوند.
+                </p>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => startQuiz("review")}
+                disabled={loading}
+                className="shrink-0 gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+              >
+                {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                مرور اشتباهات
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* مرور خطاها */}
         {correctCount < questions.length && (
