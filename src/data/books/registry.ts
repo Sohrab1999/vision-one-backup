@@ -4,6 +4,7 @@
 
 import type { BookId, BookData, BookMeta } from "./types";
 import { VISION_ONE_BOOK } from "../vision-one";
+import { GRADE_NINE_BOOK } from "../grade-9";
 
 export const BOOKS: BookMeta[] = [
   {
@@ -40,11 +41,11 @@ export const BOOKS: BookMeta[] = [
     id: "grade-9",
     title: "زبان انگلیسی نهم",
     gradeLabel: "پایه نهم",
-    author: "—",
-    tagline: "در انتظار آپلود فایل جزوه",
+    author: "دکتر حسن لطفی",
+    tagline: "جزوه کامل — ۶ درس، واژگان، درسنامه، تست امتحانی و مرور جامع",
     color: "violet",
     emoji: "📕",
-    available: false,
+    available: true,
   },
   {
     id: "grade-11",
@@ -77,6 +78,8 @@ export function getBookData(id: BookId): BookData | null {
   switch (id) {
     case "vision-one":
       return VISION_ONE_BOOK;
+    case "grade-9":
+      return GRADE_NINE_BOOK;
     // فازهای بعدی: case "grade-7": return GRADE_SEVEN_BOOK; و به همین ترتیب
     default:
       return null;

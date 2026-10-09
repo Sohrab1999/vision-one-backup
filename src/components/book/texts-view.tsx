@@ -13,17 +13,20 @@ import { ClickableEnText } from "./word-lookup";
 import { useBookData } from "@/lib/book-context";
 import type { Reading, Conversation } from "@/data/types";
 
-const LESSON_TABS = [
-  { lesson: 1, label: "درس ۱" },
-  { lesson: 2, label: "درس ۲" },
-  { lesson: 3, label: "درس ۳" },
-  { lesson: 4, label: "درس ۴" },
-];
+/** برچسب‌های تب درس — به‌صورت خودکار از محتوای کتاب فعال ساخته می‌شوند */
+function useLessonTabs() {
+  const data = useBookData();
+  const lessons = new Set<number>();
+  data.readings.forEach((r) => lessons.add(r.lesson));
+  data.conversations.forEach((c) => lessons.add(c.lesson));
+  return [...lessons].sort((a, b) => a - b).map((n) => ({ lesson: n, label: `درس ${n}` }));
+}
 
 export function ReadingsLibrary({ lessonFilter }: { lessonFilter?: number }) {
   const data = useBookData();
+  const lessonTabs = useLessonTabs();
   const [showFa, setShowFa] = useState(true);
-  const [activeLesson, setActiveLesson] = useState(lessonFilter ?? 1);
+  const [activeLesson, setActiveLesson] = useState(lessonFilter ?? lessonTabs[0]?.lesson ?? 1);
 
   const list = data.readings.filter((r) => r.lesson === activeLesson);
 
@@ -31,7 +34,7 @@ export function ReadingsLibrary({ lessonFilter }: { lessonFilter?: number }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex gap-1.5">
-          {LESSON_TABS.map((t) => (
+          {lessonTabs.map((t) => (
             <button
               key={t.lesson}
               type="button"
@@ -121,13 +124,14 @@ export function ReadingCard({
 
 export function ConversationsList({ lessonFilter }: { lessonFilter?: number }) {
   const data = useBookData();
-  const [activeLesson, setActiveLesson] = useState(lessonFilter ?? 1);
+  const lessonTabs = useLessonTabs();
+  const [activeLesson, setActiveLesson] = useState(lessonFilter ?? lessonTabs[0]?.lesson ?? 1);
   const list = data.conversations.filter((c) => c.lesson === activeLesson);
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-1.5">
-        {LESSON_TABS.map((t) => (
+        {lessonTabs.map((t) => (
           <button
             key={t.lesson}
             type="button"

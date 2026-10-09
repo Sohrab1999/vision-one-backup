@@ -43,7 +43,7 @@ import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
 import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store";
 import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
 import { usePulses } from "@/lib/use-daily-pulse";
-import { useBook } from "@/lib/book-context";
+import { useBook, useBookData } from "@/lib/book-context";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -82,13 +82,9 @@ function levelBadgeClass(level: string): string {
   return "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400";
 }
 
-const LESSON_OPTIONS = [
+const BASE_LESSON_OPTIONS = [
   { value: "all", label: "همه بخش‌ها" },
   { value: "0", label: "جمع‌بندی کل کتاب" },
-  { value: "1", label: "درس ۱" },
-  { value: "2", label: "درس ۲" },
-  { value: "3", label: "درس ۳" },
-  { value: "4", label: "درس ۴" },
 ];
 
 const COUNT_OPTIONS = [5, 10, 20, 40];
@@ -163,6 +159,17 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [count, setCount] = useState(10);
   const [level, setLevel] = useState("all");
   const [poolMeta, setPoolMeta] = useState<PoolMeta | null>(null);
+
+  /** گزینه‌های محدوده درس — به‌صورت خودکار از واژگان کتاب فعال ساخته می‌شوند (پشتیبانی از هر تعداد درس) */
+  const lessonOptions = useMemo(() => {
+    if (!bookData) return BASE_LESSON_OPTIONS;
+    return [
+      ...BASE_LESSON_OPTIONS,
+      ...bookData.vocab.lessons
+        .filter((l) => l.lesson > 0)
+        .map((l) => ({ value: String(l.lesson), label: `درس ${l.lesson}` })),
+    ];
+  }, [bookData]);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
@@ -874,7 +881,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             <div>
               <p className="mb-2 text-[13px] font-bold">۲. محدوده درس</p>
               <div className="flex flex-wrap gap-2">
-                {LESSON_OPTIONS.map((o) => (
+                {lessonOptions.map((o) => (
                   <button
                     key={o.value}
                     type="button"

@@ -1,33 +1,43 @@
 // Seed script: populates the Question table from extracted data files.
 // Run with: bun run prisma/seed.ts
+//
+// چندکتابی امن: فقط سؤال‌های همان جزوه جایگزین می‌شوند تا
+// نتایج آزمون (Attempt) و سؤال‌های سایر جزوه‌ها دست‌نخورده بمانند.
 
 import { PrismaClient } from "@prisma/client";
-import { QUIZ_SEED } from "../src/data/vision-one/quiz-seed";
+import { QUIZ_SEED as VISION_ONE_QUIZ } from "../src/data/vision-one/quiz-seed";
+import { QUIZ_SEED as GRADE_NINE_QUIZ } from "../src/data/grade-9/quiz-seed";
 
 const db = new PrismaClient();
 
+const SOURCES: { book: string; rows: typeof VISION_ONE_QUIZ }[] = [
+  { book: "vision-one", rows: VISION_ONE_QUIZ },
+  { book: "grade-9", rows: GRADE_NINE_QUIZ as typeof VISION_ONE_QUIZ },
+];
+
 async function main() {
-  const existing = await db.question.count();
-  if (existing > 0) {
-    await db.question.deleteMany();
-    console.log(`Cleared ${existing} existing questions.`);
+  for (const src of SOURCES) {
+    const existing = await db.question.count({ where: { book: src.book } });
+    if (existing > 0) {
+      await db.question.deleteMany({ where: { book: src.book } });
+      console.log(`Cleared ${existing} existing questions of "${src.book}".`);
+    }
+
+    const rows = src.rows.map((q) => ({
+      book: src.book,
+      category: q.category,
+      lesson: q.lesson,
+      scope: q.scope,
+      text: q.text,
+      options: JSON.stringify(q.options),
+      answer: q.answer,
+      level: q.level,
+      explanation: q.explanation ?? null,
+    }));
+
+    await db.question.createMany({ data: rows });
+    console.log(`✅ Seeded ${rows.length} questions for "${src.book}".`);
   }
-
-  const rows = QUIZ_SEED.map((q) => ({
-    // همهٔ سؤال‌های فعلی متعلق به جزوهٔ پایه دهم (ویژن وان) هستند
-    book: "vision-one",
-    category: q.category,
-    lesson: q.lesson,
-    scope: q.scope,
-    text: q.text,
-    options: JSON.stringify(q.options),
-    answer: q.answer,
-    level: q.level,
-    explanation: q.explanation ?? null,
-  }));
-
-  await db.question.createMany({ data: rows });
-  console.log(`✅ Seeded ${rows.length} questions.`);
 }
 
 main()
