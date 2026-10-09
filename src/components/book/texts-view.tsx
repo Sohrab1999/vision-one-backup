@@ -110,7 +110,7 @@ export function ReadingCard({
             </div>
           ))}
           <p className="flex items-center justify-center gap-1.5 text-[10.5px] text-muted-foreground">
-            💡 روی هر واژهٔ انگلیسی کلیک کن تا معنی و دیکشنری‌اش را ببینی
+            💡 روی هر واژه کلیک کن — یا یک عبارت را با ماوس انتخاب کن تا «جست‌وجو» ظاهر شود
           </p>
         </div>
       </CardContent>

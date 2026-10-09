@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { User, Check, Download, Upload, HardDriveDownload } from "lucide-react";
+import { User, Check, Download, Upload, HardDriveDownload, Star, BookOpen, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useUserName, setName } from "@/lib/name-store";
+import { useLearnedWords } from "@/lib/learned-store";
+import { useStarredWords } from "@/lib/star-store";
+import { useQuestionStars } from "@/lib/question-star-store";
+import { useCombinedRounds } from "@/lib/round-counters";
 import { downloadBackup, parseBackup, restoreBackup } from "@/lib/progress-backup";
 import { toast } from "sonner";
 
@@ -24,6 +28,10 @@ export function ProfileButton() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(name);
   const fileRef = useRef<HTMLInputElement>(null);
+  const { count: learnedCount } = useLearnedWords();
+  const { count: starredWordCount } = useStarredWords();
+  const { count: starredQCount } = useQuestionStars();
+  const combinedRounds = useCombinedRounds();
 
   function save() {
     setName(value);
@@ -95,6 +103,48 @@ export function ProfileButton() {
             maxLength={40}
             autoFocus
           />
+        </div>
+
+        <Separator />
+
+        {/* ── خلاصهٔ پیشرفت این دستگاه ── */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+              <BookOpen size={13} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-black leading-4">{learnedCount.toLocaleString("fa-IR")}</span>
+              <span className="block text-[10px] text-muted-foreground">واژهٔ یادگرفته</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-yellow-500/15 text-yellow-600 dark:text-yellow-400">
+              <Star size={13} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-black leading-4">{starredWordCount.toLocaleString("fa-IR")}</span>
+              <span className="block text-[10px] text-muted-foreground">واژهٔ ستاره‌دار</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-yellow-500/15 text-yellow-600 dark:text-yellow-400">
+              <Star size={13} className="fill-current" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-black leading-4">{starredQCount.toLocaleString("fa-IR")}</span>
+              <span className="block text-[10px] text-muted-foreground">سؤال ستاره‌دار</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-400">
+              <Layers size={13} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-black leading-4">{combinedRounds.toLocaleString("fa-IR")}</span>
+              <span className="block text-[10px] text-muted-foreground">مرور ترکیبی</span>
+            </span>
+          </div>
         </div>
 
         <Separator />

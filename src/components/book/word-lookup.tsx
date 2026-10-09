@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { X, Star, BookOpen, SearchX, GraduationCap, CheckCircle2 } from "lucide-react";
+import { X, Star, BookOpen, SearchX, GraduationCap, CheckCircle2, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DICTIONARY } from "@/data/dictionary";
 import { ALL_VOCAB } from "@/data/vocab";
@@ -136,9 +136,11 @@ function segmentText(text: string): Segment[] {
   return segs;
 }
 
-/** متن انگلیسی قابل‌کلیک: هر واژه (و عبارت شناخته‌شده) یک دکمهٔ جست‌وجوست */
+/** متن انگلیسی قابل‌کلیک: هر واژه (و عبارت شناخته‌شده) یک دکمهٔ جست‌وجوست + جست‌وجوی عبارتِ انتخاب‌شده */
 export function ClickableEnText({ text, className }: { text: string; className?: string }) {
   const [sel, setSel] = useState<{ hit: LookupHit; x: number; y: number } | null>(null);
+  const [selSearch, setSelSearch] = useState<{ raw: string; x: number; y: number } | null>(null);
+  const wrapRef = useRef<HTMLSpanElement>(null);
 
   const segs = useMemo(() => segmentText(text), [text]);
 
@@ -149,9 +151,55 @@ export function ClickableEnText({ text, className }: { text: string; className?:
     setSel({ hit: lookup(norm), x: rect.left + rect.width / 2, y: rect.bottom });
   }, []);
 
+  // جست‌وجوی عبارت انتخاب‌شده با ماوس/لمس — علاوه بر کلیک تک‌واژه
+  useEffect(() => {
+    function extractSelection(): { raw: string; x: number; y: number } | null {
+      const s = window.getSelection();
+      if (!s || s.isCollapsed || s.rangeCount === 0) return null;
+      const range = s.getRangeAt(0);
+      const host = wrapRef.current;
+      if (!host || !host.contains(range.commonAncestorContainer)) return null;
+      const raw = s.toString().trim().replace(/\s+/g, " ");
+      if (!raw || raw.length > 60 || !/[A-Za-z]/.test(raw)) return null;
+      const rect = range.getBoundingClientRect();
+      if (!rect || (rect.width === 0 && rect.height === 0)) return null;
+      return { raw, x: rect.left + rect.width / 2, y: rect.bottom };
+    }
+    function onUp() {
+      // صبر یک تیک تا selection نهایی شود (مخصوصاً در لمس)
+      setTimeout(() => setSelSearch(extractSelection()), 0);
+    }
+    function onDown(e: Event) {
+      const t = e.target as HTMLElement | null;
+      // دکمهٔ جست‌وجوی خودِ انتخاب، انتخاب را پاک نکند
+      if (t?.closest?.("[data-sel-search]")) return;
+      setSelSearch(null);
+    }
+    document.addEventListener("mouseup", onUp);
+    document.addEventListener("touchend", onUp);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      document.removeEventListener("mouseup", onUp);
+      document.removeEventListener("touchend", onUp);
+      document.removeEventListener("mousedown", onDown);
+    };
+  }, []);
+
+  function openSelectionSearch() {
+    if (!selSearch) return;
+    const { raw, x, y } = selSearch;
+    setSelSearch(null);
+    setSel({ hit: lookup(normalize(raw)), x, y });
+  }
+
+  // موقعیت دکمهٔ شناور جست‌وجوی عبارت — clamp به دید
+  const pillLeft = selSearch
+    ? Math.min(Math.max(selSearch.x, 105), (typeof window !== "undefined" ? window.innerWidth : 400) - 105)
+    : 0;
+
   return (
     <>
-      <span dir="ltr" className={className}>
+      <span ref={wrapRef} dir="ltr" className={className}>
         {segs.map((s, i) =>
           s.kind === "text" ? (
             <span key={i}>{s.raw}</span>
@@ -169,6 +217,18 @@ export function ClickableEnText({ text, className }: { text: string; className?:
           ),
         )}
       </span>
+      {selSearch && !sel && (
+        <button
+          type="button"
+          data-sel-search
+          onClick={openSelectionSearch}
+          className="lookup-pop fixed z-100 flex max-w-[210px] items-center gap-1.5 rounded-full border border-primary/50 bg-card px-3.5 py-2 text-[11.5px] font-black text-primary shadow-xl shadow-black/20 transition-transform hover:scale-105 active:scale-95"
+          style={{ left: pillLeft, top: selSearch.y + 8, transform: "translateX(-50%)" }}
+        >
+          <Search size={13} className="shrink-0" />
+          <span className="truncate">جست‌وجوی «{selSearch.raw}»</span>
+        </button>
+      )}
       {sel && <LookupPopover sel={sel} onClose={() => setSel(null)} />}
     </>
   );
@@ -329,7 +389,9 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
       ) : !hit.vocab ? (
         <p className="mt-2 flex items-center gap-1.5 text-[11px] leading-5 text-muted-foreground">
           <SearchX size={12} />
-          این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد.
+          {hit.word.includes(" ")
+            ? "این عبارت در دیکشنری و واژگان جزوه پیدا نشد."
+            : "این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد."}
         </p>
       ) : null}
 

@@ -45,6 +45,28 @@ function todayKey(): string {
   return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
+/** شنبهٔ آغازین هفتهٔ جاری (هفتهٔ ایرانی از شنبه شروع می‌شود) — هماهنگ با weekly-store سمت کلاینت */
+function weekStart(now = new Date()): Date {
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  d.setDate(d.getDate() - ((d.getDay() + 1) % 7));
+  return d;
+}
+
+/** کلید هفته به شکل YYYY-MM-DDِ شنبهٔ آغازین — برای seed چالش هفتگی */
+function weekKeyOf(now = new Date()): string {
+  const s = weekStart(now);
+  const mm = String(s.getMonth() + 1).padStart(2, "0");
+  const dd = String(s.getDate()).padStart(2, "0");
+  return `${s.getFullYear()}-${mm}-${dd}`;
+}
+
+/** شمارهٔ هفته برای نمایش (از شنبهٔ آغازین سال) */
+function weekIndexOf(now = new Date()): number {
+  const s = weekStart(now);
+  const dayOfYear = Math.floor((s.getTime() - new Date(s.getFullYear(), 0, 1).getTime()) / 86400000);
+  return Math.floor(dayOfYear / 7) + 1;
+}
+
 const LEVEL_KEYS = ["آموزشی", "متوسط", "کنکوری"] as const;
 
 export async function GET(req: NextRequest) {
@@ -59,6 +81,7 @@ export async function GET(req: NextRequest) {
     );
     const idsParam = searchParams.get("ids");
     const daily = searchParams.get("daily") === "1";
+    const weekly = searchParams.get("weekly") === "1";
     const meta = searchParams.get("meta") === "1";
 
     // ── متادیتای بانک سؤال (شمارنده‌ها برای تنظیمات آزمون)
@@ -78,7 +101,7 @@ export async function GET(req: NextRequest) {
     const where: { category?: string; lesson?: number; level?: string } = {};
     if (category !== "all") where.category = category;
     if (lesson !== "all") where.lesson = Number(lesson);
-    if (!daily && level !== "all" && (LEVEL_KEYS as readonly string[]).includes(level)) {
+    if (!daily && !weekly && level !== "all" && (LEVEL_KEYS as readonly string[]).includes(level)) {
       where.level = level;
     }
 
@@ -101,6 +124,10 @@ export async function GET(req: NextRequest) {
     if (daily) {
       // چالش روزانه: ۵ سؤال قطعی بر اساس تاریخ — ترکیبی از گرامر و واژگان
       const seed = Number(todayKey().replace(/-/g, "")) % 2147483647;
+      picked = seededShuffle(pool, seed).slice(0, Math.min(count, pool.length));
+    } else if (weekly) {
+      // چالش هفتگی: ۱۰ سؤال قطعی بر اساس شنبهٔ آغازین هفته — همهٔ کاربرانِ یک هفته، همان سؤال‌ها
+      const seed = Number(weekKeyOf().replace(/-/g, "")) % 2147483647;
       picked = seededShuffle(pool, seed).slice(0, Math.min(count, pool.length));
     } else {
       const shuffled = [...pool].sort(() => Math.random() - 0.5);
@@ -133,7 +160,12 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    return NextResponse.json({ questions, pool: pool.length, daily: daily ? todayKey() : undefined });
+    return NextResponse.json({
+      questions,
+      pool: pool.length,
+      daily: daily ? todayKey() : undefined,
+      weekly: weekly ? { week: weekKeyOf(), index: weekIndexOf() } : undefined,
+    });
   } catch (e) {
     console.error("GET /api/questions error:", e);
     return NextResponse.json(

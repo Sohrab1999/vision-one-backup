@@ -20,6 +20,7 @@ import {
   Download,
   Hourglass,
   CalendarCheck,
+  CalendarRange,
   Gauge,
   Star,
   Layers,
@@ -39,7 +40,9 @@ import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
 import { useQuestionStars, toggleQuestionStar } from "@/lib/question-star-store";
 import { recordStudySession } from "@/lib/goal-store";
 import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
-import { useDailyPulse } from "@/lib/use-daily-pulse";
+import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store";
+import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
+import { usePulses } from "@/lib/use-daily-pulse";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -55,7 +58,7 @@ interface Question {
 }
 
 type Phase = "setup" | "playing" | "result";
-type Mode = "normal" | "review" | "daily" | "starred" | "combined";
+type Mode = "normal" | "review" | "daily" | "weekly" | "starred" | "combined";
 
 const CATEGORY_OPTIONS = [
   { value: "all", label: "همه سؤال‌ها" },
@@ -171,12 +174,14 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [timed, setTimed] = useState(0);
   const [, setQTick] = useState(0);
   const [exporting, setExporting] = useState(false);
-  const pulse = useDailyPulse(phase === "setup");
+  const pulses = usePulses(phase === "setup");
   const userName = useUserName();
   const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
   const { ids: practiceIds } = usePracticeIds();
   const { ids: starredQIds, count: starredQCount, has: hasQStar, toggle: toggleQStar } = useQuestionStars();
   const daily = useDailyInfo();
+  const weekly = useWeeklyInfo();
+  const combinedRounds = useCombinedRounds();
   /** مرور ترکیبی: اشتباهات + ستاره‌دارها (بدون تکرار، حداکثر ۸۰ سؤال) */
   const combinedIds = useMemo(
     () => Array.from(new Set([...mistakeIds, ...starredQIds])).slice(0, 80),
@@ -324,6 +329,34 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     }
   }
 
+  /** شروع چالش هفتگی — ۱۰ سؤال قطعی این هفته، بدون زمان‌سنج */
+  async function startWeekly() {
+    setLoading(true);
+    setMode("weekly");
+    try {
+      const res = await fetch("/api/questions?weekly=1&count=10");
+      const data = await res.json();
+      if (!res.ok || !data.questions?.length) {
+        toast.error("چالش این هفته آماده نیست — بعداً دوباره امتحان کن.");
+        return;
+      }
+      setQuestions(data.questions as Question[]);
+      setAnswers(new Array(data.questions.length).fill(null));
+      setIndex(0);
+      setSelected(null);
+      setAiExplanation(null);
+      setElapsed(0);
+      deadlineRef.current = 0;
+      if (advanceRef.current) clearTimeout(advanceRef.current);
+      setPhase("playing");
+      toast.info(`چالش هفتگی شروع شد — ۱۰ سؤال هفتهٔ ${weekly.weekIndex.toLocaleString("fa-IR")} برای همه یکسان است! 📅`, { duration: 3200 });
+    } catch {
+      toast.error("خطا در دریافت چالش هفتگی");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   /** هنگام اتمام زمان یک سؤال: بدون پاسخ ثبت و اشتباه، سپس نمایش پاسخ و رفتن خودکار */
   function handleTimeout() {
     if (!current || selected !== null) return;
@@ -339,9 +372,9 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     advanceRef.current = setTimeout(() => nextQuestion(), 1900);
   }
 
-  // شمارش معکوس حالت زمان‌دار — دی‌دلاین هر سؤال با تغییر سؤال/فاز بازنشانی می‌شود (در چالش روزانه غیرفعال)
+  // شمارش معکوس حالت زمان‌دار — دی‌دلاین هر سؤال با تغییر سؤال/فاز بازنشانی می‌شود (در چالش روزانه/هفتگی غیرفعال)
   useEffect(() => {
-    if (phase !== "playing" || timed <= 0 || selected !== null || mode === "daily") return;
+    if (phase !== "playing" || timed <= 0 || selected !== null || mode === "daily" || mode === "weekly") return;
     if (deadlineRef.current === 0 || deadlineRef.current < Date.now() - timed * 1000) {
       deadlineRef.current = Date.now() + timed * 1000;
     }
@@ -409,7 +442,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setIndex((i) => i + 1);
     setSelected(answers[index + 1]);
     setAiExplanation(null);
-    deadlineRef.current = mode === "daily" ? 0 : Date.now() + timed * 1000;
+    deadlineRef.current = mode === "daily" || mode === "weekly" ? 0 : Date.now() + timed * 1000;
   }
 
   // میان‌برهای کیبورد حین آزمون: ۱-۴ (فارسی/انگلیسی) انتخاب گزینه، Enter سؤال بعدی
@@ -443,6 +476,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     recordStudySession();
     const streak = touchStreak();
     if (mode === "daily") recordDailyResult(todayKey(), scorePct, questions.length);
+    if (mode === "weekly") recordWeeklyResult(weekKeyOf(), scorePct, questions.length);
+    if (mode === "combined") recordCombinedRound();
     const detail = questions.map((q, i) => ({ id: q.id, chosen: answers[i], answer: q.answer }));
     fetch("/api/attempts", {
       method: "POST",
@@ -453,11 +488,13 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             ? "review"
             : mode === "daily"
               ? "daily"
-              : mode === "starred"
-                ? "starred"
-                : mode === "combined"
-                  ? "combined"
-                  : category,
+              : mode === "weekly"
+                ? "weekly"
+                : mode === "starred"
+                  ? "starred"
+                  : mode === "combined"
+                    ? "combined"
+                    : category,
         lesson: lesson === "all" ? 0 : Number(lesson),
         total: questions.length,
         correct: correctCount,
@@ -470,6 +507,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         toast.success(
           mode === "daily"
             ? `چالش امروز ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ${scorePct >= 80 ? "🏆" : "💪"}`
+            : mode === "weekly"
+              ? `چالش هفتگی ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ 📅 ${scorePct >= 80 ? "🏆" : "💪"}`
             : mode === "review"
               ? `دور مرور تمام شد! ${mistakeCount.toLocaleString("fa-IR")} سؤال دیگر در دفتر اشتباهات مانده`
               : mode === "starred"
@@ -579,15 +618,15 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                     ? `امروز انجامش دادی — می‌تونی دوباره امتحان کنی و رکوردت رو بهتر کنی (${daily.totalDone.toLocaleString("fa-IR")} چالش کامل‌شده)`
                     : "۵ سؤال امروز برای همه یکسان است — با یک بار انجام، زنجیره‌ات هم شارژ می‌شود."}
                 </p>
-                {pulse && pulse.players > 0 && (
+                {pulses.daily && pulses.daily.players > 0 && (
                   <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
                     <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
-                    امروز {pulse.players.toLocaleString("fa-IR")} نفر چالش دادند
-                    {pulse.avg !== null && (
-                      <> — میانگین دقت {pulse.avg.toLocaleString("fa-IR")}٪</>
+                    امروز {pulses.daily.players.toLocaleString("fa-IR")} نفر چالش دادند
+                    {pulses.daily.avg !== null && (
+                      <> — میانگین دقت {pulses.daily.avg.toLocaleString("fa-IR")}٪</>
                     )}
-                    {pulse.best !== null && pulse.best > 0 && (
-                      <span className="text-muted-foreground">· بهترین {pulse.best.toLocaleString("fa-IR")}٪</span>
+                    {pulses.daily.best !== null && pulses.daily.best > 0 && (
+                      <span className="text-muted-foreground">· بهترین {pulses.daily.best.toLocaleString("fa-IR")}٪</span>
                     )}
                   </p>
                 )}
@@ -600,6 +639,57 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
               >
                 {loading ? <Loader2 size={14} className="animate-spin" /> : <CalendarCheck size={14} />}
                 {daily.doneToday ? "دوباره" : "شروع چالش"}
+              </Button>
+            </div>
+          </div>
+
+          {/* چالش هفتگی — ۱۰ سؤال قطعی این هفته */}
+          <div className="relative overflow-hidden rounded-2xl border border-violet-500/40 bg-gradient-to-l from-violet-500/12 via-violet-500/5 to-transparent p-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600 dark:text-violet-400">
+                <CalendarRange size={19} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="flex flex-wrap items-center gap-2 text-[13px] font-black">
+                  چالش هفتگی
+                  <Badge className="border-violet-500/40 bg-violet-500/15 text-[10px] text-violet-700 dark:text-violet-300">
+                    هفتهٔ {weekly.weekIndex.toLocaleString("fa-IR")} · ۱۰ سؤال
+                  </Badge>
+                  {weekly.doneThisWeek ? (
+                    <Badge variant="outline" className="gap-1 border-primary/40 bg-primary/10 text-[10px] text-primary">
+                      <CheckCircle2 size={10} />
+                      این هفته: {weekly.bestThisWeek?.toLocaleString("fa-IR")}٪
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-[10px]">این هفته انجام نشده</Badge>
+                  )}
+                </p>
+                <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                  {weekly.doneThisWeek
+                    ? `این هفته انجامش دادی — رکورد ${weekly.bestThisWeek?.toLocaleString("fa-IR")}٪ (${weekly.totalDone.toLocaleString("fa-IR")} هفته چالش داده‌ای)`
+                    : "۱۰ سؤال این هفته برای همه یکسان است — رقابهٔ هفتگی کلاس تا شنبهٔ بعد."}
+                </p>
+                {pulses.weekly && pulses.weekly.players > 0 && (
+                  <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-violet-700 dark:text-violet-300">
+                    <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500" />
+                    این هفته {pulses.weekly.players.toLocaleString("fa-IR")} نفر چالش دادند
+                    {pulses.weekly.avg !== null && (
+                      <> — میانگین دقت {pulses.weekly.avg.toLocaleString("fa-IR")}٪</>
+                    )}
+                    {pulses.weekly.best !== null && pulses.weekly.best > 0 && (
+                      <span className="text-muted-foreground">· بهترین {pulses.weekly.best.toLocaleString("fa-IR")}٪</span>
+                    )}
+                  </p>
+                )}
+              </div>
+              <Button
+                size="sm"
+                onClick={startWeekly}
+                disabled={loading}
+                className="shrink-0 gap-1.5 bg-violet-600 text-white hover:bg-violet-700"
+              >
+                {loading ? <Loader2 size={14} className="animate-spin" /> : <CalendarRange size={14} />}
+                {weekly.doneThisWeek ? "دوباره" : "شروع چالش"}
               </Button>
             </div>
           </div>
@@ -950,6 +1040,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                   <CalendarCheck size={13} /> چالش روزانه {new Date().toLocaleDateString("fa-IR", { month: "short", day: "numeric" })}
                 </span>
               )}
+              {mode === "weekly" && (
+                <span className="flex items-center gap-1 font-bold text-violet-600 dark:text-violet-400">
+                  <CalendarRange size={13} /> چالش هفتگی {new Date().toLocaleDateString("fa-IR", { month: "short", day: "numeric" })}
+                </span>
+              )}
               {mode === "starred" && (
                 <span className="flex items-center gap-1 font-bold text-yellow-600 dark:text-yellow-400">
                   <Star size={13} /> تمرین ستاره‌دارها
@@ -965,7 +1060,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                   <Gauge size={13} /> سطح {level}
                 </span>
               )}
-              {timed > 0 && mode !== "daily" && (
+              {timed > 0 && mode !== "daily" && mode !== "weekly" && (
                 <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
                   <Hourglass size={13} /> حالت زمان‌دار ({timed.toLocaleString("fa-IR")} ثانیه‌ای)
                 </span>
@@ -1200,6 +1295,12 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 چالش روزانه
               </Badge>
             )}
+            {mode === "weekly" && (
+              <Badge className="border-violet-500/40 bg-violet-500/15 text-[11px] text-violet-700 dark:text-violet-300">
+                <CalendarRange size={11} />
+                چالش هفتگی · هفتهٔ {weekly.weekIndex.toLocaleString("fa-IR")}
+              </Badge>
+            )}
             <Badge variant="outline" className="text-[11px]">
               {current.scope}
             </Badge>
@@ -1209,7 +1310,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             <Badge variant="secondary" className="text-[11px]">
               {current.category === "grammar" ? "گرامر" : "واژگان"}
             </Badge>
-            {timed > 0 && mode !== "daily" && (
+            {timed > 0 && mode !== "daily" && mode !== "weekly" && (
               <Badge variant="outline" className="gap-1 border-amber-500/40 text-[10.5px] text-amber-600 dark:text-amber-400">
                 <Hourglass size={10} />
                 زمان‌دار

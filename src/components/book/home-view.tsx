@@ -23,6 +23,7 @@ import {
   NotebookPen,
   CheckCircle2,
   CalendarCheck,
+  CalendarRange,
   Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,8 @@ import { useMistakes } from "@/lib/mistakes-store";
 import { useQuestionStars } from "@/lib/question-star-store";
 import { useDailyGoal } from "@/lib/goal-store";
 import { useDailyInfo } from "@/lib/daily-store";
-import { useDailyPulse } from "@/lib/use-daily-pulse";
+import { useWeeklyInfo } from "@/lib/weekly-store";
+import { usePulses } from "@/lib/use-daily-pulse";
 import type { ViewId } from "./app-header";
 import { SpeakButton } from "./speak-button";
 
@@ -75,8 +77,8 @@ const FEATURE_CARDS: {
   { view: "vocab", title: "واژگان تعاملی", desc: "جستجو، کارت فلپ و علامت‌گذاری واژه‌های یادگرفته", icon: BookOpen, stat: `${BOOK_STATS.words} واژه` },
   { view: "flashcards", title: "تمرین واژه‌ها", desc: "فلاش‌کارت SRS و بازی تطبیق واژه و معنی", icon: Layers, stat: "SRS" },
   { view: "grammar", title: "درسنامه گرامر", desc: "۱۱ درسنامه با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: "۱۱ درسنامه" },
-  { view: "quiz", title: "آزمون تعاملی", desc: `بانک سؤال واقعی جزوه با فیلتر سطح، چالش روزانه و توضیح هوشمند`, icon: ClipboardList, stat: `${BOOK_STATS.questions} تست` },
-  { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۵ نشان افتخار", icon: TrendingUp, stat: "۱۵ نشان" },
+  { view: "quiz", title: "آزمون تعاملی", desc: `بانک سؤال واقعی جزوه با فیلتر سطح، چالش روزانه و هفتگی`, icon: ClipboardList, stat: `${BOOK_STATS.questions} تست` },
+  { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۶ نشان افتخار", icon: TrendingUp, stat: "۱۶ نشان" },
   { view: "texts", title: "متن و مکالمه", desc: "ریدینگ‌ها و مکالمه‌ها با روایت صوتی", icon: FileText, stat: `${BOOK_STATS.readings + BOOK_STATS.conversations} متن` },
   { view: "dict", title: "دیکشنری", desc: "تعریف انگلیسی به انگلیسی با تلفظ و مثال", icon: Library, stat: `${BOOK_STATS.dictionary} مدخل` },
   { view: "verbs", title: "افعال بی‌قاعده", desc: "جدول کامل افعال با جستجو", icon: Repeat, stat: `${BOOK_STATS.verbs} فعل` },
@@ -99,7 +101,8 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const { count: starredQCount } = useQuestionStars();
   const daily = useDailyGoal();
   const dailyInfo = useDailyInfo();
-  const pulse = useDailyPulse();
+  const weekly = useWeeklyInfo();
+  const pulses = usePulses();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
 
@@ -322,19 +325,65 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
               ? `رکورد امروز ${dailyInfo.bestToday?.toLocaleString("fa-IR")}٪ — دوباره امتحان کن و بهترش کن! (مجموع ${dailyInfo.totalDone.toLocaleString("fa-IR")} چالش)`
               : "هر روز ۵ سؤال جدید؛ سؤال‌های امروز برای همه یکسانه — آزمونش بده و جایگاهت در کلاس رو بساز."}
           </span>
-          {pulse && pulse.players > 0 && (
+          {pulses.daily && pulses.daily.players > 0 && (
             <span className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
               <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
-              امروز {pulse.players.toLocaleString("fa-IR")} نفر چالش دادند
-              {pulse.avg !== null && <> — میانگین دقت {pulse.avg.toLocaleString("fa-IR")}٪</>}
-              {pulse.best !== null && pulse.best > 0 && (
-                <span className="text-muted-foreground">· بهترین {pulse.best.toLocaleString("fa-IR")}٪</span>
+              امروز {pulses.daily.players.toLocaleString("fa-IR")} نفر چالش دادند
+              {pulses.daily.avg !== null && <> — میانگین دقت {pulses.daily.avg.toLocaleString("fa-IR")}٪</>}
+              {pulses.daily.best !== null && pulses.daily.best > 0 && (
+                <span className="text-muted-foreground">· بهترین {pulses.daily.best.toLocaleString("fa-IR")}٪</span>
               )}
             </span>
           )}
         </span>
         <span className="flex shrink-0 items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2 text-[12.5px] font-black text-white shadow-md shadow-amber-500/25 transition-transform group-hover:scale-105">
           {dailyInfo.doneToday ? "دوباره" : "شروع چالش"}
+          <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
+        </span>
+      </button>
+
+      {/* ── چالش هفتگی ─────────────────────────────── */}
+      <button
+        type="button"
+        onClick={() => onNavigate("quiz")}
+        className="rise-in group flex w-full flex-wrap items-center gap-4 rounded-2xl border border-violet-500/40 bg-gradient-to-l from-violet-500/12 via-violet-500/5 to-transparent p-4 text-right transition-all hover:border-violet-500/70 hover:shadow-lg hover:shadow-violet-500/10"
+      >
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600 transition-transform group-hover:scale-105 dark:text-violet-400">
+          <CalendarRange size={22} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-center gap-2 text-[14px] font-black">
+            چالش هفتگی
+            <Badge className="border-violet-500/40 bg-violet-500/15 text-[10px] text-violet-700 dark:text-violet-300">
+              هفتهٔ {weekly.weekIndex.toLocaleString("fa-IR")} · ۱۰ سؤال
+            </Badge>
+            {weekly.doneThisWeek ? (
+              <Badge className="gap-1 bg-primary text-[10px] text-primary-foreground">
+                <CheckCircle2 size={10} />
+                انجام شد — {weekly.bestThisWeek?.toLocaleString("fa-IR")}٪
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="text-[10px]">منتظر توئه</Badge>
+            )}
+          </span>
+          <span className="mt-1 block text-[11.5px] leading-5 text-muted-foreground">
+            {weekly.doneThisWeek
+              ? `رکورد این هفته ${weekly.bestThisWeek?.toLocaleString("fa-IR")}٪ — تا شنبهٔ بعد فرصت داری بهترش کنی! (مجموع ${weekly.totalDone.toLocaleString("fa-IR")} هفته)`
+              : "هر هفته ۱۰ سؤال قطعی جدید؛ سؤال‌های این هفته برای همه کلاس یکسانه — تا شنبه فرصت داری."}
+          </span>
+          {pulses.weekly && pulses.weekly.players > 0 && (
+            <span className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-violet-700 dark:text-violet-300">
+              <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500" />
+              این هفته {pulses.weekly.players.toLocaleString("fa-IR")} نفر چالش دادند
+              {pulses.weekly.avg !== null && <> — میانگین دقت {pulses.weekly.avg.toLocaleString("fa-IR")}٪</>}
+              {pulses.weekly.best !== null && pulses.weekly.best > 0 && (
+                <span className="text-muted-foreground">· بهترین {pulses.weekly.best.toLocaleString("fa-IR")}٪</span>
+              )}
+            </span>
+          )}
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5 rounded-xl bg-violet-600 px-4 py-2 text-[12.5px] font-black text-white shadow-md shadow-violet-600/25 transition-transform group-hover:scale-105">
+          {weekly.doneThisWeek ? "دوباره" : "شروع چالش"}
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
         </span>
       </button>

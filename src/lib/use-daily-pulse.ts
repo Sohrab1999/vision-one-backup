@@ -3,18 +3,26 @@
 import { useEffect, useState } from "react";
 
 /**
- * نبض اجتماعی چالش روزانه — میانگین/بهترین دقت و تعداد پاسخ‌دهندگان امروز از سرور.
+ * نبض اجتماعی چالش‌ها — تعداد پاسخ‌دهندگان، میانگین و بهترین دقت از سرور.
+ * daily: آزمون‌های dailyِ امروز · weekly: آزمون‌های weekly از شنبهٔ آغازین هفته.
  * سبک و یک‌بار مصرف: فقط یک GET به /api/attempts.
  */
 
-export interface DailyPulse {
+export interface Pulse {
   players: number;
   avg: number | null;
   best: number | null;
 }
 
-export function useDailyPulse(enabled = true): DailyPulse | null {
-  const [pulse, setPulse] = useState<DailyPulse | null>(null);
+interface Pulses {
+  daily: Pulse | null;
+  weekly: Pulse | null;
+}
+
+const IDLE: Pulses = { daily: null, weekly: null };
+
+export function usePulses(enabled = true): Pulses {
+  const [pulses, setPulses] = useState<Pulses>(IDLE);
 
   useEffect(() => {
     if (!enabled) return;
@@ -22,9 +30,15 @@ export function useDailyPulse(enabled = true): DailyPulse | null {
     fetch("/api/attempts")
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (!cancelled && d?.dailyPulse && typeof d.dailyPulse.players === "number") {
-          setPulse(d.dailyPulse as DailyPulse);
+        if (cancelled || !d) return;
+        const next: Pulses = { daily: null, weekly: null };
+        if (d.dailyPulse && typeof d.dailyPulse.players === "number") {
+          next.daily = d.dailyPulse as Pulse;
         }
+        if (d.weeklyPulse && typeof d.weeklyPulse.players === "number") {
+          next.weekly = d.weeklyPulse as Pulse;
+        }
+        setPulses(next);
       })
       .catch(() => undefined);
     return () => {
@@ -32,5 +46,10 @@ export function useDailyPulse(enabled = true): DailyPulse | null {
     };
   }, [enabled]);
 
-  return pulse;
+  return pulses;
+}
+
+/** سازگاری با کدهای قبلی — فقط نبض چالش روزانه */
+export function useDailyPulse(enabled = true): Pulse | null {
+  return usePulses(enabled).daily;
 }

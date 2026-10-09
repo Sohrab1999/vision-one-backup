@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { Star } from "lucide-react";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -42,6 +43,8 @@ import { useStreak } from "@/lib/streak-store";
 import { useUserName } from "@/lib/name-store";
 import { useDailyGoal } from "@/lib/goal-store";
 import { useDailyInfo } from "@/lib/daily-store";
+import { useQuestionStars } from "@/lib/question-star-store";
+import { useCombinedRounds } from "@/lib/round-counters";
 import { setPracticeIds } from "@/lib/practice-store";
 import { ActivityHeatmap } from "./activity-heatmap";
 import { toast } from "sonner";
@@ -97,6 +100,7 @@ const CATEGORY_FA: Record<string, string> = {
   all: "ترکیبی",
   review: "مرور اشتباهات",
   daily: "چالش روزانه",
+  weekly: "چالش هفتگی",
   starred: "تمرین ستاره‌دار",
   combined: "مرور ترکیبی",
 };
@@ -229,6 +233,14 @@ const ACHIEVEMENTS: {
     check: (c) => c.dailyDone >= 3,
     progress: (c) => [Math.min(c.dailyDone, 3), 3],
   },
+  {
+    id: "combined-review",
+    icon: "🧩",
+    title: "مرورگر",
+    desc: "یک مرور ترکیبی کامل کن",
+    check: (c) => c.combinedRounds >= 1,
+    progress: (c) => [Math.min(c.combinedRounds, 1), 1],
+  },
 ];
 
 interface AchContext {
@@ -239,6 +251,7 @@ interface AchContext {
   streakBest: number;
   goalHit: boolean;
   dailyDone: number;
+  combinedRounds: number;
 }
 
 function fmtDuration(sec: number): string {
@@ -264,6 +277,8 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
   const userName = useUserName();
   const daily = useDailyGoal();
   const dailyInfo = useDailyInfo();
+  const { count: starredQCount } = useQuestionStars();
+  const combinedRounds = useCombinedRounds();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [recent, setRecent] = useState<RecentAttempt[]>([]);
@@ -302,8 +317,9 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
       streakBest: streak.best,
       goalHit: daily.goal > 0 && daily.todayCount >= daily.goal,
       dailyDone: dailyInfo.totalDone,
+      combinedRounds,
     }),
-    [stats, learned, streak.best, daily.goal, daily.todayCount, dailyInfo.totalDone],
+    [stats, learned, streak.best, daily.goal, daily.todayCount, dailyInfo.totalDone, combinedRounds],
   );
 
   const unlocked = useMemo(
@@ -347,6 +363,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
     { icon: Target, label: "دقت کل پاسخ‌ها", value: `${(stats?.accuracy ?? 0).toLocaleString("fa-IR")}٪`, color: "text-teal-500", bg: "bg-teal-500/10" },
     { icon: Trophy, label: "بهترین رکورد", value: `${(stats?.best ?? 0).toLocaleString("fa-IR")}٪`, color: "text-amber-500", bg: "bg-amber-500/10" },
     { icon: BookOpen, label: "واژه یادگرفته", value: learned.toLocaleString("fa-IR"), color: "text-emerald-500", bg: "bg-emerald-500/10" },
+    { icon: Star, label: "سؤال ستاره‌دار", value: starredQCount.toLocaleString("fa-IR"), color: "text-yellow-500", bg: "bg-yellow-500/10" },
     { icon: Flame, label: "زنجیره فعال", value: streak.count.toLocaleString("fa-IR") + " روز", color: "text-orange-500", bg: "bg-orange-500/10" },
     { icon: Medal, label: "نشان‌های باز‌شده", value: `${unlocked.toLocaleString("fa-IR")} از ${ACHIEVEMENTS.length.toLocaleString("fa-IR")}`, color: "text-violet-500", bg: "bg-violet-500/10" },
   ];
@@ -365,8 +382,8 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
       </div>
 
       {loading && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7">
+          {Array.from({ length: 7 }).map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardContent className="p-4">
                 <div className="h-10 w-10 rounded-xl bg-muted" />
@@ -381,15 +398,15 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
       {!loading && (
         <>
           {/* ── کارت‌های آمار ── */}
-          <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <section className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
             {kpis.map((k, i) => (
-              <Card key={k.label} className={`rise-in rise-in-${(i % 6) + 1} overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5`}>
+              <Card key={k.label} className={`rise-in rise-in-${(i % 4) + 1} overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5`}>
                 <CardContent className="p-4">
                   <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", k.bg, k.color)}>
                     <k.icon size={19} />
                   </span>
                   <p className="mt-2.5 text-lg font-black leading-none">{k.value}</p>
-                  <p className="mt-1 text-[11px] text-muted-foreground">{k.label}</p>
+                  <p className="mt-1 text-[11px] leading-4 text-muted-foreground">{k.label}</p>
                 </CardContent>
               </Card>
             ))}

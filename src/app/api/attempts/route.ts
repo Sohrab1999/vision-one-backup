@@ -52,10 +52,13 @@ interface LeaderRow {
 export async function GET() {
   try {
     // ── نبض چالش روزانه: آزمون‌های dailyِ امروز (مقایسهٔ اجتماعی) ──
+    // ── نبض چالش هفتگی: آزمون‌های weekly از شنبهٔ آغازین هفته (هفتهٔ ایرانی از شنبه) ──
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 1) % 7));
 
-    const [recent, agg, last60, chart, detailRows, dailyToday] = await Promise.all([
+    const [recent, agg, last60, chart, detailRows, dailyToday, weeklyThisWeek] = await Promise.all([
       db.attempt.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
       db.attempt.aggregate({
         _count: { _all: true },
@@ -74,6 +77,12 @@ export async function GET() {
       }),
       db.attempt.findMany({
         where: { category: "daily", createdAt: { gte: startOfToday } },
+        select: { correct: true, total: true },
+        orderBy: { createdAt: "desc" },
+        take: 300,
+      }),
+      db.attempt.findMany({
+        where: { category: "weekly", createdAt: { gte: weekStart } },
         select: { correct: true, total: true },
         orderBy: { createdAt: "desc" },
         take: 300,
@@ -199,6 +208,27 @@ export async function GET() {
           : null,
     };
 
+    // ── نبض اجتماعی چالش هفتگی: پاسخ‌دهندگان چالش هفتگی از شنبه ──
+    const weeklyPulse = {
+      players: weeklyThisWeek.length,
+      avg:
+        weeklyThisWeek.length > 0
+          ? Math.round(
+              weeklyThisWeek.reduce((s, a) => s + (a.total > 0 ? (a.correct / a.total) * 100 : 0), 0) /
+                weeklyThisWeek.length,
+            )
+          : null,
+      best:
+        weeklyThisWeek.length > 0
+          ? Math.round(
+              weeklyThisWeek.reduce(
+                (m, a) => Math.max(m, a.total > 0 ? (a.correct / a.total) * 100 : 0),
+                0,
+              ),
+            )
+          : null,
+    };
+
     return NextResponse.json({
       recent: recent.map((a) => ({
         id: a.id,
@@ -221,6 +251,7 @@ export async function GET() {
       leaderboard,
       topMisses,
       dailyPulse,
+      weeklyPulse,
       stats: {
         attempts: agg._count._all,
         sumTotal,
