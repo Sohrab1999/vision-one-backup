@@ -8,6 +8,7 @@ import { GRADE_SEVEN_BOOK } from "../grade-7";
 import { GRADE_EIGHT_BOOK } from "../grade-8";
 import { GRADE_NINE_BOOK } from "../grade-9";
 import { GRADE_ELEVEN_BOOK } from "../grade-11";
+import { GRADE_TWELVE_BOOK } from "../grade-12";
 
 export const BOOKS: BookMeta[] = [
   {
@@ -64,11 +65,11 @@ export const BOOKS: BookMeta[] = [
     id: "grade-12",
     title: "زبان انگلیسی دوازدهم",
     gradeLabel: "پایه دوازدهم",
-    author: "—",
-    tagline: "در انتظار آپلود فایل جزوه",
+    author: "جمال احمدی و همکاران",
+    tagline: "جزوه جامع Vision Three — ۳ درس، واژگان، درسنامه، تست امتحان نهایی و ضمیمه",
     color: "rose",
     emoji: "📓",
-    available: false,
+    available: true,
   },
 ];
 
@@ -89,7 +90,8 @@ export function getBookData(id: BookId): BookData | null {
       return GRADE_NINE_BOOK;
     case "grade-11":
       return GRADE_ELEVEN_BOOK;
-    // فاز بعدی: case "grade-12" و به همین ترتیب
+    case "grade-12":
+      return GRADE_TWELVE_BOOK;
     default:
       return null;
   }

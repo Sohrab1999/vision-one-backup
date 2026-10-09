@@ -164,7 +164,7 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
       {/* نکته پیشرفت */}
       <p className="flex items-center justify-center gap-1.5 pb-2 text-center text-xs text-muted-foreground">
         <Layers size={13} className="shrink-0" aria-hidden />
-        برای افزودن جزوه‌های هفتم تا نهم و یازدهم و دوازدهم، فایل PDF هر جزوه باید بارگذاری شود — نقشه راه در پوشه «نقشه راه ها».
+        هر ۶ جزوه (پایه هفتم تا دوازدهم + ویژن وان) فعال است — برای جزئیات هر جزوه، نقشه راه در پوشه «نقشه راه ها» را ببینید.
       </p>
     </div>
   );

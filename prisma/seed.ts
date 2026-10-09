@@ -10,6 +10,7 @@ import { QUIZ_SEED as GRADE_SEVEN_QUIZ } from "../src/data/grade-7/quiz-seed";
 import { QUIZ_SEED as GRADE_EIGHT_QUIZ } from "../src/data/grade-8/quiz-seed";
 import { QUIZ_SEED as GRADE_NINE_QUIZ } from "../src/data/grade-9/quiz-seed";
 import { QUIZ_SEED as GRADE_ELEVEN_QUIZ } from "../src/data/grade-11/quiz-seed";
+import { QUIZ_SEED as GRADE_TWELVE_QUIZ } from "../src/data/grade-12/quiz-seed";
 
 const db = new PrismaClient();
 
@@ -19,6 +20,7 @@ const SOURCES: { book: string; rows: typeof VISION_ONE_QUIZ }[] = [
   { book: "grade-8", rows: GRADE_EIGHT_QUIZ as typeof VISION_ONE_QUIZ },
   { book: "grade-9", rows: GRADE_NINE_QUIZ as typeof VISION_ONE_QUIZ },
   { book: "grade-11", rows: GRADE_ELEVEN_QUIZ as typeof VISION_ONE_QUIZ },
+  { book: "grade-12", rows: GRADE_TWELVE_QUIZ as typeof VISION_ONE_QUIZ },
 ];
 
 async function main() {

@@ -23,6 +23,7 @@ const COLOR_MAP: Record<string, { bg: string; text: string; border: string }> = 
   teal: { bg: "bg-teal-500/10", text: "text-teal-600 dark:text-teal-400", border: "hover:border-teal-500/40" },
   violet: { bg: "bg-violet-500/10", text: "text-violet-600 dark:text-violet-400", border: "hover:border-violet-500/40" },
   orange: { bg: "bg-orange-500/10", text: "text-orange-600 dark:text-orange-400", border: "hover:border-orange-500/40" },
+  rose: { bg: "bg-rose-500/10", text: "text-rose-600 dark:text-rose-400", border: "hover:border-rose-500/40" },
 };
 
 export function ContentsView({
