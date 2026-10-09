@@ -1,26 +1,30 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
  * Starred questions store — سؤال‌هایی که کاربر حین آزمون ستاره می‌زند
- * (نکته‌های سخت برای مرور هدفمند). Persisted in localStorage: visionone:qstars
+ * (نکته‌های سخت برای مرور هدفمند). Persisted in localStorage scoped per book: visionone:book:<id>:qstars
  *
  * - toggleQuestionStar(id): ستاره/حذف ستاره
  * - useQuestionStars(): خواندن واکنشی با useSyncExternalStore
  */
 
-const QSTAR_KEY = "visionone:qstars";
+const STORE_NAME = "qstars";
 const MAX_QSTARS = 400;
 const EMPTY: string[] = [];
 
 let cache: string[] | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 function read(): string[] {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(QSTAR_KEY);
+    const raw = readScoped(STORE_NAME);
     const parsed = raw ? (JSON.parse(raw) as unknown) : [];
     cache = Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
   } catch {
@@ -32,7 +36,7 @@ function read(): string[] {
 function persist(next: string[]) {
   cache = next;
   try {
-    localStorage.setItem(QSTAR_KEY, JSON.stringify(next));
+    writeScoped(STORE_NAME, JSON.stringify(next));
   } catch {
     /* noop */
   }

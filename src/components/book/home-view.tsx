@@ -39,8 +39,8 @@ import {
   YAxis,
   Tooltip as ChartTooltip,
 } from "recharts";
-import { BOOK_INFO, BOOK_STATS, CHAPTERS } from "@/data/book-meta";
-import { ALL_VOCAB } from "@/data/vocab";
+import { useBook, useBookData } from "@/lib/book-context";
+import type { VocabEntry } from "@/data/types";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useUserName } from "@/lib/name-store";
 import { useStreak } from "@/lib/streak-store";
@@ -66,34 +66,44 @@ interface ChartPoint {
   idx: number;
 }
 
-const FEATURE_CARDS: {
+function useWordOfDay(vocab: VocabEntry[]) {
+  return useMemo(() => {
+    const day = Math.floor(Date.now() / 86400000);
+    return vocab[day % vocab.length];
+  }, [vocab]);
+}
+
+/** کارت‌های بخش‌های کتاب — آمارها از دادهٔ کتاب فعال می‌آیند */
+function useFeatureCards(): {
   view: ViewId;
   title: string;
   desc: string;
   icon: React.ComponentType<{ size?: number | string; className?: string }>;
   stat?: string;
-}[] = [
-  { view: "contents", title: "فهرست فصل‌ها", desc: "مسیر یادگیری گام‌به‌گام کتاب", icon: ListOrdered },
-  { view: "vocab", title: "واژگان تعاملی", desc: "جستجو، کارت فلپ و علامت‌گذاری واژه‌های یادگرفته", icon: BookOpen, stat: `${BOOK_STATS.words} واژه` },
-  { view: "flashcards", title: "تمرین واژه‌ها", desc: "فلاش‌کارت SRS و بازی تطبیق واژه و معنی", icon: Layers, stat: "SRS" },
-  { view: "grammar", title: "درسنامه گرامر", desc: "۱۱ درسنامه با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: "۱۱ درسنامه" },
-  { view: "quiz", title: "آزمون تعاملی", desc: `بانک سؤال واقعی جزوه با فیلتر سطح، چالش روزانه و هفتگی`, icon: ClipboardList, stat: `${BOOK_STATS.questions} تست` },
-  { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۶ نشان افتخار", icon: TrendingUp, stat: "۱۶ نشان" },
-  { view: "texts", title: "متن و مکالمه", desc: "ریدینگ‌ها و مکالمه‌ها با روایت صوتی", icon: FileText, stat: `${BOOK_STATS.readings + BOOK_STATS.conversations} متن` },
-  { view: "dict", title: "دیکشنری", desc: "تعریف انگلیسی به انگلیسی با تلفظ و مثال", icon: Library, stat: `${BOOK_STATS.dictionary} مدخل` },
-  { view: "verbs", title: "افعال بی‌قاعده", desc: "جدول کامل افعال با جستجو", icon: Repeat, stat: `${BOOK_STATS.verbs} فعل` },
-  { view: "tutor", title: "دستیار هوشمند", desc: "تمرین مکالمه با معلم AI فارسی‌زبان", icon: Bot, stat: "۲۴/۷" },
-];
-
-function useWordOfDay() {
-  return useMemo(() => {
-    const day = Math.floor(Date.now() / 86400000);
-    return ALL_VOCAB[day % ALL_VOCAB.length];
-  }, []);
+}[] {
+  const data = useBookData();
+  return useMemo(
+    () => [
+      { view: "contents", title: "فهرست فصل‌ها", desc: "مسیر یادگیری گام‌به‌گام کتاب", icon: ListOrdered },
+      { view: "vocab", title: "واژگان تعاملی", desc: "جستجو، کارت فلپ و علامت‌گذاری واژه‌های یادگرفته", icon: BookOpen, stat: `${data.stats.words} واژه` },
+      { view: "flashcards", title: "تمرین واژه‌ها", desc: "فلاش‌کارت SRS و بازی تطبیق واژه و معنی", icon: Layers, stat: "SRS" },
+      { view: "grammar", title: "درسنامه گرامر", desc: "درسنامه‌های گرامر با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: `${data.stats.grammarLessons} درسنامه` },
+      { view: "quiz", title: "آزمون تعاملی", desc: `بانک سؤال واقعی جزوه با فیلتر سطح، چالش روزانه و هفتگی`, icon: ClipboardList, stat: `${data.stats.questions} تست` },
+      { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۶ نشان افتخار", icon: TrendingUp, stat: "۱۶ نشان" },
+      { view: "texts", title: "متن و مکالمه", desc: "ریدینگ‌ها و مکالمه‌ها با روایت صوتی", icon: FileText, stat: `${data.stats.readings + data.stats.conversations} متن` },
+      { view: "dict", title: "دیکشنری", desc: "تعریف انگلیسی به انگلیسی با تلفظ و مثال", icon: Library, stat: `${data.stats.dictionary} مدخل` },
+      { view: "verbs", title: "افعال بی‌قاعده", desc: "جدول کامل افعال با جستجو", icon: Repeat, stat: `${data.stats.verbs} فعل` },
+      { view: "tutor", title: "دستیار هوشمند", desc: "تمرین مکالمه با معلم AI فارسی‌زبان", icon: Bot, stat: "۲۴/۷" },
+    ],
+    [data.stats],
+  );
 }
 
 export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
-  const wordOfDay = useWordOfDay();
+  const { bookId } = useBook();
+  const data = useBookData();
+  const wordOfDay = useWordOfDay(data.vocab.all);
+  const featureCards = useFeatureCards();
   const { count: learned } = useLearnedWords();
   const userName = useUserName();
   const streak = useStreak();
@@ -108,7 +118,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/attempts")
+    fetch(`/api/attempts?book=${bookId}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         if (cancelled || !d) return;
@@ -126,9 +136,9 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [bookId]);
 
-  const learnedPct = Math.round((learned / BOOK_STATS.words) * 100);
+  const learnedPct = Math.round((learned / data.stats.words) * 100);
 
   return (
     <div className="space-y-8 pb-4">
@@ -143,18 +153,18 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           <div className="rise-in flex flex-wrap items-center justify-center gap-2">
             <Badge className="gap-1 bg-accent text-accent-foreground border-accent/40 text-[12px]">
               <BadgeCheck size={13} />
-              {BOOK_INFO.price}
+              {data.info.price}
             </Badge>
             <Badge variant="outline" className="text-[12px]">
-              {BOOK_INFO.edition}
+              {data.info.edition}
             </Badge>
             <Badge variant="secondary" className="font-en text-[11px]">
-              Vision One
+              {data.info.subtitle}
             </Badge>
           </div>
 
           <p className="rise-in text-[12px] font-bold text-primary">
-            {userName ? `سلام ${userName}! 👋 خوش برگشتی` : "به کتاب وب ویژن وان خوش آمدی 👋"}
+            {userName ? `سلام ${userName}! 👋 خوش برگشتی` : `به کتاب وب «${data.info.subtitle}» خوش آمدی 👋`}
             {streak.count > 0 && (
               <span className="mr-2 inline-flex translate-y-px items-center gap-1 rounded-full border border-orange-500/40 bg-orange-500/10 px-2 py-0.5 text-[10px] font-black text-orange-500">
                 <Flame size={11} className="streak-flame" />
@@ -164,20 +174,18 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           </p>
 
           <h1 className="rise-in rise-in-1 text-3xl sm:text-5xl font-black leading-[1.25] tracking-tight">
-            جزوه جامع{" "}
             <span className="bg-gradient-to-l from-primary via-emerald-400 to-accent-foreground bg-clip-text text-transparent">
-              زبان انگلیسی
-            </span>{" "}
-            پایه دهم
+              {data.info.title}
+            </span>
           </h1>
 
           <p className="rise-in rise-in-2 mx-auto max-w-2xl text-sm sm:text-base text-muted-foreground leading-7">
             حالا به شکل یک کتاب وب تعاملی؛ با روایت صوتی واژه‌ها و متن‌ها، درسنامه‌های گرامر،
-            بانک {BOOK_STATS.questions} تست واقعی جزوه و دستیار هوشمند مکالمه — همه در یک‌جا.
+            بانک {data.stats.questions} تست واقعی جزوه و دستیار هوشمند مکالمه — همه در یک‌جا.
           </p>
 
           <p className="rise-in rise-in-2 text-[12px] text-muted-foreground/80">
-            {BOOK_INFO.author}
+            {data.info.author}
           </p>
 
           <div className="rise-in rise-in-3 flex flex-wrap items-center justify-center gap-3 pt-1">
@@ -391,10 +399,10 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
       {/* ── نوار آمار ─────────────────────────────── */}
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          { icon: BookOpen, label: "واژه", value: BOOK_STATS.words, color: "text-primary" },
-          { icon: ClipboardList, label: "تست", value: BOOK_STATS.questions, color: "text-amber-500" },
-          { icon: FileText, label: "متن و مکالمه", value: BOOK_STATS.readings + BOOK_STATS.conversations, color: "text-teal-500" },
-          { icon: Library, label: "مدخل دیکشنری", value: BOOK_STATS.dictionary, color: "text-orange-500" },
+          { icon: BookOpen, label: "واژه", value: data.stats.words, color: "text-primary" },
+          { icon: ClipboardList, label: "تست", value: data.stats.questions, color: "text-amber-500" },
+          { icon: FileText, label: "متن و مکالمه", value: data.stats.readings + data.stats.conversations, color: "text-teal-500" },
+          { icon: Library, label: "مدخل دیکشنری", value: data.stats.dictionary, color: "text-orange-500" },
         ].map((s, i) => (
           <Card key={s.label} className={`rise-in rise-in-${i + 1} border/60`}>
             <CardContent className="flex items-center gap-3 p-4">
@@ -420,7 +428,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
                 پیشرفت من
               </h2>
               <Badge variant="secondary" className="text-[11px]">
-                {learned.toLocaleString("fa-IR")} از {BOOK_STATS.words.toLocaleString("fa-IR")} واژه
+                {learned.toLocaleString("fa-IR")} از {data.stats.words.toLocaleString("fa-IR")} واژه
               </Badge>
             </div>
             <Progress value={learnedPct} className="h-2.5" />
@@ -527,7 +535,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
               </div>
             </div>
             <p className="text-[11px] leading-5 text-muted-foreground">
-              هر روز یک واژه از {BOOK_STATS.words.toLocaleString("fa-IR")} واژه کتاب را بشناس. روی دکمه بلندگو بزن تا تلفظش را بشنوی.
+              هر روز یک واژه از {data.stats.words.toLocaleString("fa-IR")} واژه کتاب را بشناس. روی دکمه بلندگو بزن تا تلفظش را بشنوی.
             </p>
           </CardContent>
         </Card>
@@ -590,7 +598,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           بخش‌های کتاب وب
         </h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURE_CARDS.map((f, i) => (
+          {featureCards.map((f, i) => (
             <button
               key={f.view}
               type="button"
@@ -625,14 +633,14 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
             <p className="text-xs text-muted-foreground leading-5">
               شکست بخشی از زندگی است؛ اگر شکست نخوری یاد نمی‌گیری و اگر یاد نگیری هرگز موفق نمی‌شوی.
             </p>
-            <p className="text-[11px] font-bold text-accent-foreground">— صفحه ۳ جزوه، {BOOK_INFO.author.replace("تألیف و گردآوری: ", "")}</p>
+            <p className="text-[11px] font-bold text-accent-foreground">— صفحه ۳ جزوه، {data.info.author.replace("تألیف و گردآوری: ", "")}</p>
           </CardContent>
         </Card>
       </section>
 
       {/* فصل‌ها پیش‌نمایش سریع */}
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-        {CHAPTERS.map((ch) => (
+        {data.chapters.map((ch) => (
           <button
             key={ch.id}
             type="button"

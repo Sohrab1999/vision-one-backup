@@ -1,6 +1,6 @@
 // واژگان درس چهارم (پایه دهم) — جزوه جامع «ویژن وان»
 // منبع: صفحات ۱۴۲ تا ۱۴۴ (رونویسی عینی از جدول واژگان)
-import type { VocabWord } from "./types";
+import type { VocabWord } from "../types";
 
 export const VOCAB_LESSON_4: VocabWord[] = [
   { word: "across", meaning: "از این سو – آن سو", lesson: 4 },

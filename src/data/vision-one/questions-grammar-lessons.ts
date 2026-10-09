@@ -1,6 +1,6 @@
 // تست‌های گرامر و نگارش پایه دهم — ۲۰ تست انتهای هر درس (درس ۱ تا درس ۴)
 // منبع: جزوه جامع «Vision One» — صفحات ۶۶-۶۷، ۹۹-۱۰۰، ۱۳۴ و ۱۶۳
-import type { QuizQuestionSeed } from "./types";
+import type { QuizQuestionSeed } from "../types";
 
 export const GRAMMAR_LESSONS: QuizQuestionSeed[] = [
   // ─── درس اول (صفحات ۶۶-۶۷) — سطح: متوسط (تست‌های ۱۹ و ۲۰: کنکوری) ───

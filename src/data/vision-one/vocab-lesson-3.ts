@@ -1,6 +1,6 @@
 // واژگان درس سوم (پایه دهم) — جزوه جامع «ویژن وان»
 // منبع: صفحات ۱۱۴ تا ۱۱۶ (رونویسی عینی از جدول واژگان)
-import type { VocabWord } from "./types";
+import type { VocabWord } from "../types";
 
 export const VOCAB_LESSON_3: VocabWord[] = [
   { word: "action", meaning: "عمل، عملکرد", lesson: 3 },

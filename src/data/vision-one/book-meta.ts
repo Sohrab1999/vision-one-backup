@@ -1,23 +1,6 @@
-import type { Reading, Conversation, IrregularVerb } from "./types";
-import { READING_LIST } from "./readings";
-import { CONVERSATION_LIST } from "./conversations";
-import { IRREGULAR_VERBS } from "./irregular-verbs";
-import { DICTIONARY } from "./dictionary";
-import { QUIZ_SEED } from "./quiz-seed";
-import { ALL_VOCAB } from "./vocab";
+import type { ChapterMeta, BookInfo } from "../types";
 
 /** اطلاعات فصل‌های کتاب — مطابق فهرست جزوه (صفحه ۴۱) */
-export interface ChapterMeta {
-  id: number;
-  number: string;
-  title: string;
-  titleFa: string;
-  quote: { en: string; fa: string; source: string };
-  minutes: number;
-  color: string;
-  grammarTopics: string[];
-}
-
 export const CHAPTERS: ChapterMeta[] = [
   {
     id: 0,
@@ -91,7 +74,7 @@ export const CHAPTERS: ChapterMeta[] = [
   },
 ];
 
-export const BOOK_INFO = {
+export const BOOK_INFO: BookInfo = {
   title: "جزوه جامع زبان انگلیسی پایه دهم",
   subtitle: "Vision One",
   author: "تألیف و گردآوری: جمال احمدی و همکاران",
@@ -99,15 +82,3 @@ export const BOOK_INFO = {
   price: "رایــگان",
   telegram: "@PracticalEnglishInKonkour",
 };
-
-export const BOOK_STATS = {
-  words: ALL_VOCAB.length,
-  questions: QUIZ_SEED.length,
-  readings: READING_LIST.length,
-  conversations: CONVERSATION_LIST.length,
-  dictionary: DICTIONARY.length,
-  verbs: IRREGULAR_VERBS.length,
-  grammarLessons: 9,
-};
-
-export { READING_LIST, CONVERSATION_LIST, IRREGULAR_VERBS };

@@ -1,0 +1,1438 @@
+     1→"use client";
+     2→
+     3→import { useEffect, useMemo, useRef, useState } from "react";
+     4→import {
+     5→  ClipboardList,
+     6→  Play,
+     7→  ArrowLeft,
+     8→  RotateCcw,
+     9→  CheckCircle2,
+    10→  XCircle,
+    11→  Sparkles,
+    12→  Loader2,
+    13→  Trophy,
+    14→  Timer,
+    15→  ListChecks,
+    16→  BookMarked,
+    17→  NotebookPen,
+    18→  Printer,
+    19→  Trash2,
+    20→  Download,
+    21→  Hourglass,
+    22→  CalendarCheck,
+    23→  CalendarRange,
+    24→  Gauge,
+    25→  Star,
+    26→  Layers,
+    27→} from "lucide-react";
+    28→import { Button } from "@/components/ui/button";
+    29→import { Card, CardContent } from "@/components/ui/card";
+    30→import { Badge } from "@/components/ui/badge";
+    31→import { Progress } from "@/components/ui/progress";
+    32→import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+    33→import { Label } from "@/components/ui/label";
+    34→import { cn } from "@/lib/utils";
+    35→import { toast } from "sonner";
+    36→import { useUserName } from "@/lib/name-store";
+    37→import { touchStreak } from "@/lib/streak-store";
+    38→import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
+    39→import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
+    40→import { useQuestionStars, toggleQuestionStar } from "@/lib/question-star-store";
+    41→import { recordStudySession } from "@/lib/goal-store";
+    42→import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
+    43→import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store";
+    44→import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
+    45→import { usePulses } from "@/lib/use-daily-pulse";
+    46→import type { ViewId } from "./app-header";
+    47→
+    48→interface Question {
+    49→  id: string;
+    50→  category: string;
+    51→  lesson: number;
+    52→  scope: string;
+    53→  text: string;
+    54→  options: string[];
+    55→  answer: number;
+    56→  level: string;
+    57→  explanation: string | null;
+    58→}
+    59→
+    60→type Phase = "setup" | "playing" | "result";
+    61→type Mode = "normal" | "review" | "daily" | "weekly" | "starred" | "combined";
+    62→
+    63→const CATEGORY_OPTIONS = [
+    64→  { value: "all", label: "همه سؤال‌ها" },
+    65→  { value: "grammar", label: "فقط گرامر" },
+    66→  { value: "vocabulary", label: "فقط واژگان" },
+    67→];
+    68→
+    69→const LEVEL_OPTIONS = [
+    70→  { value: "all", label: "همه سطوح" },
+    71→  { value: "آموزشی", label: "آموزشی" },
+    72→  { value: "متوسط", label: "متوسط" },
+    73→  { value: "کنکوری", label: "کنکوری" },
+    74→];
+    75→
+    76→/** رنگ نشان سطح روی کارت سؤال و چیپ فعال سطح */
+    77→function levelBadgeClass(level: string): string {
+    78→  if (level === "all") return "border-primary bg-primary/10 text-primary";
+    79→  if (level === "آموزشی") return "border-primary/40 bg-primary/10 text-primary";
+    80→  if (level === "کنکوری") return "border-destructive/40 bg-destructive/10 text-destructive";
+    81→  return "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400";
+    82→}
+    83→
+    84→const LESSON_OPTIONS = [
+    85→  { value: "all", label: "همه بخش‌ها" },
+    86→  { value: "0", label: "جمع‌بندی کل کتاب" },
+    87→  { value: "1", label: "درس ۱" },
+    88→  { value: "2", label: "درس ۲" },
+    89→  { value: "3", label: "درس ۳" },
+    90→  { value: "4", label: "درس ۴" },
+    91→];
+    92→
+    93→const COUNT_OPTIONS = [5, 10, 20, 40];
+    94→
+    95→const TIMED_OPTIONS = [
+    96→  { value: 0, label: "بدون زمان" },
+    97→  { value: 15, label: "۱۵ ثانیه" },
+    98→  { value: 30, label: "۳۰ ثانیه" },
+    99→  { value: 60, label: "۶۰ ثانیه" },
+   100→];
+   101→
+   102→const LETTERS = ["A", "B", "C", "D"];
+   103→
+   104→const CONFETTI_COLORS = ["#10b981", "#f59e0b", "#f97316", "#14b8a6", "#84cc16", "#eab308"];
+   105→
+   106→/** Lightweight CSS confetti — shown when the quiz score is ۸۰٪ or higher. */
+   107→function Confetti() {
+   108→  const pieces = useMemo(
+   109→    () =>
+   110→      Array.from({ length: 32 }, (_, i) => ({
+   111→        id: i,
+   112→        left: Math.random() * 100,
+   113→        delay: Math.random() * 1.2,
+   114→        duration: 2.4 + Math.random() * 1.6,
+   115→        size: 6 + Math.random() * 6,
+   116→        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+   117→        drift: Math.round((Math.random() - 0.5) * 120),
+   118→        round: Math.random() > 0.5,
+   119→      })),
+   120→    [],
+   121→  );
+   122→  return (
+   123→    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+   124→      {pieces.map((p) => (
+   125→        <span
+   126→          key={p.id}
+   127→          className="confetti-piece absolute top-[-14px] block"
+   128→          style={{
+   129→            left: `${p.left}%`,
+   130→            width: p.size,
+   131→            height: p.size * (p.round ? 1 : 0.45),
+   132→            background: p.color,
+   133→            borderRadius: p.round ? "50%" : 2,
+   134→            animationDelay: `${p.delay}s`,
+   135→            animationDuration: `${p.duration}s`,
+   136→            "--confetti-drift": `${p.drift}px`,
+   137→          } as React.CSSProperties}
+   138→        />
+   139→      ))}
+   140→    </div>
+   141→  );
+   142→}
+   143→
+   144→function fmtTime(s: number) {
+   145→  const m = Math.floor(s / 60);
+   146→  const sec = s % 60;
+   147→  return `${m.toLocaleString("fa-IR")}:${sec.toString().padStart(2, "0")}`;
+   148→}
+   149→
+   150→interface PoolMeta {
+   151→  total: number;
+   152→  byLevel: Record<string, number>;
+   153→  byCategory: Record<string, number>;
+   154→}
+   155→
+   156→export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
+   157→  const [phase, setPhase] = useState<Phase>("setup");
+   158→  const [mode, setMode] = useState<Mode>("normal");
+   159→  const [category, setCategory] = useState("all");
+   160→  const [lesson, setLesson] = useState(lessonFilter !== undefined ? String(lessonFilter) : "all");
+   161→  const [count, setCount] = useState(10);
+   162→  const [level, setLevel] = useState("all");
+   163→  const [poolMeta, setPoolMeta] = useState<PoolMeta | null>(null);
+   164→
+   165→  const [questions, setQuestions] = useState<Question[]>([]);
+   166→  const [loading, setLoading] = useState(false);
+   167→
+   168→  const [index, setIndex] = useState(0);
+   169→  const [selected, setSelected] = useState<number | null>(null);
+   170→  const [answers, setAnswers] = useState<(number | null)[]>([]);
+   171→  const [aiExplaining, setAiExplaining] = useState(false);
+   172→  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+   173→  const [elapsed, setElapsed] = useState(0);
+   174→  const [timed, setTimed] = useState(0);
+   175→  const [, setQTick] = useState(0);
+   176→  const [exporting, setExporting] = useState(false);
+   177→  const pulses = usePulses(phase === "setup");
+   178→  const userName = useUserName();
+   179→  const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
+   180→  const { ids: practiceIds } = usePracticeIds();
+   181→  const { ids: starredQIds, count: starredQCount, has: hasQStar, toggle: toggleQStar } = useQuestionStars();
+   182→  const daily = useDailyInfo();
+   183→  const weekly = useWeeklyInfo();
+   184→  const combinedRounds = useCombinedRounds();
+   185→  /** مرور ترکیبی: اشتباهات + ستاره‌دارها (بدون تکرار، حداکثر ۸۰ سؤال) */
+   186→  const combinedIds = useMemo(
+   187→    () => Array.from(new Set([...mistakeIds, ...starredQIds])).slice(0, 80),
+   188→    [mistakeIds, starredQIds],
+   189→  );
+   190→  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+   191→  const deadlineRef = useRef(0);
+   192→  const answeredLeftRef = useRef(0);
+   193→  const advanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+   194→
+   195→  async function startPracticeRound(ids: string[], nextMode: Mode = "normal") {
+   196→    setLoading(true);
+   197→    setMode(nextMode);
+   198→    try {
+   199→      const params = new URLSearchParams({ count: String(Math.max(ids.length, 1)) });
+   200→      params.set("ids", ids.join(","));
+   201→      const res = await fetch(`/api/questions?${params.toString()}`);
+   202→      const data = await res.json();
+   203→      if (!res.ok || !data.questions?.length) {
+   204→        toast.error("سؤالی برای تمرین یافت نشد.");
+   205→        return;
+   206→      }
+   207→      setQuestions(data.questions as Question[]);
+   208→      setAnswers(new Array(data.questions.length).fill(null));
+   209→      setIndex(0);
+   210→      setSelected(null);
+   211→      setAiExplanation(null);
+   212→      setElapsed(0);
+   213→      deadlineRef.current = Date.now() + timed * 1000;
+   214→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   215→      setPhase("playing");
+   216→      clearPracticeIds();
+   217→    } catch {
+   218→      toast.error("خطا در دریافت سؤالات");
+   219→    } finally {
+   220→      setLoading(false);
+   221→    }
+   222→  }
+   223→
+   224→  useEffect(() => {
+   225→    if (lessonFilter !== undefined) setLesson(String(lessonFilter));
+   226→  }, [lessonFilter]);
+   227→
+   228→  // شمارنده‌های بانک سؤال برای چیپ‌های سطح — یک‌بار در ورود به تنظیمات
+   229→  useEffect(() => {
+   230→    if (poolMeta) return;
+   231→    let cancelled = false;
+   232→    fetch("/api/questions?meta=1")
+   233→      .then((r) => (r.ok ? r.json() : null))
+   234→      .then((d) => {
+   235→        if (!cancelled && d && typeof d.total === "number") setPoolMeta(d as PoolMeta);
+   236→      })
+   237→      .catch(() => undefined);
+   238→    return () => {
+   239→      cancelled = true;
+   240→    };
+   241→  }, [poolMeta]);
+   242→
+   243→  useEffect(() => {
+   244→    if (phase === "playing") {
+   245→      timerRef.current = setInterval(() => setElapsed((s) => s + 1), 1000);
+   246→    }
+   247→    return () => {
+   248→      if (timerRef.current) clearInterval(timerRef.current);
+   249→    };
+   250→  }, [phase]);
+   251→
+   252→  const current = questions[index];
+   253→  /** ثانیه‌های باقی‌ماندهٔ سؤال جاری در حالت زمان‌دار — پس از پاسخ‌دادن منجمد می‌شود */
+   254→  const qLeft =
+   255→    timed > 0 && phase === "playing" && deadlineRef.current > 0
+   256→      ? Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000))
+   257→      : 0;
+   258→  const shownLeft = selected === null ? qLeft : selected === -1 ? 0 : answeredLeftRef.current;
+   259→  const correctCount = useMemo(
+   260→    () => questions.reduce((acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0), 0),
+   261→    [questions, answers],
+   262→  );
+   263→  const scorePct = questions.length
+   264→    ? Math.round((correctCount / questions.length) * 100)
+   265→    : 0;
+   266→
+   267→  async function startQuiz(nextMode: Mode = "normal") {
+   268→    setLoading(true);
+   269→    setMode(nextMode);
+   270→    try {
+   271→      const params = new URLSearchParams({
+   272→        category: category === "all" ? "all" : category,
+   273→        lesson: lesson === "all" ? "all" : lesson,
+   274→        count: String(count),
+   275→      });
+   276→      if (level !== "all") params.set("level", level);
+   277→      if (nextMode === "review") params.set("ids", mistakeIds.join(","));
+   278→      const res = await fetch(`/api/questions?${params.toString()}`);
+   279→      const data = await res.json();
+   280→      if (!res.ok || !data.questions?.length) {
+   281→        toast.error(
+   282→          level !== "all"
+   283→            ? "با این تنظیمات سؤالی یافت نشد — سطح دیگری را امتحان کنید."
+   284→            : "سؤالی یافت نشد — تنظیمات دیگری را امتحان کنید.",
+   285→        );
+   286→        return;
+   287→      }
+   288→      setQuestions(data.questions as Question[]);
+   289→      setAnswers(new Array(data.questions.length).fill(null));
+   290→      setIndex(0);
+   291→      setSelected(null);
+   292→      setAiExplanation(null);
+   293→      setElapsed(0);
+   294→      deadlineRef.current = Date.now() + timed * 1000;
+   295→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   296→      setPhase("playing");
+   297→    } catch {
+   298→      toast.error("خطا در دریافت سؤالات");
+   299→    } finally {
+   300→      setLoading(false);
+   301→    }
+   302→  }
+   303→
+   304→  /** شروع چالش روزانه — ۵ سؤال قطعی امروز، بدون زمان‌سنج */
+   305→  async function startDaily() {
+   306→    setLoading(true);
+   307→    setMode("daily");
+   308→    try {
+   309→      const res = await fetch("/api/questions?daily=1&count=5");
+   310→      const data = await res.json();
+   311→      if (!res.ok || !data.questions?.length) {
+   312→        toast.error("چالش امروز آماده نیست — بعداً دوباره امتحان کن.");
+   313→        return;
+   314→      }
+   315→      setQuestions(data.questions as Question[]);
+   316→      setAnswers(new Array(data.questions.length).fill(null));
+   317→      setIndex(0);
+   318→      setSelected(null);
+   319→      setAiExplanation(null);
+   320→      setElapsed(0);
+   321→      deadlineRef.current = 0;
+   322→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   323→      setPhase("playing");
+   324→      toast.info("چالش روزانه شروع شد — ۵ سؤال امروز همه یکسان است! 🎯", { duration: 3200 });
+   325→    } catch {
+   326→      toast.error("خطا در دریافت چالش روزانه");
+   327→    } finally {
+   328→      setLoading(false);
+   329→    }
+   330→  }
+   331→
+   332→  /** شروع چالش هفتگی — ۱۰ سؤال قطعی این هفته، بدون زمان‌سنج */
+   333→  async function startWeekly() {
+   334→    setLoading(true);
+   335→    setMode("weekly");
+   336→    try {
+   337→      const res = await fetch("/api/questions?weekly=1&count=10");
+   338→      const data = await res.json();
+   339→      if (!res.ok || !data.questions?.length) {
+   340→        toast.error("چالش این هفته آماده نیست — بعداً دوباره امتحان کن.");
+   341→        return;
+   342→      }
+   343→      setQuestions(data.questions as Question[]);
+   344→      setAnswers(new Array(data.questions.length).fill(null));
+   345→      setIndex(0);
+   346→      setSelected(null);
+   347→      setAiExplanation(null);
+   348→      setElapsed(0);
+   349→      deadlineRef.current = 0;
+   350→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   351→      setPhase("playing");
+   352→      toast.info(`چالش هفتگی شروع شد — ۱۰ سؤال هفتهٔ ${weekly.weekIndex.toLocaleString("fa-IR")} برای همه یکسان است! 📅`, { duration: 3200 });
+   353→    } catch {
+   354→      toast.error("خطا در دریافت چالش هفتگی");
+   355→    } finally {
+   356→      setLoading(false);
+   357→    }
+   358→  }
+   359→
+   360→  /** هنگام اتمام زمان یک سؤال: بدون پاسخ ثبت و اشتباه، سپس نمایش پاسخ و رفتن خودکار */
+   361→  function handleTimeout() {
+   362→    if (!current || selected !== null) return;
+   363→    toast.info("وقت این سؤال تمام شد ⏰", { duration: 1900 });
+   364→    recordMistake(current.id);
+   365→    setSelected(-1);
+   366→    setAnswers((prev) => {
+   367→      const next = [...prev];
+   368→      next[index] = -1;
+   369→      return next;
+   370→    });
+   371→    setAiExplanation(null);
+   372→    advanceRef.current = setTimeout(() => nextQuestion(), 1900);
+   373→  }
+   374→
+   375→  // شمارش معکوس حالت زمان‌دار — دی‌دلاین هر سؤال با تغییر سؤال/فاز بازنشانی می‌شود (در چالش روزانه/هفتگی غیرفعال)
+   376→  useEffect(() => {
+   377→    if (phase !== "playing" || timed <= 0 || selected !== null || mode === "daily" || mode === "weekly") return;
+   378→    if (deadlineRef.current === 0 || deadlineRef.current < Date.now() - timed * 1000) {
+   379→      deadlineRef.current = Date.now() + timed * 1000;
+   380→    }
+   381→    const iv = setInterval(() => {
+   382→      if (Date.now() >= deadlineRef.current) {
+   383→        clearInterval(iv);
+   384→        handleTimeout();
+   385→      } else {
+   386→        setQTick((t) => t + 1);
+   387→      }
+   388→    }, 1000);
+   389→    return () => clearInterval(iv);
+   390→  }, [phase, timed, selected, index]);
+   391→
+   392→  function chooseOption(optIdx: number) {
+   393→    if (selected !== null) return;
+   394→    if (timed > 0 && deadlineRef.current > 0) {
+   395→      answeredLeftRef.current = Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000));
+   396→    }
+   397→    setSelected(optIdx);
+   398→    setAnswers((prev) => {
+   399→      const next = [...prev];
+   400→      next[index] = optIdx;
+   401→      return next;
+   402→    });
+   403→    if (current) {
+   404→      if (optIdx === current.answer) {
+   405→        // در مرور اشتباهات و مرور ترکیبی، پاسخ درست سؤال را از دفتر اشتباهات حذف می‌کند
+   406→        if (mode === "review" || mode === "combined") resolveMistake(current.id);
+   407→      } else {
+   408→        recordMistake(current.id);
+   409→      }
+   410→    }
+   411→  }
+   412→
+   413→  async function askAiExplanation() {
+   414→    if (!current) return;
+   415→    setAiExplaining(true);
+   416→    try {
+   417→      const res = await fetch("/api/explain", {
+   418→        method: "POST",
+   419→        headers: { "Content-Type": "application/json" },
+   420→        body: JSON.stringify({
+   421→          text: current.text,
+   422→          options: current.options,
+   423→          answer: current.answer,
+   424→        }),
+   425→      });
+   426→      const data = await res.json();
+   427→      if (res.ok) setAiExplanation(data.explanation);
+   428→      else toast.error(data.error ?? "خطا در توضیح هوشمند");
+   429→    } catch {
+   430→      toast.error("خطا در ارتباط با هوش مصنوعی");
+   431→    } finally {
+   432→      setAiExplaining(false);
+   433→    }
+   434→  }
+   435→
+   436→  function nextQuestion() {
+   437→    if (advanceRef.current) clearTimeout(advanceRef.current);
+   438→    if (index + 1 >= questions.length) {
+   439→      finish();
+   440→      return;
+   441→    }
+   442→    setIndex((i) => i + 1);
+   443→    setSelected(answers[index + 1]);
+   444→    setAiExplanation(null);
+   445→    deadlineRef.current = mode === "daily" || mode === "weekly" ? 0 : Date.now() + timed * 1000;
+   446→  }
+   447→
+   448→  // میان‌برهای کیبورد حین آزمون: ۱-۴ (فارسی/انگلیسی) انتخاب گزینه، Enter سؤال بعدی
+   449→  useEffect(() => {
+   450→    if (phase !== "playing") return;
+   451→    function onKey(e: KeyboardEvent) {
+   452→      const target = e.target as HTMLElement | null;
+   453→      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+   454→      if (e.key === "Enter" && selected !== null) {
+   455→        e.preventDefault();
+   456→        nextQuestion();
+   457→        return;
+   458→      }
+   459→      if (selected !== null) return;
+   460→      const fa = "۱۲۳۴".indexOf(e.key);
+   461→      const en = "1234".indexOf(e.key);
+   462→      const digit = fa >= 0 ? fa : en;
+   463→      if (digit >= 0 && digit < (current?.options.length ?? 0)) {
+   464→        e.preventDefault();
+   465→        chooseOption(digit);
+   466→      }
+   467→    }
+   468→    window.addEventListener("keydown", onKey);
+   469→    return () => window.removeEventListener("keydown", onKey);
+   470→  }, [phase, selected, index, questions]);
+   471→
+   472→  function finish() {
+   473→    if (timerRef.current) clearInterval(timerRef.current);
+   474→    if (advanceRef.current) clearTimeout(advanceRef.current);
+   475→    setPhase("result");
+   476→    recordStudySession();
+   477→    const streak = touchStreak();
+   478→    if (mode === "daily") recordDailyResult(todayKey(), scorePct, questions.length);
+   479→    if (mode === "weekly") recordWeeklyResult(weekKeyOf(), scorePct, questions.length);
+   480→    if (mode === "combined") recordCombinedRound();
+   481→    const detail = questions.map((q, i) => ({ id: q.id, chosen: answers[i], answer: q.answer }));
+   482→    fetch("/api/attempts", {
+   483→      method: "POST",
+   484→      headers: { "Content-Type": "application/json" },
+   485→      body: JSON.stringify({
+   486→        category:
+   487→          mode === "review"
+   488→            ? "review"
+   489→            : mode === "daily"
+   490→              ? "daily"
+   491→              : mode === "weekly"
+   492→                ? "weekly"
+   493→                : mode === "starred"
+   494→                  ? "starred"
+   495→                  : mode === "combined"
+   496→                    ? "combined"
+   497→                    : category,
+   498→        lesson: lesson === "all" ? 0 : Number(lesson),
+   499→        total: questions.length,
+   500→        correct: correctCount,
+   501→        duration: elapsed,
+   502→        name: userName || undefined,
+   503→        detail,
+   504→      }),
+   505→    })
+   506→      .then(() =>
+   507→        toast.success(
+   508→          mode === "daily"
+   509→            ? `چالش امروز ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ${scorePct >= 80 ? "🏆" : "💪"}`
+   510→            : mode === "weekly"
+   511→              ? `چالش هفتگی ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ 📅 ${scorePct >= 80 ? "🏆" : "💪"}`
+   512→            : mode === "review"
+   513→              ? `دور مرور تمام شد! ${mistakeCount.toLocaleString("fa-IR")} سؤال دیگر در دفتر اشتباهات مانده`
+   514→              : mode === "starred"
+   515→                ? `تمرین ستاره‌دارها ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ⭐`
+   516→                : mode === "combined"
+   517→                  ? `مرور ترکیبی ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ 🧩`
+   518→                  : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
+   519→        ),
+   520→      )
+   521→      .catch(() => undefined);
+   522→  }
+   523→
+   524→  /** خروجی CSV از دفتر اشتباهات — فایل UTF-8 با BOM برای اکسل */
+   525→  async function exportMistakesCsv() {
+   526→    if (!mistakeIds.length || exporting) return;
+   527→    setExporting(true);
+   528→    try {
+   529→      const res = await fetch(`/api/questions?count=${mistakeIds.length}&ids=${mistakeIds.join(",")}`);
+   530→      const data = await res.json();
+   531→      const qs = (data.questions ?? []) as Question[];
+   532→      if (!qs.length) {
+   533→        toast.error("سؤالی برای خروجی یافت نشد.");
+   534→        return;
+   535→      }
+   536→      const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
+   537→      const rows = [
+   538→        ["ردیف", "متن سؤال", "پاسخ صحیح", "دسته", "مبحث", "سطح"].join(","),
+   539→        ...qs.map((q, i) =>
+   540→          [
+   541→            i + 1,
+   542→            esc(q.text),
+   543→            esc(q.options[q.answer] ?? ""),
+   544→            q.category === "grammar" ? "گرامر" : "واژگان",
+   545→            esc(q.scope),
+   546→            esc(q.level),
+   547→          ].join(","),
+   548→        ),
+   549→      ];
+   550→      const blob = new Blob(["\uFEFF" + rows.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+   551→      const url = URL.createObjectURL(blob);
+   552→      const a = document.createElement("a");
+   553→      a.href = url;
+   554→      a.download = "vision-one-mistakes.csv";
+   555→      document.body.appendChild(a);
+   556→      a.click();
+   557→      a.remove();
+   558→      URL.revokeObjectURL(url);
+   559→      toast.success(`فایل CSV با ${qs.length.toLocaleString("fa-IR")} سؤال دانلود شد.`);
+   560→    } catch {
+   561→      toast.error("خطا در ساخت فایل CSV");
+   562→    } finally {
+   563→      setExporting(false);
+   564→    }
+   565→  }
+   566→
+   567→  function reset() {
+   568→    if (advanceRef.current) clearTimeout(advanceRef.current);
+   569→    deadlineRef.current = 0;
+   570→    setPhase("setup");
+   571→    setQuestions([]);
+   572→    setAnswers([]);
+   573→    setIndex(0);
+   574→    setSelected(null);
+   575→    setElapsed(0);
+   576→  }
+   577→
+   578→  // ─────────── Setup ───────────
+   579→  if (phase === "setup") {
+   580→    return (
+   581→      <Card className="mx-auto max-w-xl rise-in">
+   582→        <CardContent className="space-y-6 p-6">
+   583→          <div className="flex items-center gap-3">
+   584→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+   585→              <ClipboardList size={22} />
+   586→            </span>
+   587→            <div>
+   588→              <h2 className="text-lg font-black">آزمون تعاملی</h2>
+   589→              <p className="text-xs text-muted-foreground">
+   590→                بانک سؤال واقعی جزوه — سطح: آموزشی تا کنکوری
+   591→              </p>
+   592→            </div>
+   593→          </div>
+   594→
+   595→          {/* چالش روزانه — ۵ سؤال قطعی امروز */}
+   596→          <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4">
+   597→            <div className="flex items-center gap-3">
+   598→              <span className="daily-pulse flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   599→                <CalendarCheck size={19} />
+   600→              </span>
+   601→              <div className="min-w-0 flex-1">
+   602→                <p className="flex flex-wrap items-center gap-2 text-[13px] font-black">
+   603→                  چالش روزانه
+   604→                  <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+   605→                    ۵ سؤال · بدون زمان
+   606→                  </Badge>
+   607→                  {daily.doneToday ? (
+   608→                    <Badge variant="outline" className="gap-1 border-primary/40 bg-primary/10 text-[10px] text-primary">
+   609→                      <CheckCircle2 size={10} />
+   610→                      امروز: {daily.bestToday?.toLocaleString("fa-IR")}٪
+   611→                    </Badge>
+   612→                  ) : (
+   613→                    <Badge variant="secondary" className="text-[10px]">امروز انجام نشده</Badge>
+   614→                  )}
+   615→                </p>
+   616→                <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+   617→                  {daily.doneToday
+   618→                    ? `امروز انجامش دادی — می‌تونی دوباره امتحان کنی و رکوردت رو بهتر کنی (${daily.totalDone.toLocaleString("fa-IR")} چالش کامل‌شده)`
+   619→                    : "۵ سؤال امروز برای همه یکسان است — با یک بار انجام، زنجیره‌ات هم شارژ می‌شود."}
+   620→                </p>
+   621→                {pulses.daily && pulses.daily.players > 0 && (
+   622→                  <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
+   623→                    <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+   624→                    امروز {pulses.daily.players.toLocaleString("fa-IR")} نفر چالش دادند
+   625→                    {pulses.daily.avg !== null && (
+   626→                      <> — میانگین دقت {pulses.daily.avg.toLocaleString("fa-IR")}٪</>
+   627→                    )}
+   628→                    {pulses.daily.best !== null && pulses.daily.best > 0 && (
+   629→                      <span className="text-muted-foreground">· بهترین {pulses.daily.best.toLocaleString("fa-IR")}٪</span>
+   630→                    )}
+   631→                  </p>
+   632→                )}
+   633→              </div>
+   634→              <Button
+   635→                size="sm"
+   636→                onClick={startDaily}
+   637→                disabled={loading}
+   638→                className="shrink-0 gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+   639→              >
+   640→                {loading ? <Loader2 size={14} className="animate-spin" /> : <CalendarCheck size={14} />}
+   641→                {daily.doneToday ? "دوباره" : "شروع چالش"}
+   642→              </Button>
+   643→            </div>
+   644→          </div>
+   645→
+   646→          {/* چالش هفتگی — ۱۰ سؤال قطعی این هفته */}
+   647→          <div className="relative overflow-hidden rounded-2xl border border-violet-500/40 bg-gradient-to-l from-violet-500/12 via-violet-500/5 to-transparent p-4">
+   648→            <div className="flex items-center gap-3">
+   649→              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600 dark:text-violet-400">
+   650→                <CalendarRange size={19} />
+   651→              </span>
+   652→              <div className="min-w-0 flex-1">
+   653→                <p className="flex flex-wrap items-center gap-2 text-[13px] font-black">
+   654→                  چالش هفتگی
+   655→                  <Badge className="border-violet-500/40 bg-violet-500/15 text-[10px] text-violet-700 dark:text-violet-300">
+   656→                    هفتهٔ {weekly.weekIndex.toLocaleString("fa-IR")} · ۱۰ سؤال
+   657→                  </Badge>
+   658→                  {weekly.doneThisWeek ? (
+   659→                    <Badge variant="outline" className="gap-1 border-primary/40 bg-primary/10 text-[10px] text-primary">
+   660→                      <CheckCircle2 size={10} />
+   661→                      این هفته: {weekly.bestThisWeek?.toLocaleString("fa-IR")}٪
+   662→                    </Badge>
+   663→                  ) : (
+   664→                    <Badge variant="secondary" className="text-[10px]">این هفته انجام نشده</Badge>
+   665→                  )}
+   666→                </p>
+   667→                <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+   668→                  {weekly.doneThisWeek
+   669→                    ? `این هفته انجامش دادی — رکورد ${weekly.bestThisWeek?.toLocaleString("fa-IR")}٪ (${weekly.totalDone.toLocaleString("fa-IR")} هفته چالش داده‌ای)`
+   670→                    : "۱۰ سؤال این هفته برای همه یکسان است — رقابهٔ هفتگی کلاس تا شنبهٔ بعد."}
+   671→                </p>
+   672→                {pulses.weekly && pulses.weekly.players > 0 && (
+   673→                  <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-violet-700 dark:text-violet-300">
+   674→                    <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500" />
+   675→                    این هفته {pulses.weekly.players.toLocaleString("fa-IR")} نفر چالش دادند
+   676→                    {pulses.weekly.avg !== null && (
+   677→                      <> — میانگین دقت {pulses.weekly.avg.toLocaleString("fa-IR")}٪</>
+   678→                    )}
+   679→                    {pulses.weekly.best !== null && pulses.weekly.best > 0 && (
+   680→                      <span className="text-muted-foreground">· بهترین {pulses.weekly.best.toLocaleString("fa-IR")}٪</span>
+   681→                    )}
+   682→                  </p>
+   683→                )}
+   684→              </div>
+   685→              <Button
+   686→                size="sm"
+   687→                onClick={startWeekly}
+   688→                disabled={loading}
+   689→                className="shrink-0 gap-1.5 bg-violet-600 text-white hover:bg-violet-700"
+   690→              >
+   691→                {loading ? <Loader2 size={14} className="animate-spin" /> : <CalendarRange size={14} />}
+   692→                {weekly.doneThisWeek ? "دوباره" : "شروع چالش"}
+   693→              </Button>
+   694→            </div>
+   695→          </div>
+   696→
+   697→          {/* دور تمرین سؤال‌های پراشتباه (ارسالی از آمار) */}
+   698→          {practiceIds.length > 0 && (
+   699→            <div className="relative overflow-hidden rounded-2xl border border-primary/40 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent p-4 rise-in">
+   700→              <div className="flex items-center gap-3">
+   701→                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+   702→                  <ListChecks size={19} />
+   703→                </span>
+   704→                <div className="min-w-0 flex-1">
+   705→                  <p className="flex items-center gap-2 text-[13px] font-black">
+   706→                    دور تمرین سؤال‌های پراشتباه
+   707→                    <Badge className="bg-primary text-[10px] text-primary-foreground">
+   708→                      {practiceIds.length.toLocaleString("fa-IR")} سؤال
+   709→                    </Badge>
+   710→                  </p>
+   711→                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+   712→                    سؤال‌هایی که بیشترین اشتباه را داشتی — از بخش آمار انتخاب شده‌اند.
+   713→                  </p>
+   714→                </div>
+   715→                <Button
+   716→                  size="sm"
+   717→                  onClick={() => startPracticeRound(practiceIds)}
+   718→                  disabled={loading}
+   719→                  className="shrink-0 gap-1.5"
+   720→                >
+   721→                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+   722→                  شروع تمرین
+   723→                </Button>
+   724→              </div>
+   725→            </div>
+   726→          )}
+   727→
+   728→          {/* تمرین سؤال‌های ستاره‌دار */}
+   729→          {starredQCount > 0 && (
+   730→            <div className="relative overflow-hidden rounded-2xl border border-yellow-500/40 bg-gradient-to-l from-yellow-500/10 via-yellow-500/5 to-transparent p-4">
+   731→              <div className="flex items-center gap-3">
+   732→                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-500/15 text-yellow-600 dark:text-yellow-400">
+   733→                  <Star size={19} />
+   734→                </span>
+   735→                <div className="min-w-0 flex-1">
+   736→                  <p className="flex items-center gap-2 text-[13px] font-black">
+   737→                    تمرین سؤال‌های ستاره‌دار
+   738→                    <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[10px] text-yellow-700 dark:text-yellow-300">
+   739→                      {starredQCount.toLocaleString("fa-IR")} سؤال
+   740→                    </Badge>
+   741→                  </p>
+   742→                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+   743→                    نکته‌هایی که خودت حین آزمون ستاره زدی — مرور هدفمند سؤال‌های سخت.
+   744→                  </p>
+   745→                </div>
+   746→                <Button
+   747→                  size="sm"
+   748→                  onClick={() => startPracticeRound(starredQIds.slice(0, 60), "starred")}
+   749→                  disabled={loading}
+   750→                  className="shrink-0 gap-1.5 bg-yellow-500 text-white hover:bg-yellow-600"
+   751→                >
+   752→                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+   753→                  شروع تمرین
+   754→                </Button>
+   755→              </div>
+   756→            </div>
+   757→          )}
+   758→
+   759→          {/* مرور ترکیبی — اشتباهات + ستاره‌دارها */}
+   760→          {mistakeCount > 0 && starredQCount > 0 && combinedIds.length > Math.max(mistakeCount, 0) && (
+   761→            <div className="relative overflow-hidden rounded-2xl border border-teal-500/40 bg-gradient-to-l from-teal-500/10 via-teal-500/5 to-transparent p-4">
+   762→              <div className="flex items-center gap-3">
+   763→                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
+   764→                  <Layers size={19} />
+   765→                </span>
+   766→                <div className="min-w-0 flex-1">
+   767→                  <p className="flex items-center gap-2 text-[13px] font-black">
+   768→                    مرور ترکیبی
+   769→                    <Badge className="border-teal-500/40 bg-teal-500/15 text-[10px] text-teal-700 dark:text-teal-300">
+   770→                      {combinedIds.length.toLocaleString("fa-IR")} سؤال
+   771→                    </Badge>
+   772→                  </p>
+   773→                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+   774→                    اشتباه‌های دفتر + سؤال‌های ستاره‌دار در یک دور — پاسخ درست از دفتر اشتباهات حذف می‌کند.
+   775→                  </p>
+   776→                </div>
+   777→                <Button
+   778→                  size="sm"
+   779→                  onClick={() => startPracticeRound(combinedIds, "combined")}
+   780→                  disabled={loading}
+   781→                  className="shrink-0 gap-1.5 bg-teal-600 text-white hover:bg-teal-700"
+   782→                >
+   783→                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+   784→                  شروع مرور
+   785→                </Button>
+   786→              </div>
+   787→            </div>
+   788→          )}
+   789→
+   790→          {/* مرور هوشمند اشتباهات */}
+   791→          {mistakeCount > 0 && (
+   792→            <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/10 via-amber-500/5 to-transparent p-4">
+   793→              <div className="flex items-center gap-3">
+   794→                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   795→                  <NotebookPen size={19} />
+   796→                </span>
+   797→                <div className="min-w-0 flex-1">
+   798→                  <p className="flex items-center gap-2 text-[13px] font-black">
+   799→                    مرور هوشمند اشتباهات
+   800→                    <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+   801→                      {mistakeCount.toLocaleString("fa-IR")} سؤال
+   802→                    </Badge>
+   803→                  </p>
+   804→                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+   805→                    فقط سؤال‌هایی که قبلاً اشتباه جواب دادی — با هر پاسخ درست از دفتر اشتباهات حذف می‌شوند.
+   806→                  </p>
+   807→                </div>
+   808→                <Button
+   809→                  size="sm"
+   810→                  onClick={() => startQuiz("review")}
+   811→                  disabled={loading}
+   812→                  className="shrink-0 gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+   813→                >
+   814→                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+   815→                  شروع مرور
+   816→                </Button>
+   817→              </div>
+   818→              <div className="absolute bottom-1.5 left-2 flex items-center gap-3">
+   819→                <button
+   820→                  type="button"
+   821→                  onClick={exportMistakesCsv}
+   822→                  disabled={exporting}
+   823→                  className="flex items-center gap-1 text-[10px] text-muted-foreground/70 transition-colors hover:text-primary disabled:opacity-50"
+   824→                >
+   825→                  {exporting ? <Loader2 size={11} className="animate-spin" /> : <Download size={11} />}
+   826→                  خروجی CSV
+   827→                </button>
+   828→                <button
+   829→                  type="button"
+   830→                  onClick={() => {
+   831→                    clearMistakes();
+   832→                    toast.info("دفتر اشتباهات پاک شد.");
+   833→                  }}
+   834→                  className="flex items-center gap-1 text-[10px] text-muted-foreground/70 transition-colors hover:text-destructive"
+   835→                >
+   836→                  <Trash2 size={11} />
+   837→                  پاک‌کردن دفتر
+   838→                </button>
+   839→              </div>
+   840→            </div>
+   841→          )}
+   842→
+   843→          <div className="space-y-4">
+   844→            <div>
+   845→              <p className="mb-2 text-[13px] font-bold">۱. دسته سؤال</p>
+   846→              <div className="grid grid-cols-3 gap-2">
+   847→                {CATEGORY_OPTIONS.map((o) => (
+   848→                  <button
+   849→                    key={o.value}
+   850→                    type="button"
+   851→                    onClick={() => setCategory(o.value)}
+   852→                    className={cn(
+   853→                      "rounded-xl border p-2.5 text-[12px] font-bold transition-all",
+   854→                      category === o.value
+   855→                        ? "border-primary bg-primary/10 text-primary shadow-sm"
+   856→                        : "text-muted-foreground hover:bg-muted",
+   857→                    )}
+   858→                  >
+   859→                    {o.label}
+   860→                  </button>
+   861→                ))}
+   862→              </div>
+   863→            </div>
+   864→
+   865→            <div>
+   866→              <p className="mb-2 text-[13px] font-bold">۲. محدوده درس</p>
+   867→              <div className="flex flex-wrap gap-2">
+   868→                {LESSON_OPTIONS.map((o) => (
+   869→                  <button
+   870→                    key={o.value}
+   871→                    type="button"
+   872→                    onClick={() => setLesson(o.value)}
+   873→                    className={cn(
+   874→                      "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   875→                      lesson === o.value
+   876→                        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   877→                        : "text-muted-foreground hover:bg-muted",
+   878→                    )}
+   879→                  >
+   880→                    {o.label}
+   881→                  </button>
+   882→                ))}
+   883→              </div>
+   884→            </div>
+   885→
+   886→            <div>
+   887→              <p className="mb-2 text-[13px] font-bold">۳. تعداد سؤال</p>
+   888→              <div className="grid grid-cols-4 gap-2">
+   889→                {COUNT_OPTIONS.map((c) => (
+   890→                  <button
+   891→                    key={c}
+   892→                    type="button"
+   893→                    onClick={() => setCount(c)}
+   894→                    className={cn(
+   895→                      "rounded-xl border p-2.5 text-sm font-black transition-all",
+   896→                      count === c
+   897→                        ? "border-primary bg-primary/10 text-primary shadow-sm"
+   898→                        : "text-muted-foreground hover:bg-muted",
+   899→                    )}
+   900→                  >
+   901→                    {c.toLocaleString("fa-IR")}
+   902→                  </button>
+   903→                ))}
+   904→              </div>
+   905→            </div>
+   906→
+   907→            <div>
+   908→              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+   909→                ۴. سطح دشواری
+   910→                <Gauge size={13} className="text-muted-foreground" />
+   911→              </p>
+   912→              <div className="grid grid-cols-4 gap-2">
+   913→                {LEVEL_OPTIONS.map((o) => (
+   914→                  <button
+   915→                    key={o.value}
+   916→                    type="button"
+   917→                    onClick={() => setLevel(o.value)}
+   918→                    aria-pressed={level === o.value}
+   919→                    className={cn(
+   920→                      "flex flex-col items-center gap-0.5 rounded-xl border p-2.5 text-[12px] font-black transition-all",
+   921→                      level === o.value
+   922→                        ? levelBadgeClass(o.value) + " shadow-sm ring-1 ring-current/30"
+   923→                        : "text-muted-foreground hover:bg-muted",
+   924→                    )}
+   925→                  >
+   926→                    {o.label}
+   927→                    {poolMeta && o.value !== "all" && (
+   928→                      <span className="text-[9px] font-bold opacity-70">
+   929→                        {(poolMeta.byLevel[o.value] ?? 0).toLocaleString("fa-IR")} سؤال
+   930→                      </span>
+   931→                    )}
+   932→                  </button>
+   933→                ))}
+   934→              </div>
+   935→            </div>
+   936→
+   937→            <div>
+   938→              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+   939→                ۵. حالت زمان‌دار (کنکوری)
+   940→                {timed > 0 && (
+   941→                  <Badge className="gap-1 border-amber-500/40 bg-amber-500/15 text-[9.5px] text-amber-700 dark:text-amber-300">
+   942→                    <Hourglass size={10} />
+   943→                    فعال
+   944→                  </Badge>
+   945→                )}
+   946→              </p>
+   947→              <div className="grid grid-cols-4 gap-2">
+   948→                {TIMED_OPTIONS.map((o) => (
+   949→                  <button
+   950→                    key={o.value}
+   951→                    type="button"
+   952→                    onClick={() => setTimed(o.value)}
+   953→                    aria-pressed={timed === o.value}
+   954→                    className={cn(
+   955→                      "rounded-xl border p-2.5 text-[12px] font-black transition-all",
+   956→                      timed === o.value
+   957→                        ? "border-amber-500 bg-amber-500/10 text-amber-600 shadow-sm dark:text-amber-400"
+   958→                        : "text-muted-foreground hover:bg-muted",
+   959→                    )}
+   960→                  >
+   961→                    {o.label}
+   962→                  </button>
+   963→                ))}
+   964→              </div>
+   965→              {timed > 0 && (
+   966→                <p className="mt-2 flex items-start gap-1.5 rounded-xl bg-amber-500/10 p-2.5 text-[11px] leading-5 text-amber-700 dark:text-amber-300">
+   967→                  <Hourglass size={13} className="mt-0.5 shrink-0" />
+   968→                  برای هر سؤال فقط {timed.toLocaleString("fa-IR")} ثانیه وقت داری؛ وقت که تمام شود، سؤال بدون پاسخ در دفتر اشتباهات ثبت می‌شود و پاسخ درست نمایش داده می‌شود.
+   969→                </p>
+   970→              )}
+   971→            </div>
+   972→          </div>
+   973→
+   974→          <Button size="lg" className="w-full gap-2 h-12 text-base" onClick={() => startQuiz()} disabled={loading}>
+   975→            {loading ? <Loader2 className="animate-spin" size={18} /> : <Play size={18} />}
+   976→            شروع آزمون
+   977→          </Button>
+   978→          <p className="text-center text-[10.5px] text-muted-foreground/70">
+   979→            میان‌بر کیبورد حین آزمون: کلیدهای ۱ تا ۴ برای انتخاب گزینه و Enter برای سؤال بعدی
+   980→          </p>
+   981→        </CardContent>
+   982→      </Card>
+   983→    );
+   984→  }
+   985→
+   986→  // ─────────── Result ───────────
+   987→  if (phase === "result") {
+   988→    const wrongCount = questions.length - correctCount;
+   989→    const message =
+   990→      scorePct >= 90
+   991→        ? "فوق‌العاده بود! تو آماده‌ی کنکوری 🏆"
+   992→        : scorePct >= 70
+   993→          ? "خیلی خوب! فقط کمی تمرین بیشتر 💪"
+   994→          : scorePct >= 50
+   995→            ? "قابل قبول؛ درسنامه‌ها را یک مرور کن 📖"
+   996→            : "نگران نباش! از واژگان و گرامر شروع کن و دوباره امتحان بده ✨";
+   997→
+   998→    return (
+   999→      <div className="mx-auto max-w-2xl space-y-4 rise-in">
+  1000→        <Card className="result-pop relative overflow-hidden border-primary/30 no-print">
+  1001→          {scorePct >= 80 && <Confetti />}
+  1002→          <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+  1003→            <div className="relative h-36 w-36">
+  1004→              <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+  1005→                <circle cx="60" cy="60" r="52" fill="none" strokeWidth="12" className="stroke-muted" />
+  1006→                <circle
+  1007→                  cx="60"
+  1008→                  cy="60"
+  1009→                  r="52"
+  1010→                  fill="none"
+  1011→                  strokeWidth="12"
+  1012→                  strokeLinecap="round"
+  1013→                  className={cn(
+  1014→                    "transition-all duration-1000",
+  1015→                    scorePct >= 70 ? "stroke-primary" : scorePct >= 50 ? "stroke-amber-500" : "stroke-destructive",
+  1016→                  )}
+  1017→                  strokeDasharray={`${(scorePct / 100) * 326.7} 326.7`}
+  1018→                />
+  1019→              </svg>
+  1020→              <div className="absolute inset-0 flex flex-col items-center justify-center">
+  1021→                <p className="text-3xl font-black">{scorePct.toLocaleString("fa-IR")}٪</p>
+  1022→                <p className="text-[11px] text-muted-foreground">
+  1023→                  {correctCount.toLocaleString("fa-IR")} از {questions.length.toLocaleString("fa-IR")}
+  1024→                </p>
+  1025→              </div>
+  1026→            </div>
+  1027→            <p className="text-sm font-bold">{message}</p>
+  1028→            <div className="flex flex-wrap justify-center gap-3 text-[12px] text-muted-foreground">
+  1029→              <span className="flex items-center gap-1">
+  1030→                <Timer size={13} /> {fmtTime(elapsed)}
+  1031→              </span>
+  1032→              <span className="flex items-center gap-1">
+  1033→                <ListChecks size={13} /> {questions.length.toLocaleString("fa-IR")} سؤال
+  1034→              </span>
+  1035→              <span className="flex items-center gap-1">
+  1036→                <Trophy size={13} /> {correctCount.toLocaleString("fa-IR")} صحیح
+  1037→              </span>
+  1038→              {mode === "daily" && (
+  1039→                <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
+  1040→                  <CalendarCheck size={13} /> چالش روزانه {new Date().toLocaleDateString("fa-IR", { month: "short", day: "numeric" })}
+  1041→                </span>
+  1042→              )}
+  1043→              {mode === "weekly" && (
+  1044→                <span className="flex items-center gap-1 font-bold text-violet-600 dark:text-violet-400">
+  1045→                  <CalendarRange size={13} /> چالش هفتگی {new Date().toLocaleDateString("fa-IR", { month: "short", day: "numeric" })}
+  1046→                </span>
+  1047→              )}
+  1048→              {mode === "starred" && (
+  1049→                <span className="flex items-center gap-1 font-bold text-yellow-600 dark:text-yellow-400">
+  1050→                  <Star size={13} /> تمرین ستاره‌دارها
+  1051→                </span>
+  1052→              )}
+  1053→              {mode === "combined" && (
+  1054→                <span className="flex items-center gap-1 font-bold text-teal-600 dark:text-teal-400">
+  1055→                  <Layers size={13} /> مرور ترکیبی
+  1056→                </span>
+  1057→              )}
+  1058→              {mode === "normal" && level !== "all" && (
+  1059→                <span className="flex items-center gap-1 font-bold">
+  1060→                  <Gauge size={13} /> سطح {level}
+  1061→                </span>
+  1062→              )}
+  1063→              {timed > 0 && mode !== "daily" && mode !== "weekly" && (
+  1064→                <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
+  1065→                  <Hourglass size={13} /> حالت زمان‌دار ({timed.toLocaleString("fa-IR")} ثانیه‌ای)
+  1066→                </span>
+  1067→              )}
+  1068→            </div>
+  1069→            <div className="flex flex-wrap justify-center gap-2 no-print">
+  1070→              <Button onClick={reset} className="gap-2">
+  1071→                <RotateCcw size={16} />
+  1072→                آزمون جدید
+  1073→              </Button>
+  1074→              <Button onClick={() => window.print()} variant="outline" className="gap-2">
+  1075→                <Printer size={16} />
+  1076→                چاپ کارنامه
+  1077→              </Button>
+  1078→            </div>
+  1079→          </CardContent>
+  1080→        </Card>
+  1081→
+  1082→        {/* پیشنهاد مرور اشتباهات همین آزمون */}
+  1083→        {mode === "normal" && wrongCount > 0 && (
+  1084→          <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/10 via-amber-500/5 to-transparent p-4 no-print rise-in">
+  1085→            <div className="flex flex-wrap items-center gap-3">
+  1086→              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+  1087→                <NotebookPen size={19} />
+  1088→              </span>
+  1089→              <div className="min-w-0 flex-1">
+  1090→                <p className="text-[13px] font-black">
+  1091→                  {wrongCount.toLocaleString("fa-IR")} سؤال در دفتر اشتباهات ثبت شد
+  1092→                </p>
+  1093→                <p className="mt-0.5 text-[11px] text-muted-foreground">
+  1094→                  همین حالا فقط اشتباه‌هایت را مرور کن؛ با هر پاسخ درست از دفتر حذف می‌شوند.
+  1095→                </p>
+  1096→              </div>
+  1097→              <Button
+  1098→                size="sm"
+  1099→                onClick={() => startQuiz("review")}
+  1100→                disabled={loading}
+  1101→                className="shrink-0 gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+  1102→              >
+  1103→                {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+  1104→                مرور اشتباهات
+  1105→              </Button>
+  1106→            </div>
+  1107→          </div>
+  1108→        )}
+  1109→
+  1110→        {/* مرور خطاها */}
+  1111→        {correctCount < questions.length && (
+  1112→          <Card className="no-print">
+  1113→            <CardContent className="p-5">
+  1114→              <h3 className="mb-3 flex items-center gap-2 text-sm font-black">
+  1115→                <BookMarked size={16} className="text-amber-500" />
+  1116→                مرور پاسخ‌های نادرست
+  1117→              </h3>
+  1118→              <div className="space-y-3">
+  1119→                {questions.map((q, i) =>
+  1120→                  answers[i] === q.answer ? null : (
+  1121→                    <div key={q.id} className="rounded-xl border bg-card p-3">
+  1122→                      <div className="flex items-start justify-between gap-2">
+  1123→                        <p dir="ltr" className="font-en flex-1 text-[12px] font-semibold leading-6">
+  1124→                          {q.text}
+  1125→                        </p>
+  1126→                        <button
+  1127→                          type="button"
+  1128→                          onClick={() => toggleQStar(q.id)}
+  1129→                          aria-label={hasQStar(q.id) ? "حذف ستاره سؤال" : "ستاره‌دار کردن سؤال"}
+  1130→                          aria-pressed={hasQStar(q.id)}
+  1131→                          title={hasQStar(q.id) ? "حذف از سؤال‌های ستاره‌دار" : "ستاره‌دار کن تا در تمرین بعدی بیاید"}
+  1132→                          className={cn(
+  1133→                            "flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all hover:scale-110",
+  1134→                            hasQStar(q.id) ? "text-yellow-500" : "text-muted-foreground/50 hover:text-yellow-500",
+  1135→                          )}
+  1136→                        >
+  1137→                          <Star size={14} className={cn(hasQStar(q.id) && "fill-yellow-500 star-pop")} />
+  1138→                        </button>
+  1139→                      </div>
+  1140→                      <div className="mt-2 flex flex-wrap items-center gap-2 text-[12px]">
+  1141→                        <Badge variant="destructive" className="text-[10px]">
+  1142→                          پاسخ شما:
+  1143→                          {answers[i] === -1
+  1144→                            ? " وقت تمام شد ⏰"
+  1145→                            : answers[i] !== null
+  1146→                              ? ` ${q.options[answers[i] as number]}`
+  1147→                              : " —"}
+  1148→                        </Badge>
+  1149→                        <Badge className="text-[10px] bg-primary">صحیح: {q.options[q.answer]}</Badge>
+  1150→                      </div>
+  1151→                    </div>
+  1152→                  ),
+  1153→                )}
+  1154→              </div>
+  1155→            </CardContent>
+  1156→          </Card>
+  1157→        )}
+  1158→        {/* کارنامه قابل چاپ — فقط در حالت چاپ دیده می‌شود */}
+  1159→        <div className="print-area hidden">
+  1160→          <div className="print-card rounded-xl bg-white p-6 text-right">
+  1161→            <div className="mb-4 flex items-center justify-between border-b pb-3">
+  1162→              <p dir="ltr" className="font-en text-sm font-black">Vision One — Report Card</p>
+  1163→              <p className="text-[12px] print-muted">
+  1164→                {new Date().toLocaleDateString("fa-IR")} — {new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })}
+  1165→              </p>
+  1166→            </div>
+  1167→            <div className="mb-4 grid grid-cols-4 gap-3 text-center">
+  1168→              <div className="print-card rounded-lg border p-3">
+  1169→                <p className="text-lg font-black">{scorePct.toLocaleString("fa-IR")}٪</p>
+  1170→                <p className="text-[10px] print-muted">دقت</p>
+  1171→              </div>
+  1172→              <div className="print-card rounded-lg border p-3">
+  1173→                <p className="text-lg font-black">{correctCount.toLocaleString("fa-IR")}</p>
+  1174→                <p className="text-[10px] print-muted">صحیح</p>
+  1175→              </div>
+  1176→              <div className="print-card rounded-lg border p-3">
+  1177→                <p className="text-lg font-black">{(questions.length - correctCount).toLocaleString("fa-IR")}</p>
+  1178→                <p className="text-[10px] print-muted">نادرست</p>
+  1179→              </div>
+  1180→              <div className="print-card rounded-lg border p-3">
+  1181→                <p className="text-lg font-black">{fmtTime(elapsed)}</p>
+  1182→                <p className="text-[10px] print-muted">زمان</p>
+  1183→              </div>
+  1184→            </div>
+  1185→            {userName && (
+  1186→              <p className="mb-2 text-[12px] print-muted">دانش‌آموز: {userName}</p>
+  1187→            )}
+  1188→            <p className="mb-1 text-[13px] font-black">پاسخ‌های نادرست برای مرور:</p>
+  1189→            <ol className="list-decimal space-y-2 pr-5">
+  1190→              {questions.map((q, i) =>
+  1191→                answers[i] === q.answer ? null : (
+  1192→                  <li key={q.id} className="text-[11.5px] leading-6">
+  1193→                    <span dir="ltr" className="font-en block font-semibold">{q.text}</span>
+  1194→                    <span className="print-muted">
+  1195→                      پاسخ درست: <b dir="ltr" className="font-en">{q.options[q.answer]}</b>
+  1196→                      {answers[i] === -1
+  1197→                        ? " — بدون پاسخ (وقت تمام شد)"
+  1198→                        : answers[i] !== null && (
+  1199→                            <> — پاسخ شما: <span dir="ltr" className="font-en">{q.options[answers[i] as number]}</span></>
+  1200→                          )}
+  1201→                    </span>
+  1202→                  </li>
+  1203→                ),
+  1204→              )}
+  1205→            </ol>
+  1206→            <p className="mt-4 text-center text-[10px] print-muted">
+  1207→              جزوه جامع زبان انگلیسی پایه دهم — ویژن وان | vision-one.web
+  1208→            </p>
+  1209→          </div>
+  1210→        </div>
+  1211→      </div>
+  1212→    );
+  1213→  }
+  1214→
+  1215→  // ─────────── Playing ───────────
+  1216→  if (!current) return null;
+  1217→  const answered = selected !== null;
+  1218→
+  1219→  return (
+  1220→    <div className="mx-auto max-w-2xl space-y-4 rise-in">
+  1221→      {/* نوار پیشرفت */}
+  1222→      <div className="flex items-center gap-3">
+  1223→        <Progress value={((index + 1) / questions.length) * 100} className="h-2 flex-1" />
+  1224→        <span className="shrink-0 text-[12px] font-bold text-muted-foreground">
+  1225→          سؤال {(index + 1).toLocaleString("fa-IR")} از {questions.length.toLocaleString("fa-IR")}
+  1226→        </span>
+  1227→        {timed > 0 ? (
+  1228→          <Badge
+  1229→            variant="outline"
+  1230→            className={cn(
+  1231→              "gap-1 shrink-0 text-[11px] font-black tabular-nums",
+  1232→              selected === -1
+  1233→                ? "border-destructive/50 bg-destructive/10 text-destructive"
+  1234→                : shownLeft <= 5
+  1235→                  ? "timer-urgent border-destructive/50 bg-destructive/10 text-destructive"
+  1236→                  : shownLeft <= 10
+  1237→                    ? "border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+  1238→                    : "border-primary/40 bg-primary/10 text-primary",
+  1239→            )}
+  1240→          >
+  1241→            {selected === -1 ? <Hourglass size={11} /> : <Timer size={11} />}
+  1242→            {selected === -1 ? "وقت تمام" : `${shownLeft.toLocaleString("fa-IR")} ثانیه`}
+  1243→          </Badge>
+  1244→        ) : (
+  1245→          <Badge variant="secondary" className="gap-1 shrink-0 text-[11px]">
+  1246→            <Timer size={11} />
+  1247→            {fmtTime(elapsed)}
+  1248→          </Badge>
+  1249→        )}
+  1250→      </div>
+  1251→
+  1252→      {/* نوار زمان باقی‌ماندهٔ سؤال در حالت زمان‌دار */}
+  1253→      {timed > 0 && (
+  1254→        <div aria-hidden className="h-1 overflow-hidden rounded-full bg-muted">
+  1255→          <div
+  1256→            className={cn(
+  1257→              "h-full rounded-full transition-[width] duration-1000 ease-linear",
+  1258→              selected === -1
+  1259→                ? "bg-destructive/60"
+  1260→                : shownLeft <= 5
+  1261→                  ? "bg-destructive"
+  1262→                  : shownLeft <= 10
+  1263→                    ? "bg-amber-500"
+  1264→                    : "bg-primary",
+  1265→            )}
+  1266→            style={{ width: `${Math.min(100, (shownLeft / timed) * 100)}%` }}
+  1267→          />
+  1268→        </div>
+  1269→      )}
+  1270→
+  1271→      <Card>
+  1272→        <CardContent className="space-y-5 p-5">
+  1273→          <div className="flex flex-wrap items-center gap-2">
+  1274→            {mode === "review" && (
+  1275→              <Badge className="border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
+  1276→                <NotebookPen size={11} />
+  1277→                دور مرور
+  1278→              </Badge>
+  1279→            )}
+  1280→            {mode === "starred" && (
+  1281→              <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[11px] text-yellow-700 dark:text-yellow-300">
+  1282→                <Star size={11} />
+  1283→                تمرین ستاره‌دارها
+  1284→              </Badge>
+  1285→            )}
+  1286→            {mode === "combined" && (
+  1287→              <Badge className="border-teal-500/40 bg-teal-500/15 text-[11px] text-teal-700 dark:text-teal-300">
+  1288→                <Layers size={11} />
+  1289→                مرور ترکیبی
+  1290→              </Badge>
+  1291→            )}
+  1292→            {mode === "daily" && (
+  1293→              <Badge className="border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
+  1294→                <CalendarCheck size={11} />
+  1295→                چالش روزانه
+  1296→              </Badge>
+  1297→            )}
+  1298→            {mode === "weekly" && (
+  1299→              <Badge className="border-violet-500/40 bg-violet-500/15 text-[11px] text-violet-700 dark:text-violet-300">
+  1300→                <CalendarRange size={11} />
+  1301→                چالش هفتگی · هفتهٔ {weekly.weekIndex.toLocaleString("fa-IR")}
+  1302→              </Badge>
+  1303→            )}
+  1304→            <Badge variant="outline" className="text-[11px]">
+  1305→              {current.scope}
+  1306→            </Badge>
+  1307→            <Badge variant="outline" className={cn("text-[11px]", levelBadgeClass(current.level))}>
+  1308→              سطح: {current.level}
+  1309→            </Badge>
+  1310→            <Badge variant="secondary" className="text-[11px]">
+  1311→              {current.category === "grammar" ? "گرامر" : "واژگان"}
+  1312→            </Badge>
+  1313→            {timed > 0 && mode !== "daily" && mode !== "weekly" && (
+  1314→              <Badge variant="outline" className="gap-1 border-amber-500/40 text-[10.5px] text-amber-600 dark:text-amber-400">
+  1315→                <Hourglass size={10} />
+  1316→                زمان‌دار
+  1317→              </Badge>
+  1318→            )}
+  1319→            {/* ستاره‌دار کردن سؤال جاری — حتی قبل از پاسخ */}
+  1320→            <button
+  1321→              type="button"
+  1322→              onClick={() => toggleQStar(current.id)}
+  1323→              aria-label={hasQStar(current.id) ? "حذف ستاره سؤال" : "ستاره‌دار کردن این سؤال"}
+  1324→              aria-pressed={hasQStar(current.id)}
+  1325→              title={hasQStar(current.id) ? "حذف از سؤال‌های ستاره‌دار" : "این سؤال را برای مرور بعدی ستاره‌دار کن"}
+  1326→              className={cn(
+  1327→                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all hover:scale-110",
+  1328→                hasQStar(current.id) ? "text-yellow-500" : "text-muted-foreground/50 hover:text-yellow-500",
+  1329→              )}
+  1330→            >
+  1331→              <Star size={15} className={cn(hasQStar(current.id) && "fill-yellow-500 star-pop")} />
+  1332→            </button>
+  1333→            <span className="mr-auto flex items-center gap-1 text-[12px] font-bold text-primary">
+  1334→              <CheckCircle2 size={13} />
+  1335→              {correctCount.toLocaleString("fa-IR")} صحیح
+  1336→            </span>
+  1337→          </div>
+  1338→
+  1339→          <p dir="ltr" className="font-en rounded-xl bg-muted/50 p-4 text-[15px] font-semibold leading-8">
+  1340→            {current.text}
+  1341→          </p>
+  1342→
+  1343→          <RadioGroup value={selected !== null ? String(selected) : ""} className="gap-2">
+  1344→            {current.options.map((opt, i) => {
+  1345→              const isCorrect = i === current.answer;
+  1346→              const isChosen = i === selected;
+  1347→              return (
+  1348→                <Label
+  1349→                  key={i}
+  1350→                  htmlFor={`opt-${index}-${i}`}
+  1351→                  className={cn(
+  1352→                    "flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-all",
+  1353→                    !answered && "hover:border-primary/50 hover:bg-primary/5",
+  1354→                    answered && isCorrect && "border-primary bg-primary/10 shadow-sm",
+  1355→                    answered && isChosen && !isCorrect && "border-destructive bg-destructive/10",
+  1356→                    answered && !isChosen && !isCorrect && "opacity-55",
+  1357→                  )}
+  1358→                >
+  1359→                  <RadioGroupItem
+  1360→                    id={`opt-${index}-${i}`}
+  1361→                    value={String(i)}
+  1362→                    disabled={answered}
+  1363→                    onClick={() => chooseOption(i)}
+  1364→                    className={cn(
+  1365→                      answered && isCorrect && "border-primary text-primary",
+  1366→                      answered && isChosen && !isCorrect && "border-destructive text-destructive",
+  1367→                    )}
+  1368→                  />
+  1369→                  <span
+  1370→                    dir="ltr"
+  1371→                    className={cn(
+  1372→                      "font-en flex-1 text-[14px] leading-6",
+  1373→                      answered && isCorrect && "font-bold text-primary",
+  1374→                      answered && isChosen && !isCorrect && "text-destructive",
+  1375→                    )}
+  1376→                  >
+  1377→                    <span
+  1378→                      className={cn(
+  1379→                        "mr-2 inline-flex h-5.5 w-5.5 translate-y-1 items-center justify-center rounded-lg text-[10px] font-black transition-colors",
+  1380→                        answered && isCorrect
+  1381→                          ? "bg-primary text-primary-foreground"
+  1382→                          : answered && isChosen && !isCorrect
+  1383→                            ? "bg-destructive text-destructive-foreground"
+  1384→                            : "bg-primary/10 text-primary",
+  1385→                      )}
+  1386→                    >
+  1387→                      {LETTERS[i]}
+  1388→                    </span>
+  1389→                    {opt}
+  1390→                  </span>
+  1391→                  {answered && isCorrect && <CheckCircle2 size={17} className="text-primary shrink-0" />}
+  1392→                  {answered && isChosen && !isCorrect && <XCircle size={17} className="text-destructive shrink-0" />}
+  1393→                  {!answered && (
+  1394→                    <kbd className="hidden h-5 min-w-5 shrink-0 items-center justify-center rounded-md border bg-muted/70 px-1 font-en text-[10px] font-bold text-muted-foreground sm:inline-flex" title="میان‌بر کیبورد">
+  1395→                      {i + 1}
+  1396→                    </kbd>
+  1397→                  )}
+  1398→                </Label>
+  1399→              );
+  1400→            })}
+  1401→          </RadioGroup>
+  1402→
+  1403→          {answered && (
+  1404→            <div className="space-y-3 rise-in">
+  1405→              {aiExplanation && (
+  1406→                <div className="rounded-xl border border-accent/50 bg-accent/25 p-3 text-[12.5px] leading-7">
+  1407→                  <p className="mb-1 flex items-center gap-1.5 text-[11px] font-black text-accent-foreground">
+  1408→                    <Sparkles size={12} className="text-amber-500" />
+  1409→                    توضیح هوشمند
+  1410→                  </p>
+  1411→                  {aiExplanation}
+  1412→                </div>
+  1413→              )}
+  1414→              <div className="flex flex-wrap items-center justify-between gap-2">
+  1415→                <Button
+  1416→                  variant="outline"
+  1417→                  size="sm"
+  1418→                  onClick={askAiExplanation}
+  1419→                  disabled={aiExplaining}
+  1420→                  className="gap-1.5 text-[12px]"
+  1421→                >
+  1422→                  {aiExplaining ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} className="text-amber-500" />}
+  1423→                  توضیح با هوش مصنوعی
+  1424→                </Button>
+  1425→                <Button onClick={nextQuestion} className="gap-2">
+  1426→                  {index + 1 >= questions.length ? "دیدن نتیجه" : "سؤال بعدی"}
+  1427→                  <kbd className="hidden rounded-md border border-primary/30 bg-primary/10 px-1.5 py-0.5 font-en text-[10px] font-bold sm:inline">↵</kbd>
+  1428→                  <ArrowLeft size={15} />
+  1429→                </Button>
+  1430→              </div>
+  1431→            </div>
+  1432→          )}
+  1433→        </CardContent>
+  1434→      </Card>
+  1435→    </div>
+  1436→  );
+  1437→}
+  1438→

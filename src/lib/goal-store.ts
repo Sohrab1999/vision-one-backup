@@ -2,15 +2,16 @@
 
 import { useSyncExternalStore } from "react";
 import { touchStreak } from "./streak-store";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
  * Daily goal + activity store — user picks a daily word-learning goal (e.g. 10 words)
  * and every word marked as "learned" is logged per epoch-day.
  * Quiz/match sessions are logged too, feeding the activity heatmap.
- * Persisted in localStorage: visionone:goal
+ * Persisted in localStorage scoped per book: visionone:book:<id>:goal
  */
 
-const GOAL_KEY = "visionone:goal";
+const STORE_NAME = "goal";
 /** keep only the last N days of the log (۱۲ هفته + حاشیه) */
 const LOG_KEEP = 90;
 
@@ -27,6 +28,9 @@ const EMPTY: GoalData = { goal: 10, log: {}, sessionLog: {} };
 
 let cache: GoalData | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 function epochDay(): number {
   return Math.floor(Date.now() / 86400000);
@@ -35,7 +39,7 @@ function epochDay(): number {
 function read(): GoalData {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(GOAL_KEY);
+    const raw = readScoped(STORE_NAME);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<GoalData>;
       cache = {
@@ -55,7 +59,7 @@ function read(): GoalData {
 function write(next: GoalData) {
   cache = next;
   try {
-    localStorage.setItem(GOAL_KEY, JSON.stringify(next));
+    writeScoped(STORE_NAME, JSON.stringify(next));
   } catch {
     /* noop */
   }

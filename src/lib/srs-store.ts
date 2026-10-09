@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
  * Leitner-box SRS (Spaced Repetition) store for flashcards.
@@ -9,12 +10,12 @@ import { useSyncExternalStore } from "react";
  *  - answered "بلد بودم"  → box +1 (max 5)
  *  - answered "بلد نبودم" → box 0
  * Session selection weights words by (5 - box) so hard/unseen words appear more.
- * Persisted in localStorage: visionone:srs
+ * Persisted in localStorage scoped per book: visionone:book:<id>:srs
  */
 
 export const SRS_MAX_BOX = 5;
 
-const SRS_KEY = "visionone:srs";
+const STORE_NAME = "srs";
 const EMPTY: Record<string, { box: number; seen: number; wrong: number }> = {};
 
 export interface SrsItem {
@@ -27,11 +28,14 @@ type SrsData = Record<string, SrsItem>;
 
 let cache: SrsData | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 function read(): SrsData {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(SRS_KEY);
+    const raw = readScoped(STORE_NAME);
     cache = raw ? (JSON.parse(raw) as SrsData) : {};
   } catch {
     cache = {};
@@ -51,7 +55,7 @@ function subscribe(cb: () => void) {
 function persist(next: SrsData) {
   cache = next;
   try {
-    localStorage.setItem(SRS_KEY, JSON.stringify(next));
+    writeScoped(STORE_NAME, JSON.stringify(next));
   } catch {
     /* noop */
   }

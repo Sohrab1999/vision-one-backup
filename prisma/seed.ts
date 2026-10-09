@@ -2,7 +2,7 @@
 // Run with: bun run prisma/seed.ts
 
 import { PrismaClient } from "@prisma/client";
-import { QUIZ_SEED } from "../src/data/quiz-seed";
+import { QUIZ_SEED } from "../src/data/vision-one/quiz-seed";
 
 const db = new PrismaClient();
 
@@ -14,6 +14,8 @@ async function main() {
   }
 
   const rows = QUIZ_SEED.map((q) => ({
+    // همهٔ سؤال‌های فعلی متعلق به جزوهٔ پایه دهم (ویژن وان) هستند
+    book: "vision-one",
     category: q.category,
     lesson: q.lesson,
     scope: q.scope,

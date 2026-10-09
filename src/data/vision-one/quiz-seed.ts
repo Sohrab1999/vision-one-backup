@@ -1,4 +1,4 @@
-import type { QuizQuestionSeed } from "./types";
+import type { QuizQuestionSeed } from "../types";
 import { GRAMMAR_100 } from "./questions-grammar-comprehensive";
 import { GRAMMAR_LESSONS } from "./questions-grammar-lessons";
 import { VOCAB_120 as VOCAB_FIRST_120 } from "./questions-vocab";

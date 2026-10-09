@@ -2,7 +2,7 @@
 // Source: کتاب کار انگلیسی پایه دهم، صفحات ۲۰۶ تا ۲۲۷
 // Lesson One: entries 1-85 | Lesson Two: 1-92 | Lesson Three | Lesson Four
 
-import type { DictEntry } from "./types";
+import type { DictEntry } from "../types";
 
 export const DICTIONARY: DictEntry[] = [
   // ————— Lesson One —————

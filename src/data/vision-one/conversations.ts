@@ -2,7 +2,7 @@
 // منبع: رونویسی VLM از جزوه — متن انگلیسی و ترجمه فارسی عیناً بدون تغییر رونویسی شده‌اند
 // نام گوینده (انگلیسی/فارسی) از ابتدای هر خط به فیلد speaker منتقل شده است
 
-import type { Conversation, ConversationLine } from "./types";
+import type { Conversation, ConversationLine } from "../types";
 
 export const CONVERSATION_LIST: Conversation[] = [
   // ————— Lesson One —————

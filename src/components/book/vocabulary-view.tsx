@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { BookOpen, Gauge } from "lucide-react";
-import { VOCAB_LESSONS, vocabOfLesson } from "@/data/vocab";
-import { BOOK_STATS } from "@/data/book-meta";
+import { useBookData } from "@/lib/book-context";
 import { VocabCardGrid } from "./vocab-card-grid";
 import { cn } from "@/lib/utils";
 import { useVoiceSpeed, VOICE_SPEED_OPTIONS } from "@/lib/voice-store";
@@ -11,8 +10,14 @@ import { setPracticeIntent } from "@/lib/practice-intent";
 import type { ViewId } from "./app-header";
 
 export function VocabularyView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) {
+  const data = useBookData();
   const [lesson, setLesson] = useState<number | undefined>(undefined);
-  const words = lesson === undefined ? [...vocabOfLesson(1), ...vocabOfLesson(2), ...vocabOfLesson(3), ...vocabOfLesson(4)] : vocabOfLesson(lesson);
+  const words =
+    lesson === undefined
+      ? data.vocab.lessons
+          .filter((l) => l.lesson > 0)
+          .flatMap((l) => data.vocab.ofLesson(l.lesson))
+      : data.vocab.ofLesson(lesson);
 
   return (
     <div className="space-y-4">
@@ -23,15 +28,15 @@ export function VocabularyView({ onNavigate }: { onNavigate?: (v: ViewId) => voi
             واژگان کلیدی و تکمیلی
           </h1>
           <p className="mt-1 text-xs text-muted-foreground">
-            {BOOK_STATS.words.toLocaleString("fa-IR")} واژه از کل کتاب — روی کارت بزن تا معنی را ببینی و آن را «یاد گرفته» علامت بزنی.
+            {data.stats.words.toLocaleString("fa-IR")} واژه از کل کتاب — روی کارت بزن تا معنی را ببینی و آن را «یاد گرفته» علامت بزنی.
           </p>
         </div>
         <VoiceSpeedControl />
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <FilterChip active={lesson === undefined} onClick={() => setLesson(undefined)} label="همه درس‌های دهم" />
-        {VOCAB_LESSONS.map((l) => (
+        <FilterChip active={lesson === undefined} onClick={() => setLesson(undefined)} label="همه درس‌های جزوه" />
+        {data.vocab.lessons.map((l) => (
           <FilterChip
             key={l.lesson}
             active={lesson === l.lesson}

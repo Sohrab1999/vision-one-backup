@@ -1,5 +1,6 @@
-// Shared content types for the "Vision One" interactive web book.
+// Shared content types for the interactive web book library (پایه ۷ تا ۱۲).
 // Every data file under src/data must import its types from here.
+// این تایپ‌ها بین همه جزوه‌ها مشترک‌اند — قرارداد داده‌ها.
 
 export interface VocabWord {
   /** English word exactly as printed in the book (pos markers like "(n, v)" kept inline) */
@@ -91,4 +92,56 @@ export interface IrregularVerb {
   past: string;
   participle: string;
   meaning: string;
+}
+
+// ─── تایپ‌های چندکتابی (مشترک بین همه جزوه‌ها) ───
+
+/** یک واژه به‌همراه برچسب درس (برای نمایش در لیست‌ها) */
+export type VocabEntry = VocabWord & { lessonLabel: string };
+
+/** متادیتای یک فصل/درس از جزوه */
+export interface ChapterMeta {
+  id: number;
+  number: string;
+  title: string;
+  titleFa: string;
+  quote: { en: string; fa: string; source: string };
+  minutes: number;
+  color: string;
+  grammarTopics: string[];
+}
+
+/** مشخصات چاپی جزوه (صفحه شناسنامه کتاب) */
+export interface BookInfo {
+  title: string;
+  subtitle: string;
+  author: string;
+  edition: string;
+  price: string;
+  telegram: string;
+}
+
+// ─── تایپ‌های درسنامه گرامر (شکل مشترک بین همه جزوه‌ها) ───
+
+export interface GrammarExample {
+  en: string;
+  fa: string;
+}
+
+export interface GrammarBlock {
+  kind: "text" | "formula" | "table" | "examples" | "note";
+  title?: string;
+  text?: string;
+  headers?: string[];
+  rows?: string[][];
+  items?: GrammarExample[];
+}
+
+export interface GrammarLesson {
+  id: string;
+  lesson: number;
+  title: string;
+  titleFa: string;
+  summary: string;
+  blocks: GrammarBlock[];
 }

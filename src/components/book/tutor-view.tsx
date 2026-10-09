@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useBook, useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
 
 interface Msg {
@@ -24,11 +25,12 @@ const STARTERS = [
 ];
 
 export function TutorView() {
+  const { bookId, meta } = useBook();
+  const data = useBookData();
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      content:
-        "Hi there! 👋 I'm your English tutor from Vision One.\n(سلام! من دستیار زبان انگلیسی تو از جزوه ویژن وان هستم.)\n\nLet's practice English together — just start chatting with me!\n(بیا با هم تمرین انگلیسی کنیم — فقط شروع کن به حرف زدن!)",
+      content: `Hi there! 👋 I'm your English tutor from ${data.info.subtitle}.\n(سلام! من دستیار زبان انگلیسی تو از جزوه «${data.info.subtitle}» هستم.)\n\nLet's practice English together — just start chatting with me!\n(بیا با هم تمرین انگلیسی کنیم — فقط شروع کن به حرف زدن!)`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -54,13 +56,18 @@ export function TutorView() {
           messages: next
             .slice(1)
             .map((m) => ({ role: m.role, content: m.content })),
+          book: {
+            id: bookId,
+            title: data.info.title,
+            grade: meta?.gradeLabel ?? "",
+          },
         }),
       });
-      const data = await res.json();
+      const resData = await res.json();
       if (res.ok) {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+        setMessages((prev) => [...prev, { role: "assistant", content: resData.reply }]);
       } else {
-        toast.error(data.error ?? "خطا در ارتباط با دستیار");
+        toast.error(resData.error ?? "خطا در ارتباط با دستیار");
       }
     } catch {
       toast.error("خطا در ارتباط با سرور");
@@ -195,7 +202,7 @@ export function TutorView() {
       </Card>
 
       <p className="text-center text-[11px] text-muted-foreground">
-        دستیار بر اساس محتوای کتاب Vision 1 پاسخ می‌دهد — از او درباره واژه‌ها، گرامر یا تمرین مکالمه بپرس.
+        دستیار بر اساس محتوای کتاب {data.info.subtitle} پاسخ می‌دهد — از او درباره واژه‌ها، گرامر یا تمرین مکالمه بپرس.
       </p>
     </div>
   );

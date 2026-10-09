@@ -1,10 +1,11 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
- * Daily Challenge store — بهترین نتیجهٔ هر روز را در localStorage نگه می‌دارد.
- * کلید: visionone:daily  — ساختار: { [date]: { pct, total } }
+ * Daily Challenge store — بهترین نتیجهٔ هر روز را در localStorage نگه می‌دارد (scoped هر کتاب).
+ * کلید: visionone:book:<id>:daily — ساختار: { [date]: { pct, total } }
  * plus یک شمارندهٔ کل چالش‌های کامل‌شده برای نشان «چالش‌باز».
  */
 
@@ -17,13 +18,16 @@ interface DailyStore {
   map: Record<string, DailyResult>;
 }
 
-const DAILY_KEY = "visionone:daily";
+const STORE_NAME = "daily";
 const KEEP_DAYS = 400;
 
 const EMPTY: DailyStore = { map: {} };
 
 let cache: DailyStore | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 /** تاریخ امروز به وقت محلی کاربر به شکل YYYY-MM-DD (هماهنگ با seed سرور) */
 export function todayKey(): string {
@@ -36,7 +40,7 @@ export function todayKey(): string {
 function read(): DailyStore {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(DAILY_KEY);
+    const raw = readScoped(STORE_NAME);
     const parsed = raw ? (JSON.parse(raw) as DailyStore) : EMPTY;
     cache = parsed && typeof parsed === "object" && parsed.map ? parsed : EMPTY;
   } catch {
@@ -48,7 +52,7 @@ function read(): DailyStore {
 function persist(next: DailyStore) {
   cache = next;
   try {
-    localStorage.setItem(DAILY_KEY, JSON.stringify(next));
+    writeScoped(STORE_NAME, JSON.stringify(next));
   } catch {
     /* noop */
   }

@@ -1,6 +1,6 @@
 // ۱۰۰ تست گرامر و نگارش درس ۱ تا ۴ — پایه دهم (جزوه جامع «Vision One»، صفحات ۱۷۲ تا ۱۷۶)
 // سطح: متوسط و کنکوری | پاسخنامه کلیدی صفحه ۳۰۰
-import type { QuizQuestionSeed } from "./types";
+import type { QuizQuestionSeed } from "../types";
 
 export const GRAMMAR_100: QuizQuestionSeed[] = [
   { category: "grammar", lesson: 0, scope: "جمع‌بندی درس ۱ تا ۴", text: "I don't know where Mr. Jordan is. He ________ in the garden, but I'm not sure.", options: ["may is", "may be", "must is", "must be"], answer: 1, level: "کنکوری" },

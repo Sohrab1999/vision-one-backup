@@ -12,6 +12,8 @@ datasource db {
 /// سؤالات آزمون استخراج‌شده از جزوه (گرامر و واژگان)
 model Question {
   id          String   @id @default(cuid())
+  /// شناسه جزوهٔ مالک سؤال — "vision-one" | "grade-7" | "grade-8" | "grade-9" | "grade-11" | "grade-12"
+  book        String   @default("vision-one")
   /// "grammar" | "vocabulary"
   category    String
   /// 0 = جمع‌بندی, 1..4 = شماره درس
@@ -31,11 +33,14 @@ model Question {
   createdAt   DateTime @default(now())
 
   @@index([category, lesson])
+  @@index([book])
 }
 
 /// نتیجه یک آزمون کامل‌شده توسط کاربر
 model Attempt {
   id        String   @id @default(cuid())
+  /// شناسه جزوهٔ مالک آزمون — "vision-one" | "grade-7" | "grade-8" | "grade-9" | "grade-11" | "grade-12"
+  book      String   @default("vision-one")
   /// "grammar" | "vocabulary" | "all"
   category  String
   lesson    Int
@@ -50,4 +55,5 @@ model Attempt {
   createdAt DateTime @default(now())
 
   @@index([category])
+  @@index([book])
 }

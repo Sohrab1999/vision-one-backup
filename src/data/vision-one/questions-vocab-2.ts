@@ -2,7 +2,7 @@
 // Source: رونوشت‌های VLM صفحات ۱۸۴ تا ۱۸۸ — تست‌های ۱۳۱ تا ۲۴۰
 // کلیدها با پاسخنامه تأییدشده (a=0, b=1, c=2, d=3) تک‌به‌تک تطبیق داده شده است.
 
-import type { QuizQuestionSeed } from "./types";
+import type { QuizQuestionSeed } from "../types";
 
 export const VOCAB_110: QuizQuestionSeed[] = [
   // ---- t184 (131-152) ----

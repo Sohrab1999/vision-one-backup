@@ -14,23 +14,24 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { IRREGULAR_VERBS } from "@/data/book-meta";
+import { useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
 
 export function VerbsView() {
+  const data = useBookData();
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return IRREGULAR_VERBS;
-    return IRREGULAR_VERBS.filter(
+    if (!q) return data.verbs;
+    return data.verbs.filter(
       (v) =>
         v.base.toLowerCase().includes(q) ||
         v.past.toLowerCase().includes(q) ||
         v.participle.toLowerCase().includes(q) ||
         v.meaning.includes(query.trim()),
     );
-  }, [query]);
+  }, [data.verbs, query]);
 
   return (
     <div className="space-y-4">
@@ -41,7 +42,7 @@ export function VerbsView() {
             افعال بی‌قاعده
           </h1>
           <p className="mt-1 text-xs text-muted-foreground">
-            {IRREGULAR_VERBS.length.toLocaleString("fa-IR")} فعل بی‌قاعده جزوه — شکل اول، گذشته، اسم مفعول و معنی.
+            {data.verbs.length.toLocaleString("fa-IR")} فعل بی‌قاعده جزوه — شکل اول، گذشته، اسم مفعول و معنی.
           </p>
         </div>
         <div className="relative w-full sm:w-72">

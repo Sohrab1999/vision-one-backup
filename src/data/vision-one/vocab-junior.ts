@@ -1,4 +1,4 @@
-import type { VocabWord } from "./types";
+import type { VocabWord } from "../types";
 
 // واژگان پایه هفتم تا نهم — بخش «مرور» جزوه جامع دهم
 // منبع: صفحات ۸ تا ۱۸ PDF (رونوشت VLM)، هر ردیف: word :: معنی فارسی

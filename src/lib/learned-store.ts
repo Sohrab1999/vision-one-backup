@@ -2,22 +2,26 @@
 
 import { useSyncExternalStore } from "react";
 import { recordWordLearned } from "./goal-store";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
- * External store for "learned words" persisted in localStorage.
+ * External store for "learned words" persisted in localStorage (scoped per book).
  * React-idiomatic: consumed via useSyncExternalStore (no effect-setState).
  */
 
-const LEARNED_KEY = "visionone:learned";
+const STORE_NAME = "learned";
 const EMPTY: Set<string> = new Set();
 
 let cache: Set<string> | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 function read(): Set<string> {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(LEARNED_KEY);
+    const raw = readScoped(STORE_NAME);
     cache = new Set(raw ? (JSON.parse(raw) as string[]) : []);
   } catch {
     cache = new Set();
@@ -41,7 +45,7 @@ export function toggleLearned(word: string) {
   else next.add(word);
   cache = next;
   try {
-    localStorage.setItem(LEARNED_KEY, JSON.stringify([...next]));
+    writeScoped(STORE_NAME, JSON.stringify([...next]));
   } catch {
     /* noop */
   }

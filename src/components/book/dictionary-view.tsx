@@ -6,22 +6,23 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DICTIONARY } from "@/data/dictionary";
+import { useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
 
 export function DictionaryView() {
+  const data = useBookData();
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return DICTIONARY;
-    return DICTIONARY.filter(
+    if (!q) return data.dictionary;
+    return data.dictionary.filter(
       (d) =>
         d.word.toLowerCase().includes(q) ||
         d.definition.toLowerCase().includes(q) ||
         d.pos.toLowerCase().includes(q),
     );
-  }, [query]);
+  }, [data.dictionary, query]);
 
   return (
     <div className="space-y-4">
@@ -31,7 +32,7 @@ export function DictionaryView() {
           دیکشنری انگلیسی به انگلیسی
         </h1>
         <p className="mt-1 text-xs text-muted-foreground">
-          {DICTIONARY.length.toLocaleString("fa-IR")} مدخل از دیکشنری تکمیلی جزوه — با تلفظ IPA، نقش دستوری و مثال.
+          {data.dictionary.length.toLocaleString("fa-IR")} مدخل از دیکشنری تکمیلی جزوه — با تلفظ IPA، نقش دستوری و مثال.
         </p>
       </div>
 

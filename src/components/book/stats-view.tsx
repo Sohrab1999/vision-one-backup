@@ -37,7 +37,6 @@ import {
   Tooltip as ChartTooltip,
   Cell,
 } from "recharts";
-import { BOOK_STATS } from "@/data/book-meta";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStreak } from "@/lib/streak-store";
 import { useUserName } from "@/lib/name-store";
@@ -46,6 +45,7 @@ import { useDailyInfo } from "@/lib/daily-store";
 import { useQuestionStars } from "@/lib/question-star-store";
 import { useCombinedRounds } from "@/lib/round-counters";
 import { setPracticeIds } from "@/lib/practice-store";
+import { useBook } from "@/lib/book-context";
 import { ActivityHeatmap } from "./activity-heatmap";
 import { toast } from "sonner";
 import type { ViewId } from "./app-header";
@@ -272,6 +272,7 @@ function fmtDate(iso: string): string {
 }
 
 export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) {
+  const { bookId } = useBook();
   const { count: learned } = useLearnedWords();
   const streak = useStreak();
   const userName = useUserName();
@@ -289,7 +290,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/attempts")
+    fetch(`/api/attempts?book=${bookId}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         if (cancelled || !d) return;
@@ -306,7 +307,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [bookId]);
 
   const achContext: AchContext = useMemo(
     () => ({

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { normalizeBookId } from "../_lib/book";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,16 @@ function mulberry32(seed: number) {
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+/** هش قطعی FNV-1a رشته به عدد ۳۲-بیتی بدون علامت — برای seed مستقل هر کتاب */
+function hashSeed(input: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < input.length; i++) {
+    h ^= input.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
 }
 
 function seededShuffle<T>(arr: T[], seed: number): T[] {
@@ -72,6 +83,8 @@ const LEVEL_KEYS = ["آموزشی", "متوسط", "کنکوری"] as const;
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
+    // ── شناسه کتاب از query: ?book=<id> — نامعتبر/خالی → ویژن وان (رفتار قدیمی) ──
+    const book = normalizeBookId(searchParams.get("book"));
     const category = searchParams.get("category") ?? "all";
     const lesson = searchParams.get("lesson") ?? "all";
     const level = searchParams.get("level") ?? "all";
@@ -87,9 +100,9 @@ export async function GET(req: NextRequest) {
     // ── متادیتای بانک سؤال (شمارنده‌ها برای تنظیمات آزمون)
     if (meta) {
       const [byLevel, byCategory, total] = await Promise.all([
-        db.question.groupBy({ by: ["level"], _count: true }),
-        db.question.groupBy({ by: ["category"], _count: true }),
-        db.question.count(),
+        db.question.groupBy({ by: ["level"], _count: true, where: { book } }),
+        db.question.groupBy({ by: ["category"], _count: true, where: { book } }),
+        db.question.count({ where: { book } }),
       ]);
       return NextResponse.json({
         total,
@@ -98,7 +111,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const where: { category?: string; lesson?: number; level?: string } = {};
+    const where: { book: string; category?: string; lesson?: number; level?: string } = { book };
     if (category !== "all") where.category = category;
     if (lesson !== "all") where.lesson = Number(lesson);
     if (!daily && !weekly && level !== "all" && (LEVEL_KEYS as readonly string[]).includes(level)) {
@@ -114,7 +127,7 @@ export async function GET(req: NextRequest) {
       : [];
 
     const pool = ids.length
-      ? await db.question.findMany({ where: { id: { in: ids } } })
+      ? await db.question.findMany({ where: { id: { in: ids }, book } })
       : await db.question.findMany({ where });
     if (pool.length === 0) {
       return NextResponse.json({ questions: [], pool: 0 });
@@ -123,11 +136,12 @@ export async function GET(req: NextRequest) {
     let picked;
     if (daily) {
       // چالش روزانه: ۵ سؤال قطعی بر اساس تاریخ — ترکیبی از گرامر و واژگان
-      const seed = Number(todayKey().replace(/-/g, "")) % 2147483647;
+      // seed مستقل هر کتاب: hash(book:dateKey) — همه کاربرانِ یک کتاب در یک روز، همان سؤال‌ها
+      const seed = hashSeed(`${book}:${todayKey()}`);
       picked = seededShuffle(pool, seed).slice(0, Math.min(count, pool.length));
     } else if (weekly) {
-      // چالش هفتگی: ۱۰ سؤال قطعی بر اساس شنبهٔ آغازین هفته — همهٔ کاربرانِ یک هفته، همان سؤال‌ها
-      const seed = Number(weekKeyOf().replace(/-/g, "")) % 2147483647;
+      // چالش هفتگی: ۱۰ سؤال قطعی بر اساس شنبهٔ آغازین هفته — همهٔ کاربرانِ یک کتاب در یک هفته، همان سؤال‌ها
+      const seed = hashSeed(`${book}:${weekKeyOf()}`);
       picked = seededShuffle(pool, seed).slice(0, Math.min(count, pool.length));
     } else {
       const shuffled = [...pool].sort(() => Math.random() - 0.5);

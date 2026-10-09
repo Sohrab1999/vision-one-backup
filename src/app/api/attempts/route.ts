@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { normalizeBookId } from "../_lib/book";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as {
+      book?: string;
       category?: string;
       lesson?: number;
       total?: number;
@@ -15,6 +17,9 @@ export async function POST(req: NextRequest) {
       detail?: unknown;
     };
 
+    // ── شناسه کتاب از body: نامعتبر/خالی → ویژن وان (رفتار قدیمی) ──
+    const book = normalizeBookId(body.book);
+
     const total = Number(body.total ?? 0);
     const correct = Number(body.correct ?? 0);
     if (!total || total <= 0) {
@@ -23,6 +28,7 @@ export async function POST(req: NextRequest) {
 
     const attempt = await db.attempt.create({
       data: {
+        book,
         category: body.category ?? "all",
         lesson: Number(body.lesson ?? 0),
         total,
@@ -49,8 +55,12 @@ interface LeaderRow {
   lastPlayed: string;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    // ── فیلتر کتاب: همهٔ آمار/لیدربورد/نبض‌ها per-book است — نامعتبر/خالی → ویژن وان ──
+    const { searchParams } = new URL(req.url);
+    const book = normalizeBookId(searchParams.get("book"));
+
     // ── نبض چالش روزانه: آزمون‌های dailyِ امروز (مقایسهٔ اجتماعی) ──
     // ── نبض چالش هفتگی: آزمون‌های weekly از شنبهٔ آغازین هفته (هفتهٔ ایرانی از شنبه) ──
     const now = new Date();
@@ -59,30 +69,33 @@ export async function GET() {
     weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 1) % 7));
 
     const [recent, agg, last60, chart, detailRows, dailyToday, weeklyThisWeek] = await Promise.all([
-      db.attempt.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
+      db.attempt.findMany({ where: { book }, orderBy: { createdAt: "desc" }, take: 8 }),
       db.attempt.aggregate({
+        where: { book },
         _count: { _all: true },
         _sum: { total: true, correct: true },
       }),
-      db.attempt.findMany({ orderBy: { createdAt: "desc" }, take: 60 }),
+      db.attempt.findMany({ where: { book }, orderBy: { createdAt: "desc" }, take: 60 }),
       db.attempt.findMany({
+        where: { book },
         orderBy: { createdAt: "desc" },
         take: 20,
         select: { id: true, correct: true, total: true, category: true, createdAt: true },
       }),
       db.attempt.findMany({
+        where: { book },
         orderBy: { createdAt: "desc" },
         take: 150,
         select: { id: true, detail: true, createdAt: true },
       }),
       db.attempt.findMany({
-        where: { category: "daily", createdAt: { gte: startOfToday } },
+        where: { book, category: "daily", createdAt: { gte: startOfToday } },
         select: { correct: true, total: true },
         orderBy: { createdAt: "desc" },
         take: 300,
       }),
       db.attempt.findMany({
-        where: { category: "weekly", createdAt: { gte: weekStart } },
+        where: { book, category: "weekly", createdAt: { gte: weekStart } },
         select: { correct: true, total: true },
         orderBy: { createdAt: "desc" },
         take: 300,
@@ -97,9 +110,9 @@ export async function GET() {
       return Math.max(max, p);
     }, 0);
 
-    // ── لیدربورد محلی: گروه‌بندی بر اساس نام دانش‌آموز ──
+    // ── لیدربورد محلی: گروه‌بندی بر اساس نام دانش‌آموز (per-book) ──
     const namedRows = await db.attempt.findMany({
-      where: { name: { not: null } },
+      where: { book, name: { not: null } },
       orderBy: { createdAt: "desc" },
       take: 500,
       select: { name: true, total: true, correct: true, createdAt: true },
@@ -163,7 +176,7 @@ export async function GET() {
     }[] = [];
     if (topIds.length) {
       const qRows = await db.question.findMany({
-        where: { id: { in: topIds.map(([id]) => id) } },
+        where: { id: { in: topIds.map(([id]) => id) }, book },
       });
       const qMap = new Map(qRows.map((q) => [q.id, q]));
       topMisses = topIds

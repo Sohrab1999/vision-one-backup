@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useBook } from "./book-context";
 
 /**
  * نبض اجتماعی چالش‌ها — تعداد پاسخ‌دهندگان، میانگین و بهترین دقت از سرور.
  * daily: آزمون‌های dailyِ امروز · weekly: آزمون‌های weekly از شنبهٔ آغازین هفته.
- * سبک و یک‌بار مصرف: فقط یک GET به /api/attempts.
+ * سبک و یک‌بار مصرف: فقط یک GET به /api/attempts — scoped به کتاب فعال.
  */
 
 export interface Pulse {
@@ -22,12 +23,13 @@ interface Pulses {
 const IDLE: Pulses = { daily: null, weekly: null };
 
 export function usePulses(enabled = true): Pulses {
+  const { bookId } = useBook();
   const [pulses, setPulses] = useState<Pulses>(IDLE);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !bookId) return;
     let cancelled = false;
-    fetch("/api/attempts")
+    fetch(`/api/attempts?book=${encodeURIComponent(bookId)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         if (cancelled || !d) return;
@@ -44,7 +46,7 @@ export function usePulses(enabled = true): Pulses {
     return () => {
       cancelled = true;
     };
-  }, [enabled]);
+  }, [enabled, bookId]);
 
   return pulses;
 }

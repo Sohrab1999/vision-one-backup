@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
 import { SpeakButton } from "./speak-button";
-import type { VocabEntry } from "@/data/vocab";
+import type { VocabEntry } from "@/data/types";
 
 /** دکمه نشان‌گذاری (ستاره) — کلیکش نباید کارت را فلیپ کند */
 function StarToggle({ active, onClick }: { active: boolean; onClick: () => void }) {

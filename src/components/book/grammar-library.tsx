@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { GraduationCap, Lightbulb, Table2, Quote, Type } from "lucide-react";
 import {
   Accordion,
@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { SpeakButton } from "./speak-button";
-import { GRAMMAR_LESSON_LIST } from "@/data/grammar";
-import type { GrammarLesson, GrammarBlock } from "@/data/grammar";
+import { useBookData } from "@/lib/book-context";
+import type { GrammarBlock } from "@/data/types";
 
 function BlockRenderer({ block }: { block: GrammarBlock }) {
   if (block.kind === "text" || block.kind === "formula") {
@@ -150,7 +150,14 @@ function GrammarAccordionItems({
   lessonFilter?: number;
   value: string;
 }) {
-  const lessons = GRAMMAR_FILTERED(lessonFilter);
+  const data = useBookData();
+  const lessons = useMemo(
+    () =>
+      lessonFilter === undefined
+        ? data.grammar.lessons
+        : data.grammar.lessons.filter((g) => g.lesson === lessonFilter),
+    [data.grammar.lessons, lessonFilter],
+  );
   return (
     <>
       {lessons.map((g) => (
@@ -193,7 +200,3 @@ function GrammarAccordionItems({
   );
 }
 
-function GRAMMAR_FILTERED(lessonFilter?: number): GrammarLesson[] {
-  if (lessonFilter === undefined) return GRAMMAR_LESSON_LIST;
-  return GRAMMAR_LESSON_LIST.filter((g) => g.lesson === lessonFilter);
-}

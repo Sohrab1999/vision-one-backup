@@ -1,10 +1,11 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
- * Weekly Challenge store — بهترین نتیجهٔ هر هفته را در localStorage نگه می‌دارد.
- * کلید: visionone:weekly — ساختار: { [weekKey]: { pct, total } }
+ * Weekly Challenge store — بهترین نتیجهٔ هر هفته را در localStorage نگه می‌دارد (scoped هر کتاب).
+ * کلید: visionone:book:<id>:weekly — ساختار: { [weekKey]: { pct, total } }
  * هفتهٔ ایرانی: از شنبه شروع می‌شود؛ weekKey = تاریخِ شنبهٔ آغازین (YYYY-MM-DD)
  * — هماهنگ با weekStart/weekKeyOf در /api/questions (seed قطعی هفتگی).
  */
@@ -18,13 +19,16 @@ interface WeeklyStore {
   map: Record<string, WeeklyResult>;
 }
 
-const WEEKLY_KEY = "visionone:weekly";
+const STORE_NAME = "weekly";
 const KEEP_WEEKS = 120;
 
 const EMPTY: WeeklyStore = { map: {} };
 
 let cache: WeeklyStore | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 /** شنبهٔ آغازین هفتهٔ جاری (هفتهٔ ایرانی از شنبه) */
 export function weekStartOf(now = new Date()): Date {
@@ -53,7 +57,7 @@ export function weekIndexOf(now = new Date()): number {
 function read(): WeeklyStore {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(WEEKLY_KEY);
+    const raw = readScoped(STORE_NAME);
     const parsed = raw ? (JSON.parse(raw) as WeeklyStore) : EMPTY;
     cache = parsed && typeof parsed === "object" && parsed.map ? parsed : EMPTY;
   } catch {
@@ -65,7 +69,7 @@ function read(): WeeklyStore {
 function persist(next: WeeklyStore) {
   cache = next;
   try {
-    localStorage.setItem(WEEKLY_KEY, JSON.stringify(next));
+    writeScoped(STORE_NAME, JSON.stringify(next));
   } catch {
     /* noop */
   }

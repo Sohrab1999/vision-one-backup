@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { X, Star, BookOpen, SearchX, GraduationCap, CheckCircle2, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DICTIONARY } from "@/data/dictionary";
-import { ALL_VOCAB } from "@/data/vocab";
-import type { DictEntry, VocabWord } from "@/data/types";
+import { useBookData } from "@/lib/book-context";
+import type { DictEntry, VocabEntry, VocabWord } from "@/data/types";
 import { SpeakButton } from "./speak-button";
 import { useStarredWords, toggleStar } from "@/lib/star-store";
 import { useSRSData, SRS_MAX_BOX } from "@/lib/srs-store";
@@ -15,13 +14,15 @@ import { requestView } from "@/lib/nav-store";
 
 /**
  * Word lookup — کلیک روی هر واژهٔ انگلیسی در متن‌ها، معنی و دیکشنری همان واژه را نشان می‌دهد.
- * داده از دیکشنری ۳۲۶مدخلی + واژگان ۱٬۴۸۸واژهای جزوه (بدون درخواست شبکه).
+ * داده از دیکشنری و واژگانِ جزوهٔ فعال می‌آید (بدون درخواست شبکه) و با تغییر کتاب بازسازی می‌شود.
  */
 
-// ── نگاشت‌های جست‌وجو (lazy singleton) ──
-let dictMap: Map<string, DictEntry> | null = null;
-let vocabMap: Map<string, VocabWord> | null = null;
-let phraseSet: Set<string> | null = null;
+// ── نگاشت‌های جست‌وجو — از دادهٔ کتاب فعال ساخته می‌شوند ──
+interface LookupMaps {
+  dict: Map<string, DictEntry>;
+  vocab: Map<string, VocabWord>;
+  phrases: Set<string>;
+}
 
 function normalize(raw: string): string {
   return raw
@@ -31,21 +32,33 @@ function normalize(raw: string): string {
     .toLowerCase();
 }
 
-function buildMaps() {
-  if (dictMap) return;
-  dictMap = new Map();
-  vocabMap = new Map();
-  phraseSet = new Set();
-  for (const d of DICTIONARY) {
+function buildMaps(dictionary: DictEntry[], vocabList: VocabEntry[]): LookupMaps {
+  const dict = new Map<string, DictEntry>();
+  const vocab = new Map<string, VocabWord>();
+  const phrases = new Set<string>();
+  for (const d of dictionary) {
     const key = normalize(d.word);
-    if (key && !dictMap.has(key)) dictMap.set(key, d);
-    if (key.includes(" ")) phraseSet!.add(key);
+    if (key && !dict.has(key)) dict.set(key, d);
+    if (key.includes(" ")) phrases.add(key);
   }
-  for (const v of ALL_VOCAB) {
+  for (const v of vocabList) {
     const key = normalize(v.word);
-    if (key && !vocabMap.has(key)) vocabMap.set(key, v);
-    if (key.includes(" ")) phraseSet!.add(key);
+    if (key && !vocab.has(key)) vocab.set(key, v);
+    if (key.includes(" ")) phrases.add(key);
   }
+  return { dict, vocab, phrases };
+}
+
+/** کش سبک بهازای آرایه‌های دادهٔ کتاب فعال — با تغییر کتاب (تغییر رفرنس داده) بازسازی می‌شود */
+let mapsCache: { dictionary: DictEntry[]; vocab: VocabEntry[]; maps: LookupMaps } | null = null;
+
+function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[]): LookupMaps {
+  if (mapsCache && mapsCache.dictionary === dictionary && mapsCache.vocab === vocab) {
+    return mapsCache.maps;
+  }
+  const maps = buildMaps(dictionary, vocab);
+  mapsCache = { dictionary, vocab, maps };
+  return maps;
 }
 
 interface LookupHit {
@@ -54,8 +67,7 @@ interface LookupHit {
   vocab?: VocabWord;
 }
 
-function lookup(norm: string): LookupHit {
-  buildMaps();
+function lookup(maps: LookupMaps, norm: string): LookupHit {
   const candidates = [norm];
   // ساده‌سازی صرفی: جمع، فعل ساده، «'s»
   if (norm.endsWith("'s")) candidates.push(norm.slice(0, -2));
@@ -66,8 +78,8 @@ function lookup(norm: string): LookupHit {
   if (norm.endsWith("ing")) candidates.push(norm.slice(0, -3), norm.slice(0, -3) + "e");
   for (const c of candidates) {
     if (!c) continue;
-    const hit = dictMap!.get(c);
-    const vocab = vocabMap!.get(c);
+    const hit = maps.dict.get(c);
+    const vocab = maps.vocab.get(c);
     if (hit || vocab) return { word: c, dict: hit, vocab };
   }
   return { word: norm };
@@ -83,8 +95,7 @@ interface WordSpan {
 
 const WORD_RE = /[A-Za-z]+(?:['’-][A-Za-z]+)*/g;
 
-function extractWords(text: string): WordSpan[] {
-  buildMaps();
+function extractWords(text: string, maps: LookupMaps): WordSpan[] {
   const words: WordSpan[] = [];
   for (const m of text.matchAll(WORD_RE)) {
     const start = m.index ?? 0;
@@ -99,7 +110,7 @@ function extractWords(text: string): WordSpan[] {
     const b = words[i + 1];
     if (
       b &&
-      phraseSet!.has(`${a.norm} ${b.norm}`) &&
+      maps.phrases.has(`${a.norm} ${b.norm}`) &&
       /^\s+$/.test(text.slice(a.end, b.start))
     ) {
       merged.push({
@@ -123,8 +134,8 @@ interface Segment {
   norm?: string;
 }
 
-function segmentText(text: string): Segment[] {
-  const words = extractWords(text);
+function segmentText(text: string, maps: LookupMaps): Segment[] {
+  const words = extractWords(text, maps);
   const segs: Segment[] = [];
   let pos = 0;
   for (const w of words) {
@@ -138,18 +149,26 @@ function segmentText(text: string): Segment[] {
 
 /** متن انگلیسی قابل‌کلیک: هر واژه (و عبارت شناخته‌شده) یک دکمهٔ جست‌وجوست + جست‌وجوی عبارتِ انتخاب‌شده */
 export function ClickableEnText({ text, className }: { text: string; className?: string }) {
+  const data = useBookData();
   const [sel, setSel] = useState<{ hit: LookupHit; x: number; y: number } | null>(null);
   const [selSearch, setSelSearch] = useState<{ raw: string; x: number; y: number } | null>(null);
   const wrapRef = useRef<HTMLSpanElement>(null);
 
-  const segs = useMemo(() => segmentText(text), [text]);
+  const maps = useMemo(
+    () => getLookupMaps(data.dictionary, data.vocab.all),
+    [data.dictionary, data.vocab.all],
+  );
+  const segs = useMemo(() => segmentText(text, maps), [text, maps]);
 
-  const onWordClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const norm = e.currentTarget.dataset.norm ?? "";
-    if (!norm) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    setSel({ hit: lookup(norm), x: rect.left + rect.width / 2, y: rect.bottom });
-  }, []);
+  const onWordClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const norm = e.currentTarget.dataset.norm ?? "";
+      if (!norm) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      setSel({ hit: lookup(maps, norm), x: rect.left + rect.width / 2, y: rect.bottom });
+    },
+    [maps],
+  );
 
   // جست‌وجوی عبارت انتخاب‌شده با ماوس/لمس — علاوه بر کلیک تک‌واژه
   useEffect(() => {
@@ -189,7 +208,7 @@ export function ClickableEnText({ text, className }: { text: string; className?:
     if (!selSearch) return;
     const { raw, x, y } = selSearch;
     setSelSearch(null);
-    setSel({ hit: lookup(normalize(raw)), x, y });
+    setSel({ hit: lookup(maps, normalize(raw)), x, y });
   }
 
   // موقعیت دکمهٔ شناور جست‌وجوی عبارت — clamp به دید

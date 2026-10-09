@@ -2,7 +2,7 @@
 // منبع: رونویسی VLM از جزوه — متن انگلیسی و ترجمه فارسی عیناً بدون تغییر رونویسی شده‌اند
 // هر درس: یک متن کتاب درسی + یک متن کتاب کار
 
-import type { Reading, ReadingParagraph } from "./types";
+import type { Reading, ReadingParagraph } from "../types";
 
 export const READING_LIST: Reading[] = [
   // ————— Lesson One —————

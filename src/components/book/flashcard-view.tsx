@@ -22,7 +22,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { VOCAB_LESSONS, vocabOfLesson, ALL_VOCAB, type VocabEntry } from "@/data/vocab";
+import type { VocabEntry } from "@/data/types";
+import { useBookData } from "@/lib/book-context";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
 import { usePracticeIntent, clearPracticeIntent } from "@/lib/practice-intent";
@@ -125,6 +126,7 @@ export function FlashcardView() {
 }
 
 function FlashcardGame() {
+  const data = useBookData();
   const intent = usePracticeIntent();
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
@@ -141,8 +143,8 @@ function FlashcardGame() {
   const [reviewCount, setReviewCount] = useState(0);
 
   const basePool = useMemo(
-    () => (lesson === ALL_LESSONS ? ALL_VOCAB : vocabOfLesson(lesson)),
-    [lesson],
+    () => (lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson)),
+    [data.vocab, lesson],
   );
   const pool = useMemo(() => {
     let p = basePool;
@@ -249,9 +251,9 @@ function FlashcardGame() {
                     : "text-muted-foreground hover:bg-muted",
                 )}
               >
-                کل کتاب (۱٬۴۸۸ واژه)
+                کل کتاب ({data.vocab.all.length.toLocaleString("fa-IR")} واژه)
               </button>
-              {VOCAB_LESSONS.filter((l) => l.lesson > 0).map((l) => (
+              {data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => (
                 <button
                   key={l.lesson}
                   type="button"

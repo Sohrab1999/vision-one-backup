@@ -1,11 +1,9 @@
-import type { VocabWord } from "./types";
+import type { VocabWord, VocabEntry } from "../types";
 import { VOCAB_LESSON_1 } from "./vocab-lesson-1";
 import { VOCAB_LESSON_2 } from "./vocab-lesson-2";
 import { VOCAB_LESSON_3 } from "./vocab-lesson-3";
 import { VOCAB_LESSON_4 } from "./vocab-lesson-4";
 import { VOCAB_JUNIOR } from "./vocab-junior";
-
-export type VocabEntry = VocabWord & { lessonLabel: string };
 
 export const VOCAB_LESSONS: { lesson: number; label: string }[] = [
   { lesson: 0, label: "پایه ۷ تا ۹" },

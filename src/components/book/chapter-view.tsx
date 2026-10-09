@@ -15,8 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CHAPTERS, READING_LIST } from "@/data/book-meta";
-import { vocabOfLesson } from "@/data/vocab";
+import { useBookData } from "@/lib/book-context";
 import { VocabCardGrid } from "./vocab-card-grid";
 import { GrammarLibrary } from "./grammar-library";
 import { QuizGame } from "./quiz-game";
@@ -31,7 +30,8 @@ export function ChapterView({
   chapterId: number;
   onNavigate: (v: ViewId) => void;
 }) {
-  const chapter = CHAPTERS.find((c) => c.id === chapterId) ?? CHAPTERS[0];
+  const data = useBookData();
+  const chapter = data.chapters.find((c) => c.id === chapterId) ?? data.chapters[0];
   const [tab, setTab] = useState("intro");
 
   return (
@@ -100,7 +100,7 @@ export function ChapterView({
           <ChapterIntro chapterId={chapter.id} onTabChange={setTab} />
         </TabsContent>
         <TabsContent value="vocab" className="rise-in">
-          <VocabCardGrid words={vocabOfLesson(chapter.id)} />
+          <VocabCardGrid words={data.vocab.ofLesson(chapter.id)} />
         </TabsContent>
         <TabsContent value="conv" className="rise-in">
           <ConversationsList lessonFilter={chapter.id} />
@@ -128,11 +128,14 @@ export function ChapterView({
 }
 
 function ReadingsOfLesson({ lesson }: { lesson: number }) {
+  const data = useBookData();
   return (
     <>
-      {READING_LIST.filter((r) => r.lesson === lesson).map((r) => (
-        <ReadingCard key={r.id} reading={r} />
-      ))}
+      {data.readings
+        .filter((r) => r.lesson === lesson)
+        .map((r) => (
+          <ReadingCard key={r.id} reading={r} />
+        ))}
     </>
   );
 }
@@ -144,8 +147,9 @@ function ChapterIntro({
   chapterId: number;
   onTabChange: (tab: string) => void;
 }) {
-  const chapter = CHAPTERS.find((c) => c.id === chapterId) ?? CHAPTERS[0];
-  const words = vocabOfLesson(chapterId);
+  const data = useBookData();
+  const chapter = data.chapters.find((c) => c.id === chapterId) ?? data.chapters[0];
+  const words = data.vocab.ofLesson(chapterId);
   const sample = words.slice(0, 8);
 
   const steps = [

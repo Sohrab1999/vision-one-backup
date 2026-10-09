@@ -1,7 +1,7 @@
 // افعال بی‌قاعده (Irregular Verbs) — "Vision One" (جزوه جامع زبان انگلیسی پایه دهم)
 // Source: صفحات ۲۲۸ تا ۲۳۰ — جدول: شکل اول | شکل دوم | شکل سوم | معنی فارسی
 
-import type { IrregularVerb } from "./types";
+import type { IrregularVerb } from "../types";
 
 export const IRREGULAR_VERBS: IrregularVerb[] = [
   { base: "awake", past: "awoke", participle: "awaken", meaning: "بیدار شدن، بیدار کردن" },

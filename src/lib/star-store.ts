@@ -1,23 +1,27 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
  * Starred words store — واژه‌های نشان‌شدهٔ کاربر (ستاره‌دار) در localStorage.
- * کلید: visionone:starred — مستقل از «یاد گرفتم» برای مرور هدفمند.
+ * کلید scoped هر کتاب: visionone:book:<id>:starred — مستقل از «یاد گرفتم» برای مرور هدفمند.
  */
 
-const STAR_KEY = "visionone:starred";
+const STORE_NAME = "starred";
 const MAX_STARS = 600;
 const EMPTY: string[] = [];
 
 let cache: string[] | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 function read(): string[] {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(STAR_KEY);
+    const raw = readScoped(STORE_NAME);
     const parsed = raw ? (JSON.parse(raw) as unknown) : [];
     cache = Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
   } catch {
@@ -29,7 +33,7 @@ function read(): string[] {
 function persist(next: string[]) {
   cache = next;
   try {
-    localStorage.setItem(STAR_KEY, JSON.stringify(next));
+    writeScoped(STORE_NAME, JSON.stringify(next));
   } catch {
     /* noop */
   }

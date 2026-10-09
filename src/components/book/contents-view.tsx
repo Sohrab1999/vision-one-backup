@@ -12,8 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CHAPTERS, BOOK_STATS } from "@/data/book-meta";
-import { VOCAB_COUNT_BY_LESSON, vocabOfLesson } from "@/data/vocab";
+import { useBookData } from "@/lib/book-context";
 import { useLearnedWords } from "@/lib/learned-store";
 import { cn } from "@/lib/utils";
 import type { ViewId } from "./app-header";
@@ -31,10 +30,11 @@ export function ContentsView({
 }: {
   onOpenChapter: (chapterId: number) => void;
 }) {
+  const data = useBookData();
   const { learned } = useLearnedWords();
 
   const learnedPct = (chapterId: number): number => {
-    const words = vocabOfLesson(chapterId);
+    const words = data.vocab.ofLesson(chapterId);
     if (words.length === 0) return 0;
     const learnedCount = words.filter((w) => learned.has(w.word)).length;
     return Math.round((learnedCount / words.length) * 100);
@@ -45,14 +45,14 @@ export function ContentsView({
       <div className="text-center space-y-2 rise-in">
         <h1 className="text-2xl font-black">فهرست مطالب</h1>
         <p className="mx-auto max-w-md text-xs leading-6 text-muted-foreground">
-          مسیر یادگیری کتاب در {CHAPTERS.length.toLocaleString("fa-IR")} فصل — هر فصل شامل واژگان، مکالمه، ریدینگ، گرامر و تمرین اختصاصی است.
+          مسیر یادگیری کتاب در {data.chapters.length.toLocaleString("fa-IR")} فصل — هر فصل شامل واژگان، مکالمه، ریدینگ، گرامر و تمرین اختصاصی است.
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        {CHAPTERS.map((ch, idx) => {
+        {data.chapters.map((ch, idx) => {
           const c = COLOR_MAP[ch.color] ?? COLOR_MAP.emerald;
-          const total = VOCAB_COUNT_BY_LESSON[ch.id] ?? 0;
+          const total = data.vocab.countByLesson[ch.id] ?? 0;
           const pct = learnedPct(ch.id);
           return (
             <Card
@@ -126,19 +126,19 @@ export function ContentsView({
         <CardContent className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 p-4 text-[12px] text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 size={13} className="text-primary" />
-            {BOOK_STATS.words.toLocaleString("fa-IR")} واژه
+            {data.stats.words.toLocaleString("fa-IR")} واژه
           </span>
           <span className="flex items-center gap-1.5">
             <CheckCircle2 size={13} className="text-primary" />
-            {BOOK_STATS.questions.toLocaleString("fa-IR")} تست
+            {data.stats.questions.toLocaleString("fa-IR")} تست
           </span>
           <span className="flex items-center gap-1.5">
             <CheckCircle2 size={13} className="text-primary" />
-            {BOOK_STATS.readings.toLocaleString("fa-IR")} ریدینگ + {BOOK_STATS.conversations.toLocaleString("fa-IR")} مکالمه
+            {data.stats.readings.toLocaleString("fa-IR")} ریدینگ + {data.stats.conversations.toLocaleString("fa-IR")} مکالمه
           </span>
           <span className="flex items-center gap-1.5">
             <CheckCircle2 size={13} className="text-primary" />
-            {BOOK_STATS.dictionary.toLocaleString("fa-IR")} مدخل دیکشنری
+            {data.stats.dictionary.toLocaleString("fa-IR")} مدخل دیکشنری
           </span>
         </CardContent>
       </Card>

@@ -2,7 +2,7 @@
 // Source: جزوه جامع دهم، صفحات ۱۷۸ تا ۱۸۳ — تست‌های ۱ تا ۱۲۰
 // کلیدها با پاسخنامه کلیدی صفحه ۳۰۱ تطبیق داده شده است.
 
-import type { QuizQuestionSeed } from "./types";
+import type { QuizQuestionSeed } from "../types";
 
 export const VOCAB_120: QuizQuestionSeed[] = [
   // Q1

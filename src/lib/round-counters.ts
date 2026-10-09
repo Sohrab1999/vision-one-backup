@@ -1,27 +1,31 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 /**
  * شمارندهٔ دورهای کامل‌شدهٔ ویژه — فعلاً فقط «مرور ترکیبی» برای نشان «مرورگر».
- * کلید: visionone:rounds — ساختار: { combined: number }
+ * کلید scoped هر کتاب: visionone:book:<id>:rounds — ساختار: { combined: number }
  */
 
 interface RoundStore {
   combined: number;
 }
 
-const ROUNDS_KEY = "visionone:rounds";
+const STORE_NAME = "rounds";
 
 const EMPTY: RoundStore = { combined: 0 };
 
 let cache: RoundStore | null = null;
 const listeners = new Set<() => void>();
+registerScopedReset(() => {
+  cache = null;
+});
 
 function read(): RoundStore {
   if (cache) return cache;
   try {
-    const raw = localStorage.getItem(ROUNDS_KEY);
+    const raw = readScoped(STORE_NAME);
     const parsed = raw ? (JSON.parse(raw) as RoundStore) : EMPTY;
     cache = parsed && typeof parsed === "object" && typeof parsed.combined === "number" ? parsed : EMPTY;
   } catch {
@@ -33,7 +37,7 @@ function read(): RoundStore {
 function persist(next: RoundStore) {
   cache = next;
   try {
-    localStorage.setItem(ROUNDS_KEY, JSON.stringify(next));
+    writeScoped(STORE_NAME, JSON.stringify(next));
   } catch {
     /* noop */
   }

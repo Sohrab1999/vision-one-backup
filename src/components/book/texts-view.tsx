@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { SpeakButton } from "./speak-button";
 import { ClickableEnText } from "./word-lookup";
-import { READING_LIST, CONVERSATION_LIST } from "@/data/book-meta";
+import { useBookData } from "@/lib/book-context";
 import type { Reading, Conversation } from "@/data/types";
 
 const LESSON_TABS = [
@@ -21,10 +21,11 @@ const LESSON_TABS = [
 ];
 
 export function ReadingsLibrary({ lessonFilter }: { lessonFilter?: number }) {
+  const data = useBookData();
   const [showFa, setShowFa] = useState(true);
   const [activeLesson, setActiveLesson] = useState(lessonFilter ?? 1);
 
-  const list = READING_LIST.filter((r) => r.lesson === activeLesson);
+  const list = data.readings.filter((r) => r.lesson === activeLesson);
 
   return (
     <div className="space-y-4">
@@ -119,8 +120,9 @@ export function ReadingCard({
 }
 
 export function ConversationsList({ lessonFilter }: { lessonFilter?: number }) {
+  const data = useBookData();
   const [activeLesson, setActiveLesson] = useState(lessonFilter ?? 1);
-  const list = CONVERSATION_LIST.filter((c) => c.lesson === activeLesson);
+  const list = data.conversations.filter((c) => c.lesson === activeLesson);
 
   return (
     <div className="space-y-4">

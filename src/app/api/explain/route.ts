@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { bookPromptLine } from "../_lib/book";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, options, answer } = (await req.json()) as {
+    const { text, options, answer, book } = (await req.json()) as {
       text?: string;
       options?: string[];
       answer?: number;
+      book?: { id?: string; title?: string; grade?: string };
     };
 
     if (!text || !options || typeof answer !== "number") {
@@ -19,7 +21,8 @@ export async function POST(req: NextRequest) {
     const system = `تو معلم باتجربه زبان انگلیسی پایه دهم دبیرستان ایران هستی. برای تست گرامر/واژگان داده‌شده، به فارسی ساده توضیح بده:
 - یک نکته گرامری یا واژگانی کلیدی که حل تست به آن وابسته است (مطابق سرفصل‌های کتاب Vision 1 پایه دهم: آینده ساده، انواع صفت، گذشته استمراری، ضمایر انعکاسی، افعال ناقص، حروف اضافه، قید حالت یا واژگان درس‌ها)
 - یک مثال کوتاه انگلیسی با ترجمه فارسی
-قوانین: حداکثر ۶۰ کلمه فارسی. گزینه‌های غلط را لیست نکن و درباره آن‌ها توضیح نده. فقط نکته اصلی + مثال. بدون مقدمه‌چینی.`;
+قوانین: حداکثر ۶۰ کلمه فارسی. گزینه‌های غلط را لیست نکن و درباره آن‌ها توضیح نده. فقط نکته اصلی + مثال. بدون مقدمه‌چینی.
+${bookPromptLine(book)}`;
 
     const user = `Question: ${text}
 Options: ${options.map((o, i) => `${"abcd"[i]}) ${o}`).join(" | ")}

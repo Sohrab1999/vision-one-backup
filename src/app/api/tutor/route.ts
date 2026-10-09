@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { bookPromptLine } from "../_lib/book";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -22,11 +23,17 @@ interface ChatMessage {
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = (await req.json()) as { messages?: ChatMessage[] };
+    const { messages, book } = (await req.json()) as {
+      messages?: ChatMessage[];
+      book?: { id?: string; title?: string; grade?: string };
+    };
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ error: "پیامی ارسال نشده" }, { status: 400 });
     }
+
+    // ── خط «کتاب فعلی کاربر» به پرامپت سیستم افزوده می‌شود (دستورهای قبلی حفظ می‌شوند) ──
+    const systemPrompt = `${SYSTEM_PROMPT}\n\n${bookPromptLine(book)}`;
 
     const trimmed = messages
       .filter((m) => m.role === "user" || m.role === "assistant")
@@ -38,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     const completion = await zai.chat.completions.create({
       messages: [
-        { role: "assistant", content: SYSTEM_PROMPT },
+        { role: "assistant", content: systemPrompt },
         ...trimmed,
       ],
       thinking: { type: "disabled" },

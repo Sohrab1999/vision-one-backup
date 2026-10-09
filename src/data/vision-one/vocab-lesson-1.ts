@@ -1,4 +1,4 @@
-import type { VocabWord } from "./types";
+import type { VocabWord } from "../types";
 
 // Transcribed from the printed vocab tables (Vision One — پایه دهم, درس اول).
 // Source pages: p44.md, p45.md

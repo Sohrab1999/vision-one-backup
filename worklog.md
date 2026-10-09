@@ -464,3 +464,75 @@ Work Log:
 Stage Summary:
 - مسیر جدید مرجع نقشه راه: /home/z/my-project/نقشه راه ها/نقشه-راه-چند-جزوه-ای.md
 - فاز ۱ (معماری چندکتابی) همچنان در انتظار فرمان «شروع فاز ۱» است
+
+---
+Task ID: 1-b
+Agent: backend-book-scoping
+Task: فیلد book در دیتابیس + فیلتر book در APIها + هوش مصنوعی کتاب‌آگاه
+
+Work Log:
+- خواندن schema.prisma، seed.ts و هر چهار مسیر API (questions/attempts/tutor/explain) پیش از تغییر
+- اسکیما: افزودن فیلد `book String @default("vision-one")` با کامنت مستند به هر دو مدل Question و Attempt + ایندکس `@@index([book])` روی هر دو (ایندکس‌های قبلی `@@index([category, lesson])` و `@@index([category])` حفظ شد)
+- اجرای `bun run db:push` موفق (Generate Prisma Client v6.19.2)؛ راستی‌آزمایی بک‌فیل: ۵۳۰/۵۳۰ سؤال و ۱۷/۱۷ Attempt موجود مقدار book="vision-one" گرفتند
+- seed.ts: مسیر import QUIZ_SEED به "../src/data/vision-one/quiz-seed" به‌روز شد (فایل جابه‌جاشدهٔ عامل موازی تأیید شد؛ export QUIZ_SEED موجود است) و `book: "vision-one"` به هر ردیف ساخته‌شده اضافه شد — اسکریپت seed اجرا نشد (برای عامل اصلی)
+- ساخت helper مشترک src/app/api/_lib/book.ts (پوشهٔ _ از روتینگ مستثنی است): `normalizeBookId()` (اعتبارسنجی بر اساس ۶ شناسهٔ مجاز هماهنگ با BookId در src/data/books/types.ts با import تایپ‌محور؛ نامعتبر/خالی → vision-one) و `bookPromptLine()` (خط فارسی «کتاب فعلی کاربر» — vision-one: «جزوه جامع زبان انگلیسی پایه دهم — ویژن وان»، پایه‌های دیگر: «جزوه زبان انگلیسی پایه …»، نامشخص: «جزوه زبان انگلیسی متوسطه»)
+- GET /api/questions: پارامتر query جدید `book` (پیش‌فرض vision-one، نامعتبر → vision-one)؛ فیلتر `where: { book }` روی همهٔ کوئری‌ها: دو groupBy متا + count متا، where اصلی لیست، و lookup با `ids` (ترکیب `id: { in }, book`)؛ چالش روزانه/هفتگی اکنون با هش قطعی FNV-1a روی «book:dateKey» و «book:weekKey» seed می‌شود (تابع hashSeed جدید) — هم‌کتاب+یک‌روز = همان سؤال‌ها برای همه؛ شکل پاسخ بدون تغییر
+- POST /api/attempts: فیلد `book` از body خوانده و پس از اعتبارسنجی روی Attempt ذخیره می‌شود؛ GET /api/attempts: پارامتر query جدید `book` و فیلتر `where: { book }` روی تمام ۸ کوئری (recent، aggregate، last60، chart، detailRows، dailyToday، weeklyThisWeek، namedRows لیدربورد) و همچنین lookup سؤال‌های topMisses — شکل JSON پاسخ سرbatim حفظ شد
+- POST /api/tutor و POST /api/explain: خواندن `book: { id?, title?, grade? }` از body و بافتن خط `bookPromptLine(book)` به انتهای پرامپت سیستم موجود (هیچ دستور قبلی حذف نشد)؛ `export const dynamic = "force-dynamic"` در همهٔ مسیرها سر جای خود است
+- تست با bun مستقیماً روی handlerها (چون dev server به‌خاطر ریفکتور نیمه‌کارهٔ عامل فرانت‌اند خطای compile سراسری دارد و ۵۰۰ برمی‌گرداند): meta بدون book = total 530 (مشابه قبل)، book=grade-7 = بانک خالی، book=bogus = عین vision-one؛ daily دو بار پشت‌سرهم یکسان (قطعی)؛ attempts بدون book = stats {attempts:17} (مشابه قبل)، grade-7 = صفرشده؛ POST با book=grade-7 ذخیره شد و بدون/با book نامعتبر = vision-one؛ ردیف‌های تست پاک شدند و count به ۱۷ برگشت
+- `bun run lint`: دو خطای موجود در فایل‌های خارج از محدودهٔ من (src/app/page.tsx و src/lib/book-context.tsx از عامل فرانت‌اند) — lint پنج فایل بک‌اند من (۴ مسیر + _lib/book.ts) با bunx eslint جداگانه: صفر خطا، exit=0
+
+Stage Summary:
+- دیتابیس چندکتابی شد: Question و Attempt هر دو ستون book با پیش‌فرض vision-one + ایندکس اختصاصی دارند؛ db:push موفق و داده‌های موجود بک‌فیل شدند (هیچ داده‌ای از دست نرفت)
+- APIها کتاب‌آگاه شدند: questions (?book=)، attempts (POST body.book و GET ?book=)، tutor/explain (body.book با id/title/grade) — پارامتر نامعتبر یا غایب همیشه به vision-one برمی‌گردد و رفتار پیشین عیناً حفظ است؛ شکل پاسخ‌ها تغییر نکرده
+- چالش روزانه/هفتگی اکنون per-book است (هش FNV-1a روی book+تاریخ/هفته) و برای هر جزوه دنبالهٔ قطعی مستقل دارد
+- هوش مصنوعی: هر دو مسیر tutor/explain خط «کتاب فعلی کاربر» را از body.book می‌سازند و به پرامپت سیستم می‌افزایند (کتاب ناشناخته → خط عمومی متوسطه)
+- lint: فایل‌های من پاک (exit=0)؛ ۲ خطای eslint مربوط به فایل‌های فرانت‌اند در حال تغییر عامل دیگر است و خارج از محدودهٔ این تسک بود
+- نکته برای عامل اصلی: dev server فعلاً به‌خاطر importهای قدیمی src/components/book/* به @/data/vocab و @/data/book-meta (جابه‌جاشده) روی همهٔ مسیرها ۵۰۰ می‌دهد — پس از اتمام ریفکتور فرانت‌اند خودبه‌خود رفع می‌شود؛ seed.ts آمادهٔ اجراست اما طبق دستور اجرا نشد
+
+---
+Task ID: 1-a
+Agent: data-and-components-refactor
+Task: انتقال داده‌ها به src/data/vision-one + مونتاژ VISION_ONE_BOOK + بازنویسی کامپوننت‌ها به useBookData + پارامتر book در فراخوانی‌های API
+
+Work Log:
+- Part A — انتقال ۱۸ فایل داده از src/data/ به src/data/vision-one/ بدون هیچ تغییری در محتوای داده (mv)؛ سپس اصلاح import نسبی همه فایل‌ها: `./types` → `../types` (۱۶ فایل با sed، book-meta.ts و grammar.ts دستی)
+- grammar.ts: سه اینترفیس GrammarExample/GrammarBlock/GrammarLesson از فایل.cut و به src/data/types.ts منتقل شد (بخش «تایپ‌های درسنامه گرامر»)؛ grammar.ts اکنون `import type { GrammarLesson } from "../types"` و فقط GRAMMAR_LESSON_LIST + grammarOfLesson دارد
+- book-meta.ts: حذف اینترفیس محلی ChapterMeta و import از ../types؛ BOOK_INFO تایپ‌گذاری شد با `: BookInfo`؛ BOOK_STATS و ری‌اِکسپورت‌های READING_LIST/CONVERSATION_LIST/IRREGULAR_VERBS حذف شدند (آمار به index.ts منتقل، کامپوننت‌ها بازنویسی شدند)
+- vocab.ts: تعریف محلی `VocabEntry` حذف و از ../types import شد؛ VOCAB_LESSONS/ALL_VOCAB/VOCAB_COUNT_BY_LESSON/vocabOfLesson سر جایشان
+- src/data/books/types.ts: import تایپ GrammarLesson از "../grammar" به "../types" منتقل شد (الزام compile — تنها تغییر در فایل اورکستراتور)
+- Part B — ساخت src/data/vision-one/index.ts: `VISION_ONE_BOOK` با `satisfies BookData` شامل info/chapters/stats (محاسبه در سطح ماژول از طول آرایه‌ها؛ grammarLessons = GRAMMAR_LESSON_LIST.length نه عدد ثابت ۹)/vocab/quiz (seed + counts)/grammar/readings/conversations/dictionary/verbs + ری‌اِکسپورت BOOK_INFO و CHAPTERS
+- Part C — بازنویسی ۱۷ کامپوننت به مصرف کانتکست کتاب (الگوی `const data = useBookData();` — توجه: useBookData خودِ BookData را برمی‌گرداند نه {data}):
+  home-view (FEATURE_CARDS و useWordOfDay به داخل کامپوننت/هوک با useMemo وابسته به data منتقل شدند — CRITICAL RULE؛ fetch attempts با ?book= و deps [bookId])، contents-view، chapter-view، vocabulary-view، grammar-view (فقط متن زیرعنوان عمومی شد)، grammar-library (GRAMMAR_FILTERED حذف و به useMemo داخل GrammarAccordionItems تبدیل شد)، quiz-view (تعداد تست‌ها از data.stats.questions)، quiz-game، texts-view، dictionary-view، verbs-view، flashcard-view، match-game، word-lookup (نگاشت‌های lazy singleton ماژول‌سطح به توابع خالص + کش keyed به رفرنس آرایه‌های data.dictionary/data.vocab.all تبدیل شد — با تغییر کتاب بازسازی می‌شود)، stats-view، tutor-view، vocab-card-grid (فقط نوع VocabEntry از @/data/types)
+- همه importهای @/data/book-meta، @/data/vocab، @/data/grammar، @/data/dictionary در src/components صفر شدند (راستی‌آزمایی با جست‌وجوی سراسری)
+- API calls سمت کلاینت طبق قرارداد: quiz-game → همه ۶ فراخوانی GET /api/questions (+&book=bookId) و POST /api/attempts (body.book = bookId) و POST /api/explain (body.book = {id, title, grade})؛ stats-view و home-view → GET /api/attempts?book=bookId؛ tutor-view → POST /api/tutor با body.book = {id, title: data.info.title, grade: meta.gradeLabel}
+- شمارنده meta پول سؤال در quiz-game به deps [bookId] تغییر کرد تا با تعویض کتاب دوباره دریافت شود
+- چند متن hardcoded کتاب‌محور به داده متصل شد: «۵۳۰ تست» (quiz-view/home-view)، «کل کتاب (۱٬۴۸۸ واژه)» (flashcard/match-game)، «۱۱ درسنامه» (کارت گرامر home)، بج Vision One و h1 جلد (data.info.subtitle/title)، خوش‌آمد و پیام دستیار (subtitle) — خروجی رندر برای vision-one عیناً همان است
+- راستی‌آزمایی: `bunx tsc --noEmit` → صفر خطا در src (تنها خطاهای از قبل موجود examples/scripts/skills خارج از پروژه)؛ `bun run lint` → هیچ خطا/هشداری در فایل‌های من؛ curl / → 200 و compile موفق
+
+Stage Summary:
+- VISION_ONE_BOOK مونتاژ و به رجیستری وصل شد؛ src/data اکنون فقط types.ts + books/ + vision-one/ دارد
+- هر ۱۷ نما کاملاً کتاب‌آگاه‌اند — با تعویض کتاب از قفسه، همه داده‌ها (واژگان/گرامر/آزمون/متن/دیکشنری/افعال/آمار) به‌صورت واکنشی عوض می‌شوند؛ هیچ داده‌ای ماژول‌سطح کش‌شده کتاب‌محور باقی نمانده
+- فراخوانی‌های API با پارامتر book هماهنگ با عامل 1-b ارسال می‌شوند (query ?book= برای GET questions/attempts، body.book برای POST attempts/explain/tutor)
+- lint: فایل‌های این عامل صفر خطا؛ ۲ خطای موجود react-hooks/set-state-in-effect در page.tsx و book-context.tsx (فایل‌های ممنوعهٔ اورکستراتور) دست‌نخورده ماند
+- فایل‌های ساخته‌شده: src/data/vision-one/index.ts، agent-ctx/1-a-data-and-components-refactor.md؛ فایل‌های جابه‌جاشده: ۱۸ فایل داده؛ فایل‌های ویرایش‌شده: types.ts، books/types.ts، ۱۷ کامپوننت
+
+---
+Task ID: 1-final
+Agent: main-orchestrator (Z.ai Code)
+Task: تکمیل فاز ۱ — معماری چندکتابی + یکپارچه‌سازی + QA نهایی
+
+Work Log:
+- فاندیشن توسط اورکسراتور: src/data/books/types.ts (BookId/BookMeta/BookData)، registry.ts، src/lib/book-storage.ts (کلیدهای scoped + استور بیرونی کتاب فعال)، src/lib/book-context.tsx (BookProvider بدون useEffect با useSyncExternalStore)، bookshelf-view.tsx، بازنویسی app-header (سوئیچر + ViewId «shelf»)، app-footer (کتاب-آگاه)، page.tsx (effectiveView مشتق‌شده بدون effect)، layout (عنوان کتابخانه)، nav-store (نمای shelf)
+- مهاجرت ۹ استور localStorage به کلیدهای visionone:book:<id>:<name> با مهاجرت خودکار از کلیدهای قدیمی
+- ایجنت 1-a: انتقال ۱۸ فایل داده به src/data/vision-one/، مونتاژ VISION_ONE_BOOK (satisfies BookData)، بازنویسی ۱۷ کامپوننت به useBookData، پارامتر book در فراخوانی‌های API کلاینت
+- ایجنت 1-b: فیلد book در Question/Attempt + index، db:push + backfill (۵۳۰ سؤال، ۱۷ نتیجه)، seed ۵۳۰ سؤال با book="vision-one"، فیلتر book در questions/attempts + چالش روزانه/هفتگی per-book (FNV-1a hash)، tutor/explain کتاب‌آگاه (bookPromptLine)
+- رفع ۲ خطای react-hooks/set-state-in-effect با معماری useSyncExternalStore (بدون suppress)
+- ری‌استارت dev server برای بارگذاری Prisma Client جدید
+- QA مرورگری کامل با agent-browser: قفسه (۶ کارت)، ورود به دهم، واژگان (کارت + علامت یادگرفتم → کلید scoped)، آزمون روزانه (سؤال واقعی + پاسخ)، آمار (نمودارها)، سوئیچر هدر (۵ آیتم disabled)، موبایل iPhone 14، فوتر چسبان، reload → بازیابی مستقیم کتاب ذخیره‌شده، console/errors صفر
+- آپدیت نقشه راه: تیک کامل فاز ۱
+
+Stage Summary:
+- فاز ۱ بسته شد: کتابخانه چندجزوه‌ای آماده است؛ افزودن جزوه جدید = عضو BookId + ورودی BOOKS + پوشه داده + case در getBookData + seed
+- فاز ۲ (جزوه پایه هفتم) منتظر آپلود PDF از کاربر است
+- نکته: برای جزوه‌های جدید lazy-load داده در فاز ۷ انجام می‌شود (فعلاً فقط vision-one در باندل است)

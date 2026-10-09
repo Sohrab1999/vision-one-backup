@@ -43,6 +43,7 @@ import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
 import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store";
 import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
 import { usePulses } from "@/lib/use-daily-pulse";
+import { useBook } from "@/lib/book-context";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -154,6 +155,7 @@ interface PoolMeta {
 }
 
 export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
+  const { bookId, meta, data: bookData } = useBook();
   const [phase, setPhase] = useState<Phase>("setup");
   const [mode, setMode] = useState<Mode>("normal");
   const [category, setCategory] = useState("all");
@@ -198,6 +200,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     try {
       const params = new URLSearchParams({ count: String(Math.max(ids.length, 1)) });
       params.set("ids", ids.join(","));
+      params.set("book", String(bookId));
       const res = await fetch(`/api/questions?${params.toString()}`);
       const data = await res.json();
       if (!res.ok || !data.questions?.length) {
@@ -225,11 +228,10 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     if (lessonFilter !== undefined) setLesson(String(lessonFilter));
   }, [lessonFilter]);
 
-  // شمارنده‌های بانک سؤال برای چیپ‌های سطح — یک‌بار در ورود به تنظیمات
+  // شمارنده‌های بانک سؤال برای چیپ‌های سطح — با تغییر کتاب دوباره دریافت می‌شود
   useEffect(() => {
-    if (poolMeta) return;
     let cancelled = false;
-    fetch("/api/questions?meta=1")
+    fetch(`/api/questions?meta=1&book=${bookId}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         if (!cancelled && d && typeof d.total === "number") setPoolMeta(d as PoolMeta);
@@ -238,7 +240,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     return () => {
       cancelled = true;
     };
-  }, [poolMeta]);
+  }, [bookId]);
 
   useEffect(() => {
     if (phase === "playing") {
@@ -275,6 +277,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       });
       if (level !== "all") params.set("level", level);
       if (nextMode === "review") params.set("ids", mistakeIds.join(","));
+      params.set("book", String(bookId));
       const res = await fetch(`/api/questions?${params.toString()}`);
       const data = await res.json();
       if (!res.ok || !data.questions?.length) {
@@ -306,7 +309,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setLoading(true);
     setMode("daily");
     try {
-      const res = await fetch("/api/questions?daily=1&count=5");
+      const res = await fetch(`/api/questions?daily=1&count=5&book=${bookId}`);
       const data = await res.json();
       if (!res.ok || !data.questions?.length) {
         toast.error("چالش امروز آماده نیست — بعداً دوباره امتحان کن.");
@@ -334,7 +337,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setLoading(true);
     setMode("weekly");
     try {
-      const res = await fetch("/api/questions?weekly=1&count=10");
+      const res = await fetch(`/api/questions?weekly=1&count=10&book=${bookId}`);
       const data = await res.json();
       if (!res.ok || !data.questions?.length) {
         toast.error("چالش این هفته آماده نیست — بعداً دوباره امتحان کن.");
@@ -421,6 +424,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
           text: current.text,
           options: current.options,
           answer: current.answer,
+          book: {
+            id: bookId,
+            title: bookData?.info.title ?? "",
+            grade: meta?.gradeLabel ?? "",
+          },
         }),
       });
       const data = await res.json();
@@ -501,6 +509,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         duration: elapsed,
         name: userName || undefined,
         detail,
+        book: bookId,
       }),
     })
       .then(() =>
@@ -526,7 +535,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     if (!mistakeIds.length || exporting) return;
     setExporting(true);
     try {
-      const res = await fetch(`/api/questions?count=${mistakeIds.length}&ids=${mistakeIds.join(",")}`);
+      const res = await fetch(`/api/questions?count=${mistakeIds.length}&ids=${mistakeIds.join(",")}&book=${bookId}`);
       const data = await res.json();
       const qs = (data.questions ?? []) as Question[];
       if (!qs.length) {

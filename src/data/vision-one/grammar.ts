@@ -1,27 +1,6 @@
 // درسنامه‌های گرامر جزوه «ویژن وان» — خلاصه‌شده و ساختاریافته از صفحات ۲۲ تا ۱۶۰ جزوه
 
-export interface GrammarExample {
-  en: string;
-  fa: string;
-}
-
-export interface GrammarBlock {
-  kind: "text" | "formula" | "table" | "examples" | "note";
-  title?: string;
-  text?: string;
-  headers?: string[];
-  rows?: string[][];
-  items?: GrammarExample[];
-}
-
-export interface GrammarLesson {
-  id: string;
-  lesson: number;
-  title: string;
-  titleFa: string;
-  summary: string;
-  blocks: GrammarBlock[];
-}
+import type { GrammarLesson } from "../types";
 
 export const GRAMMAR_LESSON_LIST: GrammarLesson[] = [
   // ─────────────────────── مرور پایه ۷ تا ۹ ───────────────────────

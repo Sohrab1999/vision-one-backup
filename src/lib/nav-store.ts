@@ -10,6 +10,7 @@
  */
 
 export type NavView =
+  | "shelf"
   | "home"
   | "contents"
   | "chapter"
