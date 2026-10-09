@@ -13,6 +13,7 @@ import {
   Moon,
   Sun,
   Layers,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ export type ViewId =
   | "dict"
   | "verbs"
   | "flashcards"
+  | "stats"
   | "tutor";
 
 interface NavItem {
@@ -45,6 +47,7 @@ const NAV: NavItem[] = [
   { id: "flashcards", label: "تمرین", icon: Layers },
   { id: "grammar", label: "گرامر", icon: GraduationCap },
   { id: "quiz", label: "آزمون", icon: ClipboardList },
+  { id: "stats", label: "آمار", icon: BarChart3 },
   { id: "texts", label: "متن‌ها", icon: FileText },
   { id: "dict", label: "دیکشنری", icon: Library },
   { id: "verbs", label: "افعال بی‌قاعده", icon: Repeat },

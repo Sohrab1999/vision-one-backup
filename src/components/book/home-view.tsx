@@ -37,6 +37,7 @@ import { BOOK_INFO, BOOK_STATS, CHAPTERS } from "@/data/book-meta";
 import { ALL_VOCAB } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useUserName } from "@/lib/name-store";
+import { useStreak } from "@/lib/streak-store";
 import type { ViewId } from "./app-header";
 import { SpeakButton } from "./speak-button";
 
@@ -65,6 +66,7 @@ const FEATURE_CARDS: {
   { view: "flashcards", title: "تمرین فلاش‌کارت", desc: "دور ۱۲ واژه‌ای با میان‌بر کیبورد و مرور هوشمند", icon: Layers, stat: "SRS" },
   { view: "grammar", title: "درسنامه گرامر", desc: "۱۱ درسنامه با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: "۱۱ درسنامه" },
   { view: "quiz", title: "آزمون تعاملی", desc: "بانک سؤال واقعی جزوه با توضیح هوشمند", icon: ClipboardList, stat: `${BOOK_STATS.questions} تست` },
+  { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۳ نشان افتخار", icon: TrendingUp, stat: "۱۳ نشان" },
   { view: "texts", title: "متن و مکالمه", desc: "ریدینگ‌ها و مکالمه‌ها با روایت صوتی", icon: FileText, stat: `${BOOK_STATS.readings + BOOK_STATS.conversations} متن` },
   { view: "dict", title: "دیکشنری", desc: "تعریف انگلیسی به انگلیسی با تلفظ و مثال", icon: Library, stat: `${BOOK_STATS.dictionary} مدخل` },
   { view: "verbs", title: "افعال بی‌قاعده", desc: "جدول کامل افعال با جستجو", icon: Repeat, stat: `${BOOK_STATS.verbs} فعل` },
@@ -82,6 +84,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const wordOfDay = useWordOfDay();
   const { count: learned } = useLearnedWords();
   const userName = useUserName();
+  const streak = useStreak();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
 
@@ -132,6 +135,12 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
 
           <p className="rise-in text-[12px] font-bold text-primary">
             {userName ? `سلام ${userName}! 👋 خوش برگشتی` : "به کتاب وب ویژن وان خوش آمدی 👋"}
+            {streak.count > 0 && (
+              <span className="mr-2 inline-flex translate-y-px items-center gap-1 rounded-full border border-orange-500/40 bg-orange-500/10 px-2 py-0.5 text-[10px] font-black text-orange-500">
+                <Flame size={11} className="streak-flame" />
+                زنجیره {streak.count.toLocaleString("fa-IR")} روزه
+              </span>
+            )}
           </p>
 
           <h1 className="rise-in rise-in-1 text-3xl sm:text-5xl font-black leading-[1.25] tracking-tight">

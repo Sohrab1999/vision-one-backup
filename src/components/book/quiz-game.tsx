@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useUserName } from "@/lib/name-store";
+import { touchStreak } from "@/lib/streak-store";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -179,6 +180,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   function finish() {
     if (timerRef.current) clearInterval(timerRef.current);
     setPhase("result");
+    const streak = touchStreak();
     fetch("/api/attempts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -191,7 +193,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         name: userName || undefined,
       }),
     })
-      .then(() => toast.success(`نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}`))
+      .then(() =>
+        toast.success(
+          `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
+        ),
+      )
       .catch(() => undefined);
   }
 
@@ -308,7 +314,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
 
     return (
       <div className="mx-auto max-w-2xl space-y-4 rise-in">
-        <Card className="border-primary/30">
+        <Card className="result-pop border-primary/30">
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
             <div className="relative h-36 w-36">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
@@ -463,7 +469,16 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                       answered && isChosen && !isCorrect && "text-destructive",
                     )}
                   >
-                    <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-md bg-muted text-[10px] font-black">
+                    <span
+                      className={cn(
+                        "mr-2 inline-flex h-5.5 w-5.5 translate-y-1 items-center justify-center rounded-lg text-[10px] font-black transition-colors",
+                        answered && isCorrect
+                          ? "bg-primary text-primary-foreground"
+                          : answered && isChosen && !isCorrect
+                            ? "bg-destructive text-destructive-foreground"
+                            : "bg-primary/10 text-primary",
+                      )}
+                    >
                       {LETTERS[i]}
                     </span>
                     {opt}

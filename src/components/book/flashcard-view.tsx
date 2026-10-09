@@ -10,6 +10,8 @@ import {
   Sparkles,
   Eye,
   PartyPopper,
+  Sprout,
+  Flame,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,29 +21,47 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { VOCAB_LESSONS, vocabOfLesson, type VocabEntry } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
+import { recordSRS, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
+import { touchStreak } from "@/lib/streak-store";
 import { SpeakButton } from "./speak-button";
 
 type Phase = "setup" | "playing" | "done";
 
 const SESSION_SIZE = 12;
 
-function pickSession(pool: VocabEntry[], learned: Set<string>): VocabEntry[] {
-  const unlearned = pool.filter((w) => !learned.has(w.word));
-  const learnedOnes = pool.filter((w) => learned.has(w.word));
-  const shuffled = [...unlearned].sort(() => Math.random() - 0.5);
-  const session = shuffled.slice(0, SESSION_SIZE);
-  if (session.length < SESSION_SIZE) {
-    session.push(
-      ...[...learnedOnes].sort(() => Math.random() - 0.5).slice(0, SESSION_SIZE - session.length),
-    );
+function pickSession(pool: VocabEntry[], learned: Set<string>, srs: Record<string, SrsItem>): VocabEntry[] {
+  // Weighted sampling: unseen + low-box + unlearned words come up more often.
+  const weights = pool.map((w) => {
+    let weight = srsWeight(srs[w.word]);
+    if (learned.has(w.word)) weight = Math.min(weight, 1); // learned words rarely repeat
+    return weight;
+  });
+  const weightedPool: VocabEntry[] = [];
+  const used = new Set<number>();
+  while (weightedPool.length < Math.min(SESSION_SIZE, pool.length) && used.size < pool.length) {
+    // weighted random pick among not-yet-used items
+    const candidates = pool.map((_, i) => i).filter((i) => !used.has(i));
+    const totalW = candidates.reduce((s, i) => s + weights[i], 0);
+    let roll = Math.random() * totalW;
+    let chosen = candidates[candidates.length - 1];
+    for (const i of candidates) {
+      roll -= weights[i];
+      if (roll <= 0) {
+        chosen = i;
+        break;
+      }
+    }
+    used.add(chosen);
+    weightedPool.push(pool[chosen]);
   }
-  return session.sort(() => Math.random() - 0.5);
+  return weightedPool.sort(() => Math.random() - 0.5);
 }
 
 export function FlashcardView() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
   const { learned, toggle } = useLearnedWords();
+  const srs = useSRSData();
 
   const [deck, setDeck] = useState<VocabEntry[]>([]);
   const [index, setIndex] = useState(0);
@@ -56,19 +76,20 @@ export function FlashcardView() {
       toast.error("واژه‌ای برای این درس یافت نشد");
       return;
     }
-    setDeck(pickSession(pool, learned));
+    setDeck(pickSession(pool, learned, srs));
     setIndex(0);
     setFlipped(false);
     setKnownCount(0);
     setReviewCount(0);
     setPhase("playing");
-  }, [pool, learned]);
+  }, [pool, learned, srs]);
 
   const current = deck[index];
 
   const answer = useCallback(
     (known: boolean) => {
       if (!current) return;
+      recordSRS(current.word, known);
       if (known) {
         if (!learned.has(current.word)) toggle(current.word);
         setKnownCount((c) => c + 1);
@@ -76,6 +97,7 @@ export function FlashcardView() {
         setReviewCount((c) => c + 1);
       }
       if (index + 1 >= deck.length) {
+        touchStreak();
         setPhase("done");
       } else {
         setIndex((i) => i + 1);
@@ -115,9 +137,16 @@ export function FlashcardView() {
             <div>
               <h2 className="text-lg font-black">تمرین فلاش‌کارت</h2>
               <p className="text-xs text-muted-foreground">
-                دور {SESSION_SIZE.toLocaleString("fa-IR")} واژه‌ای — اولویت با واژه‌های یادنگرفته
+                دور {SESSION_SIZE.toLocaleString("fa-IR")} واژه‌ای — مرور هوشمند با سیستم SRS
               </p>
             </div>
+          </div>
+
+          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+            <Sprout size={15} className="mt-0.5 shrink-0 text-amber-500" />
+            <p>
+              هر واژه ۵ مرحله رشد دارد؛ واژه‌های ضعیف و دیده‌نشده بیشتر تکرار می‌شوند و با هر «بلد بودم» یک مرحله رشد می‌کنند. «بلد نبودم» واژه را به مرحله اول برمی‌گرداند.
+            </p>
           </div>
 
           <div>
@@ -180,6 +209,10 @@ export function FlashcardView() {
           <p className="text-sm text-muted-foreground">
             {knownCount.toLocaleString("fa-IR")} واژه بلد بودی و {reviewCount.toLocaleString("fa-IR")} واژه برای مرور علامت خورد.
           </p>
+          <Badge variant="outline" className="gap-1.5 border-orange-500/40 text-orange-500">
+            <Flame size={13} />
+            زنجیره یادگیری امروز فعال شد
+          </Badge>
           <div className="relative h-28 w-28">
             <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
               <circle cx="60" cy="60" r="52" fill="none" strokeWidth="12" className="stroke-muted" />
@@ -239,9 +272,26 @@ export function FlashcardView() {
         <div className={cn("flip-inner", flipped && "flipped")}>
           {/* روی کارت: واژه */}
           <div className="flip-face border bg-card shadow-lg flex flex-col items-center justify-center gap-4 p-8">
-            <Badge variant="secondary" className="text-[11px]">
-              {current.lesson === 0 ? `پایه ${current.grade}` : `درس ${current.lesson.toLocaleString("fa-IR")}`}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-[11px]">
+                {current.lesson === 0 ? `پایه ${current.grade}` : `درس ${current.lesson.toLocaleString("fa-IR")}`}
+              </Badge>
+              {/* نشانگر سطح SRS */}
+              <span
+                className="flex items-center gap-1"
+                title={`سطح SRS: ${(srs[current.word]?.box ?? 0).toLocaleString("fa-IR")} از ${SRS_MAX_BOX.toLocaleString("fa-IR")}`}
+              >
+                {Array.from({ length: SRS_MAX_BOX }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      "h-1.5 w-3 rounded-full transition-colors",
+                      i < (srs[current.word]?.box ?? 0) ? "bg-amber-500" : "bg-muted",
+                    )}
+                  />
+                ))}
+              </span>
+            </div>
             <p dir="ltr" className="font-en text-4xl font-black text-center leading-tight">
               {current.word}
             </p>

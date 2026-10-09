@@ -78,7 +78,7 @@ export function TutorView() {
             <div className="flex items-center gap-2.5">
               <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30">
                 <Bot size={19} />
-                <span className="absolute -bottom-0.5 -left-0.5 h-3 w-3 rounded-full border-2 border-card bg-emerald-400" />
+                <span className="absolute -bottom-0.5 -left-0.5 h-3 w-3 rounded-full border-2 border-card bg-emerald-400 text-emerald-400 soft-ping" />
               </span>
               <div>
                 <p className="text-sm font-black">دستیار هوشمند زبان</p>

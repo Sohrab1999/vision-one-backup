@@ -14,6 +14,7 @@ import { DictionaryView } from "@/components/book/dictionary-view";
 import { VerbsView } from "@/components/book/verbs-view";
 import { FlashcardView } from "@/components/book/flashcard-view";
 import { TutorView } from "@/components/book/tutor-view";
+import { StatsView } from "@/components/book/stats-view";
 
 export default function Page() {
   const [view, setView] = useState<ViewId>("home");
@@ -44,6 +45,7 @@ export default function Page() {
         {view === "dict" && <DictionaryView />}
         {view === "verbs" && <VerbsView />}
         {view === "flashcards" && <FlashcardView />}
+        {view === "stats" && <StatsView />}
         {view === "tutor" && <TutorView />}
       </main>
 

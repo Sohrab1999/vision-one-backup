@@ -97,7 +97,7 @@ export function ChapterView({
         </TabsList>
 
         <TabsContent value="intro" className="rise-in">
-          <ChapterIntro chapterId={chapter.id} onNavigate={onNavigate} />
+          <ChapterIntro chapterId={chapter.id} onTabChange={setTab} />
         </TabsContent>
         <TabsContent value="vocab" className="rise-in">
           <VocabCardGrid words={vocabOfLesson(chapter.id)} />
@@ -139,10 +139,10 @@ function ReadingsOfLesson({ lesson }: { lesson: number }) {
 
 function ChapterIntro({
   chapterId,
-  onNavigate,
+  onTabChange,
 }: {
   chapterId: number;
-  onNavigate: (v: ViewId) => void;
+  onTabChange: (tab: string) => void;
 }) {
   const chapter = CHAPTERS.find((c) => c.id === chapterId) ?? CHAPTERS[0];
   const words = vocabOfLesson(chapterId);
@@ -163,10 +163,10 @@ function ChapterIntro({
           <Card
             key={s.title}
             className={cn("cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg", `rise-in rise-in-${(i % 4) + 1}`)}
-            onClick={() => setTab(s.tab)}
+            onClick={() => onTabChange(s.tab)}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && setTab(s.tab)}
+            onKeyDown={(e) => e.key === "Enter" && onTabChange(s.tab)}
           >
             <CardContent className="p-4">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -184,7 +184,7 @@ function ChapterIntro({
         <CardContent className="p-5">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-sm font-black">نمونه واژه‌های این درس</h3>
-            <Button variant="outline" size="sm" onClick={() => setTab("vocab")}>
+            <Button variant="outline" size="sm" onClick={() => onTabChange("vocab")}>
               همه واژه‌ها
             </Button>
           </div>

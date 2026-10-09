@@ -1,0 +1,541 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import {
+  BarChart3,
+  Trophy,
+  Target,
+  ClipboardList,
+  BookOpen,
+  Flame,
+  Timer,
+  TrendingUp,
+  Medal,
+  Lock,
+  Sparkles,
+  History,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as ChartTooltip,
+  Cell,
+} from "recharts";
+import { BOOK_STATS } from "@/data/book-meta";
+import { useLearnedWords } from "@/lib/learned-store";
+import { useStreak } from "@/lib/streak-store";
+
+interface AttemptStats {
+  attempts: number;
+  sumTotal: number;
+  sumCorrect: number;
+  accuracy: number;
+  best: number;
+}
+
+interface ChartPoint {
+  id: string;
+  accuracy: number;
+  category: string;
+  createdAt: string;
+  idx: number;
+}
+
+interface RecentAttempt {
+  id: string;
+  category: string;
+  total: number;
+  correct: number;
+  duration: number;
+  name: string | null;
+  createdAt: string;
+}
+
+const CATEGORY_FA: Record<string, string> = {
+  grammar: "گرامر",
+  vocabulary: "واژگان",
+  all: "ترکیبی",
+};
+
+const ACHIEVEMENTS: {
+  id: string;
+  icon: string;
+  title: string;
+  desc: string;
+  check: (c: AchContext) => boolean;
+  progress?: (c: AchContext) => [number, number];
+}[] = [
+  {
+    id: "first-quiz",
+    icon: "🎯",
+    title: "اولین قدم",
+    desc: "اولین آزمون را کامل کن",
+    check: (c) => c.attempts >= 1,
+    progress: (c) => [Math.min(c.attempts, 1), 1],
+  },
+  {
+    id: "quiz-5",
+    icon: "📚",
+    title: "پنج‌تایی",
+    desc: "۵ آزمون برگزار کن",
+    check: (c) => c.attempts >= 5,
+    progress: (c) => [Math.min(c.attempts, 5), 5],
+  },
+  {
+    id: "quiz-10",
+    icon: "🏆",
+    title: "ده‌تایی",
+    desc: "۱۰ آزمون برگزار کن",
+    check: (c) => c.attempts >= 10,
+    progress: (c) => [Math.min(c.attempts, 10), 10],
+  },
+  {
+    id: "quiz-25",
+    icon: "👑",
+    title: "کهربایی",
+    desc: "۲۵ آزمون برگزار کن",
+    check: (c) => c.attempts >= 25,
+    progress: (c) => [Math.min(c.attempts, 25), 25],
+  },
+  {
+    id: "acc-60",
+    icon: "⭐",
+    title: "تیرانداز",
+    desc: "رکورد ۶۰٪ یا بالاتر بگیر",
+    check: (c) => c.best >= 60,
+    progress: (c) => [Math.min(c.best, 60), 60],
+  },
+  {
+    id: "acc-80",
+    icon: "🌟",
+    title: "عالی",
+    desc: "رکورد ۸۰٪ یا بالاتر بگیر",
+    check: (c) => c.best >= 80,
+    progress: (c) => [Math.min(c.best, 80), 80],
+  },
+  {
+    id: "acc-100",
+    icon: "💯",
+    title: "بی‌نقص",
+    desc: "یک آزمون را ۱۰۰٪ جواب بزن",
+    check: (c) => c.best >= 100,
+    progress: (c) => [Math.min(c.best, 100), 100],
+  },
+  {
+    id: "q-100",
+    icon: "🧠",
+    title: "پرسش‌پرداز",
+    desc: "به ۱۰۰ سؤال پاسخ بده",
+    check: (c) => c.sumTotal >= 100,
+    progress: (c) => [Math.min(c.sumTotal, 100), 100],
+  },
+  {
+    id: "w-50",
+    icon: "🌱",
+    title: "واژه‌آغاز",
+    desc: "۵۰ واژه را یاد بگیر",
+    check: (c) => c.learned >= 50,
+    progress: (c) => [Math.min(c.learned, 50), 50],
+  },
+  {
+    id: "w-150",
+    icon: "🌿",
+    title: "واژه‌ران",
+    desc: "۱۵۰ واژه را یاد بگیر",
+    check: (c) => c.learned >= 150,
+    progress: (c) => [Math.min(c.learned, 150), 150],
+  },
+  {
+    id: "w-500",
+    icon: "🌳",
+    title: "واژه‌استاد",
+    desc: "۵۰۰ واژه را یاد بگیر",
+    check: (c) => c.learned >= 500,
+    progress: (c) => [Math.min(c.learned, 500), 500],
+  },
+  {
+    id: "streak-3",
+    icon: "🔥",
+    title: "سه‌روز پیاپی",
+    desc: "۳ روز متوالی فعال باش",
+    check: (c) => c.streakBest >= 3,
+    progress: (c) => [Math.min(c.streakBest, 3), 3],
+  },
+  {
+    id: "streak-7",
+    icon: "⚡",
+    title: "هفت‌روز پیاپی",
+    desc: "۷ روز متوالی فعال باش",
+    check: (c) => c.streakBest >= 7,
+    progress: (c) => [Math.min(c.streakBest, 7), 7],
+  },
+];
+
+interface AchContext {
+  attempts: number;
+  best: number;
+  sumTotal: number;
+  learned: number;
+  streakBest: number;
+}
+
+function fmtDuration(sec: number): string {
+  if (!sec) return "—";
+  const fa = (v: number | string) => String(v).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  if (m === 0) return `${fa(s)} ثانیه`;
+  return `${fa(m)}:${fa(String(s).padStart(2, "0"))}`;
+}
+
+function fmtDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString("fa-IR", { month: "short", day: "numeric" });
+  } catch {
+    return "";
+  }
+}
+
+export function StatsView() {
+  const { count: learned } = useLearnedWords();
+  const streak = useStreak();
+  const [stats, setStats] = useState<AttemptStats | null>(null);
+  const [chart, setChart] = useState<ChartPoint[]>([]);
+  const [recent, setRecent] = useState<RecentAttempt[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/attempts")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (cancelled || !d) return;
+        if (d.stats) setStats(d.stats);
+        if (Array.isArray(d.chart)) {
+          setChart(d.chart.map((c: Omit<ChartPoint, "idx">, i: number) => ({ ...c, idx: i + 1 })));
+        }
+        if (Array.isArray(d.recent)) setRecent(d.recent);
+      })
+      .catch(() => undefined)
+      .finally(() => !cancelled && setLoading(false));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const achContext: AchContext = useMemo(
+    () => ({
+      attempts: stats?.attempts ?? 0,
+      best: stats?.best ?? 0,
+      sumTotal: stats?.sumTotal ?? 0,
+      learned,
+      streakBest: streak.best,
+    }),
+    [stats, learned, streak.best],
+  );
+
+  const unlocked = useMemo(
+    () => ACHIEVEMENTS.filter((a) => a.check(achContext)).length,
+    [achContext],
+  );
+
+  const byCategory = useMemo(() => {
+    const groups: Record<string, { sum: number; n: number }> = {};
+    for (const p of chart) {
+      const g = (groups[p.category] ??= { sum: 0, n: 0 });
+      g.sum += p.accuracy;
+      g.n += 1;
+    }
+    return Object.entries(groups).map(([cat, g]) => ({
+      category: CATEGORY_FA[cat] ?? cat,
+      accuracy: g.n ? Math.round(g.sum / g.n) : 0,
+    }));
+  }, [chart]);
+
+  const totalMinutes = Math.round(
+    recent.reduce((acc, a) => acc + a.duration, 0) / 60,
+  );
+
+  const kpis = [
+    { icon: ClipboardList, label: "آزمون برگزارشده", value: (stats?.attempts ?? 0).toLocaleString("fa-IR"), color: "text-primary", bg: "bg-primary/10" },
+    { icon: Target, label: "دقت کل پاسخ‌ها", value: `${(stats?.accuracy ?? 0).toLocaleString("fa-IR")}٪`, color: "text-teal-500", bg: "bg-teal-500/10" },
+    { icon: Trophy, label: "بهترین رکورد", value: `${(stats?.best ?? 0).toLocaleString("fa-IR")}٪`, color: "text-amber-500", bg: "bg-amber-500/10" },
+    { icon: BookOpen, label: "واژه یادگرفته", value: learned.toLocaleString("fa-IR"), color: "text-emerald-500", bg: "bg-emerald-500/10" },
+    { icon: Flame, label: "زنجیره فعال", value: streak.count.toLocaleString("fa-IR") + " روز", color: "text-orange-500", bg: "bg-orange-500/10" },
+    { icon: Medal, label: "نشان‌های باز‌شده", value: `${unlocked.toLocaleString("fa-IR")} از ${ACHIEVEMENTS.length.toLocaleString("fa-IR")}`, color: "text-violet-500", bg: "bg-violet-500/10" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* ── هدر ── */}
+      <div className="rise-in">
+        <h1 className="flex items-center gap-2 text-xl font-black">
+          <BarChart3 size={20} className="text-primary" />
+          آمار و نشان‌ها
+        </h1>
+        <p className="mt-1 text-xs text-muted-foreground">
+          کارنامه کامل یادگیری‌ات — روند آزمون‌ها، نشان‌های افتخار و پیشرفت واژگان در یک نگاه.
+        </p>
+      </div>
+
+      {loading && (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardContent className="p-4">
+                <div className="h-10 w-10 rounded-xl bg-muted" />
+                <div className="mt-3 h-5 w-2/3 rounded bg-muted" />
+                <div className="mt-2 h-3 w-1/2 rounded bg-muted" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {!loading && (
+        <>
+          {/* ── کارت‌های آمار ── */}
+          <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            {kpis.map((k, i) => (
+              <Card key={k.label} className={`rise-in rise-in-${(i % 6) + 1} overflow-hidden`}>
+                <CardContent className="p-4">
+                  <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", k.bg, k.color)}>
+                    <k.icon size={19} />
+                  </span>
+                  <p className="mt-2.5 text-lg font-black leading-none">{k.value}</p>
+                  <p className="mt-1 text-[11px] text-muted-foreground">{k.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </section>
+
+          {/* ── نمودارها ── */}
+          <section className="grid gap-3 lg:grid-cols-5">
+            <Card className="rise-in lg:col-span-3">
+              <CardContent className="p-5">
+                <p className="mb-3 flex items-center gap-2 text-sm font-bold">
+                  <TrendingUp size={15} className="text-primary" />
+                  روند دقت آزمون‌ها (٪)
+                </p>
+                {chart.length >= 2 ? (
+                  <div className="h-56" dir="ltr">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chart} margin={{ top: 6, right: 6, bottom: 0, left: -18 }}>
+                        <defs>
+                          <linearGradient id="statsAcc" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#10b981" stopOpacity={0.5} />
+                            <stop offset="100%" stopColor="#10b981" stopOpacity={0.03} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis dataKey="idx" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                        <ChartTooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 12,
+                            fontSize: 12,
+                            fontFamily: "inherit",
+                          }}
+                          formatter={(v: number) => [`${v.toLocaleString("fa-IR")}٪`, "دقت"]}
+                          labelFormatter={(l: number) => `آزمون شماره ${l.toLocaleString("fa-IR")}`}
+                        />
+                        <Area type="monotone" dataKey="accuracy" stroke="#10b981" strokeWidth={2.5} fill="url(#statsAcc)" dot={{ r: 3, fill: "#10b981" }} activeDot={{ r: 5 }} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : (
+                  <div className="flex h-56 items-center justify-center text-center text-xs text-muted-foreground">
+                    <div>
+                      <BarChart3 size={26} className="mx-auto mb-2 opacity-40" />
+                      برای دیدن روند، حداقل ۲ آزمون برگزار کن.
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="rise-in rise-in-1 lg:col-span-2">
+              <CardContent className="p-5">
+                <p className="mb-3 flex items-center gap-2 text-sm font-bold">
+                  <Target size={15} className="text-amber-500" />
+                  میانگین دقت به تفکیک دسته
+                </p>
+                {byCategory.length > 0 ? (
+                  <div className="h-56" dir="ltr">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={byCategory} margin={{ top: 6, right: 6, bottom: 0, left: -18 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                        <XAxis dataKey="category" tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                        <ChartTooltip
+                          contentStyle={{
+                            background: "var(--card)",
+                            border: "1px solid var(--border)",
+                            borderRadius: 12,
+                            fontSize: 12,
+                            fontFamily: "inherit",
+                          }}
+                          formatter={(v: number) => [`${v.toLocaleString("fa-IR")}٪`, "میانگین دقت"]}
+                        />
+                        <Bar dataKey="accuracy" radius={[8, 8, 0, 0]} maxBarSize={64}>
+                          {byCategory.map((_, i) => (
+                            <Cell key={i} fill={i % 2 === 0 ? "#10b981" : "#f59e0b"} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : (
+                  <div className="flex h-56 items-center justify-center text-center text-xs text-muted-foreground">
+                    <div>
+                      <Target size={26} className="mx-auto mb-2 opacity-40" />
+                      هنوز آزمونی ثبت نشده است.
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* ── نشان‌ها ── */}
+          <section className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h2 className="flex items-center gap-2 text-base font-black">
+                <Medal size={17} className="text-amber-500" />
+                نشان‌های افتخار
+              </h2>
+              <Badge variant="secondary" className="text-[11px]">
+                {unlocked.toLocaleString("fa-IR")} از {ACHIEVEMENTS.length.toLocaleString("fa-IR")} باز شده
+              </Badge>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {ACHIEVEMENTS.map((a, i) => {
+                const done = a.check(achContext);
+                const [cur, max] = a.progress ? a.progress(achContext) : [1, 1];
+                return (
+                  <Card
+                    key={a.id}
+                    className={cn(
+                      `rise-in rise-in-${(i % 4) + 1} relative overflow-hidden transition-all`,
+                      done
+                        ? "border-amber-500/40 bg-gradient-to-bl from-amber-500/10 to-transparent achievement-glow"
+                        : "opacity-80",
+                    )}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between">
+                        <span className={cn("text-3xl leading-none", !done && "grayscale opacity-40")}>
+                          {a.icon}
+                        </span>
+                        {done ? (
+                          <Badge className="gap-1 bg-amber-500 text-amber-950 text-[10px] border-amber-400/50">
+                            <Sparkles size={10} />
+                            کسب شد
+                          </Badge>
+                        ) : (
+                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                            <Lock size={12} />
+                          </span>
+                        )}
+                      </div>
+                      <h3 className={cn("mt-2.5 text-[13px] font-black", !done && "text-muted-foreground")}>
+                        {a.title}
+                      </h3>
+                      <p className="mt-0.5 text-[11px] leading-4 text-muted-foreground">{a.desc}</p>
+                      {!done && max > 1 && (
+                        <div className="mt-2.5 space-y-1">
+                          <Progress value={(cur / max) * 100} className="h-1.5" />
+                          <p className="text-[10px] text-muted-foreground">
+                            {cur.toLocaleString("fa-IR")} از {max.toLocaleString("fa-IR")}
+                          </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ── تاریخچه ── */}
+          <section className="space-y-3">
+            <h2 className="flex items-center gap-2 text-base font-black">
+              <History size={17} className="text-primary" />
+              تاریخچه آزمون‌ها
+            </h2>
+            {recent.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="p-8 text-center text-xs text-muted-foreground">
+                  هنوز آزمونی ثبت نشده — از بخش «آزمون» شروع کن!
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="p-0">
+                  <ul className="divide-y">
+                    {recent.map((a, i) => {
+                      const acc = a.total ? Math.round((a.correct / a.total) * 100) : 0;
+                      return (
+                        <li
+                          key={a.id}
+                          className={cn(
+                            "flex flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-3 text-[12px]",
+                            i === 0 && "bg-primary/5",
+                          )}
+                        >
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted font-black">
+                            {(recent.length - i).toLocaleString("fa-IR")}
+                          </span>
+                          <div className="min-w-24">
+                            <p className="font-bold">{CATEGORY_FA[a.category] ?? a.category}</p>
+                            <p className="text-[10px] text-muted-foreground">{fmtDate(a.createdAt)}</p>
+                          </div>
+                          <span className="flex items-center gap-1 text-muted-foreground">
+                            <ClipboardList size={12} />
+                            {a.correct.toLocaleString("fa-IR")} از {a.total.toLocaleString("fa-IR")}
+                          </span>
+                          <span className="flex items-center gap-1 text-muted-foreground">
+                            <Timer size={12} />
+                            {fmtDuration(a.duration)}
+                          </span>
+                          <div className="mr-auto flex w-28 items-center gap-2">
+                            <Progress value={acc} className="h-1.5 flex-1" />
+                            <span
+                              className={cn(
+                                "shrink-0 text-[11px] font-black",
+                                acc >= 80 ? "text-primary" : acc >= 50 ? "text-amber-500" : "text-destructive",
+                              )}
+                            >
+                              {acc.toLocaleString("fa-IR")}٪
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+            {totalMinutes > 0 && (
+              <p className="text-center text-[11px] text-muted-foreground">
+                مجموع زمان {recent.length.toLocaleString("fa-IR")} آزمون آخر: حدود {totalMinutes.toLocaleString("fa-IR")} دقیقه
+              </p>
+            )}
+          </section>
+        </>
+      )}
+    </div>
+  );
+}
