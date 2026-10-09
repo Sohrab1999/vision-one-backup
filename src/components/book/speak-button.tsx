@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Volume2, Square, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { speak, stopSpeaking } from "@/lib/speak";
+import { useVoiceSpeed } from "@/lib/voice-store";
 
 interface SpeakButtonProps {
   text: string;
@@ -17,12 +18,14 @@ interface SpeakButtonProps {
 export function SpeakButton({
   text,
   voice = "jam",
-  speed = 0.95,
+  speed,
   className,
   size = "sm",
   label,
 }: SpeakButtonProps) {
   const [state, setState] = useState<"idle" | "loading" | "playing">("idle");
+  const { speed: preferredSpeed } = useVoiceSpeed();
+  const effectiveSpeed = speed ?? preferredSpeed;
 
   const iconSize = size === "lg" ? 20 : size === "md" ? 17 : 14;
 
@@ -37,7 +40,7 @@ export function SpeakButton({
     setState("loading");
     await speak(text, {
       voice,
-      speed,
+      speed: effectiveSpeed,
       onEnd: () => setState("idle"),
     });
     setState("playing");

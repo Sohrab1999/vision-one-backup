@@ -1,0 +1,1118 @@
+     1→     1→// بانک تست واژگان ۲ — «جمع‌بندی واژگان درس ۱ تا ۴» (Vision One — جزوه جامع زبان انگلیسی پایه دهم)
+     2→     2→// Source: رونوشت‌های VLM صفحات ۱۸۴ تا ۱۸۸ — تست‌های ۱۳۱ تا ۲۴۰
+     3→     3→// کلیدها با پاسخنامه تأییدشده (a=0, b=1, c=2, d=3) تک‌به‌تک تطبیق داده شده است.
+     4→     4→
+     5→     5→import type { QuizQuestionSeed } from "./types";
+     6→     6→
+     7→     7→export const VOCAB_110: QuizQuestionSeed[] = [
+     8→     8→  // ---- t184 (131-152) ----
+     9→     9→  // Q131
+    10→    10→  {
+    11→    11→    category: "vocabulary",
+    12→    12→    lesson: 0,
+    13→    13→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    14→    14→    text: "We speak Persian at home so that the boys don’t forget their language and __________.",
+    15→    15→    options: ["behavior", "image", "destination", "culture"],
+    16→    16→    answer: 3,
+    17→    17→    level: "متوسط",
+    18→    18→  },
+    19→    19→  // Q132
+    20→    20→  {
+    21→    21→    category: "vocabulary",
+    22→    22→    lesson: 0,
+    23→    23→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    24→    24→    text: "In one small drop of blood there are millions of red __________.",
+    25→    25→    options: ["rings", "cells", "liquid", "facts"],
+    26→    26→    answer: 1,
+    27→    27→    level: "متوسط",
+    28→    28→  },
+    29→    29→  // Q133
+    30→    30→  {
+    31→    31→    category: "vocabulary",
+    32→    32→    lesson: 0,
+    33→    33→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    34→    34→    text: "I hurt my hand when I was playing volleyball yesterday. “hurt” means __________.",
+    35→    35→    options: ["cut", "injured", "saved", "hunted"],
+    36→    36→    answer: 1,
+    37→    37→    level: "متوسط",
+    38→    38→  },
+    39→    39→  // Q134
+    40→    40→  {
+    41→    41→    category: "vocabulary",
+    42→    42→    lesson: 0,
+    43→    43→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    44→    44→    text: "You should go to the Australian __________ to get a visa.",
+    45→    45→    options: ["destination", "airport", "embassy", "laboratory"],
+    46→    46→    answer: 2,
+    47→    47→    level: "متوسط",
+    48→    48→  },
+    49→    49→  // Q135
+    50→    50→  {
+    51→    51→    category: "vocabulary",
+    52→    52→    lesson: 0,
+    53→    53→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    54→    54→    text: "There are thousands of white __________ in a drop of blood.",
+    55→    55→    options: ["liquid", "rings", "facts", "cells"],
+    56→    56→    answer: 3,
+    57→    57→    level: "متوسط",
+    58→    58→  },
+    59→    59→  // Q136
+    60→    60→  {
+    61→    61→    category: "vocabulary",
+    62→    62→    lesson: 0,
+    63→    63→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    64→    64→    text: "Iran is a great __________ for tourists from other parts of the world.",
+    65→    65→    options: ["embassy", "continent", "destination", "behavior"],
+    66→    66→    answer: 2,
+    67→    67→    level: "متوسط",
+    68→    68→  },
+    69→    69→  // Q137
+    70→    70→  {
+    71→    71→    category: "vocabulary",
+    72→    72→    lesson: 0,
+    73→    73→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    74→    74→    text: "White cells in our blood __________ our body against microbes.",
+    75→    75→    options: ["carry", "defend", "keep", "collect"],
+    76→    76→    answer: 1,
+    77→    77→    level: "متوسط",
+    78→    78→  },
+    79→    79→  // Q138
+    80→    80→  {
+    81→    81→    category: "vocabulary",
+    82→    82→    lesson: 0,
+    83→    83→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    84→    84→    text: "Tigers are wild animals of the Asian cat family. “wild” is an opposite of __________.",
+    85→    85→    options: ["hurtful", "domestic", "safe", "dead"],
+    86→    86→    answer: 1,
+    87→    87→    level: "متوسط",
+    88→    88→  },
+    89→    89→  // Q139
+    90→    90→  {
+    91→    91→    category: "vocabulary",
+    92→    92→    lesson: 0,
+    93→    93→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+    94→    94→    text: "She’s energetic. She’s always doing something. “energetic” means __________.",
+    95→    95→    options: ["interested", "famous", "useful", "active"],
+    96→    96→    answer: 3,
+    97→    97→    level: "متوسط",
+    98→    98→  },
+    99→    99→  // Q140
+   100→   100→  {
+   101→   101→    category: "vocabulary",
+   102→   102→    lesson: 0,
+   103→   103→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   104→   104→    text: "When you are going abroad, you should get to the airport 2 hours before __________ flight.",
+   105→   105→    options: ["domestic", "local", "popular", "international"],
+   106→   106→    answer: 3,
+   107→   107→    level: "متوسط",
+   108→   108→  },
+   109→   109→  // Q141
+   110→   110→  {
+   111→   111→    category: "vocabulary",
+   112→   112→    lesson: 0,
+   113→   113→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   114→   114→    text: "Please speak more __________ so that everybody can hear you.",
+   115→   115→    options: ["loudly", "quietly", "bravely", "politely"],
+   116→   116→    answer: 0,
+   117→   117→    level: "متوسط",
+   118→   118→  },
+   119→   119→  // Q142
+   120→   120→  {
+   121→   121→    category: "vocabulary",
+   122→   122→    lesson: 0,
+   123→   123→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   124→   124→    text: "Everybody knows my brother. Actually he’s __________.",
+   125→   125→    options: ["interested", "possible", "natural", "famous"],
+   126→   126→    answer: 3,
+   127→   127→    level: "متوسط",
+   128→   128→  },
+   129→   129→  // Q143
+   130→   130→  {
+   131→   131→    category: "vocabulary",
+   132→   132→    lesson: 0,
+   133→   133→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   134→   134→    text: "Each year, many people from all parts of the world visit Iran’s __________.",
+   135→   135→    options: ["information", "attractions", "language", "vacation"],
+   136→   136→    answer: 1,
+   137→   137→    level: "متوسط",
+   138→   138→  },
+   139→   139→  // Q144
+   140→   140→  {
+   141→   141→    category: "vocabulary",
+   142→   142→    lesson: 0,
+   143→   143→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   144→   144→    text: "London’s airports __________ one hundred thousand domestic flights a year.",
+   145→   145→    options: ["save", "plan", "attract", "attend"],
+   146→   146→    answer: 1,
+   147→   147→    level: "متوسط",
+   148→   148→  },
+   149→   149→  // Q145
+   150→   150→  {
+   151→   151→    category: "vocabulary",
+   152→   152→    lesson: 0,
+   153→   153→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   154→   154→    text: "Blood is a __________ gift from Allah. It’s really amazing.",
+   155→   155→    options: ["wonderful", "healthy", "famous", "powerful"],
+   156→   156→    answer: 0,
+   157→   157→    level: "متوسط",
+   158→   158→  },
+   159→   159→  // Q146
+   160→   160→  {
+   161→   161→    category: "vocabulary",
+   162→   162→    lesson: 0,
+   163→   163→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   164→   164→    text: "Many Muslims from other parts of the world travel to Iran and go to holy __________ in Mashhad.",
+   165→   165→    options: ["shrines", "cultures", "behavior", "suggestion"],
+   166→   166→    answer: 0,
+   167→   167→    level: "متوسط",
+   168→   168→  },
+   169→   169→  // Q147
+   170→   170→  {
+   171→   171→    category: "vocabulary",
+   172→   172→    lesson: 0,
+   173→   173→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   174→   174→    text: "We can thank Allah by __________ our body healthy.",
+   175→   175→    options: ["collecting", "carrying", "keeping", "defending"],
+   176→   176→    answer: 2,
+   177→   177→    level: "متوسط",
+   178→   178→  },
+   179→   179→  // Q148
+   180→   180→  {
+   181→   181→    category: "vocabulary",
+   182→   182→    lesson: 0,
+   183→   183→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   184→   184→    text: "They had a car accident, but they are alive. “alive” is an opposite of __________.",
+   185→   185→    options: ["safe", "wild", "dead", "hurtful"],
+   186→   186→    answer: 2,
+   187→   187→    level: "متوسط",
+   188→   188→  },
+   189→   189→  // Q149
+   190→   190→  {
+   191→   191→    category: "vocabulary",
+   192→   192→    lesson: 0,
+   193→   193→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   194→   194→    text: "There isn’t much __________ for young people in this town- just the cinema and a park.",
+   195→   195→    options: ["experiment", "suggestion", "entertainment", "interest"],
+   196→   196→    answer: 2,
+   197→   197→    level: "متوسط",
+   198→   198→  },
+   199→   199→  // Q150
+   200→   200→  {
+   201→   201→    category: "vocabulary",
+   202→   202→    lesson: 0,
+   203→   203→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   204→   204→    text: "This homework can develop your writing __________.",
+   205→   205→    options: ["key", "end", "shelf", "skill"],
+   206→   206→    answer: 3,
+   207→   207→    level: "متوسط",
+   208→   208→  },
+   209→   209→  // Q151
+   210→   210→  {
+   211→   211→    category: "vocabulary",
+   212→   212→    lesson: 0,
+   213→   213→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   214→   214→    text: "Some scientists tried hard while they were working on __________.",
+   215→   215→    options: ["answers", "problems", "skills", "pains"],
+   216→   216→    answer: 1,
+   217→   217→    level: "متوسط",
+   218→   218→  },
+   219→   219→  // Q152
+   220→   220→  {
+   221→   221→    category: "vocabulary",
+   222→   222→    lesson: 0,
+   223→   223→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   224→   224→    text: "When we have different idea, we should __________ their opinions without any problem.",
+   225→   225→    options: ["attract", "respect", "locate", "spend"],
+   226→   226→    answer: 1,
+   227→   227→    level: "متوسط",
+   228→   228→  },
+   229→   229→
+   230→   230→  // ---- t185 (153-174) ----
+   231→   231→  // Q153
+   232→   232→  {
+   233→   233→    category: "vocabulary",
+   234→   234→    lesson: 0,
+   235→   235→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   236→   236→    text: "I don't remember __________, but I think it was last Friday.",
+   237→   237→    options: ["exactly", "quietly", "suitably", "neatly"],
+   238→   238→    answer: 0,
+   239→   239→    level: "متوسط",
+   240→   240→  },
+   241→   241→  // Q154
+   242→   242→  {
+   243→   243→    category: "vocabulary",
+   244→   244→    lesson: 0,
+   245→   245→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   246→   246→    text: "We can __________ Allah by saving the nature and wildlife.",
+   247→   247→    options: ["keep", "thank", "seem", "defend"],
+   248→   248→    answer: 1,
+   249→   249→    level: "متوسط",
+   250→   250→  },
+   251→   251→  // Q155
+   252→   252→  {
+   253→   253→    category: "vocabulary",
+   254→   254→    lesson: 0,
+   255→   255→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   256→   256→    text: "Some people destroy beautiful jungles in our country. \"jungle\" means __________.",
+   257→   257→    options: ["lake", "earth", "forest", "plain"],
+   258→   258→    answer: 2,
+   259→   259→    level: "متوسط",
+   260→   260→  },
+   261→   261→  // Q156
+   262→   262→  {
+   263→   263→    category: "vocabulary",
+   264→   264→    lesson: 0,
+   265→   265→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   266→   266→    text: "She's interested in medicine. She wants to work in a hospital and helps __________.",
+   267→   267→    options: ["writers", "builders", "patients", "beliefs"],
+   268→   268→    answer: 2,
+   269→   269→    level: "متوسط",
+   270→   270→  },
+   271→   271→  // Q157
+   272→   272→  {
+   273→   273→    category: "vocabulary",
+   274→   274→    lesson: 0,
+   275→   275→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   276→   276→    text: "Why don't you pay attention to me? \"attention\" is a synonym for __________.",
+   277→   277→    options: ["safe", "care", "injury", "harm"],
+   278→   278→    answer: 1,
+   279→   279→    level: "متوسط",
+   280→   280→  },
+   281→   281→  // Q158
+   282→   282→  {
+   283→   283→    category: "vocabulary",
+   284→   284→    lesson: 0,
+   285→   285→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   286→   286→    text: "The translator was great and wonderful. He could speak five __________.",
+   287→   287→    options: ["cultures", "languages", "ceremonies", "behavior"],
+   288→   288→    answer: 1,
+   289→   289→    level: "متوسط",
+   290→   290→  },
+   291→   291→  // Q159
+   292→   292→  {
+   293→   293→    category: "vocabulary",
+   294→   294→    lesson: 0,
+   295→   295→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   296→   296→    text: "Children must not eat __________ food. It's not good for their health.",
+   297→   297→    options: ["wide", "safe", "neat", "junk"],
+   298→   298→    answer: 3,
+   299→   299→    level: "متوسط",
+   300→   300→  },
+   301→   301→  // Q160
+   302→   302→  {
+   303→   303→    category: "vocabulary",
+   304→   304→    lesson: 0,
+   305→   305→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   306→   306→    text: "They returned the African elephants to their __________ home.",
+   307→   307→    options: ["amazing", "natural", "endangered", "easy"],
+   308→   308→    answer: 1,
+   309→   309→    level: "متوسط",
+   310→   310→  },
+   311→   311→  // Q161
+   312→   312→  {
+   313→   313→    category: "vocabulary",
+   314→   314→    lesson: 0,
+   315→   315→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   316→   316→    text: "Camels are __________ they do not drink water all day long.",
+   317→   317→    options: ["neat", "fresh", "medium", "fantastic"],
+   318→   318→    answer: 3,
+   319→   319→    level: "متوسط",
+   320→   320→  },
+   321→   321→  // Q162
+   322→   322→  {
+   323→   323→    category: "vocabulary",
+   324→   324→    lesson: 0,
+   325→   325→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   326→   326→    text: "Do you know the __________ of knowledge? It develops our lives.",
+   327→   327→    options: ["light", "cradle", "value", "pain"],
+   328→   328→    answer: 2,
+   329→   329→    level: "متوسط",
+   330→   330→  },
+   331→   331→  // Q163
+   332→   332→  {
+   333→   333→    category: "vocabulary",
+   334→   334→    lesson: 0,
+   335→   335→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   336→   336→    text: "Tom didn't see any __________ faces at the party. He didn't know anybody.",
+   337→   337→    options: ["hospitable", "similar", "familiar", "attractive"],
+   338→   338→    answer: 2,
+   339→   339→    level: "متوسط",
+   340→   340→  },
+   341→   341→  // Q164
+   342→   342→  {
+   343→   343→    category: "vocabulary",
+   344→   344→    lesson: 0,
+   345→   345→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   346→   346→    text: "I have an information __________ that can help me to know about different countries.",
+   347→   347→    options: ["activity", "embassy", "booklet", "departure"],
+   348→   348→    answer: 2,
+   349→   349→    level: "متوسط",
+   350→   350→  },
+   351→   351→  // Q165
+   352→   352→  {
+   353→   353→    category: "vocabulary",
+   354→   354→    lesson: 0,
+   355→   355→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   356→   356→    text: "There are a few trees in our garden. \"a few\" is an opposite of __________.",
+   357→   357→    options: ["around", "instead", "near", "many"],
+   358→   358→    answer: 3,
+   359→   359→    level: "متوسط",
+   360→   360→  },
+   361→   361→  // Q166
+   362→   362→  {
+   363→   363→    category: "vocabulary",
+   364→   364→    lesson: 0,
+   365→   365→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   366→   366→    text: "Planets and stars are different from each other. They aren't so much __________.",
+   367→   367→    options: ["rocky", "near", "alike", "alive"],
+   368→   368→    answer: 2,
+   369→   369→    level: "متوسط",
+   370→   370→  },
+   371→   371→  // Q167
+   372→   372→  {
+   373→   373→    category: "vocabulary",
+   374→   374→    lesson: 0,
+   375→   375→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   376→   376→    text: "It's important to __________ science to students at schools.",
+   377→   377→    options: ["recite", "teach", "rest", "quit"],
+   378→   378→    answer: 1,
+   379→   379→    level: "متوسط",
+   380→   380→  },
+   381→   381→  // Q168
+   382→   382→  {
+   383→   383→    category: "vocabulary",
+   384→   384→    lesson: 0,
+   385→   385→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   386→   386→    text: "Cats and dogs are domestic animals. \"domestic\" is an opposite of __________.",
+   387→   387→    options: ["dead", "safe", "hurtful", "wild"],
+   388→   388→    answer: 3,
+   389→   389→    level: "متوسط",
+   390→   390→  },
+   391→   391→  // Q169
+   392→   392→  {
+   393→   393→    category: "vocabulary",
+   394→   394→    lesson: 0,
+   395→   395→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   396→   396→    text: "You can see our website or __________ this booklet to get more information.",
+   397→   397→    options: ["locate", "attract", "spend", "check"],
+   398→   398→    answer: 3,
+   399→   399→    level: "متوسط",
+   400→   400→  },
+   401→   401→  // Q170
+   402→   402→  {
+   403→   403→    category: "vocabulary",
+   404→   404→    lesson: 0,
+   405→   405→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   406→   406→    text: "Our holy prophet (PBUH) said, \"______________ knowledge from cradle to the grave.\"",
+   407→   407→    options: ["attend", "quit", "seek", "solve"],
+   408→   408→    answer: 2,
+   409→   409→    level: "متوسط",
+   410→   410→  },
+   411→   411→  // Q171
+   412→   412→  {
+   413→   413→    category: "vocabulary",
+   414→   414→    lesson: 0,
+   415→   415→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   416→   416→    text: "One of the smallest __________ of our body is the cell.",
+   417→   417→    options: ["parts", "orbits", "facts", "types"],
+   418→   418→    answer: 0,
+   419→   419→    level: "متوسط",
+   420→   420→  },
+   421→   421→  // Q172
+   422→   422→  {
+   423→   423→    category: "vocabulary",
+   424→   424→    lesson: 0,
+   425→   425→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   426→   426→    text: "Some __________ do not pay attention to the wild life. They hunt all the animals.",
+   427→   427→    options: ["trips", "programs", "advice", "hunters"],
+   428→   428→    answer: 3,
+   429→   429→    level: "متوسط",
+   430→   430→  },
+   431→   431→  // Q173
+   432→   432→  {
+   433→   433→    category: "vocabulary",
+   434→   434→    lesson: 0,
+   435→   435→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   436→   436→    text: "The best way to learn a __________ language is to live in a country where it is spoken.",
+   437→   437→    options: ["domestic", "foreign", "popular", "successful"],
+   438→   438→    answer: 1,
+   439→   439→    level: "متوسط",
+   440→   440→  },
+   441→   441→  // Q174
+   442→   442→  {
+   443→   443→    category: "vocabulary",
+   444→   444→    lesson: 0,
+   445→   445→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   446→   446→    text: "Tell me __________, Kate, what do you think of John?",
+   447→   447→    options: ["suitably", "probably", "honestly", "suitably"],
+   448→   448→    answer: 2,
+   449→   449→    level: "متوسط",
+   450→   450→  },
+   451→   451→
+   452→   452→  // ---- t186 (175-196) ----
+   453→   453→  // Q175
+   454→   454→  {
+   455→   455→    category: "vocabulary",
+   456→   456→    lesson: 0,
+   457→   457→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   458→   458→    text: "My father is a good person. He never __________ the animals in the jungle.",
+   459→   459→    options: ["hunts", "cuts", "hopes", "protects"],
+   460→   460→    answer: 0,
+   461→   461→    level: "متوسط",
+   462→   462→  },
+   463→   463→  // Q176
+   464→   464→  {
+   465→   465→    category: "vocabulary",
+   466→   466→    lesson: 0,
+   467→   467→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   468→   468→    text: "It’s __________ that our body is one of the wonders of creation.",
+   469→   469→    options: ["clever", "clear", "alive", "alike"],
+   470→   470→    answer: 1,
+   471→   471→    level: "متوسط",
+   472→   472→  },
+   473→   473→  // Q177
+   474→   474→  {
+   475→   475→    category: "vocabulary",
+   476→   476→    lesson: 0,
+   477→   477→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   478→   478→    text: "A: “Is your little brother taller than last year?” B: “Yes, children __________ rapidly.”",
+   479→   479→    options: ["put aside", "grow up", "look for", "look like"],
+   480→   480→    answer: 1,
+   481→   481→    level: "متوسط",
+   482→   482→  },
+   483→   483→  // Q178
+   484→   484→  {
+   485→   485→    category: "vocabulary",
+   486→   486→    lesson: 0,
+   487→   487→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   488→   488→    text: "Can camels travel __________ hot and dry deserts with little food and water?",
+   489→   489→    options: ["against", "during", "across", "without"],
+   490→   490→    answer: 2,
+   491→   491→    level: "متوسط",
+   492→   492→  },
+   493→   493→  // Q179
+   494→   494→  {
+   495→   495→    category: "vocabulary",
+   496→   496→    lesson: 0,
+   497→   497→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   498→   498→    text: "Did you know that most of the world’s __________ countries are in Africa?",
+   499→   499→    options: ["ugliest", "deepest", "poorest", "farthest"],
+   500→   500→    answer: 2,
+   501→   501→    level: "متوسط",
+   502→   502→  },
+   503→   503→  // Q180
+   504→   504→  {
+   505→   505→    category: "vocabulary",
+   506→   506→    lesson: 0,
+   507→   507→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   508→   508→    text: "A: “Would you like to have dinner with us?” B: “I can’t. __________, I have to study tonight.”",
+   509→   509→    options: ["especially", "unfortunately", "easily", "luckily"],
+   510→   510→    answer: 1,
+   511→   511→    level: "متوسط",
+   512→   512→  },
+   513→   513→  // Q181
+   514→   514→  {
+   515→   515→    category: "vocabulary",
+   516→   516→    lesson: 0,
+   517→   517→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   518→   518→    text: "“Raman” decided to __________ city life and live in a small village.",
+   519→   519→    options: ["grow up", "give up", "protect", "increase"],
+   520→   520→    answer: 1,
+   521→   521→    level: "متوسط",
+   522→   522→  },
+   523→   523→  // Q182
+   524→   524→  {
+   525→   525→    category: "vocabulary",
+   526→   526→    lesson: 0,
+   527→   527→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   528→   528→    text: "She suddenly __________ that her keys were in her other bag.",
+   529→   529→    options: ["attended", "observed", "remembered", "behaved"],
+   530→   530→    answer: 2,
+   531→   531→    level: "متوسط",
+   532→   532→  },
+   533→   533→  // Q183
+   534→   534→  {
+   535→   535→    category: "vocabulary",
+   536→   536→    lesson: 0,
+   537→   537→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   538→   538→    text: "You know that __________ tourists travel to different parts of their own country.",
+   539→   539→    options: ["international", "historical", "familiar", "domestic"],
+   540→   540→    answer: 3,
+   541→   541→    level: "متوسط",
+   542→   542→  },
+   543→   543→  // Q184
+   544→   544→  {
+   545→   545→    category: "vocabulary",
+   546→   546→    lesson: 0,
+   547→   547→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   548→   548→    text: "What do you __________ when you say everything is possible?",
+   549→   549→    options: ["destroy", "hurt", "cut", "mean"],
+   550→   550→    answer: 3,
+   551→   551→    level: "متوسط",
+   552→   552→  },
+   553→   553→  // Q185
+   554→   554→  {
+   555→   555→    category: "vocabulary",
+   556→   556→    lesson: 0,
+   557→   557→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   558→   558→    text: "You can take pictures with this camera easily and fast because it’s really __________.",
+   559→   559→    options: ["absent", "energetic", "successful", "modern"],
+   560→   560→    answer: 3,
+   561→   561→    level: "متوسط",
+   562→   562→  },
+   563→   563→  // Q186
+   564→   564→  {
+   565→   565→    category: "vocabulary",
+   566→   566→    lesson: 0,
+   567→   567→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   568→   568→    text: "Planets are really amazing but not so much __________. They are different.",
+   569→   569→    options: ["nearer", "alike", "useful", "rocky"],
+   570→   570→    answer: 1,
+   571→   571→    level: "متوسط",
+   572→   572→  },
+   573→   573→  // Q187
+   574→   574→  {
+   575→   575→    category: "vocabulary",
+   576→   576→    lesson: 0,
+   577→   577→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   578→   578→    text: "The villagers were very kind and __________ to anyone who visited their village.",
+   579→   579→    options: ["traditional", "hospitable", "domestic", "historical"],
+   580→   580→    answer: 1,
+   581→   581→    level: "متوسط",
+   582→   582→  },
+   583→   583→  // Q188
+   584→   584→  {
+   585→   585→    category: "vocabulary",
+   586→   586→    lesson: 0,
+   587→   587→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   588→   588→    text: "One of the smallest __________ of our body is the cell. There are millions of them in our body.",
+   589→   589→    options: ["liquid", "parts", "facts", "signs"],
+   590→   590→    answer: 1,
+   591→   591→    level: "متوسط",
+   592→   592→  },
+   593→   593→  // Q189
+   594→   594→  {
+   595→   595→    category: "vocabulary",
+   596→   596→    lesson: 0,
+   597→   597→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   598→   598→    text: "“Oromia” __________ is in the north west of Iran and is the biggest one inside our country.",
+   599→   599→    options: ["plain", "jungle", "lake", "trip"],
+   600→   600→    answer: 2,
+   601→   601→    level: "متوسط",
+   602→   602→  },
+   603→   603→  // Q190
+   604→   604→  {
+   605→   605→    category: "vocabulary",
+   606→   606→    lesson: 0,
+   607→   607→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   608→   608→    text: "Living abroad is the best way to learn a foreign __________.",
+   609→   609→    options: ["embassy", "flight", "language", "suggestion"],
+   610→   610→    answer: 2,
+   611→   611→    level: "متوسط",
+   612→   612→  },
+   613→   613→  // Q191
+   614→   614→  {
+   615→   615→    category: "vocabulary",
+   616→   616→    lesson: 0,
+   617→   617→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   618→   618→    text: "He never __________ his interest for making new things. Finally, he became a great inventor.",
+   619→   619→    options: ["developed", "published", "grew", "lost"],
+   620→   620→    answer: 3,
+   621→   621→    level: "متوسط",
+   622→   622→  },
+   623→   623→  // Q192
+   624→   624→  {
+   625→   625→    category: "vocabulary",
+   626→   626→    lesson: 0,
+   627→   627→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   628→   628→    text: "The waiter was too rude. He didn’t speak __________.",
+   629→   629→    options: ["rudely", "loudly", "comfortably", "nicely"],
+   630→   630→    answer: 3,
+   631→   631→    level: "متوسط",
+   632→   632→  },
+   633→   633→  // Q193
+   634→   634→  {
+   635→   635→    category: "vocabulary",
+   636→   636→    lesson: 0,
+   637→   637→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   638→   638→    text: "His shoe was very dirty. There were some __________ of blood on it.",
+   639→   639→    options: ["rings", "drops", "systems", "rocks"],
+   640→   640→    answer: 1,
+   641→   641→    level: "متوسط",
+   642→   642→  },
+   643→   643→  // Q194
+   644→   644→  {
+   645→   645→    category: "vocabulary",
+   646→   646→    lesson: 0,
+   647→   647→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   648→   648→    text: "If you do exercise, you will be healthy and __________.",
+   649→   649→    options: ["interesting", "useful", "strong", "true"],
+   650→   650→    answer: 2,
+   651→   651→    level: "متوسط",
+   652→   652→  },
+   653→   653→  // Q195
+   654→   654→  {
+   655→   655→    category: "vocabulary",
+   656→   656→    lesson: 0,
+   657→   657→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   658→   658→    text: "My older brother was angry, but he sat down and listened to me __________.",
+   659→   659→    options: ["angrily", "bravely", "patiently", "rudely"],
+   660→   660→    answer: 2,
+   661→   661→    level: "متوسط",
+   662→   662→  },
+   663→   663→  // Q196
+   664→   664→  {
+   665→   665→    category: "vocabulary",
+   666→   666→    lesson: 0,
+   667→   667→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   668→   668→    text: "She was famous for doing thousands of experiments to find __________ to problems.",
+   669→   669→    options: ["answers", "cradles", "values", "novels"],
+   670→   670→    answer: 0,
+   671→   671→    level: "متوسط",
+   672→   672→  },
+   673→   673→
+   674→   674→  // ---- t187 (197-218) ----
+   675→   675→  // Q197
+   676→   676→  {
+   677→   677→    category: "vocabulary",
+   678→   678→    lesson: 0,
+   679→   679→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   680→   680→    text: "Vegetable sandwiches are easy to __________, so they are useful for short trips.",
+   681→   681→    options: ["spend", "prepare", "attract", "locate"],
+   682→   682→    answer: 1,
+   683→   683→    level: "متوسط",
+   684→   684→  },
+   685→   685→  // Q198
+   686→   686→  {
+   687→   687→    category: "vocabulary",
+   688→   688→    lesson: 0,
+   689→   689→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   690→   690→    text: "When you go on a long trip, there is a / an __________ of illnesses, so take care of yourself.",
+   691→   691→    options: ["plan", "risk", "host", "image"],
+   692→   692→    answer: 1,
+   693→   693→    level: "متوسط",
+   694→   694→  },
+   695→   695→  // Q199
+   696→   696→  {
+   697→   697→    category: "vocabulary",
+   698→   698→    lesson: 0,
+   699→   699→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   700→   700→    text: "My five-year-old daughter always goes to kindergarten happily and is full of __________.",
+   701→   701→    options: ["oxygen", "fact", "sign", "energy"],
+   702→   702→    answer: 3,
+   703→   703→    level: "متوسط",
+   704→   704→  },
+   705→   705→  // Q200
+   706→   706→  {
+   707→   707→    category: "vocabulary",
+   708→   708→    lesson: 0,
+   709→   709→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   710→   710→    text: "The Russian soldiers __________ the country against foreign enemies many times.",
+   711→   711→    options: ["attacked", "defended", "fought", "taught"],
+   712→   712→    answer: 1,
+   713→   713→    level: "متوسط",
+   714→   714→  },
+   715→   715→  // Q201
+   716→   716→  {
+   717→   717→    category: "vocabulary",
+   718→   718→    lesson: 0,
+   719→   719→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   720→   720→    text: "I always run all the way home, so my heart is __________ fast.",
+   721→   721→    options: ["orbiting", "carrying", "pumping", "doing"],
+   722→   722→    answer: 2,
+   723→   723→    level: "متوسط",
+   724→   724→  },
+   725→   725→  // Q202
+   726→   726→  {
+   727→   727→    category: "vocabulary",
+   728→   728→    lesson: 0,
+   729→   729→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   730→   730→    text: "She didn't sleep last night, so no __________ she's tired.",
+   731→   731→    options: ["wonder", "power", "sign", "fact"],
+   732→   732→    answer: 0,
+   733→   733→    level: "متوسط",
+   734→   734→  },
+   735→   735→  // Q203
+   736→   736→  {
+   737→   737→    category: "vocabulary",
+   738→   738→    lesson: 0,
+   739→   739→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   740→   740→    text: "Do you think a computer will ever be as powerful as your __________?",
+   741→   741→    options: ["organ", "heart", "nation", "brain"],
+   742→   742→    answer: 3,
+   743→   743→    level: "متوسط",
+   744→   744→  },
+   745→   745→  // Q204
+   746→   746→  {
+   747→   747→    category: "vocabulary",
+   748→   748→    lesson: 0,
+   749→   749→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   750→   750→    text: "It's __________ for you to cross the street when the light is red.",
+   751→   751→    options: ["powerful", "useful", "rocky", "dangerous"],
+   752→   752→    answer: 3,
+   753→   753→    level: "متوسط",
+   754→   754→  },
+   755→   755→  // Q205
+   756→   756→  {
+   757→   757→    category: "vocabulary",
+   758→   758→    lesson: 0,
+   759→   759→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   760→   760→    text: "It's __________ that the system of our body is among the wonders of creation.",
+   761→   761→    options: ["alike", "alive", "clever", "clear"],
+   762→   762→    answer: 3,
+   763→   763→    level: "متوسط",
+   764→   764→  },
+   765→   765→  // Q206
+   766→   766→  {
+   767→   767→    category: "vocabulary",
+   768→   768→    lesson: 0,
+   769→   769→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   770→   770→    text: "When you go to the nature on your holiday, don't forget to __________ the fire.",
+   771→   771→    options: ["fill out", "take care", "put out", "pay attention"],
+   772→   772→    answer: 2,
+   773→   773→    level: "متوسط",
+   774→   774→  },
+   775→   775→  // Q207
+   776→   776→  {
+   777→   777→    category: "vocabulary",
+   778→   778→    lesson: 0,
+   779→   779→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   780→   780→    text: "The __________ to scientists' success is their hard work.",
+   781→   781→    options: ["gain", "pain", "end", "key"],
+   782→   782→    answer: 3,
+   783→   783→    level: "متوسط",
+   784→   784→  },
+   785→   785→  // Q208
+   786→   786→  {
+   787→   787→    category: "vocabulary",
+   788→   788→    lesson: 0,
+   789→   789→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   790→   790→    text: "My father thinks that Spain is a very popular __________ for traveling in summer.",
+   791→   791→    options: ["attraction", "pyramid", "entertainment", "destination"],
+   792→   792→    answer: 3,
+   793→   793→    level: "متوسط",
+   794→   794→  },
+   795→   795→  // Q209
+   796→   796→  {
+   797→   797→    category: "vocabulary",
+   798→   798→    lesson: 0,
+   799→   799→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   800→   800→    text: "The policeman answered the tourists politely and __________.",
+   801→   801→    options: ["patiently", "probably", "rudely", "hungrily"],
+   802→   802→    answer: 0,
+   803→   803→    level: "متوسط",
+   804→   804→  },
+   805→   805→  // Q210
+   806→   806→  {
+   807→   807→    category: "vocabulary",
+   808→   808→    lesson: 0,
+   809→   809→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   810→   810→    text: "He's going to stay at least three weeks, __________ longer.",
+   811→   811→    options: ["possibly", "safely", "quietly", "neatly"],
+   812→   812→    answer: 0,
+   813→   813→    level: "متوسط",
+   814→   814→  },
+   815→   815→  // Q211
+   816→   816→  {
+   817→   817→    category: "vocabulary",
+   818→   818→    lesson: 0,
+   819→   819→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   820→   820→    text: "Doctors helped people with penicillin while the flu was __________.",
+   821→   821→    options: ["putting aside", "getting around", "going out", "filling out"],
+   822→   822→    answer: 1,
+   823→   823→    level: "متوسط",
+   824→   824→  },
+   825→   825→  // Q212
+   826→   826→  {
+   827→   827→    category: "vocabulary",
+   828→   828→    lesson: 0,
+   829→   829→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   830→   830→    text: "You should go to the __________ of a foreign country to get visa.",
+   831→   831→    options: ["agency", "embassy", "booklet", "sites"],
+   832→   832→    answer: 1,
+   833→   833→    level: "متوسط",
+   834→   834→  },
+   835→   835→  // Q213
+   836→   836→  {
+   837→   837→    category: "vocabulary",
+   838→   838→    lesson: 0,
+   839→   839→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   840→   840→    text: "It's not healthy to eat junk food during your trip. You should __________ your meals yourself.",
+   841→   841→    options: ["spend", "locate", "attract", "prepare"],
+   842→   842→    answer: 3,
+   843→   843→    level: "متوسط",
+   844→   844→  },
+   845→   845→  // Q214
+   846→   846→  {
+   847→   847→    category: "vocabulary",
+   848→   848→    lesson: 0,
+   849→   849→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   850→   850→    text: "My brother __________ his foot while he was playing football.",
+   851→   851→    options: ["saved", "hurt", "protected", "heard"],
+   852→   852→    answer: 1,
+   853→   853→    level: "متوسط",
+   854→   854→  },
+   855→   855→  // Q215
+   856→   856→  {
+   857→   857→    category: "vocabulary",
+   858→   858→    lesson: 0,
+   859→   859→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   860→   860→    text: "The cells of our body can get oxygen by every __________ of the heart.",
+   861→   861→    options: ["pump", "orbit", "ring", "wonder"],
+   862→   862→    answer: 0,
+   863→   863→    level: "متوسط",
+   864→   864→  },
+   865→   865→  // Q216
+   866→   866→  {
+   867→   867→    category: "vocabulary",
+   868→   868→    lesson: 0,
+   869→   869→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   870→   870→    text: "Because of a serious illness, he can't __________ his body as most people can.",
+   871→   871→    options: ["carry", "collect", "move", "grow"],
+   872→   872→    answer: 2,
+   873→   873→    level: "متوسط",
+   874→   874→  },
+   875→   875→  // Q217
+   876→   876→  {
+   877→   877→    category: "vocabulary",
+   878→   878→    lesson: 0,
+   879→   879→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   880→   880→    text: "It's really important to read and to __________ the holy Quran during childhood.",
+   881→   881→    options: ["publish", "recite", "attend", "cheer"],
+   882→   882→    answer: 1,
+   883→   883→    level: "متوسط",
+   884→   884→  },
+   885→   885→  // Q218
+   886→   886→  {
+   887→   887→    category: "vocabulary",
+   888→   888→    lesson: 0,
+   889→   889→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   890→   890→    text: "At this time of the year, most animals are __________ for winter.",
+   891→   891→    options: ["spending", "preparing", "checking", "solving"],
+   892→   892→    answer: 1,
+   893→   893→    level: "متوسط",
+   894→   894→  },
+   895→   895→
+   896→   896→  // ---- t188 (219-240) ----
+   897→   897→  // Q219
+   898→   898→  {
+   899→   899→    category: "vocabulary",
+   900→   900→    lesson: 0,
+   901→   901→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   902→   902→    text: "Firemen always __________ endangered people from danger.",
+   903→   903→    options: ["put out", "increase", "hurt", "save"],
+   904→   904→    answer: 3,
+   905→   905→    level: "متوسط",
+   906→   906→  },
+   907→   907→  // Q220
+   908→   908→  {
+   909→   909→    category: "vocabulary",
+   910→   910→    lesson: 0,
+   911→   911→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   912→   912→    text: "My mother knows French. She’s going to __________ the holy Quran into French.",
+   913→   913→    options: ["feel", "solve", "translate", "attend"],
+   914→   914→    answer: 2,
+   915→   915→    level: "متوسط",
+   916→   916→  },
+   917→   917→  // Q221
+   918→   918→  {
+   919→   919→    category: "vocabulary",
+   920→   920→    lesson: 0,
+   921→   921→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   922→   922→    text: "It’s important to became __________ with your destination before your trip.",
+   923→   923→    options: ["familiar", "popular", "attractive", "similar"],
+   924→   924→    answer: 0,
+   925→   925→    level: "متوسط",
+   926→   926→  },
+   927→   927→  // Q222
+   928→   928→  {
+   929→   929→    category: "vocabulary",
+   930→   930→    lesson: 0,
+   931→   931→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   932→   932→    text: "I participate in an online course to learn about __________ the nature.",
+   933→   933→    options: ["hurting", "saving", "increasing", "hunting"],
+   934→   934→    answer: 1,
+   935→   935→    level: "متوسط",
+   936→   936→  },
+   937→   937→  // Q223
+   938→   938→  {
+   939→   939→    category: "vocabulary",
+   940→   940→    lesson: 0,
+   941→   941→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   942→   942→    text: "They have carpets in wide range of colors in their store, so it’s difficult to make a __________.",
+   943→   943→    options: ["suggestion", "choice", "tour", "price"],
+   944→   944→    answer: 1,
+   945→   945→    level: "متوسط",
+   946→   946→  },
+   947→   947→  // Q224
+   948→   948→  {
+   949→   949→    category: "vocabulary",
+   950→   950→    lesson: 0,
+   951→   951→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   952→   952→    text: "She __________ her first book when she was a young student.",
+   953→   953→    options: ["solved", "quitted", "believed", "published"],
+   954→   954→    answer: 3,
+   955→   955→    level: "متوسط",
+   956→   956→  },
+   957→   957→  // Q225
+   958→   958→  {
+   959→   959→    category: "vocabulary",
+   960→   960→    lesson: 0,
+   961→   961→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   962→   962→    text: "She always eat healthy food. She __________ strong.",
+   963→   963→    options: ["defends", "seems", "carries", "moves"],
+   964→   964→    answer: 1,
+   965→   965→    level: "متوسط",
+   966→   966→  },
+   967→   967→  // Q226
+   968→   968→  {
+   969→   969→    category: "vocabulary",
+   970→   970→    lesson: 0,
+   971→   971→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   972→   972→    text: "You should know your destination before your trip by reading travel __________.",
+   973→   973→    options: ["prices", "hosts", "booklets", "paradises"],
+   974→   974→    answer: 2,
+   975→   975→    level: "متوسط",
+   976→   976→  },
+   977→   977→  // Q227
+   978→   978→  {
+   979→   979→    category: "vocabulary",
+   980→   980→    lesson: 0,
+   981→   981→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   982→   982→    text: "I don’t know all the __________ about your sister. Is it true that she is a famous person?",
+   983→   983→    options: ["rings", "creations", "facts", "types"],
+   984→   984→    answer: 2,
+   985→   985→    level: "متوسط",
+   986→   986→  },
+   987→   987→  // Q228
+   988→   988→  {
+   989→   989→    category: "vocabulary",
+   990→   990→    lesson: 0,
+   991→   991→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+   992→   992→    text: "She’s an excellent teacher and I have the greatest __________ for her.",
+   993→   993→    options: ["plan", "behavior", "respect", "suggestion"],
+   994→   994→    answer: 2,
+   995→   995→    level: "متوسط",
+   996→   996→  },
+   997→   997→  // Q229
+   998→   998→  {
+   999→   999→    category: "vocabulary",
+  1000→  1000→    lesson: 0,
+  1001→  1001→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1002→  1002→    text: "If you want to succeed, you have to take a lot of __________.",
+  1003→  1003→    options: ["risks", "behaviors", "respects", "prices"],
+  1004→  1004→    answer: 0,
+  1005→  1005→    level: "متوسط",
+  1006→  1006→  },
+  1007→  1007→  // Q230
+  1008→  1008→  {
+  1009→  1009→    category: "vocabulary",
+  1010→  1010→    lesson: 0,
+  1011→  1011→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1012→  1012→    text: "We must not break any rules in a foreign country. If we want to have a good and __________ trip.",
+  1013→  1013→    options: ["holy", "ready", "safe", "polite"],
+  1014→  1014→    answer: 2,
+  1015→  1015→    level: "متوسط",
+  1016→  1016→  },
+  1017→  1017→  // Q231
+  1018→  1018→  {
+  1019→  1019→    category: "vocabulary",
+  1020→  1020→    lesson: 0,
+  1021→  1021→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1022→  1022→    text: "I do a research about how to __________ animals from danger.",
+  1023→  1023→    options: ["protect", "hurt", "hunt", "increase"],
+  1024→  1024→    answer: 0,
+  1025→  1025→    level: "متوسط",
+  1026→  1026→  },
+  1027→  1027→  // Q232
+  1028→  1028→  {
+  1029→  1029→    category: "vocabulary",
+  1030→  1030→    lesson: 0,
+  1031→  1031→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1032→  1032→    text: "One of the most interesting __________ about our body is blood.",
+  1033→  1033→    options: ["orbits", "wonders", "rings", "types"],
+  1034→  1034→    answer: 1,
+  1035→  1035→    level: "متوسط",
+  1036→  1036→  },
+  1037→  1037→  // Q233
+  1038→  1038→  {
+  1039→  1039→    category: "vocabulary",
+  1040→  1040→    lesson: 0,
+  1041→  1041→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1042→  1042→    text: "We opened an account to __________ money to help injured animals.",
+  1043→  1043→    options: ["mean", "destroy", "attend", "save"],
+  1044→  1044→    answer: 3,
+  1045→  1045→    level: "متوسط",
+  1046→  1046→  },
+  1047→  1047→  // Q234
+  1048→  1048→  {
+  1049→  1049→    category: "vocabulary",
+  1050→  1050→    lesson: 0,
+  1051→  1051→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1052→  1052→    text: "I really like math. I can __________ math problems fast.",
+  1053→  1053→    options: ["develop", "solve", "grow", "quit"],
+  1054→  1054→    answer: 1,
+  1055→  1055→    level: "متوسط",
+  1056→  1056→  },
+  1057→  1057→  // Q235
+  1058→  1058→  {
+  1059→  1059→    category: "vocabulary",
+  1060→  1060→    lesson: 0,
+  1061→  1061→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1062→  1062→    text: "My father is a good firefighter. He __________ the fire fast and helps the people.",
+  1063→  1063→    options: ["pays attention", "puts out", "destroys", "protects"],
+  1064→  1064→    answer: 1,
+  1065→  1065→    level: "متوسط",
+  1066→  1066→  },
+  1067→  1067→  // Q236
+  1068→  1068→  {
+  1069→  1069→    category: "vocabulary",
+  1070→  1070→    lesson: 0,
+  1071→  1071→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1072→  1072→    text: "Firefighters always work quickly. The opposite of “quickly” is __________.",
+  1073→  1073→    options: ["rapidly", "easily", "slowly", "sadly"],
+  1074→  1074→    answer: 0,
+  1075→  1075→    level: "متوسط",
+  1076→  1076→  },
+  1077→  1077→  // Q237
+  1078→  1078→  {
+  1079→  1079→    category: "vocabulary",
+  1080→  1080→    lesson: 0,
+  1081→  1081→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1082→  1082→    text: "It’s important to __________ nature and people and everything during our trip.",
+  1083→  1083→    options: ["spend", "respect", "locate", "prepare"],
+  1084→  1084→    answer: 1,
+  1085→  1085→    level: "متوسط",
+  1086→  1086→  },
+  1087→  1087→  // Q238
+  1088→  1088→  {
+  1089→  1089→    category: "vocabulary",
+  1090→  1090→    lesson: 0,
+  1091→  1091→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1092→  1092→    text: "The firefighters always __________ of their car fast.",
+  1093→  1093→    options: ["fill out", "put aside", "put out", "jump out"],
+  1094→  1094→    answer: 3,
+  1095→  1095→    level: "متوسط",
+  1096→  1096→  },
+  1097→  1097→  // Q239
+  1098→  1098→  {
+  1099→  1099→    category: "vocabulary",
+  1100→  1100→    lesson: 0,
+  1101→  1101→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1102→  1102→    text: "Doctors say suitable and useful foods __________ us healthy and alive.",
+  1103→  1103→    options: ["collect", "carry", "seem", "keep"],
+  1104→  1104→    answer: 3,
+  1105→  1105→    level: "متوسط",
+  1106→  1106→  },
+  1107→  1107→  // Q240
+  1108→  1108→  {
+  1109→  1109→    category: "vocabulary",
+  1110→  1110→    lesson: 0,
+  1111→  1111→    scope: "جمع‌بندی واژگان درس ۱ تا ۴",
+  1112→  1112→    text: "You’re breaking the __________ if you touch the ball with your hands.",
+  1113→  1113→    options: ["prices", "skills", "shelfs", "rule"],
+  1114→  1114→    answer: 3,
+  1115→  1115→    level: "متوسط",
+  1116→  1116→  },
+  1117→  1117→];
+  1118→  1118→

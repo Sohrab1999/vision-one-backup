@@ -14,6 +14,9 @@ import {
   Timer,
   ListChecks,
   BookMarked,
+  NotebookPen,
+  Printer,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useUserName } from "@/lib/name-store";
 import { touchStreak } from "@/lib/streak-store";
+import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -40,6 +44,7 @@ interface Question {
 }
 
 type Phase = "setup" | "playing" | "result";
+type Mode = "normal" | "review";
 
 const CATEGORY_OPTIONS = [
   { value: "all", label: "همه سؤال‌ها" },
@@ -68,6 +73,7 @@ function fmtTime(s: number) {
 
 export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [phase, setPhase] = useState<Phase>("setup");
+  const [mode, setMode] = useState<Mode>("normal");
   const [category, setCategory] = useState("all");
   const [lesson, setLesson] = useState(lessonFilter !== undefined ? String(lessonFilter) : "all");
   const [count, setCount] = useState(10);
@@ -82,6 +88,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [aiExplanation, setAiExplanation] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const userName = useUserName();
+  const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -106,14 +113,16 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     ? Math.round((correctCount / questions.length) * 100)
     : 0;
 
-  async function startQuiz() {
+  async function startQuiz(nextMode: Mode = "normal") {
     setLoading(true);
+    setMode(nextMode);
     try {
       const params = new URLSearchParams({
         category: category === "all" ? "all" : category,
         lesson: lesson === "all" ? "all" : lesson,
         count: String(count),
       });
+      if (nextMode === "review") params.set("ids", mistakeIds.join(","));
       const res = await fetch(`/api/questions?${params.toString()}`);
       const data = await res.json();
       if (!res.ok || !data.questions?.length) {
@@ -142,6 +151,13 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       next[index] = optIdx;
       return next;
     });
+    if (current) {
+      if (optIdx === current.answer) {
+        if (mode === "review") resolveMistake(current.id);
+      } else {
+        recordMistake(current.id);
+      }
+    }
   }
 
   async function askAiExplanation() {
@@ -181,21 +197,25 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     if (timerRef.current) clearInterval(timerRef.current);
     setPhase("result");
     const streak = touchStreak();
+    const detail = questions.map((q, i) => ({ id: q.id, chosen: answers[i], answer: q.answer }));
     fetch("/api/attempts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        category,
+        category: mode === "review" ? "review" : category,
         lesson: lesson === "all" ? 0 : Number(lesson),
         total: questions.length,
         correct: correctCount,
         duration: elapsed,
         name: userName || undefined,
+        detail,
       }),
     })
       .then(() =>
         toast.success(
-          `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
+          mode === "review"
+            ? `دور مرور تمام شد! ${mistakeCount.toLocaleString("fa-IR")} سؤال دیگر در دفتر اشتباهات مانده`
+            : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
         ),
       )
       .catch(() => undefined);
@@ -226,6 +246,48 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
               </p>
             </div>
           </div>
+
+          {/* مرور هوشمند اشتباهات */}
+          {mistakeCount > 0 && (
+            <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/10 via-amber-500/5 to-transparent p-4">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                  <NotebookPen size={19} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2 text-[13px] font-black">
+                    مرور هوشمند اشتباهات
+                    <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+                      {mistakeCount.toLocaleString("fa-IR")} سؤال
+                    </Badge>
+                  </p>
+                  <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                    فقط سؤال‌هایی که قبلاً اشتباه جواب دادی — با هر پاسخ درست از دفتر اشتباهات حذف می‌شوند.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => startQuiz("review")}
+                  disabled={loading}
+                  className="shrink-0 gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+                >
+                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                  شروع مرور
+                </Button>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  clearMistakes();
+                  toast.info("دفتر اشتباهات پاک شد.");
+                }}
+                className="absolute bottom-1.5 left-2 flex items-center gap-1 text-[10px] text-muted-foreground/70 transition-colors hover:text-destructive"
+              >
+                <Trash2 size={11} />
+                پاک‌کردن دفتر
+              </button>
+            </div>
+          )}
 
           <div className="space-y-4">
             <div>
@@ -314,7 +376,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
 
     return (
       <div className="mx-auto max-w-2xl space-y-4 rise-in">
-        <Card className="result-pop border-primary/30">
+        <Card className="result-pop border-primary/30 no-print">
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
             <div className="relative h-36 w-36">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
@@ -352,10 +414,14 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 <Trophy size={13} /> {correctCount.toLocaleString("fa-IR")} صحیح
               </span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 no-print">
               <Button onClick={reset} className="gap-2">
                 <RotateCcw size={16} />
                 آزمون جدید
+              </Button>
+              <Button onClick={() => window.print()} variant="outline" className="gap-2">
+                <Printer size={16} />
+                چاپ کارنامه
               </Button>
             </div>
           </CardContent>
@@ -363,7 +429,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
 
         {/* مرور خطاها */}
         {correctCount < questions.length && (
-          <Card>
+          <Card className="no-print">
             <CardContent className="p-5">
               <h3 className="mb-3 flex items-center gap-2 text-sm font-black">
                 <BookMarked size={16} className="text-amber-500" />
@@ -391,6 +457,57 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             </CardContent>
           </Card>
         )}
+        {/* کارنامه قابل چاپ — فقط در حالت چاپ دیده می‌شود */}
+        <div className="print-area hidden">
+          <div className="print-card rounded-xl bg-white p-6 text-right">
+            <div className="mb-4 flex items-center justify-between border-b pb-3">
+              <p dir="ltr" className="font-en text-sm font-black">Vision One — Report Card</p>
+              <p className="text-[12px] print-muted">
+                {new Date().toLocaleDateString("fa-IR")} — {new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })}
+              </p>
+            </div>
+            <div className="mb-4 grid grid-cols-4 gap-3 text-center">
+              <div className="print-card rounded-lg border p-3">
+                <p className="text-lg font-black">{scorePct.toLocaleString("fa-IR")}٪</p>
+                <p className="text-[10px] print-muted">دقت</p>
+              </div>
+              <div className="print-card rounded-lg border p-3">
+                <p className="text-lg font-black">{correctCount.toLocaleString("fa-IR")}</p>
+                <p className="text-[10px] print-muted">صحیح</p>
+              </div>
+              <div className="print-card rounded-lg border p-3">
+                <p className="text-lg font-black">{(questions.length - correctCount).toLocaleString("fa-IR")}</p>
+                <p className="text-[10px] print-muted">نادرست</p>
+              </div>
+              <div className="print-card rounded-lg border p-3">
+                <p className="text-lg font-black">{fmtTime(elapsed)}</p>
+                <p className="text-[10px] print-muted">زمان</p>
+              </div>
+            </div>
+            {userName && (
+              <p className="mb-2 text-[12px] print-muted">دانش‌آموز: {userName}</p>
+            )}
+            <p className="mb-1 text-[13px] font-black">پاسخ‌های نادرست برای مرور:</p>
+            <ol className="list-decimal space-y-2 pr-5">
+              {questions.map((q, i) =>
+                answers[i] === q.answer ? null : (
+                  <li key={q.id} className="text-[11.5px] leading-6">
+                    <span dir="ltr" className="font-en block font-semibold">{q.text}</span>
+                    <span className="print-muted">
+                      پاسخ درست: <b dir="ltr" className="font-en">{q.options[q.answer]}</b>
+                      {answers[i] !== null && (
+                        <> — پاسخ شما: <span dir="ltr" className="font-en">{q.options[answers[i] as number]}</span></>
+                      )}
+                    </span>
+                  </li>
+                ),
+              )}
+            </ol>
+            <p className="mt-4 text-center text-[10px] print-muted">
+              جزوه جامع زبان انگلیسی پایه دهم — ویژن وان | vision-one.web
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -416,6 +533,12 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       <Card>
         <CardContent className="space-y-5 p-5">
           <div className="flex flex-wrap items-center gap-2">
+            {mode === "review" && (
+              <Badge className="border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
+                <NotebookPen size={11} />
+                دور مرور
+              </Badge>
+            )}
             <Badge variant="outline" className="text-[11px]">
               {current.scope}
             </Badge>

@@ -65,6 +65,7 @@ const CATEGORY_FA: Record<string, string> = {
   grammar: "گرامر",
   vocabulary: "واژگان",
   all: "ترکیبی",
+  review: "مرور اشتباهات",
 };
 
 const ACHIEVEMENTS: {

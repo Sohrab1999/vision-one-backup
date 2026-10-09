@@ -24,18 +24,34 @@ export async function GET(req: NextRequest) {
       Math.max(parseInt(searchParams.get("count") ?? "10", 10) || 10, 1),
       100,
     );
+    const idsParam = searchParams.get("ids");
+    const ids = idsParam
+      ? idsParam
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => /^[a-z0-9]{10,40}$/i.test(s))
+          .slice(0, 100)
+      : [];
 
     const where: { category?: string; lesson?: number } = {};
     if (category !== "all") where.category = category;
     if (lesson !== "all") where.lesson = Number(lesson);
 
-    const pool = await db.question.findMany({ where });
+    const pool = ids.length
+      ? await db.question.findMany({ where: { id: { in: ids } } })
+      : await db.question.findMany({ where });
     if (pool.length === 0) {
       return NextResponse.json({ questions: [], pool: 0 });
     }
 
     const shuffled = [...pool].sort(() => Math.random() - 0.5);
     const picked = shuffled.slice(0, Math.min(count, pool.length));
+    if (ids.length && picked.length < pool.length) {
+      // keep review order stable-ish: show missed questions first by original ids order
+      picked.sort(
+        (a, b) => ids.indexOf(a.id) - ids.indexOf(b.id),
+      );
+    }
 
     const questions: QuizQuestionDto[] = picked.map((q) => {
       let options: string[] = [];

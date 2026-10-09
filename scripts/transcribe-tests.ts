@@ -2,7 +2,7 @@ import ZAI from "z-ai-web-dev-sdk";
 import fs from "fs";
 
 const DIR = "/tmp/pages";
-const PAGES = [184, 185, 186, 187, 188];
+const PAGES = [189, 190, 191, 192, 193, 194];
 
 const mcqPrompt = `This page contains numbered multiple-choice English vocabulary test questions from a bilingual (English-Persian) textbook. Each question has a stem (English sentence, sometimes with A:/B: dialogue lines) and exactly 4 options labeled a., b., c., d. (sometimes shown as boxes).
 

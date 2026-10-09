@@ -20,6 +20,7 @@ import {
   Flame,
   Layers,
   TrendingUp,
+  NotebookPen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -38,6 +39,7 @@ import { ALL_VOCAB } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useUserName } from "@/lib/name-store";
 import { useStreak } from "@/lib/streak-store";
+import { useMistakes } from "@/lib/mistakes-store";
 import type { ViewId } from "./app-header";
 import { SpeakButton } from "./speak-button";
 
@@ -85,6 +87,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const { count: learned } = useLearnedWords();
   const userName = useUserName();
   const streak = useStreak();
+  const { count: mistakeCount } = useMistakes();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
 
@@ -318,6 +321,31 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           </CardContent>
         </Card>
       </section>
+
+      {/* ── دفتر اشتباهات ─────────────────────────────── */}
+      {mistakeCount > 0 && (
+        <button
+          type="button"
+          onClick={() => onNavigate("quiz")}
+          className="rise-in group flex w-full flex-wrap items-center gap-3 rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4 text-right transition-all hover:border-amber-500/70 hover:shadow-lg hover:shadow-amber-500/10"
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 transition-transform group-hover:scale-105 dark:text-amber-400">
+            <NotebookPen size={20} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2 text-[13.5px] font-black">
+              دفتر اشتباهات تو
+              <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+                {mistakeCount.toLocaleString("fa-IR")} سؤال
+              </Badge>
+            </span>
+            <span className="mt-0.5 block truncate text-[11.5px] text-muted-foreground">
+              {mistakeCount.toLocaleString("fa-IR")} سؤال منتظر مروره — با حالت «مرور هوشمند» هر کدوم رو درست جواب بدی، از دفتر حذف می‌شه.
+            </span>
+          </span>
+          <ArrowLeft size={17} className="shrink-0 text-amber-600 transition-transform group-hover:-translate-x-1 dark:text-amber-400" />
+        </button>
+      )}
 
       {/* ── بخش‌های کتاب ─────────────────────────────── */}
       <section className="space-y-3">
