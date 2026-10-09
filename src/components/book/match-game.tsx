@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Handshake,
   Sparkles,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,6 +23,7 @@ import { VOCAB_LESSONS, vocabOfLesson, ALL_VOCAB, type VocabEntry } from "@/data
 import { recordSRS } from "@/lib/srs-store";
 import { touchStreak } from "@/lib/streak-store";
 import { recordStudySession } from "@/lib/goal-store";
+import { useStarredWords } from "@/lib/star-store";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { useVoiceSpeed } from "@/lib/voice-store";
 
@@ -77,6 +79,8 @@ export function MatchGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
   const [pairCount, setPairCount] = useState(6);
+  const [starredOnly, setStarredOnly] = useState(false);
+  const starred = useStarredWords();
 
   const [deck, setDeck] = useState<VocabEntry[]>([]);
   const [enCol, setEnCol] = useState<VocabEntry[]>([]);
@@ -93,6 +97,10 @@ export function MatchGame() {
   const basePool = useMemo(
     () => (lesson === ALL_LESSONS ? ALL_VOCAB : vocabOfLesson(lesson)),
     [lesson],
+  );
+  const activePool = useMemo(
+    () => (starredOnly ? basePool.filter((w) => starred.has(w.word)) : basePool),
+    [basePool, starredOnly, starred],
   );
 
   // Best record re-read on every render/phase change (primitive snapshot — safe).
@@ -119,9 +127,13 @@ export function MatchGame() {
   useEffect(() => () => stopSpeaking(), []);
 
   const start = useCallback(() => {
-    const chosen = pickPairs(basePool, pairCount);
+    const chosen = pickPairs(activePool, pairCount);
     if (chosen.length < 3) {
-      toast.error("واژه کافی برای این درس پیدا نشد");
+      toast.error(
+        starredOnly
+          ? "واژه ستاره‌داری کافی در این محدوده نیست — بیشتر ستاره بزن! ⭐"
+          : "واژه کافی برای این درس پیدا نشد",
+      );
       return;
     }
     setDeck(chosen);
@@ -135,7 +147,7 @@ export function MatchGame() {
     setIsRecord(false);
     busy.current = false;
     setPhase("playing");
-  }, [basePool, pairCount]);
+  }, [activePool, pairCount, starredOnly]);
 
   const finish = useCallback(
     (finalAttempts: number) => {
@@ -288,6 +300,57 @@ export function MatchGame() {
               ))}
             </div>
           </div>
+
+          {/* فقط واژه‌های ستاره‌دار */}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={starredOnly}
+            onClick={() => setStarredOnly((v) => !v)}
+            className={cn(
+              "flex w-full items-center gap-3 rounded-2xl border p-3.5 text-right transition-all",
+              starredOnly
+                ? "border-yellow-500/50 bg-yellow-500/10 shadow-sm"
+                : "border-border bg-card hover:bg-muted/60",
+            )}
+          >
+            <span
+              className={cn(
+                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                starredOnly
+                  ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400"
+                  : "bg-muted text-muted-foreground",
+              )}
+            >
+              <Star size={18} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-2 text-[13px] font-black">
+                فقط ستاره‌دارها
+                {starredOnly && (
+                  <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[10px] text-yellow-700 dark:text-yellow-300">
+                    فعال
+                  </Badge>
+                )}
+              </span>
+              <span className="mt-0.5 block text-[11px] text-muted-foreground">
+                بازی فقط با {starred.count.toLocaleString("fa-IR")} واژه ستاره‌دارِ تو ساخته می‌شود.
+              </span>
+            </span>
+            <span
+              className={cn(
+                "relative h-6 w-11 shrink-0 rounded-full transition-colors",
+                starredOnly ? "bg-yellow-500" : "bg-muted-foreground/25",
+              )}
+            >
+              <span
+                className={cn(
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all",
+                  starredOnly ? "right-0.5" : "right-[22px]",
+                )}
+              />
+            </span>
+          </button>
 
           {best !== null && (
             <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">

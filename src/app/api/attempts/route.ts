@@ -51,7 +51,11 @@ interface LeaderRow {
 
 export async function GET() {
   try {
-    const [recent, agg, last60, chart, detailRows] = await Promise.all([
+    // ── نبض چالش روزانه: آزمون‌های dailyِ امروز (مقایسهٔ اجتماعی) ──
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const [recent, agg, last60, chart, detailRows, dailyToday] = await Promise.all([
       db.attempt.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
       db.attempt.aggregate({
         _count: { _all: true },
@@ -67,6 +71,12 @@ export async function GET() {
         orderBy: { createdAt: "desc" },
         take: 150,
         select: { id: true, detail: true, createdAt: true },
+      }),
+      db.attempt.findMany({
+        where: { category: "daily", createdAt: { gte: startOfToday } },
+        select: { correct: true, total: true },
+        orderBy: { createdAt: "desc" },
+        take: 300,
       }),
     ]);
 
@@ -168,6 +178,27 @@ export async function GET() {
         });
     }
 
+    // ── نبض اجتماعی چالش امروز: میانگین و بهترین دقتِ پاسخ‌دهندگان امروز ──
+    const dailyPulse = {
+      players: dailyToday.length,
+      avg:
+        dailyToday.length > 0
+          ? Math.round(
+              dailyToday.reduce((s, a) => s + (a.total > 0 ? (a.correct / a.total) * 100 : 0), 0) /
+                dailyToday.length,
+            )
+          : null,
+      best:
+        dailyToday.length > 0
+          ? Math.round(
+              dailyToday.reduce(
+                (m, a) => Math.max(m, a.total > 0 ? (a.correct / a.total) * 100 : 0),
+                0,
+              ),
+            )
+          : null,
+    };
+
     return NextResponse.json({
       recent: recent.map((a) => ({
         id: a.id,
@@ -189,6 +220,7 @@ export async function GET() {
         .reverse(),
       leaderboard,
       topMisses,
+      dailyPulse,
       stats: {
         attempts: agg._count._all,
         sumTotal,

@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { SpeakButton } from "./speak-button";
+import { ClickableEnText } from "./word-lookup";
 import { READING_LIST, CONVERSATION_LIST } from "@/data/book-meta";
 import type { Reading, Conversation } from "@/data/types";
 
@@ -96,9 +97,10 @@ export function ReadingCard({
             <div key={i} className="rounded-xl border bg-muted/30 p-4 space-y-2">
               <div className="flex items-start gap-2.5">
                 <SpeakButton text={p.en} />
-                <p dir="ltr" className="font-en flex-1 text-[13.5px] leading-7 text-foreground">
-                  {p.en}
-                </p>
+                <ClickableEnText
+                  text={p.en}
+                  className="font-en flex-1 text-[13.5px] leading-7 text-foreground"
+                />
               </div>
               {showFa && (
                 <p className="border-t pt-2 text-[13px] leading-7 text-muted-foreground">
@@ -107,6 +109,9 @@ export function ReadingCard({
               )}
             </div>
           ))}
+          <p className="flex items-center justify-center gap-1.5 text-[10.5px] text-muted-foreground">
+            💡 روی هر واژهٔ انگلیسی کلیک کن تا معنی و دیکشنری‌اش را ببینی
+          </p>
         </div>
       </CardContent>
     </Card>
@@ -201,9 +206,10 @@ function ConversationCard({ conversation }: { conversation: Conversation }) {
                     </p>
                     <SpeakButton text={line.en} />
                   </div>
-                  <p dir="ltr" className="font-en mt-1 text-[13.5px] font-semibold leading-6">
-                    {line.en}
-                  </p>
+                  <ClickableEnText
+                    text={line.en}
+                    className="font-en mt-1 block text-[13.5px] font-semibold leading-6"
+                  />
                   <p className="mt-1 text-[12px] leading-6 text-muted-foreground">{line.fa}</p>
                 </div>
               </div>

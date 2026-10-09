@@ -14,6 +14,7 @@ import {
   Flame,
   Target,
   Puzzle,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { VOCAB_LESSONS, vocabOfLesson, ALL_VOCAB, type VocabEntry } from "@/data/vocab";
 import { useLearnedWords } from "@/lib/learned-store";
+import { useStarredWords } from "@/lib/star-store";
 import { recordSRS, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
 import { touchStreak } from "@/lib/streak-store";
 import { SpeakButton } from "./speak-button";
@@ -119,8 +121,10 @@ function FlashcardGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(1);
   const [weakOnly, setWeakOnly] = useState(false);
+  const [starredOnly, setStarredOnly] = useState(false);
   const { learned, toggle } = useLearnedWords();
   const srs = useSRSData();
+  const starred = useStarredWords();
 
   const [deck, setDeck] = useState<VocabEntry[]>([]);
   const [index, setIndex] = useState(0);
@@ -132,17 +136,21 @@ function FlashcardGame() {
     () => (lesson === ALL_LESSONS ? ALL_VOCAB : vocabOfLesson(lesson)),
     [lesson],
   );
-  const pool = useMemo(
-    () => (weakOnly ? basePool.filter((w) => isWeak(w.word, srs)) : basePool),
-    [basePool, weakOnly, srs],
-  );
+  const pool = useMemo(() => {
+    let p = basePool;
+    if (weakOnly) p = p.filter((w) => isWeak(w.word, srs));
+    if (starredOnly) p = p.filter((w) => starred.has(w.word));
+    return p;
+  }, [basePool, weakOnly, starredOnly, srs, starred]);
 
   const start = useCallback(() => {
     if (pool.length === 0) {
       toast.error(
-        weakOnly
-          ? "واژه ضعیفی در این محدوده نیست — همه را بلدی! 🎉"
-          : "واژه‌ای برای این درس یافت نشد",
+        starredOnly
+          ? "در این محدوده واژه ستاره‌داری نیست — از نمای واژگان ستاره بزن! ⭐"
+          : weakOnly
+            ? "واژه ضعیفی در این محدوده نیست — همه را بلدی! 🎉"
+            : "واژه‌ای برای این درس یافت نشد",
       );
       return;
     }
@@ -152,7 +160,7 @@ function FlashcardGame() {
     setKnownCount(0);
     setReviewCount(0);
     setPhase("playing");
-  }, [pool, learned, srs, weakOnly]);
+  }, [pool, learned, srs, weakOnly, starredOnly]);
 
   const current = deck[index];
 
@@ -302,6 +310,57 @@ function FlashcardGame() {
             </span>
           </button>
 
+          {/* حالت تمرین فقط واژه‌های ستاره‌دار */}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={starredOnly}
+            onClick={() => setStarredOnly((v) => !v)}
+            className={cn(
+              "flex w-full items-center gap-3 rounded-2xl border p-3.5 text-right transition-all",
+              starredOnly
+                ? "border-yellow-500/50 bg-yellow-500/10 shadow-sm"
+                : "border-border bg-card hover:bg-muted/60",
+            )}
+          >
+            <span
+              className={cn(
+                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                starredOnly
+                  ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400"
+                  : "bg-muted text-muted-foreground",
+              )}
+            >
+              <Star size={18} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-2 text-[13px] font-black">
+                فقط ستاره‌دارها
+                {starredOnly && (
+                  <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[10px] text-yellow-700 dark:text-yellow-300">
+                    فعال
+                  </Badge>
+                )}
+              </span>
+              <span className="mt-0.5 block text-[11px] text-muted-foreground">
+                فقط واژه‌هایی که در نمای واژگان ستاره زدی ({starred.count.toLocaleString("fa-IR")} واژه) تمرین می‌شوند.
+              </span>
+            </span>
+            <span
+              className={cn(
+                "relative h-6 w-11 shrink-0 rounded-full transition-colors",
+                starredOnly ? "bg-yellow-500" : "bg-muted-foreground/25",
+              )}
+            >
+              <span
+                className={cn(
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all",
+                  starredOnly ? "right-0.5" : "right-[22px]",
+                )}
+              />
+            </span>
+          </button>
+
           <div className="grid grid-cols-3 gap-2 text-center text-[12px]">
             <div className="rounded-xl bg-primary/8 border border-primary/20 p-3">
               <p className="text-lg font-black text-primary">{unlearned.toLocaleString("fa-IR")}</p>
@@ -313,7 +372,15 @@ function FlashcardGame() {
             </div>
             <div className="rounded-xl bg-muted/60 p-3">
               <p className="text-lg font-black">{pool.length.toLocaleString("fa-IR")}</p>
-              <p className="text-[11px] text-muted-foreground">{weakOnly ? "موجود در دور ضعیف" : "کل واژگان محدوده"}</p>
+              <p className="text-[11px] text-muted-foreground">
+                {weakOnly && starredOnly
+                  ? "ضعیف + ستاره‌دار"
+                  : weakOnly
+                    ? "موجود در دور ضعیف"
+                    : starredOnly
+                      ? "ستاره‌دار محدوده"
+                      : "کل واژگان محدوده"}
+              </p>
             </div>
           </div>
 
@@ -412,6 +479,11 @@ function FlashcardGame() {
               <Badge variant="secondary" className="text-[11px]">
                 {current.lesson === 0 ? `پایه ${current.grade}` : `درس ${current.lesson.toLocaleString("fa-IR")}`}
               </Badge>
+              {starred.has(current.word) && (
+                <span title="واژه ستاره‌دار" className="star-pop flex items-center">
+                  <Star size={13} className="fill-yellow-500 text-yellow-500" />
+                </span>
+              )}
               {/* نشانگر سطح SRS */}
               <span
                 className="flex items-center gap-1"

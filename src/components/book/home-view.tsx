@@ -45,6 +45,7 @@ import { useStreak } from "@/lib/streak-store";
 import { useMistakes } from "@/lib/mistakes-store";
 import { useDailyGoal } from "@/lib/goal-store";
 import { useDailyInfo } from "@/lib/daily-store";
+import { useDailyPulse } from "@/lib/use-daily-pulse";
 import type { ViewId } from "./app-header";
 import { SpeakButton } from "./speak-button";
 
@@ -95,6 +96,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const { count: mistakeCount } = useMistakes();
   const daily = useDailyGoal();
   const dailyInfo = useDailyInfo();
+  const pulse = useDailyPulse();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
 
@@ -317,6 +319,16 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
               ? `رکورد امروز ${dailyInfo.bestToday?.toLocaleString("fa-IR")}٪ — دوباره امتحان کن و بهترش کن! (مجموع ${dailyInfo.totalDone.toLocaleString("fa-IR")} چالش)`
               : "هر روز ۵ سؤال جدید؛ سؤال‌های امروز برای همه یکسانه — آزمونش بده و جایگاهت در کلاس رو بساز."}
           </span>
+          {pulse && pulse.players > 0 && (
+            <span className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
+              <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+              امروز {pulse.players.toLocaleString("fa-IR")} نفر چالش دادند
+              {pulse.avg !== null && <> — میانگین دقت {pulse.avg.toLocaleString("fa-IR")}٪</>}
+              {pulse.best !== null && pulse.best > 0 && (
+                <span className="text-muted-foreground">· بهترین {pulse.best.toLocaleString("fa-IR")}٪</span>
+              )}
+            </span>
+          )}
         </span>
         <span className="flex shrink-0 items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2 text-[12.5px] font-black text-white shadow-md shadow-amber-500/25 transition-transform group-hover:scale-105">
           {dailyInfo.doneToday ? "دوباره" : "شروع چالش"}

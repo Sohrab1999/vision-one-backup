@@ -438,3 +438,32 @@
     margin: 12mm;
   }
 }
+
+
+/* ─── جست‌وجوی واژه در متن‌ها (کلیک روی واژه) ─── */
+.lookup-word {
+  text-decoration: underline transparent;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  text-decoration-style: dotted;
+  transition: color 0.15s ease, background-color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.lookup-word:hover,
+.lookup-word:focus-visible {
+  text-decoration-color: currentColor;
+  outline: none;
+}
+@keyframes lookup-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.lookup-pop {
+  animation: lookup-in 0.18s cubic-bezier(0.22, 1.2, 0.36, 1);
+  transform-origin: top center;
+}

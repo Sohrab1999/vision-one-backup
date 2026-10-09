@@ -36,6 +36,7 @@ import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store
 import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
 import { recordStudySession } from "@/lib/goal-store";
 import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
+import { useDailyPulse } from "@/lib/use-daily-pulse";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -167,6 +168,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [timed, setTimed] = useState(0);
   const [, setQTick] = useState(0);
   const [exporting, setExporting] = useState(false);
+  const pulse = useDailyPulse(phase === "setup");
   const userName = useUserName();
   const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
   const { ids: practiceIds } = usePracticeIds();
@@ -554,6 +556,18 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                     ? `امروز انجامش دادی — می‌تونی دوباره امتحان کنی و رکوردت رو بهتر کنی (${daily.totalDone.toLocaleString("fa-IR")} چالش کامل‌شده)`
                     : "۵ سؤال امروز برای همه یکسان است — با یک بار انجام، زنجیره‌ات هم شارژ می‌شود."}
                 </p>
+                {pulse && pulse.players > 0 && (
+                  <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
+                    <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                    امروز {pulse.players.toLocaleString("fa-IR")} نفر چالش دادند
+                    {pulse.avg !== null && (
+                      <> — میانگین دقت {pulse.avg.toLocaleString("fa-IR")}٪</>
+                    )}
+                    {pulse.best !== null && pulse.best > 0 && (
+                      <span className="text-muted-foreground">· بهترین {pulse.best.toLocaleString("fa-IR")}٪</span>
+                    )}
+                  </p>
+                )}
               </div>
               <Button
                 size="sm"
