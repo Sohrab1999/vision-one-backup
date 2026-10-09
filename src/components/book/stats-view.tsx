@@ -41,6 +41,7 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { useStreak } from "@/lib/streak-store";
 import { useUserName } from "@/lib/name-store";
 import { useDailyGoal } from "@/lib/goal-store";
+import { useDailyInfo } from "@/lib/daily-store";
 import { setPracticeIds } from "@/lib/practice-store";
 import { ActivityHeatmap } from "./activity-heatmap";
 import { toast } from "sonner";
@@ -95,6 +96,7 @@ const CATEGORY_FA: Record<string, string> = {
   vocabulary: "واژگان",
   all: "ترکیبی",
   review: "مرور اشتباهات",
+  daily: "چالش روزانه",
 };
 
 const ACHIEVEMENTS: {
@@ -217,6 +219,14 @@ const ACHIEVEMENTS: {
     check: (c) => c.goalHit,
     progress: (c) => [c.goalHit ? 1 : 0, 1],
   },
+  {
+    id: "daily-challenge-3",
+    icon: "🎯",
+    title: "چالش‌باز",
+    desc: "۳ چالش روزانه را کامل کن",
+    check: (c) => c.dailyDone >= 3,
+    progress: (c) => [Math.min(c.dailyDone, 3), 3],
+  },
 ];
 
 interface AchContext {
@@ -226,6 +236,7 @@ interface AchContext {
   learned: number;
   streakBest: number;
   goalHit: boolean;
+  dailyDone: number;
 }
 
 function fmtDuration(sec: number): string {
@@ -250,6 +261,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
   const streak = useStreak();
   const userName = useUserName();
   const daily = useDailyGoal();
+  const dailyInfo = useDailyInfo();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
   const [recent, setRecent] = useState<RecentAttempt[]>([]);
@@ -287,8 +299,9 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
       learned,
       streakBest: streak.best,
       goalHit: daily.goal > 0 && daily.todayCount >= daily.goal,
+      dailyDone: dailyInfo.totalDone,
     }),
-    [stats, learned, streak.best, daily.goal, daily.todayCount],
+    [stats, learned, streak.best, daily.goal, daily.todayCount, dailyInfo.totalDone],
   );
 
   const unlocked = useMemo(

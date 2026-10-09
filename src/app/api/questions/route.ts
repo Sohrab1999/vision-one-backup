@@ -15,16 +15,73 @@ export interface QuizQuestionDto {
   explanation: string | null;
 }
 
+/** PRNG قطعی (mulberry32) برای انتخاب چالش روزانه — همه کاربران یک روز، همان سؤال‌ها */
+function mulberry32(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+  const rand = mulberry32(seed);
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/** امروز به وقت سرور به شکل YYYY-MM-DD برای seed چالش روزانه */
+function todayKey(): string {
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+const LEVEL_KEYS = ["آموزشی", "متوسط", "کنکوری"] as const;
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category") ?? "all";
     const lesson = searchParams.get("lesson") ?? "all";
+    const level = searchParams.get("level") ?? "all";
     const count = Math.min(
       Math.max(parseInt(searchParams.get("count") ?? "10", 10) || 10, 1),
       100,
     );
     const idsParam = searchParams.get("ids");
+    const daily = searchParams.get("daily") === "1";
+    const meta = searchParams.get("meta") === "1";
+
+    // ── متادیتای بانک سؤال (شمارنده‌ها برای تنظیمات آزمون)
+    if (meta) {
+      const [byLevel, byCategory, total] = await Promise.all([
+        db.question.groupBy({ by: ["level"], _count: true }),
+        db.question.groupBy({ by: ["category"], _count: true }),
+        db.question.count(),
+      ]);
+      return NextResponse.json({
+        total,
+        byLevel: Object.fromEntries(byLevel.map((l) => [l.level, l._count])),
+        byCategory: Object.fromEntries(byCategory.map((c) => [c.category, c._count])),
+      });
+    }
+
+    const where: { category?: string; lesson?: number; level?: string } = {};
+    if (category !== "all") where.category = category;
+    if (lesson !== "all") where.lesson = Number(lesson);
+    if (!daily && level !== "all" && (LEVEL_KEYS as readonly string[]).includes(level)) {
+      where.level = level;
+    }
+
     const ids = idsParam
       ? idsParam
           .split(",")
@@ -33,10 +90,6 @@ export async function GET(req: NextRequest) {
           .slice(0, 100)
       : [];
 
-    const where: { category?: string; lesson?: number } = {};
-    if (category !== "all") where.category = category;
-    if (lesson !== "all") where.lesson = Number(lesson);
-
     const pool = ids.length
       ? await db.question.findMany({ where: { id: { in: ids } } })
       : await db.question.findMany({ where });
@@ -44,8 +97,15 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ questions: [], pool: 0 });
     }
 
-    const shuffled = [...pool].sort(() => Math.random() - 0.5);
-    const picked = shuffled.slice(0, Math.min(count, pool.length));
+    let picked;
+    if (daily) {
+      // چالش روزانه: ۵ سؤال قطعی بر اساس تاریخ — ترکیبی از گرامر و واژگان
+      const seed = Number(todayKey().replace(/-/g, "")) % 2147483647;
+      picked = seededShuffle(pool, seed).slice(0, Math.min(count, pool.length));
+    } else {
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      picked = shuffled.slice(0, Math.min(count, pool.length));
+    }
     if (ids.length && picked.length < pool.length) {
       // keep review order stable-ish: show missed questions first by original ids order
       picked.sort(
@@ -73,7 +133,7 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    return NextResponse.json({ questions, pool: pool.length });
+    return NextResponse.json({ questions, pool: pool.length, daily: daily ? todayKey() : undefined });
   } catch (e) {
     console.error("GET /api/questions error:", e);
     return NextResponse.json(

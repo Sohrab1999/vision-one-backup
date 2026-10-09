@@ -22,6 +22,7 @@ import {
   TrendingUp,
   NotebookPen,
   CheckCircle2,
+  CalendarCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,6 +44,7 @@ import { useUserName } from "@/lib/name-store";
 import { useStreak } from "@/lib/streak-store";
 import { useMistakes } from "@/lib/mistakes-store";
 import { useDailyGoal } from "@/lib/goal-store";
+import { useDailyInfo } from "@/lib/daily-store";
 import type { ViewId } from "./app-header";
 import { SpeakButton } from "./speak-button";
 
@@ -70,8 +72,8 @@ const FEATURE_CARDS: {
   { view: "vocab", title: "واژگان تعاملی", desc: "جستجو، کارت فلپ و علامت‌گذاری واژه‌های یادگرفته", icon: BookOpen, stat: `${BOOK_STATS.words} واژه` },
   { view: "flashcards", title: "تمرین واژه‌ها", desc: "فلاش‌کارت SRS و بازی تطبیق واژه و معنی", icon: Layers, stat: "SRS" },
   { view: "grammar", title: "درسنامه گرامر", desc: "۱۱ درسنامه با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: "۱۱ درسنامه" },
-  { view: "quiz", title: "آزمون تعاملی", desc: "بانک سؤال واقعی جزوه با توضیح هوشمند", icon: ClipboardList, stat: `${BOOK_STATS.questions} تست` },
-  { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۴ نشان افتخار", icon: TrendingUp, stat: "۱۴ نشان" },
+  { view: "quiz", title: "آزمون تعاملی", desc: `بانک سؤال واقعی جزوه با فیلتر سطح، چالش روزانه و توضیح هوشمند`, icon: ClipboardList, stat: `${BOOK_STATS.questions} تست` },
+  { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۵ نشان افتخار", icon: TrendingUp, stat: "۱۵ نشان" },
   { view: "texts", title: "متن و مکالمه", desc: "ریدینگ‌ها و مکالمه‌ها با روایت صوتی", icon: FileText, stat: `${BOOK_STATS.readings + BOOK_STATS.conversations} متن` },
   { view: "dict", title: "دیکشنری", desc: "تعریف انگلیسی به انگلیسی با تلفظ و مثال", icon: Library, stat: `${BOOK_STATS.dictionary} مدخل` },
   { view: "verbs", title: "افعال بی‌قاعده", desc: "جدول کامل افعال با جستجو", icon: Repeat, stat: `${BOOK_STATS.verbs} فعل` },
@@ -92,6 +94,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const streak = useStreak();
   const { count: mistakeCount } = useMistakes();
   const daily = useDailyGoal();
+  const dailyInfo = useDailyInfo();
   const [stats, setStats] = useState<AttemptStats | null>(null);
   const [chart, setChart] = useState<ChartPoint[]>([]);
 
@@ -284,6 +287,42 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           </CardContent>
         </Card>
       </section>
+
+      {/* ── چالش روزانه ─────────────────────────────── */}
+      <button
+        type="button"
+        onClick={() => onNavigate("quiz")}
+        className="rise-in group flex w-full flex-wrap items-center gap-4 rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4 text-right transition-all hover:border-amber-500/70 hover:shadow-lg hover:shadow-amber-500/10"
+      >
+        <span className="daily-pulse flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 transition-transform group-hover:scale-105 dark:text-amber-400">
+          <CalendarCheck size={22} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-center gap-2 text-[14px] font-black">
+            چالش روزانه
+            <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+              ۵ سؤال · امروز
+            </Badge>
+            {dailyInfo.doneToday ? (
+              <Badge className="gap-1 bg-primary text-[10px] text-primary-foreground">
+                <CheckCircle2 size={10} />
+                انجام شد — {dailyInfo.bestToday?.toLocaleString("fa-IR")}٪
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="text-[10px]">منتظر توئه</Badge>
+            )}
+          </span>
+          <span className="mt-1 block text-[11.5px] leading-5 text-muted-foreground">
+            {dailyInfo.doneToday
+              ? `رکورد امروز ${dailyInfo.bestToday?.toLocaleString("fa-IR")}٪ — دوباره امتحان کن و بهترش کن! (مجموع ${dailyInfo.totalDone.toLocaleString("fa-IR")} چالش)`
+              : "هر روز ۵ سؤال جدید؛ سؤال‌های امروز برای همه یکسانه — آزمونش بده و جایگاهت در کلاس رو بساز."}
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2 text-[12.5px] font-black text-white shadow-md shadow-amber-500/25 transition-transform group-hover:scale-105">
+          {dailyInfo.doneToday ? "دوباره" : "شروع چالش"}
+          <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
+        </span>
+      </button>
 
       {/* ── نوار آمار ─────────────────────────────── */}
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">

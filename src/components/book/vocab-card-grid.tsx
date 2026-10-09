@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, CheckCircle2, LayoutGrid, Rows3 } from "lucide-react";
+import { Search, CheckCircle2, LayoutGrid, Rows3, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -17,9 +17,35 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useLearnedWords } from "@/lib/learned-store";
+import { useStarredWords } from "@/lib/star-store";
 import { SpeakButton } from "./speak-button";
 import type { VocabEntry } from "@/data/vocab";
 
+/** دکمه نشان‌گذاری (ستاره) — کلیکش نباید کارت را فلیپ کند */
+function StarToggle({ active, onClick }: { active: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        onClick();
+      }}
+      onKeyDown={(e) => e.stopPropagation()}
+      aria-label={active ? "حذف نشان" : "نشان‌گذاری واژه"}
+      aria-pressed={active}
+      title={active ? "حذف نشان" : "نشان‌گذاری برای مرور بعدی"}
+      className={cn(
+        "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border transition-all active:scale-90",
+        active
+          ? "border-amber-500/50 bg-amber-500/15 text-amber-500"
+          : "border-transparent bg-muted/50 text-muted-foreground/50 hover:border-amber-500/30 hover:text-amber-500",
+      )}
+    >
+      <Star size={13} className={cn(active && "fill-amber-500 star-pop")} />
+    </button>
+  );
+}
 export function VocabCardGrid({
   words,
   showLessonBadge = false,
@@ -29,18 +55,22 @@ export function VocabCardGrid({
 }) {
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState<"cards" | "table">("cards");
+  const [starredOnly, setStarredOnly] = useState(false);
   const { learned, toggle } = useLearnedWords();
+  const { has: hasStar, toggle: toggleStar, count: starCount } = useStarredWords();
 
   const filtered = useMemo(() => {
+    let list = words;
+    if (starredOnly) list = list.filter((w) => hasStar(w.word));
     const q = query.trim().toLowerCase();
-    if (!q) return words;
-    return words.filter(
+    if (!q) return list;
+    return list.filter(
       (w) =>
         w.word.toLowerCase().includes(q) ||
         w.meaning.includes(query.trim()) ||
         (w.pos ?? "").toLowerCase().includes(q),
     );
-  }, [words, query]);
+  }, [words, query, starredOnly, hasStar]);
 
   const learnedInList = filtered.filter((w) => learned.has(w.word)).length;
 
@@ -66,6 +96,21 @@ export function VocabCardGrid({
             <CheckCircle2 size={11} />
             {learnedInList.toLocaleString("fa-IR")} یادگرفته
           </Badge>
+          <button
+            type="button"
+            onClick={() => setStarredOnly((v) => !v)}
+            aria-pressed={starredOnly}
+            className={cn(
+              "flex h-7 shrink-0 items-center gap-1 rounded-full border px-2.5 text-[11px] font-black transition-all",
+              starredOnly
+                ? "border-amber-500/60 bg-amber-500/15 text-amber-600 shadow-sm dark:text-amber-400"
+                : "text-muted-foreground hover:bg-muted",
+            )}
+            title="فقط واژه‌های نشان‌شده"
+          >
+            <Star size={11} className={cn(starredOnly && "fill-amber-500 text-amber-500")} />
+            {starCount.toLocaleString("fa-IR")}
+          </button>
           <div className="flex rounded-lg border bg-card p-0.5 shrink-0">
             <Button
               size="icon"
@@ -99,7 +144,7 @@ export function VocabCardGrid({
                   <TableHead className="text-left">واژه</TableHead>
                   <TableHead>معنی</TableHead>
                   {showLessonBadge && <TableHead className="w-24">بخش</TableHead>}
-                  <TableHead className="w-12">صدا</TableHead>
+                  <TableHead className="w-20">نشان</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -118,7 +163,10 @@ export function VocabCardGrid({
                       </TableCell>
                     )}
                     <TableCell>
-                      <SpeakButton text={w.word} />
+                      <div className="flex items-center gap-1">
+                        <StarToggle active={hasStar(w.word)} onClick={() => toggleStar(w.word)} />
+                        <SpeakButton text={w.word} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -146,7 +194,10 @@ export function VocabCardGrid({
                       <Badge variant="secondary" className="text-[10px] shrink-0">
                         {showLessonBadge ? w.lessonLabel : `درس ${w.lesson > 0 ? w.lesson.toLocaleString("fa-IR") : "۷-۹"}`}
                       </Badge>
-                      <SpeakButton text={w.word} />
+                      <span className="flex items-center gap-1">
+                        <StarToggle active={hasStar(w.word)} onClick={() => toggleStar(w.word)} />
+                        <SpeakButton text={w.word} />
+                      </span>
                     </div>
                     <p dir="ltr" className="font-en text-lg font-black text-foreground leading-tight line-clamp-2">
                       {w.word}
@@ -159,7 +210,10 @@ export function VocabCardGrid({
                         <CheckCircle2 size={11} />
                         یاد گرفتم
                       </span>
-                      <SpeakButton text={w.word} />
+                      <span className="flex items-center gap-1">
+                        <StarToggle active={hasStar(w.word)} onClick={() => toggleStar(w.word)} />
+                        <SpeakButton text={w.word} />
+                      </span>
                     </div>
                     <p className="text-[15px] font-bold leading-6 text-right">{w.meaning}</p>
                   </div>
@@ -173,6 +227,11 @@ export function VocabCardGrid({
       {mode === "cards" && filtered.length > 240 && (
         <p className="text-center text-xs text-muted-foreground">
           ۲۴۰ واژه اول نمایش داده شده — برای واژه‌های دیگر جستجو کنید.
+        </p>
+      )}
+      {starredOnly && filtered.length === 0 && (
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-6 text-center text-xs leading-6 text-muted-foreground">
+          هنوز واژه‌ای نشان نزدی‌ای — روی ☆ هر کارت بزن تا برای مرور بعدی نشان شود.
         </p>
       )}
     </div>

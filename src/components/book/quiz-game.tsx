@@ -19,6 +19,8 @@ import {
   Trash2,
   Download,
   Hourglass,
+  CalendarCheck,
+  Gauge,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +35,7 @@ import { touchStreak } from "@/lib/streak-store";
 import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
 import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
 import { recordStudySession } from "@/lib/goal-store";
+import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -48,13 +51,28 @@ interface Question {
 }
 
 type Phase = "setup" | "playing" | "result";
-type Mode = "normal" | "review";
+type Mode = "normal" | "review" | "daily";
 
 const CATEGORY_OPTIONS = [
   { value: "all", label: "همه سؤال‌ها" },
   { value: "grammar", label: "فقط گرامر" },
   { value: "vocabulary", label: "فقط واژگان" },
 ];
+
+const LEVEL_OPTIONS = [
+  { value: "all", label: "همه سطوح" },
+  { value: "آموزشی", label: "آموزشی" },
+  { value: "متوسط", label: "متوسط" },
+  { value: "کنکوری", label: "کنکوری" },
+];
+
+/** رنگ نشان سطح روی کارت سؤال و چیپ فعال سطح */
+function levelBadgeClass(level: string): string {
+  if (level === "all") return "border-primary bg-primary/10 text-primary";
+  if (level === "آموزشی") return "border-primary/40 bg-primary/10 text-primary";
+  if (level === "کنکوری") return "border-destructive/40 bg-destructive/10 text-destructive";
+  return "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400";
+}
 
 const LESSON_OPTIONS = [
   { value: "all", label: "همه بخش‌ها" },
@@ -122,12 +140,20 @@ function fmtTime(s: number) {
   return `${m.toLocaleString("fa-IR")}:${sec.toString().padStart(2, "0")}`;
 }
 
+interface PoolMeta {
+  total: number;
+  byLevel: Record<string, number>;
+  byCategory: Record<string, number>;
+}
+
 export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [phase, setPhase] = useState<Phase>("setup");
   const [mode, setMode] = useState<Mode>("normal");
   const [category, setCategory] = useState("all");
   const [lesson, setLesson] = useState(lessonFilter !== undefined ? String(lessonFilter) : "all");
   const [count, setCount] = useState(10);
+  const [level, setLevel] = useState("all");
+  const [poolMeta, setPoolMeta] = useState<PoolMeta | null>(null);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
@@ -144,6 +170,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const userName = useUserName();
   const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
   const { ids: practiceIds } = usePracticeIds();
+  const daily = useDailyInfo();
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const deadlineRef = useRef(0);
   const answeredLeftRef = useRef(0);
@@ -182,6 +209,21 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     if (lessonFilter !== undefined) setLesson(String(lessonFilter));
   }, [lessonFilter]);
 
+  // شمارنده‌های بانک سؤال برای چیپ‌های سطح — یک‌بار در ورود به تنظیمات
+  useEffect(() => {
+    if (poolMeta) return;
+    let cancelled = false;
+    fetch("/api/questions?meta=1")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!cancelled && d && typeof d.total === "number") setPoolMeta(d as PoolMeta);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [poolMeta]);
+
   useEffect(() => {
     if (phase === "playing") {
       timerRef.current = setInterval(() => setElapsed((s) => s + 1), 1000);
@@ -215,11 +257,16 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         lesson: lesson === "all" ? "all" : lesson,
         count: String(count),
       });
+      if (level !== "all") params.set("level", level);
       if (nextMode === "review") params.set("ids", mistakeIds.join(","));
       const res = await fetch(`/api/questions?${params.toString()}`);
       const data = await res.json();
       if (!res.ok || !data.questions?.length) {
-        toast.error("سؤالی یافت نشد — تنظیمات دیگری را امتحان کنید.");
+        toast.error(
+          level !== "all"
+            ? "با این تنظیمات سؤالی یافت نشد — سطح دیگری را امتحان کنید."
+            : "سؤالی یافت نشد — تنظیمات دیگری را امتحان کنید.",
+        );
         return;
       }
       setQuestions(data.questions as Question[]);
@@ -233,6 +280,34 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       setPhase("playing");
     } catch {
       toast.error("خطا در دریافت سؤالات");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /** شروع چالش روزانه — ۵ سؤال قطعی امروز، بدون زمان‌سنج */
+  async function startDaily() {
+    setLoading(true);
+    setMode("daily");
+    try {
+      const res = await fetch("/api/questions?daily=1&count=5");
+      const data = await res.json();
+      if (!res.ok || !data.questions?.length) {
+        toast.error("چالش امروز آماده نیست — بعداً دوباره امتحان کن.");
+        return;
+      }
+      setQuestions(data.questions as Question[]);
+      setAnswers(new Array(data.questions.length).fill(null));
+      setIndex(0);
+      setSelected(null);
+      setAiExplanation(null);
+      setElapsed(0);
+      deadlineRef.current = 0;
+      if (advanceRef.current) clearTimeout(advanceRef.current);
+      setPhase("playing");
+      toast.info("چالش روزانه شروع شد — ۵ سؤال امروز همه یکسان است! 🎯", { duration: 3200 });
+    } catch {
+      toast.error("خطا در دریافت چالش روزانه");
     } finally {
       setLoading(false);
     }
@@ -253,9 +328,9 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     advanceRef.current = setTimeout(() => nextQuestion(), 1900);
   }
 
-  // شمارش معکوس حالت زمان‌دار — دی‌دلاین هر سؤال با تغییر سؤال/فاز بازنشانی می‌شود
+  // شمارش معکوس حالت زمان‌دار — دی‌دلاین هر سؤال با تغییر سؤال/فاز بازنشانی می‌شود (در چالش روزانه غیرفعال)
   useEffect(() => {
-    if (phase !== "playing" || timed <= 0 || selected !== null) return;
+    if (phase !== "playing" || timed <= 0 || selected !== null || mode === "daily") return;
     if (deadlineRef.current === 0 || deadlineRef.current < Date.now() - timed * 1000) {
       deadlineRef.current = Date.now() + timed * 1000;
     }
@@ -322,8 +397,32 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setIndex((i) => i + 1);
     setSelected(answers[index + 1]);
     setAiExplanation(null);
-    deadlineRef.current = Date.now() + timed * 1000;
+    deadlineRef.current = mode === "daily" ? 0 : Date.now() + timed * 1000;
   }
+
+  // میان‌برهای کیبورد حین آزمون: ۱-۴ (فارسی/انگلیسی) انتخاب گزینه، Enter سؤال بعدی
+  useEffect(() => {
+    if (phase !== "playing") return;
+    function onKey(e: KeyboardEvent) {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+      if (e.key === "Enter" && selected !== null) {
+        e.preventDefault();
+        nextQuestion();
+        return;
+      }
+      if (selected !== null) return;
+      const fa = "۱۲۳۴".indexOf(e.key);
+      const en = "1234".indexOf(e.key);
+      const digit = fa >= 0 ? fa : en;
+      if (digit >= 0 && digit < (current?.options.length ?? 0)) {
+        e.preventDefault();
+        chooseOption(digit);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phase, selected, index, questions]);
 
   function finish() {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -331,12 +430,13 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setPhase("result");
     recordStudySession();
     const streak = touchStreak();
+    if (mode === "daily") recordDailyResult(todayKey(), scorePct, questions.length);
     const detail = questions.map((q, i) => ({ id: q.id, chosen: answers[i], answer: q.answer }));
     fetch("/api/attempts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        category: mode === "review" ? "review" : category,
+        category: mode === "review" ? "review" : mode === "daily" ? "daily" : category,
         lesson: lesson === "all" ? 0 : Number(lesson),
         total: questions.length,
         correct: correctCount,
@@ -347,9 +447,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     })
       .then(() =>
         toast.success(
-          mode === "review"
-            ? `دور مرور تمام شد! ${mistakeCount.toLocaleString("fa-IR")} سؤال دیگر در دفتر اشتباهات مانده`
-            : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
+          mode === "daily"
+            ? `چالش امروز ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ${scorePct >= 80 ? "🏆" : "💪"}`
+            : mode === "review"
+              ? `دور مرور تمام شد! ${mistakeCount.toLocaleString("fa-IR")} سؤال دیگر در دفتر اشتباهات مانده`
+              : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
         ),
       )
       .catch(() => undefined);
@@ -423,6 +525,45 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
               <p className="text-xs text-muted-foreground">
                 بانک سؤال واقعی جزوه — سطح: آموزشی تا کنکوری
               </p>
+            </div>
+          </div>
+
+          {/* چالش روزانه — ۵ سؤال قطعی امروز */}
+          <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4">
+            <div className="flex items-center gap-3">
+              <span className="daily-pulse flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                <CalendarCheck size={19} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="flex flex-wrap items-center gap-2 text-[13px] font-black">
+                  چالش روزانه
+                  <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+                    ۵ سؤال · بدون زمان
+                  </Badge>
+                  {daily.doneToday ? (
+                    <Badge variant="outline" className="gap-1 border-primary/40 bg-primary/10 text-[10px] text-primary">
+                      <CheckCircle2 size={10} />
+                      امروز: {daily.bestToday?.toLocaleString("fa-IR")}٪
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-[10px]">امروز انجام نشده</Badge>
+                  )}
+                </p>
+                <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                  {daily.doneToday
+                    ? `امروز انجامش دادی — می‌تونی دوباره امتحان کنی و رکوردت رو بهتر کنی (${daily.totalDone.toLocaleString("fa-IR")} چالش کامل‌شده)`
+                    : "۵ سؤال امروز برای همه یکسان است — با یک بار انجام، زنجیره‌ات هم شارژ می‌شود."}
+                </p>
+              </div>
+              <Button
+                size="sm"
+                onClick={startDaily}
+                disabled={loading}
+                className="shrink-0 gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+              >
+                {loading ? <Loader2 size={14} className="animate-spin" /> : <CalendarCheck size={14} />}
+                {daily.doneToday ? "دوباره" : "شروع چالش"}
+              </Button>
             </div>
           </div>
 
@@ -576,7 +717,37 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
 
             <div>
               <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
-                ۴. حالت زمان‌دار (کنکوری)
+                ۴. سطح دشواری
+                <Gauge size={13} className="text-muted-foreground" />
+              </p>
+              <div className="grid grid-cols-4 gap-2">
+                {LEVEL_OPTIONS.map((o) => (
+                  <button
+                    key={o.value}
+                    type="button"
+                    onClick={() => setLevel(o.value)}
+                    aria-pressed={level === o.value}
+                    className={cn(
+                      "flex flex-col items-center gap-0.5 rounded-xl border p-2.5 text-[12px] font-black transition-all",
+                      level === o.value
+                        ? levelBadgeClass(o.value) + " shadow-sm ring-1 ring-current/30"
+                        : "text-muted-foreground hover:bg-muted",
+                    )}
+                  >
+                    {o.label}
+                    {poolMeta && o.value !== "all" && (
+                      <span className="text-[9px] font-bold opacity-70">
+                        {(poolMeta.byLevel[o.value] ?? 0).toLocaleString("fa-IR")} سؤال
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+                ۵. حالت زمان‌دار (کنکوری)
                 {timed > 0 && (
                   <Badge className="gap-1 border-amber-500/40 bg-amber-500/15 text-[9.5px] text-amber-700 dark:text-amber-300">
                     <Hourglass size={10} />
@@ -615,6 +786,9 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
             {loading ? <Loader2 className="animate-spin" size={18} /> : <Play size={18} />}
             شروع آزمون
           </Button>
+          <p className="text-center text-[10.5px] text-muted-foreground/70">
+            میان‌بر کیبورد حین آزمون: کلیدهای ۱ تا ۴ برای انتخاب گزینه و Enter برای سؤال بعدی
+          </p>
         </CardContent>
       </Card>
     );
@@ -672,7 +846,17 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
               <span className="flex items-center gap-1">
                 <Trophy size={13} /> {correctCount.toLocaleString("fa-IR")} صحیح
               </span>
-              {timed > 0 && (
+              {mode === "daily" && (
+                <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
+                  <CalendarCheck size={13} /> چالش روزانه {new Date().toLocaleDateString("fa-IR", { month: "short", day: "numeric" })}
+                </span>
+              )}
+              {mode === "normal" && level !== "all" && (
+                <span className="flex items-center gap-1 font-bold">
+                  <Gauge size={13} /> سطح {level}
+                </span>
+              )}
+              {timed > 0 && mode !== "daily" && (
                 <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
                   <Hourglass size={13} /> حالت زمان‌دار ({timed.toLocaleString("fa-IR")} ثانیه‌ای)
                 </span>
@@ -874,16 +1058,22 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 دور مرور
               </Badge>
             )}
+            {mode === "daily" && (
+              <Badge className="border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
+                <CalendarCheck size={11} />
+                چالش روزانه
+              </Badge>
+            )}
             <Badge variant="outline" className="text-[11px]">
               {current.scope}
             </Badge>
-            <Badge variant="secondary" className="text-[11px]">
+            <Badge variant="outline" className={cn("text-[11px]", levelBadgeClass(current.level))}>
               سطح: {current.level}
             </Badge>
             <Badge variant="secondary" className="text-[11px]">
               {current.category === "grammar" ? "گرامر" : "واژگان"}
             </Badge>
-            {timed > 0 && (
+            {timed > 0 && mode !== "daily" && (
               <Badge variant="outline" className="gap-1 border-amber-500/40 text-[10.5px] text-amber-600 dark:text-amber-400">
                 <Hourglass size={10} />
                 زمان‌دار
@@ -949,6 +1139,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                   </span>
                   {answered && isCorrect && <CheckCircle2 size={17} className="text-primary shrink-0" />}
                   {answered && isChosen && !isCorrect && <XCircle size={17} className="text-destructive shrink-0" />}
+                  {!answered && (
+                    <kbd className="hidden h-5 min-w-5 shrink-0 items-center justify-center rounded-md border bg-muted/70 px-1 font-en text-[10px] font-bold text-muted-foreground sm:inline-flex" title="میان‌بر کیبورد">
+                      {i + 1}
+                    </kbd>
+                  )}
                 </Label>
               );
             })}
@@ -978,6 +1173,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 </Button>
                 <Button onClick={nextQuestion} className="gap-2">
                   {index + 1 >= questions.length ? "دیدن نتیجه" : "سؤال بعدی"}
+                  <kbd className="hidden rounded-md border border-primary/30 bg-primary/10 px-1.5 py-0.5 font-en text-[10px] font-bold sm:inline">↵</kbd>
                   <ArrowLeft size={15} />
                 </Button>
               </div>
