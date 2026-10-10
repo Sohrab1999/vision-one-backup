@@ -17,6 +17,7 @@ export type NavView =
   | "vocab"
   | "grammar"
   | "quiz"
+  | "games"
   | "texts"
   | "dict"
   | "verbs"

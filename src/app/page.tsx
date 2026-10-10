@@ -11,6 +11,7 @@ import { ChapterView } from "@/components/book/chapter-view";
 import { VocabularyView } from "@/components/book/vocabulary-view";
 import { GrammarView } from "@/components/book/grammar-view";
 import { QuizView } from "@/components/book/quiz-view";
+import { GamesHub } from "@/components/book/games/games-hub";
 import { TextsView } from "@/components/book/texts-view";
 import { DictionaryView } from "@/components/book/dictionary-view";
 import { VerbsView } from "@/components/book/verbs-view";
@@ -93,6 +94,7 @@ function App() {
           {effectiveView === "vocab" && hasData && <VocabularyView onNavigate={navigate} />}
           {effectiveView === "grammar" && hasData && <GrammarView />}
           {effectiveView === "quiz" && hasData && <QuizView />}
+          {effectiveView === "games" && hasData && <GamesHub />}
           {effectiveView === "texts" && hasData && <TextsView />}
           {effectiveView === "dict" && hasData && <DictionaryView />}
           {effectiveView === "verbs" && hasData && <VerbsView />}
