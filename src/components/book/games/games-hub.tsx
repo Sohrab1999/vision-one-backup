@@ -20,6 +20,15 @@ import {
   ArrowRight,
   Trophy,
   Sparkles,
+  Bird,
+  Dices,
+  Grid3x3,
+  SpellCheck2,
+  Blocks,
+  Brain,
+  Swords,
+  Headphones,
+  Compass,
   type LucideIcon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,8 +42,31 @@ import { ScrambleGame } from "./scramble-game";
 import { ClozeGame } from "./cloze-game";
 import { WordSearchGame } from "./wordsearch-game";
 import { SpeedQuizGame } from "./speed-quiz-game";
+import { FlappyQuizGame } from "./flappy-quiz-game";
+import { SnakesLaddersGame } from "./snakes-ladders-game";
+import { CrosswordGame } from "./crossword-game";
+import { WordleGame } from "./wordle-game";
+import { HangmanGame } from "./hangman-game";
+import { SentenceBuilderGame } from "./sentence-builder-game";
+import { DuelGame } from "./duel-game";
+import { ListeningHuntGame } from "./listening-hunt-game";
+import { AdventureMapGame } from "./adventure-map-game";
 
-export type GameKey = "memory" | "scramble" | "cloze" | "word-search" | "speed-quiz";
+export type GameKey =
+  | "memory"
+  | "scramble"
+  | "cloze"
+  | "word-search"
+  | "speed-quiz"
+  | "flappy-quiz"
+  | "snakes-ladders"
+  | "crossword"
+  | "wordle"
+  | "hangman"
+  | "sentence-builder"
+  | "duel"
+  | "listening-hunt"
+  | "adventure-map";
 
 interface GameInfo {
   key: GameKey;
@@ -80,6 +112,73 @@ const GAMES: GameInfo[] = [
     desc: "۶۰ ثانیه فرصت داری! پاسخ پیاپی درست کمبو می‌سازد و امتیازت را ×۲ و ×۳ می‌کند.",
     icon: Zap,
     tile: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  },
+];
+
+/** بازی‌های فاز ۴ نقشه راه ۲۰۲۶ — ماجراجویی، سرعت و مهارت */
+const GAMES_EXTRA: GameInfo[] = [
+  {
+    key: "flappy-quiz",
+    name: "فلپی گزینش",
+    desc: "پرنده را در پرواز نگه دار و دقیقاً از دروازهٔ گزینهٔ درست عبور کن — کمبو سرعت را بیشتر می‌کند!",
+    icon: Bird,
+    tile: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  },
+  {
+    key: "snakes-ladders",
+    name: "مار و پله واژگانی",
+    desc: "تخته کلاسیک ۱۰۰ خانه؛ برای تاس انداختن سؤال را درست جواب بده — ۲ تا ۴ نفر یا مقابل ربات.",
+    icon: Dices,
+    tile: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  },
+  {
+    key: "crossword",
+    name: "جدول متقاطع",
+    desc: "جدول از واژگان خود درس ساخته می‌شود؛ با سرنخ فارسی، حرف‌به‌حرف پر کن.",
+    icon: Grid3x3,
+    tile: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
+  },
+  {
+    key: "wordle",
+    name: "وردل ویژن",
+    desc: "واژهٔ ۵ حرفی را در ۶ فرصت حدس بزن؛ رنگ حرف‌ها راهنمایت است — حالت روزانه و بی‌نهایت.",
+    icon: SpellCheck2,
+    tile: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  },
+  {
+    key: "hangman",
+    name: "دارباز",
+    desc: "با راهنمای معنی فارسی، حرف‌به‌حرف واژه را پیدا کن؛ هر خطا یک بادکنک می‌ترکد!",
+    icon: Brain,
+    tile: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  },
+  {
+    key: "sentence-builder",
+    name: "سازنده جمله",
+    desc: "کلمات جمله‌های کتاب به‌هم ریخته‌اند؛ با راهنمای ترجمه، ترتیب را درست بچین.",
+    icon: Blocks,
+    tile: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
+  },
+  {
+    key: "duel",
+    name: "دوئل دونفره",
+    desc: "صفحه دو نیمه می‌شود؛ دو بازیکن هم‌زمان به سؤال‌های یکسان جواب می‌دهند — برنده دور زیادتر!",
+    icon: Swords,
+    tile: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  },
+  {
+    key: "listening-hunt",
+    name: "شکار صدا",
+    desc: "کلمه را فقط گوش کن و معنی درست را از بین ۴ گزینه شکار کن — تمرین شنیداری خالص.",
+    icon: Headphones,
+    tile: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  },
+  {
+    key: "adventure-map",
+    name: "نقشه ماجراجویی",
+    desc: "مسیر ۸ مرحله‌ای با ۴ نوع مینی‌بازی؛ هر مرحله تا ۳ ستاره — نقشه با تو پیش می‌رود!",
+    icon: Compass,
+    tile: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
   },
 ];
 
@@ -138,7 +237,7 @@ export function GamesHub() {
   const totalPlays = Object.values(plays).reduce((a, b) => a + b, 0);
 
   if (active) {
-    const info = GAMES.find((g) => g.key === active)!;
+    const info = [...GAMES, ...GAMES_EXTRA].find((g) => g.key === active)!;
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3">
@@ -163,6 +262,15 @@ export function GamesHub() {
         {active === "cloze" && <ClozeGame />}
         {active === "word-search" && <WordSearchGame />}
         {active === "speed-quiz" && <SpeedQuizGame />}
+        {active === "flappy-quiz" && <FlappyQuizGame />}
+        {active === "snakes-ladders" && <SnakesLaddersGame />}
+        {active === "crossword" && <CrosswordGame />}
+        {active === "wordle" && <WordleGame />}
+        {active === "hangman" && <HangmanGame />}
+        {active === "sentence-builder" && <SentenceBuilderGame />}
+        {active === "duel" && <DuelGame />}
+        {active === "listening-hunt" && <ListeningHuntGame />}
+        {active === "adventure-map" && <AdventureMapGame />}
       </div>
     );
   }
@@ -190,7 +298,7 @@ export function GamesHub() {
             </Badge>
             <Badge variant="outline" className="gap-1 border-amber-500/40 text-[11px] text-amber-600 dark:text-amber-400">
               <Sparkles size={11} />
-              ۵ بازی واژگانی
+              ۱۴ بازی واژگانی و مهارتی
             </Badge>
           </div>
         </CardContent>
@@ -198,7 +306,7 @@ export function GamesHub() {
 
       {/* کارت بازی‌ها */}
       <div className="grid gap-3 sm:grid-cols-2">
-        {GAMES.map((g, i) => (
+        {[...GAMES, ...GAMES_EXTRA].map((g, i) => (
           <button
             key={g.key}
             type="button"

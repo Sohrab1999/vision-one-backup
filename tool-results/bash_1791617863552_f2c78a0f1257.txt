@@ -1,0 +1,182 @@
+  - پایان هر پاسخ با setTimeout ۱ ثانیه‌ای + busy ref (ضد دوباره‌کلیک) و advanceRef (clearTimeout در انصراف/شروع/unmount)؛ درست → recordSRS(true) + speak؛ غلط → seedReviewFromQuiz + wrongList/wrongRef.
+  - done: PartyPopper + رکورد Badge، grid-cols-3 (دقت Target teal، درست emerald، غلط destructive)، لیست غلط‌ها max-h-44 با معنی فارسی یا Badge سبز «بدون غلط — عالی!»، «دور جدید»/«تنظیمات».
+  - پایان بازی: touchStreak + recordStudySession + bumpPlays(bookId,"cloze") + saveAttempt با detail [{word, ok}] (از wrongRef ساخته می‌شود تا stale-state نخورد).
+  - رکورد {score, total} با scope «all|lesson:rounds» — بهتر = score بیشتر؛ useSyncExternalStore با اسنپ‌شات پایدار (کَش ماژولی بر اساس کلید+raw — جلوگیری از حلقه getSnapshot).
+  - نکته تایپ: bookId در useBook از نوع BookId|null است (برخلاف فرض تسک) — چون useBookData بدون کتاب فعال throw می‌کند، با non-null assertion امن شد (eslint no-non-null-assertion در پروژه خاموش است؛ الگوی «!» در خود hub هم هست).
+  - بدون setState در effect (فقط interval functional و cleanup تایمر/صدا)؛ تایمر finish حداکثر ۱ ثانیه اختلاف دارد (همان الگوی match-game).
+- راستی‌آزمایی: tsc صفر خطا برای cloze-game (خطاهای باقی‌ماندهٔ src فقط مال hub است: missing sibling games که موازی ساخته می‌شوند + خطای پیش‌موجود bookId|null خط ۱۳۳ خود hub)؛ eslint صفر روی فایل؛ شمارش U+200C سالم (۳۵) و صفر U+FFFD؛ بدون any/console/رنگ آبی؛ همه importها مصرف شده‌اند.
+- سرور راه نیفتاد، مرورگر باز نشد، git استفاده نشد.
+
+Stage Summary:
+- بازی «جای خالی» کامل و آماده QA مرورگری است: جمله‌های واقعی خود کتاب با جای خالی واژه هدف، ۳ گزینه (هدف + ۲ حواس‌پرتی هم‌درس با معنی یکتا)، اتصال کامل SRS (درست → تثبیت، غلط → صف مرور هوشمند)، ثبت Attempt/bumpPlays و رکورد شخصی اسکوپ‌شده بر درس×تعداد پرسش.
+- برای QA: آزمایشگاه → «جای خالی»؛ سناریوها: شمارش «N جمله آماده» هر چیپ، شروع با کل کتاب/تک درس، پاسخ درست (پاپ + تلفظ)، غلط (شیک + هایلایت گزینه درست + رفتن به صف مرور)، پایان (درصد/درست/غلط + لیست غلط‌ها)، رکورد جدید با تکرار نتیجه بهتر، «دور جدید» و «تنظیمات».
+- ریسک/یادداشت: خطای TS موجود در games-hub.tsx (line 133: getPlays(bookId) با BookId|null) و importهای ۴ بازی موازیِ در دست ساخت — خارج از محدوده این تسک؛ درس‌های دارای صفر جمله به‌صورت خودکار disabled می‌شوند و پیام toast محافظ شروع را هم پوشش می‌دهد.
+---
+Task ID: 3-d
+Agent: wordsearch-game
+Task: فاز ۳ — بازی «شکار کلمه» (Word Search)
+
+Work Log:
+- فایل جدید src/components/book/games/wordsearch-game.tsx (~۶۷۷ خط، "use client"، export نام‌دار WordSearchGame بدون props) — بدون دست‌زدن به هیچ فایل دیگر و بدون راه‌اندازی سرور/git.
+- مطالعهٔ الگوها: match-game.tsx (فازها/رکورد/استایل)، games-hub.tsx (قرارداد hub)، shared.ts، srs-store.ts (recordSRS با کلید واژهٔ خام)، book-context.tsx، data/types.ts (VocabEntry) — ۱۵۰+ خط آخر worklog خوانده شد.
+- الگوریتم خالص generatePuzzle: جهت‌های ثابت [[0,1],[1,0],[1,1],[1,-1]] (فقط forward)، مرتب‌سازی نزولی طول، حداکثر ۲۰۰ تلاش تصادفی per-word با بازهٔ مجاز نقطهٔ شروع برای هر جهت (rMin/rMax/cMin/cMax + گارد بازهٔ خالی)، برخورد فقط با همان حرف، حذف واژهٔ جا نشده، حلقهٔ بازسازی تا ۱۰ بار اگر < ۴ واژه جا شود، پرکردن خالی‌ها ۵۰٪ از حروف خود پازل (استتار) + ۵۰٪ A-Z تصادفی. واژه‌های بلندتر از اندازهٔ جدول (مثل ۹ حرفی در ۸×۸) قبل از جای‌گذاری فیلتر می‌شوند.
+- استخر واژه‌ها: baseWordOf = حذف پرانتزها + uppercase؛ فقط /^[A-Z]{3,9}$/ بدون فاصله؛ dedupe بر اساس baseWord (validWordList)؛ در start() ترجیح واژه‌های جاگیرنده (length ≤ size) وقتی به تعداد خواستی کافی‌اند؛ گارد < ۴ کاندید و گارد < ۴ جای‌گذاری با toast.error.
+- انتخاب tap-tap: state sel: {row,col} | null — tap اول شروع، همان خانه لغو، غیرهم‌خط تغییر شروع، هم‌خط → pathBetween (گام ±1) → رشتهٔ حروف؛ تطبیق با واژه‌های باقی‌مانده یا معکوسش → found (Set از base) + recordSRS(raw، true) + speak(base.toLowerCase, speed) + match-pop روی مسیر؛ غلط → match-shake روی دو سر + پاک شدن selection؛ پایان همه → finish.
+- پایان (finish): touchStreak + recordStudySession + bumpPlays("word-search") + saveAttempt (detail: [{word: raw, ok: true}]) + رکورد { time } با مقایسهٔ کمترین زمان و saveBest؛ زمان دقیق از startedAtRef (نه تایمر ۱ثانیه‌ای).
+- رکورد: scope `${lesson === -1 ? "all" : lesson}:${wordCount}` — useSyncExternalStore + subscribeGameData با اسنپ‌شات primitive (b.time یا null) طبق الگوی match-game (بدون hydration mismatch و بدون حلقهٔ getSnapshot).
+- UI سه‌فازی: Setup (سربرگ emerald + Search، جعبهٔ Sparkles amber، چیپ‌های درس/تعداد [6,8,10]/اندازه [8,10] با faNum، Badge «سریع‌ترین شکار»، دکمهٔ h-12 «شروع شکار»)؛ Playing (نوار Badge زمان/پیدا‌شده + انصراف، progress bar، جدول dir="ltr" با gridTemplateColumns repeat(size, minmax(0,1fr))، سلول‌های aspect-square min-h-6 font-en font-black با aria-label و aria-pressed، لیست سرنخ‌های شماره‌دار فارسی با CheckCircle2 و toggle «نمایش واژه‌ها» با Eye بدون جریمه)؛ Done (PartyPopper + Badge رکورد/رکورد جدید، grid-cols-3 زمان/واژه/جدول، لیست واژه‌ها max-h-44 اسکرولی، «شکار جدید» و «تنظیمات»).
+- sound/cleanup: useVoiceSpeed + useEffect(() => () => stopSpeaking(), []) + پاک‌سازی تایمرهای pop/shake در همان cleanup؛ تایمر فقط interval functional؛ صفر setState مستقیم در useEffect.
+- راستی‌آزمایی: tsc --noEmit → صفر خطای مربوط به wordsearch (فقط ۲ خطای پیش‌موجود games-hub به‌خاطر فایل‌های بازی‌های موازیِ هنوز ساخته‌نشده و باگ کتابخوانی bookId nullable در خود hub — خارج از محدودهٔ این تسک)؛ eslint روی فایل → rc=0؛ تست فشار الگوریتم روی کد واقعی استخراج‌شده: ۳۰۰ ساخت برای هر دو اندازه ۸ و ۱۰ — همیشه ≥ ۵ واژه جا شد (۸×۸ دقیقاً ۵ از ۷ با دو واژهٔ ۹حرفی)، بدون برخورد ناسازگار، بدون out-of-bounds، سلول‌های متوالی معتبر، همهٔ placementها از هر دو جهت قابل‌یافتن، dedupe درست.
+- پالت فقط emerald/amber/teal + توکن‌ها؛ اعداد faNum؛ بدون رنگ آبی؛ کلاس‌های آمادهٔ rise-in/match-pop/match-shake استفاده شد؛ shuffle از shared برای ترتیب تصادفی سرنخ‌ها.
+
+Stage Summary:
+- بازی «شکار کلمه» کامل و آمادهٔ hub است (games-hub از قبل آن را import و رندر می‌کند): تولید قطعی‌سالم جدول ۸×۸/۱۰×۱۰ با واژه‌های ۳..۹ حرفیِ کتاب، شکار tap-tap دو-لمسی با پذیرش هر دو جهت، سرنخ فارسی + تلفظ + ثبت SRS با کلید واژهٔ خام، رکورد کمترین زمان اسکوپ‌شده (درس:تعداد)، attempt سروری و شمارندهٔ دورها — هم‌قرارداد با بقیهٔ بازی‌های فاز ۳.
+- ریسک/یادداشت: بدترین حالت الگوریتم (۱۰ دور بازسازی × ۱۰ واژه × ۲۰۰ تلاش) همچنان < یک میلی‌ثانیه در عمل و در تست ۳۰۰تایی هیچ‌وقت زیر ۵ واژهٔ جاافتاده نیامد؛ در ۸×۸ واژه‌های ۹حرفی ذاتاً کنار گذاشته می‌شوند (start از استخر جاگیرنده استفاده می‌کند تا تعداد خواستی حفظ شود)؛ اگر درسی کمتر از ۴ واژهٔ معتبر داشته باشد toast راهنما می‌دهد.
+- نکته برای عامل‌های بعدی: ۲ خطای tsc فعلی games-hub.tsx است (ماژول‌های memory/scramble/cloze/speed-quiz هنوز ساخته نشده‌اند + getPlays(bookId) با bookId|null) — با تکمیل بقیهٔ بازی‌ها و یک گارد کوچک در خود hub رفع می‌شود؛ فایل wordsearch-game.tsx در برابر bookId=null مقاوم است (fallback "vision-one" که عملاً هرگز اجرا نمی‌شود).
+---
+Task ID: 3-a
+Agent: memory-game
+Task: فاز ۳ — بازی «تطبیق حافظه» (Memory Pairs)
+
+Work Log:
+- قواعد پروژه از ۱۵۰ خط آخر worklog خوانده شد؛ فایل‌های الگو کامل مرور شدند: match-game.tsx (فازها/چیپ‌ها/رکورد)، games/shared.ts (قرارداد رکورد/plays/attempt)، games-hub.tsx (رندر بدون props)، بخش فلیپ review-view (~۵۹۰-۶۴۵) و تعریف flip-scene/flip-inner/flip-face/flip-back در globals.css. نکتهٔ کلیدی: transform فلیپ روی flip-inner است، پس match-pop/match-shake نباید روی flip-inner/flip-back بیفتند (rotateY حین انیمیشن override و کارت خراب می‌شود) — هر دو روی flip-scene اعمال شدند.
+- فقط یک فایل جدید ساخته شد: src/components/book/games/memory-game.tsx (۴۷۷ خط، با ابزار Write — ZWNJ سالم)؛ هیچ فایل دیگری دست نخورد، سرور dev راه نیفتاد و git استفاده نشد.
+- Setup: سربرگ emerald با LayoutGrid + جعبهٔ راهنمای amber با Sparkles؛ چیپ‌های قرصی درس («کل کتاب (N واژه)» + درس‌های lesson>0 با ALL_LESSONS=-1) و تعداد جفت [۴،۶،۸] همه با min-h-11 و aria-pressed؛ Badge رکورد outline با Trophy؛ دکمهٔ شروع h-12 w-full. استخر واژه: حذف معنی‌های تکراری (الگوی pickPairs در match-game) + pickUnique با کلید word → کمبود واژهٔ یکتا برای 2N کارت = toast.error.
+- Playing: نوار Badgeها (تایمر/حرکت/جفت‌شده) + «انصراف» ghost در mr-auto؛ نوار پیشرفت گرادیان primary→emerald-400 مثل match-game؛ شبکهٔ grid-cols-3 sm:grid-cols-4 با 2N کارت شافل‌شدهٔ رو به پایین؛ ساختار فلیپ طبق تسک (h-24 sm:h-28) — جفت‌شده: match-pop + opacity-60 + border-primary/50؛ جفت غلط: match-shake روی صحنه + border-destructive/60 (destructive فقط برای خطا).
+- منطق: قفل کلیک با busy ref؛ حرکت = هر جفت‌کوشش +1 (نه هر کلیک)؛ جفت درست (یک en + یک fa با word برابر) → recordSRS(word, true) + speak(word, {speed}) و پس از ۴۰۰ms ثبت matched/شروع pop و آزادشدن قفل؛ جفت غلط پس از ۶۵۰ms بسته می‌شود و هیچ ثبتی ندارد (کاوش). پایان: touchStreak + recordStudySession + bumpPlays(bookId,"memory") + saveAttempt({lesson (۰ = کل کتاب), total, correct, duration, detail:[{moves,time}]}) + مقایسهٔ رکورد (حرکت کمتر، تساوی → زمان کمتر) → saveBest + toast «رکورد جدید!» یا toast عادی + phase done.
+- رکورد: shape {moves,time} با scope «{lesson|all}:{pairCount}»؛ نمایش در setup با useSyncExternalStore(subscribeGameData, …, () => null) — اسنپ‌شات رشته‌ای (JSON.stringify) تا مثل best عددی match-game primitive بماند و حلقهٔ رندر رخ ندهد (loadBest هر بار آبجکت تازه می‌سازد)؛ تایمر: setInterval با cleanup و بدون setState مستقیم در effect (react-hooks v6) + secsRef برای زمان دقیق لحظهٔ پایان (finish(finalMoves, secsRef.current) از داخل setTimeout منطق بازی).
+- Done: کارت amber با PartyPopper + Badge «رکورد جدید! 🏆» + سه شمارندهٔ زمان/حرکت/دقت (دقت = round(pairCount ÷ moves × 100)) + «دور جدید» (همان تنظیمات، دک جدید با RotateCcw) و «تنظیمات» (outline).
+- دسترس‌پذیری: role="group" روی صفحهٔ بازی، aria-label توصیفی هر کارت («کارت N رو به پایین» / واژه یا معنی هنگام باز بودن / «جفت شد»)، aria-pressed روی کارت‌ها و چیپ‌ها؛ متن انگلیسی dir="ltr" + font-en؛ اعداد همه faNum و زمان‌ها fmtTime.
+- راستی‌آزمایی: python — ۴۷۷ خط، ۲۶ نویسهٔ ZWNJ سالم، صفر U+FFFD، براکت/آکولاد تراز؛ bunx tsc --noEmit → صفر خطا در memory-game.tsx (تنها خطای src/: games-hub.tsx:133 «getPlays(bookId)» با BookId|null — پیش‌موجودِ هاب و خارج از محدودهٔ این تسک)؛ bun run lint → صفر خطا در memory-game.tsx (دو خطای react-hooks/refs در speed-quiz-game.tsx متعلق به عامل موازی است).
+
+Stage Summary:
+- بازی «تطبیق حافظه» کامل و سیم‌کشی‌شده است (games-hub از قبل import/رندرش را داشت): سه فاز setup/playing/done روی الگوی match-game، فلیپ سه‌بعدی با کلاس‌های موجود globals.css، recordSRS برای هر جفت درست، رکورد {moves,time} اسکوپ‌شده بر درس×تعدادجفت، Attempt سروری + شمارندهٔ دورها + زنجیره/جلسهٔ مطالعه در پایان — بدون هیچ رگرسیون (فقط یک فایل جدید).
+- نکتهٔ فنی برای هر بازی فلیپ‌دار بعدی: match-pop/match-shake انیمیشن transform هستند و rotateY را override می‌کنند — روی flip-inner/flip-back نگذارید؛ جای امن flip-scene (المان بیرونی) است.
+- نکته برای ارکستراتور: games-hub.tsx:133 باید bookId را non-null کند (مثل bookId ?? "") چون getPlays پارامتر string می‌گیرد — با تکمیل فایل‌های بازی، tsc هاب را کامل چک می‌کند و این خطا دیده می‌شود؛ الباقی خطاهای tsc خارج از src/ و پیش‌موجودند.
+
+---
+Task ID: 3-b
+Agent: scramble-game
+Task: فاز ۳ — بازی «حروف جابه‌جا» (Word Scramble)
+
+Work Log:
+- worklog (۱۵۰+ خط آخر) و فایل‌های مرجع کامل خواندند: match-game.tsx (الگوی طلایی فازها/چیپ‌ها/رکورد)، games/shared.ts (قرارداد رکورد/Attempt/plays)، games-hub.tsx (نحوهٔ رندر)، data/types.ts (VocabEntry با pos? اختیاری)، book-context.tsx (useBook/useBookData).
+- فایل جدید src/components/book/games/scramble-game.tsx ساخته شد (717 خط، «use client»، export نام‌دار ScrambleGame بدون props) — هیچ فایل دیگری دست نخورد، سرور راه نیفتاد، git استفاده نشد.
+- فاز Setup: سربرگ مربع amber + Shuffle، جعبهٔ راهنمای amber-500/25 با Sparkles، چیپ‌های درس «کل کتاب (N واژه)» + درس‌ها (ALL_LESSONS=-1)، چیپ‌های [5,8,12] واژه (پیش‌فرض 8)، Badge «سریع‌ترین اجرا» با useSyncExternalStore(subscribeGameData) روی loadBest و snapshot عددی (بدون mismatch/loop)، دکمهٔ شروع h-12 — استخر فقط واژه‌های تک‌کلمه‌ای ^[A-Za-z]{3,12}$ پس از baseWord (حذف پرانتزها) و انتخاب با pickUnique یکتا بر کلید واژهٔ پایه؛ کاندید <3 → toast.error «واژه قابل بازی در این محدوده پیدا نشد».
+- فاز Playing: نوار بالا (واژه i/N با Target، زمان با Timer، حل‌شده با CheckCircle2، ردشده destructive با XCircle فقط اگر >0، انصراف ghost) + progress bar گرادیانی مثل match-game + کارت واژهٔ rounded-2xl شامل: Badge درس/pos + دکمهٔ Volume2 همیشه فعال (speak با useVoiceSpeed، dir=ltr)، جعبهٔ معنی فارسی به‌عنوان راهنما، ردیف پاسخ LTR (خانهٔ پر = دکمهٔ بازگشت حرف به استخر با border-2 primary/40، خانهٔ خالی = div dashed)، استخر حروف LTR (h-12 w-12 font-en، used → opacity-25 pointer-events-none)، سه دکمهٔ «پاک کردن/راهنما (amber)/رد کردن (destructive)» همه min-h-11.
+- معماری حروف تکراری: tiles: {id, letter}[] اینکس‌محور + slots: (number|null)[] — حروف تکراری مستقل؛ حذف کلاسیک used-Set به نفع مشتق‌سازی از slots (بدون state دوقلو).
+- حل درست: پرشدن همهٔ خانه‌ها و تطبیق با واژهٔ پایه → match-pop روی ردیف پاسخ + speak + recordSRS(base, true) +advance بعد از ~650ms؛ رد کردن: recordSRS(base, false) + Badge سبز واژهٔ درست برای ۱ ثانیه؛ راهنما: حرف درست بعدی جای‌گذاری می‌شود (hinted++ و رکورد می‌سوزد)؛ هر سه مسیر با ref «locked» قفل می‌شوند.
+- کیبورد: keydown listener در effect وابسته به [phase, slots, tiles, placeTile, returnLast] با add/remove cleanup — حروف a-z جای‌گذاری، Backspace برگرداندن (preventDefault)، Enter بی‌اثر؛ setState فقط داخل callback رویداد.
+- پایان (finishRun): touchStreak + recordStudySession + bumpPlays(bookId,"scramble") + saveAttempt با lesson = عدد درس یا 0 برای کل کتاب، detail = [{word, ok}] و duration از secsRef (دقیق تا لحظهٔ پایان) — رکورد shape {time} فقط اگر skipped===0 && hinted===0 با scope `${lesson|"all"}:${rounds}` و saveBest؛ Badge «رکورد جدید! 🏆» در صفحهٔ تمام شد.
+- فاز Done: PartyPopper amber + grid-cols-3 (زمان/حل‌شده/ردشده) + فهرست ردشده‌ها (max-h-44 overflow-y-auto، واژهٔ font-en + معنی فارسی + Badge «به مرور اضافه شد») + «دور جدید» (RotateCcw) و «تنظیمات».
+- قراردادهای react-hooks v6 رعایت شد: صفر setState مستقیم در effect (تایمر = setInterval با functional setState و secsRef هم‌گام؛ listener فقط در effect کیبورد)؛ تایمرهای معلق (650ms/1000ms) هم در cancel() و هم در cleanup unmount پاک می‌شوند تا پس از انصراف finish اکو نزند؛ stopSpeaking در cleanup.
+- پالت فقط emerald/amber/teal + توکن‌های معنایی؛ اعداد faNum، زمان fmtTime، متن انگلیسی dir="ltr" + font-en؛ بدون any؛ بدون import بلااستفاده (شمارش تأیید شد).
+- راستی‌آزمایی: bunx tsc --noEmit → صفر خطا در scramble-game (تنها خطای باقی‌ماندهٔ src: games-hub:133 که پیش‌موجود و خارج از محدودهٔ این تسک است — getPlays(bookId) با BookId|null)؛ bun run lint → صفر خطا در این فایل (فقط ۲ خطای react-hooks/refs در speed-quiz-game.tsx ساب‌ایجنت موازی)؛ صحت UTF-8/ZWNJ با python (صفر U+FFFD، ۴۶ ZWNJ).
+- هم‌خوانی الگو با memory-game (تسک موازی 3-a): همین قرارداد bookId ?? "" با کامنت مشترک — سازگاری کامل با games-hub که ScrambleGame را بدون props رندر می‌کند.
+
+Stage Summary:
+- بازی «حروف جابه‌جا» کامل و آمادهٔ اتصال به آزمایشگاه است: games-hub از قبل <ScrambleGame /> را رندر می‌کند (import آن در hub موجود بود) — با ورود فایل، چیپ «حروف جابه‌جا» فعال می‌شود.
+- یکتاسازی واژه با pickUnique روی baseWord و فیلتر ^[A-Za-z]{3,12}$ تضمین می‌کند فقط واژه‌های قابل سرهم‌کردن وارد بازی شوند؛ حروف تکراری اینکس‌محور مدیریت می‌شوند.
+- حلقهٔ یادگیری کامل: حل درست → SRS(✓)+تلفظ، رد کردن → SRS(✗)+Badge سبز+لیست «به مرور اضافه شد»، Attempt سروری با detail، رکورد سریع‌ترین اجرای کامل per-درس/تعداد.
+- ریسک/یادداشت: تلفظ قبل از حل عمداً فعال است (راهنمای تلفظی — طبق تسک)؛ خطای TS پیش‌موجود games-hub:133 (getPlays با BookId|null) و ۲ خطای lint فایل speed-quiz متعلق به سایر عامل‌هاست و در بازهٔ این تسک رفع نمی‌شود؛ QA مرورگری نهایی (کلیک/کیبورد/رکورد) با ارکستراتور انجام شود.
+
+---
+Task ID: 3-e
+Agent: speed-quiz-game
+Task: فاز ۳ — بازی «تست برقی» (Speed Quiz)
+
+Work Log:
+- ورودی‌ها خوانده شد: worklog (۱۵۰+ خط)، match-game (الگوی طلایی)، games/shared.ts، games-hub، data/types.ts (QuizQuestionSeed)، data/books/types.ts (BookData.quiz)، book-context، srs-store (seedReviewFromQuiz)، speak/voice-store، attempts API (گارد total>0) و توزیع seed (۵۳۰ سؤال: درس ۰ = ۴۵۰، درس ۱..۴ = ۲۰؛ گرامر ۱۸۰/واژگان ۳۵۰؛ سطح‌های کنکوری/متوسط/آموزشی).
+- فایل جدید src/components/book/games/speed-quiz-game.tsx (~۶۵۵ خط، "use client"، export نام‌دار SpeedQuizGame بدون props) — هیچ فایل دیگری تغییر نکرد؛ سرور راه نیفتاد؛ git استفاده نشد.
+- Setup: سربرگ Zap کهربایی «تست برقی / تایمر روشن است — هر ثانیه مهم است!»، جعبهٔ راهنمای Sparkles با متن کمبو، چیپ‌های «محدوده؟» (کل بانک + درس‌های یکتای seed مرتب‌شده با برچسب «جمع‌بندی/درس N» و تعداد واقعیِ فیلترشده با دستهٔ فعال)، «کدام دسته؟» (همه/واژگان/گرامر)، «چند ثانیه؟» (۳۰/۶۰/۹۰ با Timer)، Badge رکورد «بهترین امتیاز» با useSyncExternalStore + subscribeGameData (الگوی match-game)، دکمهٔ h-12 «شروع مسابقه» — استخر < ۵ → toast.error «سؤال کافی در این محدوده نیست».
+- Playing: نوار بالا (Badge تایمر Clock که در ≤۵ ثانیه border-destructive/60 bg-destructive/10 می‌گیرد، Badge امتیاز Star با match-pop روی تغییر score با key، Badge کمبو Flame «×m» در combo≥۲ وگرنه خاکستری «کمبو ×۱»، Badge «سؤال N»، انصراف mr-auto)؛ نوار زمان با width=(timeLeft/duration)×۱۰۰٪ و رنگ primary→destructive؛ کارت سؤال با Badgeهای درس/سطح(outline amber)/دسته، متن dir=ltr font-en، گرید گزینه‌ها sm:grid-cols-2 با شمارهٔ ۱..۴ فارسی و min-h-12، دکمهٔ ghost «رد کردن» (SkipForward).
+- منطق برقی: پاسخ درست → comboRef++ ، ضریب ۱/۲/۳ (≥۲ → ×۲، ≥۵ → ×۳)، score += ۱۰×ضریب، speak(گزینه) فقط برای واژگان بدون await؛ غلط → کمبو صفر + واژگان: seedReviewFromQuiz(متن گزینهٔ درست) (گرامر: هیچ) + فلاش match-shake کارت؛ هر پاسخ/رد → drawNext فوری (اگر صف تمام شد → reshuffle و ادامه تا پایان تایمر — چرخهٔ بی‌پایان)؛ skip فقط کمبو را صفر و سؤال را عوض می‌کند (در answered شمرده نمی‌شود — دقت = درست/پاسخ‌داده‌شده).
+- تایمر: timeRef = شمارندهٔ واقعی ثانیه (مالک: تایمر؛ start آن را duration می‌کند)؛ setInterval یک‌ثانیه‌ای اول کم می‌کند و setTimeLeft(t=>t-1) نمایش را همگام نگه می‌دارد، سپس رسیدن به صفر → finishRef.current?.() — باز happened-to-zero دقیقاً بعدِ «duration» ثانیه؛ cleanup با phase.
+- سازگاری با قاعدهٔ react-hooks/refs (نوشتن ref در رندر ممنوع — lint error می‌داد): به‌جای «finishRef.current = finish در بدنهٔ رندر»، effect بدون آرایه وابستگی بعد از هر کامیت آخرین finish/answer را در refها می‌نشاند (الگوی latest-ref)؛ کیبورد ۱..۴ (فارسی/انگلیسی) با effect وابسته به [phase] و فراخوانی از answerRef.
+- پایان (finish با گارد overRef): touchStreak + recordStudySession + bumpPlays(bookId,"speed-quiz") + saveAttempt (فقط اگر answered>0؛ detail={score,maxCombo}، duration=مدت−باقی‌مانده) + رکورد {score} با scope `${lesson|all}:${cat}:${duration}` — saveBest فقط اگر score>0 و بهتر از قبلی؛ Badge «رکورد جدید! 🏆» فقط وقتی رکورد قبلی وجود داشت.
+- Done: Zap در دایرهٔ amber + «زمان تمام شد!» + کارت رتبهٔ شخصی با گرادیان from-primary/10 to-amber-500/10 (≥۲۵۰ «اسطورهٔ برق» Trophy amber، ≥۱۵۰ «تندباد» Zap emerald، ≥۷۰ «چابک» Wind teal، <۷۰ «تازه‌کار» Sprout muted) با امتیاز درشت font-black text-3xl؛ grid-cols-3 امتیاز/دقت٪(Target)/بیشترین کمبو(Flame «×N»)؛ ردیف مقایسه «بهترین رکورد تو: N — X٪ از رکوردت»؛ «مسابقهٔ جدید» (RotateCcw) و «تنظیمات».
+- ویرایش‌های حساس به ZWNJ با python3 و انکر ASCII + assert انجام شد (یک MultiEdit ناتمامِ ابزار Edit نیمه‌اعمال شده بود — وضعیت دیسک با python خوانده و تکمیل/اصلاح شد).
+- راستی‌آزمایی: bun run lint = صفر خطا؛ bunx tsc --noEmit برای این فایل = صفر (فقط خطای پیش‌موجود games-hub.tsx:133 — bookId nullable به getPlays — که خارج از مأموریت این تسک و دست‌نخورده ماند)؛ ZWNJ سالم (۳۷ نویسه، صفر U+FFFD)؛ بدون any، بدون import بلااستفاده، بدون آبی/ایندیگو؛ setState در effect body صفر (تنها callbackهای تایمر/کیبورد/رویداد).
+
+Stage Summary:
+- بازی «تست برقی» کامل و سیم‌کشی‌شده با آزمایشگاه است (games-hub از قبل آن را import کرده بود): ۵۳۰ سؤال خود جزوه با تایمر ۳۰/۶۰/۹۰ ثانیه‌ای، کمبو ×۲/×۳، چرخهٔ بی‌پایان سؤال، رتبهٔ شخصی چهارمرحله‌ای، رکورد per-scope در localStorage، Attempt سروری و بازگشت واژه‌های غلط‌زدهٔ واژگانی به صف مرور هوشمند.
+- نکته برای عامل‌های بعدی: قاعدهٔ eslint react-hooks/refs نوشتن ref در بدنهٔ رندر را خطا می‌دهد — الگوی «effect بدون dep + نوشتن ref» جایگزین الگوی «finishRef.current = fn در رندر» است؛ انحراف‌های آگاهانه از متن تسک: بازخورد درست/غلط به‌جای رنگ گزینه (به‌دلیل پیشروی آنی) روی پاپ نشان امتیاز/فلاش کارت پیاده شد و skip در answered شمرده نمی‌شود.
+- برای QA مرورگری: آزمایشگاه → تست برقی → شروع با ۶۰ ثانیه → چند پاسخ درست پیاپی (Badge ×۲/×۳) → یک غلط (لرزش کارت + کارت SRS فردا برای واژگان) → رد کردن → اتمام تایمر → رتبه و رکورد؛ کیبورد ۱..۴؛ سوییچ کتاب برای جدا بودن رکوردها.
+
+---
+Task ID: 3 (orchestrator — فاز ۳ کامل؛ زیرتسک‌های 3-a..3-e در بخش‌های جدا ثبت شدند + سیم‌کشی/هاب/یکپارچه‌سازی/QA توسط ارکستراتور)
+Agent: main orchestrator (Z.ai Code)
+Task: فاز ۳ نقشه راه جامع ۲۰۲۶ — آزمایشگاه بازی‌های فکری ۱ (واژگانی)
+
+Work Log:
+- سیم‌کشی ناوبری (python برای فایل‌های ZWNJدار): nav-store «games» در NavView؛ app-header «games» در ViewId + آیتم NAV «بازی‌ها» (Gamepad2 بعد از آزمون) — یک کامای تکراری حین import-edit شناسایی و فوراً اصلاح شد؛ page.tsx: import GamesHub + شاخه رندر بعد از quiz
+- `src/components/book/games/shared.ts`: قرارداد مشترک ۵ بازی — shuffle/faNum/fmtTime/pickUnique + رکورد شخصی `visionone:game-best:{book}:{game}:{scope}` + شمارنده دورها `visionone:game-plays:{book}` + saveAttempt (POST /api/attempts با category=نام بازی + رویداد attempt-saved) + subscribeGameData/notifyGameData (storage + رویداد سفارشی)
+- `games-hub.tsx`: سربرگ گرادیانی + ۵ کارت بازی (آیکون، توضیح، Badge رکورد بهترین بین اسکوپ‌ها، شمارنده دور) + رندر بازی فعال + دکمه بازگشت
+- ۵ بازی (ساب‌ایجنت‌های موازی، هرکدام دقیقاً یک فایل، الگوی match-game): memory-game (۴۷۷خط، فلیپ flip-inner با نکته مهم: match-pop/match-shake فقط روی flip-scene تا rotateY نشکند) · scramble-game (۷۱۷خط، ایندکس‌محور برای حروف تکراری + کیبورد a-z/Backspace) · cloze-game (۶۳۶خط، استخر جمله از readings/conversations با boundary regex — پیش‌تست bun روی داده واقعی: ۴۰ آیتم کل کتاب) · wordsearch-game (۶۷۸خط، الگوریتم forward-only ۴جهت + استتار ۵۰٪ حروف خود پازل؛ تست فشار ۳۰۰ ساخت بدون خطا) · speed-quiz-game (۶۵۵خط، کمبو ×۲/×۳، latest-ref برای تایمر، seedReviewFromQuiz فقط واژگان غلط)
+- یکپارچه‌سازی و رفع اشکال: TS2345 هاب (bookId nullable → `bookId ?? ""`)؛ **باگ بحرانی getSnapshot loop** در useSyncExternalStore هاب (getPlays آبجکت تازه می‌ساخت → کرش hub بعد از ناوبری؛ fix = اسنپ‌شات رشته‌ای JSON.stringify + useMemo parse) — کنسول بعد از fix صفر
+- باگ واقعی از QA: سه بازی (cloze/speed-quiz/wordsearch) lesson = -1 را به Attempt می‌فرستادند → نگاشت `lesson === ALL ? 0 : lesson` در هر سه اصلاح شد (memory/scramble از ابتدا درست بودند)
+- QA مرورگری چهار دور (agent-browser): ورود کتاب → تب بازی‌ها → ۵ کارت → ورود به هر بازی → تعامل واقعی (فلیپ کارت، چیدن حروف، پاسخ گزینه، tap-tap سلول، پاسخ سریع) → پایان ۳۰ثانیه‌ای تست برقی با رتبه «تازه‌کار» و امتیاز ۴۰ (کمبو ×۲ دیده شد) → Attempt واقعی در SQLite ثبت شد (total 12, correct 3, duration 30) → بعد از تأیید، ردیف آزمایشی حذف شد (۲۰ Attempt واقعی دست‌نخورده)
+- رگرسیون: کتاب یازدهم — هدر ۱۴آیتمی سالم، hub با ۵ کارت، بازی حافظه اجرا، آمار لود؛ کنسول و dev.log صفر خطا؛ ZWNJ همه فایل‌های ویرایشی سالم؛ lint و tsc پاک
+- نکته QA-tooling: اسنپ‌شات a11y نیم‌فاصله را می‌ریزد (بازی‌ها → بازیها) و متن spanهای غیرتعاملی در snapshot -i نیست؛ دکمه Next.js DevTools ته body و بزرگ‌ترین ref است — اسکریپت‌های QA در .zscripts/qa-phase3*.sh برای تکرار ذخیره شدند
+
+Stage Summary:
+- فاز ۳ کامل شد: آزمایشگاه بازی‌های فکری با ۵ بازی واژگانی روی داده خود هر جزوه — همه با سه فاز setup/playing/done، رکورد شخصی اسکوپ‌شده، ثبت Attempt سروری (category = نام بازی → خودکار در آمار/نشان‌ها)، اتصال SRS (درست→recordSRS، غلط→صف مرور)، صدا، کیبورد و لمس
+- نقاط تماس: games/shared.ts (قرارداد) · games-hub.tsx (متادیتای GAMES — افزودن بازی جدید = یک آیتم + یک import) · پنج فایل بازی مستقل
+- ریسک/یادداشت: الگوریتم wordsearch روی ۸×۸ واژه‌های ۹حرفی را جا نمی‌دهد (جبران خودکار با استخر واژه‌های کوچک‌تر)؛ push سمت سرور Attempt هنوز delta نیست (فاز ۱۱)؛ رکوردهای بازی localStorage هستند و مثل بقیه اسکوپ‌ها از اسنپ‌شات کلی فاز ۱ سینک می‌شوند
+---
+Task ID: 4-e
+Agent: hangman-game
+Task: فاز ۴ — بازی «دارباز»
+
+Work Log:
+- زمینه خوانده شد: worklog (بخش‌های فاز ۳ — 3-a..3-e و ارکستراتور)، memory-game.tsx (الگوی طلایی)، shared.ts (قرارداد رکورد/plays/attempt)، types.ts (VocabEntry)، به‌علاوه scramble-game (الگوی کیبورد)، book-context/speak/srs-store/streak/goal و books/types.ts؛ games-hub بررسی شد — HangmanGame هنوز import نشده و طبق محدودهٔ تسک دست نخورد (سیم‌کشی با ارکستراتور).
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/games/hangman-game.tsx (۷۲۴ خط، "use client"، export نام‌دار HangmanGame بدون props — با ابزار Write؛ هیچ فایل دیگری تغییر نکرد، سرور راه نیفتاد، git استفاده نشد).
+- Setup: چیپ درس («کل کتاب (N واژه)» + درس‌ها، ALL_LESSONS=-1، همه min-h-11 با aria-pressed) + چیپ تعداد واژه [۳،۵] + Badge amber رکورد «بیشترین برد» با useSyncExternalStore و snapshot عددی؛ استخر = baseWord (حذف پرانتز دستوری) + فقط ^[A-Za-z]{3,10}$ + uppercase + یکتا با pickUnique؛ گارد chosen<count → toast.error.
+- Playing: سرنخ = معنی فارسی + pos (Badge outline amber) + Badge تعداد حرف؛ ردیف خانه‌های خط‌چین dir="ltr" font-en — حروف تکراری یک‌جا آشکار می‌شوند (مشتق از used) با match-pop؛ ۶ جان = ۶ بادکنک SVG (بدنه + هایلایت + گره + نخ منحنی؛ emerald/amber/teal متناوب) که با transition-all duration-500 (scale+opacity) به حباب خط‌چین destructive تبدیل می‌شود؛ کیبورد on-screen الفبایی ۳ ردیف (۹/۹/۸) با flex-1 min-h-11 و disabled opacity-30 و aria-label هر حرف + کیبورد فیزیکی (keydown effect وابسته به [phase] با cleanup + latest-ref با effect بدون dep برای guessRef).
+- منطق: برد واژه → recordSRS(true) + speak + Badge سبز match-pop؛ باخت (ششمین حرف غلط) → recordSRS(false) + آشکارسازی کامل واژه با تینت destructive + Badge «به مرور اضافه شد»؛ تعویض واژه با locked ref پس از WIN_LOCK=۱۴۰۰ms / LOSS_LOCK=۲۲۰۰ms؛ قفل double-guess سه‌لایه: locked ref + usedRef سنکرون (ضد keydown پشت‌سرهم) + idxRef گارد کلوزر کهنه حین تعویض واژه (درج با python3).
+- پایان دور: touchStreak + recordStudySession + bumpPlays(bookId,"hangman") + saveAttempt (lesson کل→۰، total، correct=برد، duration=secsRef، detail:{words:[{word,ok}]}) + saveBest {score} (بیشترین برد) با scope «all|lesson:count» و toast رکورد؛ فاز done: برد/باخت/زمان + Badge «رکورد جدید!» + فهرست واژه‌های باخته با معنی و Badge «به مرور اضافه شد» + «دور جدید»/«تنظیمات».
+- react-hooks v6: تایمر ۱ثانیه‌ای با functional setState + secsRef؛ صفر setState مستقیم در بدنهٔ effect؛ نوشتن ref فقط در callback/effect؛ stopSpeaking در unmount و cancel/start؛ cleanup تایمر معلق.
+- راستی‌آزمایی: شبیه‌سازی استخر روی دادهٔ واقعی هر ۶ کتاب با bun — همهٔ اسکوپ‌ها ≥۱۶ واژهٔ یکتای واجد شرط (کمینه: grade-8 درس ۷ = ۱۶)؛ مرور ذهنی حدس هر ۲۶ حرف: واژه حداکثر ۱۰ حرف متمایز دارد → پیش از اتمام حروف، ۶ خطا رخ می‌دهد؛ برد با lock بسته می‌شود — هیچ حالت گیرکرده/دوبارشماری وجود ندارد؛ bun run lint → صفر خطا در کل پروژه؛ bunx tsc --noEmit → صفر خطای مرتبط با hangman/src (خطاهای باقی‌مانده در examples/ و scripts/ و skills/ و tool-results/ پیش‌موجود و خارج از محدوده‌اند)؛ ZWNJ سالم (۳۶ خط، صفر U+FFFD)، بدون any، بدون import بلااستفاده، پالت فقط emerald/amber/teal + توکن‌ها + destructive فقط برای باخت/بادکنک ترکیده.
+
+Stage Summary:
+- بازی «دارباز» کامل و آمادهٔ سیم‌کشی به آزمایشگاه است (فقط یک فایل — طبق محدودهٔ تسک games-hub دست نخورد): حدس حرف با سرنخ معنی/pos، ۶ بادکنک جان دوستانه با ترکیدن transition-محور، اتصال کامل SRS (برد→تثبیت+تلفظ، باخت→صف مرور)، Attempt سروری با detail.words و رکورد «بیشترین برد» اسکوپ‌شده بر درس×تعداد واژه.
+- برای ارکستراتور: افزودن `import { HangmanGame } from "./hangman-game";` + یک آیتم GAMES با key "hangman" در games-hub.tsx بازی را فعال می‌کند؛ رکورد shape آن {score} است (بهتر = برد بیشتر).
+- ریسک/یادداشت: مسابقهٔ حدس و تعویض واژه به‌صورت سنکرون با idxRef گارد شده (مسیر کلوزر کهنه بسته است)؛ پیشرفت واژه‌ها detail-محور است (برد/باخت بلافاصله در Badgeها و progress منعکس می‌شود)؛ QA مرورگری نهایی (کلیک/کیبورد/رکورد/سوییچ کتاب) با ارکستراتور انجام شود.
+---
+Task ID: 4-b
+Agent: snakes-ladders-game
+Task: فاز ۴ — بازی «مار و پله واژگانی» (Snakes & Ladders)
+
+Work Log:
+- ورودی‌ها کامل خواندند: worklog (بخش‌های فاز ۳ با 3-a..3-e + ارکستراتور)، memory-game.tsx (الگوی طلایی سه‌فاز)، shared.ts (کل قرارداد)، speed-quiz-game.tsx (فیلتر درس/دسته + گزینه‌ای)، data/types.ts (QuizQuestionSeed)، games-hub.tsx (بدون سیم‌کشی snakes-ladders — عمداً دست نخورد)، speak/streak/goal/book-context و موجودی آیکون‌های Dice1..6/TrendingDown/TrendingUp در lucide-react 0.525.
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/games/snakes-ladders-game.tsx (۹۴۰ خط، "use client"، export نام‌دار SnakesLaddersGame بدون props، GAME_KEY = "snakes-ladders") — هیچ فایل دیگری تغییر نکرد؛ سرور dev دست‌کاری نشد؛ git استفاده نشد.
+- تخته: grid-cols-10 با gridColumnStart/gridRowStart صریح هر خانه (مقاوم به RTL)؛ شماره‌گذاری مارپیچی کلاسیک — ازLeft = b زوج ? (n-1)%10 : 9-((n-1)%10)، col = 10−fromLeft (شبکهٔ RTL)، row = 9−b+1 → خانهٔ ۱ پایین-چپ، ۱۰ پایین-راست، ۱۱ بالای ۱۰، ۱۰۰ بالا-چپ. راستی‌آزمایی با اسکریپت bun روی همان فرمول: یکتایی ۱۰۰ خانه روی شبکه، مجاورت manhattan=1 هر ۹۹ گام متوالی (۹۰ افقی + ۹ عمودی)، نقاط کلیدی ۱/۹/۱۰/۱۱/۲۰/۲۱/۵۰/۹۱/۹۹/۱۰۰ — همه پاس (یک assert آزمایشیِ خود اسکریپت با شمارش 90 به‌جای 99 گام مجاور، غلط محاسباتیِ تست بود نه باگ تخته؛ بقیهٔ invariantها همگی پاس).
+- مارها {16→6, 48→30, 62→19, 64→60, 87→24, 93→73, 95→75, 98→78} و پله‌ها {4→14, 9→31, 20→38, 28→84, 40→59, 51→67, 63→81, 71→91} — بررسی شد: مبداها مجزا، هیچ مقصدی خودش مبدا نیست (بدون زنجیرهٔ پرش)، همه در ۲..۹۹. نشان کوچک روی خانهٔ پرش (سر مار/پای پله): TrendingDown با destructive «مقصد» برای مار و TrendingUp با primary برای پله + aria-label «مار — برگشت به خانهٔ X». خانه‌های ۱ (amber) و ۱۰۰ (primary) هایلایت؛ سلول‌ها aspect-square با شطرنجی ملایم muted/card و راهنمای زیر تخته.
+- مهره‌ها: دایرهٔ کوچک رنگ بازیکن (emerald/amber/teal و بازیکن چهارم muted-foreground) در ردیف کوچک پایین خانه؛ مهرهٔ بازیکن فعال کمی بزرگ‌تر؛ نوار وضعیت بالای تخته «name — خانهٔ N / شروع» با هایلایت نوبت.
+- Setup: حالت «روی یک دستگاه» (۲ تا ۴ بازیکن، چیپ تعداد + Input نام اختیاری با placeholder بازیکن ۱..۴) یا «مقابل ربات» (تو + ربات، ردیف ثابت ربات با Badge «۶۵٪ احتمال پاسخ درست»)؛ چیپ‌های محدوده (کل بانک + درس‌های یکتای seed با تعدادِ فیلترشده) و دسته (همه/واژگان/گرامر) مثل speed-quiz؛ Badge رکورد «سریع‌ترین پیروزی» amber با useSyncExternalStore (اسنپ‌شات عددی، الگوی match-game)؛ دکمهٔ شروع h-12 با تعداد سؤال — گارد استخر < ۵ → toast.error.
+- جریان نوبت: کارت سؤال بالا (Badge نوبت با دات رنگ بازیکن، درس/سطح/دسته، متن dir=ltr font-en، ۴ گزینه min-h-11 با شمارهٔ فارسی) → درست: قفل نوبت، انیمیشن تاس (۵ چرخش تصادفی ۹۰ms + عدد قطعی با match-pop و key) → حرکت خانه‌به‌خانه با زنجیرهٔ setTimeout پله‌ای ۱۲۰ms → فرود روی مار/پله: toast «مار! برگشتی به خانهٔ X» (error) یا «پله! رفتی به خانهٔ X» (success) + پرش پس از ۵۵۰ms → تاس ۶ = toast نوبت اضافه و ادامه با همان بازیکن. غلط: highlight گزینهٔ درست + match-shake کارت + toast «بند شدی!» و نوبت بعدی پس از ۱۱۰۰ms. همهٔ عدد/زمان‌ها faNum/fmtTime.
+- ربات: تأخیر ۹۰۰ms، ۶۵٪ درست (درست: گزینهٔ answer؛ غلط: یک گزینهٔ غلط تصادفی)، نمایش انتخابش با Badge «ربات» روی گزینه، سپس همان جریان کامل تاس/حرکت/مار/پله/بونوس.
+- سؤال یکتا: deckRef = pickUnique(pool, pool.length, q→q.text)؛ drawNext در اتمام استخر reshuffle می‌کند (چرخهٔ بی‌پایان مثل speed-quiz)؛ qRef آینه برای callback ربات.
+- برنده: pos ≥ ۱۰۰ → finish: touchStreak + recordStudySession + bumpPlays(bookId, "snakes-ladders") + saveAttempt({lesson: کل→0 یا درس، total/correct فقط از بازیکن‌های انسانی، duration از secsRef، detail: {winner, players: [{name, isBot, asked, correct, wrong, position}]}}) + saveBest {time} با scope hotseat|vs-bot فقط برای برندهٔ انسانی (کمترین زمان) → فاز done با ستایش برنده (پیام متفاوت برای پیروزی ربات)، Badge «رکورد جدید! سریع‌ترین پیروزی 🏆»، ردیف آمار هر بازیکن (سؤال/درست emerald/غلط destructive + Badge برنده Crown) و دکمه‌های «بازی جدید» (همان تنظیمات) و «تنظیمات».
+- react-hooks v6: صفر setState مستقیم در بدنهٔ effect (تایمر interval فقط functional + secsRef)؛ صفر نوشتن ref در بدنهٔ رندر (منطق کامل روی playersRef/posRef/statsRef/curRef/qRef/deckRef/turnLockRef)؛ همهٔ setTimeoutها داخل later() که در timersRef ثبت و در cancel()، start() و cleanup unmount پاک می‌شوند؛ زنجیرهٔ حرکت مهره هم در همین ref است.
+- پالت فقط emerald/amber/teal + توکن‌های معنایی (destructive فقط مار/باخت/غلط)؛ بدون آبی/ایندیگو/بنفش؛ بدون any؛ بدون import بلااستفاده.
+- راستی‌آزمایی: bun run lint → صفر خطا (کل پروژه پاک)؛ bunx tsc --noEmit → صفر خطا در src/ (و صفر مورد snakes-ladders؛ خطاهای باقی‌مانده فقط examples/skills/scripts پیش‌موجود خارج از src)؛ python: ۹۴۰ خط، ۶۳ نویسهٔ ZWNJ سالم، صفر U+FFFD، آکولاد/پرانتز تراز.
+
+Stage Summary:
+- بازی «مار و پله واژگانی» کامل و آمادهٔ سیم‌کشی در games-hub است (طبق مأموریت hub دست نخورد — افزودن یک import + یک آیتم GAMES + یک شاخهٔ رندر با کلید "snakes-ladders" کافی است؛ GameKey/type فعلی hub این کلید را ندارد).
+- تاس فقط با پاسخ درست: انیمیشن تاس → حرکت پله‌ای مهره → مار/پله با toast → بونوس تاس ۶؛ ربات ۶۵٪ با نمایش انتخابش؛ آمار Attempt فقط انسان‌ها؛ رکورد سریع‌ترین پیروزی per-mode (hotseat/vs-bot).
+- تفسیر «Badge روی خانهٔ مقصد»: نشان «موجودی→مقصد» روی خانه‌ای گذاشته شد که پرش از آنجا اجرا می‌شود (سر مار/پای پله) — یعنی جایی که بازیکن فرود می‌آید و انتقال آغاز می‌شود؛ این همان خوانایی استاندارد تخته است.
+- برای QA مرورگری: setup → حالت ربات → چند پاسخ درست/غلط (تاس/حرکت/مار/پله/toastها) → تاس ۶ (نوبت اضافه) → برد ربات (پیام انتقام) → بازی جدید hotseat ۳ نفره با نام دلخواه → برندهٔ انسانی → رکورد در setup. انصراف وسط انیمیشن باید بدون timer-اکو برگردد.
+
+---
+Task ID: 4-d
+Agent: main orchestrator (ثبت جایگزین — عامل فرزند پیش از ثبت worklog متوقف شد اما فایل کامل بود)
+Task: فاز ۴ — بازی «وردل ویژن» (Vision Wordle)
+
+Work Log:
+- فایل src/components/book/games/wordle-game.tsx (~41KB) کامل نوشته و روی دیسک مانده بود؛ صحت‌سنجی ارکستراتور: export function WordleGame موجود، انتهای فایل سالم، bun run lint و bunx tsc --noEmit → صفر خطا برای این فایل.
+- اجزای کلیدی تأییدشده با grep: دو حالت daily/infinite، ذخیره وضعیت روزانه در visionone:wordle-daily:{book}، recordSRS برد/باخت، saveAttempt، رکورد infinite (کمترین حدس) و daily-streak (زنجیره برد)، انیمیشن فلیپ با الگوی flip-inner.
+
+Stage Summary:
+- بازی «وردل ویژن» کامل و آماده اتصال به آزمایشگاه است (کلید hub: "wordle") — یک import + یک آیتم GAMES + یک شاخه رندر.
+- نکته برای ارکستراتور: سؤال ۵حرفی از واژگان خود کتاب؛ ورود فقط از استخر واژگان ۵حرفی همان کتاب.
