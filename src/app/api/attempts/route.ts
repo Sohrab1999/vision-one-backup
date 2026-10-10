@@ -3,10 +3,14 @@ import { db } from "@/lib/db";
 import { normalizeBookId } from "../_lib/book";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
+  const rl = checkRate(req, "attempts:post", 30, 60_000);
+  if (!rl.ok) { logEvent("attempts", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     const body = (await req.json()) as {
       book?: string;
@@ -63,6 +67,8 @@ interface LeaderRow {
 }
 
 export async function GET(req: NextRequest) {
+  const rl = checkRate(req, "attempts:get", 90, 60_000);
+  if (!rl.ok) { logEvent("attempts", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     // ── فیلتر کتاب: همهٔ آمار/لیدربورد/نبض‌ها per-book است — نامعتبر/خالی → ویژن وان ──
     const { searchParams } = new URL(req.url);

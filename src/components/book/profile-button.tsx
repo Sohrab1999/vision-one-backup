@@ -19,6 +19,8 @@ import {
   RefreshCw,
   CloudCheck,
   Flame,
+  Trash2,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +35,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useUserName, setName } from "@/lib/name-store";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
@@ -82,6 +95,12 @@ export function ProfileButton() {
   const [busy, setBusy] = useState(false);
   const [attemptsCount, setAttemptsCount] = useState<number | null>(null);
   const [syncAt, setSyncAt] = useState<number | null>(getLastSyncAt());
+
+  // ── حذف حساب (فاز ۱۱ — حریم خصوصی) ──
+  const [delOpen, setDelOpen] = useState(false);
+  const [delConfirm, setDelConfirm] = useState(false);
+  const [delText, setDelText] = useState("");
+  const [delBusy, setDelBusy] = useState(false);
 
   useEffect(() => subscribeSync(() => setSyncAt(getLastSyncAt())), []);
 
@@ -311,6 +330,33 @@ export function ProfileButton() {
       toast.success("از حساب خارج شدی — پیشرفتت روی همین دستگاه می‌ماند");
       setOpen(false);
     });
+  }
+
+  // حذف قطعی حساب — همهٔ داده‌های سروری با کسکید پاک می‌شود؛ سپس خروج خودکار
+  async function deleteAccount() {
+    setDelBusy(true);
+    try {
+      const res = await fetch("/api/profile", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "حسابم را پاک کن" }),
+      });
+      const j = (await res.json().catch(() => null)) as { error?: string } | null;
+      if (res.ok) {
+        toast.success("حسابت کامل پاک شد — هر وقت برگشتی ما همین‌جاییم 🌱");
+        setDelConfirm(false);
+        setDelOpen(false);
+        setDelText("");
+        setOpen(false);
+        await signOut({ redirect: false });
+      } else {
+        toast.error(j?.error ?? "حذف حساب ممکن نشد — دوباره تلاش کن");
+      }
+    } catch {
+      toast.error("خطای شبکه — دوباره تلاش کن");
+    } finally {
+      setDelBusy(false);
+    }
   }
 
   return (
@@ -608,6 +654,75 @@ export function ProfileButton() {
                 <LogOut size={14} />
                 خروج از حساب
               </Button>
+
+              {/* ── حذف حساب (فاز ۱۱ — حریم خصوصی نوجوان) ── */}
+              <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3">
+                <button
+                  type="button"
+                  onClick={() => setDelOpen((v) => !v)}
+                  aria-expanded={delOpen}
+                  className="flex w-full items-center justify-between gap-2 text-right"
+                >
+                  <span className="flex items-center gap-1.5 text-[12px] font-black text-destructive">
+                    <Trash2 size={13} />
+                    حذف حساب
+                  </span>
+                  <ChevronDown
+                    size={14}
+                    className={`text-destructive transition-transform ${delOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {delOpen && (
+                  <div className="mt-3 space-y-2.5">
+                    <p className="text-[11px] leading-5 text-muted-foreground">
+                      همه پیشرفت، یادداشت‌ها و آمارت کامل پاک می‌شود و قابل بازگشت نیست. اگر مطمئنی، مرحلهٔ بعد را باز کن.
+                    </p>
+                    <AlertDialog open={delConfirm} onOpenChange={setDelConfirm}>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={delBusy}
+                          className="w-full gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 size={13} />
+                          می‌خواهم حسازم را پاک کنم
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent dir="rtl">
+                        <AlertDialogHeader className="text-right">
+                          <AlertDialogTitle>حذف قطعی حساب</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            همه پیشرفت، یادداشت‌ها و آمارت کامل پاک می‌شود و قابل بازگشت نیست. برای تأیید، عبارت
+                            «حسابم را پاک کن» را دقیقاً تایپ کن.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <Input
+                          value={delText}
+                          onChange={(e) => setDelText(e.target.value)}
+                          dir="rtl"
+                          placeholder="حسابم را پاک کن"
+                          aria-label="عبارت تأیید حذف حساب"
+                          autoComplete="off"
+                        />
+                        <AlertDialogFooter className="gap-2">
+                          <AlertDialogCancel disabled={delBusy}>انصراف</AlertDialogCancel>
+                          <AlertDialogAction
+                            disabled={delBusy || delText !== "حسابم را پاک کن"}
+                            onClick={(e) => {
+                              e.preventDefault(); // دیالوگ فقط پس از موفقیتِ درخواست بسته می‌شود
+                              void deleteAccount();
+                            }}
+                            className="bg-destructive text-white hover:bg-destructive/90"
+                          >
+                            {delBusy ? "در حال حذف…" : "حذف قطعی"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}

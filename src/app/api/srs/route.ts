@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -60,7 +62,9 @@ function toNum(v: unknown, fallback: number) {
   return Number.isFinite(n) ? n : fallback;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const rl = checkRate(req, "srs:get", 90, 60_000);
+  if (!rl.ok) { logEvent("srs", "rate-limited"); return rateLimited(rl.retryAfter); }
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "ابتدا وارد شو" }, { status: 401 });
@@ -86,6 +90,8 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
+  const rl = checkRate(req, "srs:put", 30, 60_000);
+  if (!rl.ok) { logEvent("srs", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {

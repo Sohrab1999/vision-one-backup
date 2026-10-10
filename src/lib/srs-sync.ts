@@ -16,6 +16,7 @@
 import { BOOKS } from "@/data/books/registry";
 import type { BookId } from "@/data/books/types";
 import { mergeStates, sanitize, type SrsGrade, type SrsState } from "./srs-engine";
+import { enqueueOffline } from "./offline-queue";
 
 const PUSH_DEBOUNCE_MS = 2500;
 const MAX_CARDS_PER_BOOK = 4000;
@@ -181,11 +182,12 @@ export async function srsPullMergePush(): Promise<number> {
 // ─── Push ───
 
 async function pushStates(rows: SrsRow[]): Promise<boolean> {
+  const payload = { states: rows };
   try {
     const res = await fetch("/api/srs", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ states: rows }),
+      body: JSON.stringify(payload),
     });
     if (res.status === 401) {
       authed = false; // سشن منقضی — بی‌صدا به حالت محلی برگرد
@@ -193,6 +195,8 @@ async function pushStates(rows: SrsRow[]): Promise<boolean> {
     }
     return res.ok;
   } catch {
+    // فقط خطای شبکه (نه 4xx) → در صف آفلاین می‌ماند تا با برگشت اینترنت ارسال شود
+    enqueueOffline({ url: "/api/srs", method: "PUT", body: payload });
     return false;
   }
 }

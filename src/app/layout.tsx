@@ -1,12 +1,19 @@
+/**
+ * حریم خصوصی نوجوان (تعهد «حداقل داده» — فاز ۱۱):
+ * بدون ردیاب تبلیغاتی، بدون کوکی شخص ثالث؛ دادهٔ جمع‌شده فقط پیشرفت یادگیری است
+ * (واژگان آموخته، نتایج آزمون، آمار بازی‌ها) و حذف کامل حساب از پنل حساب ممکن است.
+ */
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { PwaRegister } from "@/components/book/pwa-register";
+import { PerfReporter } from "@/components/book/perf-reporter";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://vision-one.example.com"),
   title: "کتابخانه ویژن | جزوه‌های تعاملی زبان انگلیسی پایه ۷ تا ۱۲",
   description:
-    "کتابخانه وب تعاملی جزوه‌های زبان انگلیسی متوسطه (پایه هفتم تا دوازدهم) — واژگان، گرامر، مکالمه، روایت صوتی، آزمون تعاملی و دستیار هوشمند برای هر پایه",
+    "ویژن‌وان — جزوه‌های تعاملی انگلیسی پایه هفتم تا دوازدهم: واژگان، گرامر، بازی، آزمون و دستیار هوشمند؛ رایگان و بدون تبلیغ",
   keywords: [
     "زبان انگلیسی",
     "جزوه زبان",
@@ -21,8 +28,37 @@ export const metadata: Metadata = {
     "نهم",
     "یازدهم",
     "دوازدهم",
+    "یادگیری انگلیسی با بازی",
+    "گرامر انگلیسی",
+    "فلش‌کارت",
+    "رایگان",
   ],
   authors: [{ name: "جمال احمدی و همکاران" }],
+  openGraph: {
+    title: "ویژن‌وان — یادگیری انگلیسی با بازی",
+    description:
+      "جزوه‌های تعاملی انگلیسی پایه هفتم تا دوازدهم: واژگان، گرامر، بازی، آزمون و دستیار هوشمند؛ رایگان و بدون تبلیغ",
+    url: "/",
+    siteName: "ویژن‌وان",
+    locale: "fa_IR",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1024,
+        height: 1024,
+        alt: "ویژن‌وان — یادگیری انگلیسی با بازی",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ویژن‌وان — یادگیری انگلیسی با بازی",
+    description:
+      "جزوه‌های تعاملی انگلیسی پایه هفتم تا دوازدهم: واژگان، گرامر، بازی، آزمون و دستیار هوشمند؛ رایگان و بدون تبلیغ",
+    images: ["/og-image.png"],
+  },
+  robots: { index: true, follow: true },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
@@ -65,6 +101,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased bg-background text-foreground min-h-screen flex flex-col">
         {children}
+        <PerfReporter />
         <PwaRegister />
         <Toaster position="bottom-center" richColors />
       </body>

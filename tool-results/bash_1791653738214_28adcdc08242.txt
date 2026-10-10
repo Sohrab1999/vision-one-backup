@@ -1,0 +1,221 @@
+TOTAL LENGTH: 277190
+TOTAL LINES: 1921
+Agent: full-stack-developer
+Task: تصویرسازی حافظه (Memory Image) — /api/word-image + دکمه در word-lookup
+
+Work Log:
+- خواندن worklog (قراردادها + وضعیت فاز ۸)، ai-guard.ts و الگوی ai-story/ai-teacher؛ خواندن کامل word-lookup.tsx (۵۱۹ خط پس از ویرایش)
+- ساخت src/app/api/word-image/route.ts: POST با اعتبارسنجی سخت (trim + سقف ۴۰ نویسه + regex فقط حروف انگلیسی/فاصله/خط تیره/آپاستروف + نرمال‌سازی آپاستروف‌های curly؛ meaning اختیاری سقف ۸۰)، کش دیسک /tmp/vision-wordimg/{sha1(word)}.png با mkdirSync recursive/existsSync/readFileSync/writeFileSync و برگشت cached:true، سقف روزانه consumeDailyQuota(userKeyOf(req, "word-image"), 10) با 429 فارسی «سقف روزانهٔ تصویرسازی حافظه پر شد (۱۰ تصویر) — فردا دوباره بیا! 🎨»، تولید با zai.images.generations.create (size 1024x1024، پرامپت انگلیسی سفت با ممنوعیت صریح متن/حروف/واترمارک روی تصویر)، گارد base64 خالی → 502 فارسی و سقف حجم پاسخ ۶MB → 502، dynamic force-dynamic + maxDuration 120، try/catch کامل با console.error و 500 فارسی
+- UI در word-lookup.tsx (ویرایش فقط با python3 open/read/replace/write — ۷ لنگر یکتا با گارد count==1): دکمهٔ «تصویر حافظه» (آیکون ImagePlay، h-7 w-7 هم‌ردیف SpeakButton و ستاره، همیشه فعال مگر هنگام لود → Loader2 spin)؛ state محلی memImg {word,data,loading} + کش ماژول‌اسکوپ memoryImageCache (Map با سقف ۴۰ ورودی، حذف قدیمی‌ها)؛ هندلر loadMemoryImage کاملاً event-driven بدون هیچ effect جدید: کش ماژولی → در صورت نبود POST /api/word-image با {word, meaning: hit.vocab?.meaning} و هدر x-visionone-name → ذخیره در کش + نمایش؛ نمایش <img> با data:image/png;base64 در کارت rounded-xl و border، زیرنویس Badge واژه (dir=ltr, font-en) + معنی فارسی، alt = «تصویر حافظه برای واژه {word}»؛ حالت لودینگ «دارم تصویر حافظه را می‌کشم… ✏️»؛ خطا با toast.error پیام فارسی سرور؛ گارد رندر فقط برای واژهٔ فعلی (memImg.word === hit.word) تا جابه‌جایی واژه تصویر کهنه نشان ندهد؛ سقف ارتفاع پاپ‌آور max-h-in(78vh,540px)] + overflow-y-auto برای جای تصویر
+- راستی‌آزمایی: curl «discover/کشف کردن» → HTTP 200 با image ۹۹٬۴۹۲ کاراکتر (۶۷s)؛ فراخوانی دوم → HTTP 200 و cached:true (۸ms، فایل کش ۷۴KB روی دیسک)؛ word خالی و word دارای رقم → 400 با پیام فارسی؛ bun run lint → صفر خطا؛ tsc فقط src → TSC-SRC-CLEAN؛ dev.log بدون خطای جدید
+
+Stage Summary:
+- فاز ۸ «تصویرسازی حافظه» (Dual Coding) کامل شد: کلیک روی هر واژهٔ انگلیسی در متن‌ها → پاپ‌آور دیکشنری → دکمهٔ تصویر حافظه → تصویر آموزشی پالت emerald/amber/teal با برچسب واژه و معنی فارسی زیر آن
+- فایل‌ها: src/app/api/word-image/route.ts (جدید)، src/components/book/word-lookup.tsx (ویرایش python3)؛ اسکریپت یک‌بارمصرف در tmp-scripts حذف شد
+- قرارداد: کش دولایه (دیسک شارِ سرور به‌ازای واژه + Map ماژولی شارِ کلاینت به‌ازای نشست) — تکرار همان واژه هیچ هزینهٔ مدلی ندارد؛ سقف روزانه ۱۰ تصویر به‌ازای هر کاربر با scope «word-image»
+---
+Task ID: 8-b2
+Agent: full-stack-developer
+Task: چت شخصیت‌ها (Persona Chat) — /api/persona-chat + persona-panel + تب دستیار
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۸ بخش A و قراردادهای AI) + ai-teacher/route.ts + _lib/ai-guard + _lib/book + tutor-view.tsx + teacher-panel.tsx + gamification.ts (notifyActivity).
+- دقیقاً دو فایل جدید + یک ویرایش:
+  * src/app/api/persona-chat/route.ts — POST با اعتبارسنجی کامل (persona نامعتبر/خالی ← 400 فارسی؛ messages آرایه، آخرین ۱۲ پیام، trim سقف ۶۰۰ نویسه، حداقل ۱ پیام user)، سقف روزانه consumeDailyQuota(userKeyOf(req, "persona-chat"), 40) ← 429 فارسی؛ سه پرامپت انگلیسی نوجوان‌پسند ۱۰–۱۵ خطی (سم غریبه‌مهربان 🚏 small-talk / میا هم‌کلاسی 🎒 مدرسه / لئو مسافر ✈️ اولین سفر به ایران) + قواعد مشترک: ماندن در نقش، فقط ۱–۳ جمله انگلیسی کوتاه، قاعده سطح (A2=فاعل+فعل+مفعول / B1=بند وابسته)، سؤال ادامه‌دهنده، فقط در صورت اشتباه واضح یک خط فارسی با 💡؛ فراخوانی LLM مثل ai-teacher (system به‌عنوان اولین پیام assistant + thinking disabled + bookPromptLine)، پاسخ خالی ← 502؛ dynamic=force-dynamic، maxDuration=60، try/catch کامل؛ بدون کش (چت context-dependent).
+  * src/components/book/ai/persona-panel.tsx — دو فاز: انتخاب (۳ کارت شناور grid-cols-1→sm:3 با emoji بزرگ/نام فارسی/توضیح/Badge سطح + سوییچ سطح A2/B1 پیش‌فرض A2) و چت (ScrollArea ثابت 380px، حباب‌ها مثل FreeChat با آواتار emoji شخصیت و SpeakButton روی خط انگلیسی اول، خوش‌آمد ثابت + ترجمه پرانتزی، ۳ چیپ شروع dir=ltr font-en با min-h-9، Textarea + دکمه Send با Enter/Shift+Enter، حباب سه‌نقطه در sending)؛ POST با آخرین ۱۲ پیام (بدون خوش‌آمد) + level + book ← reply ← notifyActivity()؛ خطاها toast.error فارسی؛ واژگان کتاب در لحن دخالت داده نمی‌شود (فقط level).
+  * tutor-view.tsx (فقط python3 ایمن‌ZWNJ): TABS/type گسترش با "persona" + آیکون Users + hint + import/رندر PersonaPanel + کامنت سربرگ (سه تب ← چهار تب).
+- react-hooks v6: صفر setState در بدنه‌ی effect — فقط دو effect: اسکرول (scrollTo خالص) و cleanup unmount (aliveRef=false + abortRef.abort)؛ AbortController برای هر fetch؛ تعویض شخصیت/بازگشت ← abort فوری + گارد ctrl.signal.aborted بعد از await (بدون toast بعد از abort، بدون setState پس از unmount).
+- راستی‌آزمایی: curl معتبر traveler/A2 ← 200 «I am from Canada. I am a happy traveler. …» (در نقش لئو)؛ multi-turn stranger ← 200؛ classmate با خطای «Yesterday I go» ← 200 با خط اصلاح «💡 Yesterday I went to the cinema…»؛ persona نامعتبر ← 400 فارسی؛ messages خالی ← 400 فارسی؛ bun run lint ← صفر؛ bunx tsc --noEmit (فیلتر src) ← CLEAN؛ dev.log ← GET / 200 بدون خطای کامپایل.
+- QA مرورگری (agent-browser): تب «شخصیت‌ها» در دستیار ← فاز انتخاب (سوییچ سطح + ۳ کارت) ← کلیک لئو ← خوش‌آمد + ۳ چیپ + ورودی ← ارسال چیپ ← POST /api/persona-chat 200 و حباب پاسخ با دکمه روخوانی ← «بازگشت به شخصیت‌ها» ← فاز انتخاب؛ کنسول/خطای صفحه صفر؛ اسکرین‌شات در tool-results/persona-chat*.png.
+
+Stage Summary:
+- چت مکالمه آزاد با شخصیت‌ها کامل و راستی‌آزمایی‌شده است؛ کاربر یکی از سم/میا/لئو را با سطح A2/B1 انتخاب می‌کند و شخصیت فقط با واژگان همان سطح (۱–۳ جمله) حرف می‌زند و در صورت اشتباه واضح یک خط 💡 فارسی می‌دهد.
+- فایل‌ها: src/app/api/persona-chat/route.ts، src/components/book/ai/persona-panel.tsx، src/components/book/tutor-view.tsx (ویرایش python3).
+- قرارداد: سقف روزانه ۴۰ ردوبدل به‌ازای کاربر (کلید persona-chat)؛ هر ردوبدل موفق یک notifyActivity() (زنجیره/ماموریت روزانه)؛ خوش‌آمد ثابت شخصیت جزو تاریخچه‌ی ارسالی به سرور نیست.
+- نکته‌ی ابزاری: در خروجی Bash، دنباله‌ی «» (مثل essages) در «نمایش» خورده می‌شود و گویا خط خراب است — با codepoint بررسی شد؛ فایل سالم بود و هیچ اصلاحی لازم نشد (یادداشت برای عامل‌های بعدی: پیش از «repair»، codepoint‌ها را چاپ کنید).
+---
+Task ID: 8-b4
+Agent: full-stack-developer
+Task: سؤال مشابه بساز — /api/similar-question + کارت بونس در quiz-game
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۸ بخش A و قرارداد ai-guard)، الگوی مسیرهای /api/ai-teacher (سیستم‌پرامپت به‌صورت اولین پیام assistant + thinking disabled) و /api/ai-story (استخراج JSON با regex + retry یک‌باره) و /api/explain (اعتبارسنجی ورودی) + bookPromptLine از _lib/book؛ quiz-game.tsx هر ۱۴۷۲ خط خوانده شد (ناحیه «توضیح هوشمند» ~۴۲۷-۴۶۵ و UI دکمه‌ها ~۱۴۳۵-۱۴۶۵).
+- مسیر جدید src/app/api/similar-question/route.ts ساخته شد (dynamic=force-dynamic، maxDuration=60، try/catch کامل): ورودی {text, options[2..6], answer, category?, book?} با پیام‌های ۴۰۰ فارسی؛ شکست JSON.parse بدنه → ۴۰۰ فارسی؛ کش LRU BoundedCache(200) با کلید sha1(text|answer|bookId) → {question, cached:true} (فقط برای تکرار همان سؤال)؛ سقف روزانه consumeDailyQuota(userKeyOf(req,"similar-question"), 25) → ۴۲۹ فارسی؛ پرامپت «طراح تست زبان انگلیسی پایهٔ دهم» + bookPromptLine: تست جدید هم‌الگو ولی متفاوت، گزینهٔ درست یکتا و عین نمونه نباشد، ۳ گزینهٔ غلط هم‌خانواده، خروجی فقط JSON خالص ۴گزینه‌ای با note فارسی؛ اعتبارسنجی سخت خروجی (متن ≠ نمونه، گزینهٔ درست ≠ نمونه، ۴ گزینهٔ یکتا، answer عددی ۰..۳، note ≥۲ نویسه) با retry یک‌باره و پیام تصحیحی → ۵۰۲ فارسی.
+- UI در src/components/book/quiz-game.tsx فقط با python3 (replace رشتهٔ دقیق + assert یکتایی قبل از هر replace؛ صفر U+FFFD): آیکون Wand2، interface SimilarBonus، ۴ state بونس (bonus/bonusSelected/bonusLoading/bonusRegen برای کلید ری‌انیمیشن)، ریست بونس در هر ۶ نقطهٔ setAiExplanation(null) (شروع راند عادی/تمرین/روزانه/هفتگی، handleTimeout، nextQuestion) + reset()؛ تابع generateSimilar با منبع دوگانه: دکمهٔ اصلی «سؤال مشابه بساز» همیشه از سؤال اصلی (تکرار → پاسخ کش‌شدهٔ همان سؤال) و «سؤال مشابه بعدی» از روی سؤال مشابهٔ فعلی زنجیر می‌شود تا تولید واقعاً بی‌نهایت و هر POST کلید کش تازه بگیرد؛ دکمه‌ها onClick با آرگومان صریح (false/true) تا MouseEvent به‌جای fromBonus نشت نکند.
+- کارت بونس زیر کارت اصلی (فقط answered && bonus): Badge «سؤال مشابه ✨» + «تمرین بی‌پایان»، متن dir=ltr font-en، ۴ دکمهٔ عمودی هم‌استایل سبز/قرمز با aria-pressed و قفل پس از پاسخ (disabled)، نمایش note فارسی پس از پاسخ + پیام درست/اشتباه، ردیف «سؤال مشابه بعدی» / «بستن» (setBonus(null))؛ خطا → toast.error پیام فارسی سرور؛ هیچ تغییری در منطق آزمون اصلی/recordMistake/XP/تایمر.
+- نکتهٔ عملیاتی: حین QA مرورگری پروسهٔ dev-server یک‌باره از کار افتاد (dev.log صفر بایت شد) — با nohup bun run dev بازیابی شد (Ready در ۱.۶ث) و همهٔ تست‌ها روی نمونهٔ تازه تکرار شد.
+- راستی‌آزمایی: curl معتبر (گرامر) → 200 با «My father ___ a new car last month.» (۴ گزینه، answer=2، متن و گزینهٔ درست متفاوت از نمونه، note فارسی)؛ تکرار همان بدنه → cached:true (کش کار می‌کند، بدون LLM)؛ curl واژگانی با book → 200؛ بدنهٔ خراب/بدون متن/گزینهٔ غیرآرایه/answer خارج از بازه → 400 فارسی؛ bun run lint → خروجی خالی؛ bunx tsc --noEmit | grep ^(src|components|lib|app)/ → CLEAN؛ QA مرورگری (agent-browser): پاسخ سؤال → دکمهٔ «سؤال مشابه بساز» کنار «توضیح با هوش مصنوعی» → کارت بونس با ۴ گزینه → پاسخ بونس (قفل + aria-pressed + note) → دو بار «سؤال مشابه بعدی» سه سؤال یکتای متوالی (renderهای ~۰.۹-۱.۴ث در dev.log = فراخوانی واقعی LLM نه کش) → «سؤال بعدی» اصلی → کارت بونس حذف می‌شود.
+
+Stage Summary:
+- ویژگی «سؤال مشابه بساز» کامل است: بعد از هر پاسخ، دانش‌آموز می‌تواند بی‌نهایت تست هم‌الگو از همان نکته بسازد و همان‌جا پاسخ دهد — نیمهٔ «توضیح‌دهندهٔ تست» از قبل موجود بود و اکنون حلقهٔ تمرین بی‌پایان فاز ۸ بسته شد.
+- فایل‌ها: src/app/api/similar-question/route.ts (جدید) + src/components/book/quiz-game.tsx (۴ state + generateSimilar + دکمهٔ کنار توضیح هوشمند + کارت بونس + ریست‌ها) — قرارداد «افزودن مسیر AI جدید» با ai-guard رعایت شد (BoundedCache + consumeDailyQuota + userKeyOf + bookPromptLine).
+- تصمیم‌ها: زنجیره‌کردن «بعدی» از خود سؤال مشابه (کلید کش تازه در هر گام = تولید بی‌نهایت واقعی)؛ کش فقط برای تکرار همان سؤال مبدأ؛ اعتبارسنجی دوطرفهٔ «متن و گزینهٔ درست نباید عین نمونه باشد» با retry — در بدترین حالت ۵۰۲ فارسی و toast محترمانه.
+- تست‌ها: 4×curl (200/cached/400×2)، lint 0، tsc-src 0، QA مرورگری کامل + بازگشت سالم به جریان آزمون اصلی؛ dev-server سالم (پورت 3000).
+
+---
+Task ID: 8-round3 (orchestrator — فاز ۸ بخش B با ۴ ساب‌ایجنت موازی)
+Agent: main orchestrator (Z.ai Code)
+Task: تکمیل ۴ آیتم باقی‌ماندهٔ فاز ۸ — تصویرسازی حافظه، چت شخصیت‌ها، تحلیل هوشمند خطاها، سؤال‌ساز مشابه بی‌پایان
+
+Work Log:
+- وضعیت‌سنجی: فاز ۸-A (معلم خصوصی + داستان‌ساز + رفع لهجه چینی TTS) قبلاً در commit 00d0756 بسته شده بود؛ ۴ چک‌باکس باقی بود
+- ۴ ساب‌ایجنت full-stack-developer به‌صورت موازی اجرا شد (8-b1 تا 8-b4) با قرارداد ثابت: ai-guard، LLM assistant-first + thinking disabled، ویرایش فارسی فقط python3، react-hooks v6، پالت emerald/amber/teal
+- 8-b1: /api/word-image (کش دیسک /tmp/vision-wordimg + سقف روزانه ۱۰ + پرامپت بدون متن) + دکمه «تصویر حافظه» در word-lookup با کش ماژولی ۴۰تایی و نمایش figure/figcaption
+- 8-b2: /api/persona-chat (سه شخصیت: سم غریبه 🚏 / میا هم‌کلاسی 🎒 / لئو مسافر ✈️ با قواعد A2/B1 و خط 💡 اصلاح فارسی) + persona-panel (انتخاب کارت → چت با چیپ‌های شروع و SpeakButton) + تب «شخصیت‌ها» در tutor-view (۴ تب)
+- 8-b3: /api/error-analysis (JSON سخت‌گیرانه با retry، سقف ۱۲/روز، کش ۱۲۰تایی) + error-analysis-panel در بالای نمای آزمون: «الگوی خطا» + نکته طلایی + تمرین اختصاصی ۴سؤالی سؤال‌به‌سؤال با فیدبک
+- 8-b4: /api/similar-question + کارت بونس «سؤال مشابه بساز» در quiz-game کنار «توضیح هوشمند» — زنجیرهٔ بی‌پایان (سؤال بعدی از روی خود مشابه)
+- راستی‌آزمایی ارکستراتور از دیسک: ۴ مسیر API + ۲ پنل جدید + ۴ سیم‌کشی (tutor-view/quiz-view/word-lookup/quiz-game) — همه موجود؛ ۴ ورود worklog ساب‌ایجنت‌ها
+- QA مرورگری ارکستراتور: چت لئو end-to-end (پاسخ واقعی درباره kebab + TTS)، تحلیل خطا (الگوی «ضمیرهای مفعولی» + تمرین)، بونس مشابه (پاسخ درست ourselves → «درست بود! 🎉»)، تصویر حافظه whale (200 در 69s، رندر با alt)، موبایل 390px بدون اسکرول افقی، فوتر چسبیده، کنسول صفر
+- باگ یافته و رفع‌شده در /api/similar-question: (۱) retry فقط وقتی raw غیرخالی بود اجرا نمی‌شد → حلقهٔ ۳تلاش با try/catch؛ (۲) مدل گاهی پیشوند «a)» می‌چسباند → stripOptionPrefix؛ (۳) اعتبارسنجی «گزینهٔ درست ≠ نمونه» برای تست‌های هم‌نقطه بیش‌ازحد سخت بود → تعدیل به «کل آرایهٔ گزینه‌ها ≠ نمونه» — قبل: 502های flaky؛ بعد: 3/3 و 2/2 موفق در تست‌های curl
+- تیک ۴ چک‌باکس فاز ۸ + یادداشت QA فاز ۸-B در نقشه راه (python3)؛ cron جدید ۴۹۹۴۴۹ پس از «Disabled due to exec limits» قدیمی
+
+Stage Summary:
+- فاز ۸ «دستیار هوشمند ۲.۰» به‌طور کامل بسته شد — هر ۶ آیتم ✔ (معلم خصوصی، داستان‌ساز، تصویرسازی حافظه، چت شخصیت‌ها، تحلیل خطاها، سؤال‌ساز بی‌پایان)
+- فایل‌های کلیدی این دور: src/app/api/{word-image,persona-chat,error-analysis,similar-question}/route.ts، src/components/book/ai/{persona-panel,error-analysis-panel}.tsx، ویرایش word-lookup/tutor-view/quiz-view/quiz-game
+- قرارداد تثبیت‌شده: هر مسیر AI = ai-guard (کش + سقف روزانه + userKeyOf) + سیستم‌پرامپت به‌صورت اولین پیام assistant + retry با nudge؛ خروجی JSON همیشه با اعتبارسنجی دستی و پیام‌های خطای فارسی
+- ریسک/یادداشت: تولید تصویر ۶۰-۷۰ ثانیه است (سقف maxDuration=120) — UX لودینگ دارد؛ LLM گاهی خالی برمی‌گرداند (۳ تلاش در similar-question؛ سایر مسیرها ۲ تلاش)؛ quotaها: image 10/روز، تحلیل 12/روز، مشابه 25/روز، شخصیت 40/روز، معلم 30/روز، داستان 20/روز
+- گام بعدی پیشنهادی: فاز ۹ «کلاس مجازی» (کد ۶رقمی معلم، داشبورد، تکلیف، آزمون زنده) یا فاز ۱۰ (دفتر خطاها، خروجی چاپی، اکسپورت داده)
+
+---
+Task ID: 9-a
+Agent: full-stack-developer
+Task: کلاس مجازی — بخش سرور (Prisma + API کامل)
+
+Work Log:
+- زمینه خوانده شد (worklog، الگوی مسیرهای questions/srs، lib/db)؛ ۷ مدل (Classroom/ClassMember/Assignment/AssignmentDone/Notification/LiveQuiz/LiveAnswer) انتهای schema.prisma اضافه و دو بار `bunx prisma db push` موفق (بار دوم برای ستون اضافهٔ choice) — `bunx prisma db pull --print | grep -c "model Live"` = 2
+- انحراف کوچک و مستند از اسکیمای تسک: به LiveAnswer ستون `choice Int @default(-1)` اضافه شد چون قرارداد API (answered.choice در GET دانش‌آموز) بدون ذخیرهٔ گزینهٔ انتخابی قابل پیاده‌سازی نبود؛ بقیهٔ مدل‌ها عیناً طبق تسک
+- ۵ فایل مسیر ساخته شد: api/class (POST ساخت کلاس + کد یکتای ۶رقمی با ۱۰ تلاش + crypto.randomUUID برای teacherKey)، api/class/join (upsert عضو + state کامل)، api/class/[code] (GET state دو نقشی + DELETE کسکید)، api/class/[code]/assignments (POST معلم + PUT دانش‌آموز با score فقط بار اول)، api/class/[code]/notifications (POST معلم با targetKey خالی="*" + PUT mark-read گروهی)، api/class/[code]/live (POST شروع با پایان خودکار آزمون فعال قبلی + shuffle انتخاب سؤال، GET دو نقشی بدون فیلد answer برای دانش‌آموز، PUT پاسخ فقط برای سؤال جاری و فقط بار اول با clamp choice 0..3 و ms 0..60000، PATCH next/finish با self-finish و اعلان پایان)
+- منطق مشترک در api/class/_lib/state.ts: buildClassState (members با attempts7d/avgScore7d/assignmentsDone با IN+groupBy، problem.liveWrong با groupBy content سقف ۸، weekSummary هفتگی، notifications با OR targetKey، unreadCount جداگانه، live خلاصهٔ آخرین آزمون)
+- **باگ بحرانی حل‌شده — کلاینت پرisma کهنه در سرور dev بدون ری‌استارت**: پس از db push، سرور در حال اجرا `db.classroom` را undefined می‌دید (توربوپک node_modules را دوباره باندل نمی‌کند و کش require پروسه هم کهنه بود)؛ touch فایل‌ها و تعویض کلید global کار نکرد؛ راه‌حل نهایی در src/lib/db.ts: لود PrismaClient با createRequire از دیسک + پاک‌سازی کلیدهای `.prisma`/`@prisma` از require cache + گارد `"classroom" in db` برای self-heal — بدون ری‌استارتِ ممنوعِ سرور، همهٔ مدل‌های تازه زنده شدند (بدون دست زدن به پروسه: سایر عامل‌ها بعد از هر db push دیگر نیازی به ری‌استارت ندارند)
+- چرخهٔ curl کامل موفق: ساخت کلاس (code=865681) → join آرش/سارا → state معلم members=2 → تکلیف 201 (+اعلان 📋) → PUT done doneCount=1 و تکرار بدون بازنویسی → آزمون زنده count=5 → پاسخ آرش (درست، answer از GET معلم=1) و سارا (غلط) → پاسخ تکراری همان رکورد اول → GET دانش‌آموز بدون answer و با answered{choice:1,correct:true} → PATCH next (currentIndex=1) → PATCH finish (status=finished + اعلان 🏁) → state معلم: liveWrong ۱ آیتم با متن سؤال + leaderboard ۲ نفر (آرش ۱ درست/4200ms بالاتر از سارا) → خطاها: کد نامعتبر 400، teacherKey غلط 403، index اشتباه 400 «هنوز وقت این سؤال نیست»، غیرعضو 404 «اول عضو کلاس شو»، count=50 خارج بازه 400 → اعلان mark-read (marked=4→0) و اعلان اختصاصی به سارا که آرش نمی‌بیند → DELETE کلاس یکبارمصرف {ok:true} + 404 پس از حذف + orphan members=0 (کسکید سالم)
+- کیفیت: `bun run lint` صفر؛ `bunx tsc --noEmit | grep ^(src|...)/` → TSC-SRC-CLEAN (دو خطای موقت class-view.tsx متعلق به عامل UI موازی بود که خودش بست)
+
+Stage Summary:
+- بک‌اند کامل «کلاس مجازی» فاز ۹ آمادهٔ مصرف UI است — قرارداد نهایی: POST /api/class → {code,teacherKey,name} (teacherKey فقط یک‌بار)؛ POST /api/class/join و GET /api/class/[code]?key&role → state واحد {classroom,role,members?(معلم),assignments[doneCount,done],notifications[read],unreadCount,problem?(معلم: liveWrong+weekSummary),live{id,status,currentIndex,questionCount}}؛ PUT assignments {studentKey,assignmentId,score?} → {ok,doneCount}؛ PUT live {studentKey,displayName,quizId,index,choice,ms} → {correct,answeredCount}؛ GET live معلم شامل question(با answer)+answeredCount(سؤال جاری)+leaderboard(≤۵۰، correct desc سپس totalMs asc سپس answered desc)؛ PATCH live {action:next|finish} → همان shape معلم
+- تصمیم‌های کلیدی: answeredCount فقط پاسخ‌های سؤال جاری است؛ GET state آخرین آزمون را با status برمی‌گرداند ولی GET live فقط آزمون active را (وگرنه live:null)؛ پاسخ تکراری/دیرهنگام هرگز بازنویسی نمی‌شود؛ همهٔ اعداد با clamp و همهٔ کلیدها 8..64 و کد با ^\d{6}$ اعتبارسنجی می‌شوند؛ پیام‌های خطا همه فارسی
+- ریسک/یادداشت برای عامل‌های بعدی: (۱) src/lib/db.ts جدید self-healing است — بعد از db push فقط یک درخواست بزنید تا کلاینت تازه لود شود؛ اگر روزی مدل جدید اضافه شد و دیده نشد، گارد `"classroom" in db` را به نام مدل جدید به‌روز کنید یا سرور را ری‌استارت کنید (۲) در این db نام‌های «آرش/سارا» Attemptهای قدیمی فازهای قبل دارند — attempts7d/weekSummary با displayName از Attempt تطبیق داده می‌شود (طبق قرارداد) و اعداد تست بالا متأثر از آن بود (۳) کلاس تست باقی مانده: code=865681 با teacherKey در این لاگ برای QA دستی UI
+
+---
+Task ID: 9-b
+Agent: full-stack-developer (به‌طور کامل اجرا شد ولی پاسخ نهایی به‌خاطر خطای زیرساخت قطع شد — ورودی زیر توسط ارکستراتور از روی شواهد دیسک ثبت شده)
+Task: کلاس مجازی — بخش UI
+
+Work Log:
+- src/lib/class-store.ts: getClassKey (UUID دستگاه در localStorage) + نشست کلاس cross-book با useSyncExternalStore (visionone:class-session)
+- src/components/book/class-view.tsx (لندینگ دو-نقشی + فرم ساخت/پیوستن) + class/teacher-dashboard.tsx (کد بزرگ + کپی، اعضا با آمار ۷روز، واژه‌های مشکل‌دار، تکلیف‌ساز، اعلان، پنل آزمون زنده با جدول برنده‌ها) + class/student-view.tsx (اعلان‌ها با unread، تکالیف «انجام دادم»، ورود زنده) + class/live-player.tsx (polling ۲٫۵ث، تایمر ms، ضدتقلب، رد گزینه‌ها)
+- سیم‌کشی: nav-store + app-header (آیتم «کلاس» با School بعد از گفتار) + page.tsx
+- QA خودش: ۴ اسکرین‌شات در tool-results/9b-*.png (داشبورد معلم، دانش‌آموز، موبایل) — سیم‌کشی و رندر تأیید شده
+
+Stage Summary:
+- UI کامل فاز ۹ روی قرارداد API ساب‌ایجنت 9-a؛ lint/tsc صفر (راستی‌آزمایی ارکستراتور)
+
+---
+Task ID: 9-round (orchestrator — فاز ۹ کلاس مجازی با ۲ ساب‌ایجنت موازی)
+Agent: main orchestrator (Z.ai Code)
+Task: پیاده‌سازی کامل فاز ۹ «کلاس مجازی» نقشه راه (سرور + UI + QA دو-نقشی)
+
+Work Log:
+- وضعیت‌سنجی: فاز ۸ کاملاً بسته (b8f9a1e)؛ فاز ۹ آغاز شد
+- 9-a (سرور): ۷ مدل Prisma + db push + ۶ مسیر API با state مشترک (_lib/state.ts) — چرخه curl ۱۱ مرحله‌ای کامل؛ رفع فنی مهم: src/lib/db.ts به لودر self-healing تبدیل شد (بعد از db push، پروسه dev بدون restart کلاینت تازه لود می‌کند)؛ انحراف مستند: ستون choice در LiveAnswer
+- 9-b (UI): ساب‌ایجنت همه‌چیز ساخت ولی پاسخ نهاییش به خطای زیرساخت (timeout adapter) قطع شد — راستی‌آزمایی از دیسک: همه فایل‌ها + سیم‌کشی + اسکرین‌شات‌ها موجود؛ lint/tsc صفر؛ ورود worklog اش را ارکستراتور نوشت
+- حادثهٔ زیرساختی: dev server دو بار بی‌صدا مُرد (لاگ بدون crash) — با restart احیا و پایداری با probe دوگانه تأیید شد؛ نویز ۱۴تایی کنسول = pre-existing next-auth session fetch (مربوط به ری‌استارت‌ها، نه کد)
+- QA مرورگری ارکستراتور (دو-نقشی روی یک مرورگر با جابجایی session): ساخت کلاس→داشبورد کد بزرگ؛ خروج→پیوستن دانش‌آموز→۸ اعلان خودکار دیده شد→تکلیف «انجام شد»؛ شروع زنده ۳سؤالی از UI معلم→پاسخ درست از UI دانش‌آموز («درست بود! 🎉» + answeredCount=1 سرور)→«سؤال بعدی» (currentIndex=1 سرور)→«پایان آزمون» (جدول نهایی) — چرخه کامل سبز
+- باگ یافته و رفع‌شده: در جدول برنده‌ها نام دانش‌آموز اشتباهاً نام کلاس ثبت می‌شد (نشست دستی تست) → رفع دوطرفه: GET live دانش‌آموز اکنون me:{displayName} برمی‌گرداند (server authoritative) و live-player آن را برای ثبت پاسخ/سربرگ ترجیح می‌دهد؛ ضمناً scoping باگ member در مسیر live رفع (hoist memberDisplayName)
+- تیک ۵ چک‌باکس فاز ۹ + یادداشت QA (python3)
+
+Stage Summary:
+- فاز ۹ کامل شد: جریان معلم↔دانش‌آموز بدون ایمیل با کد ۶رقمی، داشبورد با گزارش هفتگی و واژه‌های مشکل‌دار (از LiveAnswer غلط + Attempt ۷روز)، تکلیف با پیگیری، آزمون زندهٔ هم‌زمان با جدول لحظه‌ای و ضدتقلب سمت سرور، اعلان داخلی خودکار+دستی
+- فایل‌های کلیدی: prisma/schema.prisma (+۷ مدل)، src/lib/db.ts (self-healing)، src/app/api/class/** (۶ مسیر + _lib/state.ts)، src/lib/class-store.ts، src/components/book/class-view.tsx + class/{teacher-dashboard,student-view,live-player}.tsx
+- قرارداد: نشست کلاس cross-book در localStorage (نه book-scoped)؛ کلید معلم فقط یک‌بار در پاسخ create به کلاینت می‌رود؛ answer سؤالات زنده هرگز به کلاینت دانش‌آموز نمی‌رود
+- ریسک/یادداشت: polling (نه WebSocket) برای زنده — برای مقیاس کلاس نوجوان کافی؛.displayName عضو در rejoin آپدیت نمی‌شود (سمنتیک create-only)؛ نویز next-auth pre-existing
+- گام بعدی پیشنهادی: فاز ۱۰ (دفتر خطاها، خروجی چاپی فلش‌کارت، اکسپورت/ایمپورت داده، کارت پیشرفت اشتراکی)
+
+---
+Task ID: 10-b
+Agent: full-stack-developer
+Task: فاز ۱۰ UI — دفتر خطاها کامل + یادداشت شخصی واژه
+
+Work Log:
+- زمینه خوانده شد (worklog + mistakes-store قدیمی + questions/route + nav/app-header/page + word-lookup + profile-button + book-context + auth)؛ همهٔ مصرف‌کنندگان useMistakes با grep یافت شد: quiz-game (mistakes+count+clear)، error-analysis-panel (mistakes+count)، home-view (فقط count)
+- ۱) mistakes-store v2: ساختار MistakeEntry {id, at} با migration خواندن (رشته‌های قدیمی → {id, at:""})، recordMistake با unshift تاریخ now (dedup + سقف ۳۰۰ + جدید اول همان قبل)، resolveMistake/clearMistakes بدون تغییر رفتار، useMistakes() → {entries, count, clear} — فایل انگلیسی با Write/Edit
+- ۲) نما notebook-view.tsx «📓 دفتر خطاها» دو فاز در یک نما: فهرست (کارت خالی «دفتر خطاها سبز است! 🌱»، لیست max-h-96 با اسکرول‌بار سفارشی سراسری، چیپ دسته/درس، تاریخ شمسی Intl fa-IR dateStyle medium با «—» برای at خالی، آکاردئون ChevronDown با گزینهٔ درست سبز + توضیح یا «توضیحی ثبت نشده»، دکمه «همین‌ها را تمرینم کن 🎯» و «خالی کردن دفتر» با AlertDialog destructive) + تمرین (حداکثر ۱۰ جدیدترین، گزینه‌ها با قفل/سبز/قرمز، توضیح بعد از پاسخ، resolveMistake روی درست، نتیجه «X از Y درست بود» با faNum، «تمرین دوباره» از باقی‌مانده‌ها با تطبیق entries زنده، «بازگشت به دفتر»، Progress باریک) — جزئیات فهرست با effect ناهمگام (بدون setState همگام + AbortController در cleanup، کش per-book)، fetch تمرین کاملاً رویدادمحور با AbortController
+- ۳) سازگاری مصرف‌کنندگان (python3): quiz-game.tsx خط ۲۰۵ → entries + مشتق mistakeIds با useMemo (بقیهٔ کد دست‌نخورده)؛ error-analysis-panel.tsx → mistakeEntries + .map(e=>e.id) در ساخت ids؛ home-view فقط count → بدون تغییر
+- ۴) یادداشت واژه در word-lookup.tsx (فقط python3): کش ماژولی notesCache Map<bookId,{rows:Map<word,NoteRow>,status,fetchedAt}> با سقف ۵۰۰ ردیف + TTL پنج دقیقه + استور useSyncExternalStore (notifyNotes/version) — fetch فقط با رویداد باز شدن پاپ‌آپ (onWordClick/openSelectionSearch → ensureNotes)، مهمان اصلاً fetch نمی‌گیرد؛ بخش «📝 یادداشت من» با Separator در ته پاپ‌آپ: Textarea سقف ۵۰۰ با شمارنده faNum، دکمه «ذخیره» (Save) = PUT + آپدیت کش + toast «یادداشت ذخیره شد ✓»، «حذف» (Trash2 فقط اگر ردیف هست) = DELETE + کش + toast؛ 401 → حالت مهمان بدون خطا؛ 404/500 → toast فارسی و status error (تلاش دوباره در باز شدن بعدی)؛ کامپوننت WordNoteSection با key={word} مونت می‌شود تا draft هر واژه ریست شود (value = draft ?? row.note — بدون هیچ setState در effect)
+- ۵) دکمه ورود مهمان: چون authOptions pages.signIn="/" است، signIn() خام به «/» برمی‌گردد و بی‌اثر بود؛ رویداد window «visionone:open-profile» اضافه شد و profile-button (python3) به آن گوش می‌دهد و دیالوگ حساب (ورود/ثبت‌نام کامل) را باز می‌کند — هم‌الگوی رویدادهای visionone:* موجود؛ انحراف کوچک مستند از «signIn() الگوی profile-button»
+- ۶) سیم‌کشی: nav-store «notebook» بعد از review (Edit)؛ app-header (python3) آیتم «دفتر خطاها» با NotebookText کنار «مرور امروز» + ViewId؛ page.tsx (python3) import + case رندر
+- راستی‌آزمایی مرورگری (agent-browser): seed ۴ خطای قدیمی → migration خودشان به {id,at:""} و تاریخ «—»؛ فهرست با متن/چیپ/تاریخ؛ بازشدن کارت با گزینه‌ها+توضیح؛ تمرین کامل ۴ سؤال → «۲ از ۴ درست بود» + mistakes در localStorage از ۴→۲ (resolve درست کار می‌کند)؛ «تمرین دوباره» با «سؤال ۱ از ۲»؛ «بازگشت به دفتر»؛ AlertDialog «هر ۲ سؤالِ ثبت‌شده پاک می‌شود…» → تأیید → «خالی» + حالت سبز + stored="[]"؛ پاپ‌آپ واژه → بخش یادداشت مهمان + دکمه ورود → دیالوگ حساب باز شد؛ اسکرین‌شات‌ها در tool-results/10b-*.png
+- کیفیت نهایی: bun run lint صفر؛ tsc --noEmit بدون خطای src/؛ curl / = 200؛ GET /api/questions?ids=x شکل درست؛ /api/notes بدون لاگین = 401 فارسی (عامل موازی ساخته بود) و UI محترمانه مهمان را نشان می‌دهد
+
+Stage Summary:
+- فایل‌ها: src/lib/mistakes-store.ts (v2 تاریخ‌دار)، src/components/book/notebook-view.tsx (جدید)، src/components/book/word-lookup.tsx (+کش یادداشت/WordNoteSection)، src/components/book/profile-button.tsx (+شنود رویداد)، src/components/book/quiz-game.tsx و ai/error-analysis-panel.tsx (سازگاری)، src/lib/nav-store.ts، src/components/book/app-header.tsx، src/app/page.tsx (سیم‌کشی)
+- قرارداد نهایی برای عامل‌های بعدی: useMistakes() فقط {entries: {id, at}[], count, clear} برمی‌گرداند — idها را با entries.map(e=>e.id) بگیرید؛ رکوردهای پیش از v2 دارای at="" هستند (تاریخ «—» در UI)؛ recordMistake تاریخ now می‌گذارد
+- یادداشت واژه: کش ماژولی per-book با TTL ۵ دقیقه — PUT/DELETE موفق کش را همان‌جا تازه می‌کنند؛ اگر بعداً notes در جایی دیگر تغییر کرد، reload صفحه کش را هم تازه می‌کند (کش در حافظه است)
+- ریسک/یادداشت: (۱) dev server وسط تست دو بار بی‌صدا مُرد و توسط زیرساخت دوباره بالا آمد (سابقهٔ فاز ۹) — بخشی از تست‌های UI چندمرحله‌ای با HMR عامل‌های موازی قطع شد که با evalهای اتمیک دور زده شد (۲) مسیر UIِ یادداشت با حساب لاگین‌شده در مرورگر تست نشد (register/login دیالوگ وسط کار با HMR قطع شد؛ حساب آزمایشی note10b/pin 1234 در DB هست) — کد PUT/DELETE همان الگوی مسیر مهمان را دارد و 401/404 محترمانه هندل می‌شود (۳) «تمرین دوباره» وقتی همه درست شوند disable می‌شود (چیزی باقی نمی‌ماند)
+
+---
+Task ID: 10-a
+Agent: full-stack-developer
+Task: فاز ۱۰ سرور — WordNote + /api/notes + /api/export + /api/import
+
+Work Log:
+- زمینه خوانده شد (worklog — ۳ ورود آخر: 9-a سرور کلاس، 9-b UI کلاس، 9-round ارکستراتور؛ الگوی profile/srs/progress/attempts + _lib/book.ts + lib/db.ts self-healing)
+- مدل WordNote طبق اسکیما عیناً انتهای schema.prisma اضافه شد + رابطه «wordNotes WordNote[]» به User؛ `bunx prisma db push` دو بار موفق و پایدار؛ `bunx prisma db pull --print | grep -c "model WordNote"` = 1 ✓
+- گارد self-heal در src/lib/db.ts به OR منطقی ارتقا یافت: ("classroom" in db || "wordNote" in db) در هر دو نقطه (makeDb + getDb) — پس از db push فقط یک probe (GET / = 200) کلاینت تازه را زنده کرد؛ بدون هیچ ری‌استارتی
+- src/app/api/notes/route.ts (جدید): GET ?book= (اعتبارسنجی book از فهرست ۶تایی، خروجی مرتب updatedAt نزولی) · PUT {book,word,note} آپ‌سل با userId_book_word (word تریم 1..40، note تریم 1..500، خالی = 400 «یادداشت خالی است»، book نامعتبر = 400) · DELETE ?id= فقط مالک (غیرموجود/غیرمالک = 404 «یادداشت پیدا نشد») — همه 401 مهمان «ابتدا وارد شو»
+- src/app/api/export/route.ts (جدید): GET بدون پارامتر → {ok, exportedAt, version:2, server:{profile(username/avatar/grade/createdAt), progress(≤2000), attempts(≤۵۰۰ آخر، نزولی، شامل book/category/lesson/total/correct/duration/name/detail/createdAt), reviewStates(≤3000), wordNotes(≤500)}} — همه تاریخ‌ها ISO؛ 401 مهمان «برای دریافت خروجی کامل ابتدا وارد شو»
+- src/app/api/import/route.ts (جدید): POST {server:{progress?,attempts?,reviewStates?,wordNotes?}} — نبودِ server/آرایه نبودن/JSON خراب = 400 «فایل پشتیبان معتبر نیست»؛ progress ≤2000 (key 1..120، value ≤512KB) آپ‌سل userId_key؛ reviewStates ≤3000 با همان اعتبارسنجی/clamp مسیر srs (ease 1.3..3.5، interval 0..365، reps/lapses/streak ≥0، chapter 0..99، cardKey 1..128، dueAt معتبر یا now) آپ‌سل userId_book_cardKey (فایل برنده)؛ wordNotes ≤500 (word 1..40، note 1..500، book معتبر) آپ‌سل؛ attempts = ۵۰۰ ردیف آخر فایل با createMany (id/userId فایل نادیده، book نامعتبر→vision-one، category∉{grammar,vocabulary,all}→all، lesson 0..30، total 0..200، correct 0..total، duration 0..7200، name ≤40 یا null، detail ≤64KB، createdAt معتبر یا now)؛ تراکنش‌های per-section با timeout 60s؛ پاسخ {ok, imported:{progress,attempts,reviewStates,wordNotes}}
+- 🛠️ رفع باگ زیرساختی P0 خارج از اسکوپ اعلامی ولی پیش‌نیاز همین مسیرها (مستند برای ارکستراتور): getServerSession در «همهٔ» مسیرهای احرازشدهٔ پروژه (profile/srs/progress/notes/...) همیشه 401 می‌داد — علت: بدون NEXTAUTH_SECRET، next-auth v4 دو secret متفاوت می‌ساخت (createSecret روی authOptions کامل در [...nextauth] در برابر authOptions با providers:[] در getServerSession) → کوکی سشن توسط مسیرهای API رمزگشایی نمی‌شد (JWT_SESSION_ERROR: decryption operation failed در dev.log؛ اثبات با اسکرین‌سشن‌کوکی و oracle هش csrf). رفع یک‌خطی در src/lib/auth.ts: secret ثابت (NEXTAUTH_SECRET ?? AUTH_SECRET ?? fallback ثابت dev) — هر دو مسیر حالا secret یکسان دارند؛ HMR اعمال کرد، سرور ری‌استارت نشد. اثر جانبی: سشن‌های کوکی قدیمی نامعتبر می‌شوند (کاربر دوباره وارد می‌شود) — در dev بی‌اهمیت
+- حادثهٔ زیرساختی: dev server وسط کار بی‌صدا مُرد (port 3000 از دسترس خارج شد) — مطابق پیش‌آمد فاز ۹ با همان الگوی .zscripts/dev.sh (`bun run dev` background) احیا شد؛ لاگ قبلی در /tmp/devlog-backup-10a.log کپی شد
+- چرخهٔ curl کامل احرازشده (کاربر تست qa10a9674 با ثبت‌نام + ورود NextAuth): PUT یادداشت 200 → PUT تکراری همان word آپ‌سل (id ثابت، updatedAt جلو) → note خالی 400 → word 41 نویسه 400 → book نامعتبر 400 → GET مرتب نزولی → GET book نامعتبر/بدون book 400 → DELETE مالک {ok:true} → DELETE تکرار/ناموجود 404 → export کامل (version 2، wordNotes=۲) → import همان خروجی (wordNotes=2 آپ‌سل) → import {} و JSON خراب و server آرایه 400 → import server:{} → zeros → import mixed: progress کلید ۱۲۱تایی/مقدار 512KB+ رد شد و آخرین مقدار کلید تکراری winner؛ states: ease 0.5→1.3، interval 999→365، reps -3→0، book بد رد، cardKey خالی رد، ردیف تکراری cardKey = فایل برنده (ease 3.1/streak 9 روی 2.8)؛ wordNotes: book بد/word 41/note خالی رد؛ attempts: lesson 99→30، total 500→200، correct 300→200 (سقف total)، duration 99999→7200، book ناشناس→vision-one، category daily→all، name ""→null، detail 70000→65536، createdAt خراب→now، عضو غیرآبجکت رد → import 505 attempts → فقط ۵۰۰ آخر ثبت (تأیید count در sqlite) → پاک‌سازی کامل داده‌های تست (حذف کاربر تست با cascade + حذف attempts آن)
+- کیفیت: `bun run lint` صفر؛ `bunx tsc --noEmit | grep ^(src|...)/` خالی (TSC-SRC-CLEAN)؛ بعد از db push یک بار GET / = 200 (self-heal فعال)
+
+Stage Summary:
+- بک‌اند فاز ۱۰ آمادهٔ مصرف UI: GET /api/notes?book=<bookId> → {ok, notes:[{id,book,word,note,updatedAt}]} نزولی updatedAt · PUT /api/notes {book,word,note} → {ok, note:<row>} آپ‌سل (note خالی=400 «یادداشت خالی است») · DELETE /api/notes?id= → {ok:true} (404 «یادداشت پیدا نشد») · GET /api/export → {ok, exportedAt, version:2, server:{profile,progress,attempts,reviewStates,wordNotes}} (سقف 2000/500/3000/500) · POST /api/import {server:{...}} → {ok, imported:{progress,attempts,reviewStates,wordNotes}} — فایل همیشه برنده (upsert)، عضو نامعتبر skip می‌شود نه خطا
+- تصمیم‌های کلیدی: (۱) سقف‌های import با slice اعمال می‌شوند نه 413 (اتمپورت بخشنده)؛ attempts = «۵۰۰ ردیف آخرِ فایل» با slice(-500)؛ (۲) category خارج فهرست → "all" و book ناشناس → "vision-one" (همسو با normalizeBookId)؛ (۳) تراکنش per-section با timeout صریح 60s چون تا ~۶۰۰۰ upsert ممکن است؛ (۴) کلیدهای تست progress بدون پیشوند visionone: در import پذیرفته می‌شوند (برخلاف PUT progress) چون تسک فقط سقف طول خواسته بود
+- 🚨 برای ارکستراتور — انحراف مستند از اسکوپ: src/lib/auth.ts یک فیلد secret گرفت (رفع P0 سراسری getServerSession=401؛ جزئیات بالا). اگر عامل دیگری auth.ts را ویرایش می‌کند این فیلد را حذف نکند. اثر: کوکی‌های سشن قبلی نامعتبر شده‌اند (ورود مجازی لازم است — در UI فقط یک‌بار)
+- ریسک/یادداشت: (۱) هیچ UI ساخته نشد (طبق تسک) — 10-b باید برای notes/export/import از همین قرارداد استفاده کند؛ (۲) re-import attempts ردیف تکراری می‌سازد (create ساده طبق تسک — بدون کلید یکتا)؛ (۳) کاربران تست دیگر عوامل (note10b/tester10c) دست‌نخورده ماندند؛ داده‌های تست من کامل پاک شد؛ (۴) dev.log با ری‌استارت زیرساختی از نو شروع شد — نسخهٔ قبلی در /tmp/devlog-backup-10a.log
+
+---
+Task ID: 10-c
+Agent: full-stack-developer
+Task: فاز ۱۰ خروجی‌ها — چاپ فلش‌کارت دورو + کارت پیشرفت اشتراکی + اکسپورت/ایمپورت v2
+
+Work Log:
+- زمینه خوانده شد: worklog (ورودهای آخر + قرارداد فاز ۹/۸)، progress-backup.ts (v1)، profile-button.tsx (بخش پشتیبان‌گیری)، flashcard-view.tsx (pool/deck/filters)، stats-view.tsx (ساختار نماها)، streak-store (readStreak→count)، xp-store (readXp/levelInfo)، book-storage (getActiveBookSnapshot/scopedKey)، account-sync و /api/export + /api/import (قرارداد عامل موازی — عیناً مصرف شد؛ هیچ API سرور ساخته نشد)
+- ۱) چاپ فلش‌کارت دورو — src/components/book/print-flashcards.tsx (جدید با Write): دیالوگ پیش‌نمایش (تعداد کارت/برگ + راهنمای Flip on long edge) + شیت چاپ با createPortal به body؛ CSS سراسری درون‌کامپوننتی: @page {size:A4 portrait; margin:0}، در screen ‏.print-sheet {display:none} (اندازهٔ ۰×۰ — هیچ ردی روی صفحه) و در @media print تکنیک visibility + position absolute + عرض 210mm؛ هر برگ ۸ کارت (۲×۴، گرید mm با gap 2.5mm، padding 7mm)؛ برگ‌های ایندکس زوج = فرانت (واژه درشت LTR + چیپ «درس X/پایه X» با faNum + خط‌تیره ظریف) و فرد = بک (معنی فارسی وسط + واژه کوچک بالا) با آینه‌سازی افقی (همان ردیف، ستون‌های معکوس — در DOM راستی‌آزمایی شد: [a few,air]↔[air,a few])؛ خط برش dashed خاکستری دور کارت‌ها + print-color-adjust exact + page-break-after بین برگ‌ها؛ سقف ۶۴ واژه (۸×۲) با toast «فقط ۶۴ واژه اول چاپ می‌شود» و Badge هشدار در دیالوگ؛ window.print() از event handler با requestAnimationFrame×۲ (نه effect)
+- سیم‌کشی flashcard-view.tsx فقط با python3 (۵ replace با گارد یکتایی): آیکون Printer + import + state printEntries + دکمه «چاپ فلش‌کارت» (outline) در نوار سربرگ setup کنار فیلترها (justify-between) که pool فیلترشدهٔ فعلی را می‌فرستد (خالی → toast خطا) + رندر PrintFlashcards در انتهای CardContent
+- ۲) کارت پیشرفت اشتراکی — src/components/book/progress-card-generator.tsx (جدید با Write): canvas 1080×1350 (نمایش max 540px، رتینا ۲×) با پس‌زمینهٔ گرادیان روشن سبز→teal، قاب دوخطه emerald/teal، لکه‌های amber تزئینی، گوشه‌های گرد شفاف؛ عنوان «ویژن‌وان 🦉»، ردیف نام+آواتار اگر session لاگین است، ۴ ردیف آمار با دایرهٔ آیکونی (📚 جمع learned ۶ کتاب مستقیم از کلید visionone:book:<id>:learned با فالبک کلید قدیمی ویژن وان، 🔥 readStreak().count، ⭐ levelInfo(readXp().total).level، 📖 «جزوهٔ فعال: نام فارسی — Z٪ پیشرفت» = learned فعال ÷ vocab.all همان کتاب از book-context) و امضای «ویژن‌وان — یادگیری انگلیسی با بازی»؛ همه اعداد toLocaleString("fa-IR")، متن RTL با ctx.direction="rtl"/textAlign right، فونت با document.fonts.load('bold …px Vazirmatn') و fallback sans-serif و کوچک‌شوندهٔ خودکار (fitFont) برای ردیف بلند؛ رندر اولیه یک‌بار بعد از mount در effect با گارد onceRef/pctRef/drawnUserRef (بدون هیچ setState در effect — سازگار react-hooks v6) و بازکشیدن فقط اگر نام کاربر/درصد جزوه بعداً آماده شود؛ دانلود: toBlob→objectURL→a.download="vision-one-progress-card.png"→revoke؛ اشتراک: navigator.canShare?.({files})→share وگرنه فالبک دانلود + toast «مرورگر اشتراک‌گذاری فایل را پشتیبانی نمی‌کند — تصویر دانلود شد»
+- سیم‌کشی stats-view.tsx فقط با python3: import ProgressCardGenerator + ‏useBook() با data + رندر <ProgressCardGenerator activeVocabTotal={bookData?.vocab.all.length ?? null} /> بین کارت‌های آمار و نمودارها
+- ۳) اکسپورت/ایمپورت v2 — progress-backup.ts فقط با python3: تایپ ServerBackupSection (قرارداد /api/export: profile/progress/attempts/reviewStates/wordNotes) + BackupFile.version از ۱ به «1 | 2» و فیلد اختیاری server؛ collectBackup(server?) با version:2؛ parseBackup حالا v1 و v2 را می‌پذیرد و server را دست‌نخورده در ParseResult جدا برمی‌گرداند (فایل سروردارِ بدون دادهٔ محلی هم قبول)؛ restoreBackup دست‌نخورده (فقط local)؛ جدید: downloadBackupJson(backup, filename) و toAttemptsCsv (تاریخ/جزوه/دسته/درس/درست/کل/مدت) و toProgressCsv (key/value) با escape کوتیشن و BOM (\uFEFF) + CRLF — توضیح فارسی در کامنت‌ها
+- profile-button.tsx فقط با python3 (۶ ویرایش): دکمهٔ «دریافت خروجی کامل 📤» (FileDown، full-width): لاگین → fetch /api/export → ادغام {…local, server} → دانلود vision-one-backup.json + toast موفق؛ 401/مهمان → فایل local + toast «برای خروجی کامل وارد شو — این فایل فقط پیشرفت همین دستگاه است»؛ خطای شبکه → فالبک local + toast قرمز؛ دو دکمهٔ «آزمون‌ها CSV» (فقط با ورود از /api/export؛ مهمان → toast راهنما) و «پیشرفت CSV» (از باندل محلی collectBackup؛ بدون نیاز به ورود) با mime text/csv;charset=utf-8؛ «بازیابی از فایل پشتیبان» حفظ شد؛ ایمپورت ارتقا یافت: بعد از restore محلی، اگر server داشت و لاگین است → toast.loading + POST /api/import با AbortSignal.timeout(20s) → toast «X ردیف پیشرفت، Y آزمون، Z کارت مرور از رَش وارد شد» (faNum) یا خطای 400/سرور قرمز؛ مهمان با فایل سروردار → toast.warning «بخش حسابت داخل فایل است؛ برای بازگردانی آن وارد شو» ولی local بازگردانی می‌شود؛ سپس مثل قبل رفرش خودکار
+- راستی‌آزمایی: bun run lint صفر؛ bunx tsc --noEmit فیلتر ^(src|...)/ = ۰ خطا (فقط خطاهای قدیمی examples/scripts/skills خارج src)؛ curl / = 200 و /api/export و /api/import مهمان = 401 بدون کرش
+- QA مرورگری (agent-browser): حادثهٔ زیرساختی — dev-server دو بار بی‌صدا مُرد (پروسسه غیب، لاگ بدون crash) و با setsid nohup bun run dev احیا شد (پایدار تا پایان)؛ سپس: کارت پیشرفت روی نمای آمار رندر شد (بوم 1080×1350، نمایش 538×673؛ نمونه‌گیری پیکسلی: عنوان/ردیف‌ها/امضا همه کشیده شده — عدم رندر اولیه فقط در پنجرهٔ مرگ سرور و CLIENT_FETCH_ERROR پیش‌آمده بود)؛ چاپ: دیالوگ باز شد، شیت با display:none و rect 0×0 روی screen نامرئی، ۱۶ برگ برای دک ≥۶۴، آینه‌سازی بک در DOM درست، window.print() استاب‌شده دقیقاً ۱ بار از handler صدا خورد و toast «فقط ۶۴ واژه اول چاپ می‌شود» آمد؛ موبایل 390px روی آمار و فلش‌کارت: overflow-x صفر و کانواس تا 324px جمع شد؛ جریان مهمان: خروجی کامل → toast راهنما + دانلود local؛ آزمون‌ها CSV مهمان → toast راهنما؛ پیشرفت CSV خالی → «هنوز دادهٔ پیشرفتی…» و با ۲ کلید seed → «CSV ۲ ردیف پیشرفت دانلود شد»؛ ایمپورت فایل v2 سروردار به‌عنوان مهمان → warning + «۱ بخش پیشرفت بازیابی شد» + رفرش خودکار و کلید بازیابی‌شده در localStorage تأیید شد؛ جریان لاگین (ساخت حساب تستی tester10c از UI): «خروجی کامل» → toast موفق (ادغام /api/export)؛ ایمپورت همان فایل → POST /api/import واقعی و در /api/export بعدی progKeys شامل visionone:testprog/testprog2 تأیید شد؛ «آزمون‌ها CSV» بدون attempt → toast «هنوز آزمونی روی حسابت ثبت نشده»
+- نکتهٔ لاگ: دو خطای قدیمی dev.log (JWEDecryptionFailed و یک 500 روی auth/callback/credentials با «Invalid URL») مربوط به سشن‌های پیش از این تسک/ری‌استارت‌های سرور است؛ چرخهٔ auth خودم (register 200 → callback 200 → session 200) تمیز بود
+- کلیدهای تست localStorage و استایل‌های دیباگ پاک شد؛ حساب تست tester10c (کد 1234) عمداً برای QA دستی باقی ماند؛ اسکرین‌شات‌ها در tool-results/10c-*.png
+
+Stage Summary:
+- هر ۳ خروجی فاز ۱۰ کامل و راستی‌آزمایی‌شده است: (۱) چاپ فلش‌کارت دوروی A4 با ۸ کارت در صفحه و آینه‌سازی لبه‌بلند، (۲) کارت پیشرفت اشتراکی PNG 1080×1350 با پالت emerald/amber/teal و اشتراک بومی Web Share، (۳) اکسپورت کامل v2 (دستگاه+سرور) + دو CSV با BOM + ایمپورت دو-بخشی (local همیشه، server فقط با ورود به /api/import)
+- فایل‌ها: src/components/book/print-flashcards.tsx و progress-card-generator.tsx (جدید)؛ src/lib/progress-backup.ts، src/components/book/{flashcard-view,stats-view,profile-button}.tsx (python3)؛ هیچ مسیر API ساخته/تغییر داده نشد — قرارداد عامل موازی عیناً مصرف شد (401/400/شبکه همگی هندل فارسی دارند)
+- تصمیم‌ها: شیت چاپ با portal به body (فرار از overflow دیالوگ Radix) و display:none روی screen؛ نسخهٔ فایل v2 و version: «1|2» برای پذیرش v1 قدیم؛ خروجی مهمان = همان پشتیبان محلی با نام جدید؛ CSV آزمون‌ها فقط سروری (آزمون‌ها اصلاً localStorage نیستند)؛ درصد جزوهٔ فعال به‌عنوان prop از stats-view (useBookData پرتاب‌خطا دارد)
+- ریسک/یادداشت برای عامل‌های بعدی: خطوط برش با رنگ ثابت خاکستری‌اند و در چاپ سیاه‌سفید هم دیده می‌شوند؛ «چاپ فلش‌کارت» فقط در setup فلاش‌کارت است (روی دکمه pool فیلترشده می‌رود نه deck میانهٔ دور)؛ dev-server این محیط گاهی بی‌صدا می‌میرد — الگوی احیا: setsid nohup bun run dev >> dev.log 2>&1 & (بعد از db push نیازی به ری‌استارت نیست، db.ts خود-ترمیم است)؛ فایل‌های v2 قدیمی v1 همچنان قابل ایمپورت‌اند
+
+---
+Task ID: 10-round (orchestrator — فاز ۱۰ دفترچه شخصی و خروجی‌ها با ۳ ساب‌ایجنت موازی)
+Agent: main orchestrator (Z.ai Code)
+Task: پیاده‌سازی کامل فاز ۱۰ نقشه راه (دفتر خطاها کامل + یادداشت واژه + چاپ فلش‌کارت + کارت پیشرفت + اکسپورت/ایمپورت v2)
+
+Work Log:
+- وضعیت‌سنجی: فاز ۹ قبلاً بسته (8023ac5)؛ فاز ۱۰ آغاز شد با قرارداد API ازپیش‌تعریف‌شده برای ۳ عامل موازی
+- 10-a (سرور): مدل WordNote + db push پایدار + ۳ مسیر API (notes/export/import) + گارد self-heal db.ts — رفع باگ P0 پیش‌موجود: نبود secret ثابت در authOptions باعث می‌شد getServerSession با [...nextauth] دو secret متفاوت بسازد و همه مسیرهای احرازشده 401 بدهند (یک‌خطی در src/lib/auth.ts)
+- 10-b (UI دفتر): mistakes-store v2 ({id, at} با مهاجرت) + notebook-view دو فاز + یادداشت شخصی در word-lookup (کش + حالت مهمان) + سیم‌کشی nav/page/header — QA مرورگری خودش کامل (تمرین واقعی با resolve)
+- 10-c (خروجی‌ها): print-flashcards دوروی A4 + progress-card-generator (canvas 1080×1350) + progress-backup v2 + profile-button (اکسپورت کامل/CSV/ایمپورت دو-بخشی) — پاسخ نهایی عامل به timeout زیرساخت قطع شد ولی کار از دیسک کامل راستی‌آزمایی شد (worklog خط ۱۸۷۸ + همه فایل‌ها)
+- راستی‌آزمایی ارکستراتور از دیسک: هر ۷ سیم‌کشی (schema/db/nav/page/header/mistakes/print/stats/profile) + lint 0 + tsc-src 0 + هر ۴ API فارسی
+- QA مرورگری ارکستراتور: ناوبری «دفتر خطاها» و حالت سبز خالی؛ پاپ‌آپ واژه مهمان (CTA ورود) → ورود با حساب → ذخیره یادداشت «تست دوم از UI» → ماندگاری در باز شدن دوباره → GET سرور ۲ ردیف؛ دکمه «چاپ فلش‌کارت» → شیت portal با ۱۲۸ کارت display:none و @media print CSS؛ کارت پیشرفت canvas 1080×1350 + دانلود بدون خطای کنسول؛ اکسپورت مهمان فالبک محلی با toast؛ اکسپورت سرور v2 (prof+prog7+notes2)؛ موبایل ۳۹۰=۳۹۰
+- تیک ۵ چک‌باکس فاز ۱۰ + یادداشت QA (python3)
+
+Stage Summary:
+- فاز ۱۰ کامل شد: دفتر خطاها تاریخ‌دار با تمرین اختصاصی، یادداشت شخصی همگام با حساب، چاپ فلش‌کارت دو‌رو، کارت پیشرفت اشتراکی PNG، اکسپورت/ایمپورت کامل داده (مالکیت داده ۲۰۲۶)
+- فایل‌های کلیدی: prisma/schema.prisma (WordNote)، src/app/api/{notes,export,import}/route.ts، src/lib/auth.ts (secret)، src/lib/db.ts (گارد wordNote)، src/lib/mistakes-store.ts (v2)، src/lib/progress-backup.ts (v2+CSV)، src/components/book/{notebook-view,print-flashcards,progress-card-generator}.tsx (جدید) + word-lookup/profile-button/flashcard-view/stats-view/app-header/page (python3)
+- قرارداد: یادداشت فقط با حساب (401 مهمان → CTA UI)؛ اکسپورت v2 = {app, version, exportedAt, data(local), server?} — v1 قدیم هنوز خوانا؛ ایمپورت «فایل برنده است» با upsert و clamp
+- ریسک/یادداشت: dev server در این محیط گاهی بی‌صدا می‌میرد (۳ بار در این فاز) — الگوی احیا setsid nohup؛ fill مرورگر روی textarea کنترل‌شده React گاهی اولین تلاش ثبت نمی‌کند (آرتیفکت تست، نه باگ)؛ CSV فقط سروری برای آزمون‌ها (آزمون‌ها در localStorage نیستند)
+- گام بعدی پیشنهادی: فاز ۱۱ «استانداردهای وب ۲۰۲۶» (بودجه کارایی، WCAG، آفلاین‌فرست، تست E2E، امنیت) — اندازه M

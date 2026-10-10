@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { normalizeBookId } from "../_lib/book";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -92,6 +94,8 @@ function toDate(v: unknown): Date {
 }
 
 export async function POST(req: NextRequest) {
+  const rl = checkRate(req, "import:post", 30, 60_000);
+  if (!rl.ok) { logEvent("import", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -323,6 +327,12 @@ export async function POST(req: NextRequest) {
       imported.attempts = rows.length;
     }
 
+    logEvent("import", "completed", {
+      progress: imported.progress,
+      attempts: imported.attempts,
+      states: imported.reviewStates,
+      notes: imported.wordNotes,
+    });
     return NextResponse.json({ ok: true, imported });
   } catch (e) {
     console.error("POST /api/import error:", e);

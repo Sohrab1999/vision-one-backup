@@ -12,8 +12,11 @@
  *      نتیجه را یک‌جا به سرور برمی‌گرداند تا سرور = برابر اجتماع شود.
  */
 
+import { enqueueOffline, OFFLINE_QUEUE_KEY } from "./offline-queue";
+
 const PREFIX = "visionone:";
-const DEVICE_KEYS = new Set(["visionone:active-book", "visionone:theme", "visionone:upsell"]);
+// کلید صف آفلاین دستگاه‌محلی است: نه در push سرور جمع می‌شود نه در ادغام سرور جایگزین می‌شود
+const DEVICE_KEYS = new Set(["visionone:active-book", "visionone:theme", "visionone:upsell", OFFLINE_QUEUE_KEY]);
 const PUSH_DEBOUNCE_MS = 2500;
 const MAX_KEYS = 3000;
 
@@ -28,6 +31,7 @@ function collect(): Record<string, string> {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (!key || !key.startsWith(PREFIX)) continue;
+      if (key === OFFLINE_QUEUE_KEY) continue; // صف آفلاین مالکیت خود دستگاه است — به سرور نمی‌رود
       const value = localStorage.getItem(key);
       if (value && value.length <= 512 * 1024) data[key] = value;
     }
@@ -47,11 +51,12 @@ export async function pushSnapshot(): Promise<boolean> {
   if (merging) return false;
   const data = collect();
   if (Object.keys(data).length > MAX_KEYS) return false;
+  const payload = { data };
   try {
     const res = await fetch("/api/progress", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data }),
+      body: JSON.stringify(payload),
     });
     if (res.ok) {
       notify();
@@ -59,6 +64,8 @@ export async function pushSnapshot(): Promise<boolean> {
     }
     return false;
   } catch {
+    // فقط خطای شبکه (نه 4xx) → در صف آفلاین می‌ماند تا با برگشت اینترنت ارسال شود
+    enqueueOffline({ url: "/api/progress", method: "PUT", body: payload });
     return false;
   }
 }

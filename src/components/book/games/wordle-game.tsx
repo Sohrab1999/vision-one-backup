@@ -247,6 +247,8 @@ export function WordleGame() {
   /** کلید لرزش ردیف جاری — با تغییر key انیمیشن دوباره اجرا می‌شود */
   const [shakeKey, setShakeKey] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
+  /** پیام باکس aria-live — اعلام نتیجهٔ هر حدس برای فناوری‌های کمکی */
+  const [liveMsg, setLiveMsg] = useState("");
 
   /** بازی روزانه بسته شده (کاربر به تنظیمات برگشته)؟ — بازیابی خودکار mount مستقل از این است */
   const [dailyClosed, setDailyClosed] = useState(false);
@@ -441,6 +443,16 @@ export function WordleGame() {
     const win = guess === activeAnswer;
     const rowsUsed = nextCommitted.length;
     const finished = win || rowsUsed >= MAX_ROWS;
+
+    // اعلام زندهٔ نتیجهٔ حدس برای فناوری‌های کمکی (WCAG 4.1.3) — رنگ به‌تنهایی کافی نیست
+    const verdicts = judgeVerdicts(guess, activeAnswer);
+    const greens = verdicts.filter((v) => v === "correct").length;
+    const yellows = verdicts.filter((v) => v === "present").length;
+    setLiveMsg(
+      win
+        ? `«${guess.toUpperCase()}» درست بود! 🎉`
+        : `حدس ${faNum(rowsUsed)}: ${faNum(greens)} حرف سبز، ${faNum(yellows)} زرد، ${faNum(WORD_LEN - greens - yellows)} خاکستری`,
+    );
 
     locked.current = true;
     setInput("");
@@ -721,6 +733,11 @@ export function WordleGame() {
             );
           })}
         </div>
+
+        {/* اعلام زندهٔ نتیجهٔ حدس برای فناوری‌های کمکی (WCAG 4.1.3) */}
+        <p role="status" aria-live="polite" className="sr-only">
+          {liveMsg}
+        </p>
 
         {/* کیبورد QWERTY */}
         <div dir="ltr" role="group" aria-label="کیبورد حدس" className="space-y-1.5">

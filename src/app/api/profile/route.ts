@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +11,9 @@ const GRADES = ["هفتم", "هشتم", "نهم", "دهم", "یازدهم", "د�
 const AVATARS = ["🦁", "🐼", "🦊", "🐧", "🐢", "🦉", "🐬", "🌟", "⚡", "🎯", "📚", "🚀"];
 
 /** پروفایل کاربر: خواندن حساب + ویرایش آواتار/پایه */
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const rl = checkRate(req, "profile:get", 90, 60_000);
+  if (!rl.ok) { logEvent("profile", "rate-limited"); return rateLimited(rl.retryAfter); }
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "ابتدا وارد شو" }, { status: 401 });
@@ -27,6 +31,8 @@ export async function GET() {
 }
 
 export async function PATCH(req: NextRequest) {
+  const rl = checkRate(req, "profile:patch", 30, 60_000);
+  if (!rl.ok) { logEvent("profile", "rate-limited"); return rateLimited(rl.retryAfter); }
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "ابتدا وارد شو" }, { status: 401 });
@@ -42,4 +48,35 @@ export async function PATCH(req: NextRequest) {
     select: { username: true, avatar: true, grade: true },
   });
   return NextResponse.json({ ok: true, user });
+}
+
+/** حذف کامل حساب (فاز ۱۱ — حریم خصوصی) — با عبارت تأیید دقیق؛ کسکید همه داده‌ها در اسکیما */
+export async function DELETE(req: NextRequest) {
+  const rl = checkRate(req, "profile:delete", 5, 3_600_000);
+  if (!rl.ok) { logEvent("profile", "rate-limited"); return rateLimited(rl.retryAfter); }
+
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "ابتدا وارد شو" }, { status: 401 });
+  }
+
+  let body: { confirm?: unknown };
+  try {
+    body = (await req.json()) as { confirm?: unknown };
+  } catch {
+    return NextResponse.json({ error: "برای تأیید، عبارت دقیق را وارد کن" }, { status: 400 });
+  }
+  if (body?.confirm !== "حسابم را پاک کن") {
+    return NextResponse.json({ error: "برای تأیید، عبارت دقیق را وارد کن" }, { status: 400 });
+  }
+
+  try {
+    await db.user.delete({ where: { id: session.user.id } });
+  } catch (e) {
+    console.error("DELETE /api/profile error:", e);
+    return NextResponse.json({ error: "حذف حساب ممکن نشد" }, { status: 500 });
+  }
+
+  logEvent("profile", "account-deleted");
+  return NextResponse.json({ ok: true });
 }

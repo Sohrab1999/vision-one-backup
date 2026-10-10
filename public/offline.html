@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>آفلاین هستید — کتابخانه ویژن</title>
+<title>آفلاینی — کتابخانه ویژن</title>
 <meta name="theme-color" content="#059669" />
+<link rel="icon" href="/icons/icon-32.png" />
 <style>
   :root { color-scheme: dark; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -22,7 +23,7 @@
   }
   .card {
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(52, 211, 153, 0.22);
     border-radius: 24px;
@@ -38,7 +39,7 @@
     filter: drop-shadow(0 6px 18px rgba(16, 185, 129, 0.35));
   }
   h1 {
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 800;
     margin-bottom: 12px;
     color: #ffffff;
@@ -47,7 +48,7 @@
     font-size: 15px;
     line-height: 2;
     color: #b9dccb;
-    margin-bottom: 26px;
+    margin-bottom: 24px;
   }
   .accent {
     width: 72px;
@@ -56,6 +57,21 @@
     background: linear-gradient(90deg, #10b981, #f59e0b);
     margin: 0 auto 26px;
   }
+  .hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #9fd4b8;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px dashed rgba(52, 211, 153, 0.35);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 24px;
+  }
+  .hint span.icon { font-size: 20px; line-height: 1; }
   button {
     font-family: inherit;
     font-size: 16px;
@@ -86,12 +102,20 @@
 </head>
 <body>
   <main class="card">
-    <span class="emoji" aria-hidden="true">📗</span>
-    <h1>آفلاین هستید</h1>
+    <span class="emoji" aria-hidden="true">🦉</span>
+    <h1>آفلاینی</h1>
     <div class="accent" aria-hidden="true"></div>
-    <p>اتصال اینترنت برقرار نیست — کتاب آخر بازدیدشده پس از بازگشت آنلاین در دسترس است</p>
+    <p>وقتی اینترنت برگردد خودکار ادامه می‌دهیم — کتاب آخرین بازدیدِ تو هنوز خواندنی است</p>
+    <div class="hint">
+      <span class="icon" aria-hidden="true">📴</span>
+      <span>نتیجهٔ آزمون‌ها و پیشرفتت این دوره ذخیره شده و به‌محض وصل‌شدن، خودکار برای حسابت ارسال می‌شود</span>
+    </div>
     <button type="button" onclick="location.reload()">تلاش دوباره</button>
-    <div class="status"><span class="dot" aria-hidden="true"></span>به‌محض وصل‌شدن دوباره، همین صفحه بازخوانی می‌شود</div>
+    <div class="status"><span class="dot" aria-hidden="true"></span>همین‌که اتصال وصل شود، همین صفحه خودکار بازخوانی می‌شود</div>
   </main>
+  <script>
+    // بازگشت خودکار: به‌محض آنلاین‌شدن، کتاب دوباره بارگذاری می‌شود
+    window.addEventListener("online", function () { location.reload(); });
+  </script>
 </body>
 </html>

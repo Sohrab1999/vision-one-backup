@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { buildClassState, cleanKey, isValidCode, isValidKey } from "../_lib/state";
+import { checkRate, rateLimited } from "../../_lib/rate-limit";
+import { logEvent } from "../../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +11,8 @@ export const dynamic = "force-dynamic";
  * پاسخ: state کامل کلاس مثل GET /api/class/[code] با نقش student.
  */
 export async function POST(req: NextRequest) {
+  const rl = checkRate(req, "class:join", 30, 60_000);
+  if (!rl.ok) { logEvent("class-join", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     let body: { code?: unknown; studentKey?: unknown; displayName?: unknown };
     try {

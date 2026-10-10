@@ -42,6 +42,25 @@ export function fmtTime(sec: number): string {
   return `${faNum(m)}:${faNum(String(s).padStart(2, "0"))}`;
 }
 
+// ─── دسترس‌پذیری مشترک (فاز ۱۱ — WCAG 2.2 AA) ───
+
+/**
+ * الگوی اعلام زنده (aria-live) در بازی‌ها:
+ * باکس سراسری DOM جاگذاریِ پیچیده‌ای دارد؛ به‌جای آن هر بازی یک باکس محلی
+ * `<p role="status" aria-live="polite" className="sr-only">{liveMsg}</p>`
+ * کنار ناحیهٔ بازی می‌گذارد و پیام‌های فارسی (درست بود!/جفت غلط/…) را در
+ * state خودش نگه می‌دارد. بازخورد رنگی به‌تنهایی به فناوری کمکی نمی‌رسد —
+ * هر تغییر وضعیت مهم باید هم‌زمان متن اعلام‌شدنی داشته باشد.
+ */
+
+/**
+ * توصیف فارسی یک گزینه برای aria-label فناوری‌های کمکی — «گزینه ۲: apple»
+ * (بازی‌های گزینه‌ای؛ idx صفر-مبناست و شمارهٔ نمایشی با ارقام فارسی ساخته می‌شود)
+ */
+export function describeOption(text: string, idx: number): string {
+  return `گزینه ${faNum(idx + 1)}: ${text}`;
+}
+
 /** انتخاب n عضو یکتا (بر اساس کلید) از یک استخر */
 export function pickUnique<T>(pool: T[], n: number, keyOf: (item: T) => string): T[] {
   const seen = new Set<string>();

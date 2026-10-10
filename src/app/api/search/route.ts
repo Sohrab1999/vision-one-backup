@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { BOOKS, loadBookData } from "@/data/books/registry";
 import type { BookData, BookId } from "@/data/books/types";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -86,6 +88,8 @@ function includes(haystack: string, needle: string): boolean {
 }
 
 export async function GET(req: NextRequest) {
+  const rl = checkRate(req, "search:get", 90, 60_000);
+  if (!rl.ok) { logEvent("search", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     const { searchParams } = new URL(req.url);
     const q = (searchParams.get("q") ?? "").trim();

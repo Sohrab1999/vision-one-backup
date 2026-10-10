@@ -47,6 +47,7 @@ import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
 import { usePulses } from "@/lib/use-daily-pulse";
 import { useBook, useBookData } from "@/lib/book-context";
 import { seedReviewFromQuiz } from "@/lib/srs-store";
+import { enqueueOffline } from "@/lib/offline-queue";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -539,28 +540,40 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   }
 
   // میان‌برهای کیبورد حین آزمون: ۱-۴ (فارسی/انگلیسی) انتخاب گزینه، Enter سؤال بعدی
+  // الگوی latest-ref: شنونده فقط یک‌بار ثبت می‌شود و همیشه آخرین وضعیت/توابع را می‌بیند
+  const kbChooseRef = useRef<(i: number) => void>(() => {});
+  const kbNextRef = useRef<() => void>(() => {});
+  const kbStateRef = useRef({ playing: false, selected: null as number | null, options: 0 });
   useEffect(() => {
-    if (phase !== "playing") return;
+    kbChooseRef.current = chooseOption;
+    kbNextRef.current = nextQuestion;
+    kbStateRef.current = { playing: phase === "playing", selected, options: current?.options.length ?? 0 };
+  });
+  useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
-      if (e.key === "Enter" && selected !== null) {
+      const kb = kbStateRef.current;
+      if (!kb.playing) return;
+      // وقتی دیالوگ/مودالی باز است میان‌بر فعال نماند
+      if (document.querySelector('[role="dialog"], [role="alertdialog"]')) return;
+      if (e.key === "Enter" && kb.selected !== null) {
         e.preventDefault();
-        nextQuestion();
+        kbNextRef.current();
         return;
       }
-      if (selected !== null) return;
+      if (kb.selected !== null) return;
       const fa = "۱۲۳۴".indexOf(e.key);
       const en = "1234".indexOf(e.key);
       const digit = fa >= 0 ? fa : en;
-      if (digit >= 0 && digit < (current?.options.length ?? 0)) {
+      if (digit >= 0 && digit < kb.options) {
         e.preventDefault();
-        chooseOption(digit);
+        kbChooseRef.current(digit);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [phase, selected, index, questions]);
+  }, []);
 
   function finish() {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -573,32 +586,35 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     if (mode === "weekly") recordWeeklyResult(weekKeyOf(), scorePct, questions.length);
     if (mode === "combined") recordCombinedRound();
     const detail = questions.map((q, i) => ({ id: q.id, chosen: answers[i], answer: q.answer }));
+    const attemptBody = {
+      category:
+        mode === "review"
+          ? "review"
+          : mode === "daily"
+            ? "daily"
+            : mode === "weekly"
+              ? "weekly"
+              : mode === "starred"
+                ? "starred"
+                : mode === "combined"
+                  ? "combined"
+                  : category,
+      lesson: lesson === "all" ? 0 : Number(lesson),
+      total: questions.length,
+      correct: correctCount,
+      duration: elapsed,
+      name: userName || undefined,
+      detail,
+      book: bookId,
+    };
     fetch("/api/attempts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        category:
-          mode === "review"
-            ? "review"
-            : mode === "daily"
-              ? "daily"
-              : mode === "weekly"
-                ? "weekly"
-                : mode === "starred"
-                  ? "starred"
-                  : mode === "combined"
-                    ? "combined"
-                    : category,
-        lesson: lesson === "all" ? 0 : Number(lesson),
-        total: questions.length,
-        correct: correctCount,
-        duration: elapsed,
-        name: userName || undefined,
-        detail,
-        book: bookId,
-      }),
+      body: JSON.stringify(attemptBody),
     })
-      .then(() => {
+      .then((res) => {
+        // 5xx مثل خطای شبکه به صف آفلاین می‌رود؛ موفق/4xx (مهمان، اعتبارسنجی) = همان رفتار قبلی
+        if (!res.ok && res.status >= 500) throw new Error("server");
         try {
           window.dispatchEvent(new CustomEvent("visionone:attempt-saved"));
         } catch {
@@ -618,7 +634,12 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                   : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
         );
       })
-      .catch(() => undefined);
+      .catch(() => {
+        // آفلاین/خطای سرور — آزمون در صف می‌ماند و با برگشت اینترنت خودکار ارسال می‌شود
+        // (شمارش محلی درست است؛ امتیاز و نتیجه همین‌جا نشان داده می‌شود)
+        enqueueOffline({ url: "/api/attempts", method: "POST", body: attemptBody });
+        toast("آزمونت ذخیره شد — وقتی اینترنت برگشت ارسال می‌شود 📴→📡");
+      });
   }
 
   /** خروجی CSV از دفتر اشتباهات — فایل UTF-8 با BOM برای اکسل */
@@ -1461,6 +1482,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                   <RadioGroupItem
                     id={`opt-${index}-${i}`}
                     value={String(i)}
+                    aria-label={`گزینه ${(i + 1).toLocaleString("fa-IR")}`}
                     disabled={answered}
                     onClick={() => chooseOption(i)}
                     className={cn(
@@ -1503,7 +1525,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
           </RadioGroup>
 
           {answered && (
-            <div className="space-y-3 rise-in">
+            <div aria-live="polite" className="space-y-3 rise-in">
               {aiExplanation && (
                 <div className="rounded-xl border border-accent/50 bg-accent/25 p-3 text-[12.5px] leading-7">
                   <p className="mb-1 flex items-center gap-1.5 text-[11px] font-black text-accent-foreground">

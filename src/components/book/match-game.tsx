@@ -95,6 +95,8 @@ export function MatchGame() {
   const [attempts, setAttempts] = useState(0);
   const [secs, setSecs] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
+  /** پیام برای باکس aria-live — اعلام جفت درست/غلط به فناوری‌های کمکی */
+  const [liveMsg, setLiveMsg] = useState("");
   const { speed } = useVoiceSpeed();
   const busy = useRef(false);
 
@@ -169,6 +171,7 @@ export function MatchGame() {
         /* noop */
       }
       toast.success(`بازی تطبیق تمام شد — ${acc.toLocaleString("fa-IR")}٪ دقت! 🎯`);
+      setLiveMsg("همه جفت‌ها کامل شد! 🎉");
       setPhase("done");
     },
     [deck.length, pairCount, secs],
@@ -187,6 +190,7 @@ export function MatchGame() {
         next.add(en.word);
         setMatched(next);
         setSelected(null);
+        setLiveMsg(`«${en.word}» جفت شد — درست بود! 🎉`);
         recordSRS(en.word, true);
         speak(en.word, { speed });
         if (next.size >= deck.length) {
@@ -196,6 +200,7 @@ export function MatchGame() {
       } else {
         busy.current = true;
         setWrongPair({ en: en.word, fa: fa.word });
+        setLiveMsg("جفت غلط — دوباره تلاش کن");
         setTimeout(() => {
           setWrongPair(null);
           setSelected(null);
@@ -450,6 +455,11 @@ export function MatchGame() {
         />
       </div>
 
+      {/* اعلام زندهٔ نتیجه برای فناوری‌های کمکی (WCAG 4.1.3) */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {liveMsg}
+      </p>
+
       <div className="grid grid-cols-2 gap-2 sm:gap-3">
         {/* ستون فارسی (سمت راست در RTL) */}
         <div className="space-y-2 sm:space-y-3">
@@ -463,7 +473,9 @@ export function MatchGame() {
                 key={`fa-${w.word}`}
                 type="button"
                 onClick={() => clickTile("fa", w.word)}
-                disabled={isMatched}
+                aria-label={`معنی فارسی: ${w.meaning}`}
+                aria-pressed={isSelected}
+                aria-disabled={isMatched}
                 className={cn(
                   "min-h-14 w-full rounded-xl border p-2.5 text-[13px] font-bold leading-6 transition-all",
                   isMatched
@@ -493,7 +505,9 @@ export function MatchGame() {
                 key={`en-${w.word}`}
                 type="button"
                 onClick={() => clickTile("en", w.word)}
-                disabled={isMatched}
+                aria-label={`واژه انگلیسی: ${w.word}`}
+                aria-pressed={isSelected}
+                aria-disabled={isMatched}
                 className={cn(
                   "min-h-14 w-full rounded-xl border p-2.5 text-center transition-all",
                   isMatched

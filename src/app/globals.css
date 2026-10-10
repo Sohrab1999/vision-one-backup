@@ -469,3 +469,25 @@
   animation: lookup-in 0.18s cubic-bezier(0.22, 1.2, 0.36, 1);
   transform-origin: top center;
 }
+
+
+/* ─── دسترس‌پذیری (فاز ۱۱ — WCAG 2.2 AA) ─── */
+/* حلقه فوکوس مشترک برای همهٔ المان‌های قابل فوکوس — رنگ primary پروژه (سبز emerald).
+   قاعدهٔ خاص .lookup-word دست‌نخورده ماند. */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* احترام به «کاهش حرکت» سیستم کاربر (2.3.3) — انیمیشن‌های تزئینی عملاً بی‌اثر می‌شوند */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

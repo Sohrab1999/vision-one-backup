@@ -87,6 +87,8 @@ export function MemoryGame() {
   const [moves, setMoves] = useState(0);
   const [secs, setSecs] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
+  /** پیام باکس aria-live — اعلام جفت درست/غلط برای فناوری‌های کمکی */
+  const [liveMsg, setLiveMsg] = useState("");
 
   const { speed } = useVoiceSpeed();
   const busy = useRef(false);
@@ -175,6 +177,7 @@ export function MemoryGame() {
       } else {
         toast.success(`همه جفت‌ها پیدا شد — ${faNum(finalMoves)} حرکت در ${fmtTime(finalSecs)} 🎉`);
       }
+      setLiveMsg("همه جفت‌ها پیدا شد! 🎉");
       setPhase("done");
     },
     [activeBookId, lesson, pairCount],
@@ -205,6 +208,7 @@ export function MemoryGame() {
 
       if (first.side !== card.side && first.word === card.word) {
         // جفت درست — باز می‌ماند؛ در SRS ثبت می‌شود و تلفظش پخش می‌شود
+        setLiveMsg(`«${first.word}» جفت شد — درست بود! 🎉`);
         recordSRS(first.word, true);
         speak(first.word, { speed });
         const willFinish = matchedIds.size + 2 >= cards.length;
@@ -222,6 +226,7 @@ export function MemoryGame() {
       } else {
         // جفت غلط — لرزش و بسته‌شدن (کاوش است؛ هیچ چیزی ثبت نمی‌شود)
         setWrongIds([first.id, card.id]);
+        setLiveMsg("جفت غلط — کارت‌ها بسته می‌شوند، دوباره تلاش کن");
         setTimeout(() => {
           setWrongIds([]);
           setOpenIds([]);
@@ -414,6 +419,11 @@ export function MemoryGame() {
           style={{ width: `${pct}%` }}
         />
       </div>
+
+      {/* اعلام زندهٔ نتیجه برای فناوری‌های کمکی (WCAG 4.1.3) */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {liveMsg}
+      </p>
 
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3">
         {cards.map((c, i) => {

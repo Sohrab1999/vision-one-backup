@@ -116,6 +116,8 @@ export function HangmanGame() {
   const [detail, setDetail] = useState<DetailRow[]>([]);
   const [secs, setSecs] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
+  /** پیام باکس aria-live — اعلام برد/باخت/حرف غلط برای فناوری‌های کمکی */
+  const [liveMsg, setLiveMsg] = useState("");
   /** وضعیت واژهٔ جاری: null = در حال بازی، true = برد، false = باخت */
   const [result, setResult] = useState<boolean | null>(null);
 
@@ -220,6 +222,7 @@ export function HangmanGame() {
       if (current.word.includes(letter)) {
         // حرف درست — حروف تکراری همه‌باهم آشکار می‌شوند (چیپ‌ها از used مشتق می‌شوند)
         if (current.word.split("").every((ch) => nextUsed.includes(ch))) {
+          setLiveMsg(`درست بود! واژه «${current.word}» کامل شد 🎉`);
           locked.current = true;
           recordSRS(current.word, true);
           speak(current.word, { speed });
@@ -230,11 +233,14 @@ export function HangmanGame() {
             locked.current = false;
             advance(idx + 1, nextDetail);
           }, WIN_LOCK_MS);
+        } else {
+          setLiveMsg(`حرف ${letter} درست بود — ادامه بده`);
         }
       } else {
         // حرف غلط — یک بادکنک می‌ترکد؛ با ششمین خطا واژه می‌بازد
         const wrongCount = nextUsed.filter((l) => !current.word.includes(l)).length;
         if (wrongCount >= MAX_WRONG) {
+          setLiveMsg(`واژه «${current.word}» بود — به مرور اضافه شد`);
           locked.current = true;
           recordSRS(current.word, false);
           const nextDetail = [...detail, { word: current.word, ok: false }];
@@ -244,6 +250,8 @@ export function HangmanGame() {
             locked.current = false;
             advance(idx + 1, nextDetail);
           }, LOSS_LOCK_MS);
+        } else {
+          setLiveMsg(`حرف ${letter} در واژه نیست — یک بادکنک ترکید`);
         }
       }
     },
@@ -681,6 +689,11 @@ export function HangmanGame() {
           )}
         </div>
       )}
+
+      {/* اعلام زندهٔ نتیجهٔ حدس برای فناوری‌های کمکی (WCAG 4.1.3) */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {liveMsg}
+      </p>
 
       {/* کیبورد on-screen */}
       <div

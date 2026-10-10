@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +30,8 @@ function cleanText(v: unknown, min: number, max: number): string | null {
 }
 
 export async function GET(req: NextRequest) {
+  const rl = checkRate(req, "notes:get", 90, 60_000);
+  if (!rl.ok) { logEvent("notes", "rate-limited"); return rateLimited(rl.retryAfter); }
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "ابتدا وارد شو" }, { status: 401 });
@@ -52,6 +56,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+  const rl = checkRate(req, "notes:put", 30, 60_000);
+  if (!rl.ok) { logEvent("notes", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -104,6 +110,8 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const rl = checkRate(req, "notes:delete", 30, 60_000);
+  if (!rl.ok) { logEvent("notes", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {

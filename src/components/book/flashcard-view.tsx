@@ -512,8 +512,17 @@ function FlashcardGame() {
         onClick={() => setFlipped((f) => !f)}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && setFlipped((f) => !f)}
-        aria-label="کارت تمرین — برای چرخش کلیک کنید"
+        onKeyDown={(e) => {
+          // Enter و Space هر دو کارت را می‌چرخانند — stopPropagation تا شنوندهٔ
+          // سراسری میان‌برها دوباره‌چرخش نکند (دو toggle پشت‌سرهم = بی‌اثر)
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            e.stopPropagation();
+            setFlipped((f) => !f);
+          }
+        }}
+        aria-label={flipped ? `کارت برگشت — معنی: ${current.meaning}` : `کارت تمرین — واژه: ${current.word}`}
+        aria-pressed={flipped}
       >
         <div className={cn("flip-inner", flipped && "flipped")}>
           {/* روی کارت: واژه */}
@@ -562,6 +571,11 @@ function FlashcardGame() {
           </div>
         </div>
       </div>
+
+      {/* اعلام زندهٔ محتوای کارت برای فناوری‌های کمکی (WCAG 4.1.3) */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {flipped ? `معنی واژه: ${current.meaning}` : `واژه: ${current.word}`}
+      </p>
 
       {flipped && (
         <div className="grid grid-cols-3 gap-2 rise-in">

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { normalizeBookId } from "../_lib/book";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -81,6 +83,8 @@ function weekIndexOf(now = new Date()): number {
 const LEVEL_KEYS = ["آموزشی", "متوسط", "استاندارد", "کنکوری"] as const;
 
 export async function GET(req: NextRequest) {
+  const rl = checkRate(req, "questions:get", 90, 60_000);
+  if (!rl.ok) { logEvent("questions", "rate-limited"); return rateLimited(rl.retryAfter); }
   try {
     const { searchParams } = new URL(req.url);
     // ── شناسه کتاب از query: ?book=<id> — نامعتبر/خالی → ویژن وان (رفتار قدیمی) ──
