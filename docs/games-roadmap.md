@@ -2,12 +2,12 @@
 
 | | |
 |---|---|
-| **نسخه سند** | ۱.۰ |
+| **نسخه سند** | ۱.۲ |
 | **تاریخ تصویب** | ۱۴۰۴/۰۷/۱۸ (2026-10-10) |
 | **دامنه** | آزمایشگاه بازی‌های فکری (۱۵ بازی) + کیت مشترک `games/shared.ts` |
 | **خارج از دامنه** | آزمون اصلی (`quiz-game.tsx`)، تطبیق (`match-game.tsx`)، فلش‌کارت‌ها — فقط از نظر «اتصال» پوشش داده می‌شوند |
 | **مرجع معماری** | `src/components/book/games/` · Next.js 16 + TS + Tailwind 4 + shadcn/ui |
-| **وضعیت اجرا** | ✅ G0 · 🔶 G1 (۴ ماژول + پایلوت memory) · ☐ G2 ☐ G3 ☐ G4 ☐ G5 ☐ G6 |
+| **وضعیت اجرا** | ✅ G0 · ✅ G1 (۹/۱۰ کار — فقط G1-09 کمبو مانده P2) · ☐ G2 ☐ G3 ☐ G4 ☐ G5 ☐ G6 |
 
 ---
 
@@ -276,3 +276,4 @@ games/
 |---|---|---|
 | ۱.۰ | 2026-10-10 | نگارش اولیه بر اساس ممیزی کد ۱۵ بازی |
 | ۱.۱ | 2026-10-10 | اجرا: فاز G0 کامل (۶/۶ کار — G0-01..06) و فاز G1 بخش اول (G1-01..04: sound-engine/haptics/use-pause/exit-guard + پایلوت memory با اورلی توقف و نگهبان خروج) — QA مرورگری سبز (tool-results/g1-memory-*.png)؛ باقی G1 (Shell/ResultScreen/دشواری/آموزش/کمبو/تله‌متری) و مهاجرت G2 در دور بعد |
+| ۱.۲ | 2026-10-10 | اجرا: فاز G1 کامل‌شد (۹/۱۰) — G1-05 GameShell (games/kit/game-shell.tsx) · G1-06 ResultScreen با ستاره/مرور خطاها+SRS (kit/result-screen.tsx) · G1-07 difficulty+فرمول واحد score=base×level×combo (kit/difficulty.ts) · G1-08 TutorialOverlay سه‌گامی + useAutoTutorial با useSyncExternalStore (kit/tutorial-overlay.tsx) · G1-10 telemetry جلسه start/end/abandon از /api/client-log (kit/telemetry.ts) — همه روی پایلوت memory سوار و QA مرورگری سبز (tool-results/g1-round2-*.png، رویدادهای game_session_* در dev.log)؛ مانده: G1-09 کمبو (P2) و مهاجرت G2 |

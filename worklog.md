@@ -2158,3 +2158,30 @@ Stage Summary:
 - کلید localStorage جدید: «visionone:sound-muted» (۱=بی‌صدا، پیش‌فرض روشن) — هپتیک هم زیر همین کلید
 - قرارداد برای عوامل بعدی: مهاجرت بقیهٔ بازی‌ها به کیت فقط با همین ۴ API (playSound/buzz/useGamePause/GameExitGuard)؛ در هر بازی تایمر باید روی paused گیت شود و paused در deps effect باشد؛ دکمه‌های کنترل با الگوی هدر memory (h-11 w-11 p-0، aria-pressed، لیبل پویا فارسی)
 - گام بعدی پیشنهادی: G1-05..10 (GameShell/ResultScreen/difficulty/tutorial/combo/telemetry) و سپس گروه‌های G2 به ترتیب سند (a: memory/scramble/hangman → e: fps) — این round عمداً فقط ۴ ماژول P0 + پایلوت را برداشت تا پایه پایدار شود
+
+---
+Task ID: G1-round-2
+Agent: main orchestrator (Z.ai Code)
+Task: ادامه اجرای سند games-roadmap.md — تکمیل فاز G1 (G1-05..08 + G1-10) و سوارکردن همهٔ ماژول‌های جدید روی پایلوت memory
+
+Work Log:
+- قدم صفر: worklog و سند خواند شد؛ وضعیت قبلی = G0 کامل + G1-01..04 با پایلوت memory — طبق سند، ماتریس اولویت P1 این دور: G1-05..08 و G1-10 (G1-09 کمبو عمداً نرفت چون P2 است و معیار پذیرشش مهاجرت speed-quiz/flappy می‌خواهد که ریسک امتیاز دارد)
+- ۵ ماژول جدید/به‌روزشده در games/kit/:
+  · difficulty.ts (G1-07): تایپ DifficultyKey/Preset + DIFFICULTY_PRESETS (آسان ×۱ / عادی ×۱٫۵ / سخت ×۲٫۲۵) + computeScore — فرمول واحد مستند در سربرگ: score = base × level × combo، خروجی همیشه round و ورودی خراب خنثی
+  · telemetry.ts (G1-10): createGameSession → start/end/abandon با reason قراردادی (finish/exit/hidden/unmount/restart)، duration رُند ثانیه، fire-and-forget با keepalive، هر جلسه فقط یک‌بار گزارش (reported flag) — فقط game/level/duration/reason، بدون PII
+  · tutorial-overlay.tsx (G1-08): TutorialOverlay سه‌گامی روی Dialog شادکنا (نقطه‌چین پیشرفت، قبلی/بعدی/شروع می‌کنم، «رد کردن — دیگر نشانم نده») + useAutoTutorial — کلید per-game «visionone:game-tutorial:{game}»، skip همیشه ذخیره می‌شود
+  · game-shell.tsx (G1-05): هدر یکنواخت [آیکون+نام]+[بج‌های آمار]+[راهنما|توقف|صدا|انصراف] + progress slot + باکس aria-live مرکزی sr-only؛ دکمه‌های اختیاری با الگوی h-11/aria-pressed/لیبل پویا
+  · result-screen.tsx (G1-06): ستاره‌بندی ۱..۳ (آستانه per-game مال بازی)، بج رکورد، شبکهٔ آمار، بخش «مرور N خطا» فقط با خطای >0 (بازشدن اول recordSRS(front,false) یک‌بار — مرور صریح = تمرین مجدد) و سه دکمهٔ ثابت دور جدید/مرور/خروج؛ کانفتی از مسیر موجود saveBest→emitRecord می‌آید (prop celebrate برای بازی‌های خارج از مسیر)
+- دو خطای lint حین کار و رفع: react-hooks/set-state-in-effect در useAutoTutorial → بازنویسی با الگوی رسمی پروژه useSyncExternalStore (snapshot سرور=بسته، رویداد «visionone:tutorial-change» + storage) و ریست قدم آموزش از effect به داخل close (تنها مسیر بستن)؛ handleExitClick بعد از early-return بود (rules-of-hooks) → انتقال به بالای کامپوننت
+- پایلوت memory-game.tsx (MultiEdit با anchor): GameShell جایگزین هدر دستی (بج‌ها به stats و پیشرفت به progress رفت؛ چیپ نام بازی اضافه شد — تنها تغییر ظاهری هدر طبق هدف یکنواخت‌سازی) · TUTORIAL_STEPS سه‌گامی · راهنمای شِل حین بازی = pauseGame + دیالوگ، بستن = resume (pausedForHelpRef) · ResultScreen جایگزین نمای done با آستانه ستاره acc≥85→۳/≥60→۲ · missedWords (یکتا بر اساس واژه) در شاخهٔ جفت غلط · تله‌متری: session تازه در start با level=«درس:جفت»، end(finish) در finish، abandon(exit) در تأیید گارد و — بعد از کشف QA — در مسیر خروج مستقیم بدون پیشرفت هم abandon زده شد، cleanup unmount → abandon(unmount)
+- QA مرورگری کامل agent-browser: آموزش خودکار در اولین ورود (۳ قدم پیمایش + «شروع می‌کنم») و کلید tutorial:memory=1 ذخیره ✓ · دکمهٔ راهنما حین بازی = توقف (liveMsg «بازی متوقف شد ⏸») و Esc = ادامه ✓ · توقف/اورلی/ادامه ✓ · جفت غلط عمدی (injured) → ResultScreen با ۳ ستاره (acc ۸۶٪)، بج رکورد، توست گیمیفیکیشن، «مرور ۱ خطا» باز شد و injured در SRS lapses=1 ثبت شد ✓ · «دور جدید» بدون نمایش دوبارهٔ آموزش ✓ · خروج بدون پیشرفت = مستقیم، با پیشرفت = دیالوگ گارد «برگردم به آزمایشگاه؟ 🎮» ✓ · موبایل ۳۹۰px بدون سرریز (390=390) با فوتر چسبیده (گزارش کامل in tool-results/g1-round2-*.png)
+- تله‌متری end-to-end از مرورگر واقعی در dev.log: game_session_start/end(reason=finish,duration=71)/abandon(reason=exit,duration=11)/abandon(reason=unmount,duration=34 — از HMR unmount، یعنی گارد unmount واقعاً کار می‌کند) — دقیقاً قالب قرارداد سربرگ telemetry.ts؛ تست curl مستقل هم دو رویداد را تأیید کرد
+- سند roadmap به ۱.۲ ارتقا یافت (وضعیت اجرا + ردیف چنگ‌ریز)
+
+Stage Summary:
+- فاز G1 عملاً بسته شد (۹/۱۰ کار؛ فقط G1-09 موتور کمبو به‌عنوان P2 مانده) — آزمایشگاه حالا شِل/نتیجه/آموزش/تله‌متری استاندارد دارد و همهٔ بازی‌های بعدی فقط باید از همین ۸ API کیت مصرف کنند: playSound/buzz/useGamePause/GameExitGuard/GameShell/ResultScreen/TutorialOverlay+useAutoTutorial/createGameSession (+difficulty برای فاز G3)
+- فایل‌ها: games/kit/{difficulty,telemetry,tutorial-overlay,game-shell,result-screen}.tsx? — دقیق: difficulty.ts و telemetry.ts و tutorial-overlay.tsx و game-shell.tsx و result-screen.tsx + games/memory-game.tsx (پایلوت)؛ امضاهای shared.ts و کلیدهای localStorage بازی دست‌نخورده (قانون حفظ‌شوندگی)
+- کلید localStorage جدید: «visionone:game-tutorial:{game}» (۱=دیده‌شده) · رویداد جدید: «visionone:tutorial-change»
+- قرارداد برای عوامل G2: هر مهاجرت بازی = GameShell(هدر)+ResultScreen(نتیجه)+TutorialOverlay(آموزش ۳گامی)+تله‌متری(۴ نقطه: start در شروع دور، end در پایان، abandon در تأیید گارد و در خروج مستقیمِ بدون پیشرفت و cleanup unmount) — ستاره/آستانه و مرور خطا مال خود بازی است؛ در بازی‌های زمان‌دار راهنما باید مثل memory توقف بزند
+- ریسک/یادداشت: (۱) چیپ نام بازی در هدر playing اضافه شد — تغییر ظاهری آگاهانهٔ هدف G1-05 (۲) tsc کل پروژه ۷ خطا دارد که همه خارج src/ و از پیش موجودند؛ lint صفر (۳) G1-09 کمبو باید هم‌زمان با G2 گروه speed-quiz/flappy برود تا امتیاز یکسان بماند (۴) rate-limit تله‌متری ۳۰/۵دقیقه است — بازی‌های سریع کافی است چون هر دور فقط ۲-۳ رویداد می‌فرستد
+- گام بعدی پیشنهادی: G2 به ترتیب سند — گروه a (memory/scramble/hangman: کیبورد ۴-جهته memory، راهنمای هزینه‌دار scramble، بادکنک hangman) و گروه b (cloze/word-search/sentence-builder)؛ سپس G3
