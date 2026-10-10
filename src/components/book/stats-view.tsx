@@ -47,6 +47,7 @@ import { useCombinedRounds } from "@/lib/round-counters";
 import { setPracticeIds } from "@/lib/practice-store";
 import { useBook } from "@/lib/book-context";
 import { ActivityHeatmap } from "./activity-heatmap";
+import { SrsStatsSection } from "./srs-stats-section";
 import { toast } from "sonner";
 import type { ViewId } from "./app-header";
 
@@ -723,6 +724,9 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
               </p>
             </section>
           )}
+
+          {/* ── مرور فاصله‌دار (SRS — فاز ۲) ── */}
+          <SrsStatsSection onNavigate={(v) => onNavigate?.(v as ViewId)} />
 
           {/* ── نشان‌ها ── */}
           <section className="space-y-3">

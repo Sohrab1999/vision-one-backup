@@ -21,6 +21,7 @@ export type NavView =
   | "dict"
   | "verbs"
   | "flashcards"
+  | "review"
   | "stats"
   | "tutor"
   | "compare";

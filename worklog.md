@@ -1040,3 +1040,127 @@ Stage Summary:
 - تصمیم کلیدی: همگام‌سازی «وضعیت کامل» (snapshot کلید/مقدار) به‌جای همگام‌سازی ریز رویدادی — ساده، مقاوم، سازگار با تمام استورهای فعلی و آینده.
 - ریسک‌ها/یادداشت: Google OAuth نیازمند GOOGLE_CLIENT_ID/SECRET از کاربر؛ getServerSession در POST مسیر attempts نیازمند کوکی سشن (curl flow تست شد)؛ session JWT پس از حذف کاربر تا انقضا معتبر می‌ماند (بی‌خطر — فقط شناسه).
 - بعدی: فاز ۲ — موتور مرور فاصله‌دار (SRS/FSRS) — استور srs-store موجود به مدل ReviewState سروری ارتقا می‌یابد.
+
+---
+Task ID: 2-a
+Agent: general-purpose (srs-db-api)
+Task: مدل ReviewState + API /api/srs (GET/PUT)
+
+Work Log:
+- prisma/schema.prisma فقط با python ویرایش شد: رابطهٔ `reviewStates ReviewState[]` به User (بعد از attempts) + مدل کامل ReviewState بعد از Attempt (همهٔ فیلدهای مشخصات: book/cardKey/cardType/chapter/ease/interval/reps/lapses/streak/dueAt/lastGrade + یونیک userId+book+cardKey + ایندکس‌های userId,dueAt و userId,book؛ onDelete Cascade).
+- `bun run db:push` موفق: «Your database is now in sync» بدون هیچ هشدار data-loss — مهاجرت کاملاً add-only، مدل‌های موجود دست‌نخورده، Prisma Client بازتولید شد (v6.19.2).
+- src/app/api/srs/route.ts ساخته شد با همان الگوی progress/route.ts (NextRequest/NextResponse، db، getServerSession/authOptions، force-dynamic، کامنت سربرگ فارسی):
+  - GET: گارد سشن 401 «ابتدا وارد شو» → findMany با select دقیق → پاسخ { ok, states, count } با dueAt به ISO string و lastGrade.
+  - PUT: گارد سشن 401 → بدنهٔ { states:[...] }؛ آرایه نباشد = 400 «داده نامعتبر»؛ JSON خراب = 400؛ > ۳۰۰۰ عضو = 413 با پیام فارسی. اعتبارسنجی/clamp سخت هر عضو: book سفید‌لیست ۶ جزوه (نامعتبر = skip)، cardKey پس از trim باید ۱..۱۲۸ نویسه (خالی = skip)، cardType فقط word/verb وگرنه word، chapter صحیح clamp 0..99، ease clamp 1.3..3.5 (پیش‌فرض 2.5)، interval clamp 0..365، reps/lapses/streak صحیح clamp 0..99999، lastGrade فقط {0,1,2,null}، dueAt از new Date(value) با fallback به اکنون.
+  - ذخیره: تراکنش db.$transaction با آپ‌سل تکه‌تکه ۶۰تایی روی کلید یونیک userId_book_cardKey (update شامل همهٔ فیلدها؛ create کامل) → پاسخ { ok, count }؛ catch کلی با console.error("PUT /api/srs error:") و 500 «ذخیره وضعیت مرور ممکن نشد».
+- راستی‌آزمایی: tsc صفر خطا در src/ (فیلتر grep ^src/) · `bun run lint` صفر خطا · دود-تست زنده در یک compound call (سرور از قبل بالا بود، ری‌استارت نشد): GET بی‌سشن → 401 {"error":"ابتدا وارد شو"} و PUT بی‌سشن → 401 همان پیام · جدول با کوئری sqlite_master تأیید شد (همهٔ ستون‌ها + FK با ON DELETE CASCADE + ایندکس‌های ReviewState_userId_dueAt_idx و ReviewState_userId_book_idx و یونیک سه‌ستونی ReviewState_userId_book_cardKey_key) · ReviewState در حال حاضر ۰ ردیف و User ۰ ردیف (پاک‌سازی کاربران آزمایشی فاز ۱ — داده‌ای از دست نرفت).
+- هیچ فایل دیگری تغییر نکرد؛ مرورگر/chrome باز نشد؛ سرور dev restart/kill نشد.
+
+Stage Summary:
+- زیرساخت فاز ۲ آماده است: جدول ReviewState در SQLite + API همگام‌سازی GET/PUT در /api/srs با سقف ۳۰۰۰ کارت، chunk ۶۰تایی و clamp سخت سمت سرور (SM-2: ease 1.3..3.5، interval تا ۳۶۵ روز).
+- قرارداد کلید کارت نهایی شد: واژه = متن خود واژه، فعل بی‌قاعده = "v:<base>" — کلاینت فاز بعدی (task 2-b) باید srs-store را به همین شکل به PUT بفرستد.
+- نکته برای عامل‌های بعدی: GET/PUT فقط برای کاربر واردشده کار می‌کند (مهمان 401)؛ رفتار مهمانِ آفلاین فعلی دست‌نخورده است و اتصال استور کلاینت به این API در فاز بعد انجام می‌شود.
+
+---
+Task ID: 2-d
+Agent: general-purpose (srs-flashcards-quiz)
+Task: فاز ۲ SRS — ارتقای فلش‌کارت به ۳ دکمهٔ درجه‌بندی SM-2 + اتصال آزمون واژگان به صف مرور
+
+Work Log:
+- فلش‌کارت (flashcard-view.tsx): `answer(known: boolean)` به `answer(grade: 0|1|2)` ارتقا یافت — ثبت با `gradeSrs` (جایگزین recordSRS که برای بازی تطبیق دست‌نخورده ماند)؛ فقط درجهٔ ۲ («بلد بودم») واژه را learned می‌کند.
+- شمارنده‌ها: `hardCount` جدید (grade 1) + ریست آن در start()؛ grade 0 → reviewCount، grade 2 → knownCount.
+- کیبورد: y/ی → ۲، n/ن → ۰ و h جدید → ۱ (در همان effect موجود).
+- دکمه‌های پس از فلیپ: از ۲ دکمهٔ grid-cols-2 به ۳ دکمهٔ `grid grid-cols-3 gap-2` — «نمی‌دونم» (outline قرمز destructive + XCircle)، «سخت» (outline کهربایی amber-500 + Clock)، «بلد بودم» (primary + CheckCircle2)؛ هر دکمه flex-col با آیکون+متن و زیرمتن `text-[10px]` زمان مرور بعدی همان درجه از `formatInterval(previewIntervals(srs[word], Date.now())[g])`؛ h-13 حفظ شد.
+- صفحهٔ done: جمع‌بندی سه‌عددی «X بلد بودی، Y سخت زدی و Z برای مرور علامت خورد» + درصد حلقه اکنون (knownCount+hardCount)/deck.length.
+- صفحهٔ setup: نکتهٔ آموزشی amber با متن SM-2 سه‌درجه‌ای بازنویسی شد («نمی‌دونم» ۱۰ دقیقه بعد، «سخت» رشد کم، «بلد بودم» رشد نمایی فاصله + نمایش زمان دقیق زیر دکمه‌ها)؛ راهنمای میان‌بر پایین، h سخت را اضافه شد.
+- دست‌نخورده ماند: SESSION_SIZE، weakOnly، starredOnly، تب بازی تطبیق، نوارهای رشد ۵تایی روی کارت.
+- آزمون (quiz-game.tsx): helper `seedVocabReview(correctOption)` نزدیک chooseOption اضافه شد — تطبیق دقیق و سپس loose (includes) گزینهٔ صحیح با `bookData.vocab.all` و فراخوانی `seedReviewFromQuiz` از srs-store.
+- در هر دو مسیرِ خطا — `chooseOption` (پس از recordMistake) و `handleTimeout` (پس از recordMistake) — شرط `current.category === "vocabulary"` گزینهٔ صحیح را به صف مرور می‌بندد؛ کارت نو سررسید فردا می‌گیرد و کارت قدیم بازآموزی ۱۰ دقیقه‌ای.
+- بقیهٔ رفتار آزمون (امتیاز، تایمر، دفتر اشتباهات، attempt-saved event، چالش روزانه/هفتگی) بدون تغییر.
+- ویرایش‌ها همه با python3 و انکرهای ASCII + assert count==1 انجام شد (متن‌های فارسی ZWNJدار با escape \u200c ساخته شدند؛ یک پرانتز اضافه حین ویرایش کیبورد و یک نویسهٔ نادرست در کامنت فاز ۲ موقع ذخیره شناسایی و اصلاح شد).
+- راستی‌آزمایی: `bun run lint` بدون خطا؛ `bunx tsc --noEmit | grep "^src/"` خالی (تنها خطاهای scaffold قدیمی examples/scripts خارج از src)؛ سرور dev و مرورگر دست نخورد — QA مرورگری با ارکستراتور انجام می‌شود.
+
+Stage Summary:
+- حلقهٔ کامل SRS فاز ۲ بسته شد: فلش‌کارت سه‌درجه‌ای SM-2 با پیش‌نمایش زندهٔ فاصله روی هر دکمه + آزمون واژگان حالا کارت مرور می‌سازد (غلط‌زدهٔ واژگانی → seedReviewFromQuiz).
+- APIهای هستهٔ استفاده‌شده: gradeSrs / previewIntervals / formatInterval (srs-engine) و seedReviewFromQuiz (srs-store)؛ recordSRS فقط برای بازی تطبیق باقی ماند.
+- نکته برای عامل‌های بعدی: همهٔ ویرایش فایل‌های حاوی ZWNJ فقط با python3 و انکر ASCII؛ git diff خروجی رنگی را حین بازبینی متن فارسی بی‌اعتماد نشان داد — صحت را با python خواندن از دیسک تأیید کنید.
+
+---
+Task ID: 2-c
+Agent: general-purpose (review-view)
+Task: فاز ۲ — نمای «مرور امروز» (ReviewView) روی موتور SRS + سیم‌کشی ناوبری
+
+Work Log:
+- فایل جدید src/components/book/review-view.tsx ("use client"، ~۷۶۰ خط) با سه فاز setup/playing/done:
+  - setup: کارت سربرگ (Brain + h1 «مرور هوشمند امروز» + زیرنویس SM-2)؛ ۴ KPI با grid-cols-2 sm:grid-cols-4 (سررسید امروز = reps>0 و dueAt<=now، نو باقی‌مانده = min(limit−newDone، کارت‌های نو)، دردسرساز = isLeech، کارت در چرخه = reps>0) — همه در رندر با توابع خالص روی استور ری‌اکتیو.
+  - چیپ‌های NEW_LIMIT_OPTIONS (فعال bg-primary، h-11 لمسی) با setDailyNewLimit + toast.info فارسی.
+  - «پیش‌بینی بار مرور ۷ روز آینده»: نمودار میله‌ای CSS خالص (۷ ستون، ارتفاع نسبی به بیشینه، amber-500/60 rounded-t، برچسب امروز/فردا/weekday با Intl fa-IR؛ کارت‌های عقب‌افتاده در ستون «امروز» جمع می‌شوند) با role="img" و aria-label توصیفی.
+  - بخش هشدار دردسرسازها (کارت حاشیهٔ amber، حداکثر ۸ ردیف در max-h-44 اسکرولی، Badge «×N فراموشی») + دکمهٔ «تمرین ویژه این‌ها» → جلسه فقط با لیک‌ها (مرتب بر اساس lapses نزولی).
+  - دکمهٔ شروع h-12 w-full «شروع مرور (N کارت)»؛ صف = کارت‌های سررسید (صعودی dueAt) + کارت‌های نو تا سقف باقی‌ماندهٔ روز (ترتیب درس + شافل درون‌درس، فعل‌های نو در پایان)، سقف کل ۶۰؛ N=۰ → disabled + «همه‌چیز مرور شده! 🎉»؛ نکتهٔ ریز توضیح سه دکمه.
+  - playing: فلیپ‌کارت با کلاس‌های موجود flip-scene/flip-inner/flip-face (+flip-back border-primary/35 bg-primary/10)؛ روی کارت Badge درس یا «فعل» + واژهٔ font-en dir=ltr + SpeakButton (stopPropagation)؛ پشت کارت معنی فارسی درشت (فعل: past • participle dir=ltr + معنی)؛ نوار Progress + «i / N» + Badge سبز «بلد».
+  - سه دکمهٔ درجه grid-cols-3 با پیش‌نمایش زندهٔ formatInterval(previewIntervals(state، now)): نمی‌دونم (outline destructive + XCircle)، سخت (outline amber + Clock)، بلد بودم (primary + CheckCircle2) — h-13، متن text-[13px] font-black، زمان block text-[10px].
+  - ثبت پاسخ: gradeSrs(key, grade) + bumpTodayReview(isNewCard?1:0) + شمارنده‌های محلی → کارت بعد؛ آخرین کارت → done + touchStreak() یک‌بار.
+  - کیبورد (الگوی flashcard-view): Space/Enter فلیپ؛ 1/۱ و 2/۲ و 3/۳ درجه‌ها — درجه‌ها فقط پس از فلیپ پذیرفته می‌شوند.
+  - done: سه شمارنده رنگی (destructive/amber/primary)، حلقهٔ SVG درصد موفقیت ((good+hard)/total — کپی الگوی فلش‌کارت با r=52 و dasharray 326.7)، مدت جلسه از startedAtRef، یادآوری کارت‌های «نمی‌دونم» با formatInterval(RELEARN_MS) (۱۰ دقیقه — هم‌قرارداد با موتور؛ عدد «۱۵ دقیقه» در شرح تسک با RELEARN_MS موتور نمی‌خواند، مقدار از ثابت موتور گرفته شد)، دکمه‌های «دور جدید» (بازمحاسبهٔ صف — کارت‌های ۱۰دقیقه‌ای دوباره سررسید می‌شوند) و «بازگشت به جلد» (onNavigate?.("home")).
+  - دسترس‌پذیری: role="region"، aria-live="polite" برای اعلان فاز/کارت جاری، role="list/listitem/img/button/group"، aria-pressed روی چیپ‌ها؛ اعداد همه toLocaleString("fa-IR")؛ پالت فقط emerald/amber/teal + توکن‌های معنایی (بدون آبی/ایندیگو).
+- قواعد react-hooks v6 رعایت شد: صفر setState در effect (تنها effect = listener کیبورد با setState داخل callback رویدادی)؛ صف در handlerها/رندرِ setup ساخته می‌شود؛ شمارندهٔ روزانه و سقف نو فقط با useState initializer خوانده و در handlerها (beginSession/backToSetup) تازه‌سازی می‌شوند.
+- سیم‌کشی با python و انکرهای ASCII (فایل‌ها ZWNJ دارند): nav-store.ts («review» بعد از flashcards در NavView)؛ app-header.tsx («review» در ViewId + آیتم NAV «مرور امروز» با آیکون Brain بعد از flashcards + import Brain)؛ page.tsx (import ReviewView + رندر بعد از flashcards).
+- نکتهٔ تایپ: navigate در page.tsx امضای (v: ViewId) => void دارد و strictFunctionTypes آن را به prop (v: string) => void نمی‌پذیرد (آزمون تجربی tsc: TS2322) — پس در page.tsx آداپتور یک‌خطی onNavigate={(v) => navigate(v as ViewId)} گذاشته شد؛ امضای prop خود کامپوننت مطابق تسک (v: string) => void و اختیاری/بی‌استفاده-امن ماند.
+
+Stage Summary:
+- نمای «مرور امروز» کامل و سیم‌کشی‌شده است: هدر ← تب «مرور امروز» (Brain) ← ReviewView با صف سررسید+نو، درجه‌بندی سه‌گانهٔ SM-2، دردسرسازها، پیش‌بینی ۷روزه و جمع‌بندی.
+- راستی‌آزمایی: bun run lint = صفر خطا؛ bunx tsc --noEmit | grep "^src/" = خالی (تنها خطاهای باقی‌مانده در skills/ و tool-results/ است که پیش‌موجود و خارج از اپ‌اند).
+- برای QA مرورگری: مسیر هدر → «مرور امروز»؛ سناریوها: چیپ سقف نو، شروع مرور، فلیپ و سه دکمه با زمان‌های پیش‌نمایش، میان‌بر 1/2/3، پایان جلسه (حلقهٔ درصد + مدت + زنجیره 🔥)، «دور جدید» (کارت‌های نمی‌دونم ~۱۰ دقیقه بعد در صف می‌آیند)، «بازگشت به جلد».
+- بدون رگرسیون: هیچ فایل موجودی رفتار قبلی‌اش تغییر نکرد؛ فقط الحاق عضو union/آیتم NAV/شاخهٔ رندر.
+
+---
+Task ID: 2-e
+Agent: general-purpose (srs-stats-shelf)
+Task: فاز ۲ — بخش «مرور فاصله‌دار» در نمای آمار (منحنی فراموشی + پیش‌بینی بار مرور) + نشان سررسید روی کارت‌های قفسه
+
+Work Log:
+- فایل جدید src/components/book/srs-stats-section.tsx («use client») با export SrsStatsSection({ onNavigate }: { onNavigate?: (v: string) => void }) — اختیاری و بی‌استفاده-امن؛ کل محتوا داخل یک section space-y-3 مثل بقیهٔ بخش‌های stats-view:
+  - سربرگ: h2 با Brain emerald «مرور فاصله‌دار (SRS)» + Badge «N کارت در چرخه» + دکمهٔ sm سمت چپ با Play «شروع مرور امروز» → onNavigate?.("review").
+  - KPI چهارگانه (grid-cols-2 sm:grid-cols-4، rounded-xl border p-3، با آیکون و عدد درشت): «سررسید امروز» (reps>0 و dueAt<=now — text-primary)، «کارت در چرخه» (reps>0 — teal)، «دردسرساز» (isLeech — amber)، «میانگین تسلط» (میانگین boxFromState روی کارت‌های در چرخه ÷۵ به درصد — emerald)؛ همهٔ اعداد فارسی.
+  - نمودار ستونی «بار مرور ۷ روز آینده»: ۷ نقطهٔ name/count — امروز، فردا، سپس weekday کوتاه با Intl.DateTimeFormat("fa-IR")؛ count کارت‌های reps>0 که dueAt در آن روز است و عقب‌افتاده‌ها در «امروز» جمع می‌شوند (هم‌قرارداد buildForecast در review-view)؛ ResponsiveContainer height=200 داخل div dir="ltr"؛ Bar dataKey=count fill=#10b981 radius=[8,8,0,0]؛ CartesianGrid vertical=false strokeDasharray="3 3"؛ XAxis fontSize 11 با fill var(--muted-foreground) و interval=0؛ YAxis allowDecimals=false width=28؛ Tooltip فارسی «N کارت» — الگوی رنگی compare-view کپی شد.
+  - نمودار سطحی «منحنی فراموشی شخصی»: AreaChart با نقاط t=0..14 و r=round(100*exp(-t/S)) که S = میانگین interval (روز) کارت‌های در چرخه با interval>0 (خالی → S=1)؛ linearGradient یکتای id="fc-fade" با stopهای amber (0.35 → 0.02)؛ Area stroke=#f59e0b strokeWidth=2.5؛ XAxis تیک عدد فارسی (interval=2 برای جلوگیری از تصادم) + label «روز»؛ YAxis domain [0,100] با تیک «٪» فارسی؛ Tooltip «ماندگاری تقریبی: X٪» + labelFormatter «روز N»؛ زیرنویس ریز: «بر مبنای فاصلهٔ میانگین مرورهای فعلی تو — هرچه مرورها فاصله‌دارتر، افت کندتر.»
+  - empty state صفر کارت در چرخه: Card border-dashed با Brain muted + «هنوز کارتی در چرخهٔ مرور نیست — با فلش‌کارت‌ها یا «مرور امروز» شروع کن.» + دکمهٔ outline «رفتن به مرور امروز» (به‌جای دو نمودار؛ KPIها نمایش داده می‌شوند).
+  - محاسبات خالص در useMemo (تابع summarize روی کل استور useSRSData — واحد شمارش کل استور، کلید "v:" نیز همان آیتم استور است)؛ بدون setState در effect؛ بدون رنگ آبی/ایندیگو.
+- ویرایش stats-view.tsx فقط با python3 و انکر ASCII + assert count==1 (فایل ZWNJ دارد): import بلافاصله بعد از خط ActivityHeatmap؛ رندر بلافاصله قبل از کامنت «نشان‌ها» — متن دقیق آن کامنت از خود فایل خوانده شد (ZWNJ داشت: نشان‌ها). تأیید نهایی با grep: SrsStatsSection دقیقاً یک import (خط ۵۰) و یک render (خط ۷۲۹).
+  - نکتهٔ تایپ: onNavigate در StatsView نوعش (v: ViewId) => void است و strictFunctionTypes آن را به prop (v: string) => void نمی‌پذیرد (همان TS2322 که ۲-c تجربی آزمود) → در فراخوانی آداپتور یک‌خطی onNavigate={(v) => onNavigate?.(v as ViewId)} گذاشته شد (الگوی page.tsx برای ReviewView)؛ امضای prop خود SrsStatsSection مطابق تسک (v: string) و اختیاری ماند.
+- ویرایش bookshelf-view.tsx فقط با python3: importهای useSyncExternalStore / getBookSrsCounts / BOOKS؛ بلاک ماژول‌سطح EMPTY_DUE + dueSnapshot + subscribeDueSnapshot/getDueSnapshot؛ پارامتر جدید dueCount در BookCard؛ نشان «N مرور امروز» روی جلد (absolute bottom-3 left-3، بالای خط تزئینی پایین، فقط available && dueCount>0)؛ چیپ کهربایی «N مرور سررسید در کتابخانه» در ردیف چیپ‌های سربرگ (فقط اگر totalDue>0، سطل emerald/amber حفظ شد)؛ پاس‌دادن dueCount={dueByBook[meta.id] ?? 0} در grid.
+  - انحراف آگاهانه از useMemo-with-empty-deps پیشنهادی تسک: قفسه در HTML پیش‌رندر SSR حاضر است (با curl تأیید شد) و getBookSrsCounts مستقیم localStorage می‌خواند؛ useMemo در رندر hydration عدد واقعی می‌گرفت و در برابر HTML صفرِ سرور، React 19 خطای hydration mismatch می‌داد. به‌جایش قرارداد همهٔ استورهای پروژه: useSyncExternalStore با subscribe نو-اپ که هنگام هر mount قفسه کَش را باطل می‌کند (عدد هنگام ورود تازه — همان معنای «فقط رندر اولیه») و getServerSnapshot همیشه صفر برمی‌گرداند (بدون mismatch، بدون setState در effect). پس از hydration React خودش با اسنپ‌شات کلاینت رفرش می‌کند.
+  - در حین کار: یک غلط تایپی فارسی در کامنت جدید (پروجه → پروژه) و JSDoc گرادیان که بین بلاک جدید و COVER_GRADIENT گیر افتاده بود با python اصلاح شد؛ دنبالهٔ براکت-حرف در خروجی bash فقط آرتیفکت نمایش پایپ‌لاین بود (ادعای خرابی فایل) — صحت با Grep/tsc تأیید و fix بی‌مصرف حذف شد.
+- راستی‌آزمایی: bun run lint صفر خطا؛ bunx tsc --noEmit 2>&1 | grep "^src/" خالی (فقط خطاهای پیش‌موجود skills/ و tool-results/)؛ ZWNJ هر سه فایل دست‌نخورده (شمارش U+200C و صفر بودن U+FFFD)؛ سرور dev دست‌نخورده: GET / → 200 با کامپایل موفق؛ chrome باز نشد — QA مرورگری با ارکستراتور.
+
+Stage Summary:
+- نمای آمار بخش کامل SRS گرفت: ۴ KPI + پیش‌بینی بار مرور ۷روزه (ستونی) + منحنی فراموشی شخصی (تکیه بر میانگین فاصلهٔ مرورها) + میان‌بر «شروع مرور امروز» و حالت خالی گرم.
+- قفسه: چیپ کهربایی مجموع سررسیدهای کتابخانه در سربرگ + نشان «N مرور امروز» روی جلد جزوه‌های دارای کارت سررسید (جزوه‌های بی‌داده/غیرفعال بدون نشان) — هیدریشن‌امن و تازه هنگام هر ورود به قفسه.
+- نکته برای عامل‌های بعدی: الگوی dueSnapshot/subscribeDueSnapshot در bookshelf-view برای هر نشان خلاصه‌خوان از localStorage قابل استفاده است؛ ویرایش فایل‌های ZWNJدار فقط با python3 و انکر ASCII؛ از گنجاندن دنبالهٔ براکت+حرف در متن دستورهای bash پرهیز شود (آرتیفکت نمایش).
+
+---
+Task ID: 2 (orchestrator — فاز ۲ کامل؛ زیرتسک‌های 2-a/2-c/2-d/2-e در بخش‌های جدا ثبت شدند + هسته توسط ارکستراتور)
+Agent: main orchestrator (Z.ai Code)
+Agent note: هستهٔ موتور/استور/سینک به‌دلیل اتصال عمیق به account-sync و قانون صفر-رگرسیون مستقیماً اجرا شد؛ UI و دیتابیس به ساب‌ایجنت‌ها سپرده شد.
+
+Task: فاز ۲ نقشه راه جامع ۲۰۲۶ — موتور مرور فاصله‌دار (SRS) و «مرور هوشمند روزانه»
+
+Work Log:
+- هسته (ارکستراتور): `src/lib/srs-engine.ts` — SM-2 سه‌درجه‌ای خالص (grade 0=نمی‌دونم→بازآموزی ۱۰دقیقه+ease-0.2، 1=سخت→×1.2+ease-0.15، 2=بلد بودم→رشد نمایی 1→3→×ease، سقف ۳۶۵ روز) + previewIntervals/mergeStates/sanitize/boxFromState/isLeech(≥۴ فراموشی)/formatInterval فارسی — دود-تست با bun: توالی 1→3→7.5 روز و lapse ۱۰ دقیقه تأیید شد
+- `src/lib/srs-store.ts` بازنویسی سازگار: SrsItem = SrsState + {box,seen,wrong} (همهٔ مصرف‌کنندگان قدیمی — word-lookup/match-game/pickSession — بدون تغییر کار می‌کنند)؛ مهاجرت خودکار دادهٔ قدیمی box→SM-2 با زمان‌بندی آینده (بدون سیل مرور)؛ gradeSrs/seedReviewFromQuiz(کارت نو→فردا، قدیم→بازآموزی)/getDailyNewLimit/setDailyNewLimit/getTodayReview/bumpTodayReview/getBookSrsCounts (برای نشان قفسه)؛ invalidation کَش در storage event
+- `src/lib/srs-sync.ts`: همگام‌سازی سروری ساختاریافته — captureSrsLocal قبل از ادغام کلی فاز ۱ (حفظ نسخهٔ محلی) → srsPullMergePush با mergeStates در سطح هر کارت (برنده: reps→interval→dueAt) → PUT نهایی؛ push debounce-شدهٔ ۲.۵ثانیه‌ای فقط کتاب‌های تغییریافته؛ مهمان = صفر درخواست؛ 401 → بازگشت بی‌صدای محلی
+- `account-provider.tsx` (python): setSrsAuthed(true) در ورود، captureSrsLocal قبل از pullMergePush، ادغام SRS بعد از آن (toast با جمع changed)، قطع سینک در خروج/مهمان
+- 2-a (ساب‌ایجنت): مدل `ReviewState` (یونیک userId+book+cardKey، ایندکس dueAt) + رابطهٔ User.reviewStates + db:push add-only؛ API `/api/srs` GET/PUT با سفید‌لیست کتاب، clamp سخت (ease/interval/شمارنده‌ها)، آپ‌سل تراکنشی ۶۰تایی — دود-تست 401 مهمان + جدول ۱۶ستونه در SQLite
+- 2-c (ساب‌ایجنت): `src/components/book/review-view.tsx` (~۷۶۰ خط) — سه فاز setup/playing/done: ۴ KPI، چیپ سقف کارت نو (۵..۳۰)، پیش‌بینی ۷روزهٔ CSS خالص، بخش دردسرسازها + تمرین ویژه، فلیپ‌کارت با کلاس‌های موجود، سه دکمه با پیش‌نمایش زندهٔ زمان، کیبورد 1/2/3، حلقهٔ درصد SVG + مدت + زنجیره؛ سیم‌کشی NavView/ViewId/NAV(Brain «مرور امروز»)/page.tsx
+- 2-d (ساب‌ایجنت): فلش‌کارت ۳دکمه‌ای با formatInterval زیر هر دکمه (recordSRS حفظ شد برای بازی تطبیق؛ فقط grade 2 learned می‌کند؛ میان‌بر h سخت)؛ آزمون: seedVocabReview روی پاسخ غلط واژگانی (chooseOption + handleTimeout) با تطبیق exact/loose روی vocab.all
+- 2-e (ساب‌ایجنت): `srs-stats-section.tsx` در آمار — ۴ KPI + BarChart پیش‌بینی ۷روزه (emerald) + AreaChart منحنی فراموشی R=100·e^(−t/S) با S=میانگین فاصلهٔ کارت‌ها (amber) + empty-state + دکمهٔ «مرور امروز»؛ قفسه: نشان «N مرور امروز» روی جلد کتاب‌های دارای سررسید + چیپ مجموع کتابخانه (useSyncExternalStore برای جلوگیری از hydration mismatch)
+- تنظیمات/شمارندهٔ روزانه (srs-settings/srs-daily) به SCOPED_STORE_NAMES اضافه شد — سینک آن‌ها از راه اسنپ‌شات کلی فاز ۱
+- QA مرورگری کامل (agent-browser): جلسهٔ ۱۵ کارتی واقعی در یازدهم (۱۱/۲/۲، ۸۷٪، ۱:۰۷) → ۱۵ کارت SM-2 ذخیره (interval 1روز، box 1، due فردا) · دور جدید = ۰ کارت (سقف نو پر، نمی‌دونم‌ها ۱۰دقیقه‌ای) · آزمون واژگان: پاسخ غلط «diet» → کارت ۱۶ام با dueInH=24 (معیار پذیرش نقشه راه) · آمار: ۲ نمودار recharts (۷ میله + ۱ منحنی) · فلش‌کارت ۳دکمه‌ای با زمان‌ها · سوییچ به هفتم و مقایسه سالم · موبایل ۳۹۰px بدون اسکرول افقی · تم تیره OK · کنسول بدون خطا · dev.log فقط 200/prisma-query
+- QA سروری curl: register→login→PUT /api/srs (count:2، BAD-BOOK skip، clamp)→GET round-trip یک‌به‌یک — سپس حذف کاربر آزمایشی (cascade ردیف‌های SRS: count=0)؛ ۲۰ Attempt واقعی دست‌نخورده؛ localStorageهای تست پاک شد
+- نقشه راه: هر ۶ آیتم فاز ۲ تیک + گزارش QA ثبت شد
+
+Stage Summary:
+- فاز ۲ کامل شد: یادگیری واژگان از «خواندن» به «یادگاری علمی SM-2» رسید — نمای «مرور امروز» با سقف کارت نو قابل تنظیم، فلش‌کارت ۳درجه‌ای با زمان‌بندی نمایشی، تشخیص و تمرین ویژهٔ دردسرسازها، منحنی فراموشی + پیش‌بینی بار مرور در آمار، و بازگشت خودکار واژه‌های غلط‌زدهٔ آزمون به صف مرور
+- معماری: استور محلی = منبع حقیقت (مهمان کامل)، سرور ReviewState = آینهٔ ساختاریافته برای کاربر وارد‌شده (ادغام کارت‌به‌کارت بدون از دست رفتن پیشرفت هیچ دستگاهی) — آمادهٔ فازهای ۶ (XP از مرورها)، ۹ (واژه‌های مشکل‌دار کلاس) و ۸ (تحلیل خطا)
+- نقاط تماس: srs-engine.ts / srs-store.ts / srs-sync.ts / api/srs / review-view.tsx / srs-stats-section.tsx
+- ریسک/یادداشت: مهاجرت دادهٔ قدیمی یک‌طرفه است ولی مقادیر SM-2 از box بازسازی می‌شوند؛ push کامل کتاب (نه delta) برای ۶۰۰ کارت ~۱۰۰KB است — در فاز ۱۱ می‌شود delta-push کرد؛ تست واقعی دو-دستگاهی با گوشی کاربر هنوز انجام نشده (فقط شبیه‌سازی localStorage و تست سروری)

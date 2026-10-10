@@ -18,6 +18,7 @@ import {
   Check,
   Clock,
   GitCompareArrows,
+  Brain,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ export type ViewId =
   | "dict"
   | "verbs"
   | "flashcards"
+  | "review"
   | "stats"
   | "tutor"
   | "compare";
@@ -61,6 +63,7 @@ const NAV: NavItem[] = [
   { id: "contents", label: "فهرست", icon: ListOrdered },
   { id: "vocab", label: "واژگان", icon: BookOpen },
   { id: "flashcards", label: "تمرین", icon: Layers },
+  { id: "review", label: "مرور امروز", icon: Brain },
   { id: "grammar", label: "گرامر", icon: GraduationCap },
   { id: "quiz", label: "آزمون", icon: ClipboardList },
   { id: "stats", label: "آمار", icon: BarChart3 },

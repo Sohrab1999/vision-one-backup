@@ -33,6 +33,8 @@ export const SCOPED_STORE_NAMES = [
   "daily",
   "weekly",
   "rounds",
+  "srs-settings",
+  "srs-daily",
 ] as const;
 
 export type ScopedStoreName = (typeof SCOPED_STORE_NAMES)[number];

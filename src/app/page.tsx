@@ -15,6 +15,7 @@ import { TextsView } from "@/components/book/texts-view";
 import { DictionaryView } from "@/components/book/dictionary-view";
 import { VerbsView } from "@/components/book/verbs-view";
 import { FlashcardView } from "@/components/book/flashcard-view";
+import { ReviewView } from "@/components/book/review-view";
 import { TutorView } from "@/components/book/tutor-view";
 import { StatsView } from "@/components/book/stats-view";
 import { CompareView } from "@/components/book/compare-view";
@@ -96,6 +97,7 @@ function App() {
           {effectiveView === "dict" && hasData && <DictionaryView />}
           {effectiveView === "verbs" && hasData && <VerbsView />}
           {effectiveView === "flashcards" && hasData && <FlashcardView />}
+          {effectiveView === "review" && hasData && <ReviewView onNavigate={(v) => navigate(v as ViewId)} />}
           {effectiveView === "stats" && hasData && <StatsView onNavigate={navigate} />}
           {effectiveView === "tutor" && hasData && <TutorView />}
         </motion.div>

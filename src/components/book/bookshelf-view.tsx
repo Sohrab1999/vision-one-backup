@@ -1,10 +1,36 @@
 "use client";
 
 import { BookOpen, Clock, Layers, Sparkles, ArrowLeft, GitCompareArrows } from "lucide-react";
+import { useSyncExternalStore } from "react";
+import { getBookSrsCounts } from "@/lib/srs-store";
+import { BOOKS } from "@/data/books/registry";
 import { cn } from "@/lib/utils";
 import { useBook } from "@/lib/book-context";
 import type { BookMeta } from "@/data/books/types";
 import type { ViewId } from "./app-header";
+
+// ── نشان سررسید قفسه (فاز ۲) ── مجموع مرورهای سررسید هر جزوه، مستقیم از localStorage
+// با الگوی استور بیرونی پروژه: سمت سرور و حین hydration صفر برمی‌گردد (بدون خطای mismatch
+// با HTML پیش‌رندرشده) و بلافاصله پس از آن عدد واقعی می‌نشیند. subscribe هنگام هر mount
+// قفسه کَش را باطل می‌کند تا عدد هنگام ورود تازه باشد (معادل useMemo تنها-اولیه).
+const EMPTY_DUE: Record<string, number> = {};
+let dueSnapshot: Record<string, number> | null = null;
+
+function subscribeDueSnapshot() {
+  dueSnapshot = null; // ورود دوباره به قفسه → محاسبهٔ تازه
+  return () => {};
+}
+
+function getDueSnapshot(): Record<string, number> {
+  if (!dueSnapshot) {
+    const out: Record<string, number> = {};
+    for (const b of BOOKS) {
+      if (b.available) out[b.id] = getBookSrsCounts(b.id).due;
+    }
+    dueSnapshot = out;
+  }
+  return dueSnapshot;
+}
 
 /** کلاس‌های گرادیان جلد بر اساس رنگ کتاب — بدون آبی/ایندیگو */
 const COVER_GRADIENT: Record<BookMeta["color"], string> = {
@@ -29,9 +55,11 @@ function BookCard({
   meta,
   active,
   onOpen,
+  dueCount,
 }: {
   meta: BookMeta;
   active: boolean;
+  dueCount: number;
   onOpen: (id: BookMeta["id"]) => void;
 }) {
   const available = meta.available;
@@ -94,6 +122,12 @@ function BookCard({
           </span>
         )}
 
+        {/* نشان مرور سررسید این جزوه (فاز ۲) */}
+        {available && dueCount > 0 && (
+          <span className="absolute bottom-3 left-3 rounded-full bg-white/25 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur">
+            {dueCount.toLocaleString("fa-IR")} مرور امروز
+          </span>
+        )}
         {/* خط تزئینی پایین جلد */}
         <span className="absolute inset-x-0 bottom-0 h-1.5 bg-black/10" aria-hidden />
       </div>
@@ -116,6 +150,9 @@ function BookCard({
 export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
   const { books, bookId, setBook } = useBook();
   const availableCount = books.filter((b) => b.available).length;
+  // تعداد مرور سررسید هر جزوه + مجموع کل کتابخانه (فاز ۲)
+  const dueByBook = useSyncExternalStore(subscribeDueSnapshot, getDueSnapshot, () => EMPTY_DUE);
+  const totalDue = Object.values(dueByBook).reduce((sum, n) => sum + n, 0);
 
   function openBook(id: BookMeta["id"]) {
     setBook(id);
@@ -148,6 +185,11 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
               <GitCompareArrows size={14} aria-hidden />
               مقایسه پایه‌ها
             </button>
+            {totalDue > 0 && (
+              <span className="rounded-full bg-amber-500/15 px-3 py-1.5 text-xs font-bold text-amber-700 dark:text-amber-300">
+                {totalDue.toLocaleString("fa-IR")} مرور سررسید در کتابخانه
+              </span>
+            )}
             <span className={cn("rounded-full px-3 py-1.5 text-xs font-bold", BADGE_TEXT.emerald)}>
               {availableCount} جزوه فعال
             </span>
@@ -166,7 +208,7 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
         {books.map((meta) => (
-          <BookCard key={meta.id} meta={meta} active={meta.id === bookId} onOpen={openBook} />
+          <BookCard key={meta.id} meta={meta} active={meta.id === bookId} dueCount={dueByBook[meta.id] ?? 0} onOpen={openBook} />
         ))}
       </section>
 

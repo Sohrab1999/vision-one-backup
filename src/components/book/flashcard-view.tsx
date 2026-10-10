@@ -15,6 +15,7 @@ import {
   Target,
   Puzzle,
   Star,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,7 +28,8 @@ import { useBookData } from "@/lib/book-context";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
 import { usePracticeIntent, clearPracticeIntent } from "@/lib/practice-intent";
-import { recordSRS, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
+import { gradeSrs, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
+import { previewIntervals, formatInterval } from "@/lib/srs-engine";
 import { touchStreak } from "@/lib/streak-store";
 import { SpeakButton } from "./speak-button";
 import { MatchGame } from "./match-game";
@@ -140,6 +142,7 @@ function FlashcardGame() {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [knownCount, setKnownCount] = useState(0);
+  const [hardCount, setHardCount] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
 
   const basePool = useMemo(
@@ -168,6 +171,7 @@ function FlashcardGame() {
     setIndex(0);
     setFlipped(false);
     setKnownCount(0);
+    setHardCount(0);
     setReviewCount(0);
     setPhase("playing");
   }, [pool, learned, srs, weakOnly, starredOnly]);
@@ -175,12 +179,14 @@ function FlashcardGame() {
   const current = deck[index];
 
   const answer = useCallback(
-    (known: boolean) => {
+    (grade: 0 | 1 | 2) => {
       if (!current) return;
-      recordSRS(current.word, known);
-      if (known) {
+      gradeSrs(current.word, grade);
+      if (grade === 2) {
         if (!learned.has(current.word)) toggle(current.word);
         setKnownCount((c) => c + 1);
+      } else if (grade === 1) {
+        setHardCount((c) => c + 1);
       } else {
         setReviewCount((c) => c + 1);
       }
@@ -203,9 +209,11 @@ function FlashcardGame() {
         e.preventDefault();
         setFlipped((f) => !f);
       } else if (e.key === "y" || e.key === "ی") {
-        answer(true);
+        answer(2);
       } else if (e.key === "n" || e.key === "ن") {
-        answer(false);
+        answer(0);
+      } else if (e.key === "h") {
+        answer(1);
       }
     }
     window.addEventListener("keydown", onKey);
@@ -234,7 +242,7 @@ function FlashcardGame() {
           <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
             <Sprout size={15} className="mt-0.5 shrink-0 text-amber-500" />
             <p>
-              هر واژه ۵ مرحله رشد دارد؛ واژه‌های ضعیف و دیده‌نشده بیشتر تکرار می‌شوند و با هر «بلد بودم» یک مرحله رشد می‌کنند. «بلد نبودم» واژه را به مرحله اول برمی‌گرداند.
+              هر واژه با زمان‌بندی SM-2 زمان مرور بعدی مخصوص خودش را می‌گیرد: «نمی‌دونم» ۱۰ دقیقه بعد، «سخت» با رشد کم و «بلد بودم» با رشد نمایی فاصله. زمان دقیق هر گزینه زیر دکمه‌ها نوشته شده.
             </p>
           </div>
 
@@ -402,7 +410,8 @@ function FlashcardGame() {
           <p className="text-center text-[11px] text-muted-foreground">
             میان‌برها: <kbd className="rounded bg-muted px-1.5">Space</kbd> چرخش کارت •{" "}
             <kbd className="rounded bg-muted px-1.5">y</kbd> بلد بودم •{" "}
-            <kbd className="rounded bg-muted px-1.5">n</kbd> بلد نبودم
+            <kbd className="rounded bg-muted px-1.5">n</kbd> بلد نبودم •{" "}
+            <kbd className="rounded bg-muted px-1.5">h</kbd> سخت
           </p>
         </CardContent>
       </Card>
@@ -411,7 +420,7 @@ function FlashcardGame() {
 
   // ── Done ──
   if (phase === "done") {
-    const pct = Math.round((knownCount / Math.max(deck.length, 1)) * 100);
+    const pct = Math.round(((knownCount + hardCount) / Math.max(deck.length, 1)) * 100);
     return (
       <Card className="mx-auto max-w-xl rise-in border-primary/30">
         <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
@@ -420,7 +429,7 @@ function FlashcardGame() {
           </span>
           <h2 className="text-xl font-black">دور تمام شد!</h2>
           <p className="text-sm text-muted-foreground">
-            {knownCount.toLocaleString("fa-IR")} واژه بلد بودی و {reviewCount.toLocaleString("fa-IR")} واژه برای مرور علامت خورد.
+            {knownCount.toLocaleString("fa-IR")} بلد بودی، {hardCount.toLocaleString("fa-IR")} سخت زدی و {reviewCount.toLocaleString("fa-IR")} برای مرور علامت خورد.
           </p>
           <Badge variant="outline" className="gap-1.5 border-orange-500/40 text-orange-500">
             <Flame size={13} />
@@ -531,19 +540,47 @@ function FlashcardGame() {
       </div>
 
       {flipped && (
-        <div className="grid grid-cols-2 gap-3 rise-in">
+        <div className="grid grid-cols-3 gap-2 rise-in">
           <Button
             variant="outline"
             size="lg"
-            onClick={() => answer(false)}
-            className="gap-2 h-13 border-destructive/40 text-destructive hover:bg-destructive/10"
+            onClick={() => answer(0)}
+            className="flex h-13 flex-col gap-1 border-destructive/40 text-destructive hover:bg-destructive/10"
           >
-            <XCircle size={19} />
-            بلد نبودم
+            <span className="flex items-center gap-1.5">
+              <XCircle size={19} />
+              نمی‌دونم
+            </span>
+            <span className="block text-[10px] font-medium opacity-80">
+              {formatInterval(previewIntervals(srs[current.word], Date.now())[0])}
+            </span>
           </Button>
-          <Button size="lg" onClick={() => answer(true)} className="gap-2 h-13">
-            <CheckCircle2 size={19} />
-            بلد بودم
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => answer(1)}
+            className="flex h-13 flex-col gap-1 border-amber-500/50 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
+          >
+            <span className="flex items-center gap-1.5">
+              <Clock size={19} />
+              سخت
+            </span>
+            <span className="block text-[10px] font-medium opacity-80">
+              {formatInterval(previewIntervals(srs[current.word], Date.now())[1])}
+            </span>
+          </Button>
+          <Button
+            size="lg"
+            onClick={() => answer(2)}
+            className="flex h-13 flex-col gap-1"
+          >
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 size={19} />
+              بلد بودم
+            </span>
+            <span className="block text-[10px] font-medium opacity-80">
+              {formatInterval(previewIntervals(srs[current.word], Date.now())[2])}
+            </span>
           </Button>
         </div>
       )}

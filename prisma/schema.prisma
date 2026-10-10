@@ -51,6 +51,7 @@ model User {
 
   progress Progress[]
   attempts Attempt[]
+  reviewStates ReviewState[]
 
   @@index([username])
 }
@@ -93,4 +94,36 @@ model Attempt {
   @@index([category])
   @@index([book])
   @@index([userId])
+}
+
+/// وضعیت مرور فاصله‌دار (SRS) هر کارت برای هر کاربر — فاز ۲ نقشه راه جامع
+model ReviewState {
+  id       String  @id @default(cuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// شناسه جزوه — "vision-one" | "grade-7" | "grade-8" | "grade-9" | "grade-11" | "grade-12"
+  book     String
+  /// کلید کارت: واژه = متن خود واژه · فعل بی‌قاعده = "v:<base>"
+  cardKey  String
+  /// "word" | "verb"
+  cardType String  @default("word")
+  /// شماره درس (۰ = نامشخص)
+  chapter  Int     @default(0)
+  /// ضریب سهولت SM-2 (۱.۳ تا ۳.۵)
+  ease     Float   @default(2.5)
+  /// فاصلهٔ فعلی مرور به روز (اعشاری)
+  interval Float   @default(0)
+  reps     Int     @default(0)
+  lapses   Int     @default(0)
+  streak   Int     @default(0)
+  /// سررسید مرور بعدی
+  dueAt    DateTime @default(now())
+  /// آخرین درجه: ۰=نمی‌دونم ۱=سخت ۲=بلد بودم
+  lastGrade Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, book, cardKey])
+  @@index([userId, dueAt])
+  @@index([userId, book])
 }

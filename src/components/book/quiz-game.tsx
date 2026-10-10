@@ -44,6 +44,7 @@ import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store
 import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
 import { usePulses } from "@/lib/use-daily-pulse";
 import { useBook, useBookData } from "@/lib/book-context";
+import { seedReviewFromQuiz } from "@/lib/srs-store";
 import type { ViewId } from "./app-header";
 
 interface Question {
@@ -373,6 +374,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     if (!current || selected !== null) return;
     toast.info("وقت این سؤال تمام شد ⏰", { duration: 1900 });
     recordMistake(current.id);
+    if (current.category === "vocabulary") seedVocabReview(current.options[current.answer]);
     setSelected(-1);
     setAnswers((prev) => {
       const next = [...prev];
@@ -400,6 +402,14 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     return () => clearInterval(iv);
   }, [phase, timed, selected, index]);
 
+  /** یکپارچگی آزمون با SRS (فاز ۲): واژهٔ غلط‌زدهٔ واژگانی به صف مرور برمی‌گردد */
+  function seedVocabReview(correctOption: string | undefined) {
+    if (!correctOption || !bookData) return;
+    const exact = bookData.vocab.all.find((v) => v.word === correctOption);
+    const loose = exact ?? bookData.vocab.all.find((v) => correctOption.includes(v.word));
+    if (loose) seedReviewFromQuiz(loose.word);
+  }
+
   function chooseOption(optIdx: number) {
     if (selected !== null) return;
     if (timed > 0 && deadlineRef.current > 0) {
@@ -417,6 +427,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         if (mode === "review" || mode === "combined") resolveMistake(current.id);
       } else {
         recordMistake(current.id);
+        if (current.category === "vocabulary") seedVocabReview(current.options[current.answer]);
       }
     }
   }

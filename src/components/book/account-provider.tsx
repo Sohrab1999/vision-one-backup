@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { SessionProvider, useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { installSyncWatcher, pullMergePush } from "@/lib/account-sync";
+import { captureSrsLocal, srsPullMergePush, setSrsAuthed } from "@/lib/srs-sync";
 
 /**
  * تأمین‌کنندهٔ حساب (فاز ۱): سشن NextAuth + موتور همگام‌سازی.
@@ -23,13 +24,21 @@ function SyncController() {
   useEffect(() => {
     if (status !== "authenticated" || mergedRef.current) return;
     mergedRef.current = true;
+    setSrsAuthed(true);
     const url = new URL(window.location.href);
     if (url.searchParams.get("welcome") === "1") {
       url.searchParams.delete("welcome");
       window.history.replaceState({}, "", url.toString());
     }
+    captureSrsLocal(); // نسخهٔ محلی SRS قبل از ادغام کلی حفظ شود (فاز ۲)
     void pullMergePush()
-      .then((changed) => {
+      .then(async (changed) => {
+        let srsChanged = 0;
+        try {
+          srsChanged = await srsPullMergePush(); // ادغام ساختاریافتهٔ کارت‌ها (فاز ۲)
+        } catch {
+          /* noop */
+        }
         let alreadyMerged = false;
         try {
           alreadyMerged = sessionStorage.getItem("v1:merged") === "1";
@@ -37,9 +46,10 @@ function SyncController() {
         } catch {
           /* noop */
         }
-        if (changed > 0 && !alreadyMerged) {
+        const total = changed + srsChanged;
+        if (total > 0 && !alreadyMerged) {
           toast.success(
-            `${changed.toLocaleString("fa-IR")} بخش پیشرفت از حسابات بازیابی شد — خوش برگشتی! 🎉`,
+            `${total.toLocaleString("fa-IR")} بخش پیشرفت از حسابات بازیابی شد — خوش برگشتی! 🎉`,
           );
           window.location.reload(); // تضمین تازگی همهٔ کَش‌های محلی — فقط یک‌بار
         }
@@ -65,6 +75,12 @@ function SyncController() {
     }
     window.addEventListener("visionone:attempt-saved", onAttemptSaved);
     return () => window.removeEventListener("visionone:attempt-saved", onAttemptSaved);
+  }, [status]);
+
+  // خروج یا حالت مهمان: سینک سروری SRS قطع شود (داده محلی دست‌نخورده می‌ماند)
+  useEffect(() => {
+    if (status === "authenticated") return;
+    setSrsAuthed(false);
   }, [status]);
 
   return null;
