@@ -127,3 +127,117 @@ model ReviewState {
   @@index([userId, dueAt])
   @@index([userId, book])
 }
+
+/// کلاس مجازی — فاز ۹ نقشه راه جامع
+model Classroom {
+  id          String   @id @default(cuid())
+  /// کد ۶ رقمی یکتا برای پیوستن
+  code        String   @unique
+  name        String
+  teacherName String
+  /// uuid دستگاه معلم — برای احراز دسترسی معلم بدون لاگین
+  teacherKey  String
+  book        String   @default("vision-one")
+  createdAt   DateTime @default(now())
+  members     ClassMember[]
+  assignments Assignment[]
+  quizzes     LiveQuiz[]
+  notifications Notification[]
+
+  @@index([teacherKey])
+}
+
+/// عضو کلاس — شناسه با uuid دستگاه دانش‌آموز (بدون ایمیل)
+model ClassMember {
+  id           String   @id @default(cuid())
+  classroomId  String
+  studentKey   String
+  displayName  String
+  joinedAt     DateTime @default(now())
+  lastActiveAt DateTime @default(now())
+  classroom    Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+
+  @@unique([classroomId, studentKey])
+  @@index([classroomId])
+}
+
+/// تکلیف کلاس
+model Assignment {
+  id            String    @id @default(cuid())
+  classroomId   String
+  title         String
+  /// "review" (مرور واژگان درس) | "quiz" (آزمون N سؤالی)
+  kind          String    @default("review")
+  lesson        Int?
+  questionCount Int?
+  dueAt         DateTime?
+  createdAt     DateTime  @default(now())
+  classroom     Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  dones         AssignmentDone[]
+
+  @@index([classroomId])
+}
+
+/// انجام‌شدن تکلیف توسط یک دانش‌آموز
+model AssignmentDone {
+  id           String   @id @default(cuid())
+  assignmentId String
+  studentKey   String
+  score        Int?
+  doneAt       DateTime @default(now())
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, studentKey])
+  @@index([assignmentId])
+}
+
+/// اعلان داخل اپ — بدون پیامک/ایمیل
+model Notification {
+  id          String    @id @default(cuid())
+  classroomId String
+  /// کلید گیرنده یا "*" برای همهٔ اعضا
+  targetKey   String    @default("*")
+  text        String
+  createdAt   DateTime  @default(now())
+  readAt      DateTime?
+  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+
+  @@index([classroomId, targetKey])
+}
+
+/// آزمون زندهٔ کلاسی
+model LiveQuiz {
+  id           String    @id @default(cuid())
+  classroomId  String
+  /// "active" | "finished"
+  status       String    @default("active")
+  /// آرایهٔ JSON شناسه سؤال‌ها از مدل Question
+  questionIds  String
+  currentIndex Int       @default(0)
+  startedAt    DateTime  @default(now())
+  endedAt      DateTime?
+  classroom    Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  answers      LiveAnswer[]
+
+  @@index([classroomId])
+}
+
+/// پاسخ لحظه‌ای دانش‌آموز در آزمون زنده
+model LiveAnswer {
+  id          String   @id @default(cuid())
+  quizId      String
+  studentKey  String
+  displayName String
+  index       Int
+  correct     Boolean
+  ms          Int      @default(0)
+  /// گزینهٔ انتخابی دانش‌آموز (۰..۳) — برای «پاسخ قبلی من» در GET زنده
+  choice      Int      @default(-1)
+  /// متن سؤال — برای «واژه‌های/سؤال‌های مشکل‌دار کلاس» در داشبورد معلم
+  content     String   @default("")
+  createdAt   DateTime @default(now())
+  quiz        LiveQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@unique([quizId, studentKey, index])
+  @@index([quizId])
+}

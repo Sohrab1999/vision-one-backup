@@ -1774,3 +1774,57 @@ Stage Summary:
 - قرارداد تثبیت‌شده: هر مسیر AI = ai-guard (کش + سقف روزانه + userKeyOf) + سیستم‌پرامپت به‌صورت اولین پیام assistant + retry با nudge؛ خروجی JSON همیشه با اعتبارسنجی دستی و پیام‌های خطای فارسی
 - ریسک/یادداشت: تولید تصویر ۶۰-۷۰ ثانیه است (سقف maxDuration=120) — UX لودینگ دارد؛ LLM گاهی خالی برمی‌گرداند (۳ تلاش در similar-question؛ سایر مسیرها ۲ تلاش)؛ quotaها: image 10/روز، تحلیل 12/روز، مشابه 25/روز، شخصیت 40/روز، معلم 30/روز، داستان 20/روز
 - گام بعدی پیشنهادی: فاز ۹ «کلاس مجازی» (کد ۶رقمی معلم، داشبورد، تکلیف، آزمون زنده) یا فاز ۱۰ (دفتر خطاها، خروجی چاپی، اکسپورت داده)
+
+---
+Task ID: 9-a
+Agent: full-stack-developer
+Task: کلاس مجازی — بخش سرور (Prisma + API کامل)
+
+Work Log:
+- زمینه خوانده شد (worklog، الگوی مسیرهای questions/srs، lib/db)؛ ۷ مدل (Classroom/ClassMember/Assignment/AssignmentDone/Notification/LiveQuiz/LiveAnswer) انتهای schema.prisma اضافه و دو بار `bunx prisma db push` موفق (بار دوم برای ستون اضافهٔ choice) — `bunx prisma db pull --print | grep -c "model Live"` = 2
+- انحراف کوچک و مستند از اسکیمای تسک: به LiveAnswer ستون `choice Int @default(-1)` اضافه شد چون قرارداد API (answered.choice در GET دانش‌آموز) بدون ذخیرهٔ گزینهٔ انتخابی قابل پیاده‌سازی نبود؛ بقیهٔ مدل‌ها عیناً طبق تسک
+- ۵ فایل مسیر ساخته شد: api/class (POST ساخت کلاس + کد یکتای ۶رقمی با ۱۰ تلاش + crypto.randomUUID برای teacherKey)، api/class/join (upsert عضو + state کامل)، api/class/[code] (GET state دو نقشی + DELETE کسکید)، api/class/[code]/assignments (POST معلم + PUT دانش‌آموز با score فقط بار اول)، api/class/[code]/notifications (POST معلم با targetKey خالی="*" + PUT mark-read گروهی)، api/class/[code]/live (POST شروع با پایان خودکار آزمون فعال قبلی + shuffle انتخاب سؤال، GET دو نقشی بدون فیلد answer برای دانش‌آموز، PUT پاسخ فقط برای سؤال جاری و فقط بار اول با clamp choice 0..3 و ms 0..60000، PATCH next/finish با self-finish و اعلان پایان)
+- منطق مشترک در api/class/_lib/state.ts: buildClassState (members با attempts7d/avgScore7d/assignmentsDone با IN+groupBy، problem.liveWrong با groupBy content سقف ۸، weekSummary هفتگی، notifications با OR targetKey، unreadCount جداگانه، live خلاصهٔ آخرین آزمون)
+- **باگ بحرانی حل‌شده — کلاینت پرisma کهنه در سرور dev بدون ری‌استارت**: پس از db push، سرور در حال اجرا `db.classroom` را undefined می‌دید (توربوپک node_modules را دوباره باندل نمی‌کند و کش require پروسه هم کهنه بود)؛ touch فایل‌ها و تعویض کلید global کار نکرد؛ راه‌حل نهایی در src/lib/db.ts: لود PrismaClient با createRequire از دیسک + پاک‌سازی کلیدهای `.prisma`/`@prisma` از require cache + گارد `"classroom" in db` برای self-heal — بدون ری‌استارتِ ممنوعِ سرور، همهٔ مدل‌های تازه زنده شدند (بدون دست زدن به پروسه: سایر عامل‌ها بعد از هر db push دیگر نیازی به ری‌استارت ندارند)
+- چرخهٔ curl کامل موفق: ساخت کلاس (code=865681) → join آرش/سارا → state معلم members=2 → تکلیف 201 (+اعلان 📋) → PUT done doneCount=1 و تکرار بدون بازنویسی → آزمون زنده count=5 → پاسخ آرش (درست، answer از GET معلم=1) و سارا (غلط) → پاسخ تکراری همان رکورد اول → GET دانش‌آموز بدون answer و با answered{choice:1,correct:true} → PATCH next (currentIndex=1) → PATCH finish (status=finished + اعلان 🏁) → state معلم: liveWrong ۱ آیتم با متن سؤال + leaderboard ۲ نفر (آرش ۱ درست/4200ms بالاتر از سارا) → خطاها: کد نامعتبر 400، teacherKey غلط 403، index اشتباه 400 «هنوز وقت این سؤال نیست»، غیرعضو 404 «اول عضو کلاس شو»، count=50 خارج بازه 400 → اعلان mark-read (marked=4→0) و اعلان اختصاصی به سارا که آرش نمی‌بیند → DELETE کلاس یکبارمصرف {ok:true} + 404 پس از حذف + orphan members=0 (کسکید سالم)
+- کیفیت: `bun run lint` صفر؛ `bunx tsc --noEmit | grep ^(src|...)/` → TSC-SRC-CLEAN (دو خطای موقت class-view.tsx متعلق به عامل UI موازی بود که خودش بست)
+
+Stage Summary:
+- بک‌اند کامل «کلاس مجازی» فاز ۹ آمادهٔ مصرف UI است — قرارداد نهایی: POST /api/class → {code,teacherKey,name} (teacherKey فقط یک‌بار)؛ POST /api/class/join و GET /api/class/[code]?key&role → state واحد {classroom,role,members?(معلم),assignments[doneCount,done],notifications[read],unreadCount,problem?(معلم: liveWrong+weekSummary),live{id,status,currentIndex,questionCount}}؛ PUT assignments {studentKey,assignmentId,score?} → {ok,doneCount}؛ PUT live {studentKey,displayName,quizId,index,choice,ms} → {correct,answeredCount}؛ GET live معلم شامل question(با answer)+answeredCount(سؤال جاری)+leaderboard(≤۵۰، correct desc سپس totalMs asc سپس answered desc)؛ PATCH live {action:next|finish} → همان shape معلم
+- تصمیم‌های کلیدی: answeredCount فقط پاسخ‌های سؤال جاری است؛ GET state آخرین آزمون را با status برمی‌گرداند ولی GET live فقط آزمون active را (وگرنه live:null)؛ پاسخ تکراری/دیرهنگام هرگز بازنویسی نمی‌شود؛ همهٔ اعداد با clamp و همهٔ کلیدها 8..64 و کد با ^\d{6}$ اعتبارسنجی می‌شوند؛ پیام‌های خطا همه فارسی
+- ریسک/یادداشت برای عامل‌های بعدی: (۱) src/lib/db.ts جدید self-healing است — بعد از db push فقط یک درخواست بزنید تا کلاینت تازه لود شود؛ اگر روزی مدل جدید اضافه شد و دیده نشد، گارد `"classroom" in db` را به نام مدل جدید به‌روز کنید یا سرور را ری‌استارت کنید (۲) در این db نام‌های «آرش/سارا» Attemptهای قدیمی فازهای قبل دارند — attempts7d/weekSummary با displayName از Attempt تطبیق داده می‌شود (طبق قرارداد) و اعداد تست بالا متأثر از آن بود (۳) کلاس تست باقی مانده: code=865681 با teacherKey در این لاگ برای QA دستی UI
+
+---
+Task ID: 9-b
+Agent: full-stack-developer (به‌طور کامل اجرا شد ولی پاسخ نهایی به‌خاطر خطای زیرساخت قطع شد — ورودی زیر توسط ارکستراتور از روی شواهد دیسک ثبت شده)
+Task: کلاس مجازی — بخش UI
+
+Work Log:
+- src/lib/class-store.ts: getClassKey (UUID دستگاه در localStorage) + نشست کلاس cross-book با useSyncExternalStore (visionone:class-session)
+- src/components/book/class-view.tsx (لندینگ دو-نقشی + فرم ساخت/پیوستن) + class/teacher-dashboard.tsx (کد بزرگ + کپی، اعضا با آمار ۷روز، واژه‌های مشکل‌دار، تکلیف‌ساز، اعلان، پنل آزمون زنده با جدول برنده‌ها) + class/student-view.tsx (اعلان‌ها با unread، تکالیف «انجام دادم»، ورود زنده) + class/live-player.tsx (polling ۲٫۵ث، تایمر ms، ضدتقلب، رد گزینه‌ها)
+- سیم‌کشی: nav-store + app-header (آیتم «کلاس» با School بعد از گفتار) + page.tsx
+- QA خودش: ۴ اسکرین‌شات در tool-results/9b-*.png (داشبورد معلم، دانش‌آموز، موبایل) — سیم‌کشی و رندر تأیید شده
+
+Stage Summary:
+- UI کامل فاز ۹ روی قرارداد API ساب‌ایجنت 9-a؛ lint/tsc صفر (راستی‌آزمایی ارکستراتور)
+
+---
+Task ID: 9-round (orchestrator — فاز ۹ کلاس مجازی با ۲ ساب‌ایجنت موازی)
+Agent: main orchestrator (Z.ai Code)
+Task: پیاده‌سازی کامل فاز ۹ «کلاس مجازی» نقشه راه (سرور + UI + QA دو-نقشی)
+
+Work Log:
+- وضعیت‌سنجی: فاز ۸ کاملاً بسته (b8f9a1e)؛ فاز ۹ آغاز شد
+- 9-a (سرور): ۷ مدل Prisma + db push + ۶ مسیر API با state مشترک (_lib/state.ts) — چرخه curl ۱۱ مرحله‌ای کامل؛ رفع فنی مهم: src/lib/db.ts به لودر self-healing تبدیل شد (بعد از db push، پروسه dev بدون restart کلاینت تازه لود می‌کند)؛ انحراف مستند: ستون choice در LiveAnswer
+- 9-b (UI): ساب‌ایجنت همه‌چیز ساخت ولی پاسخ نهاییش به خطای زیرساخت (timeout adapter) قطع شد — راستی‌آزمایی از دیسک: همه فایل‌ها + سیم‌کشی + اسکرین‌شات‌ها موجود؛ lint/tsc صفر؛ ورود worklog اش را ارکستراتور نوشت
+- حادثهٔ زیرساختی: dev server دو بار بی‌صدا مُرد (لاگ بدون crash) — با restart احیا و پایداری با probe دوگانه تأیید شد؛ نویز ۱۴تایی کنسول = pre-existing next-auth session fetch (مربوط به ری‌استارت‌ها، نه کد)
+- QA مرورگری ارکستراتور (دو-نقشی روی یک مرورگر با جابجایی session): ساخت کلاس→داشبورد کد بزرگ؛ خروج→پیوستن دانش‌آموز→۸ اعلان خودکار دیده شد→تکلیف «انجام شد»؛ شروع زنده ۳سؤالی از UI معلم→پاسخ درست از UI دانش‌آموز («درست بود! 🎉» + answeredCount=1 سرور)→«سؤال بعدی» (currentIndex=1 سرور)→«پایان آزمون» (جدول نهایی) — چرخه کامل سبز
+- باگ یافته و رفع‌شده: در جدول برنده‌ها نام دانش‌آموز اشتباهاً نام کلاس ثبت می‌شد (نشست دستی تست) → رفع دوطرفه: GET live دانش‌آموز اکنون me:{displayName} برمی‌گرداند (server authoritative) و live-player آن را برای ثبت پاسخ/سربرگ ترجیح می‌دهد؛ ضمناً scoping باگ member در مسیر live رفع (hoist memberDisplayName)
+- تیک ۵ چک‌باکس فاز ۹ + یادداشت QA (python3)
+
+Stage Summary:
+- فاز ۹ کامل شد: جریان معلم↔دانش‌آموز بدون ایمیل با کد ۶رقمی، داشبورد با گزارش هفتگی و واژه‌های مشکل‌دار (از LiveAnswer غلط + Attempt ۷روز)، تکلیف با پیگیری، آزمون زندهٔ هم‌زمان با جدول لحظه‌ای و ضدتقلب سمت سرور، اعلان داخلی خودکار+دستی
+- فایل‌های کلیدی: prisma/schema.prisma (+۷ مدل)، src/lib/db.ts (self-healing)، src/app/api/class/** (۶ مسیر + _lib/state.ts)، src/lib/class-store.ts، src/components/book/class-view.tsx + class/{teacher-dashboard,student-view,live-player}.tsx
+- قرارداد: نشست کلاس cross-book در localStorage (نه book-scoped)؛ کلید معلم فقط یک‌بار در پاسخ create به کلاینت می‌رود؛ answer سؤالات زنده هرگز به کلاینت دانش‌آموز نمی‌رود
+- ریسک/یادداشت: polling (نه WebSocket) برای زنده — برای مقیاس کلاس نوجوان کافی؛.displayName عضو در rejoin آپدیت نمی‌شود (سمنتیک create-only)؛ نویز next-auth pre-existing
+- گام بعدی پیشنهادی: فاز ۱۰ (دفتر خطاها، خروجی چاپی فلش‌کارت، اکسپورت/ایمپورت داده، کارت پیشرفت اشتراکی)
