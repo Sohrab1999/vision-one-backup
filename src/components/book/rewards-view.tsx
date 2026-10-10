@@ -53,6 +53,7 @@ import {
 } from "@/lib/accent-store";
 import type { AccentTheme } from "@/lib/accent-store";
 import { useBook } from "@/lib/book-context";
+import { SuggestionBoard } from "./suggestion-board";
 
 // ─── قرارداد API رده‌بندی هفتگی: GET /api/leaderboard?book={bookId} ───
 
@@ -768,6 +769,9 @@ export function RewardsView() {
           <LeaderboardSection />
         </TabsContent>
       </Tabs>
+
+      {/* تخته پیشنهادها (فاز ۱۲) — انتهای نمای جایزه‌ها */}
+      <SuggestionBoard />
     </section>
   );
 }

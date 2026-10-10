@@ -24,6 +24,8 @@ import {
   Mic,
   School,
   NotebookText,
+  Smartphone,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -39,6 +41,8 @@ import { useIsDark, setDark } from "@/lib/theme-store";
 import { useBook } from "@/lib/book-context";
 import { GlobalSearchButton } from "./global-search";
 import { ProfileButton } from "./profile-button";
+import { useWhatsNewUnseen, OPEN_WHATS_NEW_EVENT } from "./whats-new";
+import { OPEN_INSTALL_EVENT } from "./pwa-install-guide";
 
 export type ViewId =
   | "shelf"
@@ -99,6 +103,7 @@ export function AppHeader({
   const dark = useIsDark();
   const { meta, bookId, books, setBook } = useBook();
   const hasBook = bookId !== null && meta !== null;
+  const hasUnseenNews = useWhatsNewUnseen();
 
   function toggleTheme() {
     setDark(!dark);
@@ -220,6 +225,34 @@ export function AppHeader({
 
           {/* پروفایل */}
           <ProfileButton />
+
+          {/* تازه‌ها — What's New (فاز ۱۲): نقطهٔ amber تا وقتی ورود جدید دیده نشده */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => window.dispatchEvent(new CustomEvent(OPEN_WHATS_NEW_EVENT))}
+            aria-label="تازه‌ها — چه چیزهایی جدید است"
+            className="relative h-11 w-11 shrink-0 rounded-full sm:h-9 sm:w-9"
+          >
+            <Sparkles size={17} />
+            {hasUnseenNews && (
+              <span
+                className="absolute left-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-background"
+                aria-hidden
+              />
+            )}
+          </Button>
+
+          {/* نصب روی گوشی — راهنمای PWA (فاز ۱۲) */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => window.dispatchEvent(new CustomEvent(OPEN_INSTALL_EVENT))}
+            aria-label="نصب روی گوشی"
+            className="h-11 w-11 shrink-0 rounded-full sm:h-9 sm:w-9"
+          >
+            <Smartphone size={17} />
+          </Button>
 
           {/* تغییر پوسته — در لمس هدف ≥۴۴px */}
         <Button

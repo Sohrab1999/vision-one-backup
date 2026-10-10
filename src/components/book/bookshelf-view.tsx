@@ -1,11 +1,14 @@
 "use client";
 
-import { BookOpen, Clock, Layers, Sparkles, ArrowLeft, GitCompareArrows } from "lucide-react";
-import { useSyncExternalStore } from "react";
+import { BookOpen, Clock, Layers, Sparkles, ArrowLeft, GitCompareArrows, Printer, School, Smartphone, Check } from "lucide-react";
+import { useSyncExternalStore, useState } from "react";
 import { getBookSrsCounts } from "@/lib/srs-store";
 import { BOOKS } from "@/data/books/registry";
 import { cn } from "@/lib/utils";
 import { useBook } from "@/lib/book-context";
+import { requestView } from "@/lib/nav-store";
+import { Button } from "@/components/ui/button";
+import { BrochureSheet } from "./brochure-sheet";
 import type { BookMeta } from "@/data/books/types";
 import type { ViewId } from "./app-header";
 
@@ -154,6 +157,9 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
   const dueByBook = useSyncExternalStore(subscribeDueSnapshot, getDueSnapshot, () => EMPTY_DUE);
   const totalDue = Object.values(dueByBook).reduce((sum, n) => sum + n, 0);
 
+  // بروشور معرفی معلم‌ها (فاز ۱۲)
+  const [brochureOpen, setBrochureOpen] = useState(false);
+
   function openBook(id: BookMeta["id"]) {
     setBook(id);
     onNavigate("home");
@@ -210,6 +216,77 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
         {books.map((meta) => (
           <BookCard key={meta.id} meta={meta} active={meta.id === bookId} dueCount={dueByBook[meta.id] ?? 0} onOpen={openBook} />
         ))}
+      </section>
+
+      {/* دعوت معلم‌ها (فاز ۱۲) — فقط در نمای قفسه */}
+      <section aria-label="دعوت معلم‌ها" className="space-y-3">
+        {/* نوار کوچک نصب روی گوشی */}
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full border border-teal-500/25 bg-teal-500/5 px-4 py-2 text-center text-[11px] font-bold text-teal-700 dark:text-teal-300">
+          <Smartphone size={13} aria-hidden />
+          <span>ویژن‌وان روی گوشی هم نصب می‌شود 📱</span>
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent("visionone:open-install"))}
+            className="rounded-sm underline decoration-dotted underline-offset-4 transition-colors hover:text-teal-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            راهنمای نصب
+          </button>
+        </div>
+
+        <div className="overflow-hidden rounded-3xl border border-amber-500/30 bg-gradient-to-l from-amber-50 via-background to-background dark:from-amber-950/30">
+          <div className="flex flex-col gap-5 p-6 sm:p-8 lg:flex-row lg:items-center">
+            <div className="min-w-0 flex-1 space-y-3">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/15 px-3 py-1 text-[11px] font-black text-amber-700 dark:text-amber-300">
+                دعوت معلم‌ها 👨‍🏫
+              </span>
+              <h2 className="text-xl font-black tracking-tight sm:text-2xl">
+                معلم هستید؟ کلاس مجازی رایگان بسازید
+              </h2>
+              <ul className="space-y-1.5 text-sm leading-6 text-muted-foreground">
+                <li className="flex items-center gap-1.5">
+                  <Check size={14} className="shrink-0 text-emerald-600" aria-hidden />
+                  ساخت کلاس با کد ۶رقمی
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <Check size={14} className="shrink-0 text-emerald-600" aria-hidden />
+                  تکلیف و آزمون زنده
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <Check size={14} className="shrink-0 text-emerald-600" aria-hidden />
+                  داشبورد پیشرفت — بدون ثبت‌نام دانش‌آموز
+                </li>
+              </ul>
+              <div className="flex flex-col gap-2 pt-1 sm:flex-row">
+                <Button
+                  onClick={() => {
+                    // نمای کلاس به دادهٔ جزوه نیاز دارد (hasData) — برای تازه‌وارد بدون جزوهٔ فعال، ویژن وان فعال می‌شود
+                    if (!bookId) setBook("vision-one");
+                    requestView("class");
+                  }}
+                  className="min-h-11 gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700"
+                  aria-label="ساخت کلاس مجازی رایگان"
+                >
+                  <School size={16} aria-hidden />
+                  ساخت کلاس 🏫
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setBrochureOpen(true)}
+                  className="min-h-11 gap-1.5 border-amber-500/50 text-amber-700 hover:bg-amber-500/10 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-200"
+                  aria-label="دریافت بروشور معرفی ویژن‌وان"
+                >
+                  <Printer size={16} aria-hidden />
+                  دریافت بروشور 🖨️
+                </Button>
+              </div>
+            </div>
+            <div className="hidden shrink-0 lg:flex" aria-hidden>
+              <span className="text-7xl drop-shadow-sm">👨‍🏫</span>
+            </div>
+          </div>
+        </div>
+
+        <BrochureSheet open={brochureOpen} onClose={() => setBrochureOpen(false)} />
       </section>
 
       {/* نکته پیشرفت */}

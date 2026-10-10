@@ -28,6 +28,9 @@ import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
 import { AccountProvider } from "@/components/book/account-provider";
+import { DeepLinkGate } from "@/components/book/deep-link-gate";
+import { WhatsNewDialog } from "@/components/book/whats-new";
+import { PwaInstallGuide } from "@/components/book/pwa-install-guide";
 
 /** اسکلت بارگذاری تنبل جزوه — تا رسیدن chunk dynamic import کتاب فعال */
 function BookDataLoading() {
@@ -119,6 +122,11 @@ function App() {
       {/* فاز ۶ — جشن گیمیفیکیشن: توست‌های XP/سطح/نشان + کانفتی (سراسری) */}
       <GamificationToasts />
       <ConfettiCanvas />
+
+      {/* فاز ۱۲ — لینک عمیق + تازه‌ها + راهنمای نصب (همیشه‌مونت، بدون UI در جریان عادی) */}
+      <DeepLinkGate />
+      <WhatsNewDialog />
+      <PwaInstallGuide />
     </div>
   );
 }

@@ -2,12 +2,14 @@
 
 import { BookOpen, Heart, Send, Library } from "lucide-react";
 import { useBook } from "@/lib/book-context";
+import { SurveyGate } from "./survey-gate";
 
 export function AppFooter() {
   const { data, meta } = useBook();
 
   return (
-    <footer className="mt-auto w-full border-t bg-card/50">
+    <>
+      <footer className="mt-auto w-full border-t bg-card/50">
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-right">
           {data ? (
@@ -50,6 +52,9 @@ export function AppFooter() {
           </p>
         </div>
       </div>
-    </footer>
+      </footer>
+      {/* گیت نظرسنجی (فاز ۱۲) — بدون UI تا فعال شود */}
+      <SurveyGate />
+    </>
   );
 }

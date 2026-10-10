@@ -260,3 +260,45 @@ model WordNote {
   @@unique([userId, book, word])
   @@index([userId, book])
 }
+
+/// پیشنهاد کاربر برای توسعهٔ اپ — فاز ۱۲ (تختهٔ پیشنهادها، بدون حساب)
+model Suggestion {
+  id        String   @id @default(cuid())
+  /// متن پیشنهاد کاربر (۱ تا ۱۴۰ نویسه)
+  text      String
+  votes     Int      @default(0)
+  /// کلید دستگاه پیشنهاددهنده (برای نمایش «پیشنهاد من»)
+  ownerKey  String
+  createdAt DateTime @default(now())
+
+  votesList SuggestionVote[]
+
+  @@index([votes])
+  @@index([createdAt])
+}
+
+/// رأی یک دستگاه به یک پیشنهاد — هر دستگاه فقط یک رأی به هر پیشنهاد
+model SuggestionVote {
+  id           String     @id @default(cuid())
+  suggestionId String
+  suggestion   Suggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  /// کلید دستگاه رأی‌دهنده — هر دستگاه فقط یک رأی
+  voterKey     String
+  createdAt    DateTime   @default(now())
+
+  @@unique([suggestionId, voterKey])
+}
+
+/// پاسخ نظرسنجی ۱۰ جلسه — امتیاز ۱ تا ۵ بدون حساب (حداقل داده)
+model SurveyResponse {
+  id        String   @id @default(cuid())
+  /// امتیاز ۱ تا ۵
+  score     Int
+  /// توضیح اختیاری کاربر (سقف ۲۰۰)
+  text      String?
+  /// کلید دستگاه (بدون حساب — حداقل داده)
+  userKey   String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

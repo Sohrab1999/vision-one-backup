@@ -37,7 +37,7 @@ function makeDb(): PrismaClientType {
   // ۱) کلاینت تازهٔ دیسک — همیشه دارای آخرین مدل‌های schema.prisma
   const fresh = loadFreshPrismaClient();
   // گارد self-heal: هر مدل تازه باید اینجا OR شود تا پس از db push بدون ری‌استارت لود شود
-  if (fresh && ("classroom" in fresh || "wordNote" in fresh)) return fresh;
+  if (fresh && ("classroom" in fresh || "wordNote" in fresh || "suggestion" in fresh)) return fresh;
   // ۲) راه بازگشتی: کلاینت باندل‌شده (اگر دیسک موقتاً در دسترس نبود)
   if (fresh) return fresh;
   return new PrismaClient({ log: ["query"] });
@@ -45,8 +45,19 @@ function makeDb(): PrismaClientType {
 
 function getDb(): PrismaClientType {
   const cached = globalForPrisma.prismaV9;
-  // نمونهٔ کش‌شده فقط وقتی معتبر است که مدل‌های فاز ۹/۱۰ را داشته باشد
-  if (cached && ("classroom" in cached || "wordNote" in cached)) return cached;
+  // نمونهٔ کش‌شده فقط وقتی معتبر است که مدل‌های فاز ۹/۱۰/۱۲ را داشته باشد
+  if (cached && ("classroom" in cached || "wordNote" in cached || "suggestion" in cached)) {
+    // ⚠️ کهنگی نمونه با «تازه‌ترین» مدل نشانگر سنجیده می‌شود: گارد OR بالا با مدل‌های
+    // قدیمی همیشه پاس می‌شود و self-heal هرگز رخ نمی‌دهد (آزمون واقعی فاز ۱۲ — ۵۰۰
+    // «db.suggestion is undefined»). نمونه‌ای که suggestion را ندارد حتماً پیش از
+    // db push ساخته شده → باید از دیسک تازه‌سازی شود.
+    if (!("suggestion" in cached)) {
+      const recreated = makeDb();
+      globalForPrisma.prismaV9 = recreated;
+      return recreated;
+    }
+    return cached;
+  }
   const created = makeDb();
   globalForPrisma.prismaV9 = created;
   return created;
