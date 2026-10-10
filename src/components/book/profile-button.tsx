@@ -1,7 +1,24 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { User, Check, Download, Upload, HardDriveDownload, Star, BookOpen, Layers } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import {
+  User,
+  Check,
+  Download,
+  Upload,
+  HardDriveDownload,
+  Star,
+  BookOpen,
+  Layers,
+  LogIn,
+  UserPlus,
+  LogOut,
+  RefreshCw,
+  CloudCheck,
+  Flame,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,10 +37,20 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
 import { useQuestionStars } from "@/lib/question-star-store";
 import { useCombinedRounds } from "@/lib/round-counters";
+import { useStreak } from "@/lib/streak-store";
 import { downloadBackup, parseBackup, restoreBackup } from "@/lib/progress-backup";
+import { pushSnapshot, getLastSyncAt, subscribeSync } from "@/lib/account-sync";
 import { toast } from "sonner";
 
+const AVATARS = ["🦁", "🐼", "🦊", "🐧", "🐢", "🦉", "🐬", "🌟", "⚡", "🎯", "📚", "🚀"];
+const GRADES = ["هفتم", "هشتم", "نهم", "دهم", "یازدهم", "دوازدهم"];
+
+type Mode = "login" | "register";
+
 export function ProfileButton() {
+  const { data: session, status, update } = useSession();
+  const user = session?.user;
+
   const name = useUserName();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(name);
@@ -32,6 +59,31 @@ export function ProfileButton() {
   const { count: starredWordCount } = useStarredWords();
   const { count: starredQCount } = useQuestionStars();
   const combinedRounds = useCombinedRounds();
+  const streak = useStreak();
+
+  // ── فرم حساب ──
+  const [mode, setMode] = useState<Mode>("login");
+  const [username, setUsername] = useState("");
+  const [pin, setPin] = useState("");
+  const [grade, setGrade] = useState<string>("دهم");
+  const [avatar, setAvatar] = useState<string>("🦁");
+  const [busy, setBusy] = useState(false);
+  const [attemptsCount, setAttemptsCount] = useState<number | null>(null);
+  const [syncAt, setSyncAt] = useState<number | null>(getLastSyncAt());
+
+  useEffect(() => subscribeSync(() => setSyncAt(getLastSyncAt())), []);
+
+  // آمار حساب پس از ورود
+  useEffect(() => {
+    if (status !== "authenticated") {
+      setAttemptsCount(null);
+      return;
+    }
+    fetch("/api/profile", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => setAttemptsCount(j?.attempts ?? 0))
+      .catch(() => setAttemptsCount(null));
+  }, [status, open]);
 
   function save() {
     setName(value);
@@ -59,37 +111,113 @@ export function ProfileButton() {
     }
   }
 
+  // ── احراز هویت ──
+  async function submitAuth() {
+    const u = username.trim();
+    if (u.length < 3 || u.length > 20) {
+      toast.error("نام کاربری باید ۳ تا ۲۰ نویسه باشد");
+      return;
+    }
+    if (!/^\d{4}$/.test(pin)) {
+      toast.error("کد باید دقیقاً ۴ رقم باشد");
+      return;
+    }
+    setBusy(true);
+    try {
+      if (mode === "register") {
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: u, pin, grade, avatar }),
+        });
+        const j = (await res.json()) as { error?: string };
+        if (!res.ok) {
+          toast.error(j.error ?? "ساخت حساب ممکن نشد");
+          return;
+        }
+        toast.success("حسابت ساخته شد! در حال ورود…");
+      }
+      const res = await signIn("credentials", { username: u, pin, redirect: false });
+      if (res?.error) {
+        toast.error("نام کاربری یا کد اشتباه است");
+        return;
+      }
+      setUsername("");
+      setPin("");
+      setOpen(false); // کنترلر سشن، همگام‌سازی و رفرش را انجام می‌دهد
+    } catch {
+      toast.error("اتصال ممکن نشد — اینترنت را چک کن");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function syncNow() {
+    setBusy(true);
+    const ok = await pushSnapshot();
+    setBusy(false);
+    if (ok) toast.success("پیشرفت با سرور همگام شد ☁️");
+    else toast.error("همگام‌سازی ممکن نشد");
+  }
+
+  async function saveProfile(avatar?: string, grade?: string) {
+    const res = await fetch("/api/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatar, grade }),
+    });
+    if (res.ok) {
+      const j = (await res.json()) as { user: { avatar: string | null; grade: string | null } };
+      await update({ avatar: j.user.avatar, grade: j.user.grade });
+      toast.success("پروفایل به‌روز شد");
+    } else {
+      toast.error("ذخیره پروفایل ممکن نشد");
+    }
+  }
+
+  function logout() {
+    void signOut({ redirect: false }).then(() => {
+      toast.success("از حساب خارج شدی — پیشرفتت روی همین دستگاه می‌ماند");
+      setOpen(false);
+    });
+  }
+
   return (
     <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (o) setValue(name); }}>
       <DialogTrigger asChild>
         <Button
           variant="ghost"
           size="sm"
-          aria-label="نام من"
+          aria-label={user ? `حساب ${user.username}` : "نام من"}
           className="hidden sm:flex h-9 gap-1.5 rounded-full px-3 text-[12px] font-bold text-muted-foreground hover:text-foreground"
         >
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary">
-            <User size={13} />
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary text-[13px]">
+            {user?.avatar ?? <User size={13} />}
           </span>
-          {name || "نام من"}
+          {user?.username ?? (name || "نام من")}
         </Button>
       </DialogTrigger>
       <Button
         variant="ghost"
         size="icon"
-        aria-label="نام من"
+        aria-label={user ? `حساب ${user.username}` : "نام من"}
         onClick={() => setOpen(true)}
-        className="sm:hidden h-9 w-9 rounded-full"
+        className="sm:hidden h-9 w-9 rounded-full text-[14px]"
       >
-        <User size={16} />
+        {user?.avatar ?? <User size={16} />}
       </Button>
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-right">نام تو چیست؟</DialogTitle>
+          <DialogTitle className="text-right">
+            {user ? `سلام ${user.avatar ?? ""} ${user.username}!` : "نام تو چیست؟"}
+          </DialogTitle>
           <DialogDescription className="text-right text-[12px] leading-6">
-            نامت فقط برای نمایش در کارنامه‌ها و پیشرفت استفاده می‌شود و روی همین دستگاه ذخیره می‌ماند.
+            {user
+              ? `حسابت فعاله — پیشرفتت خودکار با سرور همگام می‌شود${user.grade ? ` · پایه ${user.grade}` : ""}`
+              : "نامت فقط برای نمایش در کارنامه‌ها و پیشرفت استفاده می‌شود و روی همین دستگاه ذخیره می‌ماند."}
           </DialogDescription>
         </DialogHeader>
+
         <div className="space-y-2 py-1">
           <Label htmlFor="profile-name" className="text-[12px]">
             نام نمایشی
@@ -101,13 +229,12 @@ export function ProfileButton() {
             onKeyDown={(e) => e.key === "Enter" && save()}
             placeholder="مثلاً: آرش"
             maxLength={40}
-            autoFocus
           />
         </div>
 
         <Separator />
 
-        {/* ── خلاصهٔ پیشرفت این دستگاه ── */}
+        {/* ── خلاصهٔ پیشرفت ── */}
         <div className="grid grid-cols-2 gap-2">
           <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
@@ -116,6 +243,15 @@ export function ProfileButton() {
             <span className="min-w-0">
               <span className="block text-[13px] font-black leading-4">{learnedCount.toLocaleString("fa-IR")}</span>
               <span className="block text-[10px] text-muted-foreground">واژهٔ یادگرفته</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-500/15 text-orange-600 dark:text-orange-400">
+              <Flame size={13} className="fill-current" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-black leading-4">{streak.count.toLocaleString("fa-IR")} روز</span>
+              <span className="block text-[10px] text-muted-foreground">زنجیرهٔ فعلی</span>
             </span>
           </div>
           <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
@@ -128,15 +264,6 @@ export function ProfileButton() {
             </span>
           </div>
           <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-yellow-500/15 text-yellow-600 dark:text-yellow-400">
-              <Star size={13} className="fill-current" />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[13px] font-black leading-4">{starredQCount.toLocaleString("fa-IR")}</span>
-              <span className="block text-[10px] text-muted-foreground">سؤال ستاره‌دار</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-400">
               <Layers size={13} />
             </span>
@@ -146,6 +273,200 @@ export function ProfileButton() {
             </span>
           </div>
         </div>
+
+        {/* ── حساب کاربری ── */}
+        {status === "unauthenticated" && (
+          <>
+            <Separator />
+            <div>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <CloudCheck size={15} />
+                </span>
+                <div>
+                  <p className="text-[13px] font-black">حساب کاربری — پیشرفت همه‌جا</p>
+                  <p className="text-[11px] leading-5 text-muted-foreground">
+                    با نام کاربری و کد ۴ رقمی وارد شو تا واژه‌ها، ستاره‌ها و آمارت روی هر دستگاهی باشه.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl bg-muted p-1">
+                <Button
+                  size="sm"
+                  variant={mode === "login" ? "default" : "ghost"}
+                  onClick={() => setMode("login")}
+                  className="gap-1.5 h-8 text-[12px]"
+                >
+                  <LogIn size={13} /> ورود
+                </Button>
+                <Button
+                  size="sm"
+                  variant={mode === "register" ? "default" : "ghost"}
+                  onClick={() => setMode("register")}
+                  className="gap-1.5 h-8 text-[12px]"
+                >
+                  <UserPlus size={13} /> ساخت حساب
+                </Button>
+              </div>
+
+              <div className="space-y-2.5">
+                <div className="space-y-1">
+                  <Label htmlFor="auth-username" className="text-[11px]">نام کاربری</Label>
+                  <Input
+                    id="auth-username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="مثلاً: arash_2000 یا آرش"
+                    autoComplete="username"
+                    dir="ltr"
+                    className="text-left"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="auth-pin" className="text-[11px]">کد ۴ رقمی (مثل رمز)</Label>
+                  <Input
+                    id="auth-pin"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                    onKeyDown={(e) => e.key === "Enter" && void submitAuth()}
+                    placeholder="••••"
+                    type="password"
+                    inputMode="numeric"
+                    autoComplete={mode === "login" ? "current-password" : "new-password"}
+                    dir="ltr"
+                    className="text-left tracking-[0.4em]"
+                  />
+                </div>
+
+                {mode === "register" && (
+                  <>
+                    <div className="space-y-1">
+                      <Label className="text-[11px]">پایه‌ات</Label>
+                      <div className="flex flex-wrap gap-1">
+                        {GRADES.map((g) => (
+                          <button
+                            key={g}
+                            type="button"
+                            onClick={() => setGrade(g)}
+                            className={`rounded-lg border px-2.5 py-1 text-[11px] font-bold transition ${
+                              grade === g
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "text-muted-foreground hover:bg-muted"
+                            }`}
+                          >
+                            {g}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[11px]">آواتارت</Label>
+                      <div className="flex flex-wrap gap-1">
+                        {AVATARS.map((a) => (
+                          <button
+                            key={a}
+                            type="button"
+                            onClick={() => setAvatar(a)}
+                            aria-label={`آواتار ${a}`}
+                            className={`flex h-8 w-8 items-center justify-center rounded-lg border text-[16px] transition ${
+                              avatar === a ? "border-primary bg-primary/10" : "hover:bg-muted"
+                            }`}
+                          >
+                            {a}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <Button onClick={() => void submitAuth()} disabled={busy} className="w-full gap-1.5">
+                  {busy ? (
+                    <RefreshCw size={14} className="animate-spin" />
+                  ) : mode === "login" ? (
+                    <LogIn size={14} />
+                  ) : (
+                    <UserPlus size={14} />
+                  )}
+                  {mode === "login" ? "ورود" : "ساخت حساب و ورود"}
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {status === "authenticated" && user && (
+          <>
+            <Separator />
+            <div className="space-y-3">
+              <div className="flex items-center justify-between rounded-xl border bg-muted/40 px-3 py-2.5">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-[18px]">
+                    {user.avatar ?? "🙂"}
+                  </span>
+                  <div>
+                    <p className="text-[13px] font-black" dir="auto">{user.username}</p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {syncAt
+                        ? `آخرین همگام‌سازی: ${new Date(syncAt).toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })}`
+                        : "همگام‌سازی خودکار فعاله"}
+                      {attemptsCount !== null ? ` · ${attemptsCount.toLocaleString("fa-IR")} آزمون` : ""}
+                    </p>
+                  </div>
+                </div>
+                <Button size="sm" variant="outline" onClick={() => void syncNow()} disabled={busy} className="gap-1 h-8">
+                  <RefreshCw size={12} className={busy ? "animate-spin" : ""} />
+                  همگام کن
+                </Button>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-[11px]">آواتار</Label>
+                <div className="flex flex-wrap gap-1">
+                  {AVATARS.map((a) => (
+                    <button
+                      key={a}
+                      type="button"
+                      onClick={() => void saveProfile(a, undefined)}
+                      aria-label={`تغییر آواتار به ${a}`}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg border text-[16px] transition ${
+                        user.avatar === a ? "border-primary bg-primary/10" : "hover:bg-muted"
+                      }`}
+                    >
+                      {a}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-[11px]">پایه</Label>
+                <div className="flex flex-wrap gap-1">
+                  {GRADES.map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => void saveProfile(undefined, g)}
+                      className={`rounded-lg border px-2.5 py-1 text-[11px] font-bold transition ${
+                        user.grade === g
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <Button variant="outline" onClick={logout} className="w-full gap-1.5">
+                <LogOut size={14} />
+                خروج از حساب
+              </Button>
+            </div>
+          </>
+        )}
 
         <Separator />
 

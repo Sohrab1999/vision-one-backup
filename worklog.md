@@ -1013,3 +1013,30 @@ Stage Summary:
 - بازیابی فاجعه: کلون مخزن + bun install + db:push = بازگشت کامل اپ و داده.
 - نکته امنیتی: توکن فقط در .git/config لوکال ذخیره است؛ کاربر هر زمان می‌تواند از GitHub Revoke کند.
 - ریسبک: اگر روزی توکن منقضی شد، push خطا می‌دهد → کافی است توکن جدید ساخته و remote آپدیت شود.
+
+---
+Task ID: phase-1
+Agent: main orchestrator (Z.ai Code)
+Agent note: فاز ۱ نقشه راه جامع ۲۰۲۶ — به‌دلیل اتصال عمیق به استورهای موجود و قانون صفر-رگرسیون، مستقیماً توسط ارکستراتور اجرا شد (تفکیک به ساب‌ایجنت ریسک رگرسیون بالا می‌برد)
+
+Task: فاز ۱ — حساب کاربری و همگام‌سازی چند-دستگاهی (نقشه راه جامع ۲۰۲۶)
+
+Work Log:
+- دیتابیس: مدل‌های User (username یکتا + pinHash scrypt + grade + avatar) و Progress (اسنپ‌شات کلیدهای visionone:* با یونیک userId+key) + ستون userId روی Attempt (onDelete SetNull) — db:push افزودنی و امن.
+- احراز هویت: src/lib/auth.ts (CredentialsProvider با verify زمان‌ثابت + rate-limit درون‌حافظه‌ای ۸/دقیقه + JWT ۳۰روزه؛ callbacks jwt/session برای uid/username/avatar/grade + trigger update) + route [...]nextauth + /api/auth/register (اعتبارسنجی USERNAME_RE/PIN_RE، avatar/grade سفید‌لیست).
+- API پیشرفت: /api/progress GET/PUT (جایگزینی کامل اسنپ‌شات با تراکنش deleteMany+createMany chunked ۸۰تایی، سقف ۴MB/۳۰۰۰کلید/۵۱۲KB).
+- API پروفایل: /api/profile GET/PATCH (آواتار/پایه + شمارش آزمون‌های کاربر).
+- Attempt: getServerSession در POST → گره‌زدن userId (مهمان = null، رفتار قدیمی دست‌نخورده).
+- موتور همگام‌سازی کلاینت src/lib/account-sync.ts: پچ Storage.prototype.setItem/removeItem → debounce ۲.۵s → pushSnapshot کل وضعیت؛ pullMergePush برای ورود با قواعد ادغام (آرایه=اجتماع به‌ترتیب سرور→محلی، عدد=بیشینه، کلیدهای DEVICE_KEYS مثل active-book/theme=محلی، بقیه=سرور)؛ رفع باگ پرچم merging قبل از push.
+- account-provider.tsx: SessionProvider + SyncController — پس از ورود: ادغام → رفرش فقط اگر changed>0 با قفل sessionStorage (رفع باگ حلقه‌ی رفرش بی‌نهایت)؛ آپ‌سل نرم مهمان با رویداد visionone:attempt-saved (یک‌بارمصرف) + پرچم visionone:upsell.
+- quiz-game: dispatch رویداد attempt-saved پس از POST موفق (بازسازی زنجیره .then با python).
+- profile-button بازنویسی: بخش حساب (تب ورود/ساخت حساب: نام کاربری+کد ۴رقمی+پایه+۱۲ آواتار ایموجی)، کارت حساب فعال (آواتار/username/پایه/آخرین همگام‌سازی/شمارنده آزمون، همگام‌سازی دستی، ویرایش آواتار/پایه با session update، خروج) + کاشی زنجیره 🔥 در خلاصه پیشرفت؛ تریگر هدر با آواتار.
+- باگ‌های کشف‌شده و رفع‌شده در حین QA: (۱) حلقه رفرش پس از ورود — قفل sessionStorage؛ (۲) TS: مخلوط ??/|| و import ناموجود GetServerSessionContext؛ (۳) **هدر در ۱۲۸۰px: دکمه حساب/تم به بیرونِ چپ سرریز می‌شد (از فاز ۷)** — nav دسکتاپ → نوار اسکرول‌پذیر بدون اسکرول‌بار + shrink-0، اکشن‌ها در کانتینر pin‌شده؛ + overflow-x:clip روی body برای حلقه‌های تزئینی hero.
+- QA کامل: curl end-to-end (register→csrf login→profile→PUT/GET progress round-trip→attempt attach by-id ✅)؛ UI مرورگری: ثبت‌نام qa_tester 🦊 یازدهم → ورود → «سلام 🦊 qa_tester!» → probe key: نوشتن→۵s→ردیف سرور ✅ → خروج+localStorage/sessionStorage.clear (شبیه‌سازی دستگاه نو) → ورود → بازیابی دقیق مقدار ✅ → آپ‌سل مهمان toast ✅ → قفسه ۶ کتاب ✅ → دسکتاپ/موبایل بدون اسکرول افقی ✅ → پاک‌سازی ۲ کاربر آزمایشی (آمار ۲۰تایی Attempt حفظ شد) → lint 0 / tsc-src 0.
+- نقشه راه: هر ۵ آیتم فاز ۱ تیک + گزارش QA + یادداشت گوگل-OAuth (نیازمند کلید کاربر).
+
+Stage Summary:
+- فاز ۱ کامل شد: حساب (username+PIN) با همگام‌سازی خودکار کامل پیشرفت بین دستگاه‌ها؛ مهمان کاملاً محفوظ؛ زیرساخت آماده فازهای SRS/رده‌بندی/کلاس.
+- تصمیم کلیدی: همگام‌سازی «وضعیت کامل» (snapshot کلید/مقدار) به‌جای همگام‌سازی ریز رویدادی — ساده، مقاوم، سازگار با تمام استورهای فعلی و آینده.
+- ریسک‌ها/یادداشت: Google OAuth نیازمند GOOGLE_CLIENT_ID/SECRET از کاربر؛ getServerSession در POST مسیر attempts نیازمند کوکی سشن (curl flow تست شد)؛ session JWT پس از حذف کاربر تا انقضا معتبر می‌ماند (بی‌خطر — فقط شناسه).
+- بعدی: فاز ۲ — موتور مرور فاصله‌دار (SRS/FSRS) — استور srs-store موجود به مدل ReviewState سروری ارتقا می‌یابد.

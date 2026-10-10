@@ -169,7 +169,7 @@ export function AppHeader({
 
         {/* ناوبری دسکتاپ */}
         {hasBook && (
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-1" aria-label="ناوبری اصلی">
+          <nav className="hidden md:flex flex-1 min-w-0 items-center gap-1 overflow-x-auto px-2 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="ناوبری اصلی">
             {NAV.map((item) => {
               const active = view === item.id || (view === "chapter" && item.id === "contents");
               return (
@@ -179,7 +179,7 @@ export function AppHeader({
                   onClick={() => onNavigate(item.id)}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-medium transition-all",
+                    "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-[13px] font-medium transition-all",
                     active
                       ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -195,13 +195,15 @@ export function AppHeader({
 
         <div className="flex-1 md:hidden" />
 
-        {/* جست‌وجوی سراسری */}
-        <GlobalSearchButton />
+        {/* اکشن‌های ثابت — هرگز از هدر بیرون نمی‌زنند */}
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+          {/* جست‌وجوی سراسری */}
+          <GlobalSearchButton />
 
-        {/* پروفایل */}
-        <ProfileButton />
+          {/* پروفایل */}
+          <ProfileButton />
 
-        {/* تغییر پوسته — در لمس هدف ≥۴۴px */}
+          {/* تغییر پوسته — در لمس هدف ≥۴۴px */}
         <Button
           variant="ghost"
           size="icon"
@@ -209,8 +211,9 @@ export function AppHeader({
           aria-label={dark ? "پوسته روشن" : "پوسته تیره"}
           className="rounded-full h-11 w-11 shrink-0 sm:h-9 sm:w-9"
         >
-          {!dark ? <Moon size={17} /> : <Sun size={17} />}
-        </Button>
+            {!dark ? <Moon size={17} /> : <Sun size={17} />}
+          </Button>
+        </div>
       </div>
 
       {/* ناوبری موبایل */}

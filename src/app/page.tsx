@@ -20,6 +20,7 @@ import { StatsView } from "@/components/book/stats-view";
 import { CompareView } from "@/components/book/compare-view";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
+import { AccountProvider } from "@/components/book/account-provider";
 
 /** اسکلت بارگذاری تنبل جزوه — تا رسیدن chunk dynamic import کتاب فعال */
 function BookDataLoading() {
@@ -107,8 +108,10 @@ function App() {
 
 export default function Page() {
   return (
-    <BookProvider>
-      <App />
-    </BookProvider>
+    <AccountProvider>
+      <BookProvider>
+        <App />
+      </BookProvider>
+    </AccountProvider>
   );
 }

@@ -520,8 +520,13 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
         book: bookId,
       }),
     })
-      .then(() =>
-        toast.success(
+      .then(() => {
+        try {
+          window.dispatchEvent(new CustomEvent("visionone:attempt-saved"));
+        } catch {
+          /* noop */
+        }
+        return toast.success(
           mode === "daily"
             ? `چالش امروز ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ${scorePct >= 80 ? "🏆" : "💪"}`
             : mode === "weekly"
@@ -533,8 +538,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 : mode === "combined"
                   ? `مرور ترکیبی ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ 🧩`
                   : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
-        ),
-      )
+        );
+      })
       .catch(() => undefined);
   }
 

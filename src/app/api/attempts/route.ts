@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { normalizeBookId } from "../_lib/book";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "داده نامعتبر" }, { status: 400 });
     }
 
+    // ── فاز ۱: آزمون کاربر وارد‌شده به حسابش گره می‌خورد (مهمان = null) ──
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id ?? null;
+
     const attempt = await db.attempt.create({
       data: {
         book,
@@ -36,6 +42,7 @@ export async function POST(req: NextRequest) {
         duration: Number(body.duration ?? 0),
         name: body.name ? String(body.name).slice(0, 40) : null,
         detail: body.detail ? JSON.stringify(body.detail) : null,
+        userId,
       },
     });
 

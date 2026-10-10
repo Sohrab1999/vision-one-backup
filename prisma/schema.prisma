@@ -36,6 +36,39 @@ model Question {
   @@index([book])
 }
 
+/// حساب کاربری — ورود با نام کاربری + کد ۴ رقمی (فاز ۱ نقشه راه جامع)
+model User {
+  id        String     @id @default(cuid())
+  /// نام کاربری یکتا (لاتین یا فارسی، ۳ تا ۲۰ نویسه)
+  username  String     @unique
+  /// هش scrypt کد ۴ رقمی به شکل "salt:hash"
+  pinHash   String
+  /// پایه تحصیلی مثل "دهم" — اختیاری
+  grade     String?
+  /// آواتار ایموجی انتخابی
+  avatar    String?
+  createdAt DateTime   @default(now())
+
+  progress Progress[]
+  attempts Attempt[]
+
+  @@index([username])
+}
+
+/// اسنپ‌شات پیشرفت هر کاربر (کلیدهای visionone:* همگام‌شده از localStorage)
+model Progress {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// کلید کامل localStorage مثل "visionone:book:grade-11:learned"
+  key    String
+  /// مقدار متنی همان کلید
+  value  String
+
+  @@unique([userId, key])
+  @@index([userId])
+}
+
 /// نتیجه یک آزمون کامل‌شده توسط کاربر
 model Attempt {
   id        String   @id @default(cuid())
@@ -52,8 +85,12 @@ model Attempt {
   name      String?
   /// جزئیات پاسخ‌ها به صورت JSON
   detail    String?
+  /// کاربر وارد‌شده (اختیاری — حالت مهمان null)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
 
   @@index([category])
   @@index([book])
+  @@index([userId])
 }
