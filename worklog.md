@@ -976,3 +976,22 @@ Stage Summary:
 - باندل اولیه سبک: داده جزوه‌ها فقط chunk فعال (~۲۲۸K تا ۴۶۰K هر کدام)؛ کش per-book سوییچ برگشت را فوری می‌کند.
 - نقاط تماس جدید: `src/lib/book-data-store.ts`، `src/components/book/global-search.tsx`، `src/app/api/search/route.ts`، `src/app/api/compare/route.ts`، `src/components/book/compare-view.tsx`، `public/{manifest.webmanifest,sw.js,offline.html,icons/*}`.
 - ریسک/یادداشت: تست نصب PWA روی دستگاه واقعی (Add to Home Screen) و حالت آفلاین واقعی انجام نشده (محیط headless) — منطق SW ساده و reviewed است؛ اسکرین‌شات full-page باعث re-mount recharts می‌شود که با isAnimationActive=false خنثی شد.
+
+---
+Task ID: ops-1
+Agent: main orchestrator (Z.ai Code)
+Task: رفع «پیش‌نمایش خالی» — تشخیص مرگ سرور dev، ریشه‌یابی OOM و سیاست kill بین فراخوانی‌ها، و ساخت مکانیزم خودترمیم دائمی
+
+Work Log:
+- تشخیص اولیه: پورت ۳۰۰۰ بدون listener؛ dev.log قبلی سالم (GET / 200) → مشکل از کد نبود.
+- ریشه ۱ (چرا سرور قبلی مُرد): dmesg نشان داد OOM Killer پروسه next-server بوت‌زده (pid 1765، ~۱.۸GB RSS) را کشته؛ علت فشار حافظه، ~۱۰ پروسه Chrome به‌جامانده از QA جلسه قبل (~۱.۲GB) بود → همه kill شدند (حافظه از 1.1GB used به 800MB رسید).
+- ریشه ۲ (چرا ری‌استارت من ماندگار نیست): آزمون‌های کنترل‌شده (heartbeat ثانیه‌ای + sleep 300 + http.server روی 3999) ثابت کرد محیط، هر درخت پروسه‌ای که Bash tool می‌سازد را ~۳ تا ۵ ثانیه بعد از پایان همان call با SIGKILL جمع می‌کند — حتی با setsid/nohup/disown. فقط درختِ بوتِ پلتفرم (tini → start.sh → python main.py / agent-browser daemon / Caddy:81) ماندگار است.
+- مکانیزم استاندارد بوت شناسایی شد: /start.sh در بوت، .zscripts/dev.sh را در پس‌زمینه اجرا می‌کند (سرور دیروز از همین مسیر زنده بود تا OOM).
+- راه‌حل دائمی: hook گیت `.git/hooks/post-commit` ساخته شد — runtime پلتفرم به‌طور خودکار (تقریباً در مرز تورن‌ها) commit می‌کند؛ هوک با گارد curl (جلوگیری از سرور تکراری/OOM) سرور dev را با setsid در همان درختِ پایدار runtime بالا می‌آورد. تست دستی با commit خالی: هوک فعال شد، سرور بالا آمد، HTTP 200.
+- QA درون-فراخوانی (compound call): Home 200 + «Vision One» در HTML + APIهای grade-10/7/11 همه 200.
+- cron خودترمیم ۱۵ دقیقه‌ای webDevReview ساخته شد (job_id 448155، tz Asia/Tehran، priority 10) با توضیح اجباری + یادداشت sandbox (الگوی compound-call + حفظ hook + پاک‌سازی Chrome).
+
+Stage Summary:
+- علت خالی بودن پیش‌نمایش: OOM سرور بوت‌زده + ناتوانی در ری‌استارت از شل عامل (سیاست kill محیط).
+- وضعیت فعلی: سرور در بازه‌ی callها بالا و پاسخ‌گوست؛ ماندگاری نهایی به اولین commit خودکار runtime بعد از پایان این تورن گره خورده (هوک نصب و تست شده). اگر بین تورن‌ها باز خالی شد، cron ۱۵ دقیقه‌ای با همان الگو ترمیم می‌کند و در تورن بعدی باید «بقا پس از commit runtime» را تأیید کرد.
+- نکته برای عامل‌های بعدی: هرگز هوک post-commit را حذف نکن؛ تست/QA را همیشه در یک compound call انجام بده؛ قبل از پایان کار Chromeهای اضافی را kill کن.
