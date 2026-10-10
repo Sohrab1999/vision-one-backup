@@ -1681,3 +1681,96 @@ Stage Summary:
 - فایل‌های کلیدی: src/lib/{speak,voice-store}.ts (دو-موتوری)، src/app/api/{ai-teacher,ai-story}/route.ts، src/app/api/_lib/ai-guard.ts، src/components/book/ai/{teacher-panel,story-panel}.tsx، tutor-view.tsx (تب‌ها)
 - قرارداد: افزودن مسیر AI جدید = استفاده از ai-guard (BoundedCache + consumeDailyQuota + userKeyOf)؛ الگوی LLM: سیستم‌پرامپت به‌صورت اولین پیام assistant + thinking disabled
 - گام بعدی: فاز ۸ بخش B (تصویرسازی حافظه با image-generation، چت شخصیت‌ها، تحلیل خطاها، سؤال‌ساز مشابه)
+
+---
+Task ID: 8-b3
+Agent: full-stack-developer
+Task: تحلیل هوشمند خطاها — /api/error-analysis + پنل در آزمون
+
+Work Log:
+- زمینه خوانده شد: worklog (۲۵۰ خط آخر + بخش‌های فاز ۸)، ai-teacher (الگوی پرامپت assistant-first + thinking disabled)، ai-story (الگوی JSON سخت‌گیرانه + retry یک‌باره)، ai-guard (BoundedCache/consumeDailyQuota/userKeyOf/sha1Of)، book.ts (bookPromptLine)، mistakes-store (useMistakes)، questions route (خروجی QuizQuestionDto + گارد فرمت ids)، teacher-panel (الگوی پنل‌های AI: useBook/useBookData/readUserName/faNum) و quiz-game (الگوی رنگ سبز/قرمز گزینه‌ها).
+- مسیر API جدید src/app/api/error-analysis/route.ts با Write ساخته شد: POST body {questions[], book?}؛ اعتبارسنجی سخت (۱..۸ سؤال با slice(0,8)، text trim سقف ۴۰۰، options آرایه ۲..۶ رشته‌ای سقف ۸۰، answer clamp به [0, min(5, options-1)]؛ نامعتبر → 400 فارسی)؛ کش BoundedCache(120) با کلید sha1(text|options|answer|category …|bookId) → {analysis, cached:true}؛ سقف روزانه consumeDailyQuota(userKeyOf(req,"error-analysis"), 12) → 429 فارسی؛ پرامپت سیستم فارسی تحلیلگر خطا (assistant-first + thinking disabled) با قرارداد خروجی JSON {pattern≤۶کلمه, summary, tip, drill[۴×{text,4options,answer0..3,explain}]}؛ استخراج JSON با regex {...} + retry یک‌باره با «فقط JSON خالص»؛ اعتبارسنجی دستی نهایی (pattern/summary/tip رشته، عضو نامعتبر drill دور ریخته، drill خالی → 502)؛ dynamic=force-dynamic و maxDuration=60 و try/catch با پیام فارسی.
+- پنل جدید src/components/book/ai/error-analysis-panel.tsx با Write ساخته شد: useMistakes از mistakes-store؛ count=0 → کارت خاکستری کوچک «هنوز اشتباهی ثبت نشده — دفتر خطاها سبز است! 🌱» بدون دکمه؛ count>0 → کارت «تحلیل هوشمند خطاها» (SearchCheck) + توضیح یک‌خطی + دکمه «تحلیل اشتباهاتم (N مورد)»؛ کلیک → GET /api/questions?ids=اولین۸id&book= → POST /api/error-analysis (فقط text/options/answer/category + book از useBook/useBookData + هدر x-visionone-name) → نمایش Badge «الگوی خطا» + summary + کارت amber «نکتهٔ طلایی»؛ سپس «تمرین اختصاصی» سؤال‌به‌سؤال (متن dir=ltr font-en، ۴ دکمه گزینه با رنگ سبز/قرمز مثل quiz-game، یک تلاش، explain بعد از پاسخ، دکمه «سؤال بعدی») و در پایان «پایان تمرین — X از N درست» + دکمه «تحلیل دوباره»؛ لودینگ: Loader2 + «دارم اشتباه‌هایت را تحلیل می‌کنم…»؛ خطاها با toast.error پیام فارسی سرور؛ کاملاً event-driven — صفر effect (سازگار با react-hooks v6)؛ موبایل‌فرست با min-h-10/11 و متن ۱۲-۱۴px و break-words بدون overflow افقی.
+- quiz-view.tsx فقط با python3 ویرایش شد: import ErrorAnalysisPanel + رندر <ErrorAnalysisPanel /> بین سرصفحه و <QuizGame />؛ هیچ فایل دیگری دست نخورد.
+- راستی‌آزمایی با curl: بدنه استاندارد (She ___ to school yesterday) → 200 و JSON معتبر (pattern «زمان‌های فعل گذشته»، tip، drill دقیقاً ۴تایی با options ۴گزینه‌ای و answerهای معتبر)؛ تکرار همان بدنه → cached:true؛ questions:[] → 400 فارسی؛ text خالی → 400 فارسی؛ مسیر GET /api/questions?ids=…&book=vision-one (پای اول پنل) → سؤال‌ها با فیلدهای کامل برگشت.
+- bun run lint → صفر خطا؛ bunx tsc --noEmit → TSC-SRC-CLEAN؛ dev.log بدون خطای مرتبط.
+
+Stage Summary:
+- آیتم «تحلیل خطاها» از فاز ۸ کامل شد: مسیر src/app/api/error-analysis/route.ts + پنل src/components/book/ai/error-analysis-panel.tsx + سیم‌کشی در src/components/book/quiz-view.tsx. جریان: دفتر خطاها (تا ۸ آیتم) → تحلیل الگوی مشترک + نکته طلایی + ۴ تمرین اختصاصی همان‌جا در نمای آزمون؛ کش/سهمیه/اعتبارسنجی مطابق قرارداد ai-guard؛ رنگ‌ها فقط emerald/amber/teal و UI موبایل‌فرست.
+---
+Task ID: 8-b1
+Agent: full-stack-developer
+Task: تصویرسازی حافظه (Memory Image) — /api/word-image + دکمه در word-lookup
+
+Work Log:
+- خواندن worklog (قراردادها + وضعیت فاز ۸)، ai-guard.ts و الگوی ai-story/ai-teacher؛ خواندن کامل word-lookup.tsx (۵۱۹ خط پس از ویرایش)
+- ساخت src/app/api/word-image/route.ts: POST با اعتبارسنجی سخت (trim + سقف ۴۰ نویسه + regex فقط حروف انگلیسی/فاصله/خط تیره/آپاستروف + نرمال‌سازی آپاستروف‌های curly؛ meaning اختیاری سقف ۸۰)، کش دیسک /tmp/vision-wordimg/{sha1(word)}.png با mkdirSync recursive/existsSync/readFileSync/writeFileSync و برگشت cached:true، سقف روزانه consumeDailyQuota(userKeyOf(req, "word-image"), 10) با 429 فارسی «سقف روزانهٔ تصویرسازی حافظه پر شد (۱۰ تصویر) — فردا دوباره بیا! 🎨»، تولید با zai.images.generations.create (size 1024x1024، پرامپت انگلیسی سفت با ممنوعیت صریح متن/حروف/واترمارک روی تصویر)، گارد base64 خالی → 502 فارسی و سقف حجم پاسخ ۶MB → 502، dynamic force-dynamic + maxDuration 120، try/catch کامل با console.error و 500 فارسی
+- UI در word-lookup.tsx (ویرایش فقط با python3 open/read/replace/write — ۷ لنگر یکتا با گارد count==1): دکمهٔ «تصویر حافظه» (آیکون ImagePlay، h-7 w-7 هم‌ردیف SpeakButton و ستاره، همیشه فعال مگر هنگام لود → Loader2 spin)؛ state محلی memImg {word,data,loading} + کش ماژول‌اسکوپ memoryImageCache (Map با سقف ۴۰ ورودی، حذف قدیمی‌ها)؛ هندلر loadMemoryImage کاملاً event-driven بدون هیچ effect جدید: کش ماژولی → در صورت نبود POST /api/word-image با {word, meaning: hit.vocab?.meaning} و هدر x-visionone-name → ذخیره در کش + نمایش؛ نمایش <img> با data:image/png;base64 در کارت rounded-xl و border، زیرنویس Badge واژه (dir=ltr, font-en) + معنی فارسی، alt = «تصویر حافظه برای واژه {word}»؛ حالت لودینگ «دارم تصویر حافظه را می‌کشم… ✏️»؛ خطا با toast.error پیام فارسی سرور؛ گارد رندر فقط برای واژهٔ فعلی (memImg.word === hit.word) تا جابه‌جایی واژه تصویر کهنه نشان ندهد؛ سقف ارتفاع پاپ‌آور max-h-[min(78vh,540px)] + overflow-y-auto برای جای تصویر
+- راستی‌آزمایی: curl «discover/کشف کردن» → HTTP 200 با image ۹۹٬۴۹۲ کاراکتر (۶۷s)؛ فراخوانی دوم → HTTP 200 و cached:true (۸ms، فایل کش ۷۴KB روی دیسک)؛ word خالی و word دارای رقم → 400 با پیام فارسی؛ bun run lint → صفر خطا؛ tsc فقط src → TSC-SRC-CLEAN؛ dev.log بدون خطای جدید
+
+Stage Summary:
+- فاز ۸ «تصویرسازی حافظه» (Dual Coding) کامل شد: کلیک روی هر واژهٔ انگلیسی در متن‌ها → پاپ‌آور دیکشنری → دکمهٔ تصویر حافظه → تصویر آموزشی پالت emerald/amber/teal با برچسب واژه و معنی فارسی زیر آن
+- فایل‌ها: src/app/api/word-image/route.ts (جدید)، src/components/book/word-lookup.tsx (ویرایش python3)؛ اسکریپت یک‌بارمصرف در tmp-scripts حذف شد
+- قرارداد: کش دولایه (دیسک شارِ سرور به‌ازای واژه + Map ماژولی شارِ کلاینت به‌ازای نشست) — تکرار همان واژه هیچ هزینهٔ مدلی ندارد؛ سقف روزانه ۱۰ تصویر به‌ازای هر کاربر با scope «word-image»
+---
+Task ID: 8-b2
+Agent: full-stack-developer
+Task: چت شخصیت‌ها (Persona Chat) — /api/persona-chat + persona-panel + تب دستیار
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۸ بخش A و قراردادهای AI) + ai-teacher/route.ts + _lib/ai-guard + _lib/book + tutor-view.tsx + teacher-panel.tsx + gamification.ts (notifyActivity).
+- دقیقاً دو فایل جدید + یک ویرایش:
+  * src/app/api/persona-chat/route.ts — POST با اعتبارسنجی کامل (persona نامعتبر/خالی ← 400 فارسی؛ messages آرایه، آخرین ۱۲ پیام، trim سقف ۶۰۰ نویسه، حداقل ۱ پیام user)، سقف روزانه consumeDailyQuota(userKeyOf(req, "persona-chat"), 40) ← 429 فارسی؛ سه پرامپت انگلیسی نوجوان‌پسند ۱۰–۱۵ خطی (سم غریبه‌مهربان 🚏 small-talk / میا هم‌کلاسی 🎒 مدرسه / لئو مسافر ✈️ اولین سفر به ایران) + قواعد مشترک: ماندن در نقش، فقط ۱–۳ جمله انگلیسی کوتاه، قاعده سطح (A2=فاعل+فعل+مفعول / B1=بند وابسته)، سؤال ادامه‌دهنده، فقط در صورت اشتباه واضح یک خط فارسی با 💡؛ فراخوانی LLM مثل ai-teacher (system به‌عنوان اولین پیام assistant + thinking disabled + bookPromptLine)، پاسخ خالی ← 502؛ dynamic=force-dynamic، maxDuration=60، try/catch کامل؛ بدون کش (چت context-dependent).
+  * src/components/book/ai/persona-panel.tsx — دو فاز: انتخاب (۳ کارت شناور grid-cols-1→sm:3 با emoji بزرگ/نام فارسی/توضیح/Badge سطح + سوییچ سطح A2/B1 پیش‌فرض A2) و چت (ScrollArea ثابت 380px، حباب‌ها مثل FreeChat با آواتار emoji شخصیت و SpeakButton روی خط انگلیسی اول، خوش‌آمد ثابت + ترجمه پرانتزی، ۳ چیپ شروع dir=ltr font-en با min-h-9، Textarea + دکمه Send با Enter/Shift+Enter، حباب سه‌نقطه در sending)؛ POST با آخرین ۱۲ پیام (بدون خوش‌آمد) + level + book ← reply ← notifyActivity()؛ خطاها toast.error فارسی؛ واژگان کتاب در لحن دخالت داده نمی‌شود (فقط level).
+  * tutor-view.tsx (فقط python3 ایمن‌ZWNJ): TABS/type گسترش با "persona" + آیکون Users + hint + import/رندر PersonaPanel + کامنت سربرگ (سه تب ← چهار تب).
+- react-hooks v6: صفر setState در بدنه‌ی effect — فقط دو effect: اسکرول (scrollTo خالص) و cleanup unmount (aliveRef=false + abortRef.abort)؛ AbortController برای هر fetch؛ تعویض شخصیت/بازگشت ← abort فوری + گارد ctrl.signal.aborted بعد از await (بدون toast بعد از abort، بدون setState پس از unmount).
+- راستی‌آزمایی: curl معتبر traveler/A2 ← 200 «I am from Canada. I am a happy traveler. …» (در نقش لئو)؛ multi-turn stranger ← 200؛ classmate با خطای «Yesterday I go» ← 200 با خط اصلاح «💡 Yesterday I went to the cinema…»؛ persona نامعتبر ← 400 فارسی؛ messages خالی ← 400 فارسی؛ bun run lint ← صفر؛ bunx tsc --noEmit (فیلتر src) ← CLEAN؛ dev.log ← GET / 200 بدون خطای کامپایل.
+- QA مرورگری (agent-browser): تب «شخصیت‌ها» در دستیار ← فاز انتخاب (سوییچ سطح + ۳ کارت) ← کلیک لئو ← خوش‌آمد + ۳ چیپ + ورودی ← ارسال چیپ ← POST /api/persona-chat 200 و حباب پاسخ با دکمه روخوانی ← «بازگشت به شخصیت‌ها» ← فاز انتخاب؛ کنسول/خطای صفحه صفر؛ اسکرین‌شات در tool-results/persona-chat*.png.
+
+Stage Summary:
+- چت مکالمه آزاد با شخصیت‌ها کامل و راستی‌آزمایی‌شده است؛ کاربر یکی از سم/میا/لئو را با سطح A2/B1 انتخاب می‌کند و شخصیت فقط با واژگان همان سطح (۱–۳ جمله) حرف می‌زند و در صورت اشتباه واضح یک خط 💡 فارسی می‌دهد.
+- فایل‌ها: src/app/api/persona-chat/route.ts، src/components/book/ai/persona-panel.tsx، src/components/book/tutor-view.tsx (ویرایش python3).
+- قرارداد: سقف روزانه ۴۰ ردوبدل به‌ازای کاربر (کلید persona-chat)؛ هر ردوبدل موفق یک notifyActivity() (زنجیره/ماموریت روزانه)؛ خوش‌آمد ثابت شخصیت جزو تاریخچه‌ی ارسالی به سرور نیست.
+- نکته‌ی ابزاری: در خروجی Bash، دنباله‌ی «[m» (مثل [messages) در «نمایش» خورده می‌شود و گویا خط خراب است — با codepoint بررسی شد؛ فایل سالم بود و هیچ اصلاحی لازم نشد (یادداشت برای عامل‌های بعدی: پیش از «repair»، codepoint‌ها را چاپ کنید).
+---
+Task ID: 8-b4
+Agent: full-stack-developer
+Task: سؤال مشابه بساز — /api/similar-question + کارت بونس در quiz-game
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۸ بخش A و قرارداد ai-guard)، الگوی مسیرهای /api/ai-teacher (سیستم‌پرامپت به‌صورت اولین پیام assistant + thinking disabled) و /api/ai-story (استخراج JSON با regex + retry یک‌باره) و /api/explain (اعتبارسنجی ورودی) + bookPromptLine از _lib/book؛ quiz-game.tsx هر ۱۴۷۲ خط خوانده شد (ناحیه «توضیح هوشمند» ~۴۲۷-۴۶۵ و UI دکمه‌ها ~۱۴۳۵-۱۴۶۵).
+- مسیر جدید src/app/api/similar-question/route.ts ساخته شد (dynamic=force-dynamic، maxDuration=60، try/catch کامل): ورودی {text, options[2..6], answer, category?, book?} با پیام‌های ۴۰۰ فارسی؛ شکست JSON.parse بدنه → ۴۰۰ فارسی؛ کش LRU BoundedCache(200) با کلید sha1(text|answer|bookId) → {question, cached:true} (فقط برای تکرار همان سؤال)؛ سقف روزانه consumeDailyQuota(userKeyOf(req,"similar-question"), 25) → ۴۲۹ فارسی؛ پرامپت «طراح تست زبان انگلیسی پایهٔ دهم» + bookPromptLine: تست جدید هم‌الگو ولی متفاوت، گزینهٔ درست یکتا و عین نمونه نباشد، ۳ گزینهٔ غلط هم‌خانواده، خروجی فقط JSON خالص ۴گزینه‌ای با note فارسی؛ اعتبارسنجی سخت خروجی (متن ≠ نمونه، گزینهٔ درست ≠ نمونه، ۴ گزینهٔ یکتا، answer عددی ۰..۳، note ≥۲ نویسه) با retry یک‌باره و پیام تصحیحی → ۵۰۲ فارسی.
+- UI در src/components/book/quiz-game.tsx فقط با python3 (replace رشتهٔ دقیق + assert یکتایی قبل از هر replace؛ صفر U+FFFD): آیکون Wand2، interface SimilarBonus، ۴ state بونس (bonus/bonusSelected/bonusLoading/bonusRegen برای کلید ری‌انیمیشن)، ریست بونس در هر ۶ نقطهٔ setAiExplanation(null) (شروع راند عادی/تمرین/روزانه/هفتگی، handleTimeout، nextQuestion) + reset()؛ تابع generateSimilar با منبع دوگانه: دکمهٔ اصلی «سؤال مشابه بساز» همیشه از سؤال اصلی (تکرار → پاسخ کش‌شدهٔ همان سؤال) و «سؤال مشابه بعدی» از روی سؤال مشابهٔ فعلی زنجیر می‌شود تا تولید واقعاً بی‌نهایت و هر POST کلید کش تازه بگیرد؛ دکمه‌ها onClick با آرگومان صریح (false/true) تا MouseEvent به‌جای fromBonus نشت نکند.
+- کارت بونس زیر کارت اصلی (فقط answered && bonus): Badge «سؤال مشابه ✨» + «تمرین بی‌پایان»، متن dir=ltr font-en، ۴ دکمهٔ عمودی هم‌استایل سبز/قرمز با aria-pressed و قفل پس از پاسخ (disabled)، نمایش note فارسی پس از پاسخ + پیام درست/اشتباه، ردیف «سؤال مشابه بعدی» / «بستن» (setBonus(null))؛ خطا → toast.error پیام فارسی سرور؛ هیچ تغییری در منطق آزمون اصلی/recordMistake/XP/تایمر.
+- نکتهٔ عملیاتی: حین QA مرورگری پروسهٔ dev-server یک‌باره از کار افتاد (dev.log صفر بایت شد) — با nohup bun run dev بازیابی شد (Ready در ۱.۶ث) و همهٔ تست‌ها روی نمونهٔ تازه تکرار شد.
+- راستی‌آزمایی: curl معتبر (گرامر) → 200 با «My father ___ a new car last month.» (۴ گزینه، answer=2، متن و گزینهٔ درست متفاوت از نمونه، note فارسی)؛ تکرار همان بدنه → cached:true (کش کار می‌کند، بدون LLM)؛ curl واژگانی با book → 200؛ بدنهٔ خراب/بدون متن/گزینهٔ غیرآرایه/answer خارج از بازه → 400 فارسی؛ bun run lint → خروجی خالی؛ bunx tsc --noEmit | grep ^(src|components|lib|app)/ → CLEAN؛ QA مرورگری (agent-browser): پاسخ سؤال → دکمهٔ «سؤال مشابه بساز» کنار «توضیح با هوش مصنوعی» → کارت بونس با ۴ گزینه → پاسخ بونس (قفل + aria-pressed + note) → دو بار «سؤال مشابه بعدی» سه سؤال یکتای متوالی (renderهای ~۰.۹-۱.۴ث در dev.log = فراخوانی واقعی LLM نه کش) → «سؤال بعدی» اصلی → کارت بونس حذف می‌شود.
+
+Stage Summary:
+- ویژگی «سؤال مشابه بساز» کامل است: بعد از هر پاسخ، دانش‌آموز می‌تواند بی‌نهایت تست هم‌الگو از همان نکته بسازد و همان‌جا پاسخ دهد — نیمهٔ «توضیح‌دهندهٔ تست» از قبل موجود بود و اکنون حلقهٔ تمرین بی‌پایان فاز ۸ بسته شد.
+- فایل‌ها: src/app/api/similar-question/route.ts (جدید) + src/components/book/quiz-game.tsx (۴ state + generateSimilar + دکمهٔ کنار توضیح هوشمند + کارت بونس + ریست‌ها) — قرارداد «افزودن مسیر AI جدید» با ai-guard رعایت شد (BoundedCache + consumeDailyQuota + userKeyOf + bookPromptLine).
+- تصمیم‌ها: زنجیره‌کردن «بعدی» از خود سؤال مشابه (کلید کش تازه در هر گام = تولید بی‌نهایت واقعی)؛ کش فقط برای تکرار همان سؤال مبدأ؛ اعتبارسنجی دوطرفهٔ «متن و گزینهٔ درست نباید عین نمونه باشد» با retry — در بدترین حالت ۵۰۲ فارسی و toast محترمانه.
+- تست‌ها: 4×curl (200/cached/400×2)، lint 0، tsc-src 0، QA مرورگری کامل + بازگشت سالم به جریان آزمون اصلی؛ dev-server سالم (پورت 3000).
+
+---
+Task ID: 8-round3 (orchestrator — فاز ۸ بخش B با ۴ ساب‌ایجنت موازی)
+Agent: main orchestrator (Z.ai Code)
+Task: تکمیل ۴ آیتم باقی‌ماندهٔ فاز ۸ — تصویرسازی حافظه، چت شخصیت‌ها، تحلیل هوشمند خطاها، سؤال‌ساز مشابه بی‌پایان
+
+Work Log:
+- وضعیت‌سنجی: فاز ۸-A (معلم خصوصی + داستان‌ساز + رفع لهجه چینی TTS) قبلاً در commit 00d0756 بسته شده بود؛ ۴ چک‌باکس باقی بود
+- ۴ ساب‌ایجنت full-stack-developer به‌صورت موازی اجرا شد (8-b1 تا 8-b4) با قرارداد ثابت: ai-guard، LLM assistant-first + thinking disabled، ویرایش فارسی فقط python3، react-hooks v6، پالت emerald/amber/teal
+- 8-b1: /api/word-image (کش دیسک /tmp/vision-wordimg + سقف روزانه ۱۰ + پرامپت بدون متن) + دکمه «تصویر حافظه» در word-lookup با کش ماژولی ۴۰تایی و نمایش figure/figcaption
+- 8-b2: /api/persona-chat (سه شخصیت: سم غریبه 🚏 / میا هم‌کلاسی 🎒 / لئو مسافر ✈️ با قواعد A2/B1 و خط 💡 اصلاح فارسی) + persona-panel (انتخاب کارت → چت با چیپ‌های شروع و SpeakButton) + تب «شخصیت‌ها» در tutor-view (۴ تب)
+- 8-b3: /api/error-analysis (JSON سخت‌گیرانه با retry، سقف ۱۲/روز، کش ۱۲۰تایی) + error-analysis-panel در بالای نمای آزمون: «الگوی خطا» + نکته طلایی + تمرین اختصاصی ۴سؤالی سؤال‌به‌سؤال با فیدبک
+- 8-b4: /api/similar-question + کارت بونس «سؤال مشابه بساز» در quiz-game کنار «توضیح هوشمند» — زنجیرهٔ بی‌پایان (سؤال بعدی از روی خود مشابه)
+- راستی‌آزمایی ارکستراتور از دیسک: ۴ مسیر API + ۲ پنل جدید + ۴ سیم‌کشی (tutor-view/quiz-view/word-lookup/quiz-game) — همه موجود؛ ۴ ورود worklog ساب‌ایجنت‌ها
+- QA مرورگری ارکستراتور: چت لئو end-to-end (پاسخ واقعی درباره kebab + TTS)، تحلیل خطا (الگوی «ضمیرهای مفعولی» + تمرین)، بونس مشابه (پاسخ درست ourselves → «درست بود! 🎉»)، تصویر حافظه whale (200 در 69s، رندر با alt)، موبایل 390px بدون اسکرول افقی، فوتر چسبیده، کنسول صفر
+- باگ یافته و رفع‌شده در /api/similar-question: (۱) retry فقط وقتی raw غیرخالی بود اجرا نمی‌شد → حلقهٔ ۳تلاش با try/catch؛ (۲) مدل گاهی پیشوند «a)» می‌چسباند → stripOptionPrefix؛ (۳) اعتبارسنجی «گزینهٔ درست ≠ نمونه» برای تست‌های هم‌نقطه بیش‌ازحد سخت بود → تعدیل به «کل آرایهٔ گزینه‌ها ≠ نمونه» — قبل: 502های flaky؛ بعد: 3/3 و 2/2 موفق در تست‌های curl
+- تیک ۴ چک‌باکس فاز ۸ + یادداشت QA فاز ۸-B در نقشه راه (python3)؛ cron جدید ۴۹۹۴۴۹ پس از «Disabled due to exec limits» قدیمی
+
+Stage Summary:
+- فاز ۸ «دستیار هوشمند ۲.۰» به‌طور کامل بسته شد — هر ۶ آیتم ✔ (معلم خصوصی، داستان‌ساز، تصویرسازی حافظه، چت شخصیت‌ها، تحلیل خطاها، سؤال‌ساز بی‌پایان)
+- فایل‌های کلیدی این دور: src/app/api/{word-image,persona-chat,error-analysis,similar-question}/route.ts، src/components/book/ai/{persona-panel,error-analysis-panel}.tsx، ویرایش word-lookup/tutor-view/quiz-view/quiz-game
+- قرارداد تثبیت‌شده: هر مسیر AI = ai-guard (کش + سقف روزانه + userKeyOf) + سیستم‌پرامپت به‌صورت اولین پیام assistant + retry با nudge؛ خروجی JSON همیشه با اعتبارسنجی دستی و پیام‌های خطای فارسی
+- ریسک/یادداشت: تولید تصویر ۶۰-۷۰ ثانیه است (سقف maxDuration=120) — UX لودینگ دارد؛ LLM گاهی خالی برمی‌گرداند (۳ تلاش در similar-question؛ سایر مسیرها ۲ تلاش)؛ quotaها: image 10/روز، تحلیل 12/روز، مشابه 25/روز، شخصیت 40/روز، معلم 30/روز، داستان 20/روز
+- گام بعدی پیشنهادی: فاز ۹ «کلاس مجازی» (کد ۶رقمی معلم، داشبورد، تکلیف، آزمون زنده) یا فاز ۱۰ (دفتر خطاها، خروجی چاپی، اکسپورت داده)

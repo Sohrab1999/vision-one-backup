@@ -24,6 +24,7 @@ import {
   Gauge,
   Star,
   Layers,
+  Wand2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,6 +59,14 @@ interface Question {
   answer: number;
   level: string;
   explanation: string | null;
+}
+
+/** سؤال مشابهٔ تولیدشده با هوش مصنوعی — کارت بونس تمرین بی‌پایان */
+interface SimilarBonus {
+  text: string;
+  options: string[];
+  answer: number;
+  note: string;
 }
 
 type Phase = "setup" | "playing" | "result";
@@ -182,6 +191,11 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [aiExplaining, setAiExplaining] = useState(false);
   const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  /** کارت بونس «سؤال مشابه» — تمرین بی‌پایان از روی سؤال جاری */
+  const [bonus, setBonus] = useState<SimilarBonus | null>(null);
+  const [bonusSelected, setBonusSelected] = useState<number | null>(null);
+  const [bonusLoading, setBonusLoading] = useState(false);
+  const [bonusRegen, setBonusRegen] = useState(0); // کلید ری‌انیمیشن کارت بونس
   const [elapsed, setElapsed] = useState(0);
   const [timed, setTimed] = useState(0);
   const [, setQTick] = useState(0);
@@ -222,6 +236,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       setIndex(0);
       setSelected(null);
       setAiExplanation(null);
+      setBonus(null);
+      setBonusSelected(null);
       setElapsed(0);
       deadlineRef.current = Date.now() + timed * 1000;
       if (advanceRef.current) clearTimeout(advanceRef.current);
@@ -303,6 +319,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       setIndex(0);
       setSelected(null);
       setAiExplanation(null);
+      setBonus(null);
+      setBonusSelected(null);
       setElapsed(0);
       deadlineRef.current = Date.now() + timed * 1000;
       if (advanceRef.current) clearTimeout(advanceRef.current);
@@ -330,6 +348,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       setIndex(0);
       setSelected(null);
       setAiExplanation(null);
+      setBonus(null);
+      setBonusSelected(null);
       setElapsed(0);
       deadlineRef.current = 0;
       if (advanceRef.current) clearTimeout(advanceRef.current);
@@ -358,6 +378,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       setIndex(0);
       setSelected(null);
       setAiExplanation(null);
+      setBonus(null);
+      setBonusSelected(null);
       setElapsed(0);
       deadlineRef.current = 0;
       if (advanceRef.current) clearTimeout(advanceRef.current);
@@ -383,6 +405,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       return next;
     });
     setAiExplanation(null);
+    setBonus(null);
+    setBonusSelected(null);
     advanceRef.current = setTimeout(() => nextQuestion(), 1900);
   }
 
@@ -461,6 +485,44 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     }
   }
 
+  /** ساخت یک تست مشابه از سؤال جاری با هوش مصنوعی — نمایش به‌صورت کارت بونس */
+  async function generateSimilar(fromBonus = false) {
+    if (!current || bonusLoading) return;
+    // «سؤال مشابه بعدی» از روی سؤالِ مشابهٔ فعلی زنجیر می‌شود (تولید بی‌نهایت)؛
+    // دکمهٔ اصلی همیشه از سؤال اصلی منبع می‌گیرد (تکرار همان سؤال → پاسخ کش‌شده).
+    const src = fromBonus && bonus ? bonus : current;
+    setBonusLoading(true);
+    try {
+      const res = await fetch("/api/similar-question", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: src.text,
+          options: src.options,
+          answer: src.answer,
+          category: current.category,
+          book: {
+            id: bookId,
+            title: bookData?.info.title ?? "",
+            grade: meta?.gradeLabel ?? "",
+          },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.question) {
+        toast.error(data.error ?? "سؤال مشابه ساخته نشد — دوباره تلاش کن");
+        return;
+      }
+      setBonus(data.question as SimilarBonus);
+      setBonusSelected(null);
+      setBonusRegen((n) => n + 1);
+    } catch {
+      toast.error("خطا در ارتباط با هوش مصنوعی");
+    } finally {
+      setBonusLoading(false);
+    }
+  }
+
   function nextQuestion() {
     if (advanceRef.current) clearTimeout(advanceRef.current);
     if (index + 1 >= questions.length) {
@@ -470,6 +532,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setIndex((i) => i + 1);
     setSelected(answers[index + 1]);
     setAiExplanation(null);
+    setBonus(null);
+    setBonusSelected(null);
     deadlineRef.current = mode === "daily" || mode === "weekly" ? 0 : Date.now() + timed * 1000;
   }
 
@@ -607,6 +671,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setAnswers([]);
     setIndex(0);
     setSelected(null);
+    setBonus(null);
+    setBonusSelected(null);
     setElapsed(0);
   }
 
@@ -1447,16 +1513,28 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
                 </div>
               )}
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={askAiExplanation}
-                  disabled={aiExplaining}
-                  className="gap-1.5 text-[12px]"
-                >
-                  {aiExplaining ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} className="text-amber-500" />}
-                  توضیح با هوش مصنوعی
-                </Button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={askAiExplanation}
+                    disabled={aiExplaining}
+                    className="gap-1.5 text-[12px]"
+                  >
+                    {aiExplaining ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} className="text-amber-500" />}
+                    توضیح با هوش مصنوعی
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => generateSimilar(false)}
+                    disabled={bonusLoading}
+                    className="gap-1.5 text-[12px]"
+                  >
+                    {bonusLoading ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} className="text-teal-500" />}
+                    سؤال مشابه بساز
+                  </Button>
+                </div>
                 <Button onClick={nextQuestion} className="gap-2">
                   {index + 1 >= questions.length ? "دیدن نتیجه" : "سؤال بعدی"}
                   <kbd className="hidden rounded-md border border-primary/30 bg-primary/10 px-1.5 py-0.5 font-en text-[10px] font-bold sm:inline">↵</kbd>
@@ -1467,6 +1545,114 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
           )}
         </CardContent>
       </Card>
+
+      {/* کارت بونس — سؤال مشابه (تمرین بی‌پایان) */}
+      {answered && bonus && (
+        <Card key={bonusRegen} className="border-amber-500/40 rise-in">
+          <CardContent className="space-y-4 p-5">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge className="gap-1 border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
+                <Wand2 size={11} />
+                سؤال مشابه ✨
+              </Badge>
+              <Badge variant="outline" className="text-[10.5px]">
+                تمرین بی‌پایان
+              </Badge>
+              <span className="mr-auto flex items-center gap-1 text-[11px] font-bold text-muted-foreground">
+                ساخته‌شده از سؤال {(index + 1).toLocaleString("fa-IR")}
+              </span>
+            </div>
+
+            <p dir="ltr" className="font-en rounded-xl bg-amber-500/5 p-4 text-[15px] font-semibold leading-8">
+              {bonus.text}
+            </p>
+
+            <div className="space-y-2">
+              {bonus.options.map((opt, i) => {
+                const bonusAnswered = bonusSelected !== null;
+                const isCorrect = i === bonus.answer;
+                const isChosen = i === bonusSelected;
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-pressed={isChosen}
+                    disabled={bonusAnswered || bonusLoading}
+                    onClick={() => setBonusSelected(i)}
+                    className={cn(
+                      "flex w-full items-center gap-3 rounded-xl border p-3 transition-all",
+                      !bonusAnswered && "hover:border-primary/50 hover:bg-primary/5",
+                      bonusAnswered && isCorrect && "border-primary bg-primary/10 shadow-sm",
+                      bonusAnswered && isChosen && !isCorrect && "border-destructive bg-destructive/10",
+                      bonusAnswered && !isChosen && !isCorrect && "opacity-55",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "inline-flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-lg text-[10px] font-black transition-colors",
+                        bonusAnswered && isCorrect
+                          ? "bg-primary text-primary-foreground"
+                          : bonusAnswered && isChosen && !isCorrect
+                            ? "bg-destructive text-destructive-foreground"
+                            : "bg-primary/10 text-primary",
+                      )}
+                    >
+                      {LETTERS[i]}
+                    </span>
+                    <span
+                      dir="ltr"
+                      className={cn(
+                        "font-en flex-1 text-[14px] leading-6",
+                        bonusAnswered && isCorrect && "font-bold text-primary",
+                        bonusAnswered && isChosen && !isCorrect && "text-destructive",
+                      )}
+                    >
+                      {opt}
+                    </span>
+                    {bonusAnswered && isCorrect && <CheckCircle2 size={17} className="shrink-0 text-primary" />}
+                    {bonusAnswered && isChosen && !isCorrect && <XCircle size={17} className="shrink-0 text-destructive" />}
+                  </button>
+                );
+              })}
+            </div>
+
+            {bonusSelected !== null && bonus.note && (
+              <div className="rounded-xl border border-accent/50 bg-accent/25 p-3 text-[12.5px] leading-7">
+                <p className="mb-1 flex items-center gap-1.5 text-[11px] font-black text-accent-foreground">
+                  <Sparkles size={12} className="text-amber-500" />
+                  نکتهٔ این تست
+                </p>
+                {bonus.note}
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Button variant="outline" size="sm" onClick={() => generateSimilar(true)} disabled={bonusLoading} className="gap-1.5 text-[12px]">
+                {bonusLoading ? <Loader2 size={13} className="animate-spin" /> : <Wand2 size={13} className="text-amber-500" />}
+                سؤال مشابه بعدی
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setBonus(null)} disabled={bonusLoading} className="text-[12px]">
+                بستن
+              </Button>
+              {bonusSelected !== null && (
+                <span className="mr-auto flex items-center gap-1 text-[11.5px] font-black">
+                  {bonusSelected === bonus.answer ? (
+                    <>
+                      <CheckCircle2 size={13} className="text-primary" />
+                      <span className="text-primary">درست بود! 🎉</span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle size={13} className="text-destructive" />
+                      <span className="text-destructive">اشتباه بود — نکته را بخوان</span>
+                    </>
+                  )}
+                </span>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

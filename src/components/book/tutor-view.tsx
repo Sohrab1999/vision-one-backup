@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * TutorView — دستیار هوشمند جزوه با سه تب (فاز ۸):
+ * TutorView — دستیار هوشمند جزوه با چهار تب (فاز ۸):
  * «چت آزاد» همان چت قبلی است که بدون تغییر منطق داخل کامپوننت داخلی FreeChat زندگی می‌کند؛
- * «معلم خصوصی» و «داستان‌ساز» پنل‌های هوشمند فاز ۸ هستند (ai/teacher-panel و ai/story-panel).
+ * «معلم خصوصی» و «داستان‌ساز» پنل‌های هوشمند فاز ۸ هستند (ai/teacher-panel و ai/story-panel)؛ تب «شخصیت‌ها» چت مکالمه آزاد با سه شخصیت انگلیسی‌زبان است (ai/persona-panel).
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +16,7 @@ import {
   Send,
   Sparkles,
   User,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,7 @@ import { useBook, useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
 import { TeacherPanel } from "./ai/teacher-panel";
 import { StoryPanel } from "./ai/story-panel";
+import { PersonaPanel } from "./ai/persona-panel";
 
 interface Msg {
   role: "user" | "assistant";
@@ -41,7 +43,7 @@ const STARTERS = [
   "چطور می‌توانم واژه‌های درس اول را بهتر حفظ کنم؟",
 ];
 
-type TutorTab = "chat" | "teacher" | "story";
+type TutorTab = "chat" | "teacher" | "story" | "persona";
 
 const TABS: {
   id: TutorTab;
@@ -66,6 +68,12 @@ const TABS: {
     label: "داستان‌ساز",
     icon: BookOpenCheck,
     hint: "۶ تا ۱۲ واژه انتخاب کن — داستانی با همین واژه‌ها + سؤال فهم مطلب می‌سازد",
+  },
+  {
+    id: "persona",
+    label: "شخصیت‌ها",
+    icon: Users,
+    hint: "با غریبه، هم‌کلاسی یا مسافر انگلیسی حرف بزن — با واژگان سطح خودت",
   },
 ];
 
@@ -282,6 +290,7 @@ export function TutorView() {
         {tab === "chat" && <FreeChat />}
         {tab === "teacher" && <TeacherPanel />}
         {tab === "story" && <StoryPanel />}
+        {tab === "persona" && <PersonaPanel />}
       </div>
 
       <p className="text-center text-[11px] leading-5 text-muted-foreground">

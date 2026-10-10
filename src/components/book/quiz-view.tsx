@@ -2,6 +2,7 @@
 
 import { ClipboardList } from "lucide-react";
 import { useBookData } from "@/lib/book-context";
+import { ErrorAnalysisPanel } from "./ai/error-analysis-panel";
 import { QuizGame } from "./quiz-game";
 
 export function QuizView() {
@@ -17,6 +18,7 @@ export function QuizView() {
           {data.stats.questions.toLocaleString("fa-IR")} تست واقعی جزوه (گرامر و واژگان) با کلید تأییدشده — چالش روزانه و هفتگی برای همه یکسان است و بعد از هر پاسخ می‌توانی «توضیح هوشمند» بگیری.
         </p>
       </div>
+      <ErrorAnalysisPanel />
       <QuizGame />
     </div>
   );

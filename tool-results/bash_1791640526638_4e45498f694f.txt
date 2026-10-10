@@ -1,0 +1,250 @@
+- بازی «دوئل دونفره» کامل و آماده اتصال به آزمایشگاه (کلید hub: "duel") — export function DuelGame بدون props، هم‌سایه با قرارداد بقیه بازی‌ها (GAME_KEY="duel"، activeBookId = bookId ?? "").
+- داوری دور با قفل judgedRef و ملاک سرعت p1Ms/p2Ms؛ تایمر مالکیت timeRef با ریست دوربه‌دور؛ ترتیب گزینه‌های دو نیمه تضمیناً متفاوت است.
+- برای QA مرورگری: setup → تغییر نام‌ها → دوئل ۵ دورهای → پاسخ هم‌زمان/تک‌نفره/بی‌پاسخ (تایمر) → تساوی سرعت → غلط واژگانی (بررسی صف مرور) → انصراف وسط نتیجه → پایان و رکورد P1 → «دوئل جدید» با همان تنظیمات.
+---
+Task ID: 4-f
+Agent: sentence-builder-game
+Task: فاز ۴ — بازی «سازنده جمله» (Sentence Builder)
+
+Work Log:
+- زمینه خوانده شد: worklog (بخش‌های 4-a تا 4-e + جمع‌بندی فاز ۳)، memory-game.tsx (الگوی طلایی سه‌فاز)، shared.ts (قرارداد رکورد/plays/attempt)، scramble-game.tsx (مدل ایندکس‌محور tiles/slots + الگوی کیبورد)، data/types.ts و data/books/types.ts (Reading/Conversation/DictEntry/BookData) و book-context (useBookData)؛ games-hub بررسی شد — سیم‌کشی خارج از محدودهٔ تسک است و دست نخورد.
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/games/sentence-builder-game.tsx (۷۴۶ خط، "use client"، export نام‌دار SentenceBuilderGame بدون props، GAME_KEY = "sentence-builder") با ابزار Write؛ هیچ فایل دیگری تغییر نکرد، سرور dev دست‌کاری نشد، git استفاده نشد.
+- استخر جمله: تابع خالص buildPool روی data.readings (paragraphs[].en/fa) + data.conversations (lines[].en/fa) + data.dictionary (examples[] با lesson دیکشنری و src = واژهٔ سردرمَدخل) — جمله‌های ۴ تا ۱۲ واژه (split(/\s+/))؛ گارد واژه = /^[\w']+[.,?]?$/ (فقط ASCII + آپاستروف، با نقطه/کاما/علامت سؤال پایانی — حذف جمله‌های دارای dash خاص/گیومهٔ تایپوگرافی)؛ یکتاسازی با کلید متنِ lowercase؛ اگر تعداد < ۱۰ شد، بازه به ۳ تا ۱۶ گسترده می‌شود (وضعیت در setup نشان داده می‌شود)؛ اگر باز هم کمتر از تعداد دور بود، تکرار با shuffle مجاز است؛ گارد استخر خالی → toast.error.
+- گیم‌پلی: همان مدل ایندکس‌محور scramble — tiles: {id, word}[] به‌هم‌ریخته + slots: (number|null)[]؛ واژهٔ تکراری با شناسهٔ مستقل (بدون Set واژه)؛ tap tile → اولین slot خالی، tap slot پر → برگشت به استخر، «پاک کردن» همه را برمی‌گرداند، «رد کردن» destructive بدون SRS با مکث ۴۰۰ms (locked ref)؛ سرنخ اصلی (amber) = ترجمهٔ فارسی جمله از ابتدا نمایان (مثال دیکشنری بدون ترجمه → پیام جایگزین + واژهٔ سردرمَدخل)؛ راهنمای دوم = جای‌گذاری واژهٔ درست بعدی (+۱ hinted، رکورد می‌سوزد)؛ تطبیق ترتیب slots با واژه‌های پایه → match-pop + speak جملهٔ کامل + مکث ۷۰۰ms با locked ref → جملهٔ بعد.
+- پایان دور: touchStreak + recordStudySession + bumpPlays + saveAttempt (lesson کل→۰، total، correct = جمله‌های کامل بدون skip، duration از secsRef، detail: {hints, skipped}) + saveBest {time} با scope «all|lesson:count» فقط اگر skipped===0 && hinted===0؛ فاز done: زمان/درست/ردشده/راهنما + Badge رکورد + «دور جدید»/«تنظیمات».
+- react-hooks v6: تایمر functional setState + secsRef؛ صفر setState در بدنهٔ effect؛ کیبورد Backspace با الگوی latest-ref (اثر بدون dep برای آینه‌کردن callback در ref + اثر [phase] با addEventListener/cleanup)؛ cleanup کامل: clearInterval، clearTimeout در cancel/start/unmount و stopSpeaking در unmount/cancel.
+- ظاهر: فقط emerald/amber/teal + توکن‌های معنایی (destructive فقط رد کردن)؛ واژه‌ها font-en با dir="ltr"؛ ردیف جمله flex wrap LTR با خانه‌های dashed (الگوی scramble)؛ اعداد faNum و زمان fmtTime؛ همهٔ دکمه‌ها min-h-11 با aria-label/aria-pressed؛ نمای playing با max-w-2xl responsive.
+- راستی‌آزمایی: اسکریپت bun موقت (home/tmp-verify، بعداً حذف شد) استخر هر ۶ کتاب را ساخت — vision-one=295، grade-7=232، grade-8=236، grade-9=171، grade-11=37، grade-12=36 جمله (کمینهٔ «کل کتاب» = ۳۶ ≥ ۳؛ کمینهٔ درس‌ها = ۱۰؛ گسترش بازه فقط در grade-12 درس ۱ فعال شد) → پاس؛ bun run lint → exit 0 و صفر مورد sentence-builder؛ bunx tsc --noEmit → صفر مورد sentence-builder (۱۰ خطای پیش‌موجود فقط در examples/scripts/skills/tool-results خارج از src)؛ python: ۷۴۶ خط، ۵۹ نویسهٔ ZWNJ سالم، صفر U+FFFD، آکولاد/پرانتز تراز، بدون any و بدون رنگ ممنوعه.
+
+Stage Summary:
+- بازی «سازنده جمله» کامل و آمادهٔ سیم‌کشی به آزمایشگاه است (طبق محدودهٔ تسک games-hub دست نخورد): افزودن import { SentenceBuilderGame } from "./sentence-builder-game"; + یک آیتم GAMES با key "sentence-builder" + یک شاخهٔ رندر، بازی را فعال می‌کند؛ رکورد shape آن {time} است (بهتر = زمان کمتر، فقط دور بی‌رد/بی‌راهنما).
+- تصمیم‌ها: پاراگراف کوتاه ریدینگ (تا سقف واژه) یک «جمله» حساب می‌شود (مطابق قرارداد استخر تسک بر پایهٔ paragraphs[].en)؛ مثال‌های دیکشنری که ترجمه ندارند با پیام جایگزین + واژهٔ سردرمَدخل وارد بازی می‌شوند؛ skip برخلاف scramble هیچ SRS نمی‌زند و فقط شمارش می‌شود؛ Attempt detail = {hints, skipped} دقیقاً طبق تسک.
+- ریسک/یادداشت: راهنما وقتی همهٔ خانه‌ها پر ولی ترتیب غلط است عمل نمی‌کند (باید یک واژه به استخر برگردد — همان رفتار scramble)؛ QA مرورگری پیشنهادی: چیدن با کلیک و Backspace، tap slot برای برگشت، رد کردن (بدون SRS)، راهنما (سوزاندن رکورد)، رکورد سریع‌ترین دور در setup، سوییچ درس/کتاب و گارد درس بدون جمله.
+
+---
+Task ID: 4-i
+Agent: adventure-map-game
+Task: فاز ۴ — بازی «نقشه ماجراجویی» (Adventure Map)
+
+Work Log:
+- زمینه خوانده شد: worklog (Task ID 4-a..4-h)، memory-game.tsx (الگوی طلایی سه‌فاز)، shared.ts (قرارداد رکورد/plays/attempt)، speak/voice-store، book-context و types.ts (VocabEntry/QuizQuestionSeed)؛ games-hub بررسی شد — AdventureMapGame هنوز import نشده و طبق محدودهٔ تسک دست نخورد (سیم‌کشی با ارکستراتور).
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/games/adventure-map-game.tsx (۱۳۴۷ خط، "use client"، export نام‌دار AdventureMapGame بدون props، GAME_KEY = "adventure-map") — هیچ فایل دیگری تغییر نکرد؛ سرور dev دست‌کاری نشد؛ git استفاده نشد.
+- Setup: چیپ درس (کل=-1 + درس‌ها، همه min-h-11 با aria-pressed) + Badge amber رکورد «بیشترین ستاره» (useSyncExternalStore با اسنپ‌شات رشته‌ای، الگوی memory-game) + پنل پیشرفت ذخیره‌شده (۸ خانهٔ کوچک با ستاره/قفل) + «ادامه ماجراجویی» / «از اول» / «شروع ماجراجویی» / «نمایش نقشه» (برای دور کامل‌شده).
+- نقشه: ستون عمودی ۸ گره با آفست افقی متناوب (w-1/2 + ms-auto یک‌درمیان) + خط‌چین عمودی مطلق در وسط (border-r-2 border-dashed border-primary/25)؛ هر گره: آیکون مینی‌بازی مرحله (ListChecks/Shuffle/Link2/Headphones) + وضعیت (قفل Lock خاکستری / باز Sparkles با دکمهٔ primary و hover-scale / تمام‌شده ⭐×n با Star fill-amber)؛ فقط گرهٔ بعدیِ آزاد (findIndex روی done) کلیک‌پذیر است؛ max-w-lg.
+- ۸ مرحله = چرخهٔ ۴ نوع مینی‌چالش با ترتیب تصادفی هر دور (shuffle([0,1,2,3]) ×۲ که در progress.order ذخیره می‌شود تا آیکون‌های نقشه بعد از رفرش ثابت بمانند): (۱) آزمون واژه ۳ سؤال چهارگزینه‌ای (درست + ۳ دام با معنی متمایز از pickUnique کلید‌بر-meaning)؛ (۲) حروف جابه‌جا ۱ واژه با tiles ایندکس‌محور tap (جای‌گذاری در اولین خانهٔ خالی، پس‌گرفتن با کلیک روی خانه، لرزش match-shake در چیدمان غلط + گارد چیدمان اولیهٔ تصادفیِ درست)؛ (۳) جفت‌سازی ۲ جفت انگلیسی↔فارسی با ۴ کارت tap-tap سبک؛ (۴) شنیداری ۱ واژه — speak خودکار در شروع مرحله + دکمهٔ پخش دوباره + ۴ گزینهٔ معنی با retry.
+- داوری مرحله: صفر خطا = ۳⭐، یک خطا = ۲⭐، بیشتر = ۱⭐ (starsOf)؛ مرحله regardless کامل می‌شود؛ خطاها → recordSRS(word, false)، درست‌ها → recordSRS(word, true) + speak؛ صفحهٔ نتیجهٔ هر مرحله با ۳ ستاره و دکمهٔ «بازگشت به نقشه» یا «مراسم پایان» (مرحلهٔ ۸).
+- پیشرفت در localStorage: کلید visionone:adventure:{bookId}:{lesson|"all"} = JSON {stars: number[8], done: boolean[8], order?: StageType[8]} — ذخیره پس از هر مرحله با writeProgress + notifyGameData؛ بازیابی بدون setState-in-effect با useSyncExternalStore (اسنپ‌شات رشته‌ای + اعتبارسنجی کامل شکل داده در readProgress)؛ واژه‌های مصرف‌شدهٔ هر دور در usedWordsRef نگه داشته می‌شود تا مراحل واژهٔ تکراری نگیرند (با fallback به کل استخر).
+- پایان دور کامل (مرحلهٔ ۸): touchStreak + recordStudySession + bumpPlays(bookId,"adventure-map") + saveAttempt (lesson کل→۰، total=۸، correct=مراحل صفرخطا، duration از secsRef، detail:{stars}) + saveBest {score}=مجموع ستاره با scope «all|lesson» + toast رکورد؛ فاز done: مراسم با PartyPopper + مجموع ستاره از ۲۴ + رتبهٔ چهارمرحله‌ای (Trophy/Compass/Sprout) + شبکهٔ ۸ مرحله با ستاره‌ها + «ماجراجویی جدید» (ریست با ترتیب تازه) / «نقشه».
+- گارد استخر: در شروع هر مرحله — آزمون/شنیداری ≥۴ معنی متمایز، جفت‌سازی ≥۲ واژه، حروف جابه‌جا ≥۱ واژهٔ لاتین ۳..۱۲حرفی؛ نبود → toast.error و ماندن روی نقشه؛ شبیه‌سازی bun روی دادهٔ واقعی هر ۶ کتاب × همهٔ اسکوپ‌ها با یک دور کامل ۸مرحله‌ای: ALL SCOPES PASS (صفر گارد شکسته).
+- react-hooks v6: صفر setState در بدنهٔ effect (تایمر interval فقط secsRef را زیاد می‌کند — بدون رندر هر ثانیه)؛ نوشتن ref فقط در callback/effect (الگوی later + timersRef برای پاک‌سازی همهٔ timeoutهای معلق)؛ stopSpeaking در unmount و خروج از چالش؛ کیبورد لازم نبود (همه‌چیز tap-محور).
+- راستی‌آزمایی: bun run lint → صفر خطا (کل پروژه پاک)؛ bunx tsc --noEmit → صفر مورد adventure-map (فقط خطاهای پیش‌موجود examples/ و scripts/ و skills/ و tool-results/)؛ python: ۸۲ نویسهٔ ZWNJ سالم، صفر U+FFFD، بدون any، بدون import بلااستفاده، آکولاد تراز (اختلاف -۱ پرانتز ناشی از کلاس کاراکتر [^)] در regex واژهٔ پایه است — false positive شمارش)؛ مرور ذهنی: بعد از مرحلهٔ ۸ openIdx=-1 و هیچ گره‌ای باز نمی‌ماند؛ رفرش وسط دور → setup با «ادامه ماجراجویی» → نقشه با ستاره‌ها و ترتیب ذخیره‌شده.
+
+Stage Summary:
+- بازی «نقشه ماجراجویی» کامل و آمادهٔ سیم‌کشی در games-hub است (طبق مأموریت hub دست نخورد — افزودن import + یک آیتم GAMES با کلید "adventure-map" + یک شاخهٔ رندر کافی است).
+- چهار مینی‌چالش همه سبک‌خود پیاده شدند (بدون import از بازی‌های دیگر): آزمون واژه/شنیداری گزینه‌ای، حروف جابه‌جا ایندکس‌محور tap، جفت‌سازی tap-tap؛ ستاره‌گذاری ۱..۳ بر اساس خطا با SRS دوطرفه (درست→تثبیت+تلفظ، غلط→صف مرور).
+- پیشرفت ۸مرحله‌ای (ستاره‌ها + گره‌های تمام‌شده + ترتیب چالش‌ها) اسکوپ‌شده بر book×lesson در localStorage ماندگار است و Attempt سروری/رکورد «بیشترین ستاره» فقط در پایان دور کامل ثبت می‌شود.
+- برای QA مرورگری: setup → انتخاب درس → شروع → نقشهٔ مارپیچ → ۸ مرحله (ترتیب تصادفی هر دور) → ستاره‌های هر گره → مراسم پایان → «ماجراجویی جدید»؛ رفرش وسط دور باید «ادامه ماجراجویی» نشان دهد؛ درس کم‌واژه نباید گارد بخورد (کمینهٔ اسکوپ‌ها در شبیه‌سازی پاس شد).
+
+---
+Task ID: 4 (orchestrator — فاز ۴ کامل؛ زیرتسک‌های 4-a..4-i در بخش‌های جدا ثبت شدند + ادغام هاب/QA/رفع کرش توسط ارکستراتور)
+Agent: main orchestrator (Z.ai Code)
+Task: فاز ۴ نقشه راه جامع ۲۰۲۶ — آزمایشگاه بازی‌های فکری ۲ (۹ بازی: فلپی، مار و پله، جدول متقاطع، وردل، دارباز، سازنده جمله، دوئل، شکار صدا، نقشه ماجراجویی)
+
+Work Log:
+- ارکستریشن دو دسته ساب‌ایجنت موازی: دسته A (4-a فلپی / 4-b مار و پله / 4-c جدول / 4-d وردل / 4-e دارباز) و دسته B (4-f سازنده جمله / 4-g دوئل / 4-h شکار صدا / 4-i نقشه ماجراجویی) — دو عامل وسط لغو شدند اما فایل‌هایشان کامل بود؛ صحت‌سنجی دستی (export/انتهای فایل/lint/tsc) و ثبت worklog جایگزین برای 4-a/4-c/4-d انجام شد.
+- رفع ۲ اشکال ارکستراتوری: (۱) useMemo دستی activeWord در crossword خطای React Compiler می‌داد → IIFE بدون memo دستی؛ (۲) کرش ران‌تایم GamesHub «Cannot read properties of undefined (reading 'tile')» — نمای بازی فعال فقط در GAMES (۵ بازی فاز ۳) جست‌وجو می‌کرد؛ بازی‌های فاز ۴ در GAMES_EXTRA پیدا نمی‌شدند → fix: [...GAMES, ...GAMES_EXTRA].find.
+- ادغام هاب (python3 ایمن-ZWNJ): ۹ import + اتحاد GameKey ۱۴عضوی + آرایه GAMES_EXTRA (۹ کارت با آیکون‌های Bird/Dices/Grid3x3/SpellCheck2/Brain/Blocks/Swords/Headphones/Compass) + ۹ شاخه رندر + ادغام گرید کارت‌ها + Badge سربرگ «۱۴ بازی واژگانی و مهارتی».
+- QA مرورگری دو دور (agent-browser): دور ۱ → کشف کرش هاب و رفع؛ دور ۲ → ۹ کارت + badge OK، وردل/مار و پله/جدول/دارباز/سازنده/دوئل/شکار صدا/نقشه همگی OK؛ فلپی با اسکریپت دقیق‌تر: پرواز واقعی با Space/تپ، HUD (انصراف/امتیاز/کمبو/قلب) و «پرواز تمام شد!» + Attempt واقعی (POST /api/attempts 200).
+- گیم‌پلی عمیق: جدول متقاطع واقعاً از درس ۱ یازدهم جدول با سرنخ فارسی/شماره‌گذاری ساخت؛ مار و پله سؤال واقعی کتاب + پیام «تاس ۶ = نوبت اضافه»؛ نقشه ماجراجویی ۸ گره و چالش اول رندر شد.
+- رگرسیون: اسکریپت qa-phase3-regression → هاب ۵ بازی فاز ۳ + آمار یازدهم سالم؛ کنسول صفر خطا در همه دورها؛ lint 0 / tsc-src 0؛ اسکرین‌شات‌های بصری (فلپی canvas، setup مار و پله، جدول تولیدی، setup ماجراجویی) تأیید شدند.
+- تیک ۹ چک‌باکس + یادداشت QA فاز ۴ در فایل نقشه راه (python3).
+
+Stage Summary:
+- فاز ۴ کامل شد: آزمایشگاه ویژن‌وان اکنون ۱۴ بازی دارد — همه روی داده خود هر جزوه، با رکورد شخصی اسکوپ‌شده، Attempt سروری (category=نام بازی → آمار خودکار) و اتصال SRS (غلط → صف مرور).
+- نقاط تماس به‌روز: games-hub.tsx (GAMES + GAMES_EXTRA + GameKey — افزودن بازی جدید = import + یک آیتم + یک شاخه؛ دقت: find بازی فعال باید هر دو آرایه را بپوشاند)، shared.ts بدون تغییر، ۹ فایل بازی مستقل جدید.
+- نکته QA-tooling: در اسکریپت‌های agent-browser، refOf باید بلافاصله پس از SNAP تازه اجرا شود؛ snapshot کهنه باعث کلیک اشتباه/بی‌عمل شد (منشا WARNهای کاذب دور اول).
+- ریسک/یادداشت: فلپی بدون ورودی کاربر ~۳ ثانیه‌ای می‌بازد (طبیعی ژانر فلپی — پیام راهنمای کلیدهای Space/تپ در پایین canvas هست)؛ هوموفون‌ها در شکار صدا بدون داده phonetic فیلتر نمی‌شوند؛ push سمت سرور Attempt هنوز delta نیست (فاز ۱۱).
+
+---
+Task ID: 5-a
+Agent: orchestrator (Z.ai Code)
+Task: فاز ۵ نقشه راه ۲۰۲۶ — شوتر آموزشی اول‌شخص (Educational FPS): زیرساخت سه‌بعدی، دو حالت بازی، کنترل دسکتاپ/لمسی، کارایی و ثبت Attempt/SRS
+
+Work Log:
+- راستی‌آزمایی کامل فاز ۴ روی دیسک: هر ۹ بازی (4-a تا 4-i) موجود، worklog ثبت‌شده، ادغام ۱۴ بازیته هاب کامل، tsc/lint صفر، commit f6b4801 — فاز ۴ بسته شد
+- نقشه راه خوانده شد → فاز بعدی = فاز ۵ (شوتر آموزشی اول‌شخص)
+- نصب three@0.186.1 + @react-three/fiber@9.8.1 (+ @types/three) با bun
+- ساخت src/components/book/games/fps-shooter-game.tsx (~۹۵۰ خط):
+  * دو حالت: «شکار واژه» (معنی فارسی → واژه‌های انگلیسی از data.vocab) و «سد گرامری» (جملهٔ ناقص quiz.seed + ۴ گزینه)
+  * میدان low-poly رویه‌ای: زمین دایره‌ای + حلقه‌های راهنما، کوه‌های مخروطی، اجسام شناور با bob/spin، مه، دو نور ساده
+  * ۴ هدف اوکتاهدر متحرک (لِین/ارتفاع/عمق/بوب مستقل) با بیلبورد Sprite از CanvasTexture رویه‌ای (بدون drei/troika)
+  * انفجار رنگین‌کمانی: InstancedMesh ۳۶ ذره (۱۶ در دستگاه ضعیف) با instanceColor و جاذبه
+  * کنترل دسکتاپ: Pointer Lock + حرکت موس + شلیک از رتیکل مرکز؛ موبایل: درگ = نگاه، تپ روی هدف = شلیک؛ حالت دسترس‌پذیری «تپ ساده» + کلیدهای ۱..۴ (فارسی/انگلیسی)
+  * شلیک با Raycaster از NDC؛ cooldown ۵۵۰ms؛ شلیک به خالی جریمه ندارد
+  * تایمر هر سؤال (۱۲/۱۵ ثانیه، freeze بین سؤال‌ها)، ۳ قلب، کمبو تا ×۷ (امتیاز ۱۰ + ۲×کمبو)، reshuffle بی‌پایان استخر
+  * تطبیق پرتره: laneK بر اساس aspect + عقب‌رفتن دوربین (تأیید بصری در ۳۹۰px)
+  * تشخیص دستگاه ضعیف (hardwareConcurrency/deviceMemory) → dpr [1,1]، بدون antialias، ذرات کمتر
+  * الگوی طلایی: finish با touchStreak + recordStudySession + bumpPlays + saveAttempt(detail: mode/tap/maxCombo) + saveBest {score} per-scope (word|grammar × -tap) + seedReviewFromQuiz روی هر خطا
+  * react-hooks v6: صفر setState در بدنهٔ effect، latest-ref برای onHit/timeout/advance/voiceSpeed، پاکسازی کامل (تایمرها، Pointer Lock، stopSpeaking، dispose texture)
+  * جهش THREE فقط در توابع ماژول‌سطح (applyRig/initRig) برای رعایت react-hooks/immutability
+- ادغام در games-hub.tsx: next/dynamic با ssr:false و skeleton «بارگذاری موتور سه‌بعدی» (چانک lazy — صفر تأثیر روی بقیهٔ اپ) + GameKey «fps-shooter» + کارت با آیکون Crosshair + شمارنده «۱۵ بازی»
+- رفع ۲ خطای react-hooks/immutability (mutation دوربین/bridge در useFrame → توابع ماژول‌سطح)
+- tsc --noEmit: صفر خطا در src/ | eslint: صفر خطا/هشدار
+- QA مرورگری (agent-browser): ورود → بازی‌ها → کارت شوتر → ست‌آپ (۱۴۸۸ واژه/چیپ درس‌ها) → تپ ساده + شروع → صحنه سه‌بعدی رندر (اسکرین‌شات) → گیم‌پلی با کلید ۱..۴ → ۱ شلیک درست/۳ خطا → صفحه پایان (امتیاز ۱۰، کمبو ×۱، واژه‌های غلط‌زده e-ticket/eraser/ideal + «به مرور اضافه شد») → حالت سد گرامری (سؤال LTR Penicillin + گزینه‌ها روی اهداف) → POST /api/attempts 200 ×۳ → موبایل ۳۹۰px سالم → هاب «۱۵ بازی واژگانی و مهارتی»
+- تیک ۷ چک‌باکس فاز ۵ + عنوان «✅ تمام شد» در نقشه راه
+
+Stage Summary:
+- فاز ۵ کامل و راستی‌آزمایی‌شده؛ بازی شوتر آموزشی پانزدهمین بازی آزمایشگاه است
+- فایل‌های کلیدی: fps-shooter-game.tsx (جدید)، games-hub.tsx (ادغام lazy)، package.json (three/R3F)، نقشه راه (تیک فاز ۵)
+- تصمیم‌ها: بدون @react-three/drei (برچسب‌ها با CanvasTexture رویه‌ای)؛ برچسب هدف‌ها فقط انگلیسی؛ اسکوپ رکورد word/grammar ± tap
+- باگ شناخته‌شدهٔ بی‌اهمیت: هشدار deprecation THREE.Clock از R3F داخلی — بی‌ضرر
+- گام بعدی پیشنهادی: فاز ۶ (گیمیفیکیشن: XP، زنجیره، سکه، نشان‌ها، ماموریت روزانه، رده‌بندی، Confetti)
+
+---
+Task ID: 6-a
+Agent: subagent (rewards-view)
+Task: نمای جایزه‌های گیمیفیکیشن (فاز ۶)
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۵ و آرشیو فاز ۴) + امضای دقیق استورهای فاز ۶ از دیسک (xp-store/mission-store/badge-store/streak-store/accent-store/book-context/gamification) — همه مطابق قرارداد تسک؛ confetti.tsx بررسی شد (توست سراسری XP/نشان/ماموریت از قبل نصب است → claim بدون توست اضافی).
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/rewards-view.tsx (۷۷۴ خط، "use client"، export نام‌دار RewardsView بدون props) — هیچ فایل دیگری تغییر نکرد، هیچ ناوبری‌ای از نما وجود ندارد.
+- بخش ۱ — کارت خلاصه (گرادیانی مثل هدر هاب): حلقهٔ سطح SVG با stroke-dasharray و انیمیشن transition-offset، شمارهٔ سطح بزرگ وسط + «inLevel / need XP» + Progress افقی؛ سه pill (🪙 سکه با تم amber، 🔥 زنجیرهٔ فعلی + «بهترین» + ❄ ×n شرطی با تم teal، ✨ XP کل)؛ بلوک «سقف روزانهٔ XP» با dayXp/DAILY_CAP و توضیح ضدتقلب کمانه‌ای.
+- بخش ۲ — ماموریت‌های امروز: ردیف هر کوئست (emoji + عنوان + جایزهٔ «+n XP، +m 🪙» + Progress با شمارندهٔ فارسی «n / t»)؛ دکمهٔ «گرفتن جایزه» disabled تا done، claimMission فقط در onClick، بعد از claim → Badge muted «گرفته شد ✓»؛ پیام amber «امروز همهٔ ماموریت‌ها را گرفتی! فردا ۳ مأموریت تازه می‌آید» وقتی هر سه claimed.
+- بخش ۳ — Tabs سه‌گانه (TabsList گرید کامل موبایل، triggerها min-h-11):
+  * تب نشان‌ها: گرید ۲/۳/۴ ستونیِ ۸ نشان BADGES با رندر خالص از useBadges (بدون snapshot در رندر)؛ باز‌شده: border-amber-500/40 + «🔓 باز شده» + «+n 🪙»؛ قفل: opacity-60 + grayscale روی emoji.
+  * تب فروشگاه: (الف) گرید ۸ تم ACCENTS با swatch دایره‌ای؛ سه حالت دکمه: Badge «فعال» (غیرفعال) / «فعال‌سازی» → applyAccent / «خرید n 🪙» (amber) → spendCoins(`theme:id`) → markOwned + applyAccent + toast.success، شکست → toast.error «سکه کافی نداری»؛ emerald همیشه owned (accentOwned). (ب) گرید ۸ آواتار PREMIUM_AVATARS: خرید → spendCoins(id) + markOwned + toast؛ متعلق → «انتخاب» → equipAvatar؛ انتخاب‌شده → Badge «پوشیده» + دکمهٔ disabled. کارت «❄ یخ‌زنندهٔ زنجیره» (teal): قیمت ۳۰، توضیح جبران روز غیبت، انبار {freezes}/۷، خرید → spendCoins("streak-freeze") → grantFreeze + toast؛ freezes>=۷ → disabled «انبار پر است».
+  * تب رده‌بندی هفتگی (کامپوننت مجزا LeaderboardSection): fetch /api/leaderboard?book={bookId} در useEffect با AbortController + گارد cancelled و setState فقط داخل then/catch (react-hooks v6)؛ state به‌شکل {bookId, data} اسکوپ‌شده تا بعد از سوییچ جزوه، داده کهنه رندر نشود؛ Skeleton حین بارگذاری؛ گاردها: bookId null → پیام «جزوه را از قفسه باز کن»، خطا → پیام محترمانه 🌱، rows خالی → «هنوز این هفته کسی امتیاز نگرفته — تو اولین باش!»؛ ردیف‌ها: 🥇🥈🥉 برای ۱..۳ و عدد فارسی برای بقیه، آواتار emoji یا دایرهٔ UserRound، «xp XP» (amber)، «دقت n٪»، «n آزمون» + خط «جای تو در این هفته» از me + توضیح «رده‌بندی دوستانهٔ هفتهٔ جاری (از شنبه)».
+- سبک/دسترس‌پذیری: کارت‌های rounded-3xl/rounded-2xl bg-card/60، p-4 sm:p-6، گرید gap-3/4 موبایل‌فرست؛ فقط emerald/amber/teal + توکن‌های معنایی (صفر indigo/blue/violet)؛ همهٔ اعداد faNum؛ همهٔ دکمه‌ها min-h-11؛ aria-label/aria-hidden/aria-busy روی عناصر بی‌متن و Progressها؛ cleanup کامل اثر fetch (cancelled + ctrl.abort).
+- راستی‌آزمایی: bun run lint → خروجی خالی (صفر خطا/هشدار کل پروژه)؛ bunx tsc --noEmit | grep -i rewards → خالی (فقط خطاهای پیش‌موجود examples/scripts/skills/tool-results خارج از src)؛ dev.log → «✓ Compiled» بدون خطا؛ python: صفر U+FFFD، ۵۳ نویسهٔ ZWNJ سالم، بدون any و بدون non-null assertion، کلاس‌های ممنوعهٔ رنگی صفر. عدم توازن پرانتز (‎-6‎) فقط از شماره‌گذاری «۱)» در کامنت‌های سربرگ/بخش است — کد تراز است (tsc پاس).
+
+Stage Summary:
+- نمای «جایزه‌ها» کامل و آمادهٔ سیم‌کشی توسط ارکستراتور است: افزودن import { RewardsView } از "./rewards-view" + یک شاخهٔ رندر در سوییچ نماها کافی است (ویو به BookProvider/Toaster وابسته است، بدون نیاز به prop).
+- قرارداد fetch رده‌بندی: GET /api/leaderboard?book={bookId} → { weekStart, rows[{name,avatar,xp,quizzes,answered,accuracy}], me{xp,rank}|null } — accuracy به‌صورت درصد صحیح رندر می‌شود (هم‌راستا با attempts API)؛ سرور باید rows را نزولی بر xp و حداکثر ۲۰ ردیف بفرستد.
+- تصمیم‌ها: پیشرفت زندهٔ نشان‌های عددی حذف شد (پیشنهاد تسک: رندر خالص useBadges)؛ دکمهٔ «آزمایشگاه بازی‌ها» طبق تسک حذف شد؛ claim توست جدا ندارد چون توست سراسری GamificationToasts جایزهٔ XP/سکه را اعلام می‌کند.
+- ریسک/یادداشت: قبل از ساخت سرور، تب رده‌بندی Skeleton یا پیام محترمانهٔ خطا می‌بیند (بدون کرش)؛ سوییچ جزوه حین لود با abort+اسکوپ state ایمن است؛ گرید تم‌ها در موبایل تک‌ستونه و در lg سه‌ستونه است.
+
+---
+Task ID: 6 (orchestrator — فاز ۶ کامل؛ زیرتسک 6-a نمای جایزه‌ها با ساب‌ایجنت، 6-b..6-d و QA با ارکستراتور)
+Agent: main orchestrator (Z.ai Code)
+Task: فاز ۶ نقشه راه جامع ۲۰۲۶ — گیمیفیکیشن و انگیزه روزانه (XP/سطح، زنجیره+یخ، سکه+فروشگاه، نشان‌ها، ماموریت روزانه، رده‌بندی هفتگی، کانفتی)
+
+Work Log:
+- موتور گیمیفیکیشن سمت کلاینت (۵ استور جدید با الگوی useSyncExternalStore کش‌شده):
+  * xp-store.ts — XP کل/روزانه + منحنی سطح (۸۰+۴۰(n-1)) + سکه با پاداش سطح‌جهش (۵×سطح) + ضدتقلب: سقف روزانه ۴۰۰ XP و نرخ کمانه‌ای ۱۵٪ برای مازاد
+  * badge-store.ts — ۸ نشان (آزمون ۱۰۰، ۷روز، شکارچی واژه ۱۰۰، قهرمان دوئل، خلبان فلپی ۵۰، کاوشگر ۱۰بازی، مرورگر حرفه‌ای، ستارهٔ پنج) با evaluateBadges رویدادی + collectGameStats از localStorage
+  * mission-store.ts — ۳ کوئست دترمینیستیک روزانه (seed = epochDay) از استخر ۶تایی + claim دستی
+  * streak-store.ts — افزوده شدن freezes + grantFreeze + پل‌زدن روزهای غیبت با یخ در touchStreak
+  * accent-store.ts — ۸ تم رنگی (بدون آبی/نیلی) با override متغیرهای --primary/--ring/--chart-1 در دو حالت روشن/تیره + فروشگاه آواتار پریمیوم + بازاعمال microtask پس از رفرش
+- gamification.ts — نقطهٔ تماس واحد: awardGameActivity (بازی‌ها) / awardQuizActivity / awardReviewActivity / awardPracticeWords / awardLearnedWord / notifyActivity → همه: XP + ماموریت + نشان + زنجیره
+- اتصال‌ها: shared.ts (saveAttempt → موتور + نام مهمان در Attempt + تشخیص خودکار رکورد score/time/moves در saveBest → emitRecord)، quiz-game finish، review-view (againRef برای شمارش صحیح)، flashcard-view، learned-store (toggle → awardLearnedWord)، theme-store (reapplyAccent در setDark)
+- 6-a ساب‌ایجنت: rewards-view.tsx (۷۷۴ خط) — کارت سطح حلقه‌ای + ماموریت‌ها + تب نشان‌ها/فروشگاه/رده‌بندی + یخ زنجیره؛ lint/tsc صفر
+- 6-b: /api/leaderboard — XP هفتگی از Attempt واقعی (درست×۱۰+۲۵)، پنجرهٔ شنبه‌محور، گروه‌بندی نام نمایشی/کاربر حساب‌دار، «جای تو» برای حساب‌دارها
+- 6-d: ناوبری «جایزه‌ها» (Trophy) + مونتاج در page.tsx + GamificationToasts/ConfettiCanvas سراسری + نوار سطح/سکه در دیالوگ پروفایل
+- confetti.tsx — کانفتی کانواسی بی‌وابستگی (dt-based، rAF، cleanup کامل) + توست‌های sonner برای XP≥۱۵/سطح‌جهش/نشان/ماموریت/رکورد
+
+باگ‌های شکارشده در QA (agent-browser):
+1. کرش هیدریشن useBadges — getServerSnapshot شیء تازه + read بی‌کش → EMPTY_UNLOCKED ثابت + badgeCache
+2. mission-store — همین الگو → SERVER_MISSIONS ثابت
+3. کلید بازی «memory» ≠ «match» در awardGameActivity → ماموریت تطبیق ثبت نمی‌شد
+4. رده‌بندی خالی: Attempt بازی‌ها name نداشت → readUserName() در saveAttempt
+5. SW (PWA) چانک کهنه را سرو می‌کرد → unregister + پاک‌سازی caches برای تست
+6. فریز کل اپ پس از ویرایش‌های متوالی: آلودگی HMR توربوپک (دو نمونهٔ موازی ماژول استور → «getSnapshot should be cached») → ری‌استارت تمیز dev-server حل کرد؛ با restore کامپوننت‌ها دوباره تأیید شد
+
+QA مرورگری موفق: ۴ دور تطبیق حافظه (+۳۰XP هرکدام، رکورد «۴ حرکت»)، تست برقی ×۲ (Attempt سروری)، فلپی (گارد total>0)، واژهٔ تازه (+۳XP + practice-20:1)، claim ماموریت (+۲۵XP/+۵🪙 + «گرفته شد ✓»)، سطح‌جهش سطح ۲ (+۱۰🪙)، خرید تم teal (-۱۲۰🪙، --primary زنده در روشن/تیره، پایدار پس از رفرش)، خطای «سکه کافی نداری»، خرید یخ (-۳۰🪙، freezes:1)، رده‌بندی: ردیف 🥇 آرش ۲۵XP، موبایل ۳۹۰px بدون اسکرول افقی، مرور SRS بدون کرش، lint 0 / tsc-src 0
+
+Stage Summary:
+- فاز ۶ کامل شد: ویژن‌وان اکنون حلقهٔ انگیزهٔ کامل دارد — فعالیت → XP/سطح → سکه → فروشگاه (تم/آواتار/یخ) → هویت بصری شخصی + ماموریت روزانه + نشان + رده‌بندی دوستانه هفتگی
+- فایل‌های کلیدی: src/lib/{xp,badge,mission,accent}-store.ts، src/lib/gamification.ts، src/components/book/{rewards-view,confetti}.tsx، src/app/api/leaderboard/route.ts + اتصال‌ها در shared/quiz/review/flashcard/learned/theme/name
+- قراردادها: افزودن نشان جدید = یک عضو در BADGES؛ افزودن کوئست = یک عضو در QUEST_POOL؛ افزودن تم = یک عضو در ACCENTS؛ هیچ setState در بدنهٔ effect (الگوی v6 رعایت شد)
+- نکتهٔ ابزار: پس از ویرایش‌های زیاد روی ماژول‌های استور، در صورت رفتار عجیب هیدریشن اول dev-server را تمیز ری‌استارت کنید (آلودگی HMR) و در تست PWA، SW/caches را پاک کنید
+- گام بعدی پیشنهادی: فاز ۷ (صدا، تلفظ و مکالمه — TTS همه‌جا + ASR «بگو ببینم» + Shadowing)
+
+---
+Task ID: 7-a
+Agent: subagent (say-it)
+Task: کامپوننت «بگو ببینم» — تمرین تلفظ واژه با میکروفن (ASR) و نمره شباهت
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۶ و آرشیو فاز ۴/۵) + امضای زیرساخت فاز ۷ از دیسک (asr-client/similarity/speak/voice-store/gamification) + قرارداد useBookData و شکل واقعی vocab (BookVocabApi: lessons/all/ofLesson با VocabEntry {word, meaning, lesson, pos?}) — labelهای درس vision-one با «—» جدا می‌شوند؛ تب‌ها از split برچسب کوتاه می‌سازند («درس ۱»، «پایه ۷ تا ۹»).
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/speaking/say-it.tsx (۶۷۰ خط، "use client"، export نام‌دار SayItPractice بدون props) — هیچ فایل دیگری تغییر نکرد، ناوبری وجود ندارد، سرور dev دست‌کاری نشد.
+- انتخاب واژه: تب‌های درس (rounded-full، الگوی texts-view، min-h-11 با aria-pressed) + دکمه «واژه تصادفی» (Dices، غیرفعال اگر استخر < ۲) + گرید چیپ واژه (grid-cols-2 → sm:3 → md:4، max-h-96 overflow-y-auto، چیپ فعال border-primary bg-primary/10)؛ هر چیپ واژه LTR font-en + معنی فارسی truncated؛ gaud حالت processing همه انتخاب‌ها را disabled می‌کند (جلوگیری از ارزیابی روی واژه اشتباه).
+- صحنه تمرین: واژه text-4xl font-black text-primary با dir=ltr + معنی + Badge درس/pos؛ SpeakButton (h-11 w-11) برای روخوانی الگو + دکمه «آهسته» (speak با speed 0.7)؛ دایره میکروفن h-16 w-16 bg-primary با سه فاز: idle (Mic) → recording (animate-pulse + ring-8 + موج soundwave پنج‌تایی + شمارنده ثانیه faNum با سقف ۷) → processing (Loader2 spin + aria-busy).
+- جریان ضبط: کلیک اول startRecording(7000) درون try/catch — خطای getUserMedia → پیام کهربایی «دسترسی میکروفن داده نشد…» + باز شدن جایگزین تایپی؛ کلیک دوم یا auto-stop تایمر ۷ثانیه‌ای → stop() → AsrResult؛ گارد دوبار-فراخوانی با خنثی‌سازی recorderRef پیش از await؛ قبل از ضبط stopSpeaking (صدای الگو داخل ضبط نیفتد)؛ سوییچ واژه/درس حین ضبط → cancel فوری.
+- نتیجه: دایره نمره SVG با stroke-dasharray (الگوی rewards-view) — great=emerald-500، good=amber-500، try=amber-600 (بدون آبی/نیلی/بنفش) + برچسب scoreLabel + «شنیدم: "…"» dir=ltr با role="status" + «دوباره بگو» (شروع مجدد ضبط؛ در حالت بدون پشتیبانی → فوکوس Input) + «واژه بعدی» (چرخش استخر).
+- خطای AsrResult.ok=false → پیام amber با متن error + دکمه «تلاش دوباره» (role="alert")؛ هرگز کرش نمی‌کند (خطای stop هم catch می‌شود).
+- جایگزین «تایپ کن ببینم»: وقتی isRecordingSupported=false (useSyncExternalStore با اسنپ‌شات کش‌شده، server snapshot خوش‌بینانه true) یا اجازه میکروفن رد شده → Label + Input dir=ltr font-en + دکمه «بررسی» (min-h-11، disabled تا متن نباشد، Enter هم بررسی می‌کند) → همان مسیر evaluateAnswer.
+- گیمیفیکیشن: بعد از هر ارزیابی (میکروفن یا تایپ) — score>=60 → awardPracticeWords(1) وگرنه notifyActivity()؛ آمار جلسه بالای صحنه: «تمرین امروز: n واژه · میانگین: m» (میانگین این جلسه، faNum، حالت خالی «—»).
+- react-hooks v6: صفر setState در بدنهٔ effect — پشتیبانی ضبط با useSyncExternalStore (read کش‌شده در سطح ماژول)، فقط یک effect با [] برای cleanup (clearInterval/clearTimeout + recorderRef.current?.cancel() + stopSpeaking)؛ نوشتن ref فقط در handler/async — هیچ latest-ref لازم نشد (واژه هدف در زمان شروع ضبط capture می‌شود)؛ هیچ state مشتق‌شده ذخیره نشده (میانگین/تب مؤثر/واژهٔ فعال در رندر حساب می‌شوند؛ effectiveLesson بدون effect سوییچ کتاب را جذب می‌کند).
+- راستی‌آزمایی: bun run lint → خروجی خالی (exit 0)؛ bunx tsc --noEmit | grep say-it → خالی (فقط ۱۰ خطای پیش‌موجود examples/scripts خارج از src)؛ python: ۶۷۰ خط، صفر U+FFFD، ۲۱ نویسهٔ ZWNJ سالم، صفر any، صفر non-null assertion، صفر کلاس رنگ ممنوعه، آکولاد/پرانتز تراز؛ مسیرهای /api/asr و /api/tts موجود بودند.
+
+Stage Summary:
+- قرارداد export: `import { SayItPractice } from "@/components/book/speaking/say-it";` — بدون props؛ باید داخل نمای دارای BookProvider رندر شود (useBookData می‌خواند؛ مثل بقیه ویوها فقط وقتی data کتاب آماده است مونت شود) و Toaster سراسری موجود است.
+- پیشنهاد مونت: یک شاخهٔ جدید در سوییچ نماها (مثلاً view === "say-it" یا داخل تب Speaking فاز ۷) + آیتم ناوبری با آیکون Mic؛ کامپوننت خودش max-w-2xl mx-auto دارد و در موبایل ۳۹۰px بدون اسکرول افقی است.
+- نکات: نمره از similarityScore(word, said) ۰..۱۰۰؛ XP فقط از مسیر awardPracticeWords/notifyActivity طبق تسک (بدون Attempt سروری/SRS — اگر ارکستراتور خواست می‌تواند در ادغام اضافه کند)؛ auto-stop داخلی asr-client هم ۷ ثانیه است و با تایمر خود کامپوننت هم‌پوشان ولی بی‌تعارض است؛ در QA مرورگری اجازهٔ میکروفن باید دستی داده شود، وگرنه مسیر «تایپ کن ببینم» فعال می‌شود (خودش تست‌پذیر است).
+---
+Task ID: 7-b
+Agent: subagent (roleplay+shadowing)
+Task: مکالمه نقش‌محور (Roleplay) + سایه‌خوانی خط‌به‌خط (Shadowing)
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۶ و الگوی طلایی بازی‌ها) + زیرساخت فاز ۷ (asr-client، similarity، speak، voice-store، speak-button، gamification، word-lookup، games/shared) + types.ts (Conversation/Reading) + book-context؛ /api/asr و /api/tts آماده بودند. الگوی react-hooks سخت‌گیر از listening-hunt-game برداشت شد.
+- دقیقاً دو فایل جدید ساخته شد (هیچ فایل دیگری تغییر نکرد؛ هیچ ناوبری‌ای از نماها صادر نمی‌شود): src/components/book/speaking/roleplay-view.tsx (۹۰۵ خط، export نام‌دار RoleplayPractice بدون props، "use client") و src/components/book/speaking/shadowing-view.tsx (۷۹۱ خط، export نام‌دار ShadowingPractice بدون props، "use client").
+- RoleplayPractice چهار فاز دارد (pick/role/play/done): گرید کارت‌های مکالمه (titleFa + تعداد خط با faNum + Badge درس) ← صفحهٔ نقش با دو کارت بزرگ (نقش A = خطوط زوج emerald، نقش B = فرد amber، نام speakerها از خود خطوط استخراج و count هر نقش با faNum) + دکمهٔ سوم «فقط گوش بده» (پخش کل مکالمه با TTS و skip خودکار خطوط کاربر → مراسم ساده + «حالا نقش بگیر»).
+- بازی مکالمه: حباب‌های چت به سبک texts-view (زوج چپ emerald ملایم / فرد راست amber ملایم + آواتار دایره‌ای با حروف نام) که تا خط فعلی ساخته می‌شود؛ خطوط نقش مقابل پخش خودکار با speak(line.en, {speed}) + انیمیشن «حرف می‌زند…» (سه نقطهٔ bounce با animationDelay) + دکمهٔ «دوباره پخش» روی هر حباب (اگر خطِ نوبتِ مقابل باشد، مکالمه بعد از پخش ادامه می‌یابد).
+- نوبت کاربر «حالا نوبت توئه»: (الف) گفتار — دکمهٔ میکروفن min-h-14 با Mic → startRecording → توقف (یا تایمر محافظ ۷.۴ ثانیه‌ای، چون autoStop داخلی asr-client نتیجه را برنمی‌گرداند) → AsrResult → similarityScore → نمرهٔ ۰..۱۰۰ روی حباب با رنگ (>=۸۵ emerald، >=۶۰ amber، کمتر نارنجی ملایم — scoreLabel) + «شنیدم: …» با dir=ltr؛ (ب) تایپ — دکمهٔ «به‌جای گفتن، تایپ کن» / Input + ثبت با همان سنجه. خطای ASR/میکروفن → کارت amber محترمانه + «تلاش دوباره / تایپ می‌کنم» — بدون کرش؛ مرورگر بی‌ضبط → toast.info و هدایت خودکار به تایپ.
+- ناوبری مکالمه: «رد شدن» (skip بی‌نمره؛ صدا/ضبط را متوقف و زنجیره را ابطال می‌کند) + «بعدی» فقط بعد از نمره (خط آخر: «پایان مکالمه») + Progress بالای صحنه «خط n از m» + «اتمام و خروج» (stopSpeaking + cancel ضبط + ابطال نشست) ← برگشت به انتخاب مکالمه. مراسم: دقت میانگین + شمارش عالی/خوب + تعداد ردشده + notifyActivity() + «مکالمه دیگر».
+- ShadowingPractice سه فاز دارد (pick/practice/done): کارت‌های readings (titleFa + تعداد پاراگراف faNum + درس)؛ هر پاراگراف یک «خط» با شمارهٔ faNum + ClickableEnText + ترجمهٔ جمع‌شدنی با Switch «ترجمه»؛ خط فعال ring-2 ring-primary و scrollIntoView({block:"center"}) فقط داخل goToLine (callback) نه در رندر.
+- چرخهٔ هر خط: سه دکمهٔ بزرگ شماره‌دار «۱ گوش بده» (Volume2) / «۲ تکرار کن» (Mic — ضبط دستی + نمرهٔ similarity روی کارت؛ مرورگر بی‌ضبط → toast و تکرار شفاهی) / «۳ خط بعد» (ArrowLeft — جهت RTL؛ خط آخر «پایان متن» با Flag).
+- کنترل‌های کلی: Switchهای «آهسته» (speed 0.7) / «ترجمه» / «پخش خودکار» / «حالت ضبط» + قبلی/بعدی دستی (ArrowRight/ArrowLeft) + «پایان تمرین» + «خروج»؛ چرخهٔ خودکار: play ← onEnd ← (اگر «حالت ضبط» روشن باشد ۱.۲s مکث برای تکرار شفاهی — بدون ضبط خودکار) ← خط بعد؛ اگر کاربر با «تکرار کن» مشغول ضبط باشد چرخه تا پایان ضبط صبر می‌کند. Progress «خط n از m» + «تمرین‌شده: ٪n» (خطوط پشت‌سرگذاشته). مراسم: خطوط تمرین‌شده + میانگین نمره + خط عالی + notifyActivity() + «تمرین دوباره / متن دیگر».
+- react-hooks v7: صفر setState در بدنهٔ effect؛ الگوی latest-ref (advanceRef/speakLineRef/finishRef/stopAndScoreRef و playLineRef/goToRef/scheduleAdvanceRef با effect بدون dep)؛ گارد token روی همهٔ زنجیره‌های صدا (chainRef + sessionRef در roleplay) و onceEnd برای onEnd دومرحله‌ای (onerror+catch)؛ guard نتیجهٔ ASR با session/lineIdx/aliveRef؛ cleanup کامل unmount (stopSpeaking + cancel ضبط + clearTimeout هر دو تایمر).
+- راستی‌آزمایی: bun run lint → خروجی خالی و exit 0؛ bunx tsc --noEmit | grep "roleplay|shadowing" → خالی (فقط خطاهای پیش‌موجود examples/scripts/skills/tool-results خارج از src؛ اشکال اولیهٔ Timeout-vs-number در ref تایمرها با useRef<number|null> رفع شد)؛ python: صفر U+FFFD، صفر any، صفر non-null assertion، صفر رنگ ممنوعه (فقط emerald/amber/teal + نارنجی مجازِ نمره + توکن‌های معنایی)، آکولاد/پرانتز تراز، ۴۷/۴۵ نویسهٔ ZWNJ سالم؛ git status: فقط پوشهٔ src/components/book/speaking/ افزوده شد (say-it.tsx هم‌پوشه متعلق به تسک موازی است و دست نخورد).
+
+Stage Summary:
+- قرارداد مونت (ارکستراتور): import { RoleplayPractice } from "@/components/book/speaking/roleplay-view" و import { ShadowingPractice } from "@/components/book/speaking/shadowing-view" — هر دو بدون props و باید داخل BookProvider (نیازمند useBookData) مونت شوند؛ «خروج/اتمام و خروج» فقط به صفحهٔ انتخاب خودِ نما برمی‌گردد و هیچ requestView ای صادر نمی‌شود.
+- زیرساخت مصرف‌شده: asr-client (startRecording/isRecordingSupported)، similarity (similarityScore/scoreLabel)، speak/stopSpeaking با useVoiceSpeed، SpeakButton (شنیدن جملهٔ نقش)، ClickableEnText، notifyActivity، faNum — بدون هیچ تغییری در این فایل‌ها.
+- نکتهٔ رفتاری: autoStop داخلی asr-client فقط ضبط را قطع می‌کند و به سرور نمی‌فرستد؛ هر دو نما با تایمر محافظ خودکار (۷.۴s) این را جبران می‌کنند. پخش خودکار TTS همیشه از دل کلیک کاربر شروع می‌شود (سیاست autoplay).
+- ریسک/یادداشت: iOS ممکن است پخش و ضبط هم‌زمان را محدود کند — همهٔ خطاها محترمانه به مسیر تایپ (roleplay) یا تکرار شفاهی (shadowing) می‌روند؛ در ۳۹۰px همهٔ گریدها تک‌ستون و بدون اسکرول افقی‌اند؛ هر دو نما در unmount صدا و ضبط را کامل پاک می‌کنند.
+
+---
+Task ID: 7 (orchestrator — فاز ۷ کامل؛ زیرتسک‌های 7-a/7-b با ساب‌ایجنت موازی، زیرساخت ASR + ادغام + QA با ارکستراتور)
+Agent: main orchestrator (Z.ai Code)
+Task: فاز ۷ نقشه راه جامع ۲۰۲۶ — صدا، تلفظ و مکالمه (TTS همه‌جا + آهسته، بگو ببینم ASR، مکالمه نقش‌محور، Shadowing، کش آفلاین صوت)
+
+Work Log:
+- زیرساخت ASR سراسری توسط ارکستراتور: /api/asr (z-ai SDK سمت سرور، گاردهای 400/413/422/502 با پیام فارسی)، src/lib/asr-client.ts (MediaRecorder با انتخاب mime webm/mp4، auto-stop ۷ث، cancel، blob→base64)، src/lib/similarity.ts (نمره دو-سنجه‌ای: واژه‌ای جفت‌ساز بهترین‌ها با آستانه 0.72 ×۰.۶ + Levenshtein نویسه‌ای ×۰.۴، برچسب‌های 85/60)
+- 7-a ساب‌ایجنت: speaking/say-it.tsx (۶۷۰خط) — تمرین تلفظ واژه: تب‌های درس + واژه تصادفی، دایره میکروفن سه‌فاز، جایگزین تایپی خودکار، دایره نمره SVG، awardPracticeWords/notifyActivity
+- 7-b ساب‌ایجنت: speaking/roleplay-view.tsx (۹۰۵خط، مکالمه نقش‌محور: انتخاب نقش A/B + فقط گوش بده، TTS خودکار نقش مقابل، نوبت کاربر با میکروفن/تایپ، نمره روی حباب) + speaking/shadowing-view.tsx (۷۹۱خط، چرخهٔ «گوش بده/تکرار کن/خط بعد» + آهسته/ترجمه/پخش خودکار/حالت ضبط + scrollIntoView در callback)
+- ادغام ارکستراتوری: speaking-view.tsx (۳تب) + ViewId «speaking» در nav-store + آیتم Mic «گفتار» در NAV هدر + رندر در page.tsx
+- speak.ts دولایه شد: memory objectURL + Cache Storage «visionone-audio-v1» (سقف ۴۰۰، FIFO trim) — رفع باگ clone: res.clone() باید قبل از مصرف body صدا زده شود وگرنه کش خالی می‌ماند (اشکال‌زدایی با cache.keys از agent-browser)
+- SpeakButton.showSlow (Snail 0.7×) در واژگان نمای جدول + فلش‌کارت واژه بزرگ + دیکشنری
+- QA مرورگری: ناوبری «گفتار» فعال، بگو ببینم نمره ۱۰۰/۱۰۰ تایپی «baker» + پیام محترمانه رد اجازه میکروفن + جایگزین تایپی، مکالمه نقش‌محور: خط ۱/۸ نوبت کاربر → تایپ → ۱۰۰/۱۰۰ → بعدی → خط ربات با TTS واقعی (POST /api/tts 200) → دوباره پخش، شنیدار و تکرار: ۲ ریدینگ یازدهم + چرخه سه‌دکمه‌ای، /api/asr بدنه خالی → 400 فارسی، کش آفلاین: ۲ ورودی معتبر (۱۱۴KB WAV)، رگرسیون: هاب ۱۵ بازی + متن‌ها + واژگان سالم، موبایل ۳۹۰px بدون اسکرول افقی، کنسول صفر خطا، lint 0 / tsc-src 0
+- تیک ۵ چک‌باکس + یادداشت QA فاز ۷ در نقشه راه (python3)
+
+Stage Summary:
+- فاز ۷ کامل شد: حلقهٔ Speaking کامل — الگو (TTS آهسته) → تمرین (بگو ببینم) → کاربرد (مکالمه نقش‌محور) → تعمیق (سایه‌خوانی) → آفلاین (کش صوت)
+- فایل‌های کلیدی: src/app/api/asr/route.ts، src/lib/{asr-client,similarity}.ts، src/components/book/speaking/{say-it,roleplay-view,shadowing-view}.tsx، speaking-view.tsx، speak.ts (دولایه)، speak-button.tsx (showSlow) + سیم‌کشی nav/page/header
+- قرارداد: افزودن تمرین گفتاری جدید = استفاده از startRecording/sendToAsr + similarityScore؛ صدای جدید = speak() خودش دو-لایه کش می‌کند
+- ریسک/یادداشت: سافاری iOS MediaRecorder در mp4 ضبط می‌کند (ارسال با mime واقعی)؛ ASR سرور گاهی 422 «صدای واضح شنیده نشد» می‌دهد — UI مسیر تلاش دوباره/تایپ دارد؛ تایمر محافظ ۷.۴ث در roleplay برای جبران autoStop خاموش
+- گام بعدی پیشنهادی: فاز ۸ (دستیار هوشمند ۲.۰ — معلم خصوصی، داستان‌ساز، تصویرسازی حافظه، چت شخصیت‌ها، تحلیل خطا، سؤال‌ساز بی‌پایان)
+
+---
+Task ID: 8-round2 (orchestrator — رفع لهجه چینی TTS + فاز ۸ بخش A با ساب‌ایجنت تکمیل‌شدهٔ دستی)
+Agent: main orchestrator (Z.ai Code)
+Task: پاسخ به فیدبک کاربر «TTS شبیه صدای چینی‌هاست» + ادامهٔ نقشه راه (فاز ۸ بخش A: معلم خصوصی + داستان‌ساز)
+
+Work Log:
+- ریشه‌یابی لهجه چینی: صدای اپ از /api/tts → z-ai SDK می‌آمد که واج‌شناسی ماندارین دارد (صداها: tongtong/chuichui/xiaochen/… و jam هم پایه چینی)
+- راه‌حل: voice-store توسعه یافت (engine: browser|cloud، پیش‌فرض browser، persist localStorage) + speak.ts دو-موتوری شد: «بومی مرورگر» (speechSynthesis با انتخاب بهترین صدای en-GB/en-US امتیاز‌دهی‌شده: natural/neural > google > Samantha/daniel… + نرخ سرعت همان مقیاس + انتظار voiceschanged تا ۱ث) و «سرور» (مسیر قبلی با کش دولایه) — گارد شفاف: مرورگر بی‌صدا → fallback به سرور؛ stopSpeaking هر دو موتور را می‌بندد
+- UI: گروه «موتور صدا» (AudioLines) کنار «سرعت روخوانی» در واژگان — آپشن بومی اگر صدای انگلیسی نداشته باشد disabled خط‌خورده (state در callback، react-hooks v6 سالم)
+- QA مرورگری: هدلس کروم صفر صدا → بومی disabled و کلیک پخش → POST /api/tts 200 (fallback کار می‌کند)؛ سناریوی دستگاه واقعی (iOS/اندروید/دسکتاپ) صدای Native می‌گیرد
+- فاز ۸-A: ساب‌ایجنت به سقف تور خورد اما تقریباً همه‌چیز ساخت (tutor-view تب‌های سه‌گانه با FreeChat حفظ‌شده، ai/teacher-panel، ai/story-panel، /api/ai-story، _lib/ai-guard) — فقط /api/ai-teacher نایستاده بود که ارکستراتور با ai-guard نوشت
+- curl تست: معلم خصوصی (topic=گذشته ساده، words=discover/collect/protect) → reply ساختاریافته با مثال‌های خود واژه‌ها؛ تکرار → cached:true؛ داستان ۳واژه‌ای → JSON معتبر story/question/options/answer
+- QA مرورگری: تب معلم خصوصی — موضوع «زمان آینده ساده» + واژه‌های air/alive/a few → توضیح با مثال‌های خود واژه‌ها؛ تب داستان‌ساز — ۶ واژه → داستان «Tom and the kite» با ۷ mark هایلایت amber + سؤال فهم مطلب ۳گزینه‌ای → پاسخ درست → فیدبک؛ موبایل ۳۹۰px تمیز؛ کنسول صفر خطا؛ lint 0 / tsc-src 0
+- تیک ۲ چک‌باکس فاز ۸ (معلم خصوصی + داستان‌ساز) + دو یادداشت در نقشه راه (python3)
+
+Stage Summary:
+- صدای اپ اکنون روی دستگاه واقعی Native و بدون لهجه است؛ موتور سرور انتخابی/شفاف باقی مانده — فیدبک کاربر بسته شد
+- فاز ۸: ۲ از ۶ آیتم کامل (معلم خصوصی + داستان‌ساز)؛ باقی‌مانده: تصویرسازی حافظه، چت شخصیت‌ها، تحلیل خطاها، سؤال‌ساز مشابه (نیمهٔ «توضیح‌دهنده تست» از قبل موجود است)
+- فایل‌های کلیدی: src/lib/{speak,voice-store}.ts (دو-موتوری)، src/app/api/{ai-teacher,ai-story}/route.ts، src/app/api/_lib/ai-guard.ts، src/components/book/ai/{teacher-panel,story-panel}.tsx، tutor-view.tsx (تب‌ها)
+- قرارداد: افزودن مسیر AI جدید = استفاده از ai-guard (BoundedCache + consumeDailyQuota + userKeyOf)؛ الگوی LLM: سیستم‌پرامپت به‌صورت اولین پیام assistant + thinking disabled
+- گام بعدی: فاز ۸ بخش B (تصویرسازی حافظه با image-generation، چت شخصیت‌ها، تحلیل خطاها، سؤال‌ساز مشابه)
