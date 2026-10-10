@@ -23,6 +23,7 @@ import { CompareView } from "@/components/book/compare-view";
 import { RewardsView } from "@/components/book/rewards-view";
 import { SpeakingView } from "@/components/book/speaking-view";
 import { ClassView } from "@/components/book/class-view";
+import { NotebookView } from "@/components/book/notebook-view";
 import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
@@ -102,6 +103,7 @@ function App() {
           {effectiveView === "texts" && hasData && <TextsView />}
           {effectiveView === "speaking" && hasData && <SpeakingView />}
           {effectiveView === "class" && hasData && <ClassView />}
+          {effectiveView === "notebook" && hasData && <NotebookView />}
           {effectiveView === "dict" && hasData && <DictionaryView />}
           {effectiveView === "verbs" && hasData && <VerbsView />}
           {effectiveView === "flashcards" && hasData && <FlashcardView />}

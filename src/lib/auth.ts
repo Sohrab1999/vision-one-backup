@@ -54,6 +54,10 @@ export function clientIp(req: { headers: { get(k: string): string | null } }): s
 // ─── تنظیمات NextAuth ───
 
 export const authOptions: NextAuthOptions = {
+  // Secret ثابت — بدون آن، [...nextauth] و getServerSession دو secret متفاوت می‌سازند
+  // (خطای JWT_SESSION_ERROR: decryption operation failed → همهٔ APIهای احراز‌شده ۴۰۱).
+  // در محیط واقعی NEXTAUTH_SECRET ست می‌شود؛ این fallback فقط برای dev محلی است.
+  secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET ?? "vision-one-local-dev-secret",
   session: { strategy: "jwt", maxAge: 30 * 24 * 3600 },
   providers: [
     CredentialsProvider({

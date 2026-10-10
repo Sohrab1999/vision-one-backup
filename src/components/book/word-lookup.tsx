@@ -1,12 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { X, Star, BookOpen, SearchX, GraduationCap, CheckCircle2, Search, ImagePlay, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { X, Star, BookOpen, SearchX, GraduationCap, CheckCircle2, Search, ImagePlay, Loader2, Save, Trash2, LogIn } from "lucide-react";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 import { readUserName } from "@/lib/name-store";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { useBookData } from "@/lib/book-context";
+import { useBook, useBookData } from "@/lib/book-context";
 import type { DictEntry, VocabEntry, VocabWord } from "@/data/types";
 import { SpeakButton } from "./speak-button";
 import { useStarredWords, toggleStar } from "@/lib/star-store";
@@ -67,6 +70,101 @@ function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[]): LookupMaps
 // کش ماژول‌اسکوپ تصویر حافظه — تا جابه‌جایی میان واژه‌ها تصویر هر واژه نگه داشته شود (سقف ۴۰ ورودی، قدیمی‌ها حذف)
 const memoryImageCache = new Map<string, string>();
 const MEMORY_IMG_CAP = 40;
+
+// ── یادداشت شخصی واژه (فاز ۱۰) — همگام با /api/notes ──
+// قرارداد: GET /api/notes?book= → {ok, notes:[{id,book,word,note,updatedAt}]} |
+// PUT {book,word,note} → {ok, note} | DELETE ?id= → {ok:true} | بدون لاگین → 401
+interface NoteRow {
+  id: string;
+  book: string;
+  word: string;
+  note: string;
+  updatedAt: string;
+}
+
+interface BookNotesState {
+  rows: Map<string, NoteRow>;
+  status: "idle" | "loading" | "ready" | "guest" | "error";
+  fetchedAt: number;
+}
+
+const NOTES_TTL_MS = 5 * 60 * 1000; // بعد از این مدت، اولین باز شدنِ بعدی دوباره fetch می‌کند
+const NOTES_ROW_CAP = 500;
+const NOTE_MAX_LEN = 500;
+
+// کش ماژول‌اسکوپ یادداشت‌ها به‌ازای کتاب — فقط اولین باز شدن پاپ‌آپ fetch می‌کند (الگوی memoryImageCache)
+const notesCache = new Map<string, BookNotesState>();
+let notesVersion = 0;
+const notesListeners = new Set<() => void>();
+
+function notifyNotes() {
+  notesVersion += 1;
+  notesListeners.forEach((l) => l());
+}
+
+function subscribeNotes(cb: () => void) {
+  notesListeners.add(cb);
+  return () => {
+    notesListeners.delete(cb);
+  };
+}
+
+function getNotesVersion() {
+  return notesVersion;
+}
+
+/** ورود به دیالوگ حساب از عمق پاپ‌آپ — ProfileButton گوش می‌دهد (بدون prop-drilling) */
+function openProfileLogin() {
+  window.dispatchEvent(new CustomEvent("visionone:open-profile"));
+}
+
+/** با رویداد باز شدن پاپ‌آپ صدا زده می‌شود — مهمان fetch نمی‌گیرد، فقط یک‌بار (یا پس از TTL) */
+function ensureNotes(bookId: string, authenticated: boolean) {
+  if (!bookId) return;
+  const st = notesCache.get(bookId);
+  if (!authenticated) {
+    if (!st || st.status !== "guest") {
+      notesCache.set(bookId, { rows: new Map(), status: "guest", fetchedAt: Date.now() });
+      notifyNotes();
+    }
+    return;
+  }
+  if (st && (st.status === "ready" || st.status === "loading") && Date.now() - st.fetchedAt < NOTES_TTL_MS) return;
+  notesCache.set(bookId, { rows: st?.rows ?? new Map(), status: "loading", fetchedAt: Date.now() });
+  notifyNotes();
+  void fetchNotes(bookId);
+}
+
+async function fetchNotes(bookId: string) {
+  const put = (rows: Map<string, NoteRow>, status: BookNotesState["status"]) => {
+    notesCache.set(bookId, { rows, status, fetchedAt: Date.now() });
+    notifyNotes();
+  };
+  try {
+    const res = await fetch(`/api/notes?book=${encodeURIComponent(bookId)}`, { cache: "no-store" });
+    const json = (await res.json().catch(() => null)) as { notes?: NoteRow[] } | null;
+    if (res.status === 401) {
+      put(new Map(), "guest");
+      return;
+    }
+    if (!res.ok || !json) {
+      // ۴۰۴ (سرویس هنوز آماده نیست) یا خطای سرور — محترمانه و بدون کرش
+      put(new Map(), "error");
+      toast.error("یادداشت‌ها بارگیری نشد — کمی بعد دوباره امتحان کن");
+      return;
+    }
+    const rows = new Map<string, NoteRow>();
+    for (const r of Array.isArray(json.notes) ? json.notes : []) {
+      if (rows.size >= NOTES_ROW_CAP) break;
+      if (r && typeof r.id === "string" && typeof r.word === "string" && typeof r.note === "string") {
+        rows.set(r.word, r);
+      }
+    }
+    put(rows, "ready");
+  } catch {
+    put(new Map(), "error");
+  }
+}
 
 interface LookupHit {
   word: string;
@@ -157,6 +255,8 @@ function segmentText(text: string, maps: LookupMaps): Segment[] {
 /** متن انگلیسی قابل‌کلیک: هر واژه (و عبارت شناخته‌شده) یک دکمهٔ جست‌وجوست + جست‌وجوی عبارتِ انتخاب‌شده */
 export function ClickableEnText({ text, className }: { text: string; className?: string }) {
   const data = useBookData();
+  const { bookId } = useBook();
+  const { status: sessionStatus } = useSession();
   const [sel, setSel] = useState<{ hit: LookupHit; x: number; y: number } | null>(null);
   const [selSearch, setSelSearch] = useState<{ raw: string; x: number; y: number } | null>(null);
   const wrapRef = useRef<HTMLSpanElement>(null);
@@ -173,8 +273,10 @@ export function ClickableEnText({ text, className }: { text: string; className?:
       if (!norm) return;
       const rect = e.currentTarget.getBoundingClientRect();
       setSel({ hit: lookup(maps, norm), x: rect.left + rect.width / 2, y: rect.bottom });
+      // یادداشت واژه — فقط اولین باز شدن پاپ‌آپ fetch می‌کند (کش ماژولی + TTL)
+      ensureNotes(bookId ?? "", sessionStatus === "authenticated");
     },
-    [maps],
+    [maps, bookId, sessionStatus],
   );
 
   // جست‌وجوی عبارت انتخاب‌شده با ماوس/لمس — علاوه بر کلیک تک‌واژه
@@ -216,6 +318,7 @@ export function ClickableEnText({ text, className }: { text: string; className?:
     const { raw, x, y } = selSearch;
     setSelSearch(null);
     setSel({ hit: lookup(maps, normalize(raw)), x, y });
+    ensureNotes(bookId ?? "", sessionStatus === "authenticated");
   }
 
   // موقعیت دکمهٔ شناور جست‌وجوی عبارت — clamp به دید
@@ -262,6 +365,7 @@ export function ClickableEnText({ text, className }: { text: string; className?:
 
 function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: number }; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const { bookId } = useBook();
   const starred = useStarredWords();
   const srs = useSRSData();
   const { learned, toggle: toggleLearnedWord } = useLearnedWords();
@@ -513,6 +617,170 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
           تمرین {starred.count.toLocaleString("fa-IR")} واژهٔ ستاره‌دار
         </button>
       )}
+
+      {/* یادداشت شخصی واژه (فاز ۱۰) — با Separator جدا، پایین همهٔ بخش‌ها */}
+      {bookId && (
+        <>
+          <Separator className="my-3" />
+          <WordNoteSection key={hit.word} bookId={bookId} word={hit.word} />
+        </>
+      )}
+    </div>
+  );
+}
+
+// ── بخش «📝 یادداشت من» — با key={word} مونت می‌شود تا هر واژه state تازه بگیرد ──
+// داده از کش ماژولی خوانده می‌شود (بدون fetch در هر باز شدن) و با notifyNotes تازه می‌شود.
+
+function WordNoteSection({ bookId, word }: { bookId: string; word: string }) {
+  const { status: sessionStatus } = useSession();
+  useSyncExternalStore(subscribeNotes, getNotesVersion, getNotesVersion);
+
+  const state = notesCache.get(bookId);
+  const row = state?.status === "ready" ? (state.rows.get(word) ?? undefined) : undefined;
+  const [draft, setDraft] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const value = (draft ?? row?.note ?? "").slice(0, NOTE_MAX_LEN);
+  const guest = sessionStatus !== "authenticated" || state?.status === "guest";
+
+  async function saveNote() {
+    const note = value.trim();
+    if (!note) {
+      toast.error("یادداشت خالی است — چیزی بنویس تا ذخیره شود");
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch("/api/notes", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ book: bookId, word, note }),
+      });
+      const json = (await res.json().catch(() => null)) as { note?: NoteRow; error?: string } | null;
+      if (res.status === 401) {
+        notesCache.set(bookId, { rows: new Map(), status: "guest", fetchedAt: Date.now() });
+        notifyNotes();
+        return;
+      }
+      if (!res.ok || !json?.note) {
+        toast.error(json?.error ?? "ذخیرهٔ یادداشت نشد — دوباره تلاش کن");
+        return;
+      }
+      const st = notesCache.get(bookId);
+      if (st) {
+        const rows = new Map(st.rows);
+        rows.set(word, json.note);
+        notesCache.set(bookId, { ...st, rows, status: "ready", fetchedAt: Date.now() });
+        notifyNotes();
+      }
+      setDraft(null);
+      toast.success("یادداشت ذخیره شد ✓");
+    } catch {
+      toast.error("خطا در ارتباط با سرور — اتصال اینترنتت را بررسی کن");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function removeNote() {
+    if (!row || busy) return;
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/notes?id=${encodeURIComponent(row.id)}`, { method: "DELETE" });
+      if (res.status === 401) {
+        notesCache.set(bookId, { rows: new Map(), status: "guest", fetchedAt: Date.now() });
+        notifyNotes();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("حذف یادداشت نشد — دوباره تلاش کن");
+        return;
+      }
+      const st = notesCache.get(bookId);
+      if (st) {
+        const rows = new Map(st.rows);
+        rows.delete(word);
+        notesCache.set(bookId, { ...st, rows, fetchedAt: Date.now() });
+        notifyNotes();
+      }
+      setDraft(null);
+      toast.success("یادداشت حذف شد");
+    } catch {
+      toast.error("خطا در ارتباط با سرور — اتصال اینترنتت را بررسی کن");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // مهمان (بدون سشن یا 401) — کارت ورود کوچک، بدون خطا
+  if (guest) {
+    return (
+      <div>
+        <p className="text-[11.5px] font-black">📝 یادداشت من</p>
+        <div className="mt-2 rounded-xl border border-dashed border-primary/40 bg-primary/5 p-3 text-center">
+          <p className="text-[11.5px] leading-6 text-muted-foreground">
+            برای همگام‌شدن یادداشت با حسابت وارد شو 🔑
+          </p>
+          <button
+            type="button"
+            onClick={openProfileLogin}
+            className="mx-auto mt-2 flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-[11.5px] font-black text-primary-foreground shadow-sm transition-all hover:scale-105 active:scale-95"
+          >
+            <LogIn size={13} />
+            ورود
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-[11.5px] font-black">📝 یادداشت من</p>
+        <span dir="ltr" className="text-[9.5px] font-bold text-muted-foreground">
+          {value.length.toLocaleString("fa-IR")} / {NOTE_MAX_LEN.toLocaleString("fa-IR")}
+        </span>
+      </div>
+      {state?.status === "loading" && (
+        <p className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+          <Loader2 size={10} className="animate-spin" />
+          در حال همگام‌سازی یادداشت‌ها…
+        </p>
+      )}
+      <Textarea
+        value={value}
+        onChange={(e) => setDraft(e.target.value.slice(0, NOTE_MAX_LEN))}
+        placeholder="نکتهٔ خودت را دربارهٔ این واژه بنویس… (مثلاً ترفند حفظش)"
+        maxLength={NOTE_MAX_LEN}
+        aria-label="یادداشت شخصی واژه"
+        className="mt-2 min-h-[64px] resize-none bg-muted/30 text-[12px] leading-6"
+      />
+      <div className="mt-2 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={saveNote}
+          disabled={busy}
+          className="flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-[11.5px] font-black text-primary-foreground shadow-sm transition-all hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-60"
+        >
+          {busy ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
+          ذخیره
+        </button>
+        {row && (
+          <button
+            type="button"
+            onClick={removeNote}
+            disabled={busy}
+            aria-label="حذف یادداشت"
+            title="حذف یادداشت"
+            className="flex min-h-9 items-center justify-center gap-1.5 rounded-full border border-destructive/40 px-3.5 text-[11.5px] font-black text-destructive transition-all hover:bg-destructive/10 active:scale-95 disabled:pointer-events-none disabled:opacity-60"
+          >
+            <Trash2 size={13} />
+            حذف
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -16,6 +16,7 @@ import {
   Puzzle,
   Star,
   Clock,
+  Printer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +34,7 @@ import { previewIntervals, formatInterval } from "@/lib/srs-engine";
 import { awardPracticeWords, notifyActivity } from "@/lib/gamification";
 import { SpeakButton } from "./speak-button";
 import { MatchGame } from "./match-game";
+import { PrintFlashcards } from "./print-flashcards";
 
 type Phase = "setup" | "playing" | "done";
 
@@ -144,6 +146,7 @@ function FlashcardGame() {
   const [knownCount, setKnownCount] = useState(0);
   const [hardCount, setHardCount] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
+  const [printEntries, setPrintEntries] = useState<VocabEntry[] | null>(null);
 
   const basePool = useMemo(
     () => (lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson)),
@@ -228,8 +231,8 @@ function FlashcardGame() {
     return (
       <Card className="mx-auto max-w-xl rise-in">
         <CardContent className="space-y-6 p-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <div className="flex items-center justify-between gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Layers size={22} />
             </span>
             <div>
@@ -238,6 +241,21 @@ function FlashcardGame() {
                 دور {SESSION_SIZE.toLocaleString("fa-IR")} واژه‌ای — مرور هوشمند با سیستم SRS
               </p>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0 gap-1.5"
+              onClick={() => {
+                if (pool.length === 0) {
+                  toast.error("واژه‌ای برای چاپ در این محدوده نیست");
+                  return;
+                }
+                setPrintEntries(pool); // دکِ فعلی فیلترشده به کامپوننت چاپ می‌رود
+              }}
+            >
+              <Printer size={15} />
+              چاپ فلش‌کارت
+            </Button>
           </div>
 
           <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
@@ -414,6 +432,11 @@ function FlashcardGame() {
             <kbd className="rounded bg-muted px-1.5">n</kbd> بلد نبودم •{" "}
             <kbd className="rounded bg-muted px-1.5">h</kbd> سخت
           </p>
+
+          {/* فاز ۱۰ — چاپ فلش‌کارت دورو A4 */}
+          {printEntries && (
+            <PrintFlashcards entries={printEntries} onClose={() => setPrintEntries(null)} />
+          )}
         </CardContent>
       </Card>
     );

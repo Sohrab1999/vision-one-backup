@@ -23,6 +23,7 @@ export type NavView =
   | "verbs"
   | "flashcards"
   | "review"
+  | "notebook"
   | "stats"
   | "tutor"
   | "compare"

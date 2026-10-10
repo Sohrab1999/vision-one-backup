@@ -36,7 +36,8 @@ function loadFreshPrismaClient(): PrismaClientType | null {
 function makeDb(): PrismaClientType {
   // ۱) کلاینت تازهٔ دیسک — همیشه دارای آخرین مدل‌های schema.prisma
   const fresh = loadFreshPrismaClient();
-  if (fresh && "classroom" in fresh) return fresh;
+  // گارد self-heal: هر مدل تازه باید اینجا OR شود تا پس از db push بدون ری‌استارت لود شود
+  if (fresh && ("classroom" in fresh || "wordNote" in fresh)) return fresh;
   // ۲) راه بازگشتی: کلاینت باندل‌شده (اگر دیسک موقتاً در دسترس نبود)
   if (fresh) return fresh;
   return new PrismaClient({ log: ["query"] });
@@ -44,8 +45,8 @@ function makeDb(): PrismaClientType {
 
 function getDb(): PrismaClientType {
   const cached = globalForPrisma.prismaV9;
-  // نمونهٔ کش‌شده فقط وقتی معتبر است که مدل‌های فاز ۹ را داشته باشد
-  if (cached && "classroom" in cached) return cached;
+  // نمونهٔ کش‌شده فقط وقتی معتبر است که مدل‌های فاز ۹/۱۰ را داشته باشد
+  if (cached && ("classroom" in cached || "wordNote" in cached)) return cached;
   const created = makeDb();
   globalForPrisma.prismaV9 = created;
   return created;

@@ -202,7 +202,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const [exporting, setExporting] = useState(false);
   const pulses = usePulses(phase === "setup");
   const userName = useUserName();
-  const { mistakes: mistakeIds, count: mistakeCount, clear: clearMistakes } = useMistakes();
+  const { entries: mistakeEntries, count: mistakeCount, clear: clearMistakes } = useMistakes();
+  const mistakeIds = useMemo(() => mistakeEntries.map((e) => e.id), [mistakeEntries]);
   const { ids: practiceIds } = usePracticeIds();
   const { ids: starredQIds, count: starredQCount, has: hasQStar, toggle: toggleQStar } = useQuestionStars();
   const daily = useDailyInfo();

@@ -67,7 +67,7 @@ interface QuestionLite {
 export function ErrorAnalysisPanel() {
   const { bookId, meta } = useBook();
   const data = useBookData();
-  const { mistakes, count } = useMistakes();
+  const { entries: mistakeEntries, count } = useMistakes();
 
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<AnalysisPayload | null>(null);
@@ -87,8 +87,9 @@ export function ErrorAnalysisPanel() {
 
   async function analyze() {
     if (loading) return;
-    const ids = mistakes
+    const ids = mistakeEntries
       .slice(0, 8)
+      .map((e) => e.id)
       .filter((id) => /^[a-z0-9]{10,40}$/i.test(id));
     if (!bookId || ids.length === 0) {
       toast.error("سؤال‌های دفتر خطاها پیدا نشد — اول چند آزمون بده");

@@ -52,6 +52,7 @@ model User {
   progress Progress[]
   attempts Attempt[]
   reviewStates ReviewState[]
+  wordNotes WordNote[]
 
   @@index([username])
 }
@@ -240,4 +241,22 @@ model LiveAnswer {
 
   @@unique([quizId, studentKey, index])
   @@index([quizId])
+}
+
+/// یادداشت شخصی کاربر روی یک واژه — فاز ۱۰ نقشه راه جامع
+model WordNote {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// شناسه جزوه — "vision-one" | "grade-7" | "grade-8" | "grade-9" | "grade-11" | "grade-12"
+  book      String
+  /// متن واژه انگلیسی (کلید یادداشت)
+  word      String
+  /// یادداشت شخصی کاربر (فارسی/انگلیسی، سقف ۵۰۰ نویسه)
+  note      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, book, word])
+  @@index([userId, book])
 }

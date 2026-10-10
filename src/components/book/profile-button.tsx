@@ -6,9 +6,10 @@ import { signIn } from "next-auth/react";
 import {
   User,
   Check,
-  Download,
   Upload,
   HardDriveDownload,
+  FileDown,
+  FileSpreadsheet,
   Star,
   BookOpen,
   Layers,
@@ -39,7 +40,15 @@ import { useQuestionStars } from "@/lib/question-star-store";
 import { useCombinedRounds } from "@/lib/round-counters";
 import { useStreak } from "@/lib/streak-store";
 import { useXp, levelInfo } from "@/lib/xp-store";
-import { downloadBackup, parseBackup, restoreBackup } from "@/lib/progress-backup";
+import {
+  collectBackup,
+  downloadBackupJson,
+  parseBackup,
+  restoreBackup,
+  toAttemptsCsv,
+  toProgressCsv,
+  type ServerBackupSection,
+} from "@/lib/progress-backup";
 import { pushSnapshot, getLastSyncAt, subscribeSync } from "@/lib/account-sync";
 import { toast } from "sonner";
 
@@ -76,6 +85,15 @@ export function ProfileButton() {
 
   useEffect(() => subscribeSync(() => setSyncAt(getLastSyncAt())), []);
 
+  // درخواست بازشدن دیالوگ حساب از عمق درخت (مثل کارت ورودِ یادداشت واژه — فاز ۱۰)
+  useEffect(() => {
+    function onOpenProfile() {
+      setOpen(true);
+    }
+    window.addEventListener("visionone:open-profile", onOpenProfile);
+    return () => window.removeEventListener("visionone:open-profile", onOpenProfile);
+  }, []);
+
   // آمار حساب پس از ورود
   useEffect(() => {
     if (status !== "authenticated") {
@@ -93,11 +111,87 @@ export function ProfileButton() {
     setOpen(false);
   }
 
-  function exportProgress() {
-    const count = downloadBackup();
-    toast.success(`فایل پشتیبان با ${count.toLocaleString("fa-IR")} بخش داده دانلود شد — جایش امن! 💾`);
+  // فاز ۱۰ — خروجی کامل: دادهٔ دستگاه + (با ورود) بخش سرور از /api/export
+  async function exportProgress() {
+    try {
+      const backup = collectBackup();
+      if (status === "authenticated") {
+        try {
+          const res = await fetch("/api/export", { cache: "no-store" });
+          if (res.ok) {
+            const j = (await res.json()) as { server?: ServerBackupSection };
+            if (j?.server) backup.server = j.server;
+            downloadBackupJson(backup, "vision-one-backup.json");
+            toast.success("خروجی کامل (پیشرفت دستگاه + حسابت) دانلود شد 📤");
+            return;
+          }
+          if (res.status === 401) {
+            toast.info("برای خروجی کامل وارد شو — این فایل فقط پیشرفت همین دستگاه است");
+          } else {
+            toast.error("دریافت بخش حساب ممکن نشد — فایل محلی دانلود شد");
+          }
+        } catch {
+          toast.error("اتصال ممکن نشد — فایل محلی دانلود شد");
+        }
+      } else {
+        toast.info("برای خروجی کامل وارد شو — این فایل فقط پیشرفت همین دستگاه است");
+      }
+      downloadBackupJson(backup, "vision-one-backup.json");
+    } catch {
+      toast.error("ساخت فایل پشتیبان ممکن نشد");
+    }
   }
 
+  // فاز ۱۰ — CSV آزمون‌ها (از سرور؛ مهمان → توست راهنما)
+  async function exportAttemptsCsv() {
+    if (status !== "authenticated") {
+      toast.info("آزمون‌ها روی حسابت ذخیره می‌شوند — برای گرفتن CSV اول وارد شو");
+      return;
+    }
+    try {
+      const res = await fetch("/api/export", { cache: "no-store" });
+      if (!res.ok) {
+        toast.error(res.status === 401 ? "برای گرفتن CSV اول وارد شو" : "دریافت آزمون‌ها ممکن نشد");
+        return;
+      }
+      const j = (await res.json()) as { server?: { attempts?: unknown[] } };
+      const attempts = Array.isArray(j?.server?.attempts) ? j.server.attempts : [];
+      if (attempts.length === 0) {
+        toast.info("هنوز آزمونی روی حسابت ثبت نشده");
+        return;
+      }
+      downloadText("vision-one-attempts.csv", toAttemptsCsv(attempts), "text/csv;charset=utf-8");
+      toast.success(`CSV ${attempts.length.toLocaleString("fa-IR")} آزمون دانلود شد`);
+    } catch {
+      toast.error("اتصال ممکن نشد");
+    }
+  }
+
+  // فاز ۱۰ — CSV پیشرفت محلی (کلید/مقدار) — بدون نیاز به ورود
+  function exportProgressCsv() {
+    const backup = collectBackup();
+    const rows = Object.keys(backup.data).length;
+    if (rows === 0) {
+      toast.info("هنوز دادهٔ پیشرفتی روی این دستگاه نیست");
+      return;
+    }
+    downloadText("vision-one-progress.csv", toProgressCsv(backup.data), "text/csv;charset=utf-8");
+    toast.success(`CSV ${rows.toLocaleString("fa-IR")} ردیف پیشرفت دانلود شد`);
+  }
+
+  function downloadText(filename: string, text: string, mime: string) {
+    const blob = new Blob([text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+
+  // فاز ۱۰ — ایمپورت v2: بخش محلی همیشه بازگردانی می‌شود؛ بخش سرور (با ورود) به /api/import می‌رود
   async function importProgress(file: File) {
     try {
       const text = await file.text();
@@ -107,6 +201,40 @@ export function ProfileButton() {
         return;
       }
       const count = restoreBackup(res.entries);
+
+      if (res.server) {
+        if (status === "authenticated") {
+          const tid = toast.loading("در حال بازگردانی بخش حسابت روی سرور…");
+          try {
+            const r = await fetch("/api/import", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ server: res.server }),
+              signal: AbortSignal.timeout?.(20000),
+            });
+            const j = (await r.json().catch(() => null)) as
+              | { ok?: boolean; error?: string; imported?: { progress?: number; attempts?: number; reviewStates?: number } }
+              | null;
+            toast.dismiss(tid);
+            if (r.ok && j?.ok) {
+              const imp = j.imported ?? {};
+              toast.success(
+                `${(imp.progress ?? 0).toLocaleString("fa-IR")} ردیف پیشرفت، ${(imp.attempts ?? 0).toLocaleString("fa-IR")} آزمون، ${(imp.reviewStates ?? 0).toLocaleString("fa-IR")} کارت مرور از رَش وارد شد`,
+              );
+            } else {
+              toast.error(
+                r.status === 400 ? "فایل پشتیبان معتبر نیست" : (j?.error ?? "بازگردانی حسابت ممکن نشد"),
+              );
+            }
+          } catch {
+            toast.dismiss(tid);
+            toast.error("اتصال ممکن نشد — بخش حساب وارد نشد ولی پیشرفت دستگاه بازیابی شد");
+          }
+        } else {
+          toast.warning("بخش حسابت داخل فایل است؛ برای بازگردانی آن وارد شو");
+        }
+      }
+
       toast.success(`${count.toLocaleString("fa-IR")} بخش پیشرفت بازیابی شد — صفحه رفرش می‌شود…`);
       setTimeout(() => window.location.reload(), 900);
     } catch {
@@ -495,32 +623,40 @@ export function ProfileButton() {
             <div>
               <p className="text-[13px] font-black">پشتیبان پیشرفت</p>
               <p className="text-[11px] leading-5 text-muted-foreground">
-                واژه‌های یادگرفته، ستاره‌ها، SRS، زنجیره و چالش‌ها — همه در یک فایل JSON برای انتقال به دستگاه دیگر.
+                واژه‌ها، ستاره‌ها، SRS، زنجیره و چالش‌ها — و با ورود، آزمون‌ها و حسابت هم در یک فایل JSON.
               </p>
             </div>
           </div>
+          <Button size="sm" onClick={() => void exportProgress()} className="w-full gap-1.5">
+            <FileDown size={14} />
+            دریافت خروجی کامل 📤
+          </Button>
           <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" size="sm" onClick={exportProgress} className="gap-1.5">
-              <Download size={14} />
-              دریافت فایل
+            <Button variant="outline" size="sm" onClick={() => void exportAttemptsCsv()} className="gap-1.5">
+              <FileSpreadsheet size={14} />
+              آزمون‌ها CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()} className="gap-1.5">
-              <Upload size={14} />
-              بازیابی از فایل
+            <Button variant="outline" size="sm" onClick={exportProgressCsv} className="gap-1.5">
+              <FileSpreadsheet size={14} />
+              پیشرفت CSV
             </Button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="application/json,.json"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) void importProgress(f);
-                e.target.value = "";
-              }}
-              aria-label="انتخاب فایل پشتیبان"
-            />
           </div>
+          <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()} className="w-full gap-1.5">
+            <Upload size={14} />
+            بازیابی از فایل پشتیبان
+          </Button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void importProgress(f);
+              e.target.value = "";
+            }}
+            aria-label="انتخاب فایل پشتیبان"
+          />
         </div>
 
         <DialogFooter className="gap-2 sm:justify-start">

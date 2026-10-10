@@ -23,6 +23,7 @@ import {
   Trophy,
   Mic,
   School,
+  NotebookText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -58,7 +59,8 @@ export type ViewId =
   | "tutor"
   | "compare"
   | "speaking"
-  | "class";
+  | "class"
+  | "notebook";
 
 interface NavItem {
   id: ViewId;
@@ -72,6 +74,7 @@ const NAV: NavItem[] = [
   { id: "vocab", label: "واژگان", icon: BookOpen },
   { id: "flashcards", label: "تمرین", icon: Layers },
   { id: "review", label: "مرور امروز", icon: Brain },
+  { id: "notebook", label: "دفتر خطاها", icon: NotebookText },
   { id: "grammar", label: "گرامر", icon: GraduationCap },
   { id: "quiz", label: "آزمون", icon: ClipboardList },
   { id: "games", label: "بازی‌ها", icon: Gamepad2 },

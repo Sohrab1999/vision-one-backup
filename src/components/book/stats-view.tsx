@@ -48,6 +48,7 @@ import { setPracticeIds } from "@/lib/practice-store";
 import { useBook } from "@/lib/book-context";
 import { ActivityHeatmap } from "./activity-heatmap";
 import { SrsStatsSection } from "./srs-stats-section";
+import { ProgressCardGenerator } from "./progress-card-generator";
 import { toast } from "sonner";
 import type { ViewId } from "./app-header";
 
@@ -273,7 +274,7 @@ function fmtDate(iso: string): string {
 }
 
 export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) {
-  const { bookId } = useBook();
+  const { bookId, data: bookData } = useBook();
   const { count: learned } = useLearnedWords();
   const streak = useStreak();
   const userName = useUserName();
@@ -413,6 +414,9 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
               </Card>
             ))}
           </section>
+
+          {/* ── کارت پیشرفت اشتراکی (فاز ۱۰) ── */}
+          <ProgressCardGenerator activeVocabTotal={bookData?.vocab.all.length ?? null} />
 
           {/* ── نمودارها ── */}
           <section className="grid gap-3 lg:grid-cols-5">
