@@ -1,21 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Repeat, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
+
+/** ستون‌بندی جدول — معادل w-10 (ستون #) و w-12 (ستون صدا) در Table قبلی */
+const GRID_COLS = "grid-cols-[2.5rem_1fr_1fr_1fr_1fr_3rem]";
 
 export function VerbsView() {
   const data = useBookData();
@@ -32,6 +27,20 @@ export function VerbsView() {
         v.meaning.includes(query.trim()),
     );
   }, [data.verbs, query]);
+
+  // مجازی‌سازی سطرهای جدول — با ۱۰۰+ فعل فقط سطرهای قابل‌مشاهده رندر می‌شوند
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  // useVirtualizer توابع غیرقابل-memo برمی‌گرداند و React Compiler عمداً این کامپوننت را skip می‌کند — هشدار اطلاع‌رسانی است، نه خطا
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const virtualizer = useVirtualizer({
+    count: filtered.length,
+    getScrollElement: () => parentRef.current,
+    // برآورد اولیه ارتفاع سطر (Badge + p-2) — با measureElement اصلاح می‌شود
+    estimateSize: () => 40,
+    overscan: 8,
+    getItemKey: (i) => `${filtered[i].base}-${i}`,
+  });
 
   return (
     <div className="space-y-4">
@@ -59,44 +68,52 @@ export function VerbsView() {
 
       <Card>
         <CardContent className="p-0">
-          <ScrollArea className="h-[600px]">
-            <Table>
-              <TableHeader className="sticky top-0 z-10 bg-card">
-                <TableRow>
-                  <TableHead className="w-10 text-center">#</TableHead>
-                  <TableHead className="text-left">شکل اول</TableHead>
-                  <TableHead className="text-left">شکل دوم (گذشته)</TableHead>
-                  <TableHead className="text-left">شکل سوم (p.p)</TableHead>
-                  <TableHead>معنی</TableHead>
-                  <TableHead className="w-12">صدا</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((v, i) => (
-                  <TableRow key={`${v.base}-${i}`} className="hover:bg-muted/40">
-                    <TableCell className="text-center text-xs text-muted-foreground">
-                      {(i + 1).toLocaleString("fa-IR")}
-                    </TableCell>
-                    <TableCell>
+          <div ref={parentRef} className="h-[600px] overflow-y-auto">
+            {/* سرجدول چسبان — ظاهر همان TableHeader قبلی */}
+            <div className="sticky top-0 z-10 border-b bg-card">
+              <div className={`grid h-10 items-center ${GRID_COLS}`}>
+                <div className="text-center text-sm font-medium">#</div>
+                <div className="px-2 text-left text-sm font-medium">شکل اول</div>
+                <div className="px-2 text-left text-sm font-medium">شکل دوم (گذشته)</div>
+                <div className="px-2 text-left text-sm font-medium">شکل سوم (p.p)</div>
+                <div className="px-2 text-left text-sm font-medium">معنی</div>
+                <div className="px-2 text-left text-sm font-medium">صدا</div>
+              </div>
+            </div>
+            <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+              {virtualizer.getVirtualItems().map((virtualRow) => {
+                const v = filtered[virtualRow.index];
+                return (
+                  <div
+                    key={virtualRow.key}
+                    data-index={virtualRow.index}
+                    ref={virtualizer.measureElement}
+                    className={`absolute top-0 left-0 grid w-full items-center border-b transition-colors hover:bg-muted/40 ${GRID_COLS}`}
+                    style={{ transform: `translateY(${virtualRow.start}px)` }}
+                  >
+                    <div className="p-2 text-center text-xs text-muted-foreground">
+                      {(virtualRow.index + 1).toLocaleString("fa-IR")}
+                    </div>
+                    <div className="min-w-0 p-2">
                       <Badge variant="secondary" dir="ltr" className="font-en text-[12px] font-bold">
                         {v.base}
                       </Badge>
-                    </TableCell>
-                    <TableCell dir="ltr" className="font-en text-left text-[13px] font-semibold">
+                    </div>
+                    <div dir="ltr" className="font-en p-2 text-left text-[13px] font-semibold">
                       {v.past}
-                    </TableCell>
-                    <TableCell dir="ltr" className="font-en text-left text-[13px] font-semibold text-primary">
+                    </div>
+                    <div dir="ltr" className="font-en p-2 text-left text-[13px] font-semibold text-primary">
                       {v.participle}
-                    </TableCell>
-                    <TableCell className="text-[13px]">{v.meaning}</TableCell>
-                    <TableCell>
+                    </div>
+                    <div className="min-w-0 p-2 text-[13px]">{v.meaning}</div>
+                    <div className="p-2">
                       <SpeakButton text={`${v.base}, ${v.past}, ${v.participle}`} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

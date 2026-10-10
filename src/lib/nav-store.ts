@@ -22,7 +22,8 @@ export type NavView =
   | "verbs"
   | "flashcards"
   | "stats"
-  | "tutor";
+  | "tutor"
+  | "compare";
 
 let handler: ((v: NavView) => void) | null = null;
 

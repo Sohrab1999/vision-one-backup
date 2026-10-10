@@ -11,7 +11,12 @@ const listeners = new Set<() => void>();
 
 if (typeof document !== "undefined") {
   try {
-    if (localStorage.getItem("visionone:theme") === "light") {
+    // فاز ۷ — پیش‌فرض سیستمی: اگر کاربر انتخابی ذخیره نکرده باشد، از
+    // prefers-color-scheme سیستم‌عامل پیروی می‌شود (روشن → کلاس dark حذف).
+    const stored = localStorage.getItem("visionone:theme");
+    const prefersLight =
+      typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: light)").matches;
+    if (stored === "light" || (!stored && prefersLight)) {
       document.documentElement.classList.remove("dark");
     }
   } catch {

@@ -17,6 +17,7 @@ import {
   ChevronsUpDown,
   Check,
   Clock,
+  GitCompareArrows,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useIsDark, setDark } from "@/lib/theme-store";
 import { useBook } from "@/lib/book-context";
+import { GlobalSearchButton } from "./global-search";
 import { ProfileButton } from "./profile-button";
 
 export type ViewId =
@@ -45,7 +47,8 @@ export type ViewId =
   | "verbs"
   | "flashcards"
   | "stats"
-  | "tutor";
+  | "tutor"
+  | "compare";
 
 interface NavItem {
   id: ViewId;
@@ -61,6 +64,7 @@ const NAV: NavItem[] = [
   { id: "grammar", label: "گرامر", icon: GraduationCap },
   { id: "quiz", label: "آزمون", icon: ClipboardList },
   { id: "stats", label: "آمار", icon: BarChart3 },
+  { id: "compare", label: "مقایسه", icon: GitCompareArrows },
   { id: "texts", label: "متن‌ها", icon: FileText },
   { id: "dict", label: "دیکشنری", icon: Library },
   { id: "verbs", label: "افعال بی‌قاعده", icon: Repeat },
@@ -191,16 +195,19 @@ export function AppHeader({
 
         <div className="flex-1 md:hidden" />
 
+        {/* جست‌وجوی سراسری */}
+        <GlobalSearchButton />
+
         {/* پروفایل */}
         <ProfileButton />
 
-        {/* تغییر پوسته */}
+        {/* تغییر پوسته — در لمس هدف ≥۴۴px */}
         <Button
           variant="ghost"
           size="icon"
           onClick={toggleTheme}
           aria-label={dark ? "پوسته روشن" : "پوسته تیره"}
-          className="rounded-full h-9 w-9 shrink-0"
+          className="rounded-full h-11 w-11 shrink-0 sm:h-9 sm:w-9"
         >
           {!dark ? <Moon size={17} /> : <Sun size={17} />}
         </Button>

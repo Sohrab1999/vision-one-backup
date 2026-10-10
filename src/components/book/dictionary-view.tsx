@@ -1,13 +1,26 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Library, Search, Quote } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
+
+/** تعداد ستون‌های گرید دیکشنری — موبایل ۱ ستون و دسکتاپ (md به بالا) ۲ ستون؛ هماهنگ با md:grid-cols-2 قبلی */
+function useColumnCount() {
+  const [cols, setCols] = useState(1);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setCols(mq.matches ? 2 : 1);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return cols;
+}
 
 export function DictionaryView() {
   const data = useBookData();
@@ -23,6 +36,30 @@ export function DictionaryView() {
         d.pos.toLowerCase().includes(q),
     );
   }, [data.dictionary, query]);
+
+  // مجازی‌سازی فهرست مدخل‌ها — فقط ردیف‌های قابل‌مشاهده در ویوپورت رندر می‌شوند
+  const cols = useColumnCount();
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  /** ردیف‌های گرید — هر ردیف به تعداد ستون‌ها مدخل دارد تا ارتفاع متغیر کارت‌ها با measureElement درست اندازه‌گیری شود */
+  const rows = useMemo(() => {
+    const out: (typeof filtered)[] = [];
+    for (let i = 0; i < filtered.length; i += cols) {
+      out.push(filtered.slice(i, i + cols));
+    }
+    return out;
+  }, [filtered, cols]);
+
+  // useVirtualizer توابع غیرقابل-memo برمی‌گرداند و React Compiler عمداً این کامپوننت را skip می‌کند — هشدار اطلاع‌رسانی است، نه خطا
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => parentRef.current,
+    // برآورد اولیه ارتفاع ردیف (کارت + تعریف + مثال‌ها) — با measureElement اصلاح می‌شود
+    estimateSize: () => 160,
+    overscan: 8,
+    getItemKey: (i) => rows[i].map((d) => d.word).join("|"),
+  });
 
   return (
     <div className="space-y-4">
@@ -47,49 +84,66 @@ export function DictionaryView() {
         />
       </div>
 
-      <ScrollArea className="h-[600px] rounded-xl border bg-card/40">
-        <div className="grid grid-cols-1 gap-3 p-3 md:grid-cols-2">
-          {filtered.map((d, i) => (
-            <Card key={`${d.word}-${i}`} className="border-muted">
-              <CardContent className="space-y-2 p-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p dir="ltr" className="font-en text-[15px] font-black text-primary">
-                    {d.word}
-                  </p>
-                  <span dir="ltr" className="font-en rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
-                    {d.phonetic}
-                  </span>
-                  <Badge variant="secondary" dir="ltr" className="font-en text-[10px] italic">
-                    {d.pos || "—"}
-                  </Badge>
-                  <Badge variant="outline" className="text-[10px]">
-                    درس {d.lesson.toLocaleString("fa-IR")}
-                  </Badge>
-                  <SpeakButton text={d.word} className="mr-auto" />
+      {filtered.length === 0 ? (
+        <p className="rounded-xl border bg-card/40 p-8 text-center text-sm text-muted-foreground">
+          واژه‌ای یافت نشد.
+        </p>
+      ) : (
+        <div ref={parentRef} className="h-[600px] overflow-y-auto rounded-xl border bg-card/40 px-3 pt-3">
+          <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+            {virtualizer.getVirtualItems().map((virtualRow) => {
+              const rowItems = rows[virtualRow.index];
+              return (
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={virtualizer.measureElement}
+                  className="absolute top-0 left-0 grid w-full gap-3 pb-3"
+                  style={{
+                    transform: `translateY(${virtualRow.start}px)`,
+                    gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+                  }}
+                >
+                  {rowItems.map((d, j) => (
+                    <Card key={`${d.word}-${virtualRow.index * cols + j}`} className="border-muted">
+                      <CardContent className="space-y-2 p-4">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p dir="ltr" className="font-en text-[15px] font-black text-primary">
+                            {d.word}
+                          </p>
+                          <span dir="ltr" className="font-en rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
+                            {d.phonetic}
+                          </span>
+                          <Badge variant="secondary" dir="ltr" className="font-en text-[10px] italic">
+                            {d.pos || "—"}
+                          </Badge>
+                          <Badge variant="outline" className="text-[10px]">
+                            درس {d.lesson.toLocaleString("fa-IR")}
+                          </Badge>
+                          <SpeakButton text={d.word} className="mr-auto" />
+                        </div>
+                        <p dir="ltr" className="font-en text-[13px] leading-6 text-foreground">
+                          {d.definition}
+                        </p>
+                        {d.examples.length > 0 && (
+                          <div className="space-y-1 rounded-lg bg-muted/50 p-2.5">
+                            {d.examples.map((ex, k) => (
+                              <p key={k} dir="ltr" className="font-en flex items-start gap-1.5 text-[12px] leading-5 text-muted-foreground">
+                                <Quote size={10} className="mt-1 shrink-0 text-primary/50" />
+                                {ex}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-                <p dir="ltr" className="font-en text-[13px] leading-6 text-foreground">
-                  {d.definition}
-                </p>
-                {d.examples.length > 0 && (
-                  <div className="space-y-1 rounded-lg bg-muted/50 p-2.5">
-                    {d.examples.map((ex, j) => (
-                      <p key={j} dir="ltr" className="font-en flex items-start gap-1.5 text-[12px] leading-5 text-muted-foreground">
-                        <Quote size={10} className="mt-1 shrink-0 text-primary/50" />
-                        {ex}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+              );
+            })}
+          </div>
         </div>
-        {filtered.length === 0 && (
-          <p className="p-8 text-center text-sm text-muted-foreground">
-            واژه‌ای یافت نشد.
-          </p>
-        )}
-      </ScrollArea>
+      )}
     </div>
   );
 }

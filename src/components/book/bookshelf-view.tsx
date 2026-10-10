@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Clock, Layers, Sparkles, ArrowLeft } from "lucide-react";
+import { BookOpen, Clock, Layers, Sparkles, ArrowLeft, GitCompareArrows } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBook } from "@/lib/book-context";
 import type { BookMeta } from "@/data/books/types";
@@ -139,6 +139,15 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => onNavigate("compare")}
+              className="flex items-center gap-1.5 rounded-full bg-muted px-3.5 py-1.5 text-xs font-bold text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="مقایسه پیشرفت بین پایه‌ها"
+            >
+              <GitCompareArrows size={14} aria-hidden />
+              مقایسه پایه‌ها
+            </button>
             <span className={cn("rounded-full px-3 py-1.5 text-xs font-bold", BADGE_TEXT.emerald)}>
               {availableCount} جزوه فعال
             </span>

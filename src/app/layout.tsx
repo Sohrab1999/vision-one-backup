@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { PwaRegister } from "@/components/book/pwa-register";
 
 export const metadata: Metadata = {
   title: "کتابخانه ویژن | جزوه‌های تعاملی زبان انگلیسی پایه ۷ تا ۱۲",
@@ -22,6 +23,19 @@ export const metadata: Metadata = {
     "دوازدهم",
   ],
   authors: [{ name: "جمال احمدی و همکاران" }],
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ویژن",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/icons/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -33,6 +47,12 @@ export const viewport: Viewport = {
   ],
 };
 
+/**
+ * ضد-فلش پوسته (فاز ۷) — قبل از رندر اولیه، انتخاب ذخیره‌شده یا ترجیح سیستم
+ * اعمال می‌شود تا کاربر پوسته روشن، فلش تیره نبیند.
+ */
+const THEME_INIT = `try{var t=localStorage.getItem("visionone:theme");var l=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;if(t==="light"||(!t&&l)){document.documentElement.classList.remove("dark")}}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,8 +60,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning className="dark">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body className="antialiased bg-background text-foreground min-h-screen flex flex-col">
         {children}
+        <PwaRegister />
         <Toaster position="bottom-center" richColors />
       </body>
     </html>

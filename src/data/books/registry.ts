@@ -1,14 +1,12 @@
-// رجیستری مرکزی کتابخانه — فهرست همه جزوه‌ها + دسترسی به داده کتاب فعال.
-// افزودن جزوه جدید (مثلاً فاز ۲): (۱) عضو جدید در BookId، (۲) ورودی در BOOKS،
-// (۳) پوشه src/data/grade-7/ با BookData، (۴) یک case در getBookData.
+// رجیستری مرکزی کتابخانه — فهرست همه جزوه‌ها + بارگذاری تنبل داده کتاب فعال.
+// افزودن جزوه جدید (مثلاً فاز جدید): (۱) عضو جدید در BookId، (۲) ورودی در BOOKS،
+// (۳) پوشه src/data/grade-X/ با BookData، (۴) یک loader در LOADERS.
+//
+// فاز ۷: داده جزوه‌ها دیگر import استاتیک نمی‌شوند — هر جزوه یک chunk جداگانه
+// است که فقط هنگام ورود به آن جزوه بارگذاری می‌شود (lazy-load با dynamic import).
+// متادیتای قفسه (BOOKS) استاتیک و سبک می‌ماند.
 
 import type { BookId, BookData, BookMeta } from "./types";
-import { VISION_ONE_BOOK } from "../vision-one";
-import { GRADE_SEVEN_BOOK } from "../grade-7";
-import { GRADE_EIGHT_BOOK } from "../grade-8";
-import { GRADE_NINE_BOOK } from "../grade-9";
-import { GRADE_ELEVEN_BOOK } from "../grade-11";
-import { GRADE_TWELVE_BOOK } from "../grade-12";
 
 export const BOOKS: BookMeta[] = [
   {
@@ -73,27 +71,28 @@ export const BOOKS: BookMeta[] = [
   },
 ];
 
+// ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
+
+const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
+  "vision-one": () => import("../vision-one").then((m) => m.VISION_ONE_BOOK),
+  "grade-7": () => import("../grade-7").then((m) => m.GRADE_SEVEN_BOOK),
+  "grade-8": () => import("../grade-8").then((m) => m.GRADE_EIGHT_BOOK),
+  "grade-9": () => import("../grade-9").then((m) => m.GRADE_NINE_BOOK),
+  "grade-11": () => import("../grade-11").then((m) => m.GRADE_ELEVEN_BOOK),
+  "grade-12": () => import("../grade-12").then((m) => m.GRADE_TWELVE_BOOK),
+};
+
 export function getBookMeta(id: BookId): BookMeta | undefined {
   return BOOKS.find((b) => b.id === id);
 }
 
-/** داده کامل کتاب؛ برای جزوه‌های هنوز آپلودنشده null برمی‌گرداند */
-export function getBookData(id: BookId): BookData | null {
-  switch (id) {
-    case "vision-one":
-      return VISION_ONE_BOOK;
-    case "grade-7":
-      return GRADE_SEVEN_BOOK;
-    case "grade-8":
-      return GRADE_EIGHT_BOOK;
-    case "grade-9":
-      return GRADE_NINE_BOOK;
-    case "grade-11":
-      return GRADE_ELEVEN_BOOK;
-    case "grade-12":
-      return GRADE_TWELVE_BOOK;
-    default:
-      return null;
+/** همه واژه‌های همه جزوه‌ها — فقط سمت سرور (API جست‌وجوی سراسری) استفاده می‌شود */
+export async function loadBookData(id: BookId): Promise<BookData | null> {
+  try {
+    return await LOADERS[id]();
+  } catch (err) {
+    console.error(`registry: خطا در بارگذاری جزوه ${id}`, err);
+    return null;
   }
 }
 

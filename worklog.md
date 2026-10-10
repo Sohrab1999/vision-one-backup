@@ -887,3 +887,92 @@ Stage Summary:
 - کتابخانه کامل شد: هر ۶ جزوه فعال است — ویژن وان (دهم، ۵۳۰ تست) + هفتم (۲۳۲) + هشتم (۲۲۸) + نهم (۲۳۰) + یازدهم (۲۰۴) + دوازدهم (Vision Three — ۹۰۶ واژه، ۱۵۵ تست، ۷ درسنامه، ۳ مکالمه، ۶ ریدینگ، ۲۴ دیکشنری، ۸۹ فعل) — مجموع ۱۵۷۹ سؤال
 - QA مرورگری کامل موفق: قفسه (۶ فعال/۰ در راه) → ورود به دوازدهم → جلد/فهرست (۳ فصل)/واژگان (۳ تب + ۹۰۶ واژه)/آزمون (فیلتر پویا، پاسخ واقعی صحیح، توضیح هوشمند)/گرامر (۷ درسنامه)/متن‌ها (۶ ریدینگ + ۳ مکالمه)/دیکشنری (۲۴)/افعال (۸۹، سطر awake/awoke/awaken) · رگرسیون: دهم (۵۳۰) و یازدهم (۲۰۴) سالم · موبایل ۳۹۰px بدون اسکرول افقی · فوتر طبیعی · بازیابی پس از reload · dev.log بدون خطا
 - بعدی: فاز ۷ (صیقل نهایی — PWA/تم تاریک/جستجوی سراسری/lazy-load/آمار مقایسه‌ای) — طبق قاعده، شروع فاز ۷ با اعلام کاربر.
+
+---
+Task ID: 7-a
+Agent: frontend-styling-expert (virtualization)
+
+Work Log:
+- قرائت worklog (فازهای ۱ تا ۶، QA مرورگری، قرارداد کامنت فارسی) و هر ۴ فایل هدف؛ بررسی ui/table.tsx و ui/scroll-area.tsx برای بازسازی ظاهر عین‌اللفظی
+- dictionary-view.tsx → رندر تمام مدخل‌ها با useVirtualizer مجازی‌سازی شد: ScrollArea به کانتینر اسکرول h-[600px] overflow-y-auto (همان ظاهر rounded-xl border bg-card/40) تبدیل و ردیف‌های کارت به‌صورت absolute + translateY با measureElement (ارتفاع متغیر واقعی) رندر می‌شوند — estimateSize: 160، overscan: 8
+- گرید ۱/۲ ستونه قبلی (grid-cols-1 md:grid-cols-2) با هوک کوچک useColumnCount (matchMedia روی 768px) حفظ شد؛ مدخل‌ها به ردیف‌های هم‌اندازه ستون‌ها chunk و در هر ردیف با همان Card/CardContent/Badge/SpeakButton/Quote قبلی رندر می‌شوند — جستجو، حالت خالی «واژه‌ای یافت نشد.» و کلیددهی (word+اندیس سراسری) بدون تغییر
+- verbs-view.tsx → جدول افعال مجازی‌سازی شد: چون position:absolute روی <tr> قابل‌اتکا نیست، سرجدول و سطرها با div-grid دو-نمایی همان ستون‌بندی بازسازی شدند (grid-cols-[2.5rem_1fr_1fr_1fr_1fr_3rem] = معادل w-10 و w-12) با همان کلاس‌های TableHead/TableCell (h-10 px-2 text-left font-medium، p-2، border-b، hover:bg-muted/40، سرجدول sticky top-0 z-10 bg-card) — Badge/SpeakButton/شماره فارسی/فیلتر جستجو عین قبل؛ estimateSize: 40، overscan: 8، measureElement فعال
+- هشدار اطلاع‌رسانی react-hooks/incompatible-library (رفتار عمدی React Compiler با useVirtualizer) با eslint-disable-next-line اسکوپ‌دار + کامنت فارسی بی‌اثر شد تا lint صفر problem بماند
+- quiz-game.tsx (۱۴۵۴ خط) کامل خوانده شد → مجازی‌سازی لازم نیست: فهرست بلند ساده ندارد — فاز Setup فقط چیپ‌های فیلتر/چالش است، فاز Playing سؤال‌به‌سؤال (صفحه‌بندی تک‌سؤالی با نوار پیشرفت، count حداکثر ۴۰) و فاز Result فقط سؤال‌های نادرست همان دور را لیست می‌کند؛ منطق آزمون دست نخورد
+- grammar-library.tsx بررسی شد → دست نخورد: UI آکاردئونی (Accordion تک‌بازشو) با حداکثر ۱۲ درسنامه در هر جزوه — فهرست تخت ۱۰۰+ آیتمی نیست
+- هیچ فایل دیگری (data/، page.tsx، app-header، book-context، فایل‌های موازی PWA در layout.tsx/public) تغییر نکرد
+
+Stage Summary:
+- مجازی‌سازی: dictionary-view (ردیف‌های کارت، ۱/۲ ستونه با measureElement) و verbs-view (سطرهای جدول div-grid با measureElement) با useVirtualizer — ویوپورت ثابت 600px، overscan 8، RTL و دارک‌مود سالم (کلاس‌های semantic و dark: دست نخورده)
+- عمداً دست‌نخورده: quiz-game (صفحه‌بندی تک‌سؤالی؛ فهرست بلند مرور نادرست‌ها حداکثر ۴۰ آیتم = کل دور آزمون) و grammar-library (آکاردئون ≤۱۲ آیتم)
+- خروجی‌ها: src/components/book/dictionary-view.tsx و verbs-view.tsx — bun run lint: 0 problem | bunx tsc --noEmit: صفر خطا در src (فقط خطاهای از قبل موجود examples/، scripts/، tool-results/)
+
+---
+Task ID: 7-b
+Agent: general-purpose (PWA)
+
+Work Log:
+- اسکریپت یک‌باره scripts/generate-icons.mjs (sharp، بدون وابستگی به فونت سیستمی) نوشته و با bun اجرا شد → ۶ آیکون PNG در public/icons/: icon-192، icon-512، maskable-512 (فول‌بلید با گلیف در ناحیه امن ۸۰٪)، apple-touch-icon (180)، icon-32 و icon-16 برای فاوآیکون — طراحی: مربع گردگوشه با گرادیان emerald→teal، گلیف وکتوری کتاب باز سفید (دو صفحه + خط تاق + نشانه‌های متن)، خط تأکید کهربایی؛ صحت طرح با نمونه‌برداری پیکسلی (گوشه شفاف، صفحات سفید، ستون فقرات #047857، خط کهربایی #f59e0b) و ابعاد هر ۶ فایل تأیید شد
+- public/manifest.webmanifest ساخته شد: name «کتابخانه ویژن»، short_name «ویژن»، dir rtl، lang fa، display standalone، start_url "/"، background_color #14231d، theme_color #059669، categories ["education"]، آیکون‌های ۱۹۲/۵۱۲ + maskable-512 با purpose "maskable"
+- public/sw.js (ونیل، بدون Workbox، کش visionone-v1): install → precache / ، /offline.html ، manifest و آیکون‌ها + skipWaiting (پیش‌کش تکتک با try/catch تا نصب نشکند)؛ activate → پاک‌سازی کش‌های قدیمی + clients.claim؛ fetch → ناوبری‌ها network-first با fallback کش و سپس /offline.html، استاتیک‌ها (/_next/static/، /icons/، فونت‌ها و…) cache-first با به‌روزرسانی پس‌زمینه (سبک SWR)، /api/ فقط شبکه و بدون کش، متدهای غیر GET و cross-origin کاملاً نادیده
+- public/offline.html: صفحه فارسی RTL خودکفا (فقط استایل inline، بدون فونت خارجی، color-scheme dark) با گرادیان سبز تیره، 📗، عنوان «آفلاین هستید»، پیام «اتصال اینترنت برقرار نیست — کتاب آخر بازدیدشده پس از بازگشت آنلاین در دسترس است»، دکمه «تلاش دوباره» با location.reload و نقطه‌وضعیت کهربایی
+- src/components/book/pwa-register.tsx: کامپوننت کلاینت PwaRegister — ثبت /sw.js در window.load (یا فوری اگر load گذشته باشد)، فقط در بستر https/localhost، با cleanup درست (پرچم cancelled + removeEventListener) و شکست بی‌صدا؛ return null
+- src/app/layout.tsx: افزودن manifest، appleWebApp (capable/statusBarStyle/title «ویژن») و icons (۳۲+۱۹۲ و apple-touch) به metadata — بقیه فیلدها دست‌نخورده — و رندر <PwaRegister /> کنار <Toaster />؛ هیچ route جدیدی ساخته نشد (قاعده تک‌مسیر)
+- راستی‌آزمایی: bun run lint → ۰ خطا (فقط ۲ هشدار از قبل موجود TanStack Virtual در vocabulary-view/verbs-view)؛ tsc --noEmit → صفر خطا در src (خطاهای قبلی examples/، scripts/transcribe*، tool-results/ خارج از scope)؛ node --check روی sw.js و JSON.parse روی manifest سالم؛ سرور dev در حال اجرا: هر ۹ مسیر (/, manifest, sw.js, offline.html, ۶ آیکون) → 200 و در HTML خروجی <link rel="manifest">، متاهای apple-mobile-web-app و link های icon/apple-touch-icon صادر می‌شوند؛ dev.log بدون خطای runtime
+
+Stage Summary:
+- PWA کامل شد: مانیفست RTL فارسی + سرویس‌ورکن ونیل با سه راهبرد کش (ناوبری network-first→offline.html، استاتیک cache-first/SWR، API فقط-شبکه) + صفحه آفلاین خودکفا + ۶ آیکون تولیدشده از یک SVG وکتوری — نصب‌پذیر روی موبایل/دسکتاپ و کتاب آخر در حالت آفلاین از کش در دسترس است
+- محدوده: public/{manifest.webmanifest, sw.js, offline.html, icons/*} + src/components/book/pwa-register.tsx + یک import/رندر در layout.tsx — بدون تغییر route یا منطق کتاب
+- بعدی (فاز ۷): تم تاریک/روشن سوییچ‌پذیر، جستجوی سراسری، lazy-load نماها
+
+---
+Task ID: 7-c
+Agent: general-purpose (compare stats)
+
+Work Log:
+- قرائت worklog (۱۰۵ خط آخر) + مطالعه عرف‌های مسیرهای API (src/app/api/attempts/route.ts: db از @/lib/db، NextResponse، try/catch با پیام فارسی، export const dynamic) و اسکیمای Attempt (فیلد book رشته‌ای — ۶ شناسهٔ مجاز)
+- ساخت src/app/api/compare/route.ts (تنها فایل سروری، بدون دست‌زدن به مسیرهای دیگر):
+  - GET با groupBy روی Attempt (by: ["book"]، _count._all، _sum.total/correct) برای آمار کل تاریخچهٔ هر جزوه
+  - pull جداگانهٔ ۹۰ روز اخیر (take 5000، select book/correct/total/createdAt، نزولی) → heatmap روزانه per-book (کلید YYYY-MM-DD با تاریخ محلی سرور) + trend دقت ۳۰ روزه per-book (فقط روزهای دارای داده، صعودی، accuracy = round(sumCorrect/sumTotal×100))
+  - best/lastActivity از findMany موازی (Promise.all) ۵۰۰ ردیف اخیر هر کتابِ دارای داده — best = بیشینهٔ round(correct/total×100)
+  - clamp سخت‌گیرانه به ۶ شناسهٔ مجاز (vision-one/grade-7/8/9/11/12) — مقادیر legacy/ناشناس در همهٔ خروجی‌ها حذف می‌شوند (برخلاف attempts: نرمال‌سازی به vision-one انجام نمی‌شود)
+  - آرایهٔ books همیشه هر ۶ کتاب را به ترتیب کانونی برمی‌گرداند؛ کتاب بدون داده: attempts:0 و accuracy/best/lastActivity: null
+  - خطا → console.error + 500 با پیام «خطا در دریافت آمار مقایسه‌ای»
+- ساخت src/components/book/compare-view.tsx (تنها فایل UI، "use client"، بدون import از رجیستری — BOOK_META محلی با پالت emerald/amber/teal/violet/orange/rose، بدون آبی/ایندیگو):
+  - fetch دستی با useEffect + useState (فاز loading/ready/error، fetch در async fn، گارد cancelled در cleanup) — retry با شمارندهٔ reloadKey
+  - هدر «مقایسه پایه‌ها» + زیرنویس + Badge جمع آزمون‌های کل کتابخانه (اعداد fa-IR)
+  - KPI ۶ کارته (grid-cols-2 → lg:grid-cols-6): ایموجی، برچسب پایه، تعداد آزمون، دقت٪ (یا «—»)، نوار پیشرفت h-1.5 با رنگ کتاب، بهترین رکورد
+  - نمودار ستونی recharts دقت هر پایه (ResponsiveContainer h-280، dir="ltr"، radius=[8,8,0,0]، Cell با رنگ هر کتاب، تولتیپ فارسی٪، XAxis برچسب کوتاه پایه) داخل Card با aria-label
+  - heatmap فعالیت ۹۰ روزه: هر کتاب یک سطر (برچسب w-28 shrink-0 + «n روز فعال») + ۹۰ سلول w-2.5 h-2.5 rounded-[3px] (flex wrap، dir="ltr" برای توالی تاریخی چپ→راست) با ۴ پله شدت: 0→bg-muted، 1-2→emerald-200/dark:emerald-900، 3-4→emerald-400/dark:emerald-700، 5+→emerald-600/dark:emerald-500 + legend کم→زیاد + رشتهٔ «بدون فعالیت اخیر» برای کتاب بی‌داده (و «آزمون (قدیمی)» برای کتابی که فقط دادهٔ خارج از ۹۰ روز دارد)
+  - نمودار خطی روند ۳۰ روزه: یک Line به‌ازای هر کتاب دارای trend (رنگ هماهنگ با کتاب، connectNulls برای شکاف روزها، domain [0,100]، legend با برچسب پایه، X = M/D) + empty-state «برای رسم روند…»
+  - پانویس «نتایج از آزمون‌های انجام‌شده در همین دستگاه جمع‌آوری می‌شود»؛ لودینگ: Skeleton های animate-pulse هم‌شکل نما؛ خطا: Alert destructive + دکمهٔ تلاش دوباره (h-11 ≥ ۴۴px، focus-visible ring)
+- راستی‌آزمایی: bun run lint ✓ صفر خطا | bunx tsc --noEmit → صفر خطا در src/ (فقط خطاهای از قبل موجود examples/ و scripts/ و tool-results/ خارج از محدوده) | دود-تست زنده روی dev سرور: GET /api/compare → 200 در ۱۸۲ms با خروجی صحیح (books هر ۶ کتاب: vision-one ۱۷ آزمون/دقت ۳۴/بهترین ۱۰۰، grade-9 ۱ آزمون/۸۰، بقیه null؛ heatmap و trend فقط کتاب‌های دارای داده) | تطابق ۱:۱ با groupBy مستقیم Prisma روی DB ✓ | dev.log بدون خطای runtime
+
+Stage Summary:
+- نمای «آمار مقایسه‌ای بین پایه‌ها» آماده است: مقایسه دقت/تعداد آزمون/بهترین رکورد شش جزوه کنار هم + heatmap فعالیت ۹۰ روزه per-book + روند دقت ۳۰ روزه چندخطی — همه RTL فارسی با اعداد فارسی، سازگار با تم تاریک (توکن‌های معنایی bg-card/text-muted-foreground/bg-muted)
+- قرارداد API: GET /api/compare → { books: [{book, attempts, answered, correct, accuracy|null, best|null, lastActivity|null}] × ۶ کتاب، heatmap: Record<bookId, Record<"YYYY-MM-DD", count>>، trend: Record<bookId, {date, accuracy}[]>، rangeDays: 90 }
+- نقطهٔ اتصال: CompareView در src/components/book/compare-view.tsx آماده سیم‌کشی به page.tsx با ViewId "compare" (onNavigate?: (view: string) => void اختیاری و بی‌استفاده-امن؛ آیتم ناوبری/کلید فلات برای آن توسط اورکستراتور افزوده شود)
+- فقط ۲ فایل جدید ساخته شد؛ هیچ فایل موجودی ویرایش نشد
+
+---
+Task ID: 7 (orchestrator — فاز ۷ کامل؛ زیرتسک‌های 7-a/7-b/7-c در بخش‌های جدا ثبت شدند)
+Agent: main orchestrator (Z.ai Code)
+Task: فاز ۷ نقشه راه — صیقل نهایی و استانداردهای وب ۲۰۲۶ (lazy-load، PWA، تم/دسترس‌پذیری، جست‌وجوی سراسری، آمار مقایسه‌ای، مجازی‌سازی، انیمیشن انتقال، مستندسازی)
+
+Work Log:
+- 7-d lazy-load: رجیستری بازنویسی شد — importهای استاتیک ۶ جزوه (مجموعاً ~۲.۱MB) حذف و `loadBookData` با dynamic import chunk-to-chunk جایگزین شد؛ BOOKS (متادیتای قفسه) استاتیک و سبک ماند.
+- استور بیرونی جدید `src/lib/book-data-store.ts` ساخته شد (الگوی همان book-storage): کش per-book، جلوگیری از درخواست موازی تکراری، اسنپ‌شات سرور null، بدون هیچ setState در effect (سازگار react-hooks v6). BookProvider حالا data را از این استور می‌خواند و `requestBookData(bookId)` را در effect صدا می‌زند.
+- page.tsx: گارد `hasData` برای همه ویوهای کتابی + کامپوننت اسکلت `BookDataLoading` (emoji + پالس + اسپینر) تا رسیدن chunk؛ سوییچ کتاب بدون فلش داده قدیمی (اسنپ‌شات به bookId فعال مقید است).
+- یکپارچه‌سازی 7-c: ViewId و NavView جدید «compare» به nav-store و هدر اضافه شد؛ CompareView در page.tsx؛ دکمه «مقایسه پایه‌ها» در قفسه.
+- 7-e جست‌وجوی سراسری: API `/api/search` با ایندکس درون‌حافظه‌ای (واژه/فعل/دیکشنری/گرامر/تست از ۶ جزوه، سقف per-type) + کامپوننت `global-search` (CommandDialog با ⌘K/Ctrl+K، debounce ۲۵۰ms، محافظ seq، انتخاب نتیجه = setBook + requestView)؛ دکمه جست‌وجو در هدر.
+- رفع خطای lint react-hooks/set-state-in-effect در global-search: ریست نتایج به شرط رندر منتقل شد (`visibleResults`) و setLoading داخل setTimeout ناهمگام.
+- 7-f: پیش‌فرض تم از prefers-color-scheme (theme-store) + اسکریپت ضد-فلش در layout head؛ ترنزیشن نما/کتاب با Framer Motion (motion.div کلید `bookId-view`، fade+slide+scale 0.38s)؛ دکمه‌های آیکونی هدر h-11 در موبایل (هدف لمسی ۴۴px).
+- انیمیشن Bar نمودار مقایسه به isAnimationActive={false} تغییر کرد (جلوگیری از پخش مجدد روی resize).
+- QA مرورگری کامل با agent-browser: قفسه ۶ فعال → مقایسه (KPI/ستونی/heatmap/روند) → ورود دهم با lazy-load → دیکشنری و افعال مجازی (پنجره رندر با اسکرول جابه‌جا شد) → آزمون دوازدهم: چالش روزانه، پاسخ واقعی «whom» ثبت و «صحیح ۱» شد → جست‌وجوی سراسری ⌘K با ۴ گروه کتاب از عبارت university و باز شدن واژگان دوازدهم از روی نتیجه → تم روشن/تیره → رگرسیون ۶ کتاب (h1 جلد هر جزوه تایید) → موبایل ۳۹۰px بدون اسکرول افقی → reload با بازیابی grade-11 → manifest/sw.js/offline.html/آیکون‌ها همه 200.
+- نقشه راه: فاز ۷ تیک کامل خورد + QA summary ثبت شد.
+
+Stage Summary:
+- فاز ۷ کامل شد و با آن کل نقشه راه ۷ فازی (۰ تا ۷) بسته شد — کتابخانه ۶ جزوه‌ای ویژن از معماری تا صیقل نهایی تحویل داده شد.
+- باندل اولیه سبک: داده جزوه‌ها فقط chunk فعال (~۲۲۸K تا ۴۶۰K هر کدام)؛ کش per-book سوییچ برگشت را فوری می‌کند.
+- نقاط تماس جدید: `src/lib/book-data-store.ts`، `src/components/book/global-search.tsx`، `src/app/api/search/route.ts`، `src/app/api/compare/route.ts`، `src/components/book/compare-view.tsx`، `public/{manifest.webmanifest,sw.js,offline.html,icons/*}`.
+- ریسک/یادداشت: تست نصب PWA روی دستگاه واقعی (Add to Home Screen) و حالت آفلاین واقعی انجام نشده (محیط headless) — منطق SW ساده و reviewed است؛ اسکرین‌شات full-page باعث re-mount recharts می‌شود که با isAnimationActive=false خنثی شد.
