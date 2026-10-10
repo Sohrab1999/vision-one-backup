@@ -1497,3 +1497,38 @@ Stage Summary:
 - نقاط تماس به‌روز: games-hub.tsx (GAMES + GAMES_EXTRA + GameKey — افزودن بازی جدید = import + یک آیتم + یک شاخه؛ دقت: find بازی فعال باید هر دو آرایه را بپوشاند)، shared.ts بدون تغییر، ۹ فایل بازی مستقل جدید.
 - نکته QA-tooling: در اسکریپت‌های agent-browser، refOf باید بلافاصله پس از SNAP تازه اجرا شود؛ snapshot کهنه باعث کلیک اشتباه/بی‌عمل شد (منشا WARNهای کاذب دور اول).
 - ریسک/یادداشت: فلپی بدون ورودی کاربر ~۳ ثانیه‌ای می‌بازد (طبیعی ژانر فلپی — پیام راهنمای کلیدهای Space/تپ در پایین canvas هست)؛ هوموفون‌ها در شکار صدا بدون داده phonetic فیلتر نمی‌شوند؛ push سمت سرور Attempt هنوز delta نیست (فاز ۱۱).
+
+---
+Task ID: 5-a
+Agent: orchestrator (Z.ai Code)
+Task: فاز ۵ نقشه راه ۲۰۲۶ — شوتر آموزشی اول‌شخص (Educational FPS): زیرساخت سه‌بعدی، دو حالت بازی، کنترل دسکتاپ/لمسی، کارایی و ثبت Attempt/SRS
+
+Work Log:
+- راستی‌آزمایی کامل فاز ۴ روی دیسک: هر ۹ بازی (4-a تا 4-i) موجود، worklog ثبت‌شده، ادغام ۱۴ بازیته هاب کامل، tsc/lint صفر، commit f6b4801 — فاز ۴ بسته شد
+- نقشه راه خوانده شد → فاز بعدی = فاز ۵ (شوتر آموزشی اول‌شخص)
+- نصب three@0.186.1 + @react-three/fiber@9.8.1 (+ @types/three) با bun
+- ساخت src/components/book/games/fps-shooter-game.tsx (~۹۵۰ خط):
+  * دو حالت: «شکار واژه» (معنی فارسی → واژه‌های انگلیسی از data.vocab) و «سد گرامری» (جملهٔ ناقص quiz.seed + ۴ گزینه)
+  * میدان low-poly رویه‌ای: زمین دایره‌ای + حلقه‌های راهنما، کوه‌های مخروطی، اجسام شناور با bob/spin، مه، دو نور ساده
+  * ۴ هدف اوکتاهدر متحرک (لِین/ارتفاع/عمق/بوب مستقل) با بیلبورد Sprite از CanvasTexture رویه‌ای (بدون drei/troika)
+  * انفجار رنگین‌کمانی: InstancedMesh ۳۶ ذره (۱۶ در دستگاه ضعیف) با instanceColor و جاذبه
+  * کنترل دسکتاپ: Pointer Lock + حرکت موس + شلیک از رتیکل مرکز؛ موبایل: درگ = نگاه، تپ روی هدف = شلیک؛ حالت دسترس‌پذیری «تپ ساده» + کلیدهای ۱..۴ (فارسی/انگلیسی)
+  * شلیک با Raycaster از NDC؛ cooldown ۵۵۰ms؛ شلیک به خالی جریمه ندارد
+  * تایمر هر سؤال (۱۲/۱۵ ثانیه، freeze بین سؤال‌ها)، ۳ قلب، کمبو تا ×۷ (امتیاز ۱۰ + ۲×کمبو)، reshuffle بی‌پایان استخر
+  * تطبیق پرتره: laneK بر اساس aspect + عقب‌رفتن دوربین (تأیید بصری در ۳۹۰px)
+  * تشخیص دستگاه ضعیف (hardwareConcurrency/deviceMemory) → dpr [1,1]، بدون antialias، ذرات کمتر
+  * الگوی طلایی: finish با touchStreak + recordStudySession + bumpPlays + saveAttempt(detail: mode/tap/maxCombo) + saveBest {score} per-scope (word|grammar × -tap) + seedReviewFromQuiz روی هر خطا
+  * react-hooks v6: صفر setState در بدنهٔ effect، latest-ref برای onHit/timeout/advance/voiceSpeed، پاکسازی کامل (تایمرها، Pointer Lock، stopSpeaking، dispose texture)
+  * جهش THREE فقط در توابع ماژول‌سطح (applyRig/initRig) برای رعایت react-hooks/immutability
+- ادغام در games-hub.tsx: next/dynamic با ssr:false و skeleton «بارگذاری موتور سه‌بعدی» (چانک lazy — صفر تأثیر روی بقیهٔ اپ) + GameKey «fps-shooter» + کارت با آیکون Crosshair + شمارنده «۱۵ بازی»
+- رفع ۲ خطای react-hooks/immutability (mutation دوربین/bridge در useFrame → توابع ماژول‌سطح)
+- tsc --noEmit: صفر خطا در src/ | eslint: صفر خطا/هشدار
+- QA مرورگری (agent-browser): ورود → بازی‌ها → کارت شوتر → ست‌آپ (۱۴۸۸ واژه/چیپ درس‌ها) → تپ ساده + شروع → صحنه سه‌بعدی رندر (اسکرین‌شات) → گیم‌پلی با کلید ۱..۴ → ۱ شلیک درست/۳ خطا → صفحه پایان (امتیاز ۱۰، کمبو ×۱، واژه‌های غلط‌زده e-ticket/eraser/ideal + «به مرور اضافه شد») → حالت سد گرامری (سؤال LTR Penicillin + گزینه‌ها روی اهداف) → POST /api/attempts 200 ×۳ → موبایل ۳۹۰px سالم → هاب «۱۵ بازی واژگانی و مهارتی»
+- تیک ۷ چک‌باکس فاز ۵ + عنوان «✅ تمام شد» در نقشه راه
+
+Stage Summary:
+- فاز ۵ کامل و راستی‌آزمایی‌شده؛ بازی شوتر آموزشی پانزدهمین بازی آزمایشگاه است
+- فایل‌های کلیدی: fps-shooter-game.tsx (جدید)، games-hub.tsx (ادغام lazy)، package.json (three/R3F)، نقشه راه (تیک فاز ۵)
+- تصمیم‌ها: بدون @react-three/drei (برچسب‌ها با CanvasTexture رویه‌ای)؛ برچسب هدف‌ها فقط انگلیسی؛ اسکوپ رکورد word/grammar ± tap
+- باگ شناخته‌شدهٔ بی‌اهمیت: هشدار deprecation THREE.Clock از R3F داخلی — بی‌ضرر
+- گام بعدی پیشنهادی: فاز ۶ (گیمیفیکیشن: XP، زنجیره، سکه، نشان‌ها، ماموریت روزانه، رده‌بندی، Confetti)

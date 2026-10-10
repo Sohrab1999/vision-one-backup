@@ -10,6 +10,7 @@
  */
 
 import { useMemo, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import {
   Gamepad2,
   LayoutGrid,
@@ -29,6 +30,7 @@ import {
   Swords,
   Headphones,
   Compass,
+  Crosshair,
   type LucideIcon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -52,6 +54,19 @@ import { DuelGame } from "./duel-game";
 import { ListeningHuntGame } from "./listening-hunt-game";
 import { AdventureMapGame } from "./adventure-map-game";
 
+// بازی فاز ۵ — موتور سه‌بعدی (three + R3F) در چانک جدا و lazy؛ صفر تأثیر روی بارگذاری بقیهٔ اپ
+const FpsShooterGame = dynamic(() => import("./fps-shooter-game").then((m) => m.FpsShooterGame), {
+  ssr: false,
+  loading: () => (
+    <Card>
+      <CardContent className="flex h-64 items-center justify-center gap-3 p-6 text-sm text-muted-foreground">
+        <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        در حال بارگذاری موتور سه‌بعدی…
+      </CardContent>
+    </Card>
+  ),
+});
+
 export type GameKey =
   | "memory"
   | "scramble"
@@ -66,7 +81,8 @@ export type GameKey =
   | "sentence-builder"
   | "duel"
   | "listening-hunt"
-  | "adventure-map";
+  | "adventure-map"
+  | "fps-shooter";
 
 interface GameInfo {
   key: GameKey;
@@ -180,6 +196,13 @@ const GAMES_EXTRA: GameInfo[] = [
     icon: Compass,
     tile: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
   },
+  {
+    key: "fps-shooter",
+    name: "شوتر آموزشی",
+    desc: "میدان سه‌بعدی low-poly؛ سؤال روی HUD و گزینه‌ها روی اهداف متحرک — به درست شلیک کن!",
+    icon: Crosshair,
+    tile: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  },
 ];
 
 /** خلاصه رکورد برای نشان روی کارت هر بازی — per-game scope "any" نمایشی است */
@@ -271,6 +294,7 @@ export function GamesHub() {
         {active === "duel" && <DuelGame />}
         {active === "listening-hunt" && <ListeningHuntGame />}
         {active === "adventure-map" && <AdventureMapGame />}
+        {active === "fps-shooter" && <FpsShooterGame />}
       </div>
     );
   }
@@ -298,7 +322,7 @@ export function GamesHub() {
             </Badge>
             <Badge variant="outline" className="gap-1 border-amber-500/40 text-[11px] text-amber-600 dark:text-amber-400">
               <Sparkles size={11} />
-              ۱۴ بازی واژگانی و مهارتی
+              ۱۵ بازی واژگانی و مهارتی
             </Badge>
           </div>
         </CardContent>
