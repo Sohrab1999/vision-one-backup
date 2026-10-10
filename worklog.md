@@ -2085,3 +2085,19 @@ Stage Summary:
 - قرارداد: لینک عمیق /?book=<id>&lesson=<n>&view=<NavView> با پاک‌سازی URL؛ رویدادهای open-install/open-whats-new بین bookshelf و page؛ voterKey دستگاهی (بدون حساب — حریم خصوصی)؛ What's New: هر جمعه ورود جدید در data/whats-new.ts (id = شناسه؛ seen در localStorage)
 - ریسک/یادداشت: تست Add to Home Screen روی گوشی واقعی در سندباکس ممکن نشد (معیار پذیرش مستندشده)؛ رأی/پیشنهاد دستگاهی است — کاربر چنددستگاهه می‌تواند دوباره رأی بدهد (پذیرش‌شده برای حداقل داده)؛ db.ts حالا چک تازگی مدل دارد — مدل‌های آینده خودکار
 - گام بعدی پیشنهادی: نقشه راه ۲۰۲۶ تمام است — گام‌های طبیعی بعدی: (۱) جمع‌بندی/برچسب نسخهٔ ۱.۰ و یادداشت انتشار عمومی، (۲) کارت‌های باقی‌مانده فازهای قبلی (CLS روی build تولیدی، CSP، a11y بازی‌های باقی‌مانده)، (۳) محتوای جدید جزوه‌ها
+
+---
+Task ID: games-roadmap-1
+Agent: main orchestrator (Z.ai Code)
+Task: نگارش نقشه راه دقیق و استاندارد بهبود و ارتقای بازی‌های موجود (درخواست مستقیم کاربر)
+
+Work Log:
+- ممیزی کامل کد آزمایشگاه بازی‌ها: ۱۵ بازی (۱۳٬۴۶۲ خط) در src/components/book/games/ + کیت مشترک shared.ts + اتصال به page.tsx/hub
+- اسکن الگویی با grep برای ۲۰+ قابلیت: TTS (۱۳/۱۵)، کیبورد (۹/۱۵)، aria-live (۵/۱۵)، scope (۱۴/۱۵)، saveBest/bumpPlays/saveAttempt همه، ربات مار‌و‌پله، حالت روزانه وردل، ستارهٔ adventure، lazy chunk fps — و شکاف‌ها: صدا ۰/۱۵، لرزش ۰/۱۵، Pause ۰/۱۵، نگهبان خروج ۰/۱۵، visibilitychange ۰/۱۵، reduced-motion ۰/۱۵
+- کشف ۵ بدهی فنی مستند: D1 ناهم‌خوانی کلید GAME_TITLES (wordsearch ≠ word-search → توست رکورد عنوان خام)، D2 اسکن خطی localStorage در BestBadge، D3 استاتیک بودن ۱۴ بازی در باندل اصلی (فقط fps داینامیک)، D4 کلید هاردکد scramble، D5 پیشرفت adventure فقط localStorage
+- نگارش سند docs/games-roadmap.md (نسخه ۱.۰): چشم‌انداز + ۵ KPI کمی + ۸ استاندارد اجباری (WCAG 2.2 AA، قانون جویس، WebAudio autoplay، Vibration، Page Lifecycle، بودجه کارایی، حریم خصوصی نوجوان، آفلاین‌فرست) + ماتریس ممیزی + معماری هدف GameKit v2 (۱۰ ماژول در games/kit/) + ۷ فاز G0..G6 با ۴۲ کار شماره‌دار P0/P1/P2 و حجم S/M/L و معیار پذیرش + ماتریس اولویت + ۶ ریسک + DoD ۷بندی
+
+Stage Summary:
+- خروجی: docs/games-roadmap.md — سند حاکم ارتقای بازی‌ها با قواعد حفظ‌شوندگی (امضای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage تغییرناپذیر؛ تغییر فقط افزودنی)
+- مسیر پیشنهادی اجرا: G0 (رفع D1/D3/نگهبان خروج) → G1 (کیت: صدا/لرزش/Pause/ExitGuard/Shell/ResultScreen/دشواری/آموزش/تله‌متری با پایلوت memory) → G2 (مهاجرت گروهی ۵تایی) → G3 عمق/دشواری/ماموریت → G4 رده‌بندی per-game + دوئل آنلاین (socket.io پورت 3003 با XTransformPort) → G5 AI مدرس بازی → G6 QA ماتریسی/KPI
+- قاعدهٔ صریح: تا اتمام G4 هیچ بازی جدیدی ساخته نمی‌شود؛ اولویت P0 این هفته: G0-01، G0-06، G1-01..04، G4-02
