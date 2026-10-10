@@ -1,0 +1,941 @@
+     1→     1→"use client";
+     2→     2→
+     3→     3→/**
+     4→     4→ * بازی «مار و پله واژگانی» (Snakes & Ladders) — فاز ۴ نقشه راه جامع ۲۰۲۶.
+     5→     5→ *
+     6→     6→ * تختهٔ کلاسیک ۱۰۰ خانه با شماره‌گذاری مارپیچی (۱ پایین-چپ، زیگزاگ تا ۱۰۰ بالا):
+     7→     7→ * برای انداختن تاس باید اول سؤال واژگانی خود جزوه (data.quiz.seed) را درست جواب بدهی.
+     8→     8→ * - حالت‌ها: «روی یک دستگاه» (۲ تا ۴ بازیکن hot-seat با رنگ‌های emerald/amber/teal/muted)
+     9→     9→ *   یا «مقابل ربات» (تو + ربات با ۶۵٪ احتمال پاسخ درست).
+    10→    10→ * - پاسخ درست → انیمیشن تاس (Dice* با match-pop) + حرکت مهره خانه‌به‌خانه (~۱۲۰ms)؛
+    11→    11→ *   خانه‌های مار/پله نشان کوچک مقصد دارند (TrendingDown destructive / TrendingUp primary)
+    12→    12→ *   و انتقال با toast اعلام می‌شود؛ تاس ۶ = نوبت اضافه.
+    13→    13→ * - پاسخ غلط → toast «بند شدی!» و نوبت به بازیکن بعدی می‌رسد.
+    14→    14→ * - سؤال‌ها با pickUnique روی text یکتا انتخاب می‌شوند؛ استخر تمام شد؟ reshuffle و ادامه.
+    15→    15→ * - برنده: رسیدن به خانهٔ ≥۱۰۰ → فاز done با ستایش برنده و آمار هر بازیکن.
+    16→    16→ * - رکورد «سریع‌ترین پیروزی» با اسکوپ hotseat | vs-bot در localStorage.
+    17→    17→ */
+    18→    18→
+    19→    19→import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    20→    20→import {
+    21→    21→  Bot,
+    22→    22→  Crown,
+    23→    23→  Dice1,
+    24→    24→  Dice2,
+    25→    25→  Dice3,
+    26→    26→  Dice4,
+    27→    27→  Dice5,
+    28→    28→  Dice6,
+    29→    29→  Dices,
+    30→    30→  PartyPopper,
+    31→    31→  Play,
+    32→    32→  RotateCcw,
+    33→    33→  Sparkles,
+    34→    34→  Timer,
+    35→    35→  TrendingDown,
+    36→    36→  TrendingUp,
+    37→    37→  Trophy,
+    38→    38→  Users,
+    39→    39→  type LucideIcon,
+    40→    40→} from "lucide-react";
+    41→    41→import { Button } from "@/components/ui/button";
+    42→    42→import { Card, CardContent } from "@/components/ui/card";
+    43→    43→import { Badge } from "@/components/ui/badge";
+    44→    44→import { Input } from "@/components/ui/input";
+    45→    45→import { cn } from "@/lib/utils";
+    46→    46→import { toast } from "sonner";
+    47→    47→import type { QuizQuestionSeed } from "@/data/types";
+    48→    48→import { useBook, useBookData } from "@/lib/book-context";
+    49→    49→import { touchStreak } from "@/lib/streak-store";
+    50→    50→import { recordStudySession } from "@/lib/goal-store";
+    51→    51→import {
+    52→    52→  bumpPlays,
+    53→    53→  faNum,
+    54→    54→  fmtTime,
+    55→    55→  loadBest,
+    56→    56→  pickUnique,
+    57→    57→  saveAttempt,
+    58→    58→  saveBest,
+    59→    59→  shuffle,
+    60→    60→  subscribeGameData,
+    61→    61→} from "./shared";
+    62→    62→
+    63→    63→// ─── ثابت‌ها و نقشهٔ تخته ───
+    64→    64→
+    65→    65→const GAME_KEY = "snakes-ladders";
+    66→    66→const ALL_LESSON = -1;
+    67→    67→const MIN_POOL = 5;
+    68→    68→/** مدت هر پلهٔ حرکت مهره (ms) */
+    69→    69→const STEP_MS = 120;
+    70→    70→/** تأخیر «فکر کردن» ربات (ms) */
+    71→    71→const BOT_DELAY = 900;
+    72→    72→/** احتمال پاسخ درست ربات (۶۵٪ — همان عددی که در setup نمایش داده می‌شود) */
+    73→    73→const BOT_SKILL = 0.65;
+    74→    74→/** تعداد چرخش تصادفی تاس قبل از ثابت‌شدن عدد نهایی */
+    75→    75→const DICE_FLIPS = 5;
+    76→    76→
+    77→    77→/** مارها: سر → دُم */
+    78→    78→const SNAKES: Record<number, number> = { 16: 6, 48: 30, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78 };
+    79→    79→/** پله‌ها: پایین → بالا */
+    80→    80→const LADDERS: Record<number, number> = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
+    81→    81→
+    82→    82→type Phase = "setup" | "playing" | "done";
+    83→    83→type Mode = "hotseat" | "bot";
+    84→    84→type CatKey = "all" | "vocabulary" | "grammar";
+    85→    85→
+    86→    86→interface Player {
+    87→    87→  name: string;
+    88→    88→  isBot: boolean;
+    89→    89→  /** اندیس رنگ مهره در TOKEN_BG */
+    90→    90→  ci: number;
+    91→    91→}
+    92→    92→
+    93→    93→interface PStats {
+    94→    94→  asked: number;
+    95→    95→  correct: number;
+    96→    96→  wrong: number;
+    97→    97→}
+    98→    98→
+    99→    99→/** شکل رکورد شخصی — سریع‌ترین پیروزی (ثانیه؛ کمتر = بهتر) */
+   100→   100→interface BestRecord {
+   101→   101→  time: number;
+   102→   102→}
+   103→   103→
+   104→   104→/** رنگ مهرهٔ هر بازیکن — بازیکن چهارم muted-foreground (قاعدهٔ پالت پروژه) */
+   105→   105→const TOKEN_BG = ["bg-emerald-500", "bg-amber-500", "bg-teal-500", "bg-muted-foreground"] as const;
+   106→   106→
+   107→   107→const DICE_ICONS: Record<number, LucideIcon> = { 1: Dice1, 2: Dice2, 3: Dice3, 4: Dice4, 5: Dice5, 6: Dice6 };
+   108→   108→
+   109→   109→/**
+   110→   110→ * موقعیت شبکهٔ هر خانه — شماره‌گذاری مارپیچی کلاسیک:
+   111→   111→ * ردیف پایین (b = 0) از چپ بالا می‌رود، ردیف‌های فرد از راست (زیگزاگ).
+   112→   112→ * چیدمان RTL است، پس ستون شبکه = ۱۰ − فاصله از چپ؛
+   113→   113→ * مثلاً خانهٔ ۱ → col 10/row 10 (پایین-چپ) و خانهٔ ۱۰۰ → col 10/row 1 (بالا-چپ).
+   114→   114→ */
+   115→   115→const CELL_POS: { col: number; row: number }[] = Array.from({ length: 100 }, (_, i) => {
+   116→   116→  const n = i + 1;
+   117→   117→  const b = Math.floor((n - 1) / 10);
+   118→   118→  const fromLeft = b % 2 === 0 ? (n - 1) % 10 : 9 - ((n - 1) % 10);
+   119→   119→  return { col: 10 - fromLeft, row: 9 - b + 1 };
+   120→   120→});
+   121→   121→
+   122→   122→function lessonLabel(l: number): string {
+   123→   123→  return l === 0 ? "جمع‌بندی" : `درس ${faNum(l)}`;
+   124→   124→}
+   125→   125→
+   126→   126→/** یک گزینهٔ غلط تصادفی برای جواب ربات */
+   127→   127→function wrongIndexOf(q: QuizQuestionSeed): number {
+   128→   128→  const wrongs = [0, 1, 2, 3].filter((i) => i !== q.answer);
+   129→   129→  return wrongs[Math.floor(Math.random() * wrongs.length)] ?? q.answer;
+   130→   130→}
+   131→   131→
+   132→   132→export function SnakesLaddersGame() {
+   133→   133→  const data = useBookData();
+   134→   134→  const { bookId } = useBook();
+   135→   135→  // بازی‌ها فقط داخل کتاب فعال رندر می‌شوند (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   136→   136→  const activeBookId: string = bookId ?? "";
+   137→   137→
+   138→   138→  const [phase, setPhase] = useState<Phase>("setup");
+   139→   139→  const [mode, setMode] = useState<Mode>("hotseat");
+   140→   140→  const [count, setCount] = useState(2);
+   141→   141→  const [names, setNames] = useState<string[]>(["", "", "", ""]);
+   142→   142→  const [lesson, setLesson] = useState<number>(ALL_LESSON);
+   143→   143→  const [cat, setCat] = useState<CatKey>("all");
+   144→   144→
+   145→   145→  // ── stateهای حین بازی ──
+   146→   146→  const [players, setPlayers] = useState<Player[]>([]);
+   147→   147→  const [positions, setPositions] = useState<number[]>([]);
+   148→   148→  const [stats, setStats] = useState<PStats[]>([]);
+   149→   149→  const [cur, setCur] = useState(0);
+   150→   150→  const [q, setQ] = useState<QuizQuestionSeed | null>(null);
+   151→   151→  const [qNum, setQNum] = useState(0);
+   152→   152→  const [secs, setSecs] = useState(0);
+   153→   153→  /** بازخورد پاسخ — گزینهٔ انتخابی + درست/غلط (ربات یا انسان) */
+   154→   154→  const [reveal, setReveal] = useState<{ picked: number; ok: boolean; byBot: boolean } | null>(null);
+   155→   155→  const [diceFace, setDiceFace] = useState<number | null>(null);
+   156→   156→  /** key انیمیشن match-pop تاس */
+   157→   157→  const [dicePop, setDicePop] = useState(0);
+   158→   158→
+   159→   159→  // ── stateهای فاز done ──
+   160→   160→  const [winner, setWinner] = useState<number | null>(null);
+   161→   161→  const [isRecord, setIsRecord] = useState(false);
+   162→   162→
+   163→   163→  // ── refs — منبع حقیقت منطق بازی (همهٔ callbackهای تایمر از این‌ها می‌خوانند) ──
+   164→   164→  const playersRef = useRef<Player[]>([]);
+   165→   165→  const posRef = useRef<number[]>([]);
+   166→   166→  const statsRef = useRef<PStats[]>([]);
+   167→   167→  const curRef = useRef(0);
+   168→   168→  const qRef = useRef<QuizQuestionSeed | null>(null);
+   169→   169→  const deckRef = useRef<QuizQuestionSeed[]>([]);
+   170→   170→  const qiRef = useRef(-1);
+   171→   171→  const secsRef = useRef(0);
+   172→   172→  /** قفل نوبت تا پایان کامل جریان (پاسخ → تاس → حرکت → مار/پله) */
+   173→   173→  const turnLockRef = useRef(false);
+   174→   174→  /** زنجیرهٔ همهٔ setTimeoutهای جریان نوبت — در انصراف/unmount پاک می‌شود */
+   175→   175→  const timersRef = useRef<number[]>([]);
+   176→   176→
+   177→   177→  // اسکوپ رکورد طبق نقشه راه: hotseat | vs-bot
+   178→   178→  const modeScope = mode === "bot" ? "vs-bot" : "hotseat";
+   179→   179→
+   180→   180→  // ── داده‌های مشتق ──
+   181→   181→  const pool = useMemo(
+   182→   182→    () =>
+   183→   183→      data.quiz.seed.filter(
+   184→   184→        (s) => (lesson === ALL_LESSON || s.lesson === lesson) && (cat === "all" || s.category === cat),
+   185→   185→      ),
+   186→   186→    [data.quiz.seed, lesson, cat],
+   187→   187→  );
+   188→   188→
+   189→   189→  const lessons = useMemo(
+   190→   190→    () => [...new Set(data.quiz.seed.map((s) => s.lesson))].sort((a, b) => a - b),
+   191→   191→    [data.quiz.seed],
+   192→   192→  );
+   193→   193→
+   194→   194→  /** تعداد واقعی سؤال هر چیپ محدوده (با اعمال دستهٔ فعال) */
+   195→   195→  const countFor = (l: number) =>
+   196→   196→    data.quiz.seed.filter(
+   197→   197→      (s) => (l === ALL_LESSON || s.lesson === l) && (cat === "all" || s.category === cat),
+   198→   198→    ).length;
+   199→   199→
+   200→   200→  // رکورد «سریع‌ترین پیروزی» این حالت — اسنپ‌شات عددی پایدار (الگوی match-game)
+   201→   201→  const best = useSyncExternalStore(
+   202→   202→    subscribeGameData,
+   203→   203→    () => loadBest<BestRecord>(activeBookId, GAME_KEY, modeScope)?.time ?? null,
+   204→   204→    () => null,
+   205→   205→  );
+   206→   206→
+   207→   207→  // ── مدیریت تایمرها ──
+   208→   208→
+   209→   209→  /** زمان‌بندی داخل زنجیرهٔ ref‌شده — بعد از اجرا خودش را از فهرست حذف می‌کند */
+   210→   210→  function later(fn: () => void, ms: number): void {
+   211→   211→    const t = window.setTimeout(() => {
+   212→   212→      timersRef.current = timersRef.current.filter((x) => x !== t);
+   213→   213→      fn();
+   214→   214→    }, ms);
+   215→   215→    timersRef.current.push(t);
+   216→   216→  }
+   217→   217→
+   218→   218→  function clearTimers(): void {
+   219→   219→    for (const t of timersRef.current) window.clearTimeout(t);
+   220→   220→    timersRef.current = [];
+   221→   221→  }
+   222→   222→
+   223→   223→  // ── جریان بازی ──
+   224→   224→
+   225→   225→  function drawNext(): void {
+   226→   226→    let deck = deckRef.current;
+   227→   227→    let next = qiRef.current + 1;
+   228→   228→    if (next >= deck.length) {
+   229→   229→      // استخر سؤال‌ها تمام شد → از نو شافل و ادامه
+   230→   230→      deck = shuffle(deck);
+   231→   231→      deckRef.current = deck;
+   232→   232→      next = 0;
+   233→   233→    }
+   234→   234→    qiRef.current = next;
+   235→   235→    qRef.current = deck[next];
+   236→   236→    setQ(deck[next]);
+   237→   237→    setQNum((n) => n + 1);
+   238→   238→  }
+   239→   239→
+   240→   240→  function bumpStats(p: number, ok: boolean): void {
+   241→   241→    const s = statsRef.current[p];
+   242→   242→    s.asked += 1;
+   243→   243→    if (ok) s.correct += 1;
+   244→   244→    else s.wrong += 1;
+   245→   245→    setStats(statsRef.current.map((x) => ({ ...x })));
+   246→   246→  }
+   247→   247→
+   248→   248→  function beginTurn(p: number): void {
+   249→   249→    curRef.current = p;
+   250→   250→    setCur(p);
+   251→   251→    setReveal(null);
+   252→   252→    setDiceFace(null);
+   253→   253→    turnLockRef.current = false;
+   254→   254→    drawNext();
+   255→   255→    if (playersRef.current[p]?.isBot) {
+   256→   256→      later(() => botAnswer(p), BOT_DELAY);
+   257→   257→    }
+   258→   258→  }
+   259→   259→
+   260→   260→  /** تاس: چند چرخش نمایشی → عدد قطعی → شروع حرکت مهره */
+   261→   261→  function proceedAfterCorrect(p: number): void {
+   262→   262→    const d = 1 + Math.floor(Math.random() * 6);
+   263→   263→    let flips = 0;
+   264→   264→    function cycle(): void {
+   265→   265→      flips += 1;
+   266→   266→      if (flips <= DICE_FLIPS) {
+   267→   267→        setDiceFace(1 + Math.floor(Math.random() * 6));
+   268→   268→        setDicePop((k) => k + 1);
+   269→   269→        later(cycle, 90);
+   270→   270→      } else {
+   271→   271→        setDiceFace(d);
+   272→   272→        setDicePop((k) => k + 1);
+   273→   273→        later(() => hop(p, d), 420);
+   274→   274→      }
+   275→   275→    }
+   276→   276→    later(cycle, 350);
+   277→   277→  }
+   278→   278→
+   279→   279→  /** حرکت مهره خانه‌به‌خانه با زنجیرهٔ setTimeout پله‌ای (~۱۲۰ms) */
+   280→   280→  function hop(p: number, d: number): void {
+   281→   281→    const from = posRef.current[p];
+   282→   282→    const to = Math.min(100, from + d);
+   283→   283→    let at = from;
+   284→   284→    function step(): void {
+   285→   285→      if (at < to) {
+   286→   286→        at += 1;
+   287→   287→        posRef.current[p] = at;
+   288→   288→        setPositions([...posRef.current]);
+   289→   289→        later(step, STEP_MS);
+   290→   290→      } else {
+   291→   291→        land(p, d);
+   292→   292→      }
+   293→   293→    }
+   294→   294→    step();
+   295→   295→  }
+   296→   296→
+   297→   297→  /** بررسی مار/پله در خانهٔ فرود و اعلام انتقال با toast */
+   298→   298→  function land(p: number, d: number): void {
+   299→   299→    const pos = posRef.current[p];
+   300→   300→    const snakeTo = SNAKES[pos];
+   301→   301→    const ladderTo = LADDERS[pos];
+   302→   302→    if (snakeTo !== undefined) {
+   303→   303→      toast.error(`مار! برگشتی به خانهٔ ${faNum(snakeTo)}`);
+   304→   304→      later(() => {
+   305→   305→        posRef.current[p] = snakeTo;
+   306→   306→        setPositions([...posRef.current]);
+   307→   307→        afterJump(p, d);
+   308→   308→      }, 550);
+   309→   309→    } else if (ladderTo !== undefined) {
+   310→   310→      toast.success(`پله! رفتی به خانهٔ ${faNum(ladderTo)}`);
+   311→   311→      later(() => {
+   312→   312→        posRef.current[p] = ladderTo;
+   313→   313→        setPositions([...posRef.current]);
+   314→   314→        afterJump(p, d);
+   315→   315→      }, 550);
+   316→   316→    } else {
+   317→   317→      afterJump(p, d);
+   318→   318→    }
+   319→   319→  }
+   320→   320→
+   321→   321→  /** بعد از مار/پله: پایان بازی یا نوبت بعدی (تاس ۶ = نوبت اضافه) */
+   322→   322→  function afterJump(p: number, d: number): void {
+   323→   323→    if (posRef.current[p] >= 100) {
+   324→   324→      finish(p);
+   325→   325→      return;
+   326→   326→    }
+   327→   327→    if (d === 6) {
+   328→   328→      toast.success(`تاس ${faNum(6)} — نوبت اضافه برای ${playersRef.current[p]?.name ?? ""}!`);
+   329→   329→      beginTurn(p);
+   330→   330→    } else {
+   331→   331→      beginTurn((p + 1) % playersRef.current.length);
+   332→   332→    }
+   333→   333→  }
+   334→   334→
+   335→   335→  /** پاسخ ربات — نمایش گزینهٔ انتخابی‌اش و طی همان جریان بازیکن انسانی */
+   336→   336→  function botAnswer(p: number): void {
+   337→   337→    const cq = qRef.current;
+   338→   338→    if (!cq) return;
+   339→   339→    const ok = Math.random() < BOT_SKILL;
+   340→   340→    const idx = ok ? cq.answer : wrongIndexOf(cq);
+   341→   341→    setReveal({ picked: idx, ok, byBot: true });
+   342→   342→    bumpStats(p, ok);
+   343→   343→    if (ok) {
+   344→   344→      later(() => proceedAfterCorrect(p), 600);
+   345→   345→    } else {
+   346→   346→      toast.error(`${playersRef.current[p]?.name ?? "ربات"} بند شد!`);
+   347→   347→      later(() => beginTurn((p + 1) % playersRef.current.length), 1100);
+   348→   348→    }
+   349→   349→  }
+   350→   350→
+   351→   351→  function answerHuman(idx: number): void {
+   352→   352→    if (turnLockRef.current || !q) return;
+   353→   353→    const p = curRef.current;
+   354→   354→    if (playersRef.current[p]?.isBot) return;
+   355→   355→    turnLockRef.current = true;
+   356→   356→    const ok = idx === q.answer;
+   357→   357→    setReveal({ picked: idx, ok, byBot: false });
+   358→   358→    bumpStats(p, ok);
+   359→   359→    if (ok) {
+   360→   360→      later(() => proceedAfterCorrect(p), 350);
+   361→   361→    } else {
+   362→   362→      toast.error("بند شدی!");
+   363→   363→      later(() => beginTurn((p + 1) % playersRef.current.length), 1100);
+   364→   364→    }
+   365→   365→  }
+   366→   366→
+   367→   367→  function buildPlayers(): Player[] {
+   368→   368→    if (mode === "bot") {
+   369→   369→      return [
+   370→   370→        { name: names[0]?.trim() || "تو", isBot: false, ci: 0 },
+   371→   371→        { name: "ربات", isBot: true, ci: 1 },
+   372→   372→      ];
+   373→   373→    }
+   374→   374→    return Array.from({ length: count }, (_, i) => ({
+   375→   375→      name: names[i]?.trim() || `بازیکن ${faNum(i + 1)}`,
+   376→   376→      isBot: false,
+   377→   377→      ci: i,
+   378→   378→    }));
+   379→   379→  }
+   380→   380→
+   381→   381→  function start(): void {
+   382→   382→    if (pool.length < MIN_POOL) {
+   383→   383→      toast.error("سؤال کافی در این محدوده نیست — محدودهٔ دیگری را انتخاب کن");
+   384→   384→      return;
+   385→   385→    }
+   386→   386→    clearTimers();
+   387→   387→    const ps = buildPlayers();
+   388→   388→    playersRef.current = ps;
+   389→   389→    setPlayers(ps);
+   390→   390→    posRef.current = ps.map(() => 0);
+   391→   391→    setPositions([...posRef.current]);
+   392→   392→    statsRef.current = ps.map(() => ({ asked: 0, correct: 0, wrong: 0 }));
+   393→   393→    setStats(statsRef.current.map((x) => ({ ...x })));
+   394→   394→    // سؤال یکتا روی متن — کل استخر شافل‌شده؛ تمام شد؟ در drawNext از نو شافل می‌شود
+   395→   395→    deckRef.current = pickUnique(pool, pool.length, (item) => item.text);
+   396→   396→    qiRef.current = -1;
+   397→   397→    curRef.current = 0;
+   398→   398→    secsRef.current = 0;
+   399→   399→    setSecs(0);
+   400→   400→    setQNum(0);
+   401→   401→    setReveal(null);
+   402→   402→    setDiceFace(null);
+   403→   403→    setDicePop(0);
+   404→   404→    setWinner(null);
+   405→   405→    setIsRecord(false);
+   406→   406→    setPhase("playing");
+   407→   407→    beginTurn(0);
+   408→   408→  }
+   409→   409→
+   410→   410→  function finish(winnerIdx: number): void {
+   411→   411→    clearTimers();
+   412→   412→    turnLockRef.current = true;
+   413→   413→    const spent = secsRef.current;
+   414→   414→    setSecs(spent);
+   415→   415→    touchStreak();
+   416→   416→    recordStudySession();
+   417→   417→    bumpPlays(activeBookId, GAME_KEY);
+   418→   418→    const ps = playersRef.current;
+   419→   419→    // آمار Attempt فقط از بازیکن‌های انسانی (total = سؤال‌های پرسیده‌شده از انسان‌ها)
+   420→   420→    const humanIdxs = ps.map((_, i) => i).filter((i) => !ps[i]?.isBot);
+   421→   421→    const total = humanIdxs.reduce((a, i) => a + (statsRef.current[i]?.asked ?? 0), 0);
+   422→   422→    const correct = humanIdxs.reduce((a, i) => a + (statsRef.current[i]?.correct ?? 0), 0);
+   423→   423→    if (total > 0) {
+   424→   424→      saveAttempt(activeBookId, GAME_KEY, {
+   425→   425→        lesson: lesson === ALL_LESSON ? 0 : lesson,
+   426→   426→        total,
+   427→   427→        correct,
+   428→   428→        duration: spent,
+   429→   429→        detail: {
+   430→   430→          winner: ps[winnerIdx]?.name ?? "",
+   431→   431→          players: ps.map((pl, i) => ({
+   432→   432→            name: pl.name,
+   433→   433→            isBot: pl.isBot,
+   434→   434→            asked: statsRef.current[i]?.asked ?? 0,
+   435→   435→            correct: statsRef.current[i]?.correct ?? 0,
+   436→   436→            wrong: statsRef.current[i]?.wrong ?? 0,
+   437→   437→            position: posRef.current[i] ?? 0,
+   438→   438→          })),
+   439→   439→        },
+   440→   440→      });
+   441→   441→    }
+   442→   442→    // رکورد سریع‌ترین پیروزی — فقط برندهٔ انسانی رکورد می‌سازد
+   443→   443→    if (!ps[winnerIdx]?.isBot) {
+   444→   444→      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, modeScope);
+   445→   445→      if (!prev || spent < prev.time) {
+   446→   446→        saveBest(activeBookId, GAME_KEY, modeScope, { time: spent });
+   447→   447→        setIsRecord(true);
+   448→   448→      }
+   449→   449→    }
+   450→   450→    setWinner(winnerIdx);
+   451→   451→    setPhase("done");
+   452→   452→  }
+   453→   453→
+   454→   454→  function cancel(): void {
+   455→   455→    clearTimers();
+   456→   456→    turnLockRef.current = false;
+   457→   457→    setPhase("setup");
+   458→   458→  }
+   459→   459→
+   460→   460→  // ── effectها ──
+   461→   461→
+   462→   462→  // تایمر زمان بازی — بدون setState مستقیم در بدنهٔ effect (react-hooks v6)
+   463→   463→  useEffect(() => {
+   464→   464→    if (phase !== "playing") return;
+   465→   465→    const iv = setInterval(() => {
+   466→   466→      secsRef.current += 1;
+   467→   467→      setSecs((s) => s + 1);
+   468→   468→    }, 1000);
+   469→   469→    return () => clearInterval(iv);
+   470→   470→  }, [phase]);
+   471→   471→
+   472→   472→  // پاک‌سازی کامل زنجیرهٔ تایمرها در unmount
+   473→   473→  useEffect(
+   474→   474→    () => () => {
+   475→   475→      for (const t of timersRef.current) window.clearTimeout(t);
+   476→   476→      timersRef.current = [];
+   477→   477→    },
+   478→   478→    [],
+   479→   479→  );
+   480→   480→
+   481→   481→  // ── Setup ──
+   482→   482→  if (phase === "setup") {
+   483→   483→    const chipCls = (active: boolean) =>
+   484→   484→      cn(
+   485→   485→        "flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   486→   486→        active
+   487→   487→          ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   488→   488→          : "text-muted-foreground hover:bg-muted",
+   489→   489→      );
+   490→   490→    return (
+   491→   491→      <Card className="mx-auto max-w-xl rise-in">
+   492→   492→        <CardContent className="space-y-6 p-6">
+   493→   493→          <div className="flex items-center gap-3">
+   494→   494→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   495→   495→              <Dices size={22} />
+   496→   496→            </span>
+   497→   497→            <div>
+   498→   498→              <h2 className="text-lg font-black">مار و پله واژگانی</h2>
+   499→   499→              <p className="text-xs text-muted-foreground">برای تاس انداختن اول باید سؤال را درست جواب بدهی!</p>
+   500→   500→            </div>
+   501→   501→          </div>
+   502→   502→
+   503→   503→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   504→   504→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   505→   505→            <p>
+   506→   506→              هر بازیکن برای حرکت باید یک سؤال را درست جواب دهد؛ بعد تاس می‌آید و مهره خانه‌به‌خانه جلو می‌رود.
+   507→   507→              تاس ۶ یک نوبت اضافه می‌دهد — مراقب مارها باش و دعا کن پله‌ها سر راهت باشند!
+   508→   508→            </p>
+   509→   509→          </div>
+   510→   510→
+   511→   511→          <div>
+   512→   512→            <p className="mb-2 text-[13px] font-bold">حالت بازی؟</p>
+   513→   513→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب حالت بازی">
+   514→   514→              <button
+   515→   515→                type="button"
+   516→   516→                onClick={() => setMode("hotseat")}
+   517→   517→                aria-pressed={mode === "hotseat"}
+   518→   518→                className={chipCls(mode === "hotseat")}
+   519→   519→              >
+   520→   520→                <Users size={14} />
+   521→   521→                روی یک دستگاه
+   522→   522→              </button>
+   523→   523→              <button
+   524→   524→                type="button"
+   525→   525→                onClick={() => setMode("bot")}
+   526→   526→                aria-pressed={mode === "bot"}
+   527→   527→                className={chipCls(mode === "bot")}
+   528→   528→              >
+   529→   529→                <Bot size={14} />
+   530→   530→                مقابل ربات
+   531→   531→              </button>
+   532→   532→            </div>
+   533→   533→          </div>
+   534→   534→
+   535→   535→          {mode === "hotseat" ? (
+   536→   536→            <div className="space-y-3">
+   537→   537→              <div>
+   538→   538→                <p className="mb-2 text-[13px] font-bold">چند بازیکن؟</p>
+   539→   539→                <div className="flex flex-wrap gap-2" role="group" aria-label="تعداد بازیکن‌ها">
+   540→   540→                  {[2, 3, 4].map((n) => (
+   541→   541→                    <button
+   542→   542→                      key={n}
+   543→   543→                      type="button"
+   544→   544→                      onClick={() => setCount(n)}
+   545→   545→                      aria-pressed={count === n}
+   546→   546→                      className={chipCls(count === n)}
+   547→   547→                    >
+   548→   548→                      {faNum(n)} بازیکن
+   549→   549→                    </button>
+   550→   550→                  ))}
+   551→   551→                </div>
+   552→   552→              </div>
+   553→   553→              <div className="space-y-2">
+   554→   554→                <p className="text-[13px] font-bold">نام بازیکن‌ها (اختیاری)</p>
+   555→   555→                {Array.from({ length: count }, (_, i) => (
+   556→   556→                  <div key={i} className="flex items-center gap-2">
+   557→   557→                    <span className={cn("h-3 w-3 shrink-0 rounded-full", TOKEN_BG[i])} aria-hidden />
+   558→   558→                    <Input
+   559→   559→                      value={names[i] ?? ""}
+   560→   560→                      onChange={(e) => setNames((prev) => prev.map((v, j) => (j === i ? e.target.value : v)))}
+   561→   561→                      placeholder={`بازیکن ${faNum(i + 1)}`}
+   562→   562→                      maxLength={18}
+   563→   563→                      aria-label={`نام بازیکن ${faNum(i + 1)}`}
+   564→   564→                      className="h-11 text-[13px]"
+   565→   565→                    />
+   566→   566→                  </div>
+   567→   567→                ))}
+   568→   568→              </div>
+   569→   569→            </div>
+   570→   570→          ) : (
+   571→   571→            <div className="space-y-2">
+   572→   572→              <p className="text-[13px] font-bold">بازیکن‌ها</p>
+   573→   573→              <div className="flex items-center gap-2">
+   574→   574→                <span className="h-3 w-3 shrink-0 rounded-full bg-emerald-500" aria-hidden />
+   575→   575→                <Input
+   576→   576→                  value={names[0] ?? ""}
+   577→   577→                  onChange={(e) => setNames((prev) => prev.map((v, j) => (j === 0 ? e.target.value : v)))}
+   578→   578→                  placeholder="تو"
+   579→   579→                  maxLength={18}
+   580→   580→                  aria-label="نام تو"
+   581→   581→                  className="h-11 text-[13px]"
+   582→   582→                />
+   583→   583→              </div>
+   584→   584→              <div className="flex items-center gap-2 rounded-xl border border-border/70 bg-muted/40 px-3 py-2.5 text-[12px]">
+   585→   585→                <span className="h-3 w-3 shrink-0 rounded-full bg-amber-500" aria-hidden />
+   586→   586→                <Bot size={14} className="shrink-0 text-muted-foreground" />
+   587→   587→                <span className="font-bold">ربات</span>
+   588→   588→                <span className="mr-auto text-[10px] text-muted-foreground">۶۵٪ احتمال پاسخ درست</span>
+   589→   589→              </div>
+   590→   590→            </div>
+   591→   591→          )}
+   592→   592→
+   593→   593→          <div>
+   594→   594→            <p className="mb-2 text-[13px] font-bold">محدودهٔ سؤال‌ها؟</p>
+   595→   595→            <div className="flex flex-wrap gap-2">
+   596→   596→              <button
+   597→   597→                type="button"
+   598→   598→                aria-pressed={lesson === ALL_LESSON}
+   599→   599→                onClick={() => setLesson(ALL_LESSON)}
+   600→   600→                className={chipCls(lesson === ALL_LESSON)}
+   601→   601→              >
+   602→   602→                کل بانک ({faNum(countFor(ALL_LESSON))} سؤال)
+   603→   603→              </button>
+   604→   604→              {lessons.map((l) => (
+   605→   605→                <button
+   606→   606→                  key={l}
+   607→   607→                  type="button"
+   608→   608→                  aria-pressed={lesson === l}
+   609→   609→                  onClick={() => setLesson(l)}
+   610→   610→                  className={chipCls(lesson === l)}
+   611→   611→                >
+   612→   612→                  {lessonLabel(l)} ({faNum(countFor(l))})
+   613→   613→                </button>
+   614→   614→              ))}
+   615→   615→            </div>
+   616→   616→          </div>
+   617→   617→
+   618→   618→          <div>
+   619→   619→            <p className="mb-2 text-[13px] font-bold">کدام دسته؟</p>
+   620→   620→            <div className="flex flex-wrap gap-2">
+   621→   621→              {(
+   622→   622→                [
+   623→   623→                  ["all", "همه"],
+   624→   624→                  ["vocabulary", "واژگان"],
+   625→   625→                  ["grammar", "گرامر"],
+   626→   626→                ] as const
+   627→   627→              ).map(([key, label]) => (
+   628→   628→                <button
+   629→   629→                  key={key}
+   630→   630→                  type="button"
+   631→   631→                  aria-pressed={cat === key}
+   632→   632→                  onClick={() => setCat(key)}
+   633→   633→                  className={chipCls(cat === key)}
+   634→   634→                >
+   635→   635→                  {label}
+   636→   636→                </button>
+   637→   637→              ))}
+   638→   638→            </div>
+   639→   639→          </div>
+   640→   640→
+   641→   641→          {best !== null && (
+   642→   642→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   643→   643→              <Trophy size={12} />
+   644→   644→              سریع‌ترین پیروزی ({mode === "bot" ? "مقابل ربات" : "روی یک دستگاه"}): {fmtTime(best)}
+   645→   645→            </Badge>
+   646→   646→          )}
+   647→   647→
+   648→   648→          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   649→   649→            <Play size={18} />
+   650→   650→            شروع بازی ({faNum(pool.length)} سؤال)
+   651→   651→          </Button>
+   652→   652→        </CardContent>
+   653→   653→      </Card>
+   654→   654→    );
+   655→   655→  }
+   656→   656→
+   657→   657→  // ── Done ──
+   658→   658→  if (phase === "done") {
+   659→   659→    const wp = winner !== null ? players[winner] : undefined;
+   660→   660→    return (
+   661→   661→      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+   662→   662→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   663→   663→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   664→   664→            <PartyPopper size={30} />
+   665→   665→          </span>
+   666→   666→          <h2 className="text-xl font-black">{wp ? `${wp.name} برنده شد!` : "بازی تمام شد!"} 🎉</h2>
+   667→   667→          <p className="text-[12px] leading-5 text-muted-foreground">
+   668→   668→            {wp?.isBot
+   669→   669→              ? "این‌بار ربات برد — جواب‌هایت را دقیق‌تر بده و انتقام بگیر!"
+   670→   670→              : "آفرین! با هر پاسخ درست پله بالا رفتی و از دست مارها فرار کردی."}
+   671→   671→          </p>
+   672→   672→          <div className="flex flex-wrap items-center justify-center gap-2">
+   673→   673→            <Badge variant="secondary" className="gap-1 text-[11px]">
+   674→   674→              <Timer size={11} />
+   675→   675→              {fmtTime(secs)}
+   676→   676→            </Badge>
+   677→   677→            {isRecord && (
+   678→   678→              <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   679→   679→                <Trophy size={13} />
+   680→   680→                رکورد جدید! سریع‌ترین پیروزی 🏆
+   681→   681→              </Badge>
+   682→   682→            )}
+   683→   683→          </div>
+   684→   684→
+   685→   685→          <div className="w-full space-y-1.5">
+   686→   686→            {players.map((pl, i) => (
+   687→   687→              <div key={i} className="flex items-center gap-2 rounded-xl bg-muted/50 px-3 py-2 text-[12px]">
+   688→   688→                <span className={cn("h-3 w-3 shrink-0 rounded-full", TOKEN_BG[pl.ci])} aria-hidden />
+   689→   689→                <span className="font-bold">{pl.name}</span>
+   690→   690→                {pl.isBot && <Badge variant="outline" className="px-1 py-0 text-[9px]">ربات</Badge>}
+   691→   691→                {winner === i && (
+   692→   692→                  <Badge className="gap-1 bg-amber-500 px-1.5 py-0 text-[9px] text-amber-950">
+   693→   693→                    <Crown size={10} />
+   694→   694→                    برنده
+   695→   695→                  </Badge>
+   696→   696→                )}
+   697→   697→                <span className="mr-auto flex items-center gap-2.5 text-[11px] text-muted-foreground">
+   698→   698→                  <span>سؤال: {faNum(stats[i]?.asked ?? 0)}</span>
+   699→   699→                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+   700→   700→                    درست: {faNum(stats[i]?.correct ?? 0)}
+   701→   701→                  </span>
+   702→   702→                  <span className="font-bold text-destructive">غلط: {faNum(stats[i]?.wrong ?? 0)}</span>
+   703→   703→                </span>
+   704→   704→              </div>
+   705→   705→            ))}
+   706→   706→          </div>
+   707→   707→
+   708→   708→          <div className="flex gap-2">
+   709→   709→            <Button onClick={start} className="h-11 gap-2">
+   710→   710→              <RotateCcw size={16} />
+   711→   711→              بازی جدید
+   712→   712→            </Button>
+   713→   713→            <Button variant="outline" className="h-11" onClick={() => setPhase("setup")}>
+   714→   714→              تنظیمات
+   715→   715→            </Button>
+   716→   716→          </div>
+   717→   717→        </CardContent>
+   718→   718→      </Card>
+   719→   719→    );
+   720→   720→  }
+   721→   721→
+   722→   722→  // ── Playing ──
+   723→   723→  if (!q || players.length === 0) return null;
+   724→   724→  const cp = players[cur] ?? players[0];
+   725→   725→  const locked = reveal !== null || diceFace !== null || cp.isBot;
+   726→   726→  const DiceFace = diceFace !== null ? (DICE_ICONS[diceFace] ?? Dices) : Dices;
+   727→   727→  return (
+   728→   728→    <div role="group" aria-label="بازی مار و پله واژگانی" className="mx-auto max-w-2xl space-y-3 rise-in">
+   729→   729→      {/* نوار بالا */}
+   730→   730→      <div className="flex flex-wrap items-center gap-2">
+   731→   731→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   732→   732→          <Timer size={11} />
+   733→   733→          {fmtTime(secs)}
+   734→   734→        </Badge>
+   735→   735→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   736→   736→          <Dices size={11} className="text-amber-500" />
+   737→   737→          سؤال {faNum(qNum)}
+   738→   738→        </Badge>
+   739→   739→        <Badge variant="outline" className="gap-1 border-amber-500/40 text-[11px] text-amber-600 dark:text-amber-400">
+   740→   740→          {mode === "bot" ? <Bot size={11} /> : <Users size={11} />}
+   741→   741→          {mode === "bot" ? "مقابل ربات" : "روی یک دستگاه"}
+   742→   742→        </Badge>
+   743→   743→        <div className="mr-auto">
+   744→   744→          <Button variant="ghost" size="sm" className="h-11 text-[11px] text-muted-foreground" onClick={cancel}>
+   745→   745→            انصراف
+   746→   746→          </Button>
+   747→   747→        </div>
+   748→   748→      </div>
+   749→   749→
+   750→   750→      {/* وضعیت زندهٔ مهره‌ها */}
+   751→   751→      <div className="flex flex-wrap items-center gap-1.5">
+   752→   752→        {players.map((pl, i) => (
+   753→   753→          <span
+   754→   754→            key={i}
+   755→   755→            className={cn(
+   756→   756→              "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold",
+   757→   757→              i === cur ? "border-primary/50 bg-muted/50 text-foreground" : "border-border text-muted-foreground",
+   758→   758→            )}
+   759→   759→          >
+   760→   760→            <span className={cn("h-2.5 w-2.5 rounded-full", TOKEN_BG[pl.ci])} aria-hidden />
+   761→   761→            {pl.name}
+   762→   762→            <span className="text-[10px] font-normal text-muted-foreground">
+   763→   763→              {positions[i] === 0 ? "شروع" : `خانهٔ ${faNum(positions[i] ?? 0)}`}
+   764→   764→            </span>
+   765→   765→          </span>
+   766→   766→        ))}
+   767→   767→      </div>
+   768→   768→
+   769→   769→      {/* کارت سؤال — گذرگاه انداختن تاس */}
+   770→   770→      <div
+   771→   771→        className={cn(
+   772→   772→          "space-y-3 rounded-2xl border bg-card p-4 sm:p-5",
+   773→   773→          reveal && !reveal.ok && "match-shake border-destructive/60",
+   774→   774→        )}
+   775→   775→      >
+   776→   776→        <div className="flex flex-wrap items-center gap-1.5">
+   777→   777→          <Badge variant="outline" className="gap-1.5 border-primary/40 text-[11px] font-black">
+   778→   778→            <span className={cn("h-2.5 w-2.5 rounded-full", TOKEN_BG[cp.ci])} aria-hidden />
+   779→   779→            نوبت: {cp.name}
+   780→   780→          </Badge>
+   781→   781→          {cp.isBot && (
+   782→   782→            <Badge variant="secondary" className="gap-1 text-[10px]">
+   783→   783→              <Bot size={11} />
+   784→   784→              {reveal ? "انتخاب ربات" : "دارم فکر می‌کنم…"}
+   785→   785→            </Badge>
+   786→   786→          )}
+   787→   787→          <Badge variant="secondary" className="text-[10px]">
+   788→   788→            {lessonLabel(q.lesson)}
+   789→   789→          </Badge>
+   790→   790→          <Badge variant="outline" className="border-amber-500/40 text-[10px] text-amber-600 dark:text-amber-400">
+   791→   791→            {q.level}
+   792→   792→          </Badge>
+   793→   793→          <Badge variant="secondary" className="text-[10px]">
+   794→   794→            {q.category === "vocabulary" ? "واژگان" : "گرامر"}
+   795→   795→          </Badge>
+   796→   796→        </div>
+   797→   797→
+   798→   798→        <p dir="ltr" className="font-en text-[14px] font-bold leading-7 sm:text-[15px] sm:leading-8">
+   799→   799→          {q.text}
+   800→   800→        </p>
+   801→   801→
+   802→   802→        <div className="grid gap-2 sm:grid-cols-2">
+   803→   803→          {q.options.map((opt, i) => {
+   804→   804→            const isPicked = reveal?.picked === i;
+   805→   805→            const showCorrect = reveal !== null && i === q.answer;
+   806→   806→            return (
+   807→   807→              <button
+   808→   808→                key={`${qNum}-${i}`}
+   809→   809→                type="button"
+   810→   810→                onClick={() => answerHuman(i)}
+   811→   811→                disabled={locked}
+   812→   812→                aria-label={`گزینهٔ ${faNum(i + 1)}`}
+   813→   813→                className={cn(
+   814→   814→                  "flex min-h-11 items-center gap-2 rounded-xl border bg-card px-3 py-2 text-right transition-all",
+   815→   815→                  !locked &&
+   816→   816→                    "hover:border-primary/50 hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+   817→   817→                  showCorrect && "border-emerald-500/70 bg-emerald-500/10",
+   818→   818→                  isPicked && !reveal?.ok && "border-destructive/60 bg-destructive/10",
+   819→   819→                  reveal !== null && !showCorrect && !isPicked && "opacity-50",
+   820→   820→                )}
+   821→   821→              >
+   822→   822→                <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted text-[11px] font-black">
+   823→   823→                  {faNum(i + 1)}
+   824→   824→                </span>
+   825→   825→                <span dir="ltr" className="flex-1 font-en text-[13px] font-bold leading-6 sm:text-[14px]">
+   826→   826→                  {opt}
+   827→   827→                </span>
+   828→   828→                {reveal?.byBot === true && isPicked && (
+   829→   829→                  <Badge className="shrink-0 bg-amber-500 px-1.5 py-0 text-[9px] text-amber-950">ربات</Badge>
+   830→   830→                )}
+   831→   831→              </button>
+   832→   832→            );
+   833→   833→          })}
+   834→   834→        </div>
+   835→   835→      </div>
+   836→   836→
+   837→   837→      {/* تاس — فقط بعد از پاسخ درست دیده می‌شود (ارتفاع رزرو شده تا تخته نلرزد) */}
+   838→   838→      <div className="flex h-12 items-center justify-center gap-2">
+   839→   839→        {diceFace !== null && (
+   840→   840→          <>
+   841→   841→            <span
+   842→   842→              key={dicePop}
+   843→   843→              className="match-pop flex h-11 w-11 items-center justify-center rounded-xl border-2 border-primary/30 bg-primary/10 text-primary shadow-md shadow-primary/15"
+   844→   844→            >
+   845→   845→              <DiceFace size={26} />
+   846→   846→            </span>
+   847→   847→            <Badge variant="secondary" className="text-[13px] font-black">
+   848→   848→              تاس: {faNum(diceFace)}
+   849→   849→            </Badge>
+   850→   850→          </>
+   851→   851→        )}
+   852→   852→      </div>
+   853→   853→
+   854→   854→      {/* تختهٔ ۱۰×۱۰ مارپیچی */}
+   855→   855→      <Card className="mx-auto w-full max-w-lg">
+   856→   856→        <CardContent className="p-2 sm:p-3">
+   857→   857→          <div dir="rtl" role="group" aria-label="تختهٔ مار و پله — ۱۰۰ خانه" className="grid grid-cols-10 gap-[3px]">
+   858→   858→            {CELL_POS.map((cpos, i) => {
+   859→   859→              const n = i + 1;
+   860→   860→              const snakeTo = SNAKES[n];
+   861→   861→              const ladderTo = LADDERS[n];
+   862→   862→              const riders = players.map((pl, pi) => ({ pl, pi })).filter((r) => positions[r.pi] === n);
+   863→   863→              const label = [`خانهٔ ${faNum(n)}`];
+   864→   864→              if (snakeTo !== undefined) label.push(`مار — برگشت به خانهٔ ${faNum(snakeTo)}`);
+   865→   865→              if (ladderTo !== undefined) label.push(`پله — رفتن به خانهٔ ${faNum(ladderTo)}`);
+   866→   866→              if (riders.length > 0) label.push(`مهره: ${riders.map((r) => r.pl.name).join("، ")}`);
+   867→   867→              return (
+   868→   868→                <div
+   869→   869→                  key={n}
+   870→   870→                  style={{ gridColumnStart: cpos.col, gridRowStart: cpos.row }}
+   871→   871→                  aria-label={label.join(" — ")}
+   872→   872→                  className={cn(
+   873→   873→                    "relative aspect-square rounded-[4px] border border-border/70",
+   874→   874→                    n === 1
+   875→   875→                      ? "bg-amber-500/15"
+   876→   876→                      : n === 100
+   877→   877→                        ? "bg-primary/15"
+   878→   878→                        : (cpos.row + cpos.col) % 2 === 0
+   879→   879→                          ? "bg-muted/40"
+   880→   880→                          : "bg-card",
+   881→   881→                  )}
+   882→   882→                >
+   883→   883→                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-foreground/75 sm:text-[11px]">
+   884→   884→                    {faNum(n)}
+   885→   885→                  </span>
+   886→   886→                  {snakeTo !== undefined && (
+   887→   887→                    <span
+   888→   888→                      aria-hidden
+   889→   889→                      className="absolute left-0 top-0 flex items-center gap-px rounded-br-[4px] bg-destructive/10 px-0.5 text-[7px] font-black leading-[11px] text-destructive sm:text-[8px]"
+   890→   890→                    >
+   891→   891→                      <TrendingDown size={8} />
+   892→   892→                      {faNum(snakeTo)}
+   893→   893→                    </span>
+   894→   894→                  )}
+   895→   895→                  {ladderTo !== undefined && (
+   896→   896→                    <span
+   897→   897→                      aria-hidden
+   898→   898→                      className="absolute left-0 top-0 flex items-center gap-px rounded-br-[4px] bg-primary/10 px-0.5 text-[7px] font-black leading-[11px] text-primary sm:text-[8px]"
+   899→   899→                    >
+   900→   900→                      <TrendingUp size={8} />
+   901→   901→                      {faNum(ladderTo)}
+   902→   902→                    </span>
+   903→   903→                  )}
+   904→   904→                  {riders.length > 0 && (
+   905→   905→                    <span className="absolute inset-x-0 bottom-0 flex flex-wrap-reverse items-end justify-center gap-0.5 p-0.5">
+   906→   906→                      {riders.map((r) => (
+   907→   907→                        <span
+   908→   908→                          key={r.pi}
+   909→   909→                          className={cn(
+   910→   910→                            "h-2 w-2 rounded-full ring-1 ring-background sm:h-2.5 sm:w-2.5",
+   911→   911→                            TOKEN_BG[r.pl.ci],
+   912→   912→                            r.pi === cur && "h-2.5 w-2.5 sm:h-3 sm:w-3",
+   913→   913→                          )}
+   914→   914→                        />
+   915→   915→                      ))}
+   916→   916→                    </span>
+   917→   917→                  )}
+   918→   918→                </div>
+   919→   919→              );
+   920→   920→            })}
+   921→   921→          </div>
+   922→   922→          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+   923→   923→            <span className="flex items-center gap-1">
+   924→   924→              <TrendingDown size={11} className="text-destructive" />
+   925→   925→              مار: برگشت
+   926→   926→            </span>
+   927→   927→            <span className="flex items-center gap-1">
+   928→   928→              <TrendingUp size={11} className="text-primary" />
+   929→   929→              پله: پیشروی
+   930→   930→            </span>
+   931→   931→            <span className="flex items-center gap-1">
+   932→   932→              <Dices size={11} />
+   933→   933→              تاس ۶ = نوبت اضافه
+   934→   934→            </span>
+   935→   935→          </div>
+   936→   936→        </CardContent>
+   937→   937→      </Card>
+   938→   938→    </div>
+   939→   939→  );
+   940→   940→}
+   941→   941→

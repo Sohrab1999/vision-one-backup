@@ -1,0 +1,919 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * بازی «فلپی گزینش» (Flappy Quiz) — فاز ۴ نقشه راه جامع ۲۰۲۶.
+     5→ *
+     6→ * پرندهٔ فلپی‌برد روی بانک واژگان خود جزوه پرواز می‌کند (data.quiz.seed فقط category === "vocabulary"):
+     7→ * - به‌جای لوله‌ها «دروازهٔ گزینه» می‌آید: نوار عمودی emerald با ۲ تا ۴ دهانه که روی هر دهانه
+     8→ *   یک گزینهٔ انگلیسی نوشته شده — پرنده باید دقیقاً از گزینهٔ درستِ سؤال رد شود.
+     9→ * - عبور درست: امتیاز ۱۰ + بونوس کمبو، کمبو++ و سرعت = پایه + کمبو × گام (با سقف) + پخش تلفظ گزینه.
+    10→ * - دهانهٔ غلط یا برخورد با بدنهٔ دیوار: یک ❤ کم، کمبو صفر، فلاش قرمز، واژهٔ درست با
+    11→ *   seedReviewFromQuiz به صف «مرور هوشمند» برمی‌گردد و ۱ ثانیه مصونیت دارد.
+    12→ * - زمین/سقف: یک ❤ کم و پرنده به میانه برمی‌گردد. صفر قلب = پایان دور.
+    13→ * - اتمام استخر سؤال → reshuffle و ادامه (چرخهٔ بی‌پایان، الگوی speed-quiz).
+    14→ *
+    15→ * نکتهٔ فنی: کل دنیای بازی (پرنده، دیوارها، سرعت، کمبو، قلب‌ها) در useRef زندگی می‌کند و حلقهٔ
+    16→ * requestAnimationFrame مالک آن است — setState فقط روی رویدادهای گسسته (عبور/برخورد/پایان)
+    17→ * صدا می‌زند، نه در هر فریم. فیزیک dt-based است (مستقل از نرخ فریم) و rAF/شنونده‌ها در
+    18→ * cleanup پاک می‌شوند. رکورد شخصی per-scope ("easy" | "normal") و Attempt سروری فقط پس از پایان.
+    19→ */
+    20→
+    21→import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    22→import {
+    23→  Bird,
+    24→  CheckCircle2,
+    25→  Flame,
+    26→  Heart,
+    27→  Play,
+    28→  RotateCcw,
+    29→  Sparkles,
+    30→  Star,
+    31→  Trophy,
+    32→  XCircle,
+    33→} from "lucide-react";
+    34→import { Button } from "@/components/ui/button";
+    35→import { Card, CardContent } from "@/components/ui/card";
+    36→import { Badge } from "@/components/ui/badge";
+    37→import { cn } from "@/lib/utils";
+    38→import { toast } from "sonner";
+    39→import type { QuizQuestionSeed } from "@/data/types";
+    40→import { useBook, useBookData } from "@/lib/book-context";
+    41→import { seedReviewFromQuiz } from "@/lib/srs-store";
+    42→import { touchStreak } from "@/lib/streak-store";
+    43→import { recordStudySession } from "@/lib/goal-store";
+    44→import { speak, stopSpeaking } from "@/lib/speak";
+    45→import { useVoiceSpeed } from "@/lib/voice-store";
+    46→import {
+    47→  bumpPlays,
+    48→  faNum,
+    49→  loadBest,
+    50→  pickUnique,
+    51→  saveAttempt,
+    52→  saveBest,
+    53→  shuffle,
+    54→  subscribeGameData,
+    55→} from "./shared";
+    56→
+    57→// ─── ثابت‌ها و انواع ───
+    58→
+    59→const GAME_KEY = "flappy-quiz";
+    60→const ALL_LESSONS = -1;
+    61→/** گارد استخر سؤال (تسک: استخر < ۳ → خطا) */
+    62→const MIN_POOL = 3;
+    63→/** ارتفاع منطقی بوم (پیکسل) — عرض از اندازهٔ واقعی خوانده می‌شود */
+    64→const H = 480;
+    65→const WALL_W = 84;
+    66→const BIRD_R = 13;
+    67→const GROUND_H = 24;
+    68→const HEARTS = 3;
+    69→/** مصونیت پس از عبور غلط (تسک: ۱ ثانیه) */
+    70→const INVULN_MS = 1000;
+    71→/** فلاش قرمز کل بوم پس از خطا */
+    72→const FLASH_MS = 320;
+    73→/** ماندگاری هایلایت سبز/قرمز روی دیوارِ تازه‌حل‌شده */
+    74→const WALL_FLASH_MS = 700;
+    75→
+    76→type Phase = "setup" | "playing" | "done";
+    77→
+    78→/** پیکربندی فیزیک — حالت آسان جاذبه/سرعت ملایم‌تری دارد */
+    79→interface Cfg {
+    80→  base: number;
+    81→  cap: number;
+    82→  step: number;
+    83→  gravity: number;
+    84→  flap: number;
+    85→}
+    86→
+    87→const NORMAL_CFG: Cfg = { base: 150, cap: 330, step: 13, gravity: 1400, flap: -380 };
+    88→const EASY_CFG: Cfg = { base: 112, cap: 235, step: 10, gravity: 1150, flap: -345 };
+    89→
+    90→interface FlappyGap {
+    91→  y0: number;
+    92→  y1: number;
+    93→  text: string;
+    94→  correct: boolean;
+    95→}
+    96→
+    97→interface FlappyWall {
+    98→  x: number;
+    99→  gaps: FlappyGap[];
+   100→  q: QuizQuestionSeed;
+   101→  resolved: boolean;
+   102→  ok: boolean;
+   103→  flashUntil: number;
+   104→}
+   105→
+   106→interface BirdState {
+   107→  y: number;
+   108→  vy: number;
+   109→}
+   110→
+   111→interface Popup {
+   112→  x: number;
+   113→  y: number;
+   114→  text: string;
+   115→  born: number;
+   116→}
+   117→
+   118→/** شکل رکورد شخصی این بازی — بهتر = امتیاز بیشتر */
+   119→interface BestRecord {
+   120→  score: number;
+   121→}
+   122→
+   123→// ─── کمکی‌های خالص ───
+   124→
+   125→/** نمایش جای خالی سؤال به شکل فشرده: «________» → «.....» */
+   126→function qLabel(text: string): string {
+   127→  return text.replace(/_+/g, ".....");
+   128→}
+   129→
+   130→function lessonLabel(l: number): string {
+   131→  return l === 0 ? "جمع‌بندی" : `درس ${faNum(l)}`;
+   132→}
+   133→
+   134→/** چیدمان عمودی k دهانه در باند بازی‌پذیر — ارتفاع دهانه سقف‌دار، مازاد به دیواره‌ها می‌رود */
+   135→function layoutGaps(k: number): Array<{ y0: number; y1: number }> {
+   136→  const top = 34;
+   137→  const bottom = H - GROUND_H - 12;
+   138→  const avail = bottom - top;
+   139→  const barMin = 34;
+   140→  const gapCap = 150;
+   141→  let gapH = (avail - (k - 1) * barMin) / k;
+   142→  let barH = barMin;
+   143→  if (gapH > gapCap) {
+   144→    barH = barMin + ((gapH - gapCap) * k) / (k - 1);
+   145→    gapH = gapCap;
+   146→  }
+   147→  const out: Array<{ y0: number; y1: number }> = [];
+   148→  let y = top;
+   149→  for (let i = 0; i < k; i++) {
+   150→    out.push({ y0: y, y1: y + gapH });
+   151→    y += gapH + barH;
+   152→  }
+   153→  return out;
+   154→}
+   155→
+   156→function roundRectPath(c: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+   157→  c.beginPath();
+   158→  c.moveTo(x + r, y);
+   159→  c.arcTo(x + w, y, x + w, y + h, r);
+   160→  c.arcTo(x + w, y + h, x, y + h, r);
+   161→  c.arcTo(x, y + h, x, y, r);
+   162→  c.arcTo(x, y, x + w, y, r);
+   163→  c.closePath();
+   164→}
+   165→
+   166→/** ابرهای ملایم teal — عمق پس‌زمینه بدون رنگ ممنوع */
+   167→function drawSky(c: CanvasRenderingContext2D, now: number, w: number) {
+   168→  c.fillStyle = "rgba(45, 212, 191, 0.16)";
+   169→  for (let i = 0; i < 3; i++) {
+   170→    const cx = ((i * 270 + now * (0.012 + i * 0.005)) % (w + 220)) - 110;
+   171→    const cy = 54 + i * 64;
+   172→    c.beginPath();
+   173→    c.arc(cx, cy, 22, 0, Math.PI * 2);
+   174→    c.arc(cx + 25, cy + 6, 15, 0, Math.PI * 2);
+   175→    c.arc(cx - 23, cy + 8, 13, 0, Math.PI * 2);
+   176→    c.fill();
+   177→  }
+   178→  c.fillStyle = "#059669";
+   179→  c.fillRect(0, 0, w, 4);
+   180→}
+   181→
+   182→function drawGround(c: CanvasRenderingContext2D, now: number, w: number, speed: number) {
+   183→  const gy = H - GROUND_H;
+   184→  c.fillStyle = "#059669";
+   185→  c.fillRect(0, gy, w, GROUND_H);
+   186→  c.fillStyle = "#10b981";
+   187→  c.fillRect(0, gy, w, 4);
+   188→  const off = (now * speed * 0.05) % 30;
+   189→  c.fillStyle = "#fbbf24";
+   190→  for (let x = 0; x < w + 30; x += 30) c.fillRect(x - off, gy + 13, 16, 3);
+   191→}
+   192→
+   193→/** دیوار emerald با کلاهک + گزینه‌ها با auto-shrink تا در دهانه جا شوند */
+   194→function drawWall(c: CanvasRenderingContext2D, wall: FlappyWall, now: number) {
+   195→  const segs: Array<[number, number]> = [];
+   196→  let y = 0;
+   197→  for (const g of wall.gaps) {
+   198→    segs.push([y, g.y0]);
+   199→    y = g.y1;
+   200→  }
+   201→  segs.push([y, H - GROUND_H]);
+   202→  c.fillStyle = "#059669";
+   203→  for (const [a, b] of segs) if (b > a) c.fillRect(wall.x, a, WALL_W, b - a);
+   204→  c.fillStyle = "#047857";
+   205→  for (const g of wall.gaps) {
+   206→    c.fillRect(wall.x - 4, g.y0 - 10, WALL_W + 8, 10);
+   207→    c.fillRect(wall.x - 4, g.y1, WALL_W + 8, 10);
+   208→  }
+   209→  c.textAlign = "center";
+   210→  c.textBaseline = "middle";
+   211→  for (const g of wall.gaps) {
+   212→    const cy = (g.y0 + g.y1) / 2;
+   213→    let fs = 15;
+   214→    c.font = `800 ${fs}px system-ui, sans-serif`;
+   215→    while (c.measureText(g.text).width > WALL_W - 16 && fs > 8) {
+   216→      fs -= 1;
+   217→      c.font = `800 ${fs}px system-ui, sans-serif`;
+   218→    }
+   219→    const tw = Math.min(c.measureText(g.text).width, WALL_W - 16);
+   220→    c.fillStyle = "rgba(255, 255, 255, 0.92)";
+   221→    roundRectPath(c, wall.x + WALL_W / 2 - tw / 2 - 8, cy - 11, tw + 16, 22, 8);
+   222→    c.fill();
+   223→    c.fillStyle = "#065f46";
+   224→    c.fillText(g.text, wall.x + WALL_W / 2, cy + 1);
+   225→  }
+   226→  if (wall.flashUntil > now) {
+   227→    if (wall.ok) {
+   228→      const g = wall.gaps.find((gp) => gp.correct);
+   229→      if (g) {
+   230→        c.fillStyle = "rgba(16, 185, 129, 0.30)";
+   231→        c.fillRect(wall.x - 4, g.y0, WALL_W + 8, g.y1 - g.y0);
+   232→      }
+   233→    } else {
+   234→      c.fillStyle = "rgba(239, 68, 68, 0.22)";
+   235→      c.fillRect(wall.x - 4, 0, WALL_W + 8, H - GROUND_H);
+   236→    }
+   237→  }
+   238→}
+   239→
+   240→/** پرنده = دایره amber + بال/چشم/منقار ساده + چرخش بر اساس سرعت عمودی + چشمک مصونیت */
+   241→function drawBird(
+   242→  c: CanvasRenderingContext2D,
+   243→  now: number,
+   244→  y: number,
+   245→  vy: number,
+   246→  bx: number,
+   247→  invulnUntil: number,
+   248→  lastFlapAt: number,
+   249→) {
+   250→  c.save();
+   251→  if (now < invulnUntil) c.globalAlpha = 0.45 + 0.3 * Math.abs(Math.sin(now / 60));
+   252→  c.translate(bx, y);
+   253→  c.rotate(Math.max(-0.38, Math.min(0.6, vy / 650)));
+   254→  c.beginPath();
+   255→  c.arc(0, 0, BIRD_R, 0, Math.PI * 2);
+   256→  c.fillStyle = "#f59e0b";
+   257→  c.fill();
+   258→  c.lineWidth = 2.5;
+   259→  c.strokeStyle = "#b45309";
+   260→  c.stroke();
+   261→  const flapT = Math.max(0, 1 - (now - lastFlapAt) / 350);
+   262→  const wy = 3 + Math.sin(now / (flapT > 0 ? 45 : 110)) * (2.5 + flapT * 3);
+   263→  c.beginPath();
+   264→  c.ellipse(-4, wy, 6.5, 4.2, -0.5, 0, Math.PI * 2);
+   265→  c.fillStyle = "#fcd34d";
+   266→  c.fill();
+   267→  c.stroke();
+   268→  c.beginPath();
+   269→  c.arc(5, -4.5, 3.4, 0, Math.PI * 2);
+   270→  c.fillStyle = "#ffffff";
+   271→  c.fill();
+   272→  c.beginPath();
+   273→  c.arc(6.3, -4.5, 1.6, 0, Math.PI * 2);
+   274→  c.fillStyle = "#1c1917";
+   275→  c.fill();
+   276→  c.beginPath();
+   277→  c.moveTo(11, -1);
+   278→  c.lineTo(18.5, 2);
+   279→  c.lineTo(11, 5.5);
+   280→  c.closePath();
+   281→  c.fillStyle = "#d97706";
+   282→  c.fill();
+   283→  c.restore();
+   284→}
+   285→
+   286→export function FlappyQuizGame() {
+   287→  const data = useBookData();
+   288→  const { bookId } = useBook();
+   289→  // بازی‌ها فقط داخل کتاب فعال رندر می‌شوند (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   290→  const activeBookId: string = bookId ?? "";
+   291→  const { speed } = useVoiceSpeed();
+   292→
+   293→  const [phase, setPhase] = useState<Phase>("setup");
+   294→  const [lesson, setLesson] = useState<number>(ALL_LESSONS);
+   295→  const [easy, setEasy] = useState(false);
+   296→
+   297→  // ── HUD حین بازی (فقط روی رویدادهای گسسته به‌روز می‌شود) ──
+   298→  const [hudQ, setHudQ] = useState<QuizQuestionSeed | null>(null);
+   299→  const [score, setScore] = useState(0);
+   300→  const [combo, setCombo] = useState(0);
+   301→  const [hearts, setHearts] = useState(HEARTS);
+   302→
+   303→  // ── stateهای فاز done ──
+   304→  const [isRecord, setIsRecord] = useState(false);
+   305→  const [maxCombo, setMaxCombo] = useState(0);
+   306→  const [correctCount, setCorrectCount] = useState(0);
+   307→  const [wrongCount, setWrongCount] = useState(0);
+   308→  const [wrongWords, setWrongWords] = useState<string[]>([]);
+   309→
+   310→  // ── دنیای بازی — مالک: حلقهٔ rAF ──
+   311→  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+   312→  const dimRef = useRef<{ w: number }>({ w: 640 });
+   313→  const birdRef = useRef<BirdState>({ y: H / 2, vy: 0 });
+   314→  const wallsRef = useRef<FlappyWall[]>([]);
+   315→  const popupsRef = useRef<Popup[]>([]);
+   316→  const hudWallRef = useRef<FlappyWall | null>(null);
+   317→  const deckRef = useRef<QuizQuestionSeed[]>([]);
+   318→  const deckIdxRef = useRef(0);
+   319→  const cfgRef = useRef<Cfg>(NORMAL_CFG);
+   320→  const speedRef = useRef(NORMAL_CFG.base);
+   321→  const comboRef = useRef(0);
+   322→  const scoreRef = useRef(0);
+   323→  const heartsRef = useRef(HEARTS);
+   324→  const totalRef = useRef(0);
+   325→  const correctRef = useRef(0);
+   326→  const maxComboRef = useRef(0);
+   327→  const wrongRef = useRef<string[]>([]);
+   328→  const invulnUntilRef = useRef(0);
+   329→  const flashUntilRef = useRef(0);
+   330→  const lastFlapAtRef = useRef(0);
+   331→  const startedAtRef = useRef(0);
+   332→  const overRef = useRef(false);
+   333→  const finishRef = useRef<() => void>(() => {});
+   334→  const voiceSpeedRef = useRef(speed);
+   335→
+   336→  // ── داده‌های مشتق ──
+   337→  const vocabSeed = useMemo(
+   338→    () => data.quiz.seed.filter((q) => q.category === "vocabulary"),
+   339→    [data.quiz.seed],
+   340→  );
+   341→
+   342→  const lessons = useMemo(
+   343→    () => [...new Set(vocabSeed.map((q) => q.lesson))].sort((a, b) => a - b),
+   344→    [vocabSeed],
+   345→  );
+   346→
+   347→  const countFor = useCallback(
+   348→    (l: number) => (l === ALL_LESSONS ? vocabSeed.length : vocabSeed.filter((q) => q.lesson === l).length),
+   349→    [vocabSeed],
+   350→  );
+   351→
+   352→  const pool = useMemo(
+   353→    () => (lesson === ALL_LESSONS ? vocabSeed : vocabSeed.filter((q) => q.lesson === lesson)),
+   354→    [vocabSeed, lesson],
+   355→  );
+   356→
+   357→  // رکورد شخصی این اسکوپ — الگوی speed-quiz (اسنپ‌شات عددی پایدار)
+   358→  const best = useSyncExternalStore(
+   359→    subscribeGameData,
+   360→    () => loadBest<BestRecord>(activeBookId, GAME_KEY, easy ? "easy" : "normal")?.score ?? null,
+   361→    () => null,
+   362→  );
+   363→
+   364→  // ── جریان بازی ──
+   365→
+   366→  /** سؤال بعدی از دستهٔ یکتا — اتمام استخر → reshuffle و ادامه */
+   367→  const nextQuestion = useCallback((): QuizQuestionSeed => {
+   368→    if (deckIdxRef.current >= deckRef.current.length) {
+   369→      deckRef.current = shuffle(deckRef.current);
+   370→      deckIdxRef.current = 0;
+   371→    }
+   372→    const q = deckRef.current[deckIdxRef.current];
+   373→    deckIdxRef.current += 1;
+   374→    return q;
+   375→  }, []);
+   376→
+   377→  /** ساخت یک دروازهٔ گزینه: ۲ تا ۴ دهانه (گزینهٔ درست + حواس‌پرتی‌ها، شافل) */
+   378→  const makeWall = useCallback(
+   379→    (x: number): FlappyWall => {
+   380→      const q = nextQuestion();
+   381→      const correctText = q.options[q.answer];
+   382→      const k = 2 + Math.floor(Math.random() * 3);
+   383→      const distractors = shuffle(q.options.filter((_, i) => i !== q.answer)).slice(0, k - 1);
+   384→      const texts = shuffle([correctText, ...distractors]);
+   385→      const slots = layoutGaps(k);
+   386→      return {
+   387→        x,
+   388→        gaps: slots.map((s, i) => ({
+   389→          y0: s.y0,
+   390→          y1: s.y1,
+   391→          text: texts[i],
+   392→          correct: texts[i] === correctText,
+   393→        })),
+   394→        q,
+   395→        resolved: false,
+   396→        ok: false,
+   397→        flashUntil: 0,
+   398→      };
+   399→    },
+   400→    [nextQuestion],
+   401→  );
+   402→
+   403→  const start = useCallback(() => {
+   404→    if (pool.length < MIN_POOL) {
+   405→      toast.error(`سؤال واژگانی کافی در این محدوده نیست — دست‌کم ${faNum(MIN_POOL)} سؤال لازم است`);
+   406→      return;
+   407→    }
+   408→    const cfg = easy ? EASY_CFG : NORMAL_CFG;
+   409→    cfgRef.current = cfg;
+   410→    speedRef.current = cfg.base;
+   411→    birdRef.current = { y: H / 2, vy: 0 };
+   412→    wallsRef.current = [];
+   413→    popupsRef.current = [];
+   414→    hudWallRef.current = null;
+   415→    comboRef.current = 0;
+   416→    scoreRef.current = 0;
+   417→    heartsRef.current = HEARTS;
+   418→    totalRef.current = 0;
+   419→    correctRef.current = 0;
+   420→    maxComboRef.current = 0;
+   421→    wrongRef.current = [];
+   422→    invulnUntilRef.current = 0;
+   423→    flashUntilRef.current = 0;
+   424→    lastFlapAtRef.current = 0;
+   425→    startedAtRef.current = performance.now();
+   426→    overRef.current = false;
+   427→    const deck = pickUnique(pool, pool.length, (q) => q.text);
+   428→    deckRef.current = deck;
+   429→    deckIdxRef.current = 0;
+   430→    // سؤال دیوار اول — دیوار واقعی در effect «playing» با nextQuestion از همین سرِ دسته زده می‌شود
+   431→    setHudQ(deck.length > 0 ? deck[0] : null);
+   432→    setScore(0);
+   433→    setCombo(0);
+   434→    setHearts(HEARTS);
+   435→    setIsRecord(false);
+   436→    setMaxCombo(0);
+   437→    setCorrectCount(0);
+   438→    setWrongCount(0);
+   439→    setWrongWords([]);
+   440→    setPhase("playing");
+   441→  }, [pool, easy]);
+   442→
+   443→  /** پایان دور — فقط یک‌بار (overRef قفل)؛ ثبت streak/session/plays/attempt/best */
+   444→  const finish = useCallback(() => {
+   445→    if (overRef.current) return;
+   446→    overRef.current = true;
+   447→    const total = totalRef.current;
+   448→    const finalScore = scoreRef.current;
+   449→    const elapsed = Math.max(1, Math.round((performance.now() - startedAtRef.current) / 1000));
+   450→    touchStreak();
+   451→    recordStudySession();
+   452→    bumpPlays(activeBookId, GAME_KEY);
+   453→    if (total > 0) {
+   454→      saveAttempt(activeBookId, GAME_KEY, {
+   455→        lesson: lesson === ALL_LESSONS ? 0 : lesson,
+   456→        total,
+   457→        correct: correctRef.current,
+   458→        duration: elapsed,
+   459→        detail: { score: finalScore, maxCombo: maxComboRef.current },
+   460→      });
+   461→    }
+   462→    const scope = easy ? "easy" : "normal";
+   463→    const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+   464→    if (finalScore > 0 && finalScore > (prev?.score ?? 0)) {
+   465→      saveBest(activeBookId, GAME_KEY, scope, { score: finalScore });
+   466→      setIsRecord(prev !== null);
+   467→      if (prev !== null) toast.success(`رکورد جدید! ${faNum(finalScore)} امتیاز 🏆`);
+   468→    } else {
+   469→      setIsRecord(false);
+   470→    }
+   471→    setMaxCombo(maxComboRef.current);
+   472→    setCorrectCount(correctRef.current);
+   473→    setWrongCount(total - correctRef.current);
+   474→    setWrongWords([...wrongRef.current]);
+   475→    setScore(finalScore);
+   476→    setPhase("done");
+   477→  }, [activeBookId, lesson, easy]);
+   478→
+   479→  const quit = useCallback(() => {
+   480→    overRef.current = true;
+   481→    stopSpeaking();
+   482→    setPhase("setup");
+   483→  }, []);
+   484→
+   485→  // آخرین نسخهٔ finish + سرعت صدا برای حلقهٔ rAF (الگوی latest-ref — effect بدون dep)
+   486→  useEffect(() => {
+   487→    finishRef.current = finish;
+   488→    voiceSpeedRef.current = speed;
+   489→  });
+   490→
+   491→  useEffect(
+   492→    () => () => {
+   493→      stopSpeaking();
+   494→    },
+   495→    [],
+   496→  );
+   497→
+   498→  // ── حلقهٔ بازی: اندازه‌گیری بوم، ورودی‌ها، فیزیک dt-based و رسم ──
+   499→  useEffect(() => {
+   500→    if (phase !== "playing") return;
+   501→    const canvas = canvasRef.current;
+   502→    const ctx = canvas?.getContext("2d");
+   503→    if (!canvas || !ctx) return;
+   504→
+   505→    // اندازه و وضوح — یک‌بار در شروع دور
+   506→    const rect = canvas.getBoundingClientRect();
+   507→    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+   508→    canvas.width = Math.max(1, Math.round(rect.width * dpr));
+   509→    canvas.height = Math.round(H * dpr);
+   510→    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+   511→    dimRef.current = { w: Math.round(rect.width) || 640 };
+   512→
+   513→    // نخستین دیوار (سؤالش همان deck[0] است که در start به HUD داده شده)
+   514→    if (wallsRef.current.length === 0) {
+   515→      wallsRef.current.push(makeWall(dimRef.current.w + 40));
+   516→      hudWallRef.current = wallsRef.current[0];
+   517→    }
+   518→
+   519→    const flap = () => {
+   520→      if (overRef.current) return;
+   521→      birdRef.current.vy = cfgRef.current.flap;
+   522→      lastFlapAtRef.current = performance.now();
+   523→    };
+   524→
+   525→    const syncHud = () => {
+   526→      setScore(scoreRef.current);
+   527→      setCombo(comboRef.current);
+   528→      setHearts(heartsRef.current);
+   529→    };
+   530→
+   531→    const showWallQ = (wl: FlappyWall) => {
+   532→      hudWallRef.current = wl;
+   533→      setHudQ(wl.q);
+   534→    };
+   535→
+   536→    const step = (now: number, dt: number) => {
+   537→      const cfg = cfgRef.current;
+   538→      const bird = birdRef.current;
+   539→      const { w } = dimRef.current;
+   540→      const birdX = Math.min(w * 0.28, 190);
+   541→
+   542→      // فیزیک پرنده (dt-based)
+   543→      bird.vy = Math.min(bird.vy + cfg.gravity * dt, 640);
+   544→      bird.y += bird.vy * dt;
+   545→
+   546→      // حرکت دیوارها به چپ + حذف خارج‌شده‌ها
+   547→      const walls = wallsRef.current;
+   548→      for (const wl of walls) wl.x -= speedRef.current * dt;
+   549→      while (walls.length > 0 && walls[0].x < -WALL_W - 40) walls.shift();
+   550→
+   551→      // زادن دیوار بعدی
+   552→      const spacing = Math.max(280, w * 0.62);
+   553→      const lastW = walls[walls.length - 1];
+   554→      if (!lastW || lastW.x < w - spacing) {
+   555→        const nw = makeWall(w + 30);
+   556→        walls.push(nw);
+   557→        if (!hudWallRef.current || hudWallRef.current.resolved) showWallQ(nw);
+   558→      }
+   559→
+   560→      // عبور از دیوار — لحظه‌ای که مرکز دیوار از پرنده رد می‌شود
+   561→      for (const wl of walls) {
+   562→        if (wl.resolved || wl.x + WALL_W / 2 > birdX) continue;
+   563→        wl.resolved = true;
+   564→        totalRef.current += 1;
+   565→        const gap = wl.gaps.find((g) => bird.y >= g.y0 && bird.y <= g.y1) ?? null;
+   566→        if (gap !== null && gap.correct) {
+   567→          // عبور درست — امتیاز + بونوس کمبو + شتاب + تلفظ
+   568→          comboRef.current += 1;
+   569→          maxComboRef.current = Math.max(maxComboRef.current, comboRef.current);
+   570→          const gained = 10 + Math.min(comboRef.current - 1, 5) * 2;
+   571→          scoreRef.current += gained;
+   572→          speedRef.current = Math.min(cfg.cap, cfg.base + comboRef.current * cfg.step);
+   573→          wl.ok = true;
+   574→          wl.flashUntil = now + WALL_FLASH_MS;
+   575→          popupsRef.current.push({
+   576→            x: wl.x + WALL_W / 2,
+   577→            y: bird.y - 26,
+   578→            text: `+${faNum(gained)}`,
+   579→            born: now,
+   580→          });
+   581→          correctRef.current += 1;
+   582→          void speak(gap.text, { speed: voiceSpeedRef.current });
+   583→        } else {
+   584→          // دهانهٔ غلط یا برخورد با بدنهٔ دیوار — یک ❤ کم، کمبو صفر، فلاش، صف مرور، مصونیت ۱ث
+   585→          heartsRef.current -= 1;
+   586→          comboRef.current = 0;
+   587→          speedRef.current = cfg.base;
+   588→          wl.ok = false;
+   589→          wl.flashUntil = now + WALL_FLASH_MS;
+   590→          flashUntilRef.current = now + FLASH_MS;
+   591→          invulnUntilRef.current = now + INVULN_MS;
+   592→          const word = wl.q.options[wl.q.answer];
+   593→          if (!wrongRef.current.includes(word)) wrongRef.current.push(word);
+   594→          seedReviewFromQuiz(word);
+   595→        }
+   596→        syncHud();
+   597→        if (hudWallRef.current === wl) {
+   598→          const nxt = walls.find((c) => !c.resolved);
+   599→          if (nxt) showWallQ(nxt);
+   600→          else {
+   601→            hudWallRef.current = null;
+   602→            setHudQ(null);
+   603→          }
+   604→        }
+   605→      }
+   606→
+   607→      // زمین/سقف — یک ❤ کم و پرنده به میانه برمی‌گردد
+   608→      if (bird.y + BIRD_R >= H - GROUND_H || bird.y - BIRD_R <= 0) {
+   609→        if (now >= invulnUntilRef.current) {
+   610→          heartsRef.current -= 1;
+   611→          flashUntilRef.current = now + FLASH_MS;
+   612→          invulnUntilRef.current = now + 700;
+   613→          syncHud();
+   614→        }
+   615→        bird.y = H / 2;
+   616→        bird.vy = 0;
+   617→      }
+   618→    };
+   619→
+   620→    const draw = (c: CanvasRenderingContext2D, now: number) => {
+   621→      const { w } = dimRef.current;
+   622→      const bird = birdRef.current;
+   623→      const birdX = Math.min(w * 0.28, 190);
+   624→      c.clearRect(0, 0, w, H);
+   625→      drawSky(c, now, w);
+   626→      for (const wl of wallsRef.current) drawWall(c, wl, now);
+   627→      drawGround(c, now, w, speedRef.current);
+   628→      popupsRef.current = popupsRef.current.filter((p) => now - p.born < 700);
+   629→      c.textAlign = "center";
+   630→      c.textBaseline = "middle";
+   631→      for (const p of popupsRef.current) {
+   632→        const t = now - p.born;
+   633→        c.globalAlpha = Math.max(0, 1 - t / 700);
+   634→        c.fillStyle = "#047857";
+   635→        c.font = "800 15px system-ui, sans-serif";
+   636→        c.fillText(p.text, p.x, p.y - t * 0.04);
+   637→        c.globalAlpha = 1;
+   638→      }
+   639→      drawBird(c, now, bird.y, bird.vy, birdX, invulnUntilRef.current, lastFlapAtRef.current);
+   640→      if (now < flashUntilRef.current) {
+   641→        c.fillStyle = "rgba(239, 68, 68, 0.16)";
+   642→        c.fillRect(0, 0, w, H);
+   643→      }
+   644→    };
+   645→
+   646→    const onPointer = (e: PointerEvent) => {
+   647→      e.preventDefault();
+   648→      flap();
+   649→    };
+   650→    const onKey = (e: KeyboardEvent) => {
+   651→      const t = e.target as HTMLElement | null;
+   652→      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+   653→      if (e.code === "Space" || e.code === "ArrowUp") {
+   654→        e.preventDefault();
+   655→        flap();
+   656→      }
+   657→    };
+   658→    canvas.addEventListener("pointerdown", onPointer);
+   659→    window.addEventListener("keydown", onKey);
+   660→
+   661→    let raf = 0;
+   662→    let last = performance.now();
+   663→    const tick = (now: number) => {
+   664→      raf = requestAnimationFrame(tick);
+   665→      if (overRef.current) return;
+   666→      const dt = Math.min((now - last) / 1000, 0.05);
+   667→      last = now;
+   668→      step(now, dt);
+   669→      draw(ctx, now);
+   670→      if (heartsRef.current <= 0) finishRef.current();
+   671→    };
+   672→    raf = requestAnimationFrame(tick);
+   673→
+   674→    return () => {
+   675→      cancelAnimationFrame(raf);
+   676→      canvas.removeEventListener("pointerdown", onPointer);
+   677→      window.removeEventListener("keydown", onKey);
+   678→    };
+   679→  }, [phase, makeWall]);
+   680→
+   681→  const chipCls = (active: boolean) =>
+   682→    cn(
+   683→      "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   684→      active
+   685→        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   686→        : "text-muted-foreground hover:bg-muted",
+   687→    );
+   688→
+   689→  // ── Setup ──
+   690→  if (phase === "setup") {
+   691→    return (
+   692→      <Card className="mx-auto max-w-xl rise-in">
+   693→        <CardContent className="space-y-6 p-6">
+   694→          <div className="flex items-center gap-3">
+   695→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   696→              <Bird size={22} />
+   697→            </span>
+   698→            <div>
+   699→              <h2 className="text-lg font-black">فلپی گزینش</h2>
+   700→              <p className="text-xs text-muted-foreground">پرواز کن و از دروازهٔ گزینهٔ درست رد شو!</p>
+   701→            </div>
+   702→          </div>
+   703→
+   704→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   705→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   706→            <p>
+   707→              روی هر دیوار چند گزینه نوشته شده — دقیقاً از گزینهٔ درستِ سؤالِ «دیوار پیش‌رو» رد شو. هر عبور درست
+   708→              کمبو و سرعت را بالا می‌برد و هر خطا یک ❤ کم می‌کند؛ با صفر شدن قلب‌ها پرواز تمام است.
+   709→            </p>
+   710→          </div>
+   711→
+   712→          <div>
+   713→            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   714→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   715→              <button
+   716→                type="button"
+   717→                aria-pressed={lesson === ALL_LESSONS}
+   718→                onClick={() => setLesson(ALL_LESSONS)}
+   719→                className={chipCls(lesson === ALL_LESSONS)}
+   720→              >
+   721→                کل کتاب ({faNum(vocabSeed.length)} سؤال)
+   722→              </button>
+   723→              {lessons.map((l) => (
+   724→                <button
+   725→                  key={l}
+   726→                  type="button"
+   727→                  aria-pressed={lesson === l}
+   728→                  onClick={() => setLesson(l)}
+   729→                  className={chipCls(lesson === l)}
+   730→                >
+   731→                  {lessonLabel(l)} ({faNum(countFor(l))} سؤال)
+   732→                </button>
+   733→              ))}
+   734→            </div>
+   735→          </div>
+   736→
+   737→          <div>
+   738→            <p className="mb-2 text-[13px] font-bold">سرعت پرواز</p>
+   739→            <button type="button" aria-pressed={easy} onClick={() => setEasy((v) => !v)} className={chipCls(easy)}>
+   740→              حالت آسان {easy ? "— فعال" : ""}
+   741→            </button>
+   742→            <p className="mt-2 text-[11px] text-muted-foreground">
+   743→              در حالت آسان جاذبه و سرعت پایه کمتر است؛ رکورد هر دو حالت جداگانه ثبت می‌شود.
+   744→            </p>
+   745→          </div>
+   746→
+   747→          {best !== null && (
+   748→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   749→              <Trophy size={12} />
+   750→              بهترین امتیاز: {faNum(best)}
+   751→            </Badge>
+   752→          )}
+   753→
+   754→          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   755→            <Play size={18} />
+   756→            شروع پرواز
+   757→          </Button>
+   758→        </CardContent>
+   759→      </Card>
+   760→    );
+   761→  }
+   762→
+   763→  // ── Done ──
+   764→  if (phase === "done") {
+   765→    return (
+   766→      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+   767→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   768→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   769→            <Bird size={30} />
+   770→          </span>
+   771→          <h2 className="text-xl font-black">پرواز تمام شد!</h2>
+   772→          {isRecord && (
+   773→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   774→              <Trophy size={13} />
+   775→              رکورد جدید! 🏆
+   776→            </Badge>
+   777→          )}
+   778→
+   779→          <div className="w-full rounded-2xl bg-gradient-to-bl from-primary/10 to-amber-500/10 p-5">
+   780→            <p className="text-5xl font-black leading-none">{faNum(score)}</p>
+   781→            <p className="mt-2 text-[11px] text-muted-foreground">امتیاز این پرواز</p>
+   782→          </div>
+   783→
+   784→          <div className="grid w-full grid-cols-3 gap-2 text-center">
+   785→            <div className="rounded-xl bg-muted/60 p-3">
+   786→              <Flame size={16} className="mx-auto text-amber-500" />
+   787→              <p className="mt-1.5 text-lg font-black leading-none">×{faNum(maxCombo)}</p>
+   788→              <p className="mt-1 text-[10px] text-muted-foreground">بیشترین کمبو</p>
+   789→            </div>
+   790→            <div className="rounded-xl bg-muted/60 p-3">
+   791→              <CheckCircle2 size={16} className="mx-auto text-emerald-500" />
+   792→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(correctCount)}</p>
+   793→              <p className="mt-1 text-[10px] text-muted-foreground">عبور درست</p>
+   794→            </div>
+   795→            <div className="rounded-xl bg-muted/60 p-3">
+   796→              <XCircle size={16} className="mx-auto text-destructive" />
+   797→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(wrongCount)}</p>
+   798→              <p className="mt-1 text-[10px] text-muted-foreground">خطا</p>
+   799→            </div>
+   800→          </div>
+   801→
+   802→          {wrongWords.length > 0 ? (
+   803→            <div className="w-full space-y-2 rounded-xl border p-3 text-right">
+   804→              <div className="flex items-center justify-between gap-2">
+   805→                <p className="text-[12px] font-bold">واژه‌های غلط‌زده</p>
+   806→                <Badge
+   807→                  variant="outline"
+   808→                  className="shrink-0 border-emerald-500/40 text-[10px] text-emerald-600 dark:text-emerald-400"
+   809→                >
+   810→                  به مرور اضافه شد
+   811→                </Badge>
+   812→              </div>
+   813→              <div className="flex max-h-44 flex-wrap gap-1.5 overflow-y-auto">
+   814→                {wrongWords.map((word) => (
+   815→                  <span
+   816→                    key={word}
+   817→                    dir="ltr"
+   818→                    className="font-en rounded-lg bg-muted/70 px-2.5 py-1 text-[12px] font-bold"
+   819→                  >
+   820→                    {word}
+   821→                  </span>
+   822→                ))}
+   823→              </div>
+   824→            </div>
+   825→          ) : (
+   826→            <Badge
+   827→              variant="outline"
+   828→              className="border-emerald-500/40 text-emerald-600 dark:text-emerald-400"
+   829→            >
+   830→              بدون خطا — عالی!
+   831→            </Badge>
+   832→          )}
+   833→
+   834→          <div className="flex gap-2">
+   835→            <Button onClick={start} className="h-11 gap-2">
+   836→              <RotateCcw size={16} />
+   837→              پرواز جدید
+   838→            </Button>
+   839→            <Button variant="outline" className="h-11" onClick={() => setPhase("setup")}>
+   840→              تنظیمات
+   841→            </Button>
+   842→          </div>
+   843→        </CardContent>
+   844→      </Card>
+   845→    );
+   846→  }
+   847→
+   848→  // ── Playing ──
+   849→  return (
+   850→    <div role="group" aria-label="بازی فلپی گزینش" className="mx-auto max-w-2xl space-y-3 rise-in">
+   851→      <div className="flex flex-wrap items-center gap-2">
+   852→        <Badge key={score} variant="secondary" className="match-pop gap-1.5 px-2.5 py-1 text-[13px] font-black">
+   853→          <Star size={13} className="text-amber-500" />
+   854→          {faNum(score)}
+   855→        </Badge>
+   856→        {combo >= 2 ? (
+   857→          <Badge
+   858→            variant="outline"
+   859→            className="gap-1.5 border-amber-500/50 bg-amber-500/10 px-2.5 py-1 text-[13px] font-black text-amber-600 dark:text-amber-400"
+   860→          >
+   861→            <Flame size={13} />
+   862→            ×{faNum(combo)}
+   863→          </Badge>
+   864→        ) : (
+   865→          <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px] text-muted-foreground">
+   866→            <Flame size={12} />
+   867→            کمبو ×۱
+   868→          </Badge>
+   869→        )}
+   870→        <span
+   871→          role="img"
+   872→          aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`}
+   873→          className="flex items-center gap-1"
+   874→        >
+   875→          {Array.from({ length: HEARTS }, (_, i) => (
+   876→            <Heart
+   877→              key={i}
+   878→              size={15}
+   879→              fill={i < hearts ? "currentColor" : "none"}
+   880→              className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
+   881→            />
+   882→          ))}
+   883→        </span>
+   884→        <div className="mr-auto">
+   885→          <Button variant="ghost" size="sm" className="h-11 text-[11px] text-muted-foreground" onClick={quit}>
+   886→            انصراف
+   887→          </Button>
+   888→        </div>
+   889→      </div>
+   890→
+   891→      {hudQ && (
+   892→        <div className="flex items-center gap-3 rounded-xl border bg-card px-4 py-2.5">
+   893→          <Badge
+   894→            variant="outline"
+   895→            className="shrink-0 border-teal-500/40 text-[10px] text-teal-600 dark:text-teal-400"
+   896→          >
+   897→            دیوار پیش‌رو
+   898→          </Badge>
+   899→          <p dir="ltr" className="font-en min-w-0 flex-1 truncate text-left text-[13px] font-bold sm:text-sm">
+   900→            {qLabel(hudQ.text)}
+   901→          </p>
+   902→        </div>
+   903→      )}
+   904→
+   905→      <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+   906→        <canvas
+   907→          ref={canvasRef}
+   908→          role="img"
+   909→          aria-label="بازی فلپی گزینش — برای بال زدن کلیک کن یا Space بزن"
+   910→          className="block h-[480px] w-full touch-none select-none bg-gradient-to-b from-teal-50 via-emerald-50/60 to-emerald-100 dark:from-teal-950 dark:via-emerald-950/70 dark:to-emerald-950"
+   911→        />
+   912→      </div>
+   913→      <p className="text-center text-[11px] text-muted-foreground">
+   914→        کلیک/لمس روی بوم یا Space = بال زدن — از دهانهٔ گزینهٔ درست رد شو
+   915→      </p>
+   916→    </div>
+   917→  );
+   918→}
+   919→

@@ -307,19 +307,48 @@ export function SpeedQuizGame() {
   });
 
   // تایمر شمارش معکوس — صفر شدن یعنی پایان مسابقه (finish از طریق ref تازه)
+  // فاز G0-05 — گارد visibilitychange: در تب مخفی interval پاک می‌شود (شمارش می‌ایستد و
+  // زمان کاربر نمی‌سوزد) و در بازگشت با همان timeRef از سر گرفته می‌شود — نه پرش به زمان قدیمی.
+  // بازگشت از bfcache هم با pageshow پوشش داده می‌شود؛ unmount همیشه پاک می‌کند.
   useEffect(() => {
     if (phase !== "playing") return;
-    const iv = setInterval(() => {
-      // اول کم‌کن، بعد صفر را تشخیص بده — بازی دقیقاً «duration» ثانیه طول می‌کشد
-      if (timeRef.current > 0) {
-        timeRef.current -= 1;
-        setTimeLeft((t) => Math.max(0, t - 1));
+    let iv: number | null = null;
+    const startTimer = () => {
+      if (iv !== null) return;
+      iv = window.setInterval(() => {
+        // اول کم‌کن، بعد صفر را تشخیص بده — بازی دقیقاً «duration» ثانیه طول می‌کشد
+        if (timeRef.current > 0) {
+          timeRef.current -= 1;
+          setTimeLeft((t) => Math.max(0, t - 1));
+        }
+        if (timeRef.current <= 0) {
+          finishRef.current?.();
+        }
+      }, 1000);
+    };
+    const stopTimer = () => {
+      if (iv !== null) {
+        window.clearInterval(iv);
+        iv = null;
       }
-      if (timeRef.current <= 0) {
-        finishRef.current?.();
-      }
-    }, 1000);
-    return () => clearInterval(iv);
+    };
+    const onVis = () => {
+      if (document.visibilityState === "hidden") stopTimer();
+      else startTimer();
+    };
+    const onPageshow = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      stopTimer(); // interval تازه می‌شود تا تیک معوقِ دورهٔ انجماد یک‌جا نپرد
+      if (document.visibilityState === "visible") startTimer();
+    };
+    startTimer();
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("pageshow", onPageshow);
+    return () => {
+      stopTimer();
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pageshow", onPageshow);
+    };
   }, [phase]);
 
   // میان‌بر کیبورد ۱..۴ (فارسی/انگلیسی) برای انتخاب گزینه — setState داخل callback رویداد

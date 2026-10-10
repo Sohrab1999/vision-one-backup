@@ -53,6 +53,9 @@ import {
 
 type Phase = "setup" | "playing" | "done";
 
+/** کلید بازی — الگوی مشترک همهٔ بازی‌ها (فاز G0-04) */
+const GAME_KEY = "scramble";
+
 /** حرف با شناسه یکتا — حروف تکراری مستقل مدیریت می‌شوند (اینکس‌محور) */
 interface Tile {
   id: number;
@@ -126,7 +129,7 @@ export function ScrambleGame() {
   const best = useSyncExternalStore(
     subscribeGameData,
     () => {
-      const b = loadBest<BestRec>(bookId, "scramble", scope);
+      const b = loadBest<BestRec>(bookId, GAME_KEY, scope);
       return b ? b.time : null;
     },
     () => null,
@@ -163,8 +166,8 @@ export function ScrambleGame() {
     (finalSolved: number, finalSkipped: number, finalDetail: DetailRow[]) => {
       touchStreak();
       recordStudySession();
-      bumpPlays(bookId, "scramble");
-      saveAttempt(bookId, "scramble", {
+      bumpPlays(bookId, GAME_KEY);
+      saveAttempt(bookId, GAME_KEY, {
         lesson: lesson === ALL_LESSONS ? 0 : lesson,
         total: deck.length,
         correct: finalSolved,
@@ -174,9 +177,9 @@ export function ScrambleGame() {
       // رکورد فقط برای اجرای کاملِ بدون رد کردن و بدون راهنما
       if (finalSkipped === 0 && hinted === 0) {
         const recScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`;
-        const prev = loadBest<BestRec>(bookId, "scramble", recScope);
+        const prev = loadBest<BestRec>(bookId, GAME_KEY, recScope);
         if (!prev || secsRef.current < prev.time) {
-          saveBest<BestRec>(bookId, "scramble", recScope, { time: secsRef.current });
+          saveBest<BestRec>(bookId, GAME_KEY, recScope, { time: secsRef.current });
           setIsRecord(true);
         }
       }

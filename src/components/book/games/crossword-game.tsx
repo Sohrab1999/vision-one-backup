@@ -30,6 +30,16 @@ import {
   Trophy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -347,6 +357,15 @@ export function CrosswordGame() {
   const [hints, setHints] = useState(0);
   const [secs, setSecs] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
+
+  /** نگهبان خروج (فاز G0-06) — دیالوگ تأیید وقتی حداقل یک خانهٔ جدول پر شده است */
+  const [exitAsk, setExitAsk] = useState(false);
+  /** آینهٔ exitAsk برای شنوندهٔ کیبورد فیزیکی (بدون ثبت‌مجدد effect) */
+  const exitAskRef = useRef(false);
+  const setExitAskGuard = (open: boolean): void => {
+    exitAskRef.current = open;
+    setExitAsk(open);
+  };
 
   const { speed } = useVoiceSpeed();
   const secsRef = useRef(0);
@@ -702,6 +721,7 @@ export function CrosswordGame() {
   const keyRef = useRef<(e: KeyboardEvent) => void>(() => {});
   useEffect(() => {
     keyRef.current = (e: KeyboardEvent) => {
+      if (exitAskRef.current) return; // نگهبان خروج — تایپ حروف حین دیالوگ تأیید خروج
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.key === "Backspace") {
         e.preventDefault();
@@ -946,8 +966,13 @@ export function CrosswordGame() {
             size="sm"
             className="h-11 text-[11px] text-muted-foreground"
             onClick={() => {
-              stopSpeaking();
-              setPhase("setup");
+              // نگهبان خروج (فاز G0-06) — حداقل یک خانهٔ پرشده یعنی دور نیمه‌کاره است
+              if (Object.keys(lettersRef.current).length > 0) {
+                setExitAskGuard(true);
+              } else {
+                stopSpeaking();
+                setPhase("setup");
+              }
             }}
           >
             انصراف
@@ -1097,6 +1122,32 @@ export function CrosswordGame() {
           Backspace
         </button>
       </div>
+
+      {/* نگهبان خروج (فاز G0-06) — تأیید خروج وقتی جدول نیمه‌کاره است؛ Esc/کلیک بیرون = ادامهٔ بازی */}
+      <AlertDialog open={exitAsk} onOpenChange={setExitAskGuard}>
+        <AlertDialogContent>
+          <AlertDialogHeader className="text-center sm:text-right">
+            <AlertDialogTitle>برگردم به آزمایشگاه؟ 🎮</AlertDialogTitle>
+            <AlertDialogDescription>
+              جدول هنوز نیمه‌کاره‌ست — با خروج، پیشرفت این دور از دست می‌رود.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="sm:justify-start">
+            <AlertDialogCancel className="min-h-11">نه، ادامه می‌دهم</AlertDialogCancel>
+            <AlertDialogAction
+              className="min-h-11 bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
+              onClick={() => {
+                exitAskRef.current = false;
+                setExitAsk(false);
+                stopSpeaking();
+                setPhase("setup");
+              }}
+            >
+              آره، خروج
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

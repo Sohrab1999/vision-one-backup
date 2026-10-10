@@ -9,7 +9,7 @@
  * و رکوردهای شخصی در localStorage با کتاب/محدوده اسکوپ می‌شوند.
  */
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import {
   Gamepad2,
@@ -38,33 +38,43 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useBook, useBookData } from "@/lib/book-context";
-import { faNum, getPlays, subscribeGameData, loadBest, fmtTime } from "./shared";
-import { MemoryGame } from "./memory-game";
-import { ScrambleGame } from "./scramble-game";
-import { ClozeGame } from "./cloze-game";
-import { WordSearchGame } from "./wordsearch-game";
-import { SpeedQuizGame } from "./speed-quiz-game";
-import { FlappyQuizGame } from "./flappy-quiz-game";
-import { SnakesLaddersGame } from "./snakes-ladders-game";
-import { CrosswordGame } from "./crossword-game";
-import { WordleGame } from "./wordle-game";
-import { HangmanGame } from "./hangman-game";
-import { SentenceBuilderGame } from "./sentence-builder-game";
-import { DuelGame } from "./duel-game";
-import { ListeningHuntGame } from "./listening-hunt-game";
-import { AdventureMapGame } from "./adventure-map-game";
+import { faNum, getPlays, subscribeGameData, fmtTime } from "./shared";
 
-// بازی فاز ۵ — موتور سه‌بعدی (three + R3F) در چانک جدا و lazy؛ صفر تأثیر روی بارگذاری بقیهٔ اپ
-const FpsShooterGame = dynamic(() => import("./fps-shooter-game").then((m) => m.FpsShooterGame), {
-  ssr: false,
-  loading: () => (
+/**
+ * فاز G0-03 نقشه راه بازی‌ها — هر بازی در چانک جدا و lazy است؛
+ * صفر تأثیر روی باندل اولیهٔ صفحهٔ اصلی (بازی‌ها فقط هنگام انتخاب چانکشان می‌آید
+ * و به‌محض باز شدن آزمایشگاه در زمان بیکاری مرورگر پیش‌بارگذاری می‌شوند).
+ */
+function GameChunkLoading() {
+  return (
     <Card>
       <CardContent className="flex h-64 items-center justify-center gap-3 p-6 text-sm text-muted-foreground">
         <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        در حال بارگذاری موتور سه‌بعدی…
+        در حال آماده‌سازی بازی…
       </CardContent>
     </Card>
-  ),
+  );
+}
+
+const MemoryGame = dynamic(() => import("./memory-game").then((m) => m.MemoryGame), { ssr: false, loading: GameChunkLoading });
+const ScrambleGame = dynamic(() => import("./scramble-game").then((m) => m.ScrambleGame), { ssr: false, loading: GameChunkLoading });
+const ClozeGame = dynamic(() => import("./cloze-game").then((m) => m.ClozeGame), { ssr: false, loading: GameChunkLoading });
+const WordSearchGame = dynamic(() => import("./wordsearch-game").then((m) => m.WordSearchGame), { ssr: false, loading: GameChunkLoading });
+const SpeedQuizGame = dynamic(() => import("./speed-quiz-game").then((m) => m.SpeedQuizGame), { ssr: false, loading: GameChunkLoading });
+const FlappyQuizGame = dynamic(() => import("./flappy-quiz-game").then((m) => m.FlappyQuizGame), { ssr: false, loading: GameChunkLoading });
+const SnakesLaddersGame = dynamic(() => import("./snakes-ladders-game").then((m) => m.SnakesLaddersGame), { ssr: false, loading: GameChunkLoading });
+const CrosswordGame = dynamic(() => import("./crossword-game").then((m) => m.CrosswordGame), { ssr: false, loading: GameChunkLoading });
+const WordleGame = dynamic(() => import("./wordle-game").then((m) => m.WordleGame), { ssr: false, loading: GameChunkLoading });
+const HangmanGame = dynamic(() => import("./hangman-game").then((m) => m.HangmanGame), { ssr: false, loading: GameChunkLoading });
+const SentenceBuilderGame = dynamic(() => import("./sentence-builder-game").then((m) => m.SentenceBuilderGame), { ssr: false, loading: GameChunkLoading });
+const DuelGame = dynamic(() => import("./duel-game").then((m) => m.DuelGame), { ssr: false, loading: GameChunkLoading });
+const ListeningHuntGame = dynamic(() => import("./listening-hunt-game").then((m) => m.ListeningHuntGame), { ssr: false, loading: GameChunkLoading });
+const AdventureMapGame = dynamic(() => import("./adventure-map-game").then((m) => m.AdventureMapGame), { ssr: false, loading: GameChunkLoading });
+
+// بازی فاز ۵ — موتور سه‌بعدی (three + R3F) در چانک جدا و lazy
+const FpsShooterGame = dynamic(() => import("./fps-shooter-game").then((m) => m.FpsShooterGame), {
+  ssr: false,
+  loading: GameChunkLoading,
 });
 
 export type GameKey =
@@ -205,35 +215,53 @@ const GAMES_EXTRA: GameInfo[] = [
   },
 ];
 
+/**
+ * فاز G0-02 — کش رکوردها: یک اسکن localStorage به‌ازای هر رویداد تغییر، نه هر رندر.
+ * (قبلاً getSnapshot در هر رندرِ هر کارت، کل localStorage را خطی می‌گشت)
+ */
+const bestLabelCache = new Map<string, string | null>();
+
+function bestLabelOf(bookId: string, game: GameKey): string | null {
+  const cacheKey = `${bookId}:${game}`;
+  if (bestLabelCache.has(cacheKey)) return bestLabelCache.get(cacheKey)!;
+  let label: string | null = null;
+  try {
+    let bestScore = -1;
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k || !k.startsWith(`visionone:game-best:${bookId}:${game}:`)) continue;
+      const v = JSON.parse(localStorage.getItem(k) ?? "null") as { score?: number; time?: number; moves?: number } | null;
+      if (!v) continue;
+      // حرکت کمتر = بهتر (حافظه)؛ زمان کمتر = بهتر (سرعتی)؛ امتیاز بیشتر = بهتر
+      const s = typeof v.score === "number" ? v.score : typeof v.moves === "number" ? -v.moves : typeof v.time === "number" ? -v.time : -1;
+      if (s > bestScore) {
+        bestScore = s;
+        if (typeof v.score === "number") label = `${faNum(v.score)} امتیاز`;
+        else if (typeof v.moves === "number") label = `${faNum(v.moves)} حرکت`;
+        else if (typeof v.time === "number") label = fmtTime(v.time);
+      }
+    }
+  } catch {
+    label = null;
+  }
+  bestLabelCache.set(cacheKey, label);
+  return label;
+}
+
+function subscribeBestData(cb: () => void): () => void {
+  bestLabelCache.clear();
+  return subscribeGameData(() => {
+    bestLabelCache.clear();
+    cb();
+  });
+}
+
 /** خلاصه رکورد برای نشان روی کارت هر بازی — per-game scope "any" نمایشی است */
 function BestBadge({ game }: { game: GameKey }) {
   const { bookId } = useBook();
   const best = useSyncExternalStore(
-    subscribeGameData,
-    () => {
-      // نمایشی: بهترین رکورد بین همه اسکوپ‌ها برای همان بازی
-      try {
-        let bestScore = -1;
-        let label: string | null = null;
-        for (let i = 0; i < localStorage.length; i++) {
-          const k = localStorage.key(i);
-          if (!k || !k.startsWith(`visionone:game-best:${bookId}:${game}:`)) continue;
-          const v = JSON.parse(localStorage.getItem(k) ?? "null") as { score?: number; time?: number; moves?: number } | null;
-          if (!v) continue;
-          // حرکت کمتر = بهتر (حافظه)؛ زمان کمتر = بهتر (سرعتی)؛ امتیاز بیشتر = بهتر
-          const s = typeof v.score === "number" ? v.score : typeof v.moves === "number" ? -v.moves : typeof v.time === "number" ? -v.time : -1;
-          if (s > bestScore) {
-            bestScore = s;
-            if (typeof v.score === "number") label = `${faNum(v.score)} امتیاز`;
-            else if (typeof v.moves === "number") label = `${faNum(v.moves)} حرکت`;
-            else if (typeof v.time === "number") label = fmtTime(v.time);
-          }
-        }
-        return label;
-      } catch {
-        return null;
-      }
-    },
+    subscribeBestData,
+    () => bestLabelOf(bookId ?? "", game),
     () => null,
   );
   if (!best) return null;
@@ -249,6 +277,45 @@ export function GamesHub() {
   const data = useBookData();
   const { bookId } = useBook();
   const [active, setActive] = useState<GameKey | null>(null);
+
+  // فاز G0-03 — پیش‌بارگذاری چانک بازی‌ها در زمان بیکاری مرورگر، فقط وقتی آزمایشگاه باز است
+  useEffect(() => {
+    if (active) return;
+    const idle = window as Window & {
+      requestIdleCallback?: (cb: () => void) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    const preload = () => {
+      void import("./memory-game");
+      void import("./scramble-game");
+      void import("./cloze-game");
+      void import("./wordsearch-game");
+      void import("./speed-quiz-game");
+      void import("./flappy-quiz-game");
+      void import("./snakes-ladders-game");
+      void import("./crossword-game");
+      void import("./wordle-game");
+      void import("./hangman-game");
+      void import("./sentence-builder-game");
+      void import("./duel-game");
+      void import("./listening-hunt-game");
+      void import("./adventure-map-game");
+      void import("./fps-shooter-game");
+    };
+    let id: number | ReturnType<typeof setTimeout>;
+    if (typeof idle.requestIdleCallback === "function") {
+      id = idle.requestIdleCallback(preload);
+    } else {
+      id = setTimeout(preload, 1200);
+    }
+    return () => {
+      if (typeof idle.cancelIdleCallback === "function" && typeof id === "number") {
+        idle.cancelIdleCallback(id);
+      } else {
+        clearTimeout(id);
+      }
+    };
+  }, [active]);
 
   // شمارنده دورهای بازی‌شده — اسنپ‌شات رشته‌ای (پایدار و کَش‌شونده برای useSyncExternalStore)
   const playsJson = useSyncExternalStore(

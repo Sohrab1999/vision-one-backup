@@ -1,0 +1,60 @@
+
+---
+Task ID: 12-c
+Agent: teacher-page-brochure-survey-suggestions (فاز ۱۲ — صفحه معلم‌ها + بروشور + نظرسنجی + تخته پیشنهادها)
+Task: بخش «به کلاست اضافه کن» برای معلم‌ها در قفسه + بروشور چاپی A4 + گیت نظرسنجی ۱۰ جلسه + تخته پیشنهادها با رأی‌گیری
+
+Work Log:
+- قدم صفر: worklog (ورودهای آخر) خواند؛ مالکیت رعایت شد — به page.tsx و app-header و layout و quiz/games دست نزده شد؛ ویرایش فایل‌های فارسی موجود فقط با python3 (open+read+replace+write با anchor یکتا) و فایل‌های جدید با Write
+- ۱) src/components/book/bookshelf-view.tsx (python3، ۴ ویرایش anchor یکتا): بعد از شبکهٔ کتاب‌ها و پیش از «نکته پیشرفت» بخش «دعوت معلم‌ها 👨‍🏫» — نوار ظریف teal بالای کارت «ویژن‌وان روی گوشی هم نصب می‌شود 📱» با دکمهٔ لینک‌مانند «راهنمای نصب» → dispatch رویداد window «visionone:open-install» (قرارداد عامل موازی — دیالوگ نصب مال اوست) + کارت amber-gradient با عنوان «معلم هستید؟ کلاس مجازی رایگان بسازید»، سه بولت Check سبز (ساخت کلاس با کد ۶رقمی / تکلیف و آزمون زنده / داشبورد پیشرفت — بدون ثبت‌نام دانش‌آموز)، دکمهٔ «ساخت کلاس 🏫» (requestView("class")) و «دریافت بروشور 🖨️» (state brochureOpen → BrochureSheet)؛ موبایل: flex-col → lg:flex-row؛ دکمه‌ها min-h-11
+  - انحراف کوچک و ضروری: در handler «ساخت کلاس» اگر bookId null باشد (تازه‌وارد) اول setBook("vision-one") سپس requestView("class") — چون page.tsx نمای class را با گارد hasData رندر می‌کند و بدون جزوهٔ فعال main خالی می‌ماند (باگ واقعی که در QA تازه‌وارد کشف و رفع شد؛ نمای کلاس پس از lazy-load داده ظاهر می‌شود)
+- ۲) src/components/book/brochure-sheet.tsx (جدید): همان تکنیک print-flashcards — portal به body، CSS داخلی با `.print-sheet { display:none }` + `@page A4 portrait margin 0` + `@media print` با الگوی visibility (body * hidden → .print-sheet visible، position absolute 210mm) و print-color-adjust exact؛ شیت `.bro-page` یک‌برگی 210×297mm با overflow hidden (سقف یک صفحه): سربرگ og-image.png عرض کامل با برش ظریف 52mm و گرادیان emerald + «ویژن‌وان 🦉 — جزوه‌های تعاملی زبان انگلیسی ۷ تا ۱۲»، سه ستون با جداکنندهٔ ظریف («چرا ویژن‌وان؟» ۴ بولت / «راهنمای معلم» ۳ گام شماره‌دار با فلش / «نصب روی گوشی» کروم ⋮ و سافاری ⬆️)، فوتر «vision-one — یادگیری انگلیسی با بازی»؛ نوار کنترل داخل شیت با دو دکمهٔ print:hidden؛ دیالوگ کنترل با «چاپ / ذخیره PDF» → window.print() از event handler بعد از دو rAF (هرگز در effect) و «بستن»؛ پالت چاپ فقط emerald/amber/teal + خنثی؛ props: open/onClose
+- ۳) src/components/book/survey-gate.tsx (جدید) + mount در app-footer.tsx (python3، fragment + <SurveyGate /> بعد از footer): بدون UI تا فعال شود — گارد ماژولی gateEvaluated (با reset در cleanup تا unmount واقعی هم درست ارزیابی کند؛ StrictMode خاموش است ولی پترن مقاوم نوشته شد)؛ شرط: نبود visionone:survey-done + نبود cooldown postpone (۳ روز) + useCombinedRounds() ≥ ۱۰ → setTimeout سه‌ثانیه‌ای باز می‌شود (useCombinedRounds مستقیماً number برمی‌گرداند — فیلد combined از استور scoped «visionone:book:<id>:rounds»؛ بعد از hydration eligible flip می‌شود، بدون mismatch)؛ دیالوگ «۱۰ جلسه با ویژن‌وان! 🎉» + «تجربت چطور بود؟» + رادیوگروپ ۵ ایموجی 😞😐🙂😄🤩 (role=radio، aria-label «امتیاز ۱..۵» faNum، انتخاب scale-110 amber) + textarea اختیاری سقف ۲۰۰ با شمارندهٔ faNum aria-live + «ارسال نظر 🌟» → POST /api/survey {score, text?, userKey:getClassKey()}؛ موفق → flag «1» + toast «ممنون از نظرت! 🌟»؛ خطا/404/شبکه → readApiError فارسی + بستن بدون flag؛ «بعداً»/Esc/کلیک بیرون → postpone با Date.now() و cooldown ۳ روز
+- ۴) src/components/book/suggestion-board.tsx (جدید) + mount در rewards-view.tsx (python3، بعد از </Tabs>): کارت amber «تخته پیشنهادها 💡» — خط آمار نظرسنجی اختیاری بالای تخته از GET /api/survey («از نظر N نفر: میانگین X از ۵ ⭐» با faNum، شکست کاملاً ساکت) + فرم input سقف ۱۴۰ با شمارندهٔ faNum + «پیشنهاد می‌دهم ✨» (disabled تا ۳ نویسه) → POST با voterKey=getClassKey()؛ 429 → «خیلی سریع‌سنگینی 🙂 کمی بعد دوباره»؛ موفق → درج فوری مرتب‌شده + refresh ساکت + toast؛ لیست max-h-96 overflow-y-auto (اسکرول‌بار سفارشی سراسری پروژه)؛ هر ردیف متن + دکمهٔ رأی ۴۴px (ChevronUp + تعداد faNum، aria-pressed)؛ رأی‌های من در «visionone:suggestion-votes» با استور بیرونی + useSyncExternalStore (getServerSnapshot → بدون mismatch) — رأی‌داده → پر amber و کلیک بعدی فقط toast «قبلاً رأی دادی ✓» بدون PUT؛ PUT موفق → آپدیت عدد از votes پاسخ؛ آفلاین (navigator.onLine=false یا catch) → toast 📴؛ حالت خالی «اولین پیشنهاد را تو بده 🌱»؛ fetch اولیه در mount با AbortController (setState فقط در then؛ signal در ref برای refreshهای بعدی و abort در cleanup)
+- قراردادهای عوامل موازی رعایت شد: dispatch «visionone:open-install» (دیالوگ نصب مال عامل دیگر — تست شد و باز شد)؛ API سرور هم‌زمان آماده شد و دقیقاً مطابق قرارداد مصرف شد (GET/POST/PUT suggestions، GET/POST survey — 201/429/400 با پیام فارسی تست شد)؛ دکمهٔ «تازه‌ها» هدر عامل دیگر هم دیدم — دست نخوردم
+- دادهٔ تست پاک‌سازی شد: دو پیشنهاد آزمایشی و دو پاسخ نظرسنجی من با deleteMany پرismic حذف شد تا تخته برای کاربر واقعی خالی و تمیز شروع شود (پس از QA کامل)
+
+Stage Summary:
+- چهار خروجی فاز ۱۲ بخش من کامل است: بخش دعوت معلم‌ها با نوار نصب در قفسه، بروشور چاپی یک‌برگ A4 برای معلم‌ها، گیت نظرسنجی خودکار بعد از ۱۰ جلسه با cooldown، و تخته پیشنهادهای رأی‌گیری‌شده در نمای جایزه‌ها
+- فایل‌ها: components/book/{brochure-sheet,survey-gate,suggestion-board}.tsx (جدید)؛ components/book/{bookshelf-view,app-footer,rewards-view}.tsx (python3 — فقط افزودن بخش/ mount؛ ساختار فعلی نشکست)
+- کلیدهای localStorage جدید: «visionone:survey-done» (=«1») · «visionone:survey-postpone» (Date.now، cooldown ۳ روز) · «visionone:suggestion-votes» (آرایهٔ id رأی‌ها)
+- رویداد dispatch شده: «visionone:open-install» (از نوار نصب قفسه) — «visionone:open-whats-new» نیاز نبود (دکمهٔ تازه‌ها مال عامل هدر است)
+- قرارداد برای عوامل بعدی: SurveyGate و SuggestionBoard خودمختارند (فقط fetch نسبی + استور محلی)؛ BrochureSheet به open/onClose نیاز دارد و وابستگی خارجی ندارد؛ اگر کلاس امتیازدهی نظرسنجی نسخهٔ جدید (id جدید) بیاید فقط مقدار DONE_KEY باید عوض شود
+- ریسک/یادداشت: خطای tsc باقی‌مانده در deep-link-gate.tsx مال عامل موازی است (فایلش را وسط کار من دیدم — دست نزدم)؛ اگر پس از postpone کاربر tab را ببندد و ۳ روز بگذرد دوباره پرسیده می‌شود (طبق طراحی)؛ رأی‌ها per-device هستند (بدون حساب) و idempotent سمت سرور هم تضمین شده (@@unique suggestionId+voterKey در اسکیمای عامل سرور دیدم)
+- گام بعدی پیشنهادی: بقیهٔ فاز ۱۲ عوامل موازی (نصب PWA/تازه‌ها) و سپس بستن فاز توسط ارکستراتور — هیچ فاز دیگری را شروع نکردم
+
+---
+Task ID: 12-round (orchestrator — فاز ۱۲ انتشار و رشد با ۳ ساب‌ایجنت موازی + تکمیل دستی)
+Agent: main orchestrator (Z.ai Code)
+Task: پیاده‌سازی کامل فاز ۱۲ نقشه راه (راهنمای نصب PWA + لینک عمیق + صفحه معلم/بروشور + نظرسنجی/پیشنهادها + What's New) — آخرین فاز نقشه راه
+
+Work Log:
+- پوش گیت‌هاب تأیید شد (remote backup در b76e333) + ۲ تصویر راهنمای نصب (pwa-android/ios.png) با مهارت تصویر تولید شد
+- 12-a (سرور): ۳ مدل (Suggestion/SuggestionVote یکتا per-device/SurveyResponse بدون متن در GET) + /api/suggestions + /api/survey با سقف‌های دقیق — رفع باگ بحرانی self-heal db.ts (نمونهٔ کش‌شدهٔ قدیمی مدل جدید نمی‌دید؛ چک تازگی اضافه شد)؛ رکوردهای تست پاک‌سازی
+- 12-c (UI معلم/نظرسنجی): بخش «دعوت معلم‌ها» در قفسه + بروشور A4 چاپی + SurveyGate (۱۰ جلسه + cooldown ۳روزه) + SuggestionBoard در جایزه‌ها — QA مرورگری خودش کامل (رأی idempotent، postpone، seed جلسات) + رفع باگ hasData برای تازه‌واردِ «ساخت کلاس»
+- 12-b (لینک عمیق/What's New/نصب): پاسخ به timeout قطع شد ولی هر ۵ فایل + سیم‌کشی page/header از دیسک راستی‌آزمایی شد؛ یک خطای tsc در deep-link-gate (عدد اختیاری در closure) توسط ارکستراتور رفع شد
+- راستی‌آزمایی ارکستراتور: لینک عمیق /?book=grade-11&lesson=2 → یازدهم + درس ۲ + URL پاک؛ What's New خودکار با ۶ ورود + seen؛ دیالوگ نصب دو-تبی با تصاویر؛ کنسول صفر؛ موبایل ۳۹۰=۳۹۰؛ health سبز؛ lint 0 / tsc-src 0
+- تیک ۵ چک‌باکس فاز ۱۲ + یادداشت QA (python3)
+
+Stage Summary:
+- 🏁 همهٔ ۱۲ فاز نقشه راه ۲۰۲۶ کامل شد — ویژن‌وان از قفسه تا کلاس مجازی، AI، آفلاین و انتشار
+- فایل‌های کلیدی این فاز: prisma (Suggestion/SuggestionVote/SurveyResponse)، api/{suggestions,survey}/route.ts، lib/deep-link.ts، components/book/{deep-link-gate,whats-new,pwa-install-guide,brochure-sheet,survey-gate,suggestion-board}.tsx، data/whats-new.ts، public/{pwa-android,pwa-ios}.png + سیم‌کشی page/header/bookshelf/footer/rewards
+- قرارداد: لینک عمیق /?book=<id>&lesson=<n>&view=<NavView> با پاک‌سازی URL؛ رویدادهای open-install/open-whats-new بین bookshelf و page؛ voterKey دستگاهی (بدون حساب — حریم خصوصی)؛ What's New: هر جمعه ورود جدید در data/whats-new.ts (id = شناسه؛ seen در localStorage)
+- ریسک/یادداشت: تست Add to Home Screen روی گوشی واقعی در سندباکس ممکن نشد (معیار پذیرش مستندشده)؛ رأی/پیشنهاد دستگاهی است — کاربر چنددستگاهه می‌تواند دوباره رأی بدهد (پذیرش‌شده برای حداقل داده)؛ db.ts حالا چک تازگی مدل دارد — مدل‌های آینده خودکار
+- گام بعدی پیشنهادی: نقشه راه ۲۰۲۶ تمام است — گام‌های طبیعی بعدی: (۱) جمع‌بندی/برچسب نسخهٔ ۱.۰ و یادداشت انتشار عمومی، (۲) کارت‌های باقی‌مانده فازهای قبلی (CLS روی build تولیدی، CSP، a11y بازی‌های باقی‌مانده)، (۳) محتوای جدید جزوه‌ها
+
+---
+Task ID: games-roadmap-1
+Agent: main orchestrator (Z.ai Code)
+Task: نگارش نقشه راه دقیق و استاندارد بهبود و ارتقای بازی‌های موجود (درخواست مستقیم کاربر)
+
+Work Log:
+- ممیزی کامل کد آزمایشگاه بازی‌ها: ۱۵ بازی (۱۳٬۴۶۲ خط) در src/components/book/games/ + کیت مشترک shared.ts + اتصال به page.tsx/hub
+- اسکن الگویی با grep برای ۲۰+ قابلیت: TTS (۱۳/۱۵)، کیبورد (۹/۱۵)، aria-live (۵/۱۵)، scope (۱۴/۱۵)، saveBest/bumpPlays/saveAttempt همه، ربات مار‌و‌پله، حالت روزانه وردل، ستارهٔ adventure، lazy chunk fps — و شکاف‌ها: صدا ۰/۱۵، لرزش ۰/۱۵، Pause ۰/۱۵، نگهبان خروج ۰/۱۵، visibilitychange ۰/۱۵، reduced-motion ۰/۱۵
+- کشف ۵ بدهی فنی مستند: D1 ناهم‌خوانی کلید GAME_TITLES (wordsearch ≠ word-search → توست رکورد عنوان خام)، D2 اسکن خطی localStorage در BestBadge، D3 استاتیک بودن ۱۴ بازی در باندل اصلی (فقط fps داینامیک)، D4 کلید هاردکد scramble، D5 پیشرفت adventure فقط localStorage
+- نگارش سند docs/games-roadmap.md (نسخه ۱.۰): چشم‌انداز + ۵ KPI کمی + ۸ استاندارد اجباری (WCAG 2.2 AA، قانون جویس، WebAudio autoplay، Vibration، Page Lifecycle، بودجه کارایی، حریم خصوصی نوجوان، آفلاین‌فرست) + ماتریس ممیزی + معماری هدف GameKit v2 (۱۰ ماژول در games/kit/) + ۷ فاز G0..G6 با ۴۲ کار شماره‌دار P0/P1/P2 و حجم S/M/L و معیار پذیرش + ماتریس اولویت + ۶ ریسک + DoD ۷بندی
+
+Stage Summary:
+- خروجی: docs/games-roadmap.md — سند حاکم ارتقای بازی‌ها با قواعد حفظ‌شوندگی (امضای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage تغییرناپذیر؛ تغییر فقط افزودنی)
+- مسیر پیشنهادی اجرا: G0 (رفع D1/D3/نگهبان خروج) → G1 (کیت: صدا/لرزش/Pause/ExitGuard/Shell/ResultScreen/دشواری/آموزش/تله‌متری با پایلوت memory) → G2 (مهاجرت گروهی ۵تایی) → G3 عمق/دشواری/ماموریت → G4 رده‌بندی per-game + دوئل آنلاین (socket.io پورت 3003 با XTransformPort) → G5 AI مدرس بازی → G6 QA ماتریسی/KPI
+- قاعدهٔ صریح: تا اتمام G4 هیچ بازی جدیدی ساخته نمی‌شود؛ اولویت P0 این هفته: G0-01، G0-06، G1-01..04، G4-02

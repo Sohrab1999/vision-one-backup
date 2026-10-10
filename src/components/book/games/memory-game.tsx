@@ -21,6 +21,9 @@ import {
   CheckCircle2,
   MousePointerClick,
   Sparkles,
+  Pause,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -44,6 +47,10 @@ import {
   shuffle,
   subscribeGameData,
 } from "./shared";
+import { playSound, toggleSoundMuted, isSoundMuted } from "./kit/sound-engine";
+import { buzz } from "./kit/haptics";
+import { useGamePause } from "./kit/use-pause";
+import { GameExitGuard } from "./kit/exit-guard";
 
 type Phase = "setup" | "playing" | "done";
 type Side = "en" | "fa";
@@ -90,6 +97,15 @@ export function MemoryGame() {
   /** پیام باکس aria-live — اعلام جفت درست/غلط برای فناوری‌های کمکی */
   const [liveMsg, setLiveMsg] = useState("");
 
+  // فاز G1 (پایلوت کیت بازی) — توقف/ادامهٔ استاندارد + نگهبان خروج + کلید صدا/لرزش
+  // توقف خودکار در تب مخفی هم همین‌جا اعمال می‌شود (سطح بالاتر از گارد G0-05: کاربر
+  // هنگام بازگشت اورلی «متوقف شد» می‌بیند و خودش ادامه می‌دهد)
+  const { paused, resume, toggle: togglePause } = useGamePause((p) => {
+    if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
+  });
+  const [exitAsk, setExitAsk] = useState(false);
+  const [muted, setMuted] = useState(isSoundMuted());
+
   const { speed } = useVoiceSpeed();
   const busy = useRef(false);
   const secsRef = useRef(0);
@@ -110,14 +126,44 @@ export function MemoryGame() {
   );
 
   // تایمر — بدون setState مستقیم در effect (react-hooks v6)؛ secsRef برای زمان دقیقِ لحظه پایان
+  // فاز G0-05 — گارد visibilitychange: شمارش زمان سپری‌شده (ملاک رکورد) در تب مخفی می‌ایستد
+  // (interval پاک می‌شود) و در بازگشت با همان secsRef ادامه می‌یابد — شمارنده افزایشی است و
+  // از Date.now() محاسبه نمی‌شود، پس نیازی به offset نیست. بازگشت از bfcache با pageshow
+  // پوشش داده می‌شود؛ unmount همیشه پاک می‌کند.
   useEffect(() => {
-    if (phase !== "playing") return;
-    const t = setInterval(() => {
-      secsRef.current += 1;
-      setSecs((s) => s + 1);
-    }, 1000);
-    return () => clearInterval(t);
-  }, [phase]);
+    if (phase !== "playing" || paused) return;
+    let t: number | null = null;
+    const startTimer = () => {
+      if (t !== null) return;
+      t = window.setInterval(() => {
+        secsRef.current += 1;
+        setSecs((s) => s + 1);
+      }, 1000);
+    };
+    const stopTimer = () => {
+      if (t !== null) {
+        window.clearInterval(t);
+        t = null;
+      }
+    };
+    const onVis = () => {
+      if (document.visibilityState === "hidden") stopTimer();
+      else startTimer();
+    };
+    const onPageshow = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      stopTimer(); // interval تازه می‌شود تا تیک معوقِ دورهٔ انجماد یک‌جا شمرده نشود
+      if (document.visibilityState === "visible") startTimer();
+    };
+    startTimer();
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("pageshow", onPageshow);
+    return () => {
+      stopTimer();
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pageshow", onPageshow);
+    };
+  }, [phase, paused]);
 
   useEffect(() => () => stopSpeaking(), []);
 
@@ -152,14 +198,19 @@ export function MemoryGame() {
     secsRef.current = 0;
     setIsRecord(false);
     busy.current = false;
+    resume();
+    setExitAsk(false);
     setPhase("playing");
-  }, [data.vocab, lesson, pairCount]);
+  }, [data.vocab, lesson, pairCount, resume]);
 
   const finish = useCallback(
     (finalMoves: number, finalSecs: number) => {
       touchStreak();
       recordStudySession();
       bumpPlays(activeBookId, GAME_KEY);
+      // فاز G1 — بازخورد سه‌کانالهٔ پایان دور (صدا + لرزش + متن/toast موجود)
+      playSound("finish");
+      buzz("success");
       saveAttempt(activeBookId, GAME_KEY, {
         lesson: lesson === ALL_LESSONS ? 0 : lesson,
         total: pairCount,
@@ -173,6 +224,8 @@ export function MemoryGame() {
       if (!prev || finalMoves < prev.moves || (finalMoves === prev.moves && finalSecs < prev.time)) {
         saveBest(activeBookId, GAME_KEY, scope, { moves: finalMoves, time: finalSecs });
         setIsRecord(true);
+        playSound("record");
+        buzz("record");
         toast.success(`رکورد جدید! ${faNum(finalMoves)} حرکت در ${fmtTime(finalSecs)} 🏆`);
       } else {
         toast.success(`همه جفت‌ها پیدا شد — ${faNum(finalMoves)} حرکت در ${fmtTime(finalSecs)} 🎉`);
@@ -185,12 +238,14 @@ export function MemoryGame() {
 
   const handleCardClick = useCallback(
     (card: CardItem) => {
-      if (busy.current) return;
+      if (busy.current || paused) return;
       if (matchedIds.has(card.id)) return;
       if (openIds.includes(card.id)) return;
 
-      // کارت اول
+      // کارت اول — فاز G1: بازخورد کلیک
       if (openIds.length === 0) {
+        playSound("click");
+        buzz("light");
         setOpenIds([card.id]);
         return;
       }
@@ -211,6 +266,8 @@ export function MemoryGame() {
         setLiveMsg(`«${first.word}» جفت شد — درست بود! 🎉`);
         recordSRS(first.word, true);
         speak(first.word, { speed });
+        playSound("correct");
+        buzz("success");
         const willFinish = matchedIds.size + 2 >= cards.length;
         setTimeout(() => {
           setMatchedIds((prev) => {
@@ -227,6 +284,8 @@ export function MemoryGame() {
         // جفت غلط — لرزش و بسته‌شدن (کاوش است؛ هیچ چیزی ثبت نمی‌شود)
         setWrongIds([first.id, card.id]);
         setLiveMsg("جفت غلط — کارت‌ها بسته می‌شوند، دوباره تلاش کن");
+        playSound("wrong");
+        buzz("error");
         setTimeout(() => {
           setWrongIds([]);
           setOpenIds([]);
@@ -234,7 +293,7 @@ export function MemoryGame() {
         }, WRONG_LOCK_MS);
       }
     },
-    [cards, finish, matchedIds, moves, openIds, speed],
+    [cards, finish, matchedIds, moves, openIds, paused, speed],
   );
 
   // ── Setup ──
@@ -398,14 +457,40 @@ export function MemoryGame() {
           <CheckCircle2 size={11} className="text-primary" />
           {faNum(matchedIds.size / 2)} / {faNum(pairCount)}
         </Badge>
-        <div className="mr-auto">
+        {/* فاز G1 — کنترل‌های استاندارد: توقف/ادامه + کلید صدا/لرزش */}
+        <div className="mr-auto flex items-center gap-0.5">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-11 w-11 p-0 text-muted-foreground"
+            onClick={togglePause}
+            aria-pressed={paused}
+            aria-label={paused ? "ادامهٔ بازی" : "توقف بازی"}
+          >
+            {paused ? <Play size={15} /> : <Pause size={15} />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-11 w-11 p-0 text-muted-foreground"
+            onClick={() => setMuted(toggleSoundMuted())}
+            aria-pressed={muted}
+            aria-label={muted ? "روشن‌کردن صدا" : "بی‌صدا"}
+          >
+            {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+          </Button>
           <Button
             variant="ghost"
             size="sm"
             className="h-11 text-[11px] text-muted-foreground"
             onClick={() => {
               stopSpeaking();
-              setPhase("setup");
+              // نگهبان خروج (فاز G1-04) — هر پیشرفتی یعنی دور نیمه‌کاره
+              if (moves > 0 || openIds.length > 0 || matchedIds.size > 0) {
+                setExitAsk(true);
+              } else {
+                setPhase("setup");
+              }
             }}
           >
             انصراف
@@ -425,7 +510,11 @@ export function MemoryGame() {
         {liveMsg}
       </p>
 
-      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3">
+      <div className="relative">
+      <div
+        className={cn("grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3", paused && "pointer-events-none blur-sm")}
+        aria-hidden={paused}
+      >
         {cards.map((c, i) => {
           const isMatched = matchedIds.has(c.id);
           const isOpen = isMatched || openIds.includes(c.id);
@@ -481,6 +570,33 @@ export function MemoryGame() {
           );
         })}
       </div>
+
+      {/* فاز G1-03 — اورلی توقف: کارت‌ها تار و غیرقابل‌کلیک؛ اعلام متنی در liveMsg سراسری */}
+      {paused && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+            <Pause size={26} />
+          </span>
+          <p className="text-sm font-black">بازی متوقف شد</p>
+          <Button onClick={resume} className="h-11 gap-2">
+            <Play size={16} />
+            ادامهٔ بازی
+          </Button>
+        </div>
+      )}
+      </div>
+
+      {/* فاز G1-04 — نگهبان خروج استاندارد کیت */}
+      <GameExitGuard
+        open={exitAsk}
+        onOpenChange={setExitAsk}
+        onConfirm={() => {
+          stopSpeaking();
+          setExitAsk(false);
+          resume();
+          setPhase("setup");
+        }}
+      />
     </div>
   );
 }

@@ -2101,3 +2101,60 @@ Stage Summary:
 - خروجی: docs/games-roadmap.md — سند حاکم ارتقای بازی‌ها با قواعد حفظ‌شوندگی (امضای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage تغییرناپذیر؛ تغییر فقط افزودنی)
 - مسیر پیشنهادی اجرا: G0 (رفع D1/D3/نگهبان خروج) → G1 (کیت: صدا/لرزش/Pause/ExitGuard/Shell/ResultScreen/دشواری/آموزش/تله‌متری با پایلوت memory) → G2 (مهاجرت گروهی ۵تایی) → G3 عمق/دشواری/ماموریت → G4 رده‌بندی per-game + دوئل آنلاین (socket.io پورت 3003 با XTransformPort) → G5 AI مدرس بازی → G6 QA ماتریسی/KPI
 - قاعدهٔ صریح: تا اتمام G4 هیچ بازی جدیدی ساخته نمی‌شود؛ اولویت P0 این هفته: G0-01، G0-06، G1-01..04، G4-02
+
+---
+Task ID: G0-05
+Agent: full-stack-developer
+Task: گارد visibilitychange در ۴ بازی زمان‌دار
+Work Log:
+- قدم صفر: worklog (ورودهای آخر) و بخش G0-05 سند games-roadmap.md خواند؛ مالکیت رعایت شد — فقط ۴ فایل بازی خودم ویرایش شد (shared.ts/games-hub/adventure-map/snakes-ladders/crossword عامل‌های موازی دست نخورد)؛ همهٔ ویرایش‌ها با python3 (open+read+replace با anchor یکتا+assert count==1) و بعد از هر فایل bun run lint صفر
+- ۱) speed-quiz-game.tsx (مهم‌ترین): تایمر کاهشی timeRef همان مکانیزم کتاب‌داری ماند (timestamp-based نیست پس پرش endTime موضوعیت ندارد) — effect تایمر بازنویسی شد: startTimer/stopTimer با گارد iv!==null (idempotent)؛ شنوندهٔ visibilitychange: hidden → clearInterval (شمارش می‌ایستد)، visible → startTimer با همان timeRef (ادامه از زمان باقی‌مانده، نه پرش)؛ شنوندهٔ pageshow persisted → stopTimer+startTimer تازه تا تیک معوقِ دورهٔ انجماد bfcache یک‌جا نپرد؛ cleanup همیشه stopTimer+removeEventListener (رفتار unmount حفظ شد)
+- ۲) flappy-quiz-game.tsx: فلگ paused داخل effect حلقه + شرط overRef.current||paused در tick؛ onVis: hidden → paused=true و cancelAnimationFrame (زنجیرهٔ rAF واقعاً قطع)، visible → resumeLoop با last=performance.now() تا اولین dt بعد از برگشت کوچک باشد (dt از قبل ≤۵۰ms clamp بود — دست نخورد)؛ pageshow persisted هم resumeLoop با cancel قبلی؛ گارد !overRef در resume تا بعد از پایان دور حلقه دوباره روشن نشود؛ cleanup کامل (cancel + removeEventListener هر دو شنونده)
+- ۳) duel-game.tsx: همان گارد پاز/ریزوم روی تایمر هر دور (timeRef کاهشی) + جبران زمان مخفی برای دو سنجش Date.now-محور: در بازگشت از hidden مقدار gap به roundStartRef (مبدأ ms پاسخ — ملاک برندهٔ «سریع‌تر در هر دو درست») و startAtRef (مدت کل مسابقه در Attempt) اضافه می‌شود تا سرعت پاسخ و duration متورم نشود؛ زنجیرهٔ later() (نمایش نتیجه → دور بعد) عمداً دست نخورد — در hidden دور جدید شروع می‌شود ولی شمارش‌اش پاز است و هیچ زمان/امتیازی نمی‌سوزد (یادداشت ریسک پایین)
+- ۴) memory-game.tsx: شمارندهٔ زمان افزایشی است (secsRef++/ثانیه، نه Date.now()-start) پس طبق دستور نیازی به elapsedAccum نیست — همان پاز/ریزوم interval با گارد idempotent + pageshow persisted؛ شمارش برای رکورد فقط وقتی تب visible است جلو می‌رود
+- راستی‌آزمایی agent-browser (الزامی): dev server سندباکس چند بار با OOM مُرد (dmesg: oom-kill next-server anon-rss ~1.8GB — الگوی شناخته‌شده؛ با setsid nohup bun run dev احیا شد و بین مرگ‌ها پنجرهٔ پایدار گرفته شد)؛ صفحه باز شد → قفسه → «ورود به ویژن وان» → ناوبری «بازی‌ها» → آزمایشگاه بازی‌ها → کارت «تست برقی» → «شروع مسابقه» رندر سالم: هدینگ «تست برقی» + دکمهٔ «انصراف» + progressbar «زمان باقیمانده» فعال؛ سنجهٔ دقیق نرخ تیک: aria-valuenow ۴۷→۳۰ در ۱۰٫۰۸۵ثانیه واقعی = ۱۷ واحد × (۱۰۰/۶۰) ≈ ۱۰٫۲ تیک در ۱۰ ثانیه = دقیقاً ۱ تیک/ثانیه — یعنی گارد جدید نه تیک دوباره می‌سازد نه تیک می‌خورد (رفتار کاربر عادی بدون تغییر)؛ اسکرین‌شات tool-results/g0-05-speed-quiz-playing.png؛ کنسول فقط خطاهای محیطی از پیش موجود (next-auth CLIENT_FETCH_ERROR و registry ChunkLoadError هنگام مرگ/احیای سرور) — هیچ خطایی از کد بازی‌ها
+- کیفیت نهایی: bun run lint صفر (بعد از هر فایل هم صفر)؛ bunx tsc --noEmit فیلتر games/ خالی (۷ خطای tsc کل فقط در examples/ و scripts/ و skills/ و tool-results/ — خارج از پروژه، از پیش موجود)؛ git diff هر ۴ فایل فقط در ناحیهٔ تایمر/حلقه است
+
+Stage Summary:
+- گارد حداقلی Page Lifecycle در ۴ بازی زمان‌دار فعال شد: در تب مخفی هیچ تایمری جلو نمی‌رود (زمان/امتیاز کاربر نمی‌سوزد) و در بازگشت همه از همان نقطه ادامه می‌دهند؛ بازگشت از bfcache هم با pageshow persisted پوشش داده شد؛ امتیاز/رکورد/منطق گیم‌پلی و رفتار unmount دست‌نخورده — برای کاربر بدون تب‌سوییچ صفر تغییر رفتار (نرخ تیک تایمر اندازه‌گیری و تأیید شد: ۱تیک/ثانیه)
+- فایل‌ها: games/{speed-quiz-game,flappy-quiz-game,duel-game,memory-game}.tsx — فقط همین ۴، همه با python3 و کامنت فارسی «فاز G0-05 — …» بالای هر تغییر
+- تصمیم‌ها: (۱) تایمر speed-quiz/duel کاهشی ثانیه‌شمار است نه timestamp-based → پاز/ریزوم interval کافی است و مکانیزم کتاب‌داری timeRef/timeLeft همان ماند (۲) memory شمارندهٔ افزایشی است → بدون offset طبق شاخهٔ «اگر» دستور (۳) در duel جبران gap مخفی به roundStartRef/startAtRef اضافه شد چون ملاک تساوی‌شکنی و duration بود (۴) در flappy فقط زنجیرهٔ rAF قطع/احیا می‌شود؛ clamp dt≤۵۰ms از قبل بود و حفظ شد
+- ریسک/یادداشت: (۱) زنجیرهٔ setTimeout «نمایش نتیجه → دور بعد» دوئل در تب مخفی با throttle مرورگر همچنان پیش می‌رود — دور عوض می‌شود ولی چون شمارش پاز است چیزی نمی‌سوزد؛ اگر بخواهند می‌توان در فاز Pause (G1-03) کامل فریز شود (۲) در دوئل اگر کاربر دقیقاً در پنجرهٔ ~۱٫۲ثانیه‌ای نمایش نتیجهٔ دور آخر تب را مخفی کند، finish در hidden اجرا و duration چند ثانیه بیشتر ثبت می‌شود — حالت مرزی ناچیز (۳) snakes-ladders و crossword (دو بازی دیگر فهرست G0-05 در سند) عمداً ویرایش نشدند — مالک عوامل موازی؛ پوشش من ۴ فایل محولهٔ همین تسک است
+- گام بعدی پیشنهادی: عامل مالک snakes-ladders/crossover همان الگوی startTimer/stopTimer + pageshow را کپی کند (بلوک‌ها self-contained و قابل کپی‌اند)؛ تست واقعی تب‌سوییچ روی موبایل واقعی در QA فاز G6
+
+---
+Task ID: G0-06
+Agent: full-stack-developer (تکمیل‌راستی‌آزمایی توسط orchestrator — عامل قبل از ثبت worklog تایم‌اوت شد ولی تغییراتش کامل بود)
+Task: نگهبان خروج در ۳ بازی چندمرحله‌ای + گارد visibility مار‌و‌پله
+
+Work Log:
+- عامل تغییرات را کامل اعمال کرد و بعد تایم‌اوت خورد؛ orchestrator با بازبینی git diff هر ۳ فایل + lint/tsc/سرور صحت را راستی‌آزمایی کرد
+- snakes-ladders-game.tsx: AlertDialog نگهبان خروج («برگردم به آزمایشگاه؟ 🎮») فقط در phase=playing؛ دکمهٔ انصراف → requestExit (playing → دیالوگ، setup/done → خروج مستقیم)؛ cancel() هم setExitAsk(false) می‌کند؛ + گارد visibilitychange روی ساعت دور (secsIvRef با stopClock/startClock idempotent و گارد visible؛ زنجیره‌های یک‌بارهٔ نوبت عمداً دست‌نخورده — کامنت مستند)
+- adventure-map-game.tsx: دکمهٔ «بازگشت به نقشه» حین مرحلهٔ فعال → AlertDialog («مرحله را رها کنم؟ 🗺️»)؛ تأیید → backToMap، انصراف/Esc → ادامهٔ مرحله
+- crossword-game.tsx: انصراف وقتی ≥۱ خانه پر شده → AlertDialog + گارد تایپ کیبورد حین باز بودن دیالوگ (exitAskRef آینه — بدون ثبت‌مجدد effect)؛ تأیید → stopSpeaking+setup
+- هر ۳ دیالوگ: AlertDialogCancel «نه، ادامه می‌دهم» min-h-11، Action سبک secondary، متن فارسی نوجوان‌پسند
+
+Stage Summary:
+- فاز G0 کامل شد (هر ۶ کار): G0-01 کلید "word-search" در GAME_TITLES · G0-02 کش bestLabelCache (اسکن localStorage فقط به‌ازای رویداد) · G0-03 هر ۱۵ بازی dynamic با GameChunkLoading + preload در requestIdleCallback بعد از باز شدن hub (loadBest بلااستفاده حذف شد) · G0-04 GAME_KEY در scramble · G0-05 گارد Page Lifecycle در speed-quiz/flappy/duel/memory (تیک تایمر اندازه‌گیری شد: دقیقاً ۱/ثانیه؛ اسکرین‌شات tool-results/g0-05-speed-quiz-playing.png) · G0-06 نگهبان خروج در adventure/snakes/crossword
+- فایل‌های G0: games/{shared,games-hub,scramble,speed-quiz,flappy-quiz,duel,memory,adventure-map,snakes-ladders,crossword} — هیچ امضای saveAttempt/saveBest/bumpPlays تغییر نکرد
+- راستی‌آزمایی orchestrator: bun run lint ۰ · tsc فیلتر games/ خالی · / = 200
+- ریسک/یادداشت: زنجیرهٔ نتیجه→دور بعد دوئل در hidden با throttle پیش می‌رود (بی‌ضرر — شمارش پاز است)؛ G1 باید Pause کامل را بسازد؛ تست واقعی تب‌سوییچ موبایل به QA فاز G6
+
+---
+Task ID: G1-round (orchestrator — کیت GameKit v1 + پایلوت memory)
+Agent: main orchestrator (Z.ai Code)
+Task: اجرای فاز G1 بخش اول سند games-roadmap.md — ۴ ماژول کیت (G1-01..04) + اتصال پایلوت به بازی تطبیق حافظه
+
+Work Log:
+- ۴ فایل جدید در games/kit/: sound-engine.ts (G1-01 — WebAudio سینتِتیک ۸ افکت correct/wrong/click/record/finish/tick/shoot/win بدون هیچ فایل صوتی؛ AudioContext فقط داخل playSound یعنی هندلر ژست کاربر — سیاست autoplay؛ کلید بی‌صدا سراسری visionone:sound-muted + subscribeSound الگوی استورها؛ همه مسیرها try/catch ساکت) · haptics.ts (G1-02 — ۴ الگوی لرزش light/success/error/record زیر همان کلید بی‌صدا؛ گارد navigator.vibrate برای iOS) · use-pause.ts (G1-03 — state توقف idempotent + توقف خودکار در hidden با اورلی بازگشت؛ کامنت قرارداد: مدیریت تایمر با خود بازی) · exit-guard.tsx (G1-04 — پوشش استاندارد AlertDialog با متن پیش‌فرض واحد، الگوی سه دیالوگ G0-06)
+- پایلوت memory-game.tsx (python3، ۱۶ ویرایش anchor یکتا): آیکون‌های Pause/Volume2/VolumeX + import کیت؛ useGamePause با اعلام liveMsg (فقط در phase=playing)؛ گیت paused روی effect تایمر (deps: phase,paused — هنگام توقف شنونده‌ها هم جمع می‌شوند، تداخلی با گارد G0-05 ندارد)؛ گارد paused در handleCardClick + صدای click/light برای کارت اول و correct/wrong برای جفت + buzz متناظر؛ finish → playSound("finish")+buzz("success") و در شاخهٔ رکورد playSound("record")+buzz("record")؛ هدر: دکمهٔ توقف (aria-pressed + لیبل پویا) و کلید صدا (muted state) و انصراف → نگهبان خروج وقتی moves>0 یا کارت باز یا جفت شده؛ گرید در قاب relative با blur-sm و pointer-events-none هنگام توقف + aria-hidden + اورلی «بازی متوقف شد» با دکمهٔ ادامه؛ start() → resume()+setExitAsk(false)؛ GameExitGuard در پایان نما
+- باگ lint حین کار: react-hooks/refs (v6) نوشتن cbRef.current هنگام رندر را گرفت → انتقال به useEffect بدون deps؛ بعد: lint ۰ / tsc فیلتر games/ خالی
+- QA مرورگری کامل با agent-browser: هاب با ۱۵ کارت سالم (چانک‌های داینامیک G0-03 لود شدند) → memory setup → ۴ جفت → شروع → هر ۳ کنترل جدید رندر شد → حرکت → توقف → اورلی «بازی متوقف شد» + دکمهٔ ادامه + سوییچ آیکون دکمهٔ هدر ✓ → resume → انصراف → دیالوگ «برگردم به آزمایشگاه؟ 🎮» ✓ → «نه، ادامه میدهم» → بازی ادامه یافت ✓ → کلید صدا: بی‌صدا ⇄ روشن‌کردن صدا (aria-label پویا) ✓ → کنسول و dev.log بدون خطای جدید؛ اسکرین‌شات‌ها: tool-results/g1-memory-pause-overlay.png و g1-memory-exit-guard.png
+- سند roadmap به ۱.۱ ارتقا یافت (وضعیت اجرا + جدول نسخه‌ها)
+
+Stage Summary:
+- فاز G0 (هر ۶ کار) + G1-01..04 با پایلوت memory بسته شد — بازی‌ها حالا صدا/لرزش/توقف استاندارد/نگهبان خروج دارند (حداقل پایلوت) و گارد Page Lifecycle از G0
+- فایل‌ها: games/kit/{sound-engine.ts,haptics.ts,use-pause.ts,exit-guard.tsx} (جدید) · games/memory-game.tsx (پایلوت) — امضاهای shared.ts و کلیدهای localStorage دست‌نخورده (قانون حفظ‌شوندگی سند)
+- کلید localStorage جدید: «visionone:sound-muted» (۱=بی‌صدا، پیش‌فرض روشن) — هپتیک هم زیر همین کلید
+- قرارداد برای عوامل بعدی: مهاجرت بقیهٔ بازی‌ها به کیت فقط با همین ۴ API (playSound/buzz/useGamePause/GameExitGuard)؛ در هر بازی تایمر باید روی paused گیت شود و paused در deps effect باشد؛ دکمه‌های کنترل با الگوی هدر memory (h-11 w-11 p-0، aria-pressed، لیبل پویا فارسی)
+- گام بعدی پیشنهادی: G1-05..10 (GameShell/ResultScreen/difficulty/tutorial/combo/telemetry) و سپس گروه‌های G2 به ترتیب سند (a: memory/scramble/hangman → e: fps) — این round عمداً فقط ۴ ماژول P0 + پایلوت را برداشت تا پایه پایدار شود

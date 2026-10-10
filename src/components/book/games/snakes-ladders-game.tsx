@@ -39,6 +39,16 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -155,6 +165,8 @@ export function SnakesLaddersGame() {
   const [diceFace, setDiceFace] = useState<number | null>(null);
   /** key انیمیشن match-pop تاس */
   const [dicePop, setDicePop] = useState(0);
+  /** نگهبان خروج (فاز G0-06) — دیالوگ تأیید وقتی دور شروع شده و هنوز به پایان نرسیده */
+  const [exitAsk, setExitAsk] = useState(false);
 
   // ── stateهای فاز done ──
   const [winner, setWinner] = useState<number | null>(null);
@@ -454,19 +466,53 @@ export function SnakesLaddersGame() {
   function cancel(): void {
     clearTimers();
     turnLockRef.current = false;
+    setExitAsk(false);
     setPhase("setup");
+  }
+
+  /**
+   * نگهبان خروج (فاز G0-06) — «انصراف» وقتی دورِ شروع‌شده و نه‌تمام‌شده در جریان است
+   * (فاز playing) فقط با تأیید AlertDialog اجرا می‌شود؛ در فازهای setup/done خروج مستقیم است.
+   */
+  function requestExit(): void {
+    if (phase === "playing") setExitAsk(true);
+    else cancel();
   }
 
   // ── effectها ──
 
   // تایمر زمان بازی — بدون setState مستقیم در بدنهٔ effect (react-hooks v6)
+  // گارد visibilitychange (فاز G0-05 واگذارشده به همین فایل): شمارش زمان در تب مخفی
+  // متوقف و در بازگشت از سر گرفته می‌شود. زنجیره‌های یک‌بارهٔ نوبت (timersRef — تاس،
+  // حرکت مهره، تأخیر ربات) عمداً دست‌نخورده‌اند: بخشی از جریان پاسخ‌اند، در تب مخفی
+  // فقط throttle می‌شوند و اثری روی زمان/امتیاز بازیکن ندارند.
+  const secsIvRef = useRef<number | null>(null);
   useEffect(() => {
     if (phase !== "playing") return;
-    const iv = setInterval(() => {
-      secsRef.current += 1;
-      setSecs((s) => s + 1);
-    }, 1000);
-    return () => clearInterval(iv);
+    const stopClock = (): void => {
+      if (secsIvRef.current !== null) {
+        window.clearInterval(secsIvRef.current);
+        secsIvRef.current = null;
+      }
+    };
+    const startClock = (): void => {
+      if (secsIvRef.current === null && document.visibilityState === "visible") {
+        secsIvRef.current = window.setInterval(() => {
+          secsRef.current += 1;
+          setSecs((s) => s + 1);
+        }, 1000);
+      }
+    };
+    const onVis = (): void => {
+      if (document.visibilityState === "hidden") stopClock();
+      else startClock();
+    };
+    startClock();
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      document.removeEventListener("visibilitychange", onVis);
+      stopClock();
+    };
   }, [phase]);
 
   // پاک‌سازی کامل زنجیرهٔ تایمرها در unmount
@@ -741,7 +787,7 @@ export function SnakesLaddersGame() {
           {mode === "bot" ? "مقابل ربات" : "روی یک دستگاه"}
         </Badge>
         <div className="mr-auto">
-          <Button variant="ghost" size="sm" className="h-11 text-[11px] text-muted-foreground" onClick={cancel}>
+          <Button variant="ghost" size="sm" className="h-11 text-[11px] text-muted-foreground" onClick={requestExit}>
             انصراف
           </Button>
         </div>
@@ -935,6 +981,27 @@ export function SnakesLaddersGame() {
           </div>
         </CardContent>
       </Card>
+
+      {/* نگهبان خروج (فاز G0-06) — تأیید خروج وسط دورِ نیمه‌کاره؛ Esc/کلیک بیرون = ادامهٔ بازی */}
+      <AlertDialog open={exitAsk} onOpenChange={setExitAsk}>
+        <AlertDialogContent>
+          <AlertDialogHeader className="text-center sm:text-right">
+            <AlertDialogTitle>برگردم به آزمایشگاه؟ 🎮</AlertDialogTitle>
+            <AlertDialogDescription>
+              دور مار و پله هنوز تمام نشده — با خروج، پیشرفت این دور از دست می‌رود.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="sm:justify-start">
+            <AlertDialogCancel className="min-h-11">نه، ادامه می‌دهم</AlertDialogCancel>
+            <AlertDialogAction
+              className="min-h-11 bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
+              onClick={cancel}
+            >
+              آره، خروج
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

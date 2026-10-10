@@ -1,0 +1,647 @@
+     1→   701→          </div>
+     2→   702→
+     3→   703→          {best && (
+     4→   704→            <Badge
+     5→   705→              variant="outline"
+     6→   706→              className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400"
+     7→   707→            >
+     8→   708→              <Trophy size={12} />
+     9→   709→              بیشترین ستاره: {faNum(best.score)} از {faNum(MAX_STARS)}
+    10→   710→            </Badge>
+    11→   711→          )}
+    12→   712→
+    13→   713→          {progress && (
+    14→   714→            <div className="space-y-2 rounded-xl border bg-muted/40 p-3">
+    15→   715→              <div className="flex items-center justify-between text-[12px] font-bold">
+    16→   716→                <span>پیشرفت ذخیره‌شده</span>
+    17→   717→                <span className="text-muted-foreground">
+    18→   718→                  {faNum(doneCount)} از {faNum(TOTAL_STAGES)} مرحله — {faNum(totalStars)} ستاره
+    19→   719→                </span>
+    20→   720→              </div>
+    21→   721→              <div className="flex gap-1.5">
+    22→   722→                {progress.stars.map((s, i) => (
+    23→   723→                  <div
+    24→   724→                    key={`prog-${i}`}
+    25→   725→                    className={cn(
+    26→   726→                      "flex h-8 flex-1 items-center justify-center gap-0.5 rounded-lg border text-[11px] font-black",
+    27→   727→                      progress.done[i]
+    28→   728→                        ? "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+    29→   729→                        : "border-dashed border-muted-foreground/30 text-muted-foreground/50",
+    30→   730→                    )}
+    31→   731→                  >
+    32→   732→                    {progress.done[i] ? (
+    33→   733→                      <>
+    34→   734→                        <Star size={10} className="fill-amber-500 text-amber-500" />
+    35→   735→                        {faNum(s)}
+    36→   736→                      </>
+    37→   737→                    ) : (
+    38→   738→                      <Lock size={10} />
+    39→   739→                    )}
+    40→   740→                  </div>
+    41→   741→                ))}
+    42→   742→              </div>
+    43→   743→            </div>
+    44→   744→          )}
+    45→   745→
+    46→   746→          {progress && !allDone && (
+    47→   747→            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={() => beginAdventure("continue")}>
+    48→   748→              <Play size={18} />
+    49→   749→              ادامه ماجراجویی
+    50→   750→            </Button>
+    51→   751→          )}
+    52→   752→          {progress && (
+    53→   753→            <Button
+    54→   754→              size="lg"
+    55→   755→              variant={allDone ? "default" : "outline"}
+    56→   756→              className="h-12 w-full gap-2 text-base"
+    57→   757→              onClick={() => beginAdventure("fresh")}
+    58→   758→            >
+    59→   759→              <RotateCcw size={17} />
+    60→   760→              از اول
+    61→   761→            </Button>
+    62→   762→          )}
+    63→   763→          {progress && allDone && (
+    64→   764→            <Button variant="outline" className="h-12 w-full gap-2 text-base" onClick={() => setPhase("map")}>
+    65→   765→              <Map size={17} />
+    66→   766→              نمایش نقشه
+    67→   767→            </Button>
+    68→   768→          )}
+    69→   769→          {!progress && (
+    70→   770→            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={() => beginAdventure("fresh")}>
+    71→   771→              <Play size={18} />
+    72→   772→              شروع ماجراجویی
+    73→   773→            </Button>
+    74→   774→          )}
+    75→   775→        </CardContent>
+    76→   776→      </Card>
+    77→   777→    );
+    78→   778→  }
+    79→   779→
+    80→   780→  // گارد دفاعی — نقشه/چالش بدون پیشرفت ذخیره‌شده نباید رخ دهد
+    81→   781→  if (!progress && (phase === "map" || phase === "challenge")) {
+    82→   782→    return (
+    83→   783→      <Card className="mx-auto max-w-lg rise-in">
+    84→   784→        <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
+    85→   785→          <Map size={26} className="text-muted-foreground" />
+    86→   786→          <p className="text-[13px] font-bold text-muted-foreground">ماجراجویی فعالی پیدا نشد</p>
+    87→   787→          <Button className="h-11" onClick={() => setPhase("setup")}>
+    88→   788→            بازگشت به راه‌اندازی
+    89→   789→          </Button>
+    90→   790→        </CardContent>
+    91→   791→      </Card>
+    92→   792→    );
+    93→   793→  }
+    94→   794→  if (phase === "challenge" && !challenge) {
+    95→   795→    return (
+    96→   796→      <Card className="mx-auto max-w-lg rise-in">
+    97→   797→        <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
+    98→   798→          <Map size={26} className="text-muted-foreground" />
+    99→   799→          <p className="text-[13px] font-bold text-muted-foreground">مرحله‌ای در جریان نیست</p>
+   100→   800→          <Button className="h-11" onClick={() => setPhase("map")}>
+   101→   801→            بازگشت به نقشه
+   102→   802→          </Button>
+   103→   803→        </CardContent>
+   104→   804→      </Card>
+   105→   805→    );
+   106→   806→  }
+   107→   807→
+   108→   808→  // ── نقشه — ستون مارپیچ ۸ گره با آفست افقی متناوب + خط‌چین میانی ──
+   109→   809→  if (phase === "map" && progress) {
+   110→   810→    const order = orderOf(progress);
+   111→   811→    const openIdx = progress.done.findIndex((d) => !d);
+   112→   812→    return (
+   113→   813→      <div className="mx-auto max-w-lg space-y-4 rise-in" role="group" aria-label="نقشه ماجراجویی">
+   114→   814→        <div className="flex flex-wrap items-center gap-2">
+   115→   815→          <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   116→   816→            <Map size={11} />
+   117→   817→            نقشهٔ ماجراجویی
+   118→   818→          </Badge>
+   119→   819→          <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   120→   820→            <Star size={11} className="fill-amber-400 text-amber-500" />
+   121→   821→            {faNum(totalStars)} ستاره
+   122→   822→          </Badge>
+   123→   823→          <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   124→   824→            <CheckCircle2 size={11} className="text-primary" />
+   125→   825→            {faNum(doneCount)} از {faNum(TOTAL_STAGES)} مرحله
+   126→   826→          </Badge>
+   127→   827→          <div className="mr-auto">
+   128→   828→            <Button
+   129→   829→              variant="ghost"
+   130→   830→              size="sm"
+   131→   831→              className="h-11 text-[11px] text-muted-foreground"
+   132→   832→              onClick={() => {
+   133→   833→                stopSpeaking();
+   134→   834→                setPhase("setup");
+   135→   835→              }}
+   136→   836→            >
+   137→   837→              تنظیمات
+   138→   838→            </Button>
+   139→   839→          </div>
+   140→   840→        </div>
+   141→   841→
+   142→   842→        <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+   143→   843→          <div
+   144→   844→            className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+   145→   845→            style={{ width: `${(doneCount / TOTAL_STAGES) * 100}%` }}
+   146→   846→          />
+   147→   847→        </div>
+   148→   848→
+   149→   849→        <div className="relative rounded-2xl border bg-card/60 p-4">
+   150→   850→          <div
+   151→   851→            aria-hidden
+   152→   852→            className="absolute inset-y-6 left-1/2 -translate-x-1/2 border-r-2 border-dashed border-primary/25"
+   153→   853→          />
+   154→   854→          <div className="relative space-y-6">
+   155→   855→            {progress.done.map((isDone, i) => {
+   156→   856→              const meta = STAGE_META[order[i]];
+   157→   857→              const TypeIcon = meta.icon;
+   158→   858→              const isOpen = i === openIdx;
+   159→   859→              const stars = progress.stars[i] ?? 0;
+   160→   860→              return (
+   161→   861→                <div
+   162→   862→                  key={`node-${i}`}
+   163→   863→                  className={cn(
+   164→   864→                    "flex w-1/2 flex-col items-center gap-1.5",
+   165→   865→                    i % 2 === 1 && "ms-auto",
+   166→   866→                  )}
+   167→   867→                >
+   168→   868→                  {isOpen ? (
+   169→   869→                    <button
+   170→   870→                      type="button"
+   171→   871→                      onClick={() => startStage(i)}
+   172→   872→                      aria-label={`مرحلهٔ ${faNum(i + 1)} — ${meta.label} — شروع`}
+   173→   873→                      className="group flex flex-col items-center gap-1.5"
+   174→   874→                    >
+   175→   875→                      <span className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform group-hover:scale-105 group-active:scale-95">
+   176→   876→                        <TypeIcon size={24} />
+   177→   877→                      </span>
+   178→   878→                    </button>
+   179→   879→                  ) : (
+   180→   880→                    <span
+   181→   881→                      className={cn(
+   182→   882→                        "flex h-16 w-16 items-center justify-center rounded-full border-2",
+   183→   883→                        isDone
+   184→   884→                          ? "border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+   185→   885→                          : "border-border bg-muted text-muted-foreground/60",
+   186→   886→                      )}
+   187→   887→                    >
+   188→   888→                      <TypeIcon size={22} />
+   189→   889→                    </span>
+   190→   890→                  )}
+   191→   891→                  <span
+   192→   892→                    className={cn(
+   193→   893→                      "text-[11px] font-black",
+   194→   894→                      isDone
+   195→   895→                        ? "text-amber-600 dark:text-amber-400"
+   196→   896→                        : isOpen
+   197→   897→                          ? "text-primary"
+   198→   898→                          : "text-muted-foreground",
+   199→   899→                    )}
+   200→   900→                  >
+   201→   901→                    مرحلهٔ {faNum(i + 1)}
+   202→   902→                  </span>
+   203→   903→                  <span className="text-[10px] text-muted-foreground">{meta.label}</span>
+   204→   904→                  {isDone ? (
+   205→   905→                    <span className="flex gap-0.5" aria-label={`${faNum(stars)} ستاره از ۳`}>
+   206→   906→                      {[0, 1, 2].map((s) => (
+   207→   907→                        <Star
+   208→   908→                          key={`st-${i}-${s}`}
+   209→   909→                          size={11}
+   210→   910→                          className={s < stars ? "fill-amber-400 text-amber-500" : "text-muted-foreground/25"}
+   211→   911→                        />
+   212→   912→                      ))}
+   213→   913→                    </span>
+   214→   914→                  ) : isOpen ? (
+   215→   915→                    <span className="flex items-center gap-1 text-[10px] font-bold text-primary">
+   216→   916→                      <Sparkles size={11} />
+   217→   917→                      شروع
+   218→   918→                    </span>
+   219→   919→                  ) : (
+   220→   920→                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground/70">
+   221→   921→                      <Lock size={10} />
+   222→   922→                      قفل
+   223→   923→                    </span>
+   224→   924→                  )}
+   225→   925→                </div>
+   226→   926→              );
+   227→   927→            })}
+   228→   928→          </div>
+   229→   929→        </div>
+   230→   930→
+   231→   931→        {allDone ? (
+   232→   932→          <div className="flex flex-col items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-center">
+   233→   933→            <p className="text-[13px] font-black text-amber-600 dark:text-amber-400">
+   234→   934→              همهٔ گره‌ها روشن شد — ماجراجویی کامل شد! 🎉
+   235→   935→            </p>
+   236→   936→            <Button size="sm" className="h-11 gap-2" onClick={() => setPhase("done")}>
+   237→   937→              <PartyPopper size={15} />
+   238→   938→              مراسم پایان
+   239→   939→            </Button>
+   240→   940→          </div>
+   241→   941→        ) : (
+   242→   942→          <p className="text-center text-[11px] text-muted-foreground">
+   243→   943→            گرهٔ روشنِ نقشه را بزن تا مرحلهٔ بعدی شروع شود
+   244→   944→          </p>
+   245→   945→        )}
+   246→   946→      </div>
+   247→   947→    );
+   248→   948→  }
+   249→   949→
+   250→   950→  // ── چالش جاری ──
+   251→   951→  if (phase === "challenge" && challenge) {
+   252→   952→    const meta = STAGE_META[challenge.type];
+   253→   953→    const TypeIcon = meta.icon;
+   254→   954→    return (
+   255→   955→      <Card className="mx-auto max-w-xl rise-in">
+   256→   956→        <CardContent className="space-y-5 p-6">
+   257→   957→          {challenge.resultStars === null ? (
+   258→   958→            <>
+   259→   959→              <div className="flex flex-wrap items-center gap-2">
+   260→   960→                <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   261→   961→                  <TypeIcon size={11} />
+   262→   962→                  {meta.label}
+   263→   963→                </Badge>
+   264→   964→                <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   265→   965→                  مرحلهٔ {faNum(challenge.idx + 1)} از {faNum(TOTAL_STAGES)}
+   266→   966→                </Badge>
+   267→   967→                <Badge
+   268→   968→                  variant="outline"
+   269→   969→                  className={cn(
+   270→   970→                    "gap-1.5 text-[11px]",
+   271→   971→                    challenge.errors > 0 && "border-destructive/40 text-destructive",
+   272→   972→                  )}
+   273→   973→                >
+   274→   974→                  <XCircle size={11} />
+   275→   975→                  {faNum(challenge.errors)} خطا
+   276→   976→                </Badge>
+   277→   977→                <div className="mr-auto">
+   278→   978→                  <Button
+   279→   979→                    variant="ghost"
+   280→   980→                    size="sm"
+   281→   981→                    className="h-11 text-[11px] text-muted-foreground"
+   282→   982→                    onClick={backToMap}
+   283→   983→                  >
+   284→   984→                    بازگشت به نقشه
+   285→   985→                  </Button>
+   286→   986→                </div>
+   287→   987→              </div>
+   288→   988→
+   289→   989→              {challenge.type === 0 && challenge.questions[challenge.qIdx]
+   290→   990→                ? (() => {
+   291→   991→                    const q = challenge.questions[challenge.qIdx];
+   292→   992→                    const locked = challenge.picked !== null;
+   293→   993→                    return (
+   294→   994→                      <div className="space-y-4">
+   295→   995→                        <div className="rounded-xl border bg-muted/40 p-6 text-center">
+   296→   996→                          <p className="text-[11px] text-muted-foreground">
+   297→   997→                            سؤال {faNum(challenge.qIdx + 1)} از {faNum(challenge.questions.length)} —
+   298→   998→                            معنی این واژه چیست؟
+   299→   999→                          </p>
+   300→  1000→                          <p dir="ltr" className="font-en mt-2 text-2xl font-black">
+   301→  1001→                            {q.word}
+   302→  1002→                          </p>
+   303→  1003→                        </div>
+   304→  1004→                        <div className="grid gap-2">
+   305→  1005→                          {q.options.map((opt, oi) => {
+   306→  1006→                            const isCorrect = oi === q.answer;
+   307→  1007→                            const isPicked = challenge.picked === oi;
+   308→  1008→                            return (
+   309→  1009→                              <button
+   310→  1010→                                key={`opt-${oi}`}
+   311→  1011→                                type="button"
+   312→  1012→                                disabled={locked}
+   313→  1013→                                onClick={() => answerQuiz(oi)}
+   314→  1014→                                aria-pressed={isPicked}
+   315→  1015→                                className={cn(
+   316→  1016→                                  "flex min-h-11 items-center justify-between gap-2 rounded-xl border-2 px-4 py-2.5 text-right text-[13px] font-bold transition-all",
+   317→  1017→                                  !locked && "border-border bg-card hover:border-primary/50 hover:bg-muted/60",
+   318→  1018→                                  locked && isCorrect && "border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+   319→  1019→                                  locked && isPicked && !isCorrect && "border-destructive bg-destructive/10",
+   320→  1020→                                  locked && !isCorrect && !isPicked && "opacity-50",
+   321→  1021→                                )}
+   322→  1022→                              >
+   323→  1023→                                <span>{opt}</span>
+   324→  1024→                                {locked && isCorrect && (
+   325→  1025→                                  <CheckCircle2 size={16} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
+   326→  1026→                                )}
+   327→  1027→                                {locked && isPicked && !isCorrect && (
+   328→  1028→                                  <XCircle size={16} className="shrink-0 text-destructive" />
+   329→  1029→                                )}
+   330→  1030→                              </button>
+   331→  1031→                            );
+   332→  1032→                          })}
+   333→  1033→                        </div>
+   334→  1034→                      </div>
+   335→  1035→                    );
+   336→  1036→                  })()
+   337→  1037→                : null}
+   338→  1038→
+   339→  1039→              {challenge.type === 1 && (
+   340→  1040→                <div className="space-y-4">
+   341→  1041→                  <div className="rounded-xl border bg-muted/40 p-5 text-center">
+   342→  1042→                    <p className="text-[11px] text-muted-foreground">این واژه را با حروف پایین بساز:</p>
+   343→  1043→                    <p className="mt-1.5 text-lg font-black leading-7">{challenge.meaning}</p>
+   344→  1044→                  </div>
+   345→  1045→                  <div dir="ltr" className="flex flex-wrap justify-center gap-1.5">
+   346→  1046→                    {challenge.slots.map((tid, si) => {
+   347→  1047→                      const letter =
+   348→  1048→                        tid !== null
+   349→  1049→                          ? challenge.tiles.find((t) => t.id === tid)?.letter ?? null
+   350→  1050→                          : null;
+   351→  1051→                      return (
+   352→  1052→                        <button
+   353→  1053→                          key={`slot-${si}`}
+   354→  1054→                          type="button"
+   355→  1055→                          disabled={tid === null || challenge.shake}
+   356→  1056→                          onClick={() => pullTile(si)}
+   357→  1057→                          aria-label={`خانهٔ ${faNum(si + 1)}${letter ? ` — حرف ${letter}` : " — خالی"}`}
+   358→  1058→                          className={cn(
+   359→  1059→                            "flex h-11 w-10 items-center justify-center rounded-lg border-2 border-dashed font-en text-lg font-black transition-all",
+   360→  1060→                            letter
+   361→  1061→                              ? "border-primary/60 bg-primary/10 text-primary"
+   362→  1062→                              : "border-muted-foreground/25 text-muted-foreground/30",
+   363→  1063→                            challenge.shake && "match-shake border-destructive/60 bg-destructive/10",
+   364→  1064→                          )}
+   365→  1065→                        >
+   366→  1066→                          {letter ?? "·"}
+   367→  1067→                        </button>
+   368→  1068→                      );
+   369→  1069→                    })}
+   370→  1070→                  </div>
+   371→  1071→                  <div dir="ltr" className="flex flex-wrap justify-center gap-1.5">
+   372→  1072→                    {challenge.tiles.map((t) => {
+   373→  1073→                      const placed = challenge.slots.includes(t.id);
+   374→  1074→                      return (
+   375→  1075→                        <button
+   376→  1076→                          key={`tile-${t.id}`}
+   377→  1077→                          type="button"
+   378→  1078→                          disabled={placed || challenge.shake}
+   379→  1079→                          onClick={() => placeTile(t.id)}
+   380→  1080→                          aria-label={`حرف ${t.letter}`}
+   381→  1081→                          className={cn(
+   382→  1082→                            "flex h-12 w-12 items-center justify-center rounded-lg border-2 font-en text-lg font-black transition-all",
+   383→  1083→                            placed
+   384→  1084→                              ? "border-transparent bg-muted/50 text-muted-foreground/25"
+   385→  1085→                              : "border-primary/40 bg-card text-foreground shadow-sm hover:border-primary hover:bg-primary/10 active:scale-95",
+   386→  1086→                          )}
+   387→  1087→                        >
+   388→  1088→                          {t.letter}
+   389→  1089→                        </button>
+   390→  1090→                      );
+   391→  1091→                    })}
+   392→  1092→                  </div>
+   393→  1093→                  <p className="text-center text-[10px] text-muted-foreground">
+   394→  1094→                    حرف‌ها را به ترتیب بزن؛ برای پس گرفتن یک حرف، روی خانه‌اش بزن
+   395→  1095→                  </p>
+   396→  1096→                </div>
+   397→  1097→              )}
+   398→  1098→
+   399→  1099→              {challenge.type === 2 && (
+   400→  1100→                <div className="space-y-4">
+   401→  1101→                  <p className="text-center text-[11px] text-muted-foreground">
+   402→  1102→                    دو کارت را بزن — واژه و معنی‌اش باید جور شوند
+   403→  1103→                  </p>
+   404→  1104→                  <div className="grid grid-cols-2 gap-2">
+   405→  1105→                    {challenge.cards.map((card) => {
+   406→  1106→                      const isMatched = challenge.matchedIds.includes(card.id);
+   407→  1107→                      const isSelected = challenge.sel === card.id;
+   408→  1108→                      const isWrong = challenge.wrongIds.includes(card.id);
+   409→  1109→                      return (
+   410→  1110→                        <button
+   411→  1111→                          key={`card-${card.id}`}
+   412→  1112→                          type="button"
+   413→  1113→                          disabled={isMatched || challenge.wrongIds.length > 0}
+   414→  1114→                          onClick={() => tapCard(card)}
+   415→  1115→                          aria-pressed={isSelected}
+   416→  1116→                          aria-label={
+   417→  1117→                            card.side === "en"
+   418→  1118→                              ? `کارت واژه ${card.word}`
+   419→  1119→                              : `کارت معنی ${card.meaning}`
+   420→  1120→                          }
+   421→  1121→                          className={cn(
+   422→  1122→                            "flex min-h-20 items-center justify-center rounded-xl border-2 p-3 text-center transition-all",
+   423→  1123→                            isMatched && "match-pop border-emerald-500/60 bg-emerald-500/10 opacity-70",
+   424→  1124→                            !isMatched && isSelected && "border-primary bg-primary/10 ring-2 ring-primary/25",
+   425→  1125→                            isWrong && "match-shake border-destructive bg-destructive/10",
+   426→  1126→                            !isMatched && !isSelected && !isWrong && "border-border bg-card hover:border-primary/40",
+   427→  1127→                          )}
+   428→  1128→                        >
+   429→  1129→                          {card.side === "en" ? (
+   430→  1130→                            <span dir="ltr" className="font-en text-sm font-black">
+   431→  1131→                              {card.word}
+   432→  1132→                            </span>
+   433→  1133→                          ) : (
+   434→  1134→                            <span className="text-[13px] font-bold leading-6">{card.meaning}</span>
+   435→  1135→                          )}
+   436→  1136→                        </button>
+   437→  1137→                      );
+   438→  1138→                    })}
+   439→  1139→                  </div>
+   440→  1140→                </div>
+   441→  1141→              )}
+   442→  1142→
+   443→  1143→              {challenge.type === 3 && challenge.questions[0]
+   444→  1144→                ? (() => {
+   445→  1145→                    const q = challenge.questions[0];
+   446→  1146→                    const win = challenge.picked !== null;
+   447→  1147→                    return (
+   448→  1148→                      <div className="space-y-4">
+   449→  1149→                        <div className="rounded-xl border bg-muted/40 p-6 text-center">
+   450→  1150→                          <p className="text-[11px] text-muted-foreground">
+   451→  1151→                            گوش کن و معنی درست را پیدا کن
+   452→  1152→                          </p>
+   453→  1153→                          <button
+   454→  1154→                            type="button"
+   455→  1155→                            onClick={() => speak(challenge.word, { speed })}
+   456→  1156→                            aria-label="پخش دوبارهٔ تلفظ"
+   457→  1157→                            className="mx-auto mt-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
+   458→  1158→                          >
+   459→  1159→                            <Volume2 size={26} />
+   460→  1160→                          </button>
+   461→  1161→                        </div>
+   462→  1162→                        <div className="grid gap-2">
+   463→  1163→                          {q.options.map((opt, oi) => {
+   464→  1164→                            const isCorrect = oi === q.answer;
+   465→  1165→                            const said = challenge.saidIds.includes(oi);
+   466→  1166→                            return (
+   467→  1167→                              <button
+   468→  1168→                                key={`lopt-${oi}`}
+   469→  1169→                                type="button"
+   470→  1170→                                disabled={said || win}
+   471→  1171→                                onClick={() => answerListen(oi)}
+   472→  1172→                                className={cn(
+   473→  1173→                                  "min-h-11 rounded-xl border-2 px-4 py-2.5 text-right text-[13px] font-bold transition-all",
+   474→  1174→                                  !said && !win && "border-border bg-card hover:border-primary/50 hover:bg-muted/60",
+   475→  1175→                                  win && isCorrect && "border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+   476→  1176→                                  said && !isCorrect && "border-destructive/50 bg-destructive/5 text-destructive/70 line-through",
+   477→  1177→                                  win && !isCorrect && !said && "opacity-50",
+   478→  1178→                                )}
+   479→  1179→                              >
+   480→  1180→                                {opt}
+   481→  1181→                              </button>
+   482→  1182→                            );
+   483→  1183→                          })}
+   484→  1184→                        </div>
+   485→  1185→                      </div>
+   486→  1186→                    );
+   487→  1187→                  })()
+   488→  1188→                : null}
+   489→  1189→            </>
+   490→  1190→          ) : (
+   491→  1191→            (() => {
+   492→  1192→              const stars = challenge.resultStars ?? 0;
+   493→  1193→              const msg =
+   494→  1194→                stars === 3
+   495→  1195→                  ? "بی‌نقص! بدون حتی یک خطا"
+   496→  1196→                  : stars === 2
+   497→  1197→                    ? "خیلی خوب — فقط یک خطا"
+   498→  1198→                    : "مرحله تمام شد — گرهٔ بعدی باز شد!";
+   499→  1199→              return (
+   500→  1200→                <div className="flex flex-col items-center gap-4 py-6 text-center">
+   501→  1201→                  <span
+   502→  1202→                    className={cn(
+   503→  1203→                      "flex h-14 w-14 items-center justify-center rounded-full",
+   504→  1204→                      stars >= 2
+   505→  1205→                        ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+   506→  1206→                        : "bg-muted text-muted-foreground",
+   507→  1207→                    )}
+   508→  1208→                  >
+   509→  1209→                    <Star size={26} className={stars >= 2 ? "fill-amber-400" : undefined} />
+   510→  1210→                  </span>
+   511→  1211→                  <p className="text-sm font-bold text-muted-foreground">
+   512→  1212→                    مرحلهٔ {faNum(challenge.idx + 1)} تمام شد — {meta.label}
+   513→  1213→                  </p>
+   514→  1214→                  <div className="flex gap-1.5">
+   515→  1215→                    {[0, 1, 2].map((s) => (
+   516→  1216→                      <Star
+   517→  1217→                        key={`res-${s}`}
+   518→  1218→                        size={30}
+   519→  1219→                        className={s < stars ? "fill-amber-400 text-amber-500" : "text-muted-foreground/25"}
+   520→  1220→                      />
+   521→  1221→                    ))}
+   522→  1222→                  </div>
+   523→  1223→                  <p className="text-lg font-black">{msg}</p>
+   524→  1224→                  {challenge.idx >= TOTAL_STAGES - 1 ? (
+   525→  1225→                    <Button
+   526→  1226→                      className="h-12 w-full gap-2 text-base"
+   527→  1227→                      onClick={() => {
+   528→  1228→                        setChallenge(null);
+   529→  1229→                        setPhase("done");
+   530→  1230→                      }}
+   531→  1231→                    >
+   532→  1232→                      <PartyPopper size={17} />
+   533→  1233→                      مراسم پایان
+   534→  1234→                    </Button>
+   535→  1235→                  ) : (
+   536→  1236→                    <Button className="h-12 w-full gap-2 text-base" onClick={backToMap}>
+   537→  1237→                      <Map size={16} />
+   538→  1238→                      بازگشت به نقشه
+   539→  1239→                    </Button>
+   540→  1240→                  )}
+   541→  1241→                </div>
+   542→  1242→              );
+   543→  1243→            })()
+   544→  1244→          )}
+   545→  1245→        </CardContent>
+   546→  1246→      </Card>
+   547→  1247→    );
+   548→  1248→  }
+   549→  1249→
+   550→  1250→  // ── مراسم پایان دور کامل ──
+   551→  1251→  if (phase === "done" && progress) {
+   552→  1252→    const rank =
+   553→  1253→      totalStars >= 21
+   554→  1254→        ? {
+   555→  1255→            icon: Trophy as LucideIcon,
+   556→  1256→            label: "کاشف افسانه‌ای!",
+   557→  1257→            cls: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+   558→  1258→          }
+   559→  1259→        : totalStars >= 15
+   560→  1260→          ? {
+   561→  1261→              icon: Compass as LucideIcon,
+   562→  1262→              label: "کاشف ماهر!",
+   563→  1263→              cls: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+   564→  1264→            }
+   565→  1265→          : totalStars >= 9
+   566→  1266→            ? {
+   567→  1267→                icon: Compass as LucideIcon,
+   568→  1268→                label: "کاشف کوشا",
+   569→  1269→                cls: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
+   570→  1270→              }
+   571→  1271→            : {
+   572→  1272→                icon: Sprout as LucideIcon,
+   573→  1273→                label: "تازه‌کار — دوباره امتحان کن",
+   574→  1274→                cls: "bg-muted text-muted-foreground",
+   575→  1275→              };
+   576→  1276→    const RankIcon = rank.icon;
+   577→  1277→    return (
+   578→  1278→      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+   579→  1279→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   580→  1280→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   581→  1281→            <PartyPopper size={30} />
+   582→  1282→          </span>
+   583→  1283→          <h2 className="text-xl font-black">ماجراجویی کامل شد!</h2>
+   584→  1284→          {isRecord && (
+   585→  1285→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   586→  1286→              <Trophy size={13} />
+   587→  1287→              رکورد جدید! بیشترین ستاره 🏆
+   588→  1288→            </Badge>
+   589→  1289→          )}
+   590→  1290→          <div
+   591→  1291→            className={cn(
+   592→  1292→              "flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-black",
+   593→  1293→              rank.cls,
+   594→  1294→            )}
+   595→  1295→          >
+   596→  1296→            <RankIcon size={15} />
+   597→  1297→            {rank.label}
+   598→  1298→          </div>
+   599→  1299→          <p className="text-4xl font-black">
+   600→  1300→            {faNum(totalStars)}
+   601→  1301→            <span className="mr-2 text-base font-bold text-muted-foreground">
+   602→  1302→              از {faNum(MAX_STARS)} ستاره
+   603→  1303→            </span>
+   604→  1304→          </p>
+   605→  1305→          <div className="grid w-full grid-cols-4 gap-2">
+   606→  1306→            {progress.stars.map((s, i) => (
+   607→  1307→              <div key={`fin-${i}`} className="rounded-xl bg-muted/60 p-2.5">
+   608→  1308→                <p className="text-[10px] font-bold text-muted-foreground">مرحلهٔ {faNum(i + 1)}</p>
+   609→  1309→                <div className="mt-1 flex justify-center gap-0.5">
+   610→  1310→                  {[0, 1, 2].map((k) => (
+   611→  1311→                    <Star
+   612→  1312→                      key={`fin-${i}-${k}`}
+   613→  1313→                      size={10}
+   614→  1314→                      className={k < s ? "fill-amber-400 text-amber-500" : "text-muted-foreground/25"}
+   615→  1315→                    />
+   616→  1316→                  ))}
+   617→  1317→                </div>
+   618→  1318→              </div>
+   619→  1319→            ))}
+   620→  1320→          </div>
+   621→  1321→          <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-center">
+   622→  1322→            <Button className="h-12 gap-2" onClick={() => beginAdventure("fresh")}>
+   623→  1323→              <RotateCcw size={16} />
+   624→  1324→              ماجراجویی جدید
+   625→  1325→            </Button>
+   626→  1326→            <Button variant="outline" className="h-12" onClick={() => setPhase("map")}>
+   627→  1327→              نقشه
+   628→  1328→            </Button>
+   629→  1329→          </div>
+   630→  1330→        </CardContent>
+   631→  1331→      </Card>
+   632→  1332→    );
+   633→  1333→  }
+   634→  1334→
+   635→  1335→  // گارد نهایی — حالت‌های ترکیبی غیرممکن به نقشه برمی‌گردند
+   636→  1336→  return (
+   637→  1337→    <Card className="mx-auto max-w-lg rise-in">
+   638→  1338→      <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
+   639→  1339→        <Map size={26} className="text-muted-foreground" />
+   640→  1340→        <Button className="h-11" onClick={() => setPhase("map")}>
+   641→  1341→          بازگشت به نقشه
+   642→  1342→        </Button>
+   643→  1343→      </CardContent>
+   644→  1344→    </Card>
+   645→  1345→  );
+   646→  1346→}
+   647→  1347→

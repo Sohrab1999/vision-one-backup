@@ -660,9 +660,12 @@ export function FlappyQuizGame() {
 
     let raf = 0;
     let last = performance.now();
+    // فاز G0-05 — فلگ توقف برای تب مخفی: در hidden زنجیرهٔ rAF لغو می‌شود (فیزیک می‌ایستد)
+    // و در visible از سر گرفته می‌شود
+    let paused = false;
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick);
-      if (overRef.current) return;
+      if (overRef.current || paused) return;
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       step(now, dt);
@@ -671,8 +674,34 @@ export function FlappyQuizGame() {
     };
     raf = requestAnimationFrame(tick);
 
+    // فاز G0-05 — گارد visibilitychange: در تب مخفی حلقهٔ rAF متوقف (cancelAnimationFrame)
+    // و در بازگشت با ریست «last» ادامه می‌یابد؛ dt از قبل ≤۵۰ms clamp است پس پرنده وسط
+    // پرواز پرش ناگهانی نمی‌کند. بازگشت از bfcache هم با pageshow پوشش داده می‌شود.
+    const resumeLoop = () => {
+      paused = false;
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    };
+    const onVis = () => {
+      if (document.visibilityState === "hidden") {
+        paused = true;
+        cancelAnimationFrame(raf);
+      } else if (!overRef.current) {
+        resumeLoop();
+      }
+    };
+    const onPageshow = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      cancelAnimationFrame(raf);
+      if (!overRef.current) resumeLoop();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("pageshow", onPageshow);
+
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pageshow", onPageshow);
       canvas.removeEventListener("pointerdown", onPointer);
       window.removeEventListener("keydown", onKey);
     };

@@ -396,18 +396,62 @@ export function DuelGame() {
 
   // تایمر هر دور — صفر شدن یعنی داوری فوری (بی‌پاسخ = غلط)؛ بدون setState مستقیم
   // در بدنهٔ effect (react-hooks v6) — شمارش واقعی در timeRef که با شروع هر دور ریست می‌شود
+  // فاز G0-05 — گارد visibilitychange: در تب مخفی interval پاک می‌شود (شمارش دور می‌ایستد)
+  // و در بازگشت با همان timeRef ادامه می‌یابد؛ زمانِ مخفی‌بودن به مبدأ سنجش سرعت پاسخ
+  // (roundStartRef) و مدت کل مسابقه (startAtRef) هم اضافه نمی‌شود تا داوری «سریع‌تر» و
+  // duration دست نخورد. بازگشت از bfcache با pageshow پوشش داده می‌شود؛ unmount همیشه پاک می‌کند.
   useEffect(() => {
     if (phase !== "playing") return;
-    const iv = setInterval(() => {
-      if (timeRef.current > 0 && !judgedRef.current) {
-        timeRef.current -= 1;
-        setTimeLeft((t) => Math.max(0, t - 1));
+    let iv: number | null = null;
+    let hiddenAt = 0;
+    const startTimer = () => {
+      if (iv !== null) return;
+      iv = window.setInterval(() => {
+        if (timeRef.current > 0 && !judgedRef.current) {
+          timeRef.current -= 1;
+          setTimeLeft((t) => Math.max(0, t - 1));
+        }
+        if (timeRef.current <= 0) {
+          judgeRef.current?.();
+        }
+      }, 1000);
+    };
+    const stopTimer = () => {
+      if (iv !== null) {
+        window.clearInterval(iv);
+        iv = null;
       }
-      if (timeRef.current <= 0) {
-        judgeRef.current?.();
+    };
+    const onVis = () => {
+      if (document.visibilityState === "hidden") {
+        stopTimer();
+        hiddenAt = Date.now();
+      } else {
+        startTimer();
+        if (hiddenAt > 0) {
+          const gap = Date.now() - hiddenAt;
+          hiddenAt = 0;
+          if (gap > 0) {
+            // جبران زمان مخفی — فقط با تب‌سوییچ فعال می‌شود (کاربر عادی: بدون تغییر)
+            roundStartRef.current += gap;
+            startAtRef.current += gap;
+          }
+        }
       }
-    }, 1000);
-    return () => clearInterval(iv);
+    };
+    const onPageshow = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      stopTimer(); // interval تازه می‌شود تا تیک معوقِ دورهٔ انجماد یک‌جا نپرد
+      if (document.visibilityState === "visible") onVis();
+    };
+    startTimer();
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("pageshow", onPageshow);
+    return () => {
+      stopTimer();
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pageshow", onPageshow);
+    };
   }, [phase]);
 
   // پاک‌سازی کامل زنجیرهٔ تایمرها در unmount

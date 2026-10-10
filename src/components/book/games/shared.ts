@@ -109,7 +109,7 @@ const GAME_TITLES: Record<string, string> = {
   match: "تطبیق",
   scramble: "اسکرمبل",
   cloze: "جای خالی",
-  wordsearch: "شکار کلمه",
+  "word-search": "شکار کلمه",
   "speed-quiz": "تست برقی",
   "flappy-quiz": "فلپی گزینش",
   "snakes-ladders": "مار و پله",

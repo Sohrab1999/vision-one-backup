@@ -35,6 +35,16 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -222,6 +232,8 @@ export function AdventureMapGame() {
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [challenge, setChallenge] = useState<ChallengeState | null>(null);
   const [isRecord, setIsRecord] = useState(false);
+  /** نگهبان خروج (فاز G0-06) — دیالوگ تأیید وقتی مرحلهٔ فعال شروع شده و تمام نشده */
+  const [exitAsk, setExitAsk] = useState(false);
 
   const secsRef = useRef(0);
   /** واژه‌های مصرف‌شدهٔ این دور — تا مراحل مختلف واژهٔ تکراری نگیرند */
@@ -979,7 +991,7 @@ export function AdventureMapGame() {
                     variant="ghost"
                     size="sm"
                     className="h-11 text-[11px] text-muted-foreground"
-                    onClick={backToMap}
+                    onClick={() => setExitAsk(true)}
                   >
                     بازگشت به نقشه
                   </Button>
@@ -1242,6 +1254,30 @@ export function AdventureMapGame() {
               );
             })()
           )}
+
+          {/* نگهبان خروج (فاز G0-06) — تأیید رهاکردن مرحلهٔ نیمه‌کاره؛ Esc/کلیک بیرون = ادامهٔ مرحله */}
+          <AlertDialog open={exitAsk} onOpenChange={setExitAsk}>
+            <AlertDialogContent>
+              <AlertDialogHeader className="text-center sm:text-right">
+                <AlertDialogTitle>مرحله را رها کنم؟ 🗺️</AlertDialogTitle>
+                <AlertDialogDescription>
+                  مرحلهٔ فعال هنوز تمام نشده — با برگشتن به نقشه، پیشرفت این دور از دست می‌رود و مرحله از اول شروع می‌شود.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="sm:justify-start">
+                <AlertDialogCancel className="min-h-11">نه، ادامه می‌دهم</AlertDialogCancel>
+                <AlertDialogAction
+                  className="min-h-11 bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
+                  onClick={() => {
+                    setExitAsk(false);
+                    backToMap();
+                  }}
+                >
+                  آره، برو به نقشه
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardContent>
       </Card>
     );
