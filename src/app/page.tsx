@@ -20,6 +20,8 @@ import { ReviewView } from "@/components/book/review-view";
 import { TutorView } from "@/components/book/tutor-view";
 import { StatsView } from "@/components/book/stats-view";
 import { CompareView } from "@/components/book/compare-view";
+import { RewardsView } from "@/components/book/rewards-view";
+import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
 import { AccountProvider } from "@/components/book/account-provider";
@@ -102,10 +104,15 @@ function App() {
           {effectiveView === "review" && hasData && <ReviewView onNavigate={(v) => navigate(v as ViewId)} />}
           {effectiveView === "stats" && hasData && <StatsView onNavigate={navigate} />}
           {effectiveView === "tutor" && hasData && <TutorView />}
+          {effectiveView === "rewards" && <RewardsView />}
         </motion.div>
       </main>
 
       <AppFooter />
+
+      {/* فاز ۶ — جشن گیمیفیکیشن: توست‌های XP/سطح/نشان + کانفتی (سراسری) */}
+      <GamificationToasts />
+      <ConfettiCanvas />
     </div>
   );
 }

@@ -51,5 +51,11 @@ export function setDark(next: boolean) {
   } catch {
     /* noop */
   }
+  // فاز ۶ — تم رنگی فروشگاه باید متغیرهایش را با دستهٔ روشن/تیرهٔ تازه بازاعمال کند
+  import("./accent-store")
+    .then((m) => m.reapplyAccent())
+    .catch(() => {
+      /* noop */
+    });
   listeners.forEach((l) => l());
 }

@@ -1532,3 +1532,62 @@ Stage Summary:
 - تصمیم‌ها: بدون @react-three/drei (برچسب‌ها با CanvasTexture رویه‌ای)؛ برچسب هدف‌ها فقط انگلیسی؛ اسکوپ رکورد word/grammar ± tap
 - باگ شناخته‌شدهٔ بی‌اهمیت: هشدار deprecation THREE.Clock از R3F داخلی — بی‌ضرر
 - گام بعدی پیشنهادی: فاز ۶ (گیمیفیکیشن: XP، زنجیره، سکه، نشان‌ها، ماموریت روزانه، رده‌بندی، Confetti)
+
+---
+Task ID: 6-a
+Agent: subagent (rewards-view)
+Task: نمای جایزه‌های گیمیفیکیشن (فاز ۶)
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۵ و آرشیو فاز ۴) + امضای دقیق استورهای فاز ۶ از دیسک (xp-store/mission-store/badge-store/streak-store/accent-store/book-context/gamification) — همه مطابق قرارداد تسک؛ confetti.tsx بررسی شد (توست سراسری XP/نشان/ماموریت از قبل نصب است → claim بدون توست اضافی).
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/rewards-view.tsx (۷۷۴ خط، "use client"، export نام‌دار RewardsView بدون props) — هیچ فایل دیگری تغییر نکرد، هیچ ناوبری‌ای از نما وجود ندارد.
+- بخش ۱ — کارت خلاصه (گرادیانی مثل هدر هاب): حلقهٔ سطح SVG با stroke-dasharray و انیمیشن transition-offset، شمارهٔ سطح بزرگ وسط + «inLevel / need XP» + Progress افقی؛ سه pill (🪙 سکه با تم amber، 🔥 زنجیرهٔ فعلی + «بهترین» + ❄ ×n شرطی با تم teal، ✨ XP کل)؛ بلوک «سقف روزانهٔ XP» با dayXp/DAILY_CAP و توضیح ضدتقلب کمانه‌ای.
+- بخش ۲ — ماموریت‌های امروز: ردیف هر کوئست (emoji + عنوان + جایزهٔ «+n XP، +m 🪙» + Progress با شمارندهٔ فارسی «n / t»)؛ دکمهٔ «گرفتن جایزه» disabled تا done، claimMission فقط در onClick، بعد از claim → Badge muted «گرفته شد ✓»؛ پیام amber «امروز همهٔ ماموریت‌ها را گرفتی! فردا ۳ مأموریت تازه می‌آید» وقتی هر سه claimed.
+- بخش ۳ — Tabs سه‌گانه (TabsList گرید کامل موبایل، triggerها min-h-11):
+  * تب نشان‌ها: گرید ۲/۳/۴ ستونیِ ۸ نشان BADGES با رندر خالص از useBadges (بدون snapshot در رندر)؛ باز‌شده: border-amber-500/40 + «🔓 باز شده» + «+n 🪙»؛ قفل: opacity-60 + grayscale روی emoji.
+  * تب فروشگاه: (الف) گرید ۸ تم ACCENTS با swatch دایره‌ای؛ سه حالت دکمه: Badge «فعال» (غیرفعال) / «فعال‌سازی» → applyAccent / «خرید n 🪙» (amber) → spendCoins(`theme:id`) → markOwned + applyAccent + toast.success، شکست → toast.error «سکه کافی نداری»؛ emerald همیشه owned (accentOwned). (ب) گرید ۸ آواتار PREMIUM_AVATARS: خرید → spendCoins(id) + markOwned + toast؛ متعلق → «انتخاب» → equipAvatar؛ انتخاب‌شده → Badge «پوشیده» + دکمهٔ disabled. کارت «❄ یخ‌زنندهٔ زنجیره» (teal): قیمت ۳۰، توضیح جبران روز غیبت، انبار {freezes}/۷، خرید → spendCoins("streak-freeze") → grantFreeze + toast؛ freezes>=۷ → disabled «انبار پر است».
+  * تب رده‌بندی هفتگی (کامپوننت مجزا LeaderboardSection): fetch /api/leaderboard?book={bookId} در useEffect با AbortController + گارد cancelled و setState فقط داخل then/catch (react-hooks v6)؛ state به‌شکل {bookId, data} اسکوپ‌شده تا بعد از سوییچ جزوه، داده کهنه رندر نشود؛ Skeleton حین بارگذاری؛ گاردها: bookId null → پیام «جزوه را از قفسه باز کن»، خطا → پیام محترمانه 🌱، rows خالی → «هنوز این هفته کسی امتیاز نگرفته — تو اولین باش!»؛ ردیف‌ها: 🥇🥈🥉 برای ۱..۳ و عدد فارسی برای بقیه، آواتار emoji یا دایرهٔ UserRound، «xp XP» (amber)، «دقت n٪»، «n آزمون» + خط «جای تو در این هفته» از me + توضیح «رده‌بندی دوستانهٔ هفتهٔ جاری (از شنبه)».
+- سبک/دسترس‌پذیری: کارت‌های rounded-3xl/rounded-2xl bg-card/60، p-4 sm:p-6، گرید gap-3/4 موبایل‌فرست؛ فقط emerald/amber/teal + توکن‌های معنایی (صفر indigo/blue/violet)؛ همهٔ اعداد faNum؛ همهٔ دکمه‌ها min-h-11؛ aria-label/aria-hidden/aria-busy روی عناصر بی‌متن و Progressها؛ cleanup کامل اثر fetch (cancelled + ctrl.abort).
+- راستی‌آزمایی: bun run lint → خروجی خالی (صفر خطا/هشدار کل پروژه)؛ bunx tsc --noEmit | grep -i rewards → خالی (فقط خطاهای پیش‌موجود examples/scripts/skills/tool-results خارج از src)؛ dev.log → «✓ Compiled» بدون خطا؛ python: صفر U+FFFD، ۵۳ نویسهٔ ZWNJ سالم، بدون any و بدون non-null assertion، کلاس‌های ممنوعهٔ رنگی صفر. عدم توازن پرانتز (‎-6‎) فقط از شماره‌گذاری «۱)» در کامنت‌های سربرگ/بخش است — کد تراز است (tsc پاس).
+
+Stage Summary:
+- نمای «جایزه‌ها» کامل و آمادهٔ سیم‌کشی توسط ارکستراتور است: افزودن import { RewardsView } از "./rewards-view" + یک شاخهٔ رندر در سوییچ نماها کافی است (ویو به BookProvider/Toaster وابسته است، بدون نیاز به prop).
+- قرارداد fetch رده‌بندی: GET /api/leaderboard?book={bookId} → { weekStart, rows[{name,avatar,xp,quizzes,answered,accuracy}], me{xp,rank}|null } — accuracy به‌صورت درصد صحیح رندر می‌شود (هم‌راستا با attempts API)؛ سرور باید rows را نزولی بر xp و حداکثر ۲۰ ردیف بفرستد.
+- تصمیم‌ها: پیشرفت زندهٔ نشان‌های عددی حذف شد (پیشنهاد تسک: رندر خالص useBadges)؛ دکمهٔ «آزمایشگاه بازی‌ها» طبق تسک حذف شد؛ claim توست جدا ندارد چون توست سراسری GamificationToasts جایزهٔ XP/سکه را اعلام می‌کند.
+- ریسک/یادداشت: قبل از ساخت سرور، تب رده‌بندی Skeleton یا پیام محترمانهٔ خطا می‌بیند (بدون کرش)؛ سوییچ جزوه حین لود با abort+اسکوپ state ایمن است؛ گرید تم‌ها در موبایل تک‌ستونه و در lg سه‌ستونه است.
+
+---
+Task ID: 6 (orchestrator — فاز ۶ کامل؛ زیرتسک 6-a نمای جایزه‌ها با ساب‌ایجنت، 6-b..6-d و QA با ارکستراتور)
+Agent: main orchestrator (Z.ai Code)
+Task: فاز ۶ نقشه راه جامع ۲۰۲۶ — گیمیفیکیشن و انگیزه روزانه (XP/سطح، زنجیره+یخ، سکه+فروشگاه، نشان‌ها، ماموریت روزانه، رده‌بندی هفتگی، کانفتی)
+
+Work Log:
+- موتور گیمیفیکیشن سمت کلاینت (۵ استور جدید با الگوی useSyncExternalStore کش‌شده):
+  * xp-store.ts — XP کل/روزانه + منحنی سطح (۸۰+۴۰(n-1)) + سکه با پاداش سطح‌جهش (۵×سطح) + ضدتقلب: سقف روزانه ۴۰۰ XP و نرخ کمانه‌ای ۱۵٪ برای مازاد
+  * badge-store.ts — ۸ نشان (آزمون ۱۰۰، ۷روز، شکارچی واژه ۱۰۰، قهرمان دوئل، خلبان فلپی ۵۰، کاوشگر ۱۰بازی، مرورگر حرفه‌ای، ستارهٔ پنج) با evaluateBadges رویدادی + collectGameStats از localStorage
+  * mission-store.ts — ۳ کوئست دترمینیستیک روزانه (seed = epochDay) از استخر ۶تایی + claim دستی
+  * streak-store.ts — افزوده شدن freezes + grantFreeze + پل‌زدن روزهای غیبت با یخ در touchStreak
+  * accent-store.ts — ۸ تم رنگی (بدون آبی/نیلی) با override متغیرهای --primary/--ring/--chart-1 در دو حالت روشن/تیره + فروشگاه آواتار پریمیوم + بازاعمال microtask پس از رفرش
+- gamification.ts — نقطهٔ تماس واحد: awardGameActivity (بازی‌ها) / awardQuizActivity / awardReviewActivity / awardPracticeWords / awardLearnedWord / notifyActivity → همه: XP + ماموریت + نشان + زنجیره
+- اتصال‌ها: shared.ts (saveAttempt → موتور + نام مهمان در Attempt + تشخیص خودکار رکورد score/time/moves در saveBest → emitRecord)، quiz-game finish، review-view (againRef برای شمارش صحیح)، flashcard-view، learned-store (toggle → awardLearnedWord)، theme-store (reapplyAccent در setDark)
+- 6-a ساب‌ایجنت: rewards-view.tsx (۷۷۴ خط) — کارت سطح حلقه‌ای + ماموریت‌ها + تب نشان‌ها/فروشگاه/رده‌بندی + یخ زنجیره؛ lint/tsc صفر
+- 6-b: /api/leaderboard — XP هفتگی از Attempt واقعی (درست×۱۰+۲۵)، پنجرهٔ شنبه‌محور، گروه‌بندی نام نمایشی/کاربر حساب‌دار، «جای تو» برای حساب‌دارها
+- 6-d: ناوبری «جایزه‌ها» (Trophy) + مونتاج در page.tsx + GamificationToasts/ConfettiCanvas سراسری + نوار سطح/سکه در دیالوگ پروفایل
+- confetti.tsx — کانفتی کانواسی بی‌وابستگی (dt-based، rAF، cleanup کامل) + توست‌های sonner برای XP≥۱۵/سطح‌جهش/نشان/ماموریت/رکورد
+
+باگ‌های شکارشده در QA (agent-browser):
+1. کرش هیدریشن useBadges — getServerSnapshot شیء تازه + read بی‌کش → EMPTY_UNLOCKED ثابت + badgeCache
+2. mission-store — همین الگو → SERVER_MISSIONS ثابت
+3. کلید بازی «memory» ≠ «match» در awardGameActivity → ماموریت تطبیق ثبت نمی‌شد
+4. رده‌بندی خالی: Attempt بازی‌ها name نداشت → readUserName() در saveAttempt
+5. SW (PWA) چانک کهنه را سرو می‌کرد → unregister + پاک‌سازی caches برای تست
+6. فریز کل اپ پس از ویرایش‌های متوالی: آلودگی HMR توربوپک (دو نمونهٔ موازی ماژول استور → «getSnapshot should be cached») → ری‌استارت تمیز dev-server حل کرد؛ با restore کامپوننت‌ها دوباره تأیید شد
+
+QA مرورگری موفق: ۴ دور تطبیق حافظه (+۳۰XP هرکدام، رکورد «۴ حرکت»)، تست برقی ×۲ (Attempt سروری)، فلپی (گارد total>0)، واژهٔ تازه (+۳XP + practice-20:1)، claim ماموریت (+۲۵XP/+۵🪙 + «گرفته شد ✓»)، سطح‌جهش سطح ۲ (+۱۰🪙)، خرید تم teal (-۱۲۰🪙، --primary زنده در روشن/تیره، پایدار پس از رفرش)، خطای «سکه کافی نداری»، خرید یخ (-۳۰🪙، freezes:1)، رده‌بندی: ردیف 🥇 آرش ۲۵XP، موبایل ۳۹۰px بدون اسکرول افقی، مرور SRS بدون کرش، lint 0 / tsc-src 0
+
+Stage Summary:
+- فاز ۶ کامل شد: ویژن‌وان اکنون حلقهٔ انگیزهٔ کامل دارد — فعالیت → XP/سطح → سکه → فروشگاه (تم/آواتار/یخ) → هویت بصری شخصی + ماموریت روزانه + نشان + رده‌بندی دوستانه هفتگی
+- فایل‌های کلیدی: src/lib/{xp,badge,mission,accent}-store.ts، src/lib/gamification.ts، src/components/book/{rewards-view,confetti}.tsx، src/app/api/leaderboard/route.ts + اتصال‌ها در shared/quiz/review/flashcard/learned/theme/name
+- قراردادها: افزودن نشان جدید = یک عضو در BADGES؛ افزودن کوئست = یک عضو در QUEST_POOL؛ افزودن تم = یک عضو در ACCENTS؛ هیچ setState در بدنهٔ effect (الگوی v6 رعایت شد)
+- نکتهٔ ابزار: پس از ویرایش‌های زیاد روی ماژول‌های استور، در صورت رفتار عجیب هیدریشن اول dev-server را تمیز ری‌استارت کنید (آلودگی HMR) و در تست PWA، SW/caches را پاک کنید
+- گام بعدی پیشنهادی: فاز ۷ (صدا، تلفظ و مکالمه — TTS همه‌جا + ASR «بگو ببینم» + Shadowing)

@@ -1,5 +1,9 @@
 "use client";
 
+import { awardGameActivity } from "@/lib/gamification";
+import { emitRecord } from "@/lib/xp-store";
+import { readUserName } from "@/lib/name-store";
+
 /**
  * ابزار مشترک آزمایشگاه بازی‌های فکری (فاز ۳ نقشه راه جامع ۲۰۲۶).
  *
@@ -9,6 +13,8 @@
  * - شمارنده دورها: `visionone:game-plays:{book}` → JSON map: game → تعداد
  * - امتیاز سروری: POST /api/attempts با category = نام بازی
  *   → خودکار در آمار/نشان‌ها/نمودارهای موجود می‌نشیند
+ * - فاز ۶: هر saveAttempt به موتور گیمیفیکیشن هم می‌رسد (XP/ماموریت/نشان)
+ *   و saveBest رکوردهای جدید را با کانفتی/توست اعلام می‌کند.
  * - بعد از هر نوشتن، رویداد "visionone:game-data" پخش می‌شود تا
  *   آزمایشگاه (hub) و کارت‌های رکورد بدون setState-in-effect تازه شوند
  */
@@ -77,6 +83,31 @@ export function notifyGameData(): void {
   }
 }
 
+// ─── گیمیفیکیشن (فاز ۶) ───
+
+/** عنوان فارسی بازی‌ها برای توست رکورد */
+const GAME_TITLES: Record<string, string> = {
+  match: "تطبیق",
+  scramble: "اسکرمبل",
+  cloze: "جای خالی",
+  wordsearch: "شکار کلمه",
+  "speed-quiz": "تست برقی",
+  "flappy-quiz": "فلپی گزینش",
+  "snakes-ladders": "مار و پله",
+  crossword: "جدول متقاطع",
+  wordle: "وردل ویژن",
+  hangman: "دارباز",
+  "sentence-builder": "سازنده جمله",
+  duel: "دوئل دونفره",
+  "listening-hunt": "شکار صدا",
+  "adventure-map": "نقشه ماجراجویی",
+  "fps-shooter": "شوتر آموزشی",
+};
+
+function gameTitleOf(game: string): string {
+  return GAME_TITLES[game] ?? game;
+}
+
 // ─── رکورد شخصی ───
 
 export function loadBest<T>(bookId: string, game: string, scope: string): T | null {
@@ -89,8 +120,39 @@ export function loadBest<T>(bookId: string, game: string, scope: string): T | nu
 }
 
 export function saveBest<T>(bookId: string, game: string, scope: string, value: T): void {
+  const key = bestKeyOf(bookId, game, scope);
   try {
-    localStorage.setItem(bestKeyOf(bookId, game, scope), JSON.stringify(value));
+    const raw = localStorage.getItem(key);
+    const old = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
+    localStorage.setItem(key, JSON.stringify(value));
+    // فاز ۶ — تشخیص خودکار رکورد شخصی برای توست/کانفتی
+    // (امتیاز بیشتر = رکورد؛ زمان/حرکت کمتر = رکورد)
+    if (value && typeof value === "object") {
+      const v = value as Record<string, unknown>;
+      const num = (x: unknown): x is number => typeof x === "number" && Number.isFinite(x);
+      let isRecord = false;
+      let label = "";
+      if (num(v.score)) {
+        const oldScore = num(old?.score) ? (old!.score as number) : -Infinity;
+        if (v.score > oldScore) {
+          isRecord = true;
+          label = `${gameTitleOf(game)} — ${faNum(v.score)} امتیاز`;
+        }
+      } else if (num(v.time)) {
+        const oldTime = num(old?.time) ? (old!.time as number) : Infinity;
+        if (v.time < oldTime) {
+          isRecord = true;
+          label = `${gameTitleOf(game)} — زمان ${fmtTime(v.time)}`;
+        }
+      } else if (num(v.moves)) {
+        const oldMoves = num(old?.moves) ? (old!.moves as number) : Infinity;
+        if (v.moves < oldMoves) {
+          isRecord = true;
+          label = `${gameTitleOf(game)} — ${faNum(v.moves)} حرکت`;
+        }
+      }
+      if (isRecord) emitRecord(label);
+    }
   } catch {
     /* noop */
   }
@@ -131,6 +193,8 @@ export interface AttemptPayload {
 }
 
 export function saveAttempt(bookId: string, game: string, p: AttemptPayload): void {
+  // فاز ۶ — XP/ماموریت/نشان حتی آفلاین هم ثبت می‌شود (موتور سمت کلاینت)
+  awardGameActivity({ game, correct: p.correct, total: p.total });
   fetch("/api/attempts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -142,6 +206,8 @@ export function saveAttempt(bookId: string, game: string, p: AttemptPayload): vo
       correct: p.correct,
       duration: p.duration,
       detail: p.detail,
+      // فاز ۶ — نام نمایشی مهمان برای رده‌بندی هفتگی (مهمان بی‌نام = بی‌نام می‌ماند)
+      name: readUserName() || undefined,
     }),
   })
     .then(() => {

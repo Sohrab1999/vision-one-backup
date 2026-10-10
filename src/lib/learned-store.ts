@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { recordWordLearned } from "./goal-store";
 import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
+import { awardLearnedWord } from "./gamification";
 
 /**
  * External store for "learned words" persisted in localStorage (scoped per book).
@@ -49,7 +50,10 @@ export function toggleLearned(word: string) {
   } catch {
     /* noop */
   }
-  if (wasNew) recordWordLearned(word); // feed the daily-goal counter
+  if (wasNew) {
+    recordWordLearned(word); // feed the daily-goal counter
+    awardLearnedWord(); // فاز ۶ — XP واژهٔ تازه + ماموریت + نشان شکارچی واژه
+  }
   listeners.forEach((l) => l());
 }
 

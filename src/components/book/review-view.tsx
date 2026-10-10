@@ -54,7 +54,7 @@ import {
   RELEARN_MS,
   type SrsGrade,
 } from "@/lib/srs-engine";
-import { touchStreak } from "@/lib/streak-store";
+import { awardReviewActivity } from "@/lib/gamification";
 import { SpeakButton } from "./speak-button";
 
 type Phase = "setup" | "playing" | "done";
@@ -284,6 +284,7 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
   const [newDone, setNewDone] = useState(() => getTodayReview().newDone);
 
   const startedAtRef = useRef(0);
+  const againRef = useRef(0); // فاز ۶ — شمارش پاسخ‌های «باز هم» برای XP مرور
 
   const words = data.vocab.all;
   const verbs = data.verbs;
@@ -325,6 +326,7 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
     setIndex(0);
     setFlipped(false);
     setAgainCount(0);
+    againRef.current = 0;
     setHardCount(0);
     setGoodCount(0);
     setPhase("playing");
@@ -358,11 +360,14 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
       if (!card) return;
       gradeSrs(card.key, grade);
       bumpTodayReview(card.isNewCard ? 1 : 0);
-      if (grade === 0) setAgainCount((c) => c + 1);
+      if (grade === 0) {
+        setAgainCount((c) => c + 1);
+        againRef.current += 1;
+      }
       else if (grade === 1) setHardCount((c) => c + 1);
       else setGoodCount((c) => c + 1);
       if (index + 1 >= queue.length) {
-        touchStreak(); // زنجیرهٔ روزانه — یک‌بار در پایان جلسه
+        awardReviewActivity(queue.length, queue.length - againRef.current); // فاز ۶ — XP مرور + زنجیره + ماموریت
         setPhase("done");
       } else {
         setIndex((i) => i + 1);

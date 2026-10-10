@@ -38,6 +38,7 @@ import { useStarredWords } from "@/lib/star-store";
 import { useQuestionStars } from "@/lib/question-star-store";
 import { useCombinedRounds } from "@/lib/round-counters";
 import { useStreak } from "@/lib/streak-store";
+import { useXp, levelInfo } from "@/lib/xp-store";
 import { downloadBackup, parseBackup, restoreBackup } from "@/lib/progress-backup";
 import { pushSnapshot, getLastSyncAt, subscribeSync } from "@/lib/account-sync";
 import { toast } from "sonner";
@@ -60,6 +61,8 @@ export function ProfileButton() {
   const { count: starredQCount } = useQuestionStars();
   const combinedRounds = useCombinedRounds();
   const streak = useStreak();
+  const xp = useXp();
+  const lvl = levelInfo(xp.total);
 
   // ── فرم حساب ──
   const [mode, setMode] = useState<Mode>("login");
@@ -235,6 +238,19 @@ export function ProfileButton() {
         <Separator />
 
         {/* ── خلاصهٔ پیشرفت ── */}
+        {/* فاز ۶ — XP/سطح/سکه در پروفایل */}
+        <div className="flex items-center justify-between gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2">
+          <span className="flex items-center gap-2 text-[13px] font-black">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400">
+              ⭐
+            </span>
+            سطح {lvl.level.toLocaleString("fa-IR")}
+          </span>
+          <span className="flex items-center gap-3 text-[11px] font-bold text-muted-foreground">
+            <span>🪙 {xp.coins.toLocaleString("fa-IR")}</span>
+            <span>✨ {xp.total.toLocaleString("fa-IR")} XP</span>
+          </span>
+        </div>
         <div className="grid grid-cols-2 gap-2">
           <div className="flex items-center gap-2 rounded-xl border bg-muted/40 px-3 py-2">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">

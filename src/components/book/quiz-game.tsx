@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useUserName } from "@/lib/name-store";
 import { touchStreak } from "@/lib/streak-store";
+import { awardQuizActivity } from "@/lib/gamification";
 import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
 import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
 import { useQuestionStars, toggleQuestionStar } from "@/lib/question-star-store";
@@ -502,6 +503,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
     setPhase("result");
     recordStudySession();
     const streak = touchStreak();
+    awardQuizActivity(correctCount, questions.length); // فاز ۶ — XP/ماموریت/نشان
     if (mode === "daily") recordDailyResult(todayKey(), scorePct, questions.length);
     if (mode === "weekly") recordWeeklyResult(weekKeyOf(), scorePct, questions.length);
     if (mode === "combined") recordCombinedRound();

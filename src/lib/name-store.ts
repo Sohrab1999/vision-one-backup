@@ -35,6 +35,11 @@ export function useUserName(): string {
   );
 }
 
+/** خواندن همگام نام نمایشی (برای ثبت Attempt در بازی‌ها — فاز ۶) */
+export function readUserName(): string {
+  return read();
+}
+
 export function setName(name: string) {
   cache = name.trim().slice(0, 40);
   try {

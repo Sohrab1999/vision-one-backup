@@ -30,7 +30,7 @@ import { useStarredWords } from "@/lib/star-store";
 import { usePracticeIntent, clearPracticeIntent } from "@/lib/practice-intent";
 import { gradeSrs, srsWeight, useSRSData, SRS_MAX_BOX, type SrsItem } from "@/lib/srs-store";
 import { previewIntervals, formatInterval } from "@/lib/srs-engine";
-import { touchStreak } from "@/lib/streak-store";
+import { awardPracticeWords, notifyActivity } from "@/lib/gamification";
 import { SpeakButton } from "./speak-button";
 import { MatchGame } from "./match-game";
 
@@ -191,7 +191,8 @@ function FlashcardGame() {
         setReviewCount((c) => c + 1);
       }
       if (index + 1 >= deck.length) {
-        touchStreak();
+        awardPracticeWords(deck.length); // فاز ۶ — پیشرفت ماموریت «تمرین واژه»
+        notifyActivity(); // زنجیرهٔ روزانه + ضربان فعالیت
         setPhase("done");
       } else {
         setIndex((i) => i + 1);

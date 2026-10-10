@@ -20,6 +20,7 @@ import {
   GitCompareArrows,
   Brain,
   Gamepad2,
+  Trophy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,7 @@ export type ViewId =
   | "grammar"
   | "quiz"
   | "games"
+  | "rewards"
   | "texts"
   | "dict"
   | "verbs"
@@ -69,6 +71,7 @@ const NAV: NavItem[] = [
   { id: "grammar", label: "گرامر", icon: GraduationCap },
   { id: "quiz", label: "آزمون", icon: ClipboardList },
   { id: "games", label: "بازی‌ها", icon: Gamepad2 },
+  { id: "rewards", label: "جایزه‌ها", icon: Trophy },
   { id: "stats", label: "آمار", icon: BarChart3 },
   { id: "compare", label: "مقایسه", icon: GitCompareArrows },
   { id: "texts", label: "متن‌ها", icon: FileText },
