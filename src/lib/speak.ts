@@ -1,12 +1,17 @@
 "use client";
 
 /**
- * Client-side TTS helper: caches generated audio in two layers —
- * 1) in-memory object-URLs for the session
- * 2) Cache Storage ("visionone-audio-v1") for offline playback across reloads
+ * TTS با دو موتور:
+ *  1) «بومی مرورگر» — speechSynthesis سیستم‌عامل با صدای انگلیسی Native
+ *     (پیش‌فرض: بدون لهجه، آفلاین، بی‌هزینه) ← رفع مشکل لهجه چینی
+ *  2) «سرور» — /api/tts (z-ai SDK؛ صداهای چینی‌پایه) با کش دولایه
+ *     حافظه + Cache Storage برای پخش آفلاین
  *
- * Voices: jam (British gentleman — great for English), kazi, tongtong, ...
+ * انتخاب موتور از voice-store خوانده می‌شود؛ اگر موتور بومی موجود نبود
+ * (مرورگر بی‌صدا یا بدون صدای انگلیسی) به‌طور شفاف به سرور برمی‌گردیم.
  */
+
+import { readEngineInternal } from "./voice-store";
 
 const AUDIO_CACHE = "visionone-audio-v1";
 const AUDIO_CACHE_MAX = 400; // سقف تعداد فایل‌های صوتی کش‌شده
@@ -14,6 +19,7 @@ const AUDIO_CACHE_MAX = 400; // سقف تعداد فایل‌های صوتی ک�
 const cache = new Map<string, string>();
 
 let currentAudio: HTMLAudioElement | null = null;
+let currentUtterance: SpeechSynthesisUtterance | null = null;
 
 export function stopSpeaking() {
   if (currentAudio) {
@@ -21,7 +27,99 @@ export function stopSpeaking() {
     currentAudio.currentTime = 0;
     currentAudio = null;
   }
+  try {
+    if (typeof speechSynthesis !== "undefined" && speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+    }
+    currentUtterance = null;
+  } catch {
+    /* noop */
+  }
 }
+
+// ─── موتور بومی مرورگر ───────────────────────────────────────────────
+
+let cachedVoice: SpeechSynthesisVoice | null = null;
+let voicesResolved = false;
+
+/** بهترین صدای انگلیسی دستگاه را برمی‌گزیند (GB > US > هر en) */
+function pickBrowserVoice(): SpeechSynthesisVoice | null {
+  if (typeof speechSynthesis === "undefined") return null;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return null;
+  const en = voices.filter((v) => v.lang.toLowerCase().startsWith("en"));
+  if (!en.length) return null;
+  const score = (v: SpeechSynthesisVoice): number => {
+    const n = v.name.toLowerCase();
+    let s = 0;
+    if (v.lang.toLowerCase() === "en-gb") s += 6;
+    else if (v.lang.toLowerCase() === "en-us") s += 5;
+    if (/\bnatural\b|\bneural\b/.test(n)) s += 5;
+    if (/google/.test(n)) s += 4;
+    if (/samantha|daniel|karen|serena|moira|tessa|arthur/.test(n)) s += 3;
+    if (/microsoft/.test(n)) s += 2;
+    if (/premium|enhanced/.test(n)) s += 2;
+    if (v.localService) s += 1;
+    return s;
+  };
+  return en.reduce((best, v) => (score(v) > score(best) ? v : best), en[0]);
+}
+
+/** صداها در کروم به‌صورت async لود می‌شوند — تا ۱ثانیه منتظر می‌مانیم */
+async function resolveBrowserVoice(): Promise<SpeechSynthesisVoice | null> {
+  if (typeof speechSynthesis === "undefined") return null;
+  if (cachedVoice && speechSynthesis.getVoices().includes(cachedVoice)) return cachedVoice;
+  const immediate = pickBrowserVoice();
+  if (immediate) {
+    cachedVoice = immediate;
+    voicesResolved = true;
+    return immediate;
+  }
+  if (voicesResolved) return null; // قبلاً صبر کردیم و چیزی نبود
+  const found = await new Promise<SpeechSynthesisVoice | null>((resolve) => {
+    const done = (v: SpeechSynthesisVoice | null) => {
+      speechSynthesis.removeEventListener("voiceschanged", onChange);
+      window.clearTimeout(timer);
+      resolve(v);
+    };
+    const onChange = () => {
+      const v = pickBrowserVoice();
+      if (v) done(v);
+    };
+    const timer = window.setTimeout(() => done(pickBrowserVoice()), 1000);
+    speechSynthesis.addEventListener("voiceschanged", onChange);
+  });
+  voicesResolved = true;
+  cachedVoice = found;
+  return found;
+}
+
+function speakBrowser(
+  text: string,
+  speed: number,
+  onStart: () => void,
+  onEnd: () => void,
+  voice: SpeechSynthesisVoice,
+): void {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = voice;
+  utter.lang = voice.lang;
+  utter.rate = Math.min(Math.max(speed, 0.5), 2);
+  utter.pitch = 1;
+  utter.onstart = onStart;
+  utter.onend = () => {
+    if (currentUtterance === utter) currentUtterance = null;
+    onEnd();
+  };
+  utter.onerror = () => {
+    if (currentUtterance === utter) currentUtterance = null;
+    onEnd();
+  };
+  currentUtterance = utter;
+  speechSynthesis.speak(utter);
+}
+
+// ─── موتور سرور با کش دولایه ────────────────────────────────────────
 
 /** کلید یکتا برای یک قطعه صوتی — هم برای memory هم Cache Storage */
 function audioKey(voice: string, speed: number, text: string): string {
@@ -70,15 +168,12 @@ async function trimAudioCache(store: Cache): Promise<void> {
   }
 }
 
-export async function speak(
+async function speakCloud(
   text: string,
-  opts: { voice?: string; speed?: number; onStart?: () => void; onEnd?: () => void } = {},
+  opts: { voice: string; speed: number; onStart: () => void; onEnd: () => void },
 ): Promise<void> {
-  const { voice = "jam", speed = 1, onStart, onEnd } = opts;
+  const { voice, speed, onStart, onEnd } = opts;
   const key = audioKey(voice, speed, text);
-
-  stopSpeaking();
-  onStart?.();
 
   try {
     let blob: Blob | null = null;
@@ -113,12 +208,42 @@ export async function speak(
     currentAudio = audio;
     audio.onended = () => {
       if (currentAudio === audio) currentAudio = null;
-      onEnd?.();
+      onEnd();
     };
-    audio.onerror = () => onEnd?.();
+    audio.onerror = () => onEnd();
     await audio.play();
   } catch (e) {
     console.error("speak error:", e);
-    onEnd?.();
+    onEnd();
   }
+}
+
+// ─── نقطهٔ ورود واحد ─────────────────────────────────────────────────
+
+export async function speak(
+  text: string,
+  opts: { voice?: string; speed?: number; onStart?: () => void; onEnd?: () => void } = {},
+): Promise<void> {
+  const { voice = "jam", speed = 1, onStart, onEnd } = opts;
+
+  stopSpeaking();
+  onStart?.();
+
+  const engine = readEngineInternal();
+
+  if (engine === "browser") {
+    const bv = await resolveBrowserVoice();
+    if (bv) {
+      speakBrowser(text, speed, () => onStart?.(), () => onEnd?.(), bv);
+      return;
+    }
+    // مرورگر صدای انگلیسی ندارد → شفاف به سرور برمی‌گردیم
+  }
+
+  await speakCloud(text, { voice, speed, onStart: () => onStart?.(), onEnd: () => onEnd?.() });
+}
+
+/** آیا موتور بومی واقعاً صدای انگلیسی دارد؟ (برای UI انتخاب موتور) */
+export async function browserVoiceAvailable(): Promise<boolean> {
+  return (await resolveBrowserVoice()) !== null;
 }

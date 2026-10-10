@@ -1659,3 +1659,25 @@ Stage Summary:
 - قرارداد: افزودن تمرین گفتاری جدید = استفاده از startRecording/sendToAsr + similarityScore؛ صدای جدید = speak() خودش دو-لایه کش می‌کند
 - ریسک/یادداشت: سافاری iOS MediaRecorder در mp4 ضبط می‌کند (ارسال با mime واقعی)؛ ASR سرور گاهی 422 «صدای واضح شنیده نشد» می‌دهد — UI مسیر تلاش دوباره/تایپ دارد؛ تایمر محافظ ۷.۴ث در roleplay برای جبران autoStop خاموش
 - گام بعدی پیشنهادی: فاز ۸ (دستیار هوشمند ۲.۰ — معلم خصوصی، داستان‌ساز، تصویرسازی حافظه، چت شخصیت‌ها، تحلیل خطا، سؤال‌ساز بی‌پایان)
+
+---
+Task ID: 8-round2 (orchestrator — رفع لهجه چینی TTS + فاز ۸ بخش A با ساب‌ایجنت تکمیل‌شدهٔ دستی)
+Agent: main orchestrator (Z.ai Code)
+Task: پاسخ به فیدبک کاربر «TTS شبیه صدای چینی‌هاست» + ادامهٔ نقشه راه (فاز ۸ بخش A: معلم خصوصی + داستان‌ساز)
+
+Work Log:
+- ریشه‌یابی لهجه چینی: صدای اپ از /api/tts → z-ai SDK می‌آمد که واج‌شناسی ماندارین دارد (صداها: tongtong/chuichui/xiaochen/… و jam هم پایه چینی)
+- راه‌حل: voice-store توسعه یافت (engine: browser|cloud، پیش‌فرض browser، persist localStorage) + speak.ts دو-موتوری شد: «بومی مرورگر» (speechSynthesis با انتخاب بهترین صدای en-GB/en-US امتیاز‌دهی‌شده: natural/neural > google > Samantha/daniel… + نرخ سرعت همان مقیاس + انتظار voiceschanged تا ۱ث) و «سرور» (مسیر قبلی با کش دولایه) — گارد شفاف: مرورگر بی‌صدا → fallback به سرور؛ stopSpeaking هر دو موتور را می‌بندد
+- UI: گروه «موتور صدا» (AudioLines) کنار «سرعت روخوانی» در واژگان — آپشن بومی اگر صدای انگلیسی نداشته باشد disabled خط‌خورده (state در callback، react-hooks v6 سالم)
+- QA مرورگری: هدلس کروم صفر صدا → بومی disabled و کلیک پخش → POST /api/tts 200 (fallback کار می‌کند)؛ سناریوی دستگاه واقعی (iOS/اندروید/دسکتاپ) صدای Native می‌گیرد
+- فاز ۸-A: ساب‌ایجنت به سقف تور خورد اما تقریباً همه‌چیز ساخت (tutor-view تب‌های سه‌گانه با FreeChat حفظ‌شده، ai/teacher-panel، ai/story-panel، /api/ai-story، _lib/ai-guard) — فقط /api/ai-teacher نایستاده بود که ارکستراتور با ai-guard نوشت
+- curl تست: معلم خصوصی (topic=گذشته ساده، words=discover/collect/protect) → reply ساختاریافته با مثال‌های خود واژه‌ها؛ تکرار → cached:true؛ داستان ۳واژه‌ای → JSON معتبر story/question/options/answer
+- QA مرورگری: تب معلم خصوصی — موضوع «زمان آینده ساده» + واژه‌های air/alive/a few → توضیح با مثال‌های خود واژه‌ها؛ تب داستان‌ساز — ۶ واژه → داستان «Tom and the kite» با ۷ mark هایلایت amber + سؤال فهم مطلب ۳گزینه‌ای → پاسخ درست → فیدبک؛ موبایل ۳۹۰px تمیز؛ کنسول صفر خطا؛ lint 0 / tsc-src 0
+- تیک ۲ چک‌باکس فاز ۸ (معلم خصوصی + داستان‌ساز) + دو یادداشت در نقشه راه (python3)
+
+Stage Summary:
+- صدای اپ اکنون روی دستگاه واقعی Native و بدون لهجه است؛ موتور سرور انتخابی/شفاف باقی مانده — فیدبک کاربر بسته شد
+- فاز ۸: ۲ از ۶ آیتم کامل (معلم خصوصی + داستان‌ساز)؛ باقی‌مانده: تصویرسازی حافظه، چت شخصیت‌ها، تحلیل خطاها، سؤال‌ساز مشابه (نیمهٔ «توضیح‌دهنده تست» از قبل موجود است)
+- فایل‌های کلیدی: src/lib/{speak,voice-store}.ts (دو-موتوری)، src/app/api/{ai-teacher,ai-story}/route.ts، src/app/api/_lib/ai-guard.ts، src/components/book/ai/{teacher-panel,story-panel}.tsx، tutor-view.tsx (تب‌ها)
+- قرارداد: افزودن مسیر AI جدید = استفاده از ai-guard (BoundedCache + consumeDailyQuota + userKeyOf)؛ الگوی LLM: سیستم‌پرامپت به‌صورت اولین پیام assistant + thinking disabled
+- گام بعدی: فاز ۸ بخش B (تصویرسازی حافظه با image-generation، چت شخصیت‌ها، تحلیل خطاها، سؤال‌ساز مشابه)
