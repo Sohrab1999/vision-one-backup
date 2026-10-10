@@ -179,7 +179,7 @@ export function VocabCardGrid({
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <StarToggle active={hasStar(w.word)} onClick={() => toggleStar(w.word)} />
-                        <SpeakButton text={w.word} />
+                        <SpeakButton text={w.word} showSlow />
                       </div>
                     </TableCell>
                   </TableRow>

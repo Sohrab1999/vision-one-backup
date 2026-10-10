@@ -21,6 +21,7 @@ import {
   Brain,
   Gamepad2,
   Trophy,
+  Mic,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,8 @@ export type ViewId =
   | "review"
   | "stats"
   | "tutor"
-  | "compare";
+  | "compare"
+  | "speaking";
 
 interface NavItem {
   id: ViewId;
@@ -75,6 +77,7 @@ const NAV: NavItem[] = [
   { id: "stats", label: "آمار", icon: BarChart3 },
   { id: "compare", label: "مقایسه", icon: GitCompareArrows },
   { id: "texts", label: "متن‌ها", icon: FileText },
+  { id: "speaking", label: "گفتار", icon: Mic },
   { id: "dict", label: "دیکشنری", icon: Library },
   { id: "verbs", label: "افعال بی‌قاعده", icon: Repeat },
   { id: "tutor", label: "دستیار", icon: Bot },

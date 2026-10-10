@@ -21,6 +21,7 @@ import { TutorView } from "@/components/book/tutor-view";
 import { StatsView } from "@/components/book/stats-view";
 import { CompareView } from "@/components/book/compare-view";
 import { RewardsView } from "@/components/book/rewards-view";
+import { SpeakingView } from "@/components/book/speaking-view";
 import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
@@ -98,6 +99,7 @@ function App() {
           {effectiveView === "quiz" && hasData && <QuizView />}
           {effectiveView === "games" && hasData && <GamesHub />}
           {effectiveView === "texts" && hasData && <TextsView />}
+          {effectiveView === "speaking" && hasData && <SpeakingView />}
           {effectiveView === "dict" && hasData && <DictionaryView />}
           {effectiveView === "verbs" && hasData && <VerbsView />}
           {effectiveView === "flashcards" && hasData && <FlashcardView />}

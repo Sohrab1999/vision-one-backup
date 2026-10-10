@@ -25,7 +25,8 @@ export type NavView =
   | "review"
   | "stats"
   | "tutor"
-  | "compare";
+  | "compare"
+  | "speaking";
 
 let handler: ((v: NavView) => void) | null = null;
 

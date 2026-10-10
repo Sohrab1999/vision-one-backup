@@ -524,7 +524,7 @@ function FlashcardGame() {
               {current.word}
             </p>
             <div onClick={(e) => e.stopPropagation()}>
-              <SpeakButton text={current.word} size="lg" />
+              <SpeakButton text={current.word} size="lg" showSlow />
             </div>
             <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <Eye size={12} />

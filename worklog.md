@@ -1591,3 +1591,71 @@ Stage Summary:
 - قراردادها: افزودن نشان جدید = یک عضو در BADGES؛ افزودن کوئست = یک عضو در QUEST_POOL؛ افزودن تم = یک عضو در ACCENTS؛ هیچ setState در بدنهٔ effect (الگوی v6 رعایت شد)
 - نکتهٔ ابزار: پس از ویرایش‌های زیاد روی ماژول‌های استور، در صورت رفتار عجیب هیدریشن اول dev-server را تمیز ری‌استارت کنید (آلودگی HMR) و در تست PWA، SW/caches را پاک کنید
 - گام بعدی پیشنهادی: فاز ۷ (صدا، تلفظ و مکالمه — TTS همه‌جا + ASR «بگو ببینم» + Shadowing)
+
+---
+Task ID: 7-a
+Agent: subagent (say-it)
+Task: کامپوننت «بگو ببینم» — تمرین تلفظ واژه با میکروفن (ASR) و نمره شباهت
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۶ و آرشیو فاز ۴/۵) + امضای زیرساخت فاز ۷ از دیسک (asr-client/similarity/speak/voice-store/gamification) + قرارداد useBookData و شکل واقعی vocab (BookVocabApi: lessons/all/ofLesson با VocabEntry {word, meaning, lesson, pos?}) — labelهای درس vision-one با «—» جدا می‌شوند؛ تب‌ها از split برچسب کوتاه می‌سازند («درس ۱»، «پایه ۷ تا ۹»).
+- دقیقاً یک فایل جدید ساخته شد: src/components/book/speaking/say-it.tsx (۶۷۰ خط، "use client"، export نام‌دار SayItPractice بدون props) — هیچ فایل دیگری تغییر نکرد، ناوبری وجود ندارد، سرور dev دست‌کاری نشد.
+- انتخاب واژه: تب‌های درس (rounded-full، الگوی texts-view، min-h-11 با aria-pressed) + دکمه «واژه تصادفی» (Dices، غیرفعال اگر استخر < ۲) + گرید چیپ واژه (grid-cols-2 → sm:3 → md:4، max-h-96 overflow-y-auto، چیپ فعال border-primary bg-primary/10)؛ هر چیپ واژه LTR font-en + معنی فارسی truncated؛ gaud حالت processing همه انتخاب‌ها را disabled می‌کند (جلوگیری از ارزیابی روی واژه اشتباه).
+- صحنه تمرین: واژه text-4xl font-black text-primary با dir=ltr + معنی + Badge درس/pos؛ SpeakButton (h-11 w-11) برای روخوانی الگو + دکمه «آهسته» (speak با speed 0.7)؛ دایره میکروفن h-16 w-16 bg-primary با سه فاز: idle (Mic) → recording (animate-pulse + ring-8 + موج soundwave پنج‌تایی + شمارنده ثانیه faNum با سقف ۷) → processing (Loader2 spin + aria-busy).
+- جریان ضبط: کلیک اول startRecording(7000) درون try/catch — خطای getUserMedia → پیام کهربایی «دسترسی میکروفن داده نشد…» + باز شدن جایگزین تایپی؛ کلیک دوم یا auto-stop تایمر ۷ثانیه‌ای → stop() → AsrResult؛ گارد دوبار-فراخوانی با خنثی‌سازی recorderRef پیش از await؛ قبل از ضبط stopSpeaking (صدای الگو داخل ضبط نیفتد)؛ سوییچ واژه/درس حین ضبط → cancel فوری.
+- نتیجه: دایره نمره SVG با stroke-dasharray (الگوی rewards-view) — great=emerald-500، good=amber-500، try=amber-600 (بدون آبی/نیلی/بنفش) + برچسب scoreLabel + «شنیدم: "…"» dir=ltr با role="status" + «دوباره بگو» (شروع مجدد ضبط؛ در حالت بدون پشتیبانی → فوکوس Input) + «واژه بعدی» (چرخش استخر).
+- خطای AsrResult.ok=false → پیام amber با متن error + دکمه «تلاش دوباره» (role="alert")؛ هرگز کرش نمی‌کند (خطای stop هم catch می‌شود).
+- جایگزین «تایپ کن ببینم»: وقتی isRecordingSupported=false (useSyncExternalStore با اسنپ‌شات کش‌شده، server snapshot خوش‌بینانه true) یا اجازه میکروفن رد شده → Label + Input dir=ltr font-en + دکمه «بررسی» (min-h-11، disabled تا متن نباشد، Enter هم بررسی می‌کند) → همان مسیر evaluateAnswer.
+- گیمیفیکیشن: بعد از هر ارزیابی (میکروفن یا تایپ) — score>=60 → awardPracticeWords(1) وگرنه notifyActivity()؛ آمار جلسه بالای صحنه: «تمرین امروز: n واژه · میانگین: m» (میانگین این جلسه، faNum، حالت خالی «—»).
+- react-hooks v6: صفر setState در بدنهٔ effect — پشتیبانی ضبط با useSyncExternalStore (read کش‌شده در سطح ماژول)، فقط یک effect با [] برای cleanup (clearInterval/clearTimeout + recorderRef.current?.cancel() + stopSpeaking)؛ نوشتن ref فقط در handler/async — هیچ latest-ref لازم نشد (واژه هدف در زمان شروع ضبط capture می‌شود)؛ هیچ state مشتق‌شده ذخیره نشده (میانگین/تب مؤثر/واژهٔ فعال در رندر حساب می‌شوند؛ effectiveLesson بدون effect سوییچ کتاب را جذب می‌کند).
+- راستی‌آزمایی: bun run lint → خروجی خالی (exit 0)؛ bunx tsc --noEmit | grep say-it → خالی (فقط ۱۰ خطای پیش‌موجود examples/scripts خارج از src)؛ python: ۶۷۰ خط، صفر U+FFFD، ۲۱ نویسهٔ ZWNJ سالم، صفر any، صفر non-null assertion، صفر کلاس رنگ ممنوعه، آکولاد/پرانتز تراز؛ مسیرهای /api/asr و /api/tts موجود بودند.
+
+Stage Summary:
+- قرارداد export: `import { SayItPractice } from "@/components/book/speaking/say-it";` — بدون props؛ باید داخل نمای دارای BookProvider رندر شود (useBookData می‌خواند؛ مثل بقیه ویوها فقط وقتی data کتاب آماده است مونت شود) و Toaster سراسری موجود است.
+- پیشنهاد مونت: یک شاخهٔ جدید در سوییچ نماها (مثلاً view === "say-it" یا داخل تب Speaking فاز ۷) + آیتم ناوبری با آیکون Mic؛ کامپوننت خودش max-w-2xl mx-auto دارد و در موبایل ۳۹۰px بدون اسکرول افقی است.
+- نکات: نمره از similarityScore(word, said) ۰..۱۰۰؛ XP فقط از مسیر awardPracticeWords/notifyActivity طبق تسک (بدون Attempt سروری/SRS — اگر ارکستراتور خواست می‌تواند در ادغام اضافه کند)؛ auto-stop داخلی asr-client هم ۷ ثانیه است و با تایمر خود کامپوننت هم‌پوشان ولی بی‌تعارض است؛ در QA مرورگری اجازهٔ میکروفن باید دستی داده شود، وگرنه مسیر «تایپ کن ببینم» فعال می‌شود (خودش تست‌پذیر است).
+---
+Task ID: 7-b
+Agent: subagent (roleplay+shadowing)
+Task: مکالمه نقش‌محور (Roleplay) + سایه‌خوانی خط‌به‌خط (Shadowing)
+
+Work Log:
+- زمینه خوانده شد: worklog (فاز ۶ و الگوی طلایی بازی‌ها) + زیرساخت فاز ۷ (asr-client، similarity، speak، voice-store، speak-button، gamification، word-lookup، games/shared) + types.ts (Conversation/Reading) + book-context؛ /api/asr و /api/tts آماده بودند. الگوی react-hooks سخت‌گیر از listening-hunt-game برداشت شد.
+- دقیقاً دو فایل جدید ساخته شد (هیچ فایل دیگری تغییر نکرد؛ هیچ ناوبری‌ای از نماها صادر نمی‌شود): src/components/book/speaking/roleplay-view.tsx (۹۰۵ خط، export نام‌دار RoleplayPractice بدون props، "use client") و src/components/book/speaking/shadowing-view.tsx (۷۹۱ خط، export نام‌دار ShadowingPractice بدون props، "use client").
+- RoleplayPractice چهار فاز دارد (pick/role/play/done): گرید کارت‌های مکالمه (titleFa + تعداد خط با faNum + Badge درس) ← صفحهٔ نقش با دو کارت بزرگ (نقش A = خطوط زوج emerald، نقش B = فرد amber، نام speakerها از خود خطوط استخراج و count هر نقش با faNum) + دکمهٔ سوم «فقط گوش بده» (پخش کل مکالمه با TTS و skip خودکار خطوط کاربر → مراسم ساده + «حالا نقش بگیر»).
+- بازی مکالمه: حباب‌های چت به سبک texts-view (زوج چپ emerald ملایم / فرد راست amber ملایم + آواتار دایره‌ای با حروف نام) که تا خط فعلی ساخته می‌شود؛ خطوط نقش مقابل پخش خودکار با speak(line.en, {speed}) + انیمیشن «حرف می‌زند…» (سه نقطهٔ bounce با animationDelay) + دکمهٔ «دوباره پخش» روی هر حباب (اگر خطِ نوبتِ مقابل باشد، مکالمه بعد از پخش ادامه می‌یابد).
+- نوبت کاربر «حالا نوبت توئه»: (الف) گفتار — دکمهٔ میکروفن min-h-14 با Mic → startRecording → توقف (یا تایمر محافظ ۷.۴ ثانیه‌ای، چون autoStop داخلی asr-client نتیجه را برنمی‌گرداند) → AsrResult → similarityScore → نمرهٔ ۰..۱۰۰ روی حباب با رنگ (>=۸۵ emerald، >=۶۰ amber، کمتر نارنجی ملایم — scoreLabel) + «شنیدم: …» با dir=ltr؛ (ب) تایپ — دکمهٔ «به‌جای گفتن، تایپ کن» / Input + ثبت با همان سنجه. خطای ASR/میکروفن → کارت amber محترمانه + «تلاش دوباره / تایپ می‌کنم» — بدون کرش؛ مرورگر بی‌ضبط → toast.info و هدایت خودکار به تایپ.
+- ناوبری مکالمه: «رد شدن» (skip بی‌نمره؛ صدا/ضبط را متوقف و زنجیره را ابطال می‌کند) + «بعدی» فقط بعد از نمره (خط آخر: «پایان مکالمه») + Progress بالای صحنه «خط n از m» + «اتمام و خروج» (stopSpeaking + cancel ضبط + ابطال نشست) ← برگشت به انتخاب مکالمه. مراسم: دقت میانگین + شمارش عالی/خوب + تعداد ردشده + notifyActivity() + «مکالمه دیگر».
+- ShadowingPractice سه فاز دارد (pick/practice/done): کارت‌های readings (titleFa + تعداد پاراگراف faNum + درس)؛ هر پاراگراف یک «خط» با شمارهٔ faNum + ClickableEnText + ترجمهٔ جمع‌شدنی با Switch «ترجمه»؛ خط فعال ring-2 ring-primary و scrollIntoView({block:"center"}) فقط داخل goToLine (callback) نه در رندر.
+- چرخهٔ هر خط: سه دکمهٔ بزرگ شماره‌دار «۱ گوش بده» (Volume2) / «۲ تکرار کن» (Mic — ضبط دستی + نمرهٔ similarity روی کارت؛ مرورگر بی‌ضبط → toast و تکرار شفاهی) / «۳ خط بعد» (ArrowLeft — جهت RTL؛ خط آخر «پایان متن» با Flag).
+- کنترل‌های کلی: Switchهای «آهسته» (speed 0.7) / «ترجمه» / «پخش خودکار» / «حالت ضبط» + قبلی/بعدی دستی (ArrowRight/ArrowLeft) + «پایان تمرین» + «خروج»؛ چرخهٔ خودکار: play ← onEnd ← (اگر «حالت ضبط» روشن باشد ۱.۲s مکث برای تکرار شفاهی — بدون ضبط خودکار) ← خط بعد؛ اگر کاربر با «تکرار کن» مشغول ضبط باشد چرخه تا پایان ضبط صبر می‌کند. Progress «خط n از m» + «تمرین‌شده: ٪n» (خطوط پشت‌سرگذاشته). مراسم: خطوط تمرین‌شده + میانگین نمره + خط عالی + notifyActivity() + «تمرین دوباره / متن دیگر».
+- react-hooks v7: صفر setState در بدنهٔ effect؛ الگوی latest-ref (advanceRef/speakLineRef/finishRef/stopAndScoreRef و playLineRef/goToRef/scheduleAdvanceRef با effect بدون dep)؛ گارد token روی همهٔ زنجیره‌های صدا (chainRef + sessionRef در roleplay) و onceEnd برای onEnd دومرحله‌ای (onerror+catch)؛ guard نتیجهٔ ASR با session/lineIdx/aliveRef؛ cleanup کامل unmount (stopSpeaking + cancel ضبط + clearTimeout هر دو تایمر).
+- راستی‌آزمایی: bun run lint → خروجی خالی و exit 0؛ bunx tsc --noEmit | grep "roleplay|shadowing" → خالی (فقط خطاهای پیش‌موجود examples/scripts/skills/tool-results خارج از src؛ اشکال اولیهٔ Timeout-vs-number در ref تایمرها با useRef<number|null> رفع شد)؛ python: صفر U+FFFD، صفر any، صفر non-null assertion، صفر رنگ ممنوعه (فقط emerald/amber/teal + نارنجی مجازِ نمره + توکن‌های معنایی)، آکولاد/پرانتز تراز، ۴۷/۴۵ نویسهٔ ZWNJ سالم؛ git status: فقط پوشهٔ src/components/book/speaking/ افزوده شد (say-it.tsx هم‌پوشه متعلق به تسک موازی است و دست نخورد).
+
+Stage Summary:
+- قرارداد مونت (ارکستراتور): import { RoleplayPractice } from "@/components/book/speaking/roleplay-view" و import { ShadowingPractice } from "@/components/book/speaking/shadowing-view" — هر دو بدون props و باید داخل BookProvider (نیازمند useBookData) مونت شوند؛ «خروج/اتمام و خروج» فقط به صفحهٔ انتخاب خودِ نما برمی‌گردد و هیچ requestView ای صادر نمی‌شود.
+- زیرساخت مصرف‌شده: asr-client (startRecording/isRecordingSupported)، similarity (similarityScore/scoreLabel)، speak/stopSpeaking با useVoiceSpeed، SpeakButton (شنیدن جملهٔ نقش)، ClickableEnText، notifyActivity، faNum — بدون هیچ تغییری در این فایل‌ها.
+- نکتهٔ رفتاری: autoStop داخلی asr-client فقط ضبط را قطع می‌کند و به سرور نمی‌فرستد؛ هر دو نما با تایمر محافظ خودکار (۷.۴s) این را جبران می‌کنند. پخش خودکار TTS همیشه از دل کلیک کاربر شروع می‌شود (سیاست autoplay).
+- ریسک/یادداشت: iOS ممکن است پخش و ضبط هم‌زمان را محدود کند — همهٔ خطاها محترمانه به مسیر تایپ (roleplay) یا تکرار شفاهی (shadowing) می‌روند؛ در ۳۹۰px همهٔ گریدها تک‌ستون و بدون اسکرول افقی‌اند؛ هر دو نما در unmount صدا و ضبط را کامل پاک می‌کنند.
+
+---
+Task ID: 7 (orchestrator — فاز ۷ کامل؛ زیرتسک‌های 7-a/7-b با ساب‌ایجنت موازی، زیرساخت ASR + ادغام + QA با ارکستراتور)
+Agent: main orchestrator (Z.ai Code)
+Task: فاز ۷ نقشه راه جامع ۲۰۲۶ — صدا، تلفظ و مکالمه (TTS همه‌جا + آهسته، بگو ببینم ASR، مکالمه نقش‌محور، Shadowing، کش آفلاین صوت)
+
+Work Log:
+- زیرساخت ASR سراسری توسط ارکستراتور: /api/asr (z-ai SDK سمت سرور، گاردهای 400/413/422/502 با پیام فارسی)، src/lib/asr-client.ts (MediaRecorder با انتخاب mime webm/mp4، auto-stop ۷ث، cancel، blob→base64)، src/lib/similarity.ts (نمره دو-سنجه‌ای: واژه‌ای جفت‌ساز بهترین‌ها با آستانه 0.72 ×۰.۶ + Levenshtein نویسه‌ای ×۰.۴، برچسب‌های 85/60)
+- 7-a ساب‌ایجنت: speaking/say-it.tsx (۶۷۰خط) — تمرین تلفظ واژه: تب‌های درس + واژه تصادفی، دایره میکروفن سه‌فاز، جایگزین تایپی خودکار، دایره نمره SVG، awardPracticeWords/notifyActivity
+- 7-b ساب‌ایجنت: speaking/roleplay-view.tsx (۹۰۵خط، مکالمه نقش‌محور: انتخاب نقش A/B + فقط گوش بده، TTS خودکار نقش مقابل، نوبت کاربر با میکروفن/تایپ، نمره روی حباب) + speaking/shadowing-view.tsx (۷۹۱خط، چرخهٔ «گوش بده/تکرار کن/خط بعد» + آهسته/ترجمه/پخش خودکار/حالت ضبط + scrollIntoView در callback)
+- ادغام ارکستراتوری: speaking-view.tsx (۳تب) + ViewId «speaking» در nav-store + آیتم Mic «گفتار» در NAV هدر + رندر در page.tsx
+- speak.ts دولایه شد: memory objectURL + Cache Storage «visionone-audio-v1» (سقف ۴۰۰، FIFO trim) — رفع باگ clone: res.clone() باید قبل از مصرف body صدا زده شود وگرنه کش خالی می‌ماند (اشکال‌زدایی با cache.keys از agent-browser)
+- SpeakButton.showSlow (Snail 0.7×) در واژگان نمای جدول + فلش‌کارت واژه بزرگ + دیکشنری
+- QA مرورگری: ناوبری «گفتار» فعال، بگو ببینم نمره ۱۰۰/۱۰۰ تایپی «baker» + پیام محترمانه رد اجازه میکروفن + جایگزین تایپی، مکالمه نقش‌محور: خط ۱/۸ نوبت کاربر → تایپ → ۱۰۰/۱۰۰ → بعدی → خط ربات با TTS واقعی (POST /api/tts 200) → دوباره پخش، شنیدار و تکرار: ۲ ریدینگ یازدهم + چرخه سه‌دکمه‌ای، /api/asr بدنه خالی → 400 فارسی، کش آفلاین: ۲ ورودی معتبر (۱۱۴KB WAV)، رگرسیون: هاب ۱۵ بازی + متن‌ها + واژگان سالم، موبایل ۳۹۰px بدون اسکرول افقی، کنسول صفر خطا، lint 0 / tsc-src 0
+- تیک ۵ چک‌باکس + یادداشت QA فاز ۷ در نقشه راه (python3)
+
+Stage Summary:
+- فاز ۷ کامل شد: حلقهٔ Speaking کامل — الگو (TTS آهسته) → تمرین (بگو ببینم) → کاربرد (مکالمه نقش‌محور) → تعمیق (سایه‌خوانی) → آفلاین (کش صوت)
+- فایل‌های کلیدی: src/app/api/asr/route.ts، src/lib/{asr-client,similarity}.ts، src/components/book/speaking/{say-it,roleplay-view,shadowing-view}.tsx، speaking-view.tsx، speak.ts (دولایه)، speak-button.tsx (showSlow) + سیم‌کشی nav/page/header
+- قرارداد: افزودن تمرین گفتاری جدید = استفاده از startRecording/sendToAsr + similarityScore؛ صدای جدید = speak() خودش دو-لایه کش می‌کند
+- ریسک/یادداشت: سافاری iOS MediaRecorder در mp4 ضبط می‌کند (ارسال با mime واقعی)؛ ASR سرور گاهی 422 «صدای واضح شنیده نشد» می‌دهد — UI مسیر تلاش دوباره/تایپ دارد؛ تایمر محافظ ۷.۴ث در roleplay برای جبران autoStop خاموش
+- گام بعدی پیشنهادی: فاز ۸ (دستیار هوشمند ۲.۰ — معلم خصوصی، داستان‌ساز، تصویرسازی حافظه، چت شخصیت‌ها، تحلیل خطا، سؤال‌ساز بی‌پایان)

@@ -120,7 +120,7 @@ export function DictionaryView() {
                           <Badge variant="outline" className="text-[10px]">
                             درس {d.lesson.toLocaleString("fa-IR")}
                           </Badge>
-                          <SpeakButton text={d.word} className="mr-auto" />
+                          <SpeakButton text={d.word} className="mr-auto" showSlow />
                         </div>
                         <p dir="ltr" className="font-en text-[13px] leading-6 text-foreground">
                           {d.definition}
