@@ -10,9 +10,14 @@ import { emitGamify, awardCoins, readXp, currentLevel } from "./xp-store";
  * - موتور ارزیابی: evaluateBadges(ctx) — فقط از نقاط رویدادی صدا زده می‌شود
  *   (پایان بازی/آزمون/مرور، زنجیره، واژهٔ تازه) نه در رندر.
  * - باز شدن نشان = سکهٔ جایزه + رویداد سراسری برای توست/کانفتی.
+ * - فاز G3-04: دوازده نشان مخصوص بازی آزمایشگاه (افزودنی) + شمارندهٔ برد
+ *   کامل هر بازی در کلید localStorage جدید `visionone:game-wins`
+ *   (JSON map: game → count) — الگوی read/cache/listeners همین فایل.
  */
 
 const BADGES_KEY = "visionone:badges";
+// فاز G3-04 — کلید localStorage «افزودنی» شمارندهٔ برد کامل هر بازی
+const WINS_KEY = "visionone:game-wins";
 
 export interface BadgeContext {
   /** سطح فعلی کاربر */
@@ -31,6 +36,8 @@ export interface BadgeContext {
   plays: Record<string, number>;
   /** رکوردهای عددی بازی‌ها: `${game}:${scope}` → عدد (برای رکوردهای score) */
   bestScores: Record<string, number>;
+  /** فاز G3-04 — تعداد برد کامل هر بازی: game → count (از `visionone:game-wins`) */
+  wins: Record<string, number>;
 }
 
 export interface BadgeDef {
@@ -133,6 +140,104 @@ export const BADGES: BadgeDef[] = [
     coins: 40,
     check: (c) => c.level >= 5,
   },
+  // ── فاز G3-04 — دوازده نشان مخصوص بازی آزمایشگاه (فقط افزودنی؛ idهای قبلی دست‌نخورده) ──
+  // شرط هر نشان دقیقاً قابل‌اندازه‌گیری از ctx است (wins / plays / bestScores).
+  {
+    id: "wordle-champion",
+    title: "وردل‌باز",
+    desc: "۵ بار واژهٔ وردل ویژن را درست حدس بزن",
+    emoji: "🟩",
+    coins: 30,
+    check: (c) => (c.wins["wordle"] ?? 0) >= 5,
+  },
+  {
+    id: "word-search-perfect",
+    title: "شکارچی بی‌نقص",
+    desc: "یک دور شکار کلمه را با پیدا کردن همهٔ واژه‌ها تمام کن",
+    emoji: "🎯",
+    coins: 25,
+    check: (c) => (c.wins["word-search"] ?? 0) >= 1,
+  },
+  {
+    id: "memory-veteran",
+    title: "دوست حافظه",
+    desc: "۱۰ دور تطبیق حافظه بازی کن",
+    emoji: "🧠",
+    coins: 25,
+    check: (c) => (c.plays["memory"] ?? 0) >= 10,
+  },
+  {
+    id: "speed-150",
+    title: "برق‌باز",
+    desc: "در تست برقی به امتیاز ۱۵۰ برس",
+    emoji: "⚡",
+    coins: 30,
+    check: (c) => [...Object.entries(c.bestScores)].some(([k, v]) => k.includes(":speed-quiz:") && v >= 150),
+  },
+  {
+    id: "hangman-rescuer",
+    title: "نجات‌باز دارباز",
+    desc: "۵ بار بادکنک دارباز را نجات بده",
+    emoji: "🎈",
+    coins: 30,
+    check: (c) => (c.wins["hangman"] ?? 0) >= 5,
+  },
+  {
+    id: "cloze-master",
+    title: "جای‌خالی‌باز",
+    desc: "۷ دور جای خالی را کامل کن",
+    emoji: "✍️",
+    coins: 25,
+    check: (c) => (c.plays["cloze"] ?? 0) >= 7,
+  },
+  {
+    id: "sentence-architect",
+    title: "معمار جمله",
+    desc: "۳ بار جملهٔ درهم‌ریخته را درست بچین",
+    emoji: "🏗️",
+    coins: 30,
+    check: (c) => (c.wins["sentence-builder"] ?? 0) >= 3,
+  },
+  {
+    id: "listening-ear",
+    title: "گوش تیز",
+    desc: "۳ دور شکار صدا را ببر",
+    emoji: "👂",
+    coins: 30,
+    check: (c) => (c.wins["listening-hunt"] ?? 0) >= 3,
+  },
+  {
+    id: "snake-charmer",
+    title: "مارباز",
+    desc: "۵ دور مار و پله بازی کن",
+    emoji: "🐍",
+    coins: 25,
+    check: (c) => (c.plays["snakes-ladders"] ?? 0) >= 5,
+  },
+  {
+    id: "crossword-cracker",
+    title: "جدول‌باز",
+    desc: "یک جدول متقاطع را کامل حل کن",
+    emoji: "🧩",
+    coins: 35,
+    check: (c) => (c.wins["crossword"] ?? 0) >= 1,
+  },
+  {
+    id: "sharpshooter",
+    title: "تک‌تیرانداز",
+    desc: "در شوتر آموزشی به امتیاز ۳۰۰ برس",
+    emoji: "🎯",
+    coins: 35,
+    check: (c) => [...Object.entries(c.bestScores)].some(([k, v]) => k.includes(":fps-shooter:") && v >= 300),
+  },
+  {
+    id: "lab-regular",
+    title: "بومرد آزمایشگاه",
+    desc: "مجموع ۴۰ دور از بازی‌های آزمایشگاه انجام بده",
+    emoji: "🔁",
+    coins: 40,
+    check: (c) => Object.values(c.plays).reduce((s, n) => s + n, 0) >= 40,
+  },
 ];
 
 let badgeCache: Record<string, number> | null = null;
@@ -173,10 +278,51 @@ export function subscribeBadges(cb: () => void): () => void {
   };
 }
 
-/** ارزیابی همهٔ نشان‌ها با دادهٔ آماری — فقط از نقاط رویدادی صدا زده شود */
-export function evaluateBadges(ctx: Omit<BadgeContext, "level"> & { level?: number }): BadgeDef[] {
+// ─── فاز G3-04 — شمارندهٔ برد کامل بازی‌ها (الگوی read/cache/listeners خود فایل) ───
+
+let winsCache: Record<string, number> | null = null;
+
+/** خواندن کش‌شدهٔ شمارندهٔ برد (game → count) — useSyncExternalStore به ارجاع پایدار نیاز دارد */
+function readWins(): Record<string, number> {
+  if (winsCache) return winsCache;
+  try {
+    const raw = localStorage.getItem(WINS_KEY);
+    winsCache = raw ? (JSON.parse(raw) as Record<string, number>) : {};
+  } catch {
+    winsCache = {};
+  }
+  return winsCache;
+}
+
+/** فاز G3-04 — خواندنی برای ctx ارزیابی نشان‌ها (refreshBadges در gamification) */
+export function readGameWins(): Record<string, number> {
+  return readWins();
+}
+
+/** فاز G3-04 — ثبت یک برد کامل؛ فقط از نقطهٔ رویدادی (awardGameActivity) صدا زده شود */
+export function recordGameWin(game: string): void {
+  const wins = readWins();
+  const next: Record<string, number> = { ...wins, [game]: (wins[game] ?? 0) + 1 };
+  winsCache = next;
+  try {
+    localStorage.setItem(WINS_KEY, JSON.stringify(next));
+  } catch {
+    /* noop */
+  }
+  listeners.forEach((l) => l());
+}
+
+/**
+ * ارزیابی همهٔ نشان‌ها با دادهٔ آماری — فقط از نقاط رویدادی صدا زده شود
+ *
+ * فاز G3-04 — فیلد اختیاری `wins` (برد کامل هر بازی) با پیش‌فرض {} به ctx
+ * افزودنی شد؛ امضای قبلی برای صدا زننده‌های موجود دست‌نخورده است.
+ */
+export function evaluateBadges(
+  ctx: Omit<BadgeContext, "level" | "wins"> & { level?: number; wins?: Record<string, number> },
+): BadgeDef[] {
   const xp = readXp();
-  const full: BadgeContext = { ...ctx, level: ctx.level ?? currentLevel(xp.total) };
+  const full: BadgeContext = { ...ctx, wins: ctx.wins ?? {}, level: ctx.level ?? currentLevel(xp.total) };
   const owned = read();
   const unlocked: BadgeDef[] = [];
   for (const b of BADGES) {

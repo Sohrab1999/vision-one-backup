@@ -69,3 +69,80 @@ export function computeScore(
     Number.isFinite(n) && n > 0 ? n : fallback;
   return Math.round(safe(base, 0) * safe(levelMultiplier, 1) * safe(comboMultiplier, 1));
 }
+
+// ─── فاز G3-01 — دشواری ۳سطحی بازی‌های مهاجرت‌شده (کناره‌های گیم‌پلی) ───
+//
+// بازی‌های قدیمی که در G2 روی کیت سوار شدند، امتیاز/گیم‌پلی ثابت خودشان را
+// دارند. برای اینکه رکورد کاربران نسوزد، قاعده این است:
+//
+//   ★ «عادی» دقیقاً همان رفتار قبلی بازی است (ضریب ۱ — صفر مهاجرت) ★
+//
+//   آسان  = گزینهٔ کمتر (۳) / زمان ۱٫۲۵× / امتیاز ×۰٫۷ / راهنما نصف
+//   سخت   = گزینهٔ بیشتر (۵) / زمان ۰٫۷۵× / امتیاز ×۱٫۶ (≥ ۱٫۵× عادی —
+//           معیار پذیرش G3-01) / راهنما ۱٫۵×
+//
+// و فقط در سطح‌های آسان/سخت، scope رکورد پسوند سطح می‌گیرد (الگوی
+// بی‌نهایت وردل در G2-d) تا کلیدهای عادی بایت‌به‌بایت دست‌نخورده بمانند.
+
+export interface LevelKnobs {
+  /** تعداد گزینهٔ پیشنهادی هر سؤال — بازی با min/max خودش محدود می‌کند */
+  options: number;
+  /** مقیاس زمان تایمر نسبت به رفتار قبلی (۱ = بدون تغییر) */
+  timeScale: number;
+  /** ضریب امتیاز نسبت به امتیاز قبلی بازی (عادی = ۱) */
+  scoreMultiplier: number;
+  /** هزینهٔ راهنما نسبت به قبل (۱ = بدون تغییر) */
+  hintCostScale: number;
+}
+
+/** کناره‌های گیم‌پلی رسمی هر سطح — بازی‌های مهاجرت‌شده فقط از همین می‌خوانند */
+export const LEVEL_KNOBS: Record<DifficultyKey, LevelKnobs> = {
+  easy: { options: 3, timeScale: 1.25, scoreMultiplier: 0.7, hintCostScale: 0.5 },
+  normal: { options: 4, timeScale: 1, scoreMultiplier: 1, hintCostScale: 1 },
+  hard: { options: 5, timeScale: 0.75, scoreMultiplier: 1.6, hintCostScale: 1.5 },
+};
+
+/**
+ * scope رکورد سطح‌دار — «عادی» دقیقاً همان scope قدیمی برمی‌گردد
+ * (کلیدهای localStorage موجود دست‌نخورده؛ آسان/سخت کلید افزودنی می‌گیرند)
+ */
+export function scopeWithLevel(scope: string, level: DifficultyKey): string {
+  return level === "normal" ? scope : `${scope}:${level}`;
+}
+
+/**
+ * اعمال ضریب سطح روی امتیاز خام بازی — فقط یک‌بار روی امتیاز نهایی
+ * (تا رفتار گردکردن تک‌مرحله‌ای حفظ شود). عادی = همان عدد قبلی.
+ */
+export function levelScore(rawScore: number, level: DifficultyKey): number {
+  if (!Number.isFinite(rawScore) || rawScore <= 0) return 0;
+  return Math.max(0, Math.round(rawScore * LEVEL_KNOBS[level].scoreMultiplier));
+}
+
+/** تعداد گزینه برای این سطح — با کف/سقف خود بازی مهار می‌شود */
+export function optionsFor(level: DifficultyKey, min: number, max: number): number {
+  const o = LEVEL_KNOBS[level].options;
+  return Math.min(Math.max(min, o), Math.max(min, max));
+}
+
+// ─── کلید ترجیح سطح (افزودنی) — انتخاب سطح بین جلسه‌ها حفظ می‌شود ───
+
+const LEVEL_PREF_PREFIX = "visionone:game-pref:level:";
+
+export function loadLevelPref(game: string): DifficultyKey {
+  try {
+    const raw = localStorage.getItem(`${LEVEL_PREF_PREFIX}${game}`);
+    if (raw === "easy" || raw === "normal" || raw === "hard") return raw;
+  } catch {
+    /* noop */
+  }
+  return "normal";
+}
+
+export function saveLevelPref(game: string, level: DifficultyKey): void {
+  try {
+    localStorage.setItem(`${LEVEL_PREF_PREFIX}${game}`, level);
+  } catch {
+    /* noop */
+  }
+}

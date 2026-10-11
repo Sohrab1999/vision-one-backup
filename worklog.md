@@ -2466,3 +2466,121 @@ Stage Summary:
 - ۱۲٬۰۰۰+ خط تغییر در ۱۵ فایل بازی + ۱ ماژول کیت جدید (combo-engine) — امضاهای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage صفر تغییر؛ کلیدهای جدید فقط افزودنی (tutorial:game، draft:crossword، pref:fps-quality)
 - ریسک‌ها/یادداشت‌ها برای G6: (۱) دیالوگ What's New وسط دور بازی خودش را باز می‌کند و UI را aria-hidden می‌کند — باید suppress شود (۲) تست درگ/پرش سینتتیک محدودیت viewport دارد — QA موبایل واقعی لازم (۳) prop replayLabel برای ResultScreen پیشنهاد P3 (۴) سرور سندباکس OOM می‌شود — revive-server.sh در ورود G2-b-2 مستند
 - گام بعدی طبق سند: **فاز G3 — عمق گیم‌پلی** (G3-01 دشواری ۳سطحی ۸ بازی، G3-02 انتخاب هوشمند واژه از SRS، G3-03 ماموریت روزانه بازی، G3-04..06 نشان/بی‌پایان/تم) و سپس G4 (رده‌بندی per-game + دوئل آنلاین P0)
+---
+Task ID: G3-06
+Agent: full-stack-developer (Z.ai Code)
+Task: فاز G3 — فصلی‌سازی: تم مهرگان روی GameShell (G3-06)
+
+Work Log:
+- قدم صفر: worklog (قرارداد G0..G2-final) + سند §۲ استانداردها و §۵-G3-06 («حداقل ۱ تم اجرا شود؛ پیش‌فرض بدون تغییر») + game-shell.tsx کامل خوانده شد؛ مالکیت فقط دو فایل: kit/theme.ts (جدید) و kit/game-shell.tsx (ویرایش حداقلی)
+- فایل جدید kit/theme.ts (الگوی سربرگ کیت، "use client"، JSDoc فارسی «فاز G3-06 — فصلی‌سازی»): نوع `SeasonTheme = "default" | "mehregan"` · `getSeasonTheme()` — اول کلید افزودنی `visionone:game-theme` از localStorage (فقط "default"/"mehregan" معتبر، برای QA/پیش‌نمایش)؛ در نبودش تقویم شمسی با `Intl.DateTimeFormat("fa-IR-u-ca-persian",{month:"numeric"})` + نرمال‌سازی ارقام فارسی/عربی (خروجی «۷» → ۷) — ماه ۷ (مهر) = "mehregan"، بقیه = "default"؛ هر خطا/SSR/حافظهٔ مسدود = "default" ساکت · `setSeasonTheme(t|null)` نوشتن/حذف کلید (فقط QA/پیش‌نمایش) · `mehreganHeaderCls()` کلاس‌های تزئینی عنابی/کهربایی («bg-gradient-to-br from-rose-500/20 to-amber-500/20 text-rose-600 dark:text-rose-400») یک‌جا و قابل تست
+- ویرایش حداقلی game-shell.tsx: import های useMemo/cn/theme + سربرگ JSDoc (قرارداد «پارامتر تم» بدون prop تأمین می‌شود — شِل خودش getSeasonTheme را در `useMemo(() => getSeasonTheme(), [])` می‌خواند تا هیچ بازی‌ای تغییری نکند) + سه اثر فقط در تم mehregan: (الف) 🍁 در h2 عنوان با `<span aria-hidden>` (ب) آیکون هدر با `cn("کلاس قبلی عیناً", season === "mehregan" && mehreganHeaderCls())` — twMerge زمردی را با گرادیان عنابی/متن عنابی عوض می‌کند (تأیید عملی: خروجی mehregan «rounded-lg bg-gradient-to-br from-rose-500/20 to-amber-500/20 text-rose-600 dark:text-rose-400») (ج) نوار جشن ظریف h-1 بالای شِل با گرادیان rose→orange→amber (رندر شرطی، خارج از جریان space-y-4 پیش‌فرض اثری ندارد) — آبی/ایندیگو صفر؛ ۱۵ بازی هیچ تغییری نگرفتند
+- راستی‌آزمایی بدون مرورگر: bun run lint = صفر خطا · bunx tsc --noEmit فیلتر ^src/ = خالی (باقی‌مانده خطاهای ازپیش‌موجود skills/tool-results خارج src) · اثبات بایت‌به‌بایت بودن پیش‌فرض با اجرای twMerge در bun: cn("رشتهٔ قبلی") === رشتهٔ قبلی و cn("رشتهٔ قبلی", false) === رشتهٔ قبلی (true) — رشتهٔ کلاس آیکون/بدنه در تم default حرف‌به‌حرف همان قبل · grep تأیید: همهٔ کلاس‌های جدید (bg-gradient/🍁/mehreganHeaderCls) فقط داخل شرط `season === "mehregan"`؛ مرجع theme/season/mehregan در کل games/ فقط در kit/theme.ts و kit/game-shell.tsx (صفر فایل بازی) · اجرای واقعی getSeasonTheme در سندباکس: «mehregan» (امروز 2026-10-11 = مهر ۱۹ — پذیرش «حداقل ۱ تم اجرا شود» خودکار روی هر ۱۵ شِل برقرار) · dev.log سالم (فقط EADDRINUSE کهن، GET / 200)
+
+Stage Summary:
+- تم مهرگان (G3-06) روی کیت بسته شد: GameShell خودش تم فصل را می‌خواند و هر ۱۵ بازی بدون یک بایت تغییر روی تم می‌نشینند — پیش‌فرض "default" بایت‌به‌بایت قبل (پذیرش سند) و در مهر تقویم شمسی تم عنابی/نارنجی/کهربایی خودکار فعال است
+- کلید localStorage جدید فقط افزودنی: visionone:game-theme (QA/پیش‌نمایش با setSeasonTheme؛ UI عمومی ندارد) — هیچ کلید/امضای موجود تغییر نکرد و هیچ رویداد تله‌متری جدیدی اضافه نشد (§۲-۷)
+- قرارداد «پارامتر تم» سند به‌صورت «تم محیطی/فصلی داخلی شِل» مستند شد (prop نشد تا امضای GameShellProps دست‌نخورده بماند)؛ تم‌های بعدی (یزد/یلدا/نوروز) فقط با افزودن مقدار به SeasonTheme + شاخهٔ تقویم/کلید در theme.ts ممکن است — بازی‌ها و شِل دست‌نخورده
+- یادداشت G6: تم در mount با useMemo خوانده می‌شود — تغییر کلید visionone:game-theme در همان دور بازی اعمال نمی‌شود (رفرش کافی است؛ برای QA مستند شد)
+---
+Task ID: G3-03-04
+Agent: full-stack-developer (Z.ai Code)
+Task: فاز G3 — ماموریت روزانهٔ بازی (G3-03) + دوازده نشان بازی (G3-04)
+
+Work Log:
+- قدم صفر: worklog (قرارداد داده‌ها + ۱۵۰ خط آخر — قرارداد G0..G2-final) + سند docs/games-roadmap.md §۵ فاز G3 + خواندن کامل mission-store.ts و badge-store.ts و gamification.ts + نقاط مصرف rewards-view.tsx (خط ۴۷۶ useMissions · خط ۶۶۲ BADGES.map) + راستی‌آزمایی زیرساخت: saveAttempt در games/shared.ts:214 → awardGameActivity — نقطهٔ رویدادی یگانه؛ GAME_KEY هر ۱۵ بازی (wordle/word-search/memory/speed-quiz/hangman/cloze/sentence-builder/listening-hunt/snakes-ladders/crossword/fps-shooter) با شرط نشان‌ها مطابقت داده شد
+- کار ۱ (G3-03): QUEST_POOL فقط افزودنی ۳ کوئست بازی گرفت (wordle-win-2 · memory-pairs-10 · answers-20 — ۶ آیتم قبلی و idهایشان بایت‌به‌بایت دست‌نخورده)؛ pickQuests همچنان ۳ کوئست روزانه از استخر ۹تایی با همان seed دترمینیستیک روز برمی‌گزیند؛ سیم‌کشی فقط داخل awardGameActivity: missionProgress("answers-20", Math.max(0, a.correct)) برای همهٔ بازی‌ها · memory-pairs-10 گیت a.game==="memory" (correct = جفت‌های درست — از فراخوانی saveAttempt در memory-game.tsx:304 به total/correct=pairCount راستی‌آزمایی شد) · wordle-win-2 گیت a.game==="wordle" && total>0 && correct>=total (وردل total:1/correct:win?1:0 در wordle-game.tsx:528 — یعنی دقیقاً «برد»)
+- کار ۲ (G3-04): badge-store — کلید افزودنی `visionone:game-wins` (JSON map: game→count) با الگوی read/cache/listeners خود فایل (winsCache + readWins + recordGameWin که کش را با شیء جدید عوض می‌کند تا ارجاع پایدار بماند) + توابع صادراتی recordGameWin/readGameWins · فیلد wins: Record<string, number> به BadgeContext اضافه شد و در evaluateBadges فقط «افزودنی» مصرف می‌شود: پارامتر حالا Omit<BadgeContext,"level"|"wins"> & { level?; wins? } با پیش‌فرض ctx.wins ?? {} — امضای قبلی برای صدا زنندهٔ موجود (refreshBadges) بی‌تغییرِ رفتار · BADGES فقط افزودنی ۱۲ نشان بازی (شرط هر check دقیقاً از ctx: wins برای ۷ نشان برد، plays برای ۳ نشان دور، bestScores با الگوی includes(":speed-quiz:")/":fps-shooter:" همان flappy-pilot موجود برای ۲ نشان امتیازی، lab-regular جمع Object.values(plays)≥40) · gamification: awardGameActivity → if (total>0 && correct>=total) recordGameWin(a.game) عمداً «قبل از» touchActivity تا refreshBadges شمارندهٔ تازه را ببیند؛ refreshBadges هم wins: readGameWins() به evaluateBadges می‌دهد
+- حفظ‌شوندگی: امضای missionProgress/claimMission تغییر نکرد · امضای evaluateBadges فقط فیلد اختیاری افزودنی (رفتار صدا زننده‌های قبلی یکسان) · گریف کلیدهای localStorage در diff فقط "visionone:game-wins" — صفر کلید دیگر · آفلاین‌فرست: همه چیز localStorage محلی است · هیچ توست/کانفتی جدیدی نوشته نشد — اعلام از مسیر موجود evaluateBadges → emitGamify({type:"badge"}) → توست/کانفتی موجود
+- توجیه رندر خودکار (بدون تغییر rewards-view): ماموریت‌ها از missions.quests.map → MissionRow عمومی روی def (emoji/title/target/xp/coins) رندر می‌شود و کوئست‌های جدید وقتی seed روزشان برسد در همان لیست ظاهر می‌شوند؛ نشان‌ها از BADGES.map → BadgeCard عمومی — ۱۲ کارت جدید با همان گرید ۲/۳/۴ ستونی خودکار رندر می‌شوند؛ صفر تغییر لازم در rewards-view.tsx (تأیید شد: هیچ Edit روی این فایل زده نشد)
+- راستی‌آزمایی: bun run lint = صفر خطا · bunx tsc --noEmit فیلتر '^src/' = خالی (۱۰ خط کل، همه از پیش موجود خارج src: examples/scripts/skills/tool-results) · grep تک‌تکرار بودن idها: هر ۹ id کوئست و هر ۲۰ id نشان دقیقاً یک‌بار در آرایه‌ها (بدون تداخل با quiz-100/streak-7/word-hunter/duel-hero/flappy-pilot/game-explorer/srs-master/level-5 و ۶ کوئست قبلی) · git diff فقط ۳ فایل مالکیت (تغییرات kit/difficulty و game-shell و srs-store در working tree مال عوامل موازی G3-01/02 است — دست نزدم) · سرور: GET / = 200 با کامپایل تازه (280ms) بعد از تغییرات
+
+Stage Summary:
+- فاز G3-03 و G3-04 بسته شد: استخر ماموریت روزانه از ۶ به ۹ کوئست رسید (۳تایی چرخشی روزانه از استخر جدید) و ۱۲ نشان مخصوص بازی (۷ برد-محور، ۳ دور-محور، ۲ امتیاز-محور + بومرد آزمایشگاه جمعی) به نمای نشان‌ها اضافه شد — مجموعاً ۲۰ نشان
+- کلید/رویداد جدید افزودنی: فقط `visionone:game-wins` (JSON map: game→count) · نقطهٔ رویدادی واحد بدون تغییر: saveAttempt → awardGameActivity (کوئست‌ها + recordGameWin) → refreshBadges → evaluateBadges(ctx+wins) → emitGamify موجود
+- فایل‌های تغییرکرده (فقط مالکیت تسک): src/lib/mission-store.ts (+۷) · src/lib/badge-store.ts (+۱۵۲) · src/lib/gamification.ts (+۱۷) — rewards-view.tsx و games/* و kit/* دست‌نخورده
+- یادداشت برای عوامل بعدی: شرط «برد» هر بازی از قرارداد total/correct همان بازی می‌آید (وردل 1/1، شکار کلمه و جدول = همهٔ واژه‌ها درست، تطبیق حافظه correct=جفت) — بازی‌های بدون مفهوم برد صرفاً plays می‌گیرند؛ سرور وسط کار EADDRINUSE گذرا داشت (عوامل موازی) و با init script بازیابی شد — ربطی به این تسک ندارد
+---
+Task ID: G3-05-flappy
+Agent: full-stack-developer (Z.ai Code)
+Task: فاز G3 — تمرین بی‌پایان فلپی گزینش (G3-05)
+
+Work Log:
+- قدم صفر: tail worklog + قرارداد داده‌ها + docs/games-roadmap.md §۵ فاز G3 + خواندن کامل flappy-quiz-game.tsx (۱۱۷۱ خط — الگوی rAF/کمبو/توقف/نگهبان) و قراردادهای کیت (shared.ts/saveAttempt/saveBest/pickUnique، kit/smart-pick، kit/result-screen، kit/telemetry، kit/use-pause، kit/exit-guard، الگوی scope وردل infinite:4)
+- دکمهٔ جدا «تمرین بی‌پایان ∞» (variant outline، h-12/min-h-11، گرید sm:grid-cols-2 کنار «شروع پرواز» دست‌نخورده) + توضیح یک‌خطی + بج «بهترین امتیاز بی‌پایان» (فقط اگر رکورد موجود)
+- startEndless(): همان resetهای شروع عادی + endlessRef/setEndless + استخر با smartPick کیت (G3-02؛ جایگزین pickUnique فقط در این حالت؛ شروع سرد = شافل خالص) + تله‌متری level افزودنی «{lesson}:{easy|normal}:endless»
+- قانون بی‌پایان در حلقهٔ rAF با گارد endlessRef (صفر تغییر مسیر عادی): دهانهٔ غلط/برخورد دیوار و زمین/سقف قلب کم نمی‌کند — registerMiss (ریست کمبو کیت) + ریست سرعت + فلاش + مصونیت + seedReviewFromQuiz + wrong/error صدا و لرزش همان قبل؛ liveMsg بی‌پایان معادل («کمبو ریست شد»/«ادامه بده ∞» — همان باکس aria-live شِل)؛ گیت پایان tick → if (!endlessRef && hearts<=0)
+- پایان فقط با خروج صریح: (۱) دکمهٔ «پایان پرواز» در اورلی توقف (فقط در بی‌پایان) → finishEndless("finish") → تله‌متری end(reason=finish) (۲) تأیید نگهبان خروج کیت (متن اختصاصی بی‌پایان با props موجود کیت) → finishEndless("exit") → همان قرارداد خروج وسط دور abandon(reason=exit) — هر دو در لحظهٔ خروج: saveAttempt با پیشرفت فعلی (امضای عیناً موجود؛ detail فقط افزودنی endless=true) + ResultScreen کیت («پرواز بی‌پایان تمام شد!»؛ آمار امتیاز/بیشترین کمبو/زمان پرواز با fmtTime؛ ستاره‌بندی آستانهٔ ۲×: 240/120) + رکورد scope افزودنی easy:endless / normal:endless با همان loadBest/saveBest (منطق رکورد/توست/صدا عین finish عادی) + onReplay نتیجه دوباره به بی‌پایان برمی‌گردد؛ خروج بی‌پیشرفت (total=0) مثل عادی مستقیم و بدون Attempt
+- آموزش: ENDLESS_TUTORIAL_STEP (گام چهارم ∞) فقط حین دور بی‌پایان با همان TutorialOverlay کیت (steps=tutorialSteps)؛ راهنمای زیر بوم در بی‌پایان مسیر «پایان پرواز» را می‌گوید؛ HUD بی‌پایان قلب‌ها را با بج «∞ بی‌پایان» عوض می‌کند
+- countWeak کیت با useSyncExternalStore (اسنپ‌شات عددی — بدون مشکل هیدریشن) → در setup اگر >0 خط «🎯 مرکز این دور: N واژهٔ ضعیف تو»
+- راستی‌آزمایی (بدون مرورگر — QA مرورگری با orchestrator): bun run lint = صفر · bunx tsc --noEmit | grep '^src/' = خالی (فقط خطاهای ازپیش‌موجود خارج src در examples/scripts/skills) · git diff --stat فایل مالکیت: فقط src/components/book/games/flappy-quiz-game.tsx (+331/−49) — تغییرات kit/* و lib/* و memory/scramble در working tree مال عوامل موازی G3-01..04 است (دست نزدم) · مرور کامل git diff فایل خودم خط‌به‌خط · dev.log: GET / 200 (کامپایل سالم؛ EADDRINUSE گذرای ابتدای لاگ مال راه‌اندازی موازی قبلی است)
+
+Stage Summary:
+- G3-05 فلپی بسته شد: «تمرین بی‌پایان ∞» با دکمهٔ جدا، بدون پایان با جان (خطا فقط کمبو ریست + جریمهٔ فعلی)، پایان فقط با خروج صریح («پایان پرواز» در توقف یا نگهبان خروج) و Attempt فقط در همان لحظه (detail.endless=true افزودنی) + ResultScreen کیت با زمان پرواز
+- کلید/عبارت جدید همهٔ افزودنی: رکورد scope «easy:endless / normal:endless» (الگوی وردل infinite:4) · تله‌متری level پسوند «:endless» · detail.endless=true — امضاهای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage قبلی صفر تغییر
+- تضمین حالت عادی: start/finish عادی عین قبل (فقط +۲ خط ریست حالت در start)؛ گیت‌های بی‌پایان همه با endlessRef=false خنثی؛ liveMsg/نگهبان/آموزش/ResultScreen عادی بایت‌به‌بایت همان رشته‌های قبلی؛ استخر دور عادی همان pickUnique
+- برای QA مرورگری orchestrator: مسیرها = setup→«تمرین بی‌پایان ∞»→خطای عمدی (قلب نباید کم شود، کمبو صفر، دور ادامه)→توقف→«پایان پرواز»→ResultScreen با زمان پرواز→Attempt با detail.endless در POST /api/attempts؛ و مسیر دوم: خروج شِل→نگهبان با متن بی‌پایان→تأیید→Attempt؛ و حالت عادی: قلب‌ها مثل قبل تا صفر → پایان
+
+---
+Task ID: G3-01-02a
+Agent: full-stack-developer (Z.ai Code)
+Task: فاز G3 — دشواری ۳سطحی (G3-01) + انتخاب هوشمند واژه (G3-02) برای memory/scramble/cloze/word-search
+
+Work Log:
+- قدم صفر: tail کارنامه + «قرارداد داده‌ها»، §۵ فاز G3 نقشه راه، کیت دشواری (difficulty/difficulty-picker) و smart-pick، و هر ۴ فایل بازی کامل خوانده شد
+- مشترک هر ۴ بازی (قرارداد حاکم): state سطح با useState(() => loadLevelPref(GAME_KEY)) + handleLevelChange (هم setState هم saveLevelPref)؛ DifficultyPicker + خط توضیح سطح (text-[11px] text-muted-foreground) قبل از دکمهٔ شروع در setup؛ پیام «🎯 مرکز این دور: N واژهٔ ضعیف تو» وقتی countWeak(pool, keyOf) > 0 با aria-live="polite" روی والد div؛ scope رکورد (loadBest/saveBest) و level تله‌متری با scopeWithLevel (عادی = کلید قبلی بایت‌به‌بایت)؛ detail.level = level به‌صورت فیلد افزودنی داخل هر ردیف detail (چون detail این ۴ بازی آرایه است — JSON.stringify ویژگی غیرایندکسی آرایه را می‌اندازد، پس پیوست در ردیف تنها راه افزودنیِ JSON-safe است؛ امضای saveAttempt دست‌نخورده)؛ pickUnique → smartPick فقط برای «انتخاب واژه‌های دور» با همان n و keyOf
+- memory (بهتر=کمتر — بدون levelScore؛ بدون تایمر معکوس/peek — بدون timeScale): سطح = پیش‌فرض هوشمند تعداد جفت (آسان ≤۶ با Math.min / عادی بدون تغییر / سخت ≥۸ با Math.max؛ کاربر با چیپ‌ها آزاد است)؛ استخر پالایش معنی‌تکراری start به useMemo setupPool منتقل شد (همان فیلتر) و smartPick(setupPool, pairCount, w => w.word)
+- scramble (تنها بازی امتیازی این دسته): hintCost = عادی HINT_COST ثابت (۳۰) / آسان-سخت max(1, round(30 × hintCostScale)) = ۱۵/۴۵ — در setRoundScore، liveMsg راهنما، لیبل دکمه و پاراگراف setup مصرف شد (مسیر عادی همان ثابت قبلی)؛ امتیاز نهایی ResultScreen با levelScore(roundScore, level) یک‌بار روی خام پایانی (عادی = همان عدد)؛ تایمر شمارشی است — timeScale کاربرد ندارد (مستند در هدر)
+- cloze (رکورد = تعداد درست از تعداد پرسش — امتیاز عددی ندارد، levelScore نمی‌گیرد تا معنای «X از Y» رکورد نشکند): optCount = عادی NORMAL_OPTIONS=3 / آسان-سخت optionsFor(level, 3, 5) = ۳/۵ → buildPool(data, lesson, distractorCount = optCount−1) با پیش‌فرض ۲ (عادی = عین قبل)؛ ADVANCE_MS=1000 از inline جدا شد و مکث پیشروی = عادی همان ۱۰۰۰ms / آسان-سخت ×timeScale (۱۲۵۰/۷۵۰)؛ OPTION_KEYS به ۱..۵ گسترش یافت (با ۳ گزینه گارد options[n-1] می‌گیرد — عادی بدون اثر)؛ متن راهنمای کیبورد «تا {faNum(optCount)}» پویا (عادی = «۱ تا ۳» قبلی)؛ deck با smartPick(pool, min(rounds, pool.length), it => it.answer) — حواس‌پرتی‌ها (traps) همان pickUnique قبلی در buildPool ماندند
+- word-search (رکورد کمترین زمان — بدون levelScore؛ تایمر شمارشی — بدون timeScale): سطح = پیش‌فرض هوشمند (آسان wordCount≤۶ و size≤۸ / عادی بدون تغییر / سخت wordCount≥۱۰ و size≥۱۰ — در محدودهٔ چیپ‌های موجود و خوانایی؛ ۱۲×۱۲ چپ جدید چیپ می‌خواست و UI عادی را عوض می‌کرد، اعمال نشد)؛ smartPick(pool, wordCount, w => baseWordOf(w.word))؛ weakCount دقیقاً روی همان استخر دور (fitting-or-candidates) محاسبه می‌شود
+- راستی‌آزمایی (بدون مرورگر): bun run lint → صفر خطا/هشدار (یک خطای react-hooks/immutability میانی در cloze «optCount accessed before declared» با جابه‌جایی تعریف optCount قبل از pools useMemo رفع شد)؛ bunx tsc --noEmit | grep '^src/' → خالی؛ git diff --stat فقط ۴ فایل مالکیت: memory 93 · scramble 89 · cloze 99 · wordsearch 68 (مجموع ۲۹۳+ / ۵۶−)؛ kit/ و shared.ts و games-hub ویرایش نشد؛ dev.log بدون خطای کامپایل
+- تضمین مسیر عادی (مرور کد): عادی → scopeWithLevel همان رشتهٔ قبلی، hintCost همان HINT_COST، optCount همان ۳ (distractorCount 2)، advanceMs همان 1000، smartPick با SRS خالی = همان shuffle+slice قبلی، handleLevelChange عادی هیچ default ای نمی‌دهد، پیش‌فرض‌های state (pairCount 6 / rounds 8 / rounds 10 / wordCount 6 / size 8) و همهٔ رشته‌های liveMsg/toast عادی دست‌نخورده — یعنی بدون انتخاب کاربر، رفتار بازی بایت‌به‌بایت قبلی است
+
+Stage Summary:
+- هر ۴ بازی memory/scramble/cloze/word-search صاحب «انتخاب سطح در setup» شدند (G3-01) و چیدمان واژه‌های دور به اولویت کارت‌های SRS ضعیف/سررسید/نو چسبید (G3-02) — مجموع امتیاز سخت scramble = ×۱٫۶ (≥۱٫۵× معیار پذیرش)
+- کلیدهای افزودنی: visionone:game-pref:level:{memory|scramble|cloze|word-search} · رکورد scope «{درس}:{تعداد}:{easy|hard}» (عادی کلید قدیمی) · تله‌متری level پسوند سطح · detail.level در هر ردیف Attempt
+- انحراف مستند از نقشهٔ تسک: (۱) cloze levelScore نگرفت چون «امتیاز» آن شمارندهٔ درست است نه امتیاز عددی (×۱٫۶ یعنی «۱۳ از ۱۰»!) (۲) آسان memory/cloze در کمّیِ گیم‌پلی با عادی برابرند (۶ جفت/۳ گزینه = سقفِ آسانیِ ممکن این بازی‌ها) و تمایز آسان از راه پیش‌فرض/ریتم اعمال شد (۳) برای detail آرایه‌ای، level داخل هر ردیف پیوست شد (JSON-safe)
+- برای QA مرورگری orchestrator: در هر ۴ بازی setup → چیپ آسان/سخت (باید باقی بماند پس از ورود/خروج) → خط توضیح سطح و پیام 🎯 (با SRS پرشده) → دور کامل → رکورد در scope سطح؛ عادی = رفتار قبلی (رکوردهای قدیمی همان‌جا)
+
+---
+Task ID: G3-01-02b
+Agent: full-stack-developer (تایم‌اوت قبل از ثبت — کد کامل؛ ثبت و QA توسط orchestrator)
+Task: فاز G3 — دشواری ۳سطحی (G3-01) + انتخاب هوشمند واژه (G3-02) برای speed-quiz/hangman/sentence-builder/listening-hunt + تمرین بی‌پایان speed-quiz (G3-05)
+
+Work Log:
+- کد (بررسی orchestrator): هر ۴ فایل کامل — DifficultyPicker در setup + loadLevelPref/saveLevelPref (کلید افزودنی visionone:game-pref:level:{game}) + scopeWithLevel روی رکورد/تله‌متری (عادی = کلید قدیمی بایت‌به‌بایت) + levelScore روی امتیاز نهایی (سخت ×۱٫۶ ≥ معیار ۱٫۵×) + detail.level افزودنی + smartPick روی استخر واژهٔ دور + پیام «🎯 مرکز این دور: N واژهٔ ضعیف تو»
+- speed-quiz: گزینه‌ها optionsFor(3..5) + تایمر ×timeScale (آسان ۷۵/سخت ۴۵) + G3-05 کامل: RoundMode timed|endless — دکمهٔ «تمرین بی‌پایان ∞»، شمارندهٔ صعودی، پایان فقط با خروج صریح (Attempt با detail.endless=true + telemetry + ResultScreen)، رکورد scope «{درس}:{دسته}:endless» (الگوی وردل)، امتیاز بی‌پایان ×۱، چرخهٔ شافل سؤال
+- hangman: جان/راهنما طبق سطح (عادی همان ثابت‌ها) + بایاس طول واژه (آسان کوتاه‌تر/سخت بلندتر با گارد استخر)
+- sentence-builder: هزینهٔ راهنما ×hintCostScale + scopeWithLevel
+- listening-hunt: گزینه‌های انحرافی طبق سطح (عادی همان فعلی) + جریمهٔ پخش دوباره ×hintCostScale + scopeWithLevel
+- راستی‌آزمایی orchestrator: lint صفر · tsc src صفر · مارکرها در هر ۴ فایل (۱۱..۳۲ ارجاع) · عادی = ثابت‌های قبلی (مرور کد)
+
+Stage Summary:
+- فاز G3-01 روی هر ۸ بازی واژگانی + G3-02 روی همه + G3-05 speed-quiz کامل شد (کد) — QA مرورگری جامع در G3-final
+- کلیدهای افزودنی: visionone:game-pref:level:{game} · رکورد scope پسونددار :easy/:hard/:endless · detail.level/detail.endless
+
+---
+Task ID: G3-final
+Agent: main orchestrator (Z.ai Code)
+Task: جمع‌بندی و بستن فاز G3 — عمق گیم‌پلی (ادامه اجرای سند games-roadmap.md به درخواست «ادامه بده فاز G3»)
+
+Work Log:
+- قدم پیش‌نیاز (orchestrator — درس G2: جلوگیری از تداخل فایل کیت): زیرساخت کیت یک‌جا ساخته شد — kit/difficulty.ts افزودنی (LEVEL_KNOBS: آسان ۳گزینه/×۰٫۷/زمان ۱٫۲۵×/راهنما ×۰٫۵ · سخت ۵گزینه/×۱٫۶/زمان ۰٫۷۵× — معیار «سخت ≥۱٫۵× عادی» ✓ · scopeWithLevel: عادی = کلید قدیمی بایت‌به‌بایت · levelScore/optionsFor · loadLevelPref/saveLevelPref) + kit/difficulty-picker.tsx (چیپ‌های یکدست aria-pressed) + kit/smart-pick.ts (G3-02: نمونه‌گیری وزن‌دار Efraimidis–Spirakis روی کارت‌های SRS ضعیف/سررسید/نو؛ شروع سرد = شافل خالص؛ countWeak) + صادرات افزودنی readSrsItems در srs-store
+- ۵ عامل موازی با مالکیت فایل کاملاً جدا: G3-03-04 (mission-store/badge-store/gamification) · G3-06 (kit/theme.ts + game-shell) · G3-01-02a (memory/scramble/cloze/word-search) · G3-01-02b (speed-quiz/hangman/sentence-builder/listening-hunt + بی‌پایان speed-quiz — تایم‌اوت ولی کد کامل بود؛ ثبتش orchestrator) · G3-05-flappy (بی‌پایان flappy)
+- QA مرورگری جامع (agent-browser، سشن ایزوله با seed SRS/ماموریت/پلی‌کانتر):
+  • speed-quiz سخت: ۵ گزینه (عادی ۴) + تایمر ۴۵ث (۶۰×۰٫۷۵) + توضیح سطح + ماندگاری پس از خروج/ورود (visionone:game-pref:level:speed-quiz=hard) + بازخورد «درست بود! کمبو ۱ — +۱۰ امتیاز 🎉» aria-live
+  • G3-02: پیام «🎯 مرکز این دور: ۲ واژهٔ ضعیف تو» دقیقاً برابر کارت‌های کارکردهٔ ضعیف seed (alive/amazing در بانک) — اصلاح countWeak توسط orchestrator: کارت‌های هرگز دیده‌نشده «ضعیف تو» شمرده نمی‌شوند (قبلاً ۲۴۶ گمراه‌کننده)
+  • بی‌پایان speed-quiz: شمارندهٔ صعودی ۰:۰۲ + بج ∞ به‌جای قلب + نگهبان اختصاصی «تمرین بی‌پایان را تمام کنم؟ ⏹» + خروج صریح → ResultScreen «تمرین بی‌پایان تمام شد!» + Attempt + مرور خطاها
+  • memory آسان: پیش‌فرض ۶ جفت + دور کامل ۶ حرکت بدون خطا → «رکورد جدید! ۶ حرکت 🏆» + Attempt + رکورد در scope :easy (visionone:game-best:vision-one:memory:1:6:easy) + wins={"memory":1} + ماموریت answers-20 پیشرفت ۶/۲۰ + ماموریت game-2 کامل (۲✓) با توست «ماموریت کامل شد» + نشان memory-veteran خودکار باز شد
+  • نمای جایزه‌ها: هر ۱۲ نشان بازی جدید رندر شد؛ کوئست‌های جدید در استخر چرخش روزانه (۹تایی → ۳انتخابی)
+  • G3-06: تم مهرگان خودکار (مهر = ماه ۷ تقویم شمسی) — 🍁 + گرادیان عنابی/کهربایی هدر + نوار جشن روی شِل هر بازی حین دور؛ کلید visionone:game-theme=default → 🍁 و گرادیان حذف (پیش‌فرض بایت‌به‌بایت ✓)؛ حذف کلید → بازگشت خودکار ✓
+  • flappy: دکمهٔ «تمرین بی‌پایان ∞» در setup + smartPick روی استخر بی‌پایان (کلید SRS = متن سؤال — coherent با SRS خود بازی)
+  • موبایل ۳۹۰: scrollWidth=390 بدون سرریز + تم مهرگان سالم
+- گیت کیفیت نهایی: lint ۰ · tsc src ۰ · dev.log بدون خطا (سرور با revive-server.sh احیا شد)
+- سند roadmap به ۱.۷ ارتقا یافت (چنگ‌ریز هر کار در جدول نسخه‌ها)
+
+Stage Summary:
+- 🏁 **فاز G3 کامل شد: ۶/۶** — دشواری ۳سطحی روی ۸ بازی واژگانی · انتخاب هوشمند SRS-محور · ماموریت روزانه بازی · ۱۲ نشان بازی · تمرین بی‌پایان (speed-quiz + flappy) · تم مهرگان
+- کلیدهای localStorage جدید فقط افزودنی: visionone:game-pref:level:{game} · visionone:game-wins · visionone:game-theme · رکورد scope پسونددار :easy/:hard/:endless — امضاهای saveAttempt/saveBest/bumpPlays و کلیدهای موجود صفر تغییر؛ عادی هر بازی = رفتار قبلی
+- انحراف‌های مستند: (۱) cloze/memory/word-search «بهتر=کمتر» levelScore نگرفتند (سند §۴ اجازه می‌دهد) (۲) detail.level در بازی‌های detail-آرایه‌ای داخل ردیف‌ها پیوست شد (JSON-safe) (۳) countWeak فقط کارت‌های کارکرده را می‌شمارد (اصلاح UX توسط orchestrator)
+- گام بعدی طبق سند: **فاز G4 — بُعد اجتماعی و رقابت** (G4-01 رده‌بندی هر بازی · G4-02 دوئل آنلاین realtime P0 با مینی‌سرویس socket.io پورت 3003 · G4-03/04 چالش کلاس و اشتراک نتیجه)

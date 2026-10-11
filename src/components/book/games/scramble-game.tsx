@@ -15,6 +15,13 @@
  * useGamePause + GameExitGuard + تله‌متری جلسه — امضاهای shared.ts
  * (saveAttempt/saveBest/bumpPlays) و کلیدهای localStorage هیچ تغییری نکرده‌اند
  * (قانون حفظ‌شوندگی §۳-۴ سند نقشه راه بازی‌ها).
+ *
+ * فاز G3-01 — سطح دشواری ۳گانه: هزینهٔ راهنما ×hintCostScale (آسان −۱۵ / عادی −۳۰ /
+ * سخت −۴۵ با کف ۱) + امتیاز نهایی دور levelScore (یک‌بار روی خامِ پایانی؛ عادی =
+ * دست‌نخورده). تایمر شمارشی است (بدون شمارش معکوس) — timeScale کاربرد ندارد.
+ * رکورد آسان/سخت scope پسونددار جدا می‌گیرد (کلیدهای عادی بایت‌به‌بایت دست‌نخورده).
+ * فاز G3-02 — انتخاب هوشمند واژه‌های دور: smartPick با اولویت کارت‌های SRS
+ * ضعیف/سررسید/نو (شروع سرد = همان شافل قبلی).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -51,7 +58,6 @@ import {
   shuffle,
   faNum,
   fmtTime,
-  pickUnique,
   loadBest,
   saveBest,
   bumpPlays,
@@ -70,6 +76,17 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// فاز G3-01/G3-02 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت؛ فقط مصرف)
+import { DifficultyPicker } from "./kit/difficulty-picker";
+import {
+  LEVEL_KNOBS,
+  levelScore,
+  loadLevelPref,
+  saveLevelPref,
+  scopeWithLevel,
+  type DifficultyKey,
+} from "./kit/difficulty";
+import { countWeak, smartPick } from "./kit/smart-pick";
 
 type Phase = "setup" | "playing" | "done";
 
@@ -137,6 +154,8 @@ export function ScrambleGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [rounds, setRounds] = useState<number>(8);
+  // فاز G3-01 — سطح دشواری ماندگار (پیش‌فرض «عادی» = دقیقاً رفتار قبلی بازی)
+  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
 
   const [deck, setDeck] = useState<VocabEntry[]>([]);
   const [idx, setIdx] = useState(0);
@@ -192,6 +211,12 @@ export function ScrambleGame() {
     },
     [handleTutorialClose],
   );
+  // فاز G3-01 — تغییر سطح (هزینهٔ راهنما و ضریب امتیاز از LEVEL_KNOBS خوانده می‌شود؛
+  // تعداد واژه‌های دور ثابت است — چیپ‌های «چند واژه؟» دستِ کاربر)
+  const handleLevelChange = useCallback((lv: DifficultyKey) => {
+    setLevel(lv);
+    saveLevelPref(GAME_KEY, lv);
+  }, []);
   // فاز G1-10 — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
 
@@ -207,8 +232,15 @@ export function ScrambleGame() {
     return base.filter((w) => WORD_RE.test(baseWord(w.word)));
   }, [data.vocab, lesson]);
 
+  // فاز G3-01 — هزینهٔ واقعی راهنما در این سطح: عادی = همان ثابت قبلی؛ آسان/سخت ×hintCostScale (کف ۱)
+  const hintCost =
+    level === "normal"
+      ? HINT_COST
+      : Math.max(1, Math.round(HINT_COST * LEVEL_KNOBS[level].hintCostScale));
+
   // رکورد شخصی — snapshot عددی (پایدار برای useSyncExternalStore؛ سرور null)
-  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`;
+  // فاز G3-01 — اسکوپ سطح‌دار: عادی = همان کلید قبلی بایت‌به‌بایت؛ آسان/سخت کلید افزودنی
+  const scope = scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`, level);
   const best = useSyncExternalStore(
     subscribeGameData,
     () => {
@@ -262,14 +294,14 @@ export function ScrambleGame() {
         total: deck.length,
         correct: finalSolved,
         duration: secsRef.current,
-        detail: finalDetail,
+        // فاز G3-01 — سطح دور به‌عنوان فیلد افزودنی در هر ردیف detail (شکل آرایه حفظ شده)
+        detail: finalDetail.map((d) => ({ ...d, level })),
       });
       // رکورد فقط برای اجرای کاملِ بدون رد کردن و بدون راهنما — قاعدهٔ قبلی (دست‌نخورده)
       if (finalSkipped === 0 && hinted === 0) {
-        const recScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`;
-        const prev = loadBest<BestRec>(bookId, GAME_KEY, recScope);
+        const prev = loadBest<BestRec>(bookId, GAME_KEY, scope);
         if (!prev || secsRef.current < prev.time) {
-          saveBest<BestRec>(bookId, GAME_KEY, recScope, { time: secsRef.current });
+          saveBest<BestRec>(bookId, GAME_KEY, scope, { time: secsRef.current });
           setIsRecord(true);
           playSound("record");
           buzz("record");
@@ -282,7 +314,7 @@ export function ScrambleGame() {
       }
       setPhase("done");
     },
-    [bookId, lesson, rounds, deck.length, hinted],
+    [bookId, lesson, rounds, deck.length, hinted, scope, level],
   );
 
   /** ادامه به واژهٔ بعد یا پایان دور */
@@ -409,12 +441,12 @@ export function ScrambleGame() {
     const tile = tiles.find((t) => !used.has(t.id) && t.letter === base[empty]);
     if (!tile) return;
     setHinted((h) => h + 1);
-    setRoundScore((s) => Math.max(0, s - HINT_COST));
+    setRoundScore((s) => Math.max(0, s - hintCost));
     playSound("click");
     buzz("light");
-    setLiveMsg(`راهنما فعال شد — ${faNum(HINT_COST)} امتیاز کم شد`);
+    setLiveMsg(`راهنما فعال شد — ${faNum(hintCost)} امتیاز کم شد`);
     placeTile(tile.id);
-  }, [deck, idx, slots, tiles, placeTile, paused]);
+  }, [deck, idx, slots, tiles, placeTile, paused, hintCost]);
 
   /** رد کردن — SRS(✗) + نمایش واژهٔ درست برای ۱ ثانیه (رکورد دور می‌سوزد) */
   const skipWord = useCallback(() => {
@@ -441,7 +473,9 @@ export function ScrambleGame() {
 
   /** شروع دور — انتخاب واژه‌های یکتا از استخر قابل بازی + جلسهٔ تازهٔ تله‌متری */
   const start = useCallback(() => {
-    const chosen = pickUnique(pool, rounds, (w) => baseWord(w.word));
+    // فاز G3-02 — انتخاب هوشمند واژه‌های دور (اولویت کارت‌های SRS ضعیف/سررسید/نو؛
+    // شروع سرد = همان شافل قبلی) — جایگزین drop-in برای pickUnique با همان n و keyOf
+    const chosen = smartPick(pool, rounds, (w) => baseWord(w.word));
     if (chosen.length < 3) {
       toast.error("واژه قابل بازی در این محدوده پیدا نشد");
       return;
@@ -463,17 +497,17 @@ export function ScrambleGame() {
     loadWord(chosen[0]);
     resume();
     setExitAsk(false);
-    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور
+    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3-01 — level اسکوپ سطح‌دار)
     sessionRef.current = createGameSession({
       game: GAME_KEY,
-      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`,
+      level: scope,
     });
     sessionRef.current.start();
     // فاز G2 — بازخورد شروع دور
     playSound("click");
     buzz("light");
     setPhase("playing");
-  }, [pool, rounds, loadWord, resume, lesson]);
+  }, [pool, rounds, loadWord, resume, scope]);
 
   // ── کیبورد: فقط در فاز بازی و بدون توقف؛ حروف → جای‌گذاری، Backspace → برگرداندن ──
   useEffect(() => {
@@ -518,6 +552,8 @@ export function ScrambleGame() {
 
   // ── Setup ──
   if (phase === "setup") {
+    // فاز G3-02 — شمارش کارت‌های ضعیف/سررسید/نو استخر (صفر = تمرکز هوشمند غیرفعال)
+    const weakCount = countWeak(pool, (w) => baseWord(w.word));
     return (
       <>
         <Card className="mx-auto max-w-xl rise-in">
@@ -538,7 +574,7 @@ export function ScrambleGame() {
               <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
               <p>
                 روی حروف به ترتیب بزن تا واژه ساخته شود؛ کیبورد هم کار می‌کند. هر واژهٔ حل‌شده{" "}
-                {faNum(SOLVE_POINTS)} امتیاز دارد و دکمهٔ راهنما هر بار {faNum(HINT_COST)} امتیاز
+                {faNum(SOLVE_POINTS)} امتیاز دارد و دکمهٔ راهنما هر بار {faNum(hintCost)} امتیاز
                 می‌گیرد — رد کردن یا راهنما رکوردِ دور را هم می‌سوزاند!
               </p>
             </div>
@@ -607,6 +643,24 @@ export function ScrambleGame() {
               </Badge>
             )}
 
+            {/* فاز G3-01 — انتخاب سطح دشواری (عادی = دقیقاً رفتار قبلی بازی) */}
+            <DifficultyPicker value={level} onChange={handleLevelChange} />
+            <p className="text-[11px] leading-5 text-muted-foreground">
+              {level === "easy"
+                ? `آسان: راهنما −${faNum(hintCost)} امتیاز (نصف) — امتیاز دور ×۰٫۷`
+                : level === "hard"
+                  ? `سخت: راهنما −${faNum(hintCost)} امتیاز — امتیاز دور ×۱٫۶`
+                  : `عادی: همان بازی همیشگی — راهنما −${faNum(hintCost)} امتیاز`}
+            </p>
+            {/* فاز G3-02 — پیام تمرکز هوشمند روی واژه‌های ضعیف (aria-live روی والد) */}
+            <div aria-live="polite">
+              {weakCount > 0 && (
+                <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  🎯 مرکز این دور: {faNum(weakCount)} واژهٔ ضعیف تو
+                </p>
+              )}
+            </div>
+
             <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
               <Play size={18} />
               شروع بازی
@@ -645,7 +699,8 @@ export function ScrambleGame() {
         stats={[
           {
             label: "امتیاز",
-            value: faNum(roundScore),
+            // فاز G3-01 — امتیاز نهایی دور با ضریب سطح (عادی = همان عدد قبلی)
+            value: faNum(levelScore(roundScore, level)),
             icon: <Coins size={16} className="text-amber-500" />,
           },
           {
@@ -837,7 +892,7 @@ export function ScrambleGame() {
                   className="min-h-11 gap-1.5 border-amber-500/40 text-[12px] text-amber-600 hover:bg-amber-500/10 hover:text-amber-600 dark:text-amber-400"
                 >
                   <Lightbulb size={15} />
-                  {`راهنما (−${faNum(HINT_COST)} امتیاز)`}
+                  {`راهنما (−${faNum(hintCost)} امتیاز)`}
                 </Button>
                 <Button
                   variant="ghost"

@@ -1,7 +1,7 @@
 "use client";
 
 import { awardXp, readXp, currentLevel } from "./xp-store";
-import { evaluateBadges, collectGameStats } from "./badge-store";
+import { evaluateBadges, collectGameStats, recordGameWin, readGameWins } from "./badge-store";
 import { missionProgress, readMissions } from "./mission-store";
 import { readStreak, touchStreak } from "./streak-store";
 
@@ -17,6 +17,13 @@ import { readStreak, touchStreak } from "./streak-store";
  *  - touchActivity      ← ضربان «امروز فعال باش»
  *
  * هر award = XP (با سقف روزانه) + پیشرفت ماموریت روزانه + ارزیابی نشان‌ها.
+ *
+ * فاز G3-03/04 — سیم‌کشی افزودنی داخل awardGameActivity (فقط همان‌جا):
+ *  - کوئست‌های بازی (wordle-win-2 / memory-pairs-10 / answers-20) از رویداد
+ *    پایان هر بازی پیشرفت می‌گیرند؛
+ *  - برد کامل هر دور (correct ≥ total) در `visionone:game-wins` ثبت و به
+ *    ارزیابی نشان‌ها (evaluateBadges → wins) می‌رسد؛ اعلام باز شدن نشان از
+ *    مسیر موجود evaluateBadges → emitGamify (توست/کانفتی خودش) است.
  */
 
 /** شمارش واژه‌های یادگرفتهٔ همهٔ کتاب‌ها از localStorage */
@@ -88,6 +95,8 @@ function refreshBadges(): void {
     quizPerfect: countQuizPerfect(),
     plays: games.plays,
     bestScores: games.bestScores,
+    // فاز G3-04 — برد کامل هر بازی برای نشان‌های جدید آزمایشگاه
+    wins: readGameWins(),
   });
 }
 
@@ -116,6 +125,12 @@ export function awardGameActivity(a: GameActivity): void {
   // کلیدهای واقعی بازی‌ها در hub: تطبیق حافظه = memory · فلپی = flappy-quiz
   if (a.game === "memory" || a.game === "match") missionProgress("match-1", 1);
   if (a.game === "flappy-quiz") missionProgress("flappy-1", 1);
+  // ── فاز G3-03 — ماموریت‌های روزانهٔ بازی (کوئست‌های افزودنی QUEST_POOL) ──
+  missionProgress("answers-20", Math.max(0, a.correct));
+  if (a.game === "memory") missionProgress("memory-pairs-10", Math.max(0, a.correct));
+  if (a.game === "wordle" && a.total > 0 && a.correct >= a.total) missionProgress("wordle-win-2", 1);
+  // ── فاز G3-04 — برد کامل دور برای نشان‌های بازی (قبل از touchActivity تا ارزیابی نشان‌ها ببیند) ──
+  if (a.total > 0 && a.correct >= a.total) recordGameWin(a.game);
   touchActivity();
 }
 

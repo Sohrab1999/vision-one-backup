@@ -7,6 +7,13 @@
  * جفت درست باز می‌ماند (ثبت در SRS + پخش تلفظ)، جفت غلط با لرزش دوباره بسته می‌شود
  * (کاوش است — چیزی ثبت نمی‌شود). رکورد شخصی: کمترین حرکت، تساوی → کمترین زمان؛
  * اسکوپ رکورد: درس (یا کل کتاب) × تعداد جفت.
+ *
+ * فاز G3-01 — سطح دشواری ۳گانه: سطح به‌عنوان «پیش‌فرض هوشمند» تعداد جفت عمل می‌کند
+ * (آسان ۶ / عادی بدون تغییر = دقیقاً رفتار قبلی / سخت ۸ تا سقف استخر)؛ رکورد
+ * آسان/سخت scope پسونددار جدا می‌گیرد (کلیدهای عادی بایت‌به‌بایت دست‌نخورده).
+ * بازی «بهتر = کمتر» است — ضریب امتیاز (levelScore) نمی‌گیرد.
+ * فاز G3-02 — انتخاب هوشمند واژه‌های دور: smartPick با اولویت کارت‌های SRS
+ * ضعیف/سررسید/نو (شروع سرد = همان شافل قبلی).
  */
 
 import {
@@ -46,7 +53,6 @@ import {
   faNum,
   fmtTime,
   loadBest,
-  pickUnique,
   saveAttempt,
   saveBest,
   shuffle,
@@ -64,6 +70,15 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// فاز G3-01/G3-02 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت؛ فقط مصرف)
+import { DifficultyPicker } from "./kit/difficulty-picker";
+import {
+  loadLevelPref,
+  saveLevelPref,
+  scopeWithLevel,
+  type DifficultyKey,
+} from "./kit/difficulty";
+import { countWeak, smartPick } from "./kit/smart-pick";
 
 type Phase = "setup" | "playing" | "done";
 type Side = "en" | "fa";
@@ -85,6 +100,9 @@ interface BestRecord {
 const ALL_LESSONS = -1;
 const GAME_KEY = "memory";
 const PAIR_OPTIONS = [4, 6, 8];
+/** فاز G3-01 — پیش‌فرض هوشمند تعداد جفت: آسان ≤ ۶ جفت / سخت ≥ ۸ جفت (سقف استخر در start سنجیده می‌شود) */
+const EASY_PAIR_CAP = 6;
+const HARD_PAIR_MIN = 8;
 /** قفل کلیک پس از جفت درست تا مکث کوتاه روی فلیپ (ms) */
 const MATCH_LOCK_MS = 400;
 /** مدت لرزش جفت غلط تا بسته‌شدن کارت‌ها (ms) */
@@ -120,6 +138,8 @@ export function MemoryGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState(1);
   const [pairCount, setPairCount] = useState(6);
+  // فاز G3-01 — سطح دشواری ماندگار (پیش‌فرض «عادی» = دقیقاً رفتار قبلی بازی)
+  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
 
   const [cards, setCards] = useState<CardItem[]>([]);
   const [openIds, setOpenIds] = useState<number[]>([]);
@@ -175,6 +195,15 @@ export function MemoryGame() {
     },
     [handleTutorialClose],
   );
+  // فاز G3-01 — تغییر سطح + پیش‌فرض هوشمند تعداد جفت (آسان ۶ / عادی بدون تغییر / سخت ۸)
+  // کاربر همچنان می‌تواند با چیپ‌های «چند جفت؟» دستی تغییرش دهد — سطح فقط پیش‌فرض می‌دهد
+  const handleLevelChange = useCallback((lv: DifficultyKey) => {
+    setLevel(lv);
+    saveLevelPref(GAME_KEY, lv);
+    if (lv === "easy") setPairCount((p) => Math.min(p, EASY_PAIR_CAP));
+    else if (lv === "hard") setPairCount((p) => Math.max(p, HARD_PAIR_MIN));
+    // عادی: تعداد جفت دست‌نخورده — همان پیش‌فرض فعلی بازی
+  }, []);
   // فاز G1-10 — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
 
@@ -182,12 +211,25 @@ export function MemoryGame() {
   const busy = useRef(false);
   const secsRef = useRef(0);
 
+  // فاز G3-02 — استخر پالایش‌شدهٔ درس (حذف معنی‌های تکراری — الگوی قبلی start)؛
+  // مشترک بین انتخاب هوشمند واژه‌های دور و پیام «واژه‌های ضعیف» در setup
+  const setupPool = useMemo(() => {
+    const base = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
+    const seenMeanings = new Set<string>();
+    return base.filter((w) => {
+      if (seenMeanings.has(w.meaning)) return false;
+      seenMeanings.add(w.meaning);
+      return true;
+    });
+  }, [data.vocab, lesson]);
+
   // رکورد شخصی این اسکوپ — اسنپ‌شات رشته‌ای (primitive مثل best در match-game) تا هر خواندن آبجکت تازه نسازد
-  const bestScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${pairCount}`;
+  // فاز G3-01 — اسکوپ سطح‌دار: عادی = همان کلید قبلی بایت‌به‌بایت؛ آسان/سخت کلید افزودنی
+  const scope = scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${pairCount}`, level);
   const bestRaw = useSyncExternalStore(
     subscribeGameData,
     () => {
-      const b = loadBest<BestRecord>(activeBookId, GAME_KEY, bestScope);
+      const b = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
       return b ? JSON.stringify(b) : null;
     },
     () => null,
@@ -247,16 +289,9 @@ export function MemoryGame() {
   );
 
   const start = useCallback(() => {
-    const pool = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
-    // حذف معنی‌های تکراری (الگوی match-game) — تا دو کارت فارسی یکسان بازی را گمراه نکند
-    const seenMeanings = new Set<string>();
-    const deduped = pool.filter((w) => {
-      if (seenMeanings.has(w.meaning)) return false;
-      seenMeanings.add(w.meaning);
-      return true;
-    });
-    // استخر واژه یکتا — برای N جفت باید N واژه متمایز موجود باشد
-    const chosen = pickUnique(deduped, pairCount, (w) => w.word);
+    // فاز G3-02 — انتخاب هوشمند واژه‌های دور (اولویت کارت‌های SRS ضعیف/سررسید/نو؛
+    // شروع سرد = همان شافل قبلی) — جایگزین drop-in برای pickUnique با همان n و keyOf
+    const chosen = smartPick(setupPool, pairCount, (w) => w.word);
     if (chosen.length < pairCount) {
       toast.error(
         `واژه کافی برای ${faNum(pairCount)} جفت پیدا نشد — درس دیگری را امتحان کن یا تعداد جفت را کمتر کن`,
@@ -282,14 +317,14 @@ export function MemoryGame() {
     setFocusIdx(null);
     resume();
     setExitAsk(false);
-    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور
+    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3-01 — level اسکوپ سطح‌دار)
     sessionRef.current = createGameSession({
       game: GAME_KEY,
-      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${pairCount}`,
+      level: scope,
     });
     sessionRef.current.start();
     setPhase("playing");
-  }, [data.vocab, lesson, pairCount, resume]);
+  }, [setupPool, pairCount, resume, scope]);
 
   const finish = useCallback(
     (finalMoves: number, finalSecs: number) => {
@@ -306,10 +341,10 @@ export function MemoryGame() {
         total: pairCount,
         correct: pairCount,
         duration: finalSecs,
-        detail: [{ moves: finalMoves, time: finalSecs }],
+        // فاز G3-01 — سطح دور به‌عنوان فیلد افزودنی داخل ردیف detail
+        detail: [{ moves: finalMoves, time: finalSecs, level }],
       });
       setSecs(finalSecs);
-      const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${pairCount}`;
       const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
       if (!prev || finalMoves < prev.moves || (finalMoves === prev.moves && finalSecs < prev.time)) {
         saveBest(activeBookId, GAME_KEY, scope, { moves: finalMoves, time: finalSecs });
@@ -323,7 +358,7 @@ export function MemoryGame() {
       setLiveMsg("همه جفت‌ها پیدا شد! 🎉");
       setPhase("done");
     },
-    [activeBookId, lesson, pairCount],
+    [activeBookId, lesson, pairCount, scope, level],
   );
 
   const handleCardClick = useCallback(
@@ -487,6 +522,8 @@ export function MemoryGame() {
 
   // ── Setup ──
   if (phase === "setup") {
+    // فاز G3-02 — شمارش کارت‌های ضعیف/سررسید/نو استخر (صفر = تمرکز هوشمند غیرفعال)
+    const weakCount = countWeak(setupPool, (w) => w.word);
     return (
       <>
       <Card className="mx-auto max-w-xl rise-in">
@@ -565,6 +602,24 @@ export function MemoryGame() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* فاز G3-01 — انتخاب سطح دشواری (عادی = دقیقاً رفتار قبلی بازی) */}
+          <DifficultyPicker value={level} onChange={handleLevelChange} />
+          <p className="text-[11px] leading-5 text-muted-foreground">
+            {level === "easy"
+              ? `آسان: پیش‌فرض ${faNum(EASY_PAIR_CAP)} جفت — گرید کوچکتر، رکورد سطح جدا`
+              : level === "hard"
+                ? `سخت: پیش‌فرض ${faNum(HARD_PAIR_MIN)} جفت (تا سقف استخر) — رکورد سطح جدا`
+                : "عادی: همان بازی همیشگی — رکوردهای قبلی دست‌نخورده می‌مانند"}
+          </p>
+          {/* فاز G3-02 — پیام تمرکز هوشمند روی واژه‌های ضعیف (aria-live روی والد) */}
+          <div aria-live="polite">
+            {weakCount > 0 && (
+              <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                🎯 مرکز این دور: {faNum(weakCount)} واژهٔ ضعیف تو
+              </p>
+            )}
           </div>
 
           {best && (

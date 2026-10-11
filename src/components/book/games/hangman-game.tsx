@@ -16,9 +16,18 @@
  *   آموزش ۳گامی (useAutoTutorial) + Pause (تایمر گیت روی paused) + نگهبان خروج +
  *   تله‌متری جلسه (start/end/abandon) — امضاهای shared.ts و کلیدهای localStorage
  *   دست‌نخورده (قانون حفظ‌شوندگی §۳-۴ سند).
+ *
+ * فاز G3 (نقشه راه بازی‌ها — G3-01/G3-02):
+ * - دشواری ۳سطحی با کیت difficulty: آسان = یک بادکنک اضافه (۷ جان) و واژه‌های کوتاه‌تر؛
+ *   عادی = دقیقاً همان رفتار قبلی (۶ بادکنک)؛ سخت = یک بادکنک کمتر (۵ جان — کف ۳) و
+ *   اولویت واژهٔ بلندتر (فیلتر طول ≥ میانگین، فقط وقتی استخر اجازه دهد)؛ امتیاز نهایی
+ *   (رکورد برد) = levelScore؛ اسکوپ رکورد/تله‌متری scopeWithLevel؛ detail.level افزودنی.
+ * - G3-02: انتخاب واژه‌های دور = smartPick جای pickUnique (اولویت SRS ضعیف/سررسید؛
+ *   کلید دقیقاً همان رشته‌ای که recordSRS همین بازی می‌نویسد) + پیام «مرکز این دور:
+ *   N واژهٔ ضعیف تو» در setup با aria-live.
  */
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   CheckCircle2,
   Heart,
@@ -49,7 +58,6 @@ import {
   faNum,
   fmtTime,
   loadBest,
-  pickUnique,
   saveAttempt,
   saveBest,
   subscribeGameData,
@@ -67,6 +75,17 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// فاز G3 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت GameKit v2 — فقط مصرف)
+import {
+  LEVEL_KNOBS,
+  levelScore,
+  loadLevelPref,
+  saveLevelPref,
+  scopeWithLevel,
+  type DifficultyKey,
+} from "./kit/difficulty";
+import { DifficultyPicker } from "./kit/difficulty-picker";
+import { countWeak, smartPick } from "./kit/smart-pick";
 
 type Phase = "setup" | "playing" | "done";
 
@@ -93,7 +112,7 @@ interface DetailRow {
 const ALL_LESSONS = -1;
 const GAME_KEY = "hangman";
 const WORD_OPTIONS = [3, 5];
-/** تعداد جان‌ها = تعداد بادکنک‌ها */
+/** تعداد جان‌های پایه = تعداد بادکنک‌ها در سطح عادی (فاز G3-01: آسان ‎+۱ / سخت ‎−۱ با کف ۳) */
 const MAX_WRONG = 6;
 /** مکث بعد از برد واژه تا پخش تلفظ شنیده شود (ms) */
 const WIN_LOCK_MS = 1400;
@@ -124,8 +143,8 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     icon: <Heart size={24} />,
-    title: "۶ بادکنک = ۶ جان",
-    text: "هر حرف غلط یک بادکنک می‌ترکد؛ اگر همه ترکیدند، واژه را می‌بازی و به مرور هوشمند اضافه می‌شود.",
+    title: "بادکنک‌ها = جان‌های تو",
+    text: "هر حرف غلط یک بادکنک می‌ترکد؛ اگر همه ترکیدند، واژه را می‌بازی و به مرور هوشمند اضافه می‌شود. (در سطح آسان یک بادکنک اضافه داری و در سخت یکی کمتر)",
   },
   {
     icon: <Trophy size={24} />,
@@ -162,6 +181,14 @@ function baseWord(w: string): string {
   return w.replace(/\s*\([^)]*\)\s*/g, " ").trim();
 }
 
+/**
+ * فاز G3-02 — کلید SRS واژهٔ دور: دقیقاً همان رشتهٔ UPPERCASE که recordSRS همین
+ * بازی هنگام برد/باخت می‌نویسد (مطابقت با کارت‌های ضعیف خودِ دارباز).
+ */
+function hangmanKeyOf<T extends { word: string }>(w: T): string {
+  return baseWord(w.word).toUpperCase();
+}
+
 export function HangmanGame() {
   const data = useBookData();
   const { bookId } = useBook();
@@ -171,6 +198,15 @@ export function HangmanGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState(ALL_LESSONS);
   const [count, setCount] = useState(5);
+  // ── فاز G3-01 — سطح دشواری ماندگار ──
+  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+  /** فاز G3-01 — تعداد بادکنک‌های این سطح: آسان ۷ / عادی ۶ (همان قبلی) / سخت ۵ (کف ۳) */
+  const maxWrong =
+    level === "easy"
+      ? MAX_WRONG + 1
+      : level === "hard"
+        ? Math.max(3, MAX_WRONG - 1)
+        : MAX_WRONG;
 
   const [deck, setDeck] = useState<WordItem[]>([]);
   const [idx, setIdx] = useState(0);
@@ -232,6 +268,11 @@ export function HangmanGame() {
   const sessionRef = useRef<GameSessionTracker | null>(null);
 
   const { speed } = useVoiceSpeed();
+  // ── فاز G3 — انتخاب سطح ماندگار (قرارداد کیت: saveLevelPref در onChange) ──
+  const changeLevel = useCallback((l: DifficultyKey) => {
+    setLevel(l);
+    saveLevelPref(GAME_KEY, l);
+  }, []);
   /** قفل double-guess — از حدس هم‌زمان (کلیک + کیبورد) و حین مکث برد/باخت جلوگیری می‌کند */
   const locked = useRef(false);
   /** نگاشت همگامِ used — گارد سنکرون مقابل keydownهای پشت‌سرهم قبل از رندر بعدی */
@@ -244,7 +285,8 @@ export function HangmanGame() {
   const secsRef = useRef(0);
 
   // رکورد شخصی این اسکوپ — snapshot عددی (پایدار برای useSyncExternalStore؛ سرور null)
-  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`;
+  // فاز G3-01 — اسکوپ سطح‌دار: عادی = دقیقاً همان کلید قدیمی (scopeWithLevel)
+  const scope = scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${count}`, level);
   const bestScore = useSyncExternalStore(
     subscribeGameData,
     () => {
@@ -253,6 +295,15 @@ export function HangmanGame() {
     },
     () => null,
   );
+
+  /** استخر واجد شرایط محدودهٔ فعلی — واژه‌های تک‌کلمه‌ای لاتین ۳ تا ۱۰ حرفی */
+  const eligiblePool = useMemo(() => {
+    const pool = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
+    return pool.filter((w) => WORD_RE.test(baseWord(w.word)));
+  }, [data.vocab, lesson]);
+
+  // فاز G3-02 — شمارش واژه‌های ضعیف/سررسید/نوی استخر برای پیام setup
+  const weakCount = useMemo(() => countWeak(eligiblePool, hangmanKeyOf), [eligiblePool]);
 
   // ── تایمر ۱ثانیه‌ای — functional setState + شمارندهٔ دقیق برای Attempt ──
   // فاز G2-a — گیت روی paused: هنگام توقف (دستی یا خودکارِ تب مخفی) هیچ تیکی جلو نمی‌رود
@@ -299,12 +350,14 @@ export function HangmanGame() {
         total: deck.length,
         correct,
         duration: secsRef.current,
-        detail: { words: finalDetail },
+        detail: { words: finalDetail, level },
       });
-      const recScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`;
+      // فاز G3-01 — رکورد = امتیاز سطح‌دار (عادی: همان تعداد برد قبلی)
+      const scaled = levelScore(correct, level);
+      const recScope = scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${count}`, level);
       const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, recScope);
-      if (!prev || correct > prev.score) {
-        saveBest<BestRecord>(activeBookId, GAME_KEY, recScope, { score: correct });
+      if (!prev || scaled > prev.score) {
+        saveBest<BestRecord>(activeBookId, GAME_KEY, recScope, { score: scaled });
         setIsRecord(true);
         playSound("record");
         buzz("record");
@@ -314,7 +367,7 @@ export function HangmanGame() {
       }
       setPhase("done");
     },
-    [activeBookId, lesson, count, deck.length],
+    [activeBookId, lesson, count, deck.length, level],
   );
 
   /** ادامه به واژهٔ بعدی یا پایان دور — ریست کامل وضعیت واژه */
@@ -387,8 +440,8 @@ export function HangmanGame() {
       } else {
         // حرف غلط — فاز G2-a: یک بادکنک می‌ترکد (سه‌کاناله در popBalloon)
         const wrongCount = nextUsed.filter((l) => !current.word.includes(l)).length;
-        popBalloon(MAX_WRONG - wrongCount);
-        if (wrongCount >= MAX_WRONG) {
+        popBalloon(maxWrong - wrongCount);
+        if (wrongCount >= maxWrong) {
           // باخت واژه — متنی هم: «کلمه X بود» + wrong/error در popBalloon
           setLiveMsg(`واژه «${current.word}» بود — به مرور اضافه شد`);
           locked.current = true;
@@ -402,11 +455,11 @@ export function HangmanGame() {
           }, LOSS_LOCK_MS);
         } else {
           // اعلام aria: «یک بادکنک ترکید — N جان مانده»
-          setLiveMsg(`یک بادکنک ترکید — ${faNum(MAX_WRONG - wrongCount)} جان مانده`);
+          setLiveMsg(`یک بادکنک ترکید — ${faNum(maxWrong - wrongCount)} جان مانده`);
         }
       }
     },
-    [advance, deck, detail, idx, paused, popBalloon, speed],
+    [advance, deck, detail, idx, paused, popBalloon, speed, maxWrong],
   );
 
   // ── latest-ref — آخرین نسخهٔ guessLetter برای listener پایدار کیبورد ──
@@ -445,11 +498,25 @@ export function HangmanGame() {
     }
   }, [clearRoundTimers, detail.length, resume, used.length]);
 
-  /** شروع دور — استخر فقط A-Za-z طول ۳..۱۰، یکتا با pickUnique */
+  /**
+   * شروع دور — استخر فقط A-Za-z طول ۳..۱۰، یکتا با smartPick (فاز G3-02: اولویت
+   * کارت‌های SRS ضعیف/سررسید؛ شروع سرد = همان pickUnique قبلی). فاز G3-01 —
+   * فیلتر طول واژه بر اساس سطح: سخت ≥ میانگین / آسان ≤ میانگین (فقط وقتی استخر
+   * اجازه دهد، وگرنه بدون تغییر).
+   */
   const start = useCallback(() => {
-    const pool = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
-    const eligible = pool.filter((w) => WORD_RE.test(baseWord(w.word)));
-    const chosen = pickUnique(eligible, count, (w) => baseWord(w.word).toUpperCase());
+    const eligible = eligiblePool;
+    let cand = eligible;
+    if (eligible.length > count && level !== "normal") {
+      const avg =
+        eligible.reduce((s, w) => s + baseWord(w.word).length, 0) / Math.max(1, eligible.length);
+      const byLen =
+        level === "hard"
+          ? eligible.filter((w) => baseWord(w.word).length >= avg)
+          : eligible.filter((w) => baseWord(w.word).length <= avg);
+      if (byLen.length >= count) cand = byLen;
+    }
+    const chosen = smartPick(cand, count, hangmanKeyOf);
     if (chosen.length < count) {
       toast.error(
         `واژهٔ کافی برای ${faNum(count)} واژه پیدا نشد — درس دیگری را امتحان کن یا تعداد را کمتر کن`,
@@ -478,14 +545,14 @@ export function HangmanGame() {
     setIsRecord(false);
     resume();
     setExitAsk(false);
-    // فاز G2-a — جلسهٔ تازهٔ تله‌متری برای این دور
+    // فاز G2-a — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3: اسکوپ سطح‌دار)
     sessionRef.current = createGameSession({
       game: GAME_KEY,
-      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`,
+      level: scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${count}`, level),
     });
     sessionRef.current.start();
     setPhase("playing");
-  }, [clearRoundTimers, data.vocab, lesson, count, resume]);
+  }, [clearRoundTimers, eligiblePool, lesson, count, level, resume]);
 
   // ── Setup ──
   if (phase === "setup") {
@@ -508,8 +575,8 @@ export function HangmanGame() {
             <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
               <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
               <p>
-                ۶ بادکنک داری؛ هر حرف غلط یک بادکنک می‌ترکد. واژهٔ کامل = تلفظ + ثبت در مرور هوشمند،
-                اما اگر ۶ بادکنک ترکید، واژه را می‌بازی و به صف مرور اضافه می‌شود.
+                {faNum(maxWrong)} بادکنک داری؛ هر حرف غلط یک بادکنک می‌ترکد. واژهٔ کامل = تلفظ + ثبت در
+                مرور هوشمند، اما اگر {faNum(maxWrong)} بادکنک ترکید، واژه را می‌بازی و به صف مرور اضافه می‌شود.
               </p>
             </div>
 
@@ -569,6 +636,26 @@ export function HangmanGame() {
                 ))}
               </div>
             </div>
+
+            {/* فاز G3-01 — انتخاب سطح دشواری ماندگار (کیت difficulty) */}
+            <DifficultyPicker value={level} onChange={changeLevel} />
+            <p className="-mt-3 text-[11px] leading-5 text-muted-foreground">
+              {level === "easy"
+                ? `در این سطح: ${faNum(maxWrong)} بادکنک (یک جان اضافه)، واژه‌های کوتاه‌تر، امتیاز ×۰٫۷`
+                : level === "hard"
+                  ? `در این سطح: ${faNum(maxWrong)} بادکنک، اولویت واژه‌های بلندتر، امتیاز ×۱٫۶`
+                  : "در این سطح: همان تجربهٔ اصلی — ۶ بادکنک و امتیاز معمولی"}
+            </p>
+            {/* فاز G3-02 — تمرکز هوشمند دور روی کارت‌های ضعیف/سررسید SRS */}
+            {weakCount > 0 && (
+              <p
+                role="status"
+                aria-live="polite"
+                className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400"
+              >
+                🎯 مرکز این دور: {faNum(weakCount)} واژهٔ ضعیف تو
+              </p>
+            )}
 
             {bestScore !== null && (
               <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
@@ -650,7 +737,8 @@ export function HangmanGame() {
   const losses = detail.length - wins;
   const pct = Math.round((detail.length / Math.max(deck.length, 1)) * 100);
   const wrongLetters = current ? used.filter((l) => !current.word.includes(l)) : [];
-  const livesLeft = MAX_WRONG - wrongLetters.length;
+  // فاز G3-01 — جان‌های سطح (آسان ۷ / عادی ۶ / سخت ۵)
+  const livesLeft = maxWrong - wrongLetters.length;
   const frozen = result !== null;
 
   return (
@@ -717,7 +805,7 @@ export function HangmanGame() {
             {/* بادکنک‌های جان */}
             <div className="rounded-2xl border bg-card px-4 pb-3 pt-4">
               <div role="group" aria-label="بادکنک‌های جان" className="flex items-end justify-center gap-1.5">
-                {Array.from({ length: MAX_WRONG }, (_, i) => {
+                {Array.from({ length: maxWrong }, (_, i) => {
                   const popped = i >= livesLeft;
                   // فاز G2-a — بادکنکی که همین حالا انیمیشن ترکیدن را پخش می‌کند
                   const popping = popped && popIdx === i;
@@ -735,7 +823,7 @@ export function HangmanGame() {
                       <span
                         className={cn(
                           "absolute inset-0 transition-all duration-500",
-                          BALLOON_TONES[i],
+                          BALLOON_TONES[i % BALLOON_TONES.length],
                           popping
                             ? "hangman-pop" // انیمیشن ترکیدن؛ پس از پایان، کلاس برداشته می‌شود و بادکنک حذف می‌شود
                             : popped

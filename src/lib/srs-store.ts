@@ -181,6 +181,14 @@ export function useSRSData(): Record<string, SrsItem> {
   );
 }
 
+/**
+ * خواندن همگام همهٔ کارت‌های SRS کتاب فعال — برای موتورهای غیرهوکی
+ * (فاز G3-02 نقشه راه بازی‌ها: انتخاب هوشمند واژه). فقط خواندن — هیچ نوشتنی.
+ */
+export function readSrsItems(): Record<string, SrsItem> {
+  return read();
+}
+
 // ─── تنظیمات مرور (سقف کارت نو روزانه) ───
 
 export const NEW_LIMIT_OPTIONS = [5, 10, 15, 20, 30] as const;

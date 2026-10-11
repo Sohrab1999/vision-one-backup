@@ -20,6 +20,14 @@
  * آموزش ۳گامی (useAutoTutorial) + Pause (تایمر گیت روی paused) + نگهبان خروج +
  * تله‌متری جلسه (start/end/abandon) + صدا/لرزش — امضاهای shared.ts و کلیدهای
  * localStorage دست‌نخورده (قانون حفظ‌شوندگی §۳-۴ سند).
+ *
+ * فاز G3-01 — سطح دشواری ۳گانه به‌عنوان «پیش‌فرض هوشمند» (کاربر با چیپ‌ها می‌تواند عوض کند):
+ * آسان = واژهٔ کمتر (۶) و جدول کوچکتر (۸×۸) / عادی بدون تغییر = دقیقاً رفتار قبلی /
+ * سخت = واژهٔ بیشتر (۱۰) و جدول بزرگتر (۱۰×۱۰ — در محدودهٔ خوانایی چیپ‌های موجود).
+ * رکورد «کمترین زمان» (بهتر = کمتر — بدون levelScore) آسان/سخت scope پسونددار جدا
+ * می‌شود (کلیدهای عادی بایت‌به‌بایت دست‌نخورده). تایمر شمارشی است — timeScale ندارد.
+ * فاز G3-02 — انتخاب هوشمند واژه‌های دور: smartPick با اولویت کارت‌های SRS
+ * ضعیف/سررسید/نو (شروع سرد = همان شافل قبلی).
  */
 
 import {
@@ -60,7 +68,6 @@ import {
   shuffle,
   faNum,
   fmtTime,
-  pickUnique,
   loadBest,
   saveBest,
   bumpPlays,
@@ -80,6 +87,15 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// فاز G3-01/G3-02 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت؛ فقط مصرف)
+import { DifficultyPicker } from "./kit/difficulty-picker";
+import {
+  loadLevelPref,
+  saveLevelPref,
+  scopeWithLevel,
+  type DifficultyKey,
+} from "./kit/difficulty";
+import { countWeak, smartPick } from "./kit/smart-pick";
 
 // ─── تایپ‌ها ───
 
@@ -308,6 +324,8 @@ export function WordSearchGame() {
   const [lesson, setLesson] = useState(1);
   const [wordCount, setWordCount] = useState(6);
   const [size, setSize] = useState(8);
+  // فاز G3-01 — سطح دشواری ماندگار (پیش‌فرض «عادی» = دقیقاً رفتار قبلی بازی)
+  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [clues, setClues] = useState<Placement[]>([]);
   const [found, setFound] = useState<Set<string>>(new Set());
@@ -378,10 +396,25 @@ export function WordSearchGame() {
     },
     [handleTutorialClose],
   );
+  // فاز G3-01 — تغییر سطح + پیش‌فرض هوشمند (آسان = واژه/جدول کوچکتر، سخت = بزرگتر؛
+  // کاربر همچنان با چیپ‌های «چند واژه؟/اندازه جدول؟» می‌تواند دستی تغییر دهد)
+  const handleLevelChange = useCallback((lv: DifficultyKey) => {
+    setLevel(lv);
+    saveLevelPref(GAME_KEY, lv);
+    if (lv === "easy") {
+      setWordCount((n) => Math.min(n, WORD_COUNT_OPTIONS[0]));
+      setSize((n) => Math.min(n, SIZE_OPTIONS[0]));
+    } else if (lv === "hard") {
+      setWordCount((n) => Math.max(n, WORD_COUNT_OPTIONS[WORD_COUNT_OPTIONS.length - 1]));
+      setSize((n) => Math.max(n, SIZE_OPTIONS[SIZE_OPTIONS.length - 1]));
+    }
+    // عادی: بدون تغییر — همان پیش‌فرض فعلی بازی
+  }, []);
   // فاز G2-b — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
 
-  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${wordCount}`;
+  // فاز G3-01 — اسکوپ سطح‌دار: عادی = همان کلید قبلی بایت‌به‌بایت؛ آسان/سخت کلید افزودنی
+  const scope = scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${wordCount}`, level);
 
   // استخر معتبر درس انتخابی + شمارندهٔ قابل‌شکار کل کتاب (برچسب چیپ)
   const candidates = useMemo(
@@ -432,7 +465,9 @@ export function WordSearchGame() {
     // اگر واژه‌های جاگیرنده به تعداد خواستی کافی بود از همان‌ها بگیر (برای ۸×۸ واژهٔ ۹حرفی بی‌فایده است)
     const fitting = candidates.filter((w) => baseWordOf(w.word).length <= size);
     const pool = fitting.length >= wordCount ? fitting : candidates;
-    const chosen = pickUnique(pool, wordCount, (w) => baseWordOf(w.word)).map((w) => ({
+    // فاز G3-02 — انتخاب هوشمند واژه‌های دور (اولویت کارت‌های SRS ضعیف/سررسید/نو؛
+    // شروع سرد = همان شافل قبلی) — جایگزین drop-in برای pickUnique با همان n و keyOf
+    const chosen = smartPick(pool, wordCount, (w) => baseWordOf(w.word)).map((w) => ({
       base: baseWordOf(w.word),
       raw: w.word,
       meaning: w.meaning,
@@ -501,7 +536,8 @@ export function WordSearchGame() {
         total,
         correct: foundCount,
         duration: finalTime,
-        detail: (puzzle?.placements ?? []).map((p) => ({ word: p.raw, ok: true })),
+        // فاز G3-01 — سطح دور به‌عنوان فیلد افزودنی در هر ردیف detail (شکل آرایه حفظ شده)
+        detail: (puzzle?.placements ?? []).map((p) => ({ word: p.raw, ok: true, level })),
       });
       const prev = loadBest<BestRecord>(bid, GAME_KEY, scope);
       if (!prev || typeof prev.time !== "number" || finalTime < prev.time) {
@@ -515,7 +551,7 @@ export function WordSearchGame() {
       }
       setPhase("done");
     },
-    [puzzle, bid, lesson, scope],
+    [puzzle, bid, lesson, scope, level],
   );
 
   /**
@@ -749,6 +785,10 @@ export function WordSearchGame() {
 
   // ── Setup ──
   if (phase === "setup") {
+    // فاز G3-02 — شمارش کارت‌های ضعیف/سررسید/نو استخر دور (صفر = تمرکز هوشمند غیرفعال)
+    const fittingNow = candidates.filter((w) => baseWordOf(w.word).length <= size);
+    const weakPool = fittingNow.length >= wordCount ? fittingNow : candidates;
+    const weakCount = countWeak(weakPool, (w) => baseWordOf(w.word));
     return (
       <>
         <Card className="mx-auto max-w-xl rise-in">
@@ -840,6 +880,24 @@ export function WordSearchGame() {
                 سریع‌ترین شکار: {fmtTime(best)}
               </Badge>
             )}
+
+            {/* فاز G3-01 — انتخاب سطح دشواری (عادی = دقیقاً رفتار قبلی بازی) */}
+            <DifficultyPicker value={level} onChange={handleLevelChange} />
+            <p className="text-[11px] leading-5 text-muted-foreground">
+              {level === "easy"
+                ? `آسان: پیش‌فرض ${faNum(WORD_COUNT_OPTIONS[0])} واژه در جدول ${faNum(SIZE_OPTIONS[0])}×${faNum(SIZE_OPTIONS[0])} — رکورد سطح جدا`
+                : level === "hard"
+                  ? `سخت: پیش‌فرض ${faNum(WORD_COUNT_OPTIONS[WORD_COUNT_OPTIONS.length - 1])} واژه در جدول ${faNum(SIZE_OPTIONS[SIZE_OPTIONS.length - 1])}×${faNum(SIZE_OPTIONS[SIZE_OPTIONS.length - 1])} — رکورد سطح جدا`
+                  : "عادی: همان بازی همیشگی — رکوردهای قبلی دست‌نخورده می‌مانند"}
+            </p>
+            {/* فاز G3-02 — پیام تمرکز هوشمند روی واژه‌های ضعیف (aria-live روی والد) */}
+            <div aria-live="polite">
+              {weakCount > 0 && (
+                <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  🎯 مرکز این دور: {faNum(weakCount)} واژهٔ ضعیف تو
+                </p>
+              )}
+            </div>
 
             <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
               <Play size={18} />

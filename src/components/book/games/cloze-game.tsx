@@ -16,6 +16,13 @@
  *   را برای فناوری‌های کمکی اعلام می‌کند.
  * - امضاهای shared.ts (saveAttempt/saveBest/bumpPlays) و کلیدهای localStorage
  *   دست‌نخورده — قانون حفظ‌شوندگی §۳-۴ سند بازی‌ها.
+ *
+ * فاز G3-01 — سطح دشواری ۳گانه: تعداد گزینهٔ هر پرسش (عادی = همان ۳ گزینهٔ قبلی /
+ * آسان ۳ با ریتم آرام‌تر / سخت ۵ گزینهٔ مزاحم با ریتم سریع‌تر — مکث پیشروی ×timeScale).
+ * رکورد (تعداد پاسخ درست از تعداد پرسش) امتیاز عددیِ بازی نیست — ضریب levelScore
+ * نمی‌گیرد؛ رکورد آسان/سخت scope پسونددار جدا می‌شود (کلیدهای عادی بایت‌به‌بایت).
+ * فاز G3-02 — انتخاب هوشمند پرسش‌های دور: smartPick با اولویت کارت‌های SRS
+ * ضعیف/سررسید/نو (شروع سرد = همان شافل قبلی)؛ حواس‌پرتی‌ها همان pickUnique قبلی.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -68,6 +75,17 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// فاز G3-01/G3-02 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت؛ فقط مصرف)
+import { DifficultyPicker } from "./kit/difficulty-picker";
+import {
+  LEVEL_KNOBS,
+  loadLevelPref,
+  optionsFor,
+  saveLevelPref,
+  scopeWithLevel,
+  type DifficultyKey,
+} from "./kit/difficulty";
+import { countWeak, smartPick } from "./kit/smart-pick";
 
 const GAME_KEY = "cloze";
 const ALL_LESSONS = -1;
@@ -75,14 +93,23 @@ const MAX_ITEMS = 40;
 const BLANK = "______";
 const ROUND_OPTIONS = [6, 10, 14];
 const WORD_RE = /^[A-Za-z]{3,14}$/;
-/** فاز G2-b — نگاشت کلیدهای کیبورد ۱..۳ (لاتین + فارسی) به شمارهٔ گزینه */
+/** فاز G3-01 — تعداد گزینهٔ هر پرسش در مسیر عادی (ثابت قبلی بازی — دست‌نخورده) */
+const NORMAL_OPTIONS = 3;
+/** فاز G3-01 — مکث پیشروی بین پرسش‌ها (تایمر ریتم بازی — عادی = همان ۱ ثانیه) */
+const ADVANCE_MS = 1000;
+/** فاز G2-b — نگاشت کلیدهای کیبورد ۱..۵ (لاتین + فارسی) به شمارهٔ گزینه —
+ *  فاز G3-01: گزینه‌های ۴/۵ فقط در سطح سخت فعال می‌شوند (با ۳ گزینه گارد options[n] می‌گیرد) */
 const OPTION_KEYS: Record<string, number> = {
   "1": 1,
   "2": 2,
   "3": 3,
+  "4": 4,
+  "5": 5,
   "۱": 1,
   "۲": 2,
   "۳": 3,
+  "۴": 4,
+  "۵": 5,
 };
 
 type Phase = "setup" | "playing" | "done";
@@ -174,7 +201,7 @@ function collectSentences(data: BookData): SourceSentence[] {
  * هسته ساخت پازل — تابع خالص: برای هر واژه (بدون تکرار) اولین جمله مناسب کتاب را
  * پیدا می‌کند، واژه را با ______ جایگزین و ۲ حواس‌پرتی از همان استخر درس می‌چیند.
  */
-function buildPool(data: BookData, lesson: number): ClozeItem[] {
+function buildPool(data: BookData, lesson: number, distractorCount = 2): ClozeItem[] {
   const vocabPool = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
   const sentences = collectSentences(data);
 
@@ -201,12 +228,13 @@ function buildPool(data: BookData, lesson: number): ClozeItem[] {
     if (!found) continue;
 
     // حواس‌پرتی‌ها از همان استخر درس — baseWord متفاوت + معنی یکتا (بدون ابهام)
+    // (فاز G3-01 — تعداد حواس‌پرتی سطح‌دار؛ پیش‌فرض ۲ = همان رفتار قبلی)
     const distractorPool = vocabPool.filter((w) => {
       const b = toBase(w.word);
       return b !== base && WORD_RE.test(b) && w.meaning !== entry.meaning;
     });
-    const distractors = pickUnique(distractorPool, 2, (w) => `${toBase(w.word)}|${w.meaning}`);
-    if (distractors.length < 2) continue;
+    const distractors = pickUnique(distractorPool, distractorCount, (w) => `${toBase(w.word)}|${w.meaning}`);
+    if (distractors.length < distractorCount) continue;
 
     items.push({
       id: `${lesson}:${base}`,
@@ -259,6 +287,8 @@ export function ClozeGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [rounds, setRounds] = useState<number>(10);
+  // فاز G3-01 — سطح دشواری ماندگار (پیش‌فرض «عادی» = دقیقاً رفتار قبلی بازی)
+  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
 
   const [deck, setDeck] = useState<ClozeItem[]>([]);
   const [idx, setIdx] = useState(0);
@@ -311,6 +341,13 @@ export function ClozeGame() {
     },
     [handleTutorialClose],
   );
+  // فاز G3-01 — تغییر سطح (هم‌صدا با چیپ‌های خود بازی: بازخورد کلیک)
+  const handleLevelChange = useCallback((lv: DifficultyKey) => {
+    playSound("click");
+    buzz("light");
+    setLevel(lv);
+    saveLevelPref(GAME_KEY, lv);
+  }, []);
   // فاز G2-b — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
 
@@ -320,13 +357,17 @@ export function ClozeGame() {
   const wrongRef = useRef<WrongItem[]>([]);
   const secsRef = useRef(0);
 
+  // فاز G3-01 — تعداد گزینهٔ هر پرسش: مسیر عادی = ثابت قبلی (۳)؛ آسان/سخت با optionsFor (کف ۳/سقف ۵)
+  const optCount = level === "normal" ? NORMAL_OPTIONS : optionsFor(level, NORMAL_OPTIONS, 5);
+
   // استخر پازل هر محدوده — یک‌بار برای کل کتاب + هر درس (تابع خالص)
   const pools = useMemo(() => {
     const map = new Map<number, ClozeItem[]>();
     const keys = [ALL_LESSONS, ...data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => l.lesson)];
-    for (const l of keys) map.set(l, buildPool(data, l));
+    // فاز G3-01 — تعداد حواس‌پرتی هر پرسش سطح‌دار است (عادی = ۲ حواس‌پرتی قبلی)
+    for (const l of keys) map.set(l, buildPool(data, l, optCount - 1));
     return map;
-  }, [data]);
+  }, [data, optCount]);
 
   const lessonOptions = useMemo(
     () => [
@@ -339,7 +380,11 @@ export function ClozeGame() {
   );
 
   const poolCount = pools.get(lesson)?.length ?? 0;
-  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`;
+  // فاز G3-01 — اسکوپ سطح‌دار: عادی = همان کلید قبلی بایت‌به‌بایت؛ آسان/سخت کلید افزودنی
+  const scope = scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`, level);
+  // فاز G3-01 — ریتم پیشروی بین پرسش‌ها: عادی = همان ۱ ثانیه؛ آسان/سخت ×timeScale
+  const advanceMs =
+    level === "normal" ? ADVANCE_MS : Math.round(ADVANCE_MS * LEVEL_KNOBS[level].timeScale);
 
   // رکورد شخصی — بدون setState در effect (الگوی match-game با اسنپ‌شات پایدار)
   const best = useSyncExternalStore(
@@ -388,7 +433,9 @@ export function ClozeGame() {
     buzz("light");
     clearAdvance();
     stopSpeaking();
-    setDeck(shuffle(pool).slice(0, Math.min(rounds, pool.length)));
+    // فاز G3-02 — انتخاب هوشمند پرسش‌های دور (اولویت کارت‌های SRS ضعیف/سررسید/نو؛
+    // شروع سرد = همان شافل قبلی) — جایگزین shuffle().slice() با همان n؛ کلید SRS = پاسخ
+    setDeck(smartPick(pool, Math.min(rounds, pool.length), (it) => it.answer));
     setIdx(0);
     setPicked(null);
     setCorrectCount(0);
@@ -400,14 +447,14 @@ export function ClozeGame() {
     setLiveMsg("");
     resume();
     setExitAsk(false);
-    // فاز G2-b — جلسهٔ تازهٔ تله‌متری برای این دور
+    // فاز G2-b — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3-01 — level اسکوپ سطح‌دار)
     sessionRef.current = createGameSession({
       game: GAME_KEY,
-      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`,
+      level: scope,
     });
     sessionRef.current.start();
     setPhase("playing");
-  }, [pools, lesson, rounds, resume, clearAdvance]);
+  }, [pools, lesson, rounds, resume, clearAdvance, scope]);
 
   const finish = useCallback(
     (finalCorrect: number) => {
@@ -425,9 +472,11 @@ export function ClozeGame() {
         total: deck.length,
         correct: finalCorrect,
         duration: secsRef.current,
+        // فاز G3-01 — سطح دور به‌عنوان فیلد افزودنی در هر ردیف detail (شکل آرایه حفظ شده)
         detail: deck.map((it) => ({
           word: it.answer,
           ok: !wrongRef.current.some((w) => w.word === it.answer),
+          level,
         })),
       });
       let newRecord = false;
@@ -453,7 +502,7 @@ export function ClozeGame() {
       setLiveMsg(perfect ? "همه واژه‌ها درست بود — بی‌نقص! 🎉" : "دور تمام شد!");
       setPhase("done");
     },
-    [bookId, deck, lesson, scope],
+    [bookId, deck, lesson, scope, level],
   );
 
   const answer = useCallback(
@@ -495,9 +544,9 @@ export function ClozeGame() {
         } else {
           setIdx(nextIdx);
         }
-      }, 1000);
+      }, advanceMs);
     },
-    [picked, deck, idx, correctCount, speed, finish, paused],
+    [picked, deck, idx, correctCount, speed, finish, paused, advanceMs],
   );
 
   // ── فاز G2-b — کار اختصاصی: کیبورد ۱..۳ برای انتخاب گزینه (رفع شکاف کیبورد سند §۵-G2-b) ──
@@ -546,6 +595,8 @@ export function ClozeGame() {
 
   // ── Setup ──
   if (phase === "setup") {
+    // فاز G3-02 — شمارش کارت‌های ضعیف/سررسید/نو استخر (صفر = تمرکز هوشمند غیرفعال)
+    const weakCount = countWeak(pools.get(lesson) ?? [], (it) => it.answer);
     return (
       <>
         <Card className="mx-auto max-w-xl rise-in">
@@ -647,6 +698,24 @@ export function ClozeGame() {
                 بهترین: {faNum(best.score)} از {faNum(best.total)}
               </Badge>
             )}
+
+            {/* فاز G3-01 — انتخاب سطح دشواری (عادی = دقیقاً رفتار قبلی بازی) */}
+            <DifficultyPicker value={level} onChange={handleLevelChange} />
+            <p className="text-[11px] leading-5 text-muted-foreground">
+              {level === "easy"
+                ? `آسان: ${faNum(optCount)} گزینه و ریتم آرام‌تر — رکورد سطح جدا`
+                : level === "hard"
+                  ? `سخت: ${faNum(optCount)} گزینهٔ مزاحم و ریتم سریع‌تر — رکورد سطح جدا`
+                  : `عادی: همان بازی همیشگی — ${faNum(optCount)} گزینه برای هر پرسش`}
+            </p>
+            {/* فاز G3-02 — پیام تمرکز هوشمند روی واژه‌های ضعیف (aria-live روی والد) */}
+            <div aria-live="polite">
+              {weakCount > 0 && (
+                <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  🎯 مرکز این دور: {faNum(weakCount)} واژهٔ ضعیف تو
+                </p>
+              )}
+            </div>
 
             <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
               <Play size={18} />
@@ -817,7 +886,7 @@ export function ClozeGame() {
                 </div>
 
                 <p className="text-center text-[10px] text-muted-foreground">
-                  با کلیدهای {faNum(1)} تا {faNum(3)} هم می‌توانی گزینه را انتخاب کنی
+                  با کلیدهای {faNum(1)} تا {faNum(optCount)} هم می‌توانی گزینه را انتخاب کنی
                 </p>
               </div>
             )}

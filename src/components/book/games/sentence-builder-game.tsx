@@ -20,6 +20,19 @@
  *   انتقال) و Enter/Space واژه را به استخر برمی‌گرداند — دقیقاً همان رفتار
  *   کلیک روی خانهٔ پر. جابه‌جایی هیچ منطق امتیاز جدیدی نمی‌سازد؛ اگر ردیف
  *   کامل شود همان بررسیِ مشترک placeTile اجرا می‌شود.
+ *
+ * فاز G3 (نقشه راه بازی‌ها — G3-01/G3-02):
+ * - دشواری ۳سطحی با کیت difficulty — این بازی رکورد «سریع‌ترین دور» دارد (نه امتیاز
+ *   عددی و نه تایمر معکوس)، پس از LEVEL_KNOBS فقط hintCostScale مصرف می‌شود:
+ *   هزینهٔ راهنما ×hintCostScale — عادی: هر راهنما رکورد را می‌سوزاند (همان قبلی)؛
+ *   آسان: اولین راهنما نصف‌قیمت است و رکورد می‌ماند (دومی می‌سوزاند)؛ سخت: مثل عادی
+ *   (سوزاندن رکورد سنگین‌ترین هزینهٔ ممکن است). تایمر این بازی کرنومتر صعودی است
+ *   (نه شمارش معکوس) — timeScale اعمال نمی‌شود؛ رکورد زمانی است — scoreMultiplier
+ *   هم معنا ندارد (مستند در worklog G3). اسکوپ رکورد/تله‌متری scopeWithLevel و
+ *   detail.level افزودنی.
+ * - G3-02: انتخاب جمله‌های دور = smartPick (اولویت جمله‌های مرتبط با واژه‌های ضعیف
+ *   SRS — مثال‌های دیکشنری با کلید واژهٔ سردرمدخل؛ شروع سرد = همان شافل قبلی) +
+ *   پیام «مرکز این دور: N واژهٔ ضعیف تو» در setup با aria-live.
  */
 
 import {
@@ -79,6 +92,16 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// فاز G3 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت GameKit v2 — فقط مصرف)
+import {
+  LEVEL_KNOBS,
+  loadLevelPref,
+  saveLevelPref,
+  scopeWithLevel,
+  type DifficultyKey,
+} from "./kit/difficulty";
+import { DifficultyPicker } from "./kit/difficulty-picker";
+import { countWeak, smartPick } from "./kit/smart-pick";
 
 type Phase = "setup" | "playing" | "done";
 type SentenceKind = "reading" | "conversation" | "dict";
@@ -124,6 +147,15 @@ const KIND_LABEL: Record<SentenceKind, string> = {
   conversation: "مکالمه",
   dict: "دیکشنری",
 };
+
+/**
+ * فاز G3-02 — کلید SRS یک جمله: مثال دیکشنری با کلید واژهٔ سردرمدخل (همان رشته‌ای
+ * که بازی‌های واژگانی/آزمون در مرور هوشمند می‌نویسند)؛ جمله‌های ریدینگ/مکالمه کلید
+ * مستقل دارند (در SRS نیستند — وزن برابر، شروع سرد = شافل خالص).
+ */
+function sentenceKeyOf(s: SentenceItem): string {
+  return s.src ?? `sb:${s.en}`;
+}
 
 /**
  * واژهٔ مجاز: فقط حروف/رقم/آندرلاین + آپاستروف، با حداکثر یک نقطه/کاما/علامت
@@ -199,6 +231,12 @@ export function SentenceBuilderGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [count, setCount] = useState<number>(3);
+  // ── فاز G3-01 — سطح دشواری ماندگار + انتخاب ماندگار (قرارداد کیت: saveLevelPref در onChange) ──
+  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+  const changeLevel = useCallback((l: DifficultyKey) => {
+    setLevel(l);
+    saveLevelPref(GAME_KEY, l);
+  }, []);
 
   const [deck, setDeck] = useState<SentenceItem[]>([]);
   const [idx, setIdx] = useState(0);
@@ -277,8 +315,17 @@ export function SentenceBuilderGame() {
     return { items: buildPool(data, lesson, MIN_WORDS_WIDE, MAX_WORDS_WIDE), widened: true };
   }, [data, lesson]);
 
+  // فاز G3-02 — شمارش واژه‌های ضعیف/سررسید SRS در بین جمله‌های قابل‌اتصال
+  // (مثال‌های دیکشنری با کلید سردرمدخل — بقیهٔ جمله‌ها در SRS نیستند)
+  const srsPool = useMemo(() => poolInfo.items.filter((s) => s.src), [poolInfo]);
+  const weakCount = useMemo(
+    () => (srsPool.length > 0 ? countWeak(srsPool, sentenceKeyOf) : 0),
+    [srsPool],
+  );
+
   // رکورد شخصی — snapshot عددی (پایدار برای useSyncExternalStore؛ سرور null)
-  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`;
+  // فاز G3-01 — اسکوپ سطح‌دار: عادی = دقیقاً همان کلید قدیمی (scopeWithLevel)
+  const scope = scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${count}`, level);
   const best = useSyncExternalStore(
     subscribeGameData,
     () => {
@@ -376,11 +423,18 @@ export function SentenceBuilderGame() {
         total: deck.length,
         correct: finalSolved,
         duration: secsRef.current,
-        detail: { hints: hinted, skipped },
+        detail: { hints: hinted, skipped, level },
       });
       // رکورد فقط برای دورِ کاملِ بدون رد کردن و بدون راهنما
-      if (skipped === 0 && hinted === 0) {
-        const recScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`;
+      // فاز G3-01 — هزینهٔ راهنما ×hintCostScale: عادی هر راهنما می‌سوزاند (همان قبلی)؛
+      // آسان اولین راهنما نصف‌قیمت است (۰٫۵ < ۱) و رکورد می‌ماند؛ سخت مثل عادی.
+      const burnsRecord =
+        skipped > 0 || hinted * LEVEL_KNOBS[level].hintCostScale >= 1;
+      if (!burnsRecord) {
+        const recScope = scopeWithLevel(
+          `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`,
+          level,
+        );
         const prev = loadBest<BestRec>(activeBookId, GAME_KEY, recScope);
         if (!prev || secsRef.current < prev.time) {
           saveBest<BestRec>(activeBookId, GAME_KEY, recScope, { time: secsRef.current });
@@ -393,7 +447,7 @@ export function SentenceBuilderGame() {
       setSecs(secsRef.current);
       setPhase("done");
     },
-    [activeBookId, lesson, count, deck.length, hinted, skipped],
+    [activeBookId, lesson, count, deck.length, hinted, skipped, level],
   );
 
   /** ادامه به جملهٔ بعد یا پایان دور */
@@ -534,7 +588,11 @@ export function SentenceBuilderGame() {
     setLiveMsg("همه واژه‌ها به استخر برگشتند");
   }, [paused, slots]);
 
-  /** راهنمای دوم — یک واژهٔ درستِ بعدی را جای‌گذاری می‌کند (رکورد دور می‌سوزد) */
+  /**
+   * راهنمای دوم — یک واژهٔ درستِ بعدی را جای‌گذاری می‌کند.
+   * فاز G3-01 — هزینه ×hintCostScale: عادی/سخت رکورد می‌سوزد (همان قبلی)؛
+   * در آسان اولین راهنما نصف‌قیمت است و پیامش همین را اعلام می‌کند.
+   */
   const applyHint = useCallback(() => {
     if (locked.current || paused) return;
     const empty = slots.indexOf(null);
@@ -542,10 +600,17 @@ export function SentenceBuilderGame() {
     const used = new Set(slots.filter((s): s is number => s !== null));
     const tile = tiles.find((t) => !used.has(t.id) && t.word === words[empty]);
     if (!tile) return;
-    setHinted((h) => h + 1);
+    const nextHinted = hinted + 1;
+    setHinted(nextHinted);
+    const burns = nextHinted * LEVEL_KNOBS[level].hintCostScale >= 1;
     // اگر راهنما جمله را کامل کند، پیام حل جایگزین پیام راهنما می‌شود
-    placeTile(tile.id, "راهنما فعال شد — رکورد این دور می‌سوزد");
-  }, [paused, slots, tiles, words, placeTile]);
+    placeTile(
+      tile.id,
+      burns
+        ? "راهنما فعال شد — رکورد این دور می‌سوزد"
+        : "راهنما فعال شد — در سطح آسان رکورد ماند",
+    );
+  }, [paused, slots, tiles, words, placeTile, hinted, level]);
 
   /** رد کردن — بدون SRS، فقط شمارش و جملهٔ بعد (رکورد دور می‌سوزاند) */
   const skipSentence = useCallback(() => {
@@ -598,10 +663,16 @@ export function SentenceBuilderGame() {
       toast.error("جملهٔ قابل بازی در این محدوده پیدا نشد — درس دیگری را امتحان کن");
       return;
     }
+    // فاز G3-02 — انتخاب هوشمند: اولویت جمله‌های مرتبط با واژه‌های ضعیف/سررسید SRS
+    // (شروع سرد = دقیقاً همان شافل قبلی)؛ کمبود دور با batchهای بعدی جبران می‌شود
+    // (همان امکان تکرار دور قبلی)
     const picked: SentenceItem[] = [];
-    while (picked.length < count) {
-      const batch = shuffle(items).slice(0, Math.min(count - picked.length, items.length));
+    let remaining = count;
+    while (remaining > 0) {
+      const batch = smartPick(items, Math.min(remaining, items.length), sentenceKeyOf);
+      if (batch.length === 0) break;
       picked.push(...batch);
+      remaining -= batch.length;
     }
     if (timer.current !== undefined) window.clearTimeout(timer.current);
     locked.current = false;
@@ -617,14 +688,14 @@ export function SentenceBuilderGame() {
     setExitAsk(false);
     resume();
     loadSentence(picked[0]); // نشانگر کیبورد را هم از نو می‌کند
-    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور
+    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3: اسکوپ سطح‌دار)
     sessionRef.current = createGameSession({
       game: GAME_KEY,
-      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`,
+      level: scopeWithLevel(`${lesson === ALL_LESSONS ? "all" : lesson}:${count}`, level),
     });
     sessionRef.current.start();
     setPhase("playing");
-  }, [poolInfo, count, loadSentence, resume, lesson]);
+  }, [poolInfo, count, loadSentence, resume, lesson, level]);
 
   /**
    * فاز G2-b — کیبورد ردیف ساخت (کار اختصاصی G2-b): نشانگر جایگاه فعال روی wrapper
@@ -817,6 +888,26 @@ export function SentenceBuilderGame() {
                 ))}
               </div>
             </div>
+
+            {/* فاز G3-01 — انتخاب سطح دشواری ماندگار (کیت difficulty) */}
+            <DifficultyPicker value={level} onChange={changeLevel} />
+            <p className="-mt-3 text-[11px] leading-5 text-muted-foreground">
+              {level === "easy"
+                ? "در این سطح: راهنمای اول نصف‌قیمت است و رکورد را نمی‌سوزاند"
+                : level === "hard"
+                  ? "در این سطح: هر راهنما مثل عادی رکورد را می‌سوزاند — راهنما نزن!"
+                  : "در این سطح: همان تجربهٔ اصلی — هر راهنما یا رد کردن رکورد را می‌سوزاند"}
+            </p>
+            {/* فاز G3-02 — تمرکز هوشمند دور روی جمله‌های مرتبط با کارت‌های ضعیف SRS */}
+            {weakCount > 0 && (
+              <p
+                role="status"
+                aria-live="polite"
+                className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400"
+              >
+                🎯 مرکز این دور: {faNum(weakCount)} واژهٔ ضعیف تو
+              </p>
+            )}
 
             <p className="text-center text-[11px] text-muted-foreground">
               استخر این محدوده: <span className="font-black text-foreground">{faNum(poolInfo.items.length)}</span>{" "}

@@ -11,6 +11,9 @@ import { awardXp, awardCoins, emitGamify } from "./xp-store";
  * - localStorage: `visionone:missions:{day}` → { day, quests }
  * - پیشرفت از نقاط رویدادی می‌آید: missionProgress(id, delta)
  * - گرفتن جایزه (claim) فقط از UI و پس از done شدن.
+ * - فاز G3-03: سه کوئست بازی آزمایشگاه فقط «افزودنی» به استخر اضافه شد
+ *   (وردل/تطبیق حافظه/پاسخ‌ها) — idهای آیتم‌های قبلی دست‌نخورده ماند تا
+ *   ماموریت‌های ذخیره‌شدهٔ روزهای قبل همچنان معتبر بمانند.
  */
 
 const POOL_PREFIX = "visionone:missions:";
@@ -31,6 +34,10 @@ export const QUEST_POOL: QuestDef[] = [
   { id: "practice-20", title: "۲۰ واژه تمرین کن", emoji: "📚", target: 20, xp: 40, coins: 8 },
   { id: "match-1", title: "۱ دور بازی تطبیق بزن", emoji: "🧩", target: 1, xp: 25, coins: 5 },
   { id: "flappy-1", title: "۱ دور فلپی گزینش پرواز کن", emoji: "✈️", target: 1, xp: 25, coins: 5 },
+  // ── فاز G3-03 — کوئست‌های افزودنی بازی آزمایشگاه (پیشرفت از awardGameActivity در gamification.ts) ──
+  { id: "wordle-win-2", title: "۲ برد در وردل ویژن", emoji: "🟩", target: 2, xp: 35, coins: 8 },
+  { id: "memory-pairs-10", title: "۱۰ جفت درست در تطبیق حافظه", emoji: "🃏", target: 10, xp: 30, coins: 6 },
+  { id: "answers-20", title: "۲۰ پاسخ درست در بازی‌های آزمایشگاه", emoji: "🎯", target: 20, xp: 40, coins: 8 },
 ];
 
 export interface Mission {

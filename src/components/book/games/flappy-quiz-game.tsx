@@ -24,6 +24,21 @@
  *   و منطق توقف همان مسیر G0-05) + نگهبان خروج حین پرواز + ResultScreen (ستاره‌بندی per-game
  *   و مرور خطاها با معنی واژه) + آموزش ۳گامی (useAutoTutorial) + تله‌متری جلسه.
  *
+ * فاز G3-05 (تمرین بی‌پایان — نقشه راه بازی‌ها؛ فقط فلپی — speed-quiz عامل دیگری):
+ * - دکمهٔ جدا «تمرین بی‌پایان ∞» کنار «شروع پرواز» در setup (پذیرش: دکمهٔ جدا).
+ * - در این حالت هیچ‌چیز دور را تمام نمی‌کند: پاسخ غلط/برخورد قلب کم نمی‌کند — فقط کمبو
+ *   صفر و جریمهٔ فعلی همان است (ریست سرعت، فلاش، مصونیت، صف مرور SRS، صدا/لرزش).
+ *   حلقهٔ rAF و توقف/نگهبان خروج/آموزش/صدا/لرزش همان مسیرهای فعلی کیت می‌مانند.
+ * - پایان فقط با خروج صریح: دکمهٔ «پایان پرواز» در اورلی توقف (تله‌متری end reason=finish)
+ *   یا تأیید نگهبان خروج کیت (همان قرارداد فعلی خروج وسط دور = abandon reason=exit) —
+ *   در لحظهٔ خروج Attempt با پیشرفت فعلی ثبت می‌شود (امضای saveAttempt عیناً موجود؛
+ *   detail فقط افزودنی endless=true) + ResultScreen کیت با آمار امتیاز/بیشترین کمبو/زمان پرواز.
+ * - رکورد scope افزودنی (الگوی تأییدشدهٔ وردل infinite:4): easy:endless / normal:endless
+ *   با همان loadBest/saveBest. Attempt بی‌پایان هرگز جز با خروج صریح ثبت نمی‌شود.
+ * - استخر سؤال بی‌پایان با smartPick کیت (G3-02) چیده می‌شود — اولویت کارت‌های SRS
+ *   ضعیف/سررسید + countWeak برای خط «🎯 مرکز این دور: N واژهٔ ضعیف تو» در setup.
+ *   حالت عادی بازی: صفر تغییر رفتار (قلب‌ها/پایان/رکورد/Attempt/استخر عین قبل).
+ *
  * نکتهٔ فنی: کل دنیای بازی (پرنده، دیوارها، سرعت، کمبو، قلب‌ها) در useRef زندگی می‌کند و حلقهٔ
  * requestAnimationFrame مالک آن است — setState فقط روی رویدادهای گسسته (عبور/برخورد/پایان)
  * صدا می‌زند، نه در هر فریم. فیزیک dt-based است (مستقل از نرخ فریم) با clamp dt≤۵۰ms و
@@ -36,8 +51,11 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import {
   Bird,
   CheckCircle2,
+  Flag,
   Flame,
   Heart,
+  Hourglass,
+  Infinity as InfinityIcon,
   MousePointerClick,
   Pause,
   Play,
@@ -60,6 +78,7 @@ import { useVoiceSpeed } from "@/lib/voice-store";
 import {
   bumpPlays,
   faNum,
+  fmtTime,
   loadBest,
   pickUnique,
   saveAttempt,
@@ -81,6 +100,8 @@ import {
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
 import { useCombo, COMBO_FIRE_CLASS } from "./kit/combo-engine";
+// فاز G3-05 — انتخاب هوشمند واژهٔ کیت (G3-02) — فقط برای استخر سؤال «تمرین بی‌پایان»
+import { countWeak, smartPick } from "./kit/smart-pick";
 
 // ─── ثابت‌ها و انواع ───
 
@@ -166,6 +187,13 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     text: "هر خطا یک ❤ کم می‌کند و کمبو را صفر می‌کند؛ عبورهای پشت‌سرهم بونوس می‌گیرند (۱۰ تا ۲۰ امتیاز). با صفر شدن قلب‌ها پرواز تمام است.",
   },
 ];
+
+/** فاز G3-05 — گام چهارم آموزش فقط برای «تمرین بی‌پایان» (همان مسیر کیت، یک گام بیشتر) */
+const ENDLESS_TUTORIAL_STEP: TutorialStep = {
+  icon: <InfinityIcon size={24} />,
+  title: "پرواز بی‌پایان",
+  text: "اینجا هیچ‌چیز دور را تمام نمی‌کند — هر خطا فقط کمبو را صفر می‌کند. هر وقت خواستی در توقف «پایان پرواز» را بزن تا امتیاز و آمار پروازت ثبت شود.",
+};
 
 // ─── کمکی‌های خالص ───
 
@@ -340,6 +368,9 @@ export function FlappyQuizGame() {
   const [phase, setPhase] = useState<Phase>("setup");
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [easy, setEasy] = useState(false);
+  /** فاز G3-05 — حالت «تمرین بی‌پایان» (state برای UI، ref برای حلقهٔ rAF) */
+  const [endless, setEndless] = useState(false);
+  const endlessRef = useRef(false);
 
   // ── HUD حین بازی (فقط روی رویدادهای گسسته به‌روز می‌شود) ──
   const [hudQ, setHudQ] = useState<QuizQuestionSeed | null>(null);
@@ -364,6 +395,8 @@ export function FlappyQuizGame() {
   const [isRecord, setIsRecord] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongWords, setWrongWords] = useState<string[]>([]);
+  /** فاز G3-05 — زمان پرواز دور بی‌پایان برای ResultScreen (بدون احتساب توقف‌ها) */
+  const [flightTime, setFlightTime] = useState(0);
 
   // ── فاز G2-c — توقف/ادامهٔ استاندارد کیت + نگهبان خروج + کلید صدا ──
   // هوک فقط state توقف را می‌دهد؛ منطق توقف/ادامهٔ حلقهٔ rAF همان مسیر G0-05 است:
@@ -426,6 +459,11 @@ export function FlappyQuizGame() {
       if (!o) handleTutorialClose();
     },
     [handleTutorialClose],
+  );
+  // فاز G3-05 — آموزش بی‌پایان = گام‌های عادی + گام چهارم (فقط حین دور بی‌پایان)
+  const tutorialSteps = useMemo(
+    () => (endless ? [...TUTORIAL_STEPS, ENDLESS_TUTORIAL_STEP] : TUTORIAL_STEPS),
+    [endless],
   );
   // فاز G2-c — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
@@ -498,6 +536,22 @@ export function FlappyQuizGame() {
     () => null,
   );
 
+  // فاز G3-05 — رکورد حالت بی‌پایان: scope افزودنی (الگوی تأییدشدهٔ وردل infinite:4)
+  const bestEndless = useSyncExternalStore(
+    subscribeGameData,
+    () =>
+      loadBest<BestRecord>(activeBookId, GAME_KEY, easy ? "easy:endless" : "normal:endless")?.score ??
+      null,
+    () => null,
+  );
+
+  // فاز G3-05 — شمارش کارت‌های ضعیف/سررسید/نو استخر برای پیام setup (انتخاب هوشمند G3-02)
+  const weakCount = useSyncExternalStore(
+    subscribeGameData,
+    () => countWeak(pool, (q) => q.text),
+    () => 0,
+  );
+
   // ── جریان بازی ──
 
   /** سؤال بعدی از دستهٔ یکتا — اتمام استخر → reshuffle و ادامه */
@@ -564,6 +618,9 @@ export function FlappyQuizGame() {
     pausedAccumRef.current = 0;
     pauseStartRef.current = 0;
     overRef.current = false;
+    // فاز G3-05 — شروع عادی حالت بی‌پایان را قطعاً خاموش می‌کند (رفتار عادی عین قبل)
+    endlessRef.current = false;
+    setEndless(false);
     // فاز G2-c — کمبوی تازه از موتور مشترک کیت
     resetCombo();
     const deck = pickUnique(pool, pool.length, (q) => q.text);
@@ -635,6 +692,124 @@ export function FlappyQuizGame() {
     setScore(finalScore);
     setPhase("done");
   }, [activeBookId, lesson, easy, bestComboRef]);
+
+  // ── فاز G3-05 — شروع «تمرین بی‌پایان» ──
+  // همان resetهای شروع عادی؛ دو تفاوت: حالت بی‌پایان روشن می‌شود (قلب دیگر پایان‌دهنده نیست)
+  // و استخر سؤال با smartPick کیت (G3-02 — اولویت کارت‌های SRS ضعیف/سررسید) چیده می‌شود.
+  const startEndless = useCallback(() => {
+    if (pool.length < MIN_POOL) {
+      toast.error(`سؤال واژگانی کافی در این محدوده نیست — دست‌کم ${faNum(MIN_POOL)} سؤال لازم است`);
+      return;
+    }
+    playSound("click");
+    buzz("light");
+    const cfg = easy ? EASY_CFG : NORMAL_CFG;
+    cfgRef.current = cfg;
+    speedRef.current = cfg.base;
+    birdRef.current = { y: H / 2, vy: 0 };
+    wallsRef.current = [];
+    popupsRef.current = [];
+    hudWallRef.current = null;
+    scoreRef.current = 0;
+    heartsRef.current = HEARTS;
+    totalRef.current = 0;
+    correctRef.current = 0;
+    wrongRef.current = [];
+    invulnUntilRef.current = 0;
+    flashUntilRef.current = 0;
+    lastFlapAtRef.current = 0;
+    startedAtRef.current = performance.now();
+    pausedAccumRef.current = 0;
+    pauseStartRef.current = 0;
+    overRef.current = false;
+    endlessRef.current = true;
+    setEndless(true);
+    setFlightTime(0);
+    resetCombo();
+    // فاز G3-05 — استخر بی‌پایان با انتخاب هوشمند کیت (شروع سرد: شافل خالص مثل قبل)
+    const deck = smartPick(pool, pool.length, (q) => q.text);
+    deckRef.current = deck;
+    deckIdxRef.current = 0;
+    setHudQ(deck.length > 0 ? deck[0] : null);
+    setScore(0);
+    setHearts(HEARTS);
+    setIsRecord(false);
+    setCorrectCount(0);
+    setWrongWords([]);
+    setLiveMsg("تمرین بی‌پایان شروع شد — هیچ‌چیز دور را تمام نمی‌کند ∞");
+    resume();
+    setExitAskSafe(false);
+    // جلسهٔ تازهٔ تله‌متری — level افزودنی با پسوند :endless (بدون PII)
+    sessionRef.current = createGameSession({
+      game: GAME_KEY,
+      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${easy ? "easy" : "normal"}:endless`,
+    });
+    sessionRef.current.start();
+    setPhase("playing");
+  }, [pool, easy, lesson, resetCombo, resume, setExitAskSafe]);
+
+  // ── فاز G3-05 — پایان «تمرین بی‌پایان»: فقط با خروج صریح ──
+  // دو مسیر: دکمهٔ «پایان پرواز» در اورلی توقف (reason=finish) و تأیید نگهبان خروج کیت
+  // (reason=exit — همان قرارداد فعلی فایل برای خروج وسط دور). هر دو در لحظهٔ خروج:
+  // Attempt با پیشرفت فعلی (امضای عیناً موجود؛ detail فقط افزودنی endless=true) + تله‌متری
+  // + ResultScreen کیت. رکورد: scope افزودنی easy:endless / normal:endless.
+  const finishEndless = useCallback(
+    (reason: "finish" | "exit") => {
+      if (overRef.current) return;
+      overRef.current = true;
+      // اگر حین توقف پایان داده شد (اورلی توقف/نگهبان)، همین قطعهٔ توقف هم از زمان پرواز کسر شود
+      if (pausedRef.current && pauseStartRef.current > 0) {
+        pausedAccumRef.current += performance.now() - pauseStartRef.current;
+        pauseStartRef.current = 0;
+      }
+      const total = totalRef.current;
+      const finalScore = scoreRef.current;
+      // مدت پرواز بدون احتساب زمان توقف (همان فرمول finish عادی)
+      const elapsed = Math.max(
+        1,
+        Math.round((performance.now() - startedAtRef.current - pausedAccumRef.current) / 1000),
+      );
+      touchStreak();
+      recordStudySession();
+      bumpPlays(activeBookId, GAME_KEY);
+      stopSpeaking();
+      // تله‌متری — پایان با دکمه = end(finish)؛ خروج با نگهبان = abandon(exit) مثل قبل
+      if (reason === "finish") sessionRef.current?.end("finish");
+      else sessionRef.current?.abandon("exit");
+      playSound("finish");
+      buzz("success");
+      // Attempt فقط در همین خروج صریح و فقط با پیشرفت (گارد total — عین finish عادی)
+      if (total > 0) {
+        saveAttempt(activeBookId, GAME_KEY, {
+          lesson: lesson === ALL_LESSONS ? 0 : lesson,
+          total,
+          correct: correctRef.current,
+          duration: elapsed,
+          detail: { score: finalScore, maxCombo: bestComboRef.current, endless: true },
+        });
+      }
+      const scope = easy ? "easy:endless" : "normal:endless";
+      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+      if (finalScore > 0 && finalScore > (prev?.score ?? 0)) {
+        saveBest(activeBookId, GAME_KEY, scope, { score: finalScore });
+        setIsRecord(prev !== null);
+        if (prev !== null) {
+          playSound("record");
+          buzz("record");
+          toast.success(`رکورد جدید! ${faNum(finalScore)} امتیاز 🏆`);
+        }
+      } else {
+        setIsRecord(false);
+      }
+      setFlightTime(elapsed);
+      setCorrectCount(correctRef.current);
+      setWrongWords([...wrongRef.current]);
+      setScore(finalScore);
+      setExitAskSafe(false);
+      setPhase("done");
+    },
+    [activeBookId, lesson, easy, bestComboRef, setExitAskSafe],
+  );
 
   // انصراف حین پرواز — فاز G2-c (نگهبان خروج): با هر پیشرفت، GameExitGuard؛
   // پیش از اولین دیوار، خروج مستقیم + تله‌متری abandon
@@ -757,8 +932,9 @@ export function FlappyQuizGame() {
           buzz("light");
           setLiveMsg(`+${faNum(gained)} امتیاز — کمبو ×${faNum(comboCountRef.current)} 🔥`);
         } else {
-          // دهانهٔ غلط یا برخورد با بدنهٔ دیوار — یک ❤ کم، کمبو صفر (کیت)، فلاش، صف مرور، مصونیت ۱ث
-          heartsRef.current -= 1;
+          // دهانهٔ غلط یا برخورد با بدنهٔ دیوار — کمبو صفر (کیت)، فلاش، صف مرور، مصونیت ۱ث
+          // فاز G3-05 — در تمرین بی‌پایان قلب کم نمی‌شود (دور با خطا تمام نمی‌شود)؛ بقیهٔ جریمه همان است
+          if (!endlessRef.current) heartsRef.current -= 1;
           registerMiss();
           speedRef.current = cfg.base;
           wl.ok = false;
@@ -771,7 +947,11 @@ export function FlappyQuizGame() {
           // فاز G2-c — بازخورد سه‌کانالهٔ خطای دیوار
           playSound("wrong");
           buzz("error");
-          setLiveMsg(`دهانهٔ غلط — پاسخ درست «${word}» بود — یک ❤ کم شد`);
+          setLiveMsg(
+            endlessRef.current
+              ? `دهانهٔ غلط — پاسخ درست «${word}» بود — کمبو ریست شد`
+              : `دهانهٔ غلط — پاسخ درست «${word}» بود — یک ❤ کم شد`,
+          );
         }
         syncHud();
         if (hudWallRef.current === wl) {
@@ -787,14 +967,19 @@ export function FlappyQuizGame() {
       // زمین/سقف — یک ❤ کم و پرنده به میانه برمی‌گردد
       if (bird.y + BIRD_R >= H - GROUND_H || bird.y - BIRD_R <= 0) {
         if (now >= invulnUntilRef.current) {
-          heartsRef.current -= 1;
+          // فاز G3-05 — در تمرین بی‌پایان قلب کم نمی‌شود؛ فلاش/مصونیت/صدا همان مسیر عادی
+          if (!endlessRef.current) heartsRef.current -= 1;
           flashUntilRef.current = now + FLASH_MS;
           invulnUntilRef.current = now + 700;
           syncHud();
           // فاز G2-c — بازخورد سه‌کانالهٔ برخورد با زمین/سقف (لحظهٔ رویداد، نه هر فریم)
           playSound("wrong");
           buzz("error");
-          setLiveMsg("برخورد با زمین/سقف — یک ❤ کم شد");
+          setLiveMsg(
+            endlessRef.current
+              ? "برخورد با زمین/سقف — ادامه بده ∞"
+              : "برخورد با زمین/سقف — یک ❤ کم شد",
+          );
         }
         bird.y = H / 2;
         bird.vy = 0;
@@ -872,7 +1057,8 @@ export function FlappyQuizGame() {
       last = now;
       step(now, dt);
       draw(ctx, now);
-      if (heartsRef.current <= 0) finishRef.current();
+      // فاز G3-05 — در تمرین بی‌پایان قلب‌ها پایان‌دهنده نیستند (پایان فقط با خروج صریح)
+      if (!endlessRef.current && heartsRef.current <= 0) finishRef.current();
     };
     raf = requestAnimationFrame(tick);
 
@@ -978,17 +1164,41 @@ export function FlappyQuizGame() {
                 بهترین امتیاز: {faNum(best)}
               </Badge>
             )}
+            {bestEndless !== null && (
+              <Badge
+                variant="outline"
+                className="gap-1.5 border-teal-500/40 text-teal-600 dark:text-teal-400"
+              >
+                <InfinityIcon size={12} />
+                بهترین امتیاز بی‌پایان: {faNum(bestEndless)}
+              </Badge>
+            )}
 
-            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
-              <Play size={18} />
-              شروع پرواز
-            </Button>
+            {/* فاز G3-05 — دکمهٔ جدا «تمرین بی‌پایان» کنار شروع عادی (پذیرش G3-05) */}
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+                <Play size={18} />
+                شروع پرواز
+              </Button>
+              <Button size="lg" variant="outline" className="h-12 w-full gap-2 text-base" onClick={startEndless}>
+                <InfinityIcon size={18} className="text-teal-600 dark:text-teal-400" />
+                تمرین بی‌پایان ∞
+              </Button>
+            </div>
+            <p className="-mt-3 text-center text-[11px] leading-5 text-muted-foreground">
+              بی‌پایان: خطا دور را تمام نمی‌کند (فقط کمبو صفر می‌شود) — پرواز تا «پایان پرواز» خودت ادامه دارد و رکورد جدا ثبت می‌شود.
+            </p>
+            {weakCount > 0 && (
+              <p className="-mt-3 text-center text-[11px] font-bold text-teal-600 dark:text-teal-400">
+                🎯 مرکز این دور: {faNum(weakCount)} واژهٔ ضعیف تو
+              </p>
+            )}
           </CardContent>
         </Card>
         {/* فاز G2-c — آموزش یک‌بارنمایش در اولین ورود */}
         <TutorialOverlay
           game={GAME_KEY}
-          steps={TUTORIAL_STEPS}
+          steps={tutorialSteps}
           open={tutorialOpen}
           onOpenChange={handleTutorialOpenChange}
         />
@@ -1000,33 +1210,68 @@ export function FlappyQuizGame() {
   if (phase === "done") {
     // ستاره‌بندی per-game: دور معمول ۶-۱۵ عبور × ۱۰-۲۰ امتیاز است →
     // ≥۱۲۰ = پرواز قوی (۳ ستاره)، ≥۷۰ = خوب (۲ ستاره)، بقیه ۱ ستاره
-    const stars = score >= 120 ? 3 : score >= 70 ? 2 : 1;
+    // فاز G3-05 — دور بی‌پایان می‌تواند خیلی بلندتر شود → آستانه‌ها ۲× دور عادی
+    const stars = endless
+      ? score >= 240
+        ? 3
+        : score >= 120
+          ? 2
+          : 1
+      : score >= 120
+        ? 3
+        : score >= 70
+          ? 2
+          : 1;
     return (
       <ResultScreen
-        title="پرواز تمام شد!"
+        title={endless ? "پرواز بی‌پایان تمام شد!" : "پرواز تمام شد!"}
         stars={stars}
         isRecord={isRecord}
         errorCount={wrongWords.length}
         reviewItems={wrongWords.map((w) => ({ front: w, back: meaningOf(w) }))}
-        stats={[
-          {
-            label: "امتیاز",
-            value: faNum(score),
-            icon: <Star size={16} className="text-amber-500" />,
-          },
-          {
-            label: "عبور درست",
-            value: faNum(correctCount),
-            icon: <CheckCircle2 size={16} className="text-emerald-500" />,
-          },
-          {
-            label: "بهترین کمبو",
-            value: `×${faNum(maxCombo)}`,
-            icon: <Flame size={16} className="text-teal-500" />,
-          },
-        ]}
-        onReplay={start}
-        onExit={() => setPhase("setup")}
+        stats={
+          endless
+            ? [
+                {
+                  label: "امتیاز",
+                  value: faNum(score),
+                  icon: <Star size={16} className="text-amber-500" />,
+                },
+                {
+                  label: "بیشترین کمبو",
+                  value: `×${faNum(maxCombo)}`,
+                  icon: <Flame size={16} className="text-teal-500" />,
+                },
+                {
+                  label: "زمان پرواز",
+                  value: fmtTime(flightTime),
+                  icon: <Hourglass size={16} className="text-emerald-500" />,
+                },
+              ]
+            : [
+                {
+                  label: "امتیاز",
+                  value: faNum(score),
+                  icon: <Star size={16} className="text-amber-500" />,
+                },
+                {
+                  label: "عبور درست",
+                  value: faNum(correctCount),
+                  icon: <CheckCircle2 size={16} className="text-emerald-500" />,
+                },
+                {
+                  label: "بهترین کمبو",
+                  value: `×${faNum(maxCombo)}`,
+                  icon: <Flame size={16} className="text-teal-500" />,
+                },
+              ]
+        }
+        onReplay={endless ? startEndless : start}
+        onExit={() => {
+          setEndless(false);
+          endlessRef.current = false;
+          setPhase("setup");
+        }}
         exitLabel="تنظیمات"
       />
     );
@@ -1065,20 +1310,31 @@ export function FlappyQuizGame() {
                 کمبو ×۱
               </Badge>
             )}
-            <span
-              role="img"
-              aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`}
-              className="flex items-center gap-1"
-            >
-              {Array.from({ length: HEARTS }, (_, i) => (
-                <Heart
-                  key={i}
-                  size={15}
-                  fill={i < hearts ? "currentColor" : "none"}
-                  className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
-                />
-              ))}
-            </span>
+            {endless ? (
+              // فاز G3-05 — در بی‌پایان قلب معنا ندارد (هیچ‌چیز دور را تمام نمی‌کند)
+              <Badge
+                variant="outline"
+                className="gap-1.5 border-teal-500/50 bg-teal-500/10 px-2.5 py-1 text-[13px] font-black text-teal-600 dark:text-teal-400"
+              >
+                <InfinityIcon size={13} />
+                بی‌پایان
+              </Badge>
+            ) : (
+              <span
+                role="img"
+                aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`}
+                className="flex items-center gap-1"
+              >
+                {Array.from({ length: HEARTS }, (_, i) => (
+                  <Heart
+                    key={i}
+                    size={15}
+                    fill={i < hearts ? "currentColor" : "none"}
+                    className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
+                  />
+                ))}
+              </span>
+            )}
           </>
         }
         liveMsg={liveMsg}
@@ -1131,24 +1387,50 @@ export function FlappyQuizGame() {
                 <Play size={16} />
                 ادامهٔ بازی
               </Button>
+              {endless && (
+                // فاز G3-05 — پایان فقط با خروج صریح: دکمهٔ «پایان پرواز» در اورلی توقف
+                <Button
+                  variant="outline"
+                  className="h-11 gap-2 border-teal-500/50 text-teal-700 hover:bg-teal-500/10 dark:text-teal-400"
+                  onClick={() => finishEndless("finish")}
+                >
+                  <Flag size={16} />
+                  پایان پرواز
+                </Button>
+              )}
             </div>
           )}
         </div>
 
         <p className="text-center text-[11px] text-muted-foreground">
-          کلیک/لمس روی بوم یا Space = بال زدن — از دهانهٔ گزینهٔ درست رد شو
+          {endless
+            ? "کلیک/لمس یا Space = بال زدن — هیچ‌چیز دور را تمام نمی‌کند؛ پایان پرواز: توقف ⏸ ← «پایان پرواز» یا خروج"
+            : "کلیک/لمس روی بوم یا Space = بال زدن — از دهانهٔ گزینهٔ درست رد شو"}
         </p>
 
         {/* فاز G2-c — نگهبان خروج استاندارد کیت (حین پرواز با پیشرفت) */}
         <GameExitGuard
           open={exitAsk}
+          // فاز G3-05 — در بی‌پایان تأیید خروج = پایان صریح دور (متن پیش‌فرض فقط برای دور عادی)
+          title={endless ? "پرواز بی‌پایان همین‌جا تمام شود؟ 🏁" : undefined}
+          description={
+            endless
+              ? "امتیاز و آمار همین لحظه ثبت می‌شود و صفحهٔ نتیجهٔ دور را می‌بینی."
+              : undefined
+          }
+          confirmLabel={endless ? "آره، پایان پرواز" : undefined}
           onOpenChange={(o) => {
             setExitAskSafe(o);
             // انصراف از خروج (Esc/کلیک بیرون/«نه») → پرواز از همان‌جا ادامه یابد
             if (!o) resume();
           }}
           onConfirm={() => {
-            // فاز G2-c — رهاکردن دور نیمه‌کاره + تله‌متری
+            // فاز G3-05 — در تمرین بی‌پایان خروج صریح است: Attempt + تله‌متری + نتیجه
+            if (endlessRef.current) {
+              finishEndless("exit");
+              return;
+            }
+            // فاز G2-c — رهاکردن دور نیمه‌کاره + تله‌متری (مسیر عادی — عین قبل)
             sessionRef.current?.abandon("exit");
             stopSpeaking();
             overRef.current = true;
@@ -1161,7 +1443,7 @@ export function FlappyQuizGame() {
       {/* فاز G2-c — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay
         game={GAME_KEY}
-        steps={TUTORIAL_STEPS}
+        steps={tutorialSteps}
         open={tutorialOpen}
         onOpenChange={handleTutorialOpenChange}
       />
