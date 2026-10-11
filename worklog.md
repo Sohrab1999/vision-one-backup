@@ -2599,3 +2599,18 @@ Work Log:
 
 Stage Summary:
 - گیت‌هاب کامل همگام (ac2a242) · پیش‌نمایش سالم و گرم · توصیه به کاربر: بعد از هر ری‌استارت سرور چند ثانیه صبر/ریفرش پنل پیش‌نمایش
+
+---
+Task ID: preview-fix-2
+Agent: main orchestrator (Z.ai Code)
+Task: ریشه‌یابی قطعی «refused to connect» در پنل پیش‌نمایش (اسکرین‌شات کاربر)
+
+Work Log:
+- اسکرین‌شات کاربر: پنل پیش‌نمایش پیام «preview-chat-<session>.space-z.ai refused to connect» می‌داد → علامت کلاسیک بلاک‌شدن iframe با هدر فریم‌محافظ
+- ریشه: next.config.ts فاز ۱۱ هدر «X-Frame-Options: DENY» می‌فرستاد؛ پنل پیش‌نمایش اپ را در iframe از مبدأ متفاوت (preview-chat-...space-z.ai) بار می‌کند → مرورگر اتصال را رد کرد
+- اصلاح: حذف X-Frame-Options: DENY و جایگزینی با Content-Security-Policy: frame-ancestors * (فقط والد فریم را کنترل می‌کند، با اسکریپت‌های inline Next تداخل ندارد؛ بقیه هدرها: nosniff/Referrer-Policy/Permissions-Policy دست‌نخورده)
+- راستی‌آزمایی: curl → هدر جدید اعمال شد (بدون ری‌استارت، همان پروسه) · agent-browser → صفحه باز، صفر خطای کنسول · lint صفر
+- درس: هدرهای امنیتی نباید فریم‌شدن را کلاً ببندند — در این محیط پیش‌نمایش همیشه iframe از مبدأ متفاوت است
+
+Stage Summary:
+- پیش‌نمایش باید پس از رفرش پنل فوری بیاید (کش گرم + هدر اصلاح‌شده) · کامیت و پوش روی backup/main
