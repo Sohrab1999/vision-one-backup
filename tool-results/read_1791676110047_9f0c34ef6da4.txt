@@ -1,0 +1,1383 @@
+     1→     1→"use client";
+     2→     2→
+     3→     3→/**
+     4→     4→ * بازی «نقشه ماجراجویی» (Adventure Map) — فاز ۴ نقشه راه ویژن‌وان.
+     5→     5→ *
+     6→     6→ * مسیری مارپیچ با ۸ گره؛ هر گره یک مینی‌چالش کوتاه از واژگان درس جاری است:
+     7→     7→ * (۱) آزمون واژه — ۳ سؤال چهارگزینه‌ای؛ (۲) حروف جابه‌جا — ۱ واژه با tiles لمسی؛
+     8→     8→ * (۳) جفت‌سازی — ۲ جفت انگلیسی↔فارسی؛ (۴) شنیداری — ۱ واژه با تلفظ.
+     9→     9→ * ترتیب چهار نوع چالش در هر دور تصادفی است و چرخه دو بار تکرار می‌شود.
+    10→    10→ * داوری هر مرحله: صفر خطا = ۳ ستاره، یک خطا = ۲ ستاره، بیشتر = ۱ ستاره؛
+    11→    11→ * مرحله در هر حالت کامل می‌شود و فقط گرهٔ بعدی آزاد می‌شود.
+    12→    12→ * پیشرفت (ستاره‌ها + گره‌های تمام‌شده + ترتیب چالش‌ها) در localStorage ذخیره
+    13→    13→ * می‌شود تا با رفرش وسط ماجراجویی از دست نرود.
+    14→    14→ */
+    15→    15→
+    16→    16→import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    17→    17→import {
+    18→    18→  CheckCircle2,
+    19→    19→  Compass,
+    20→    20→  Headphones,
+    21→    21→  Link2,
+    22→    22→  ListChecks,
+    23→    23→  Lock,
+    24→    24→  Map,
+    25→    25→  PartyPopper,
+    26→    26→  Play,
+    27→    27→  RotateCcw,
+    28→    28→  Shuffle,
+    29→    29→  Sparkles,
+    30→    30→  Sprout,
+    31→    31→  Star,
+    32→    32→  Trophy,
+    33→    33→  Volume2,
+    34→    34→  XCircle,
+    35→    35→  type LucideIcon,
+    36→    36→} from "lucide-react";
+    37→    37→import { Button } from "@/components/ui/button";
+    38→    38→import {
+    39→    39→  AlertDialog,
+    40→    40→  AlertDialogAction,
+    41→    41→  AlertDialogCancel,
+    42→    42→  AlertDialogContent,
+    43→    43→  AlertDialogDescription,
+    44→    44→  AlertDialogFooter,
+    45→    45→  AlertDialogHeader,
+    46→    46→  AlertDialogTitle,
+    47→    47→} from "@/components/ui/alert-dialog";
+    48→    48→import { Card, CardContent } from "@/components/ui/card";
+    49→    49→import { Badge } from "@/components/ui/badge";
+    50→    50→import { cn } from "@/lib/utils";
+    51→    51→import { toast } from "sonner";
+    52→    52→import { useBook, useBookData } from "@/lib/book-context";
+    53→    53→import { recordSRS } from "@/lib/srs-store";
+    54→    54→import { touchStreak } from "@/lib/streak-store";
+    55→    55→import { recordStudySession } from "@/lib/goal-store";
+    56→    56→import { speak, stopSpeaking } from "@/lib/speak";
+    57→    57→import { useVoiceSpeed } from "@/lib/voice-store";
+    58→    58→import {
+    59→    59→  bumpPlays,
+    60→    60→  faNum,
+    61→    61→  loadBest,
+    62→    62→  notifyGameData,
+    63→    63→  pickUnique,
+    64→    64→  saveAttempt,
+    65→    65→  saveBest,
+    66→    66→  shuffle,
+    67→    67→  subscribeGameData,
+    68→    68→} from "./shared";
+    69→    69→
+    70→    70→type Phase = "setup" | "map" | "challenge" | "done";
+    71→    71→
+    72→    72→/** انواع مینی‌چالش — چرخهٔ ۴تایی که هر دور با ترتیب تصادفی دو بار تکرار می‌شود */
+    73→    73→type StageType = 0 | 1 | 2 | 3;
+    74→    74→
+    75→    75→const GAME_KEY = "adventure-map";
+    76→    76→const ALL_LESSONS = -1;
+    77→    77→const TOTAL_STAGES = 8;
+    78→    78→const MAX_STARS = 24;
+    79→    79→/** ترتیب پیش‌فرض چرخه — فقط برای ذخیره‌های قدیمی بدون «order» */
+    80→    80→const DEFAULT_ORDER: StageType[] = [0, 1, 2, 3, 0, 1, 2, 3];
+    81→    81→
+    82→    82→const STAGE_META: { label: string; icon: LucideIcon }[] = [
+    83→    83→  { label: "آزمون واژه", icon: ListChecks },
+    84→    84→  { label: "حروف جابه‌جا", icon: Shuffle },
+    85→    85→  { label: "جفت‌سازی", icon: Link2 },
+    86→    86→  { label: "شنیداری", icon: Headphones },
+    87→    87→];
+    88→    88→
+    89→    89→/** فقط واژه‌های تک‌کلمه‌ای لاتینِ ۳ تا ۱۲ حرفی وارد چالش حروف جابه‌جا می‌شوند */
+    90→    90→const WORD_RE = /^[A-Za-z]{3,12}$/;
+    91→    91→
+    92→    92→interface QuizQ {
+    93→    93→  word: string;
+    94→    94→  meaning: string;
+    95→    95→  options: string[];
+    96→    96→  answer: number;
+    97→    97→}
+    98→    98→
+    99→    99→/** حرف با شناسه یکتا — حروف تکراری مستقل مدیریت می‌شوند (ایندکس‌محور) */
+   100→   100→interface Tile {
+   101→   101→  id: number;
+   102→   102→  letter: string;
+   103→   103→}
+   104→   104→
+   105→   105→interface MatchCard {
+   106→   106→  id: number;
+   107→   107→  side: "en" | "fa";
+   108→   108→  word: string;
+   109→   109→  meaning: string;
+   110→   110→}
+   111→   111→
+   112→   112→/** شکل رکورد شخصی — مجموع ستارهٔ دور کامل (از ۲۴) */
+   113→   113→interface BestRec {
+   114→   114→  score: number;
+   115→   115→}
+   116→   116→
+   117→   117→/** پیشرفت ذخیره‌شدهٔ ماجراجویی در localStorage */
+   118→   118→interface AdventureProgress {
+   119→   119→  stars: number[];
+   120→   120→  done: boolean[];
+   121→   121→  /** ترتیب چالش‌های این دور — برای سازگاری نقشه بعد از رفرش */
+   122→   122→  order?: StageType[] | null;
+   123→   123→}
+   124→   124→
+   125→   125→/** وضعیت مینی‌چالش جاری — هر نوع، فیلدهای خودش را پر می‌کند */
+   126→   126→interface ChallengeState {
+   127→   127→  idx: number;
+   128→   128→  type: StageType;
+   129→   129→  errors: number;
+   130→   130→  questions: QuizQ[];
+   131→   131→  qIdx: number;
+   132→   132→  picked: number | null;
+   133→   133→  word: string;
+   134→   134→  meaning: string;
+   135→   135→  tiles: Tile[];
+   136→   136→  slots: (number | null)[];
+   137→   137→  shake: boolean;
+   138→   138→  cards: MatchCard[];
+   139→   139→  sel: number | null;
+   140→   140→  matchedIds: number[];
+   141→   141→  wrongIds: number[];
+   142→   142→  saidIds: number[];
+   143→   143→  resultStars: number | null;
+   144→   144→}
+   145→   145→
+   146→   146→/** واژهٔ پایه — حذف نشانه‌های دستوری داخل پرانتز: "dry (adj.)" → "dry" */
+   147→   147→function baseWord(w: string): string {
+   148→   148→  return w.replace(/\s*\([^)]*\)\s*/g, " ").trim();
+   149→   149→}
+   150→   150→
+   151→   151→/** ستارهٔ مرحله بر اساس تعداد خطا */
+   152→   152→function starsOf(errors: number): number {
+   153→   153→  return errors === 0 ? 3 : errors === 1 ? 2 : 1;
+   154→   154→}
+   155→   155→
+   156→   156→function blankChallenge(idx: number, type: StageType): ChallengeState {
+   157→   157→  return {
+   158→   158→    idx,
+   159→   159→    type,
+   160→   160→    errors: 0,
+   161→   161→    questions: [],
+   162→   162→    qIdx: 0,
+   163→   163→    picked: null,
+   164→   164→    word: "",
+   165→   165→    meaning: "",
+   166→   166→    tiles: [],
+   167→   167→    slots: [],
+   168→   168→    shake: false,
+   169→   169→    cards: [],
+   170→   170→    sel: null,
+   171→   171→    matchedIds: [],
+   172→   172→    wrongIds: [],
+   173→   173→    saidIds: [],
+   174→   174→    resultStars: null,
+   175→   175→  };
+   176→   176→}
+   177→   177→
+   178→   178→/** خواندن پیشرفت از localStorage با اعتبارسنجی کامل شکل داده */
+   179→   179→function readProgress(key: string): AdventureProgress | null {
+   180→   180→  try {
+   181→   181→    const raw = localStorage.getItem(key);
+   182→   182→    if (!raw) return null;
+   183→   183→    const p = JSON.parse(raw) as Partial<AdventureProgress>;
+   184→   184→    if (
+   185→   185→      !Array.isArray(p.stars) ||
+   186→   186→      p.stars.length !== TOTAL_STAGES ||
+   187→   187→      !p.stars.every((s) => typeof s === "number")
+   188→   188→    ) {
+   189→   189→      return null;
+   190→   190→    }
+   191→   191→    if (
+   192→   192→      !Array.isArray(p.done) ||
+   193→   193→      p.done.length !== TOTAL_STAGES ||
+   194→   194→      !p.done.every((d) => typeof d === "boolean")
+   195→   195→    ) {
+   196→   196→      return null;
+   197→   197→    }
+   198→   198→    const order =
+   199→   199→      Array.isArray(p.order) &&
+   200→   200→      p.order.length === TOTAL_STAGES &&
+   201→   201→      p.order.every((n) => typeof n === "number" && n >= 0 && n <= 3)
+   202→   202→        ? (p.order as StageType[])
+   203→   203→        : null;
+   204→   204→    return { stars: p.stars, done: p.done, order };
+   205→   205→  } catch {
+   206→   206→    return null;
+   207→   207→  }
+   208→   208→}
+   209→   209→
+   210→   210→function writeProgress(key: string, p: AdventureProgress): void {
+   211→   211→  try {
+   212→   212→    localStorage.setItem(key, JSON.stringify(p));
+   213→   213→  } catch {
+   214→   214→    /* noop */
+   215→   215→  }
+   216→   216→  notifyGameData();
+   217→   217→}
+   218→   218→
+   219→   219→/** ترتیب چالش‌های این دور — با بازگشت به چرخهٔ پیش‌فرض برای ذخیره‌های قدیمی */
+   220→   220→function orderOf(p: AdventureProgress): StageType[] {
+   221→   221→  return p.order && p.order.length === TOTAL_STAGES ? p.order : DEFAULT_ORDER;
+   222→   222→}
+   223→   223→
+   224→   224→export function AdventureMapGame() {
+   225→   225→  const data = useBookData();
+   226→   226→  const { bookId } = useBook();
+   227→   227→  // بازی‌ها فقط داخل کتاب فعال رندر می‌شوند (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   228→   228→  const activeBookId: string = bookId ?? "";
+   229→   229→  const { speed } = useVoiceSpeed();
+   230→   230→
+   231→   231→  const [phase, setPhase] = useState<Phase>("setup");
+   232→   232→  const [lesson, setLesson] = useState<number>(ALL_LESSONS);
+   233→   233→  const [challenge, setChallenge] = useState<ChallengeState | null>(null);
+   234→   234→  const [isRecord, setIsRecord] = useState(false);
+   235→   235→  /** نگهبان خروج (فاز G0-06) — دیالوگ تأیید وقتی مرحلهٔ فعال شروع شده و تمام نشده */
+   236→   236→  const [exitAsk, setExitAsk] = useState(false);
+   237→   237→
+   238→   238→  const secsRef = useRef(0);
+   239→   239→  /** واژه‌های مصرف‌شدهٔ این دور — تا مراحل مختلف واژهٔ تکراری نگیرند */
+   240→   240→  const usedWords = useRef<Set<string>>(new Set());
+   241→   241→  const timersRef = useRef<Set<number>>(new Set());
+   242→   242→
+   243→   243→  const progressKey = `visionone:adventure:${activeBookId}:${lesson === ALL_LESSONS ? "all" : lesson}`;
+   244→   244→  const bestScope = lesson === ALL_LESSONS ? "all" : String(lesson);
+   245→   245→
+   246→   246→  // پیشرفت ذخیره‌شده — اسنپ‌شات رشته‌ای (پایدار برای useSyncExternalStore؛ الگوی memory-game)
+   247→   247→  const progressRaw = useSyncExternalStore(
+   248→   248→    subscribeGameData,
+   249→   249→    () => {
+   250→   250→      const p = readProgress(progressKey);
+   251→   251→      return p ? JSON.stringify(p) : null;
+   252→   252→    },
+   253→   253→    () => null,
+   254→   254→  );
+   255→   255→  const progress = useMemo<AdventureProgress | null>(() => {
+   256→   256→    if (!progressRaw) return null;
+   257→   257→    try {
+   258→   258→      return JSON.parse(progressRaw) as AdventureProgress;
+   259→   259→    } catch {
+   260→   260→      return null;
+   261→   261→    }
+   262→   262→  }, [progressRaw]);
+   263→   263→
+   264→   264→  // رکورد «بیشترین ستاره» این اسکوپ
+   265→   265→  const bestRaw = useSyncExternalStore(
+   266→   266→    subscribeGameData,
+   267→   267→    () => {
+   268→   268→      const b = loadBest<BestRec>(activeBookId, GAME_KEY, bestScope);
+   269→   269→      return b ? JSON.stringify(b) : null;
+   270→   270→    },
+   271→   271→    () => null,
+   272→   272→  );
+   273→   273→  const best = useMemo<BestRec | null>(
+   274→   274→    () => (bestRaw ? (JSON.parse(bestRaw) as BestRec) : null),
+   275→   275→    [bestRaw],
+   276→   276→  );
+   277→   277→
+   278→   278→  const doneCount = progress ? progress.done.filter(Boolean).length : 0;
+   279→   279→  const totalStars = progress ? progress.stars.reduce((a, b) => a + b, 0) : 0;
+   280→   280→  const allDone = progress ? progress.done.every(Boolean) : false;
+   281→   281→
+   282→   282→  // تایمر کل ماجراجویی — فقط ref (بدون setState → بدون رندر هر ثانیه)
+   283→   283→  useEffect(() => {
+   284→   284→    if (phase !== "map" && phase !== "challenge") return;
+   285→   285→    const t = window.setInterval(() => {
+   286→   286→      secsRef.current += 1;
+   287→   287→    }, 1000);
+   288→   288→    return () => window.clearInterval(t);
+   289→   289→  }, [phase]);
+   290→   290→
+   291→   291→  // پاک‌سازی نهایی: تلفظ + همهٔ تایمرهای معلق
+   292→   292→  useEffect(() => {
+   293→   293→    const timers = timersRef.current;
+   294→   294→    return () => {
+   295→   295→      timers.forEach((id) => window.clearTimeout(id));
+   296→   296→      stopSpeaking();
+   297→   297→    };
+   298→   298→  }, []);
+   299→   299→
+   300→   300→  /** setTimeout با ثبت در ref — همیشه در unmount پاک می‌شود */
+   301→   301→  const later = useCallback((fn: () => void, ms: number) => {
+   302→   302→    const id = window.setTimeout(() => {
+   303→   303→      timersRef.current.delete(id);
+   304→   304→      fn();
+   305→   305→    }, ms);
+   306→   306→    timersRef.current.add(id);
+   307→   307→  }, []);
+   308→   308→
+   309→   309→  // ── شروع/ادامه/ریست ماجراجویی ──
+   310→   310→
+   311→   311→  const beginAdventure = useCallback(
+   312→   312→    (mode: "fresh" | "continue") => {
+   313→   313→      if (mode === "fresh") {
+   314→   314→        const pool = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
+   315→   315→        if (new Set(pool.map((w) => w.meaning)).size < 4) {
+   316→   316→          toast.error("واژهٔ کافی برای ماجراجویی در این بخش نیست — درس دیگری را انتخاب کن");
+   317→   317→          return;
+   318→   318→        }
+   319→   319→        const cyc = shuffle<StageType>([0, 1, 2, 3]);
+   320→   320→        writeProgress(progressKey, {
+   321→   321→          stars: Array<number>(TOTAL_STAGES).fill(0),
+   322→   322→          done: Array<boolean>(TOTAL_STAGES).fill(false),
+   323→   323→          order: [...cyc, ...cyc],
+   324→   324→        });
+   325→   325→        usedWords.current.clear();
+   326→   326→        secsRef.current = 0;
+   327→   327→        setIsRecord(false);
+   328→   328→      }
+   329→   329→      stopSpeaking();
+   330→   330→      setChallenge(null);
+   331→   331→      setPhase("map");
+   332→   332→    },
+   333→   333→    [data.vocab, lesson, progressKey],
+   334→   334→  );
+   335→   335→
+   336→   336→  // ── ساخت و شروع یک مرحله ──
+   337→   337→
+   338→   338→  const startStage = useCallback(
+   339→   339→    (idx: number) => {
+   340→   340→      if (!progress) return;
+   341→   341→      const pool = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
+   342→   342→      const distinctMeanings = new Set(pool.map((w) => w.meaning));
+   343→   343→      const type = orderOf(progress)[idx];
+   344→   344→      const used = usedWords.current;
+   345→   345→      // واژه‌های مصرف‌نشدهٔ این دور در اولویت‌اند؛ اگر تمام شد از کل استخر
+   346→   346→      const fresh = pool.filter((w) => !used.has(baseWord(w.word)));
+   347→   347→      const src = fresh.length > 0 ? fresh : pool;
+   348→   348→      const draw = (n: number) => {
+   349→   349→        const got = pickUnique(src, n, (w) => w.meaning);
+   350→   350→        return got.length >= n ? got : pickUnique(pool, n, (w) => w.meaning);
+   351→   351→      };
+   352→   352→
+   353→   353→      if (type === 0) {
+   354→   354→        // آزمون واژه — ۳ سؤال چهارگزینه‌ای معنی
+   355→   355→        if (distinctMeanings.size < 4) {
+   356→   356→          toast.error("برای «آزمون واژه» حداقل ۴ معنی متمایز لازم است — درس دیگری را انتخاب کن");
+   357→   357→          return;
+   358→   358→        }
+   359→   359→        const picks = draw(3);
+   360→   360→        if (picks.length < 3) {
+   361→   361→          toast.error("برای «آزمون واژه» حداقل ۴ معنی متمایز لازم است — درس دیگری را انتخاب کن");
+   362→   362→          return;
+   363→   363→        }
+   364→   364→        const questions: QuizQ[] = picks.map((w) => {
+   365→   365→          const distractors = pickUnique(
+   366→   366→            pool.filter((d) => d.meaning !== w.meaning),
+   367→   367→            3,
+   368→   368→            (d) => d.meaning,
+   369→   369→          ).map((d) => d.meaning);
+   370→   370→          const options = shuffle([w.meaning, ...distractors]);
+   371→   371→          return { word: baseWord(w.word), meaning: w.meaning, options, answer: options.indexOf(w.meaning) };
+   372→   372→        });
+   373→   373→        picks.forEach((w) => used.add(baseWord(w.word)));
+   374→   374→        setChallenge({ ...blankChallenge(idx, type), questions });
+   375→   375→        setPhase("challenge");
+   376→   376→        return;
+   377→   377→      }
+   378→   378→
+   379→   379→      if (type === 1) {
+   380→   380→        // حروف جابه‌جا — ۱ واژه با tiles لمسی
+   381→   381→        const latin = src.filter((w) => WORD_RE.test(baseWord(w.word)));
+   382→   382→        const source = latin.length > 0 ? latin : pool.filter((w) => WORD_RE.test(baseWord(w.word)));
+   383→   383→        const pick = pickUnique(source, 1, (w) => baseWord(w.word))[0];
+   384→   384→        if (!pick) {
+   385→   385→          toast.error("واژهٔ انگلیسی مناسبی برای «حروف جابه‌جا» پیدا نشد");
+   386→   386→          return;
+   387→   387→        }
+   388→   388→        const base = baseWord(pick.word);
+   389→   389→        used.add(base);
+   390→   390→        const tiles = shuffle(base.split("").map((letter, i) => ({ id: i, letter })));
+   391→   391→        // جلوگیری از چیدمان اولیهٔ تصادفیِ درست
+   392→   392→        if (base.length > 1 && tiles.map((t) => t.letter).join("") === base) {
+   393→   393→          const first = tiles[0];
+   394→   394→          tiles[0] = tiles[1];
+   395→   395→          tiles[1] = first;
+   396→   396→        }
+   397→   397→        setChallenge({
+   398→   398→          ...blankChallenge(idx, type),
+   399→   399→          word: base,
+   400→   400→          meaning: pick.meaning,
+   401→   401→          tiles,
+   402→   402→          slots: Array.from({ length: base.length }, () => null as number | null),
+   403→   403→        });
+   404→   404→        setPhase("challenge");
+   405→   405→        return;
+   406→   406→      }
+   407→   407→
+   408→   408→      if (type === 2) {
+   409→   409→        // جفت‌سازی — ۲ جفت انگلیسی↔فارسی
+   410→   410→        if (distinctMeanings.size < 2) {
+   411→   411→          toast.error("برای «جفت‌سازی» حداقل ۲ واژهٔ متمایز لازم است");
+   412→   412→          return;
+   413→   413→        }
+   414→   414→        const picks = draw(2);
+   415→   415→        if (picks.length < 2) {
+   416→   416→          toast.error("برای «جفت‌سازی» حداقل ۲ واژهٔ متمایز لازم است");
+   417→   417→          return;
+   418→   418→        }
+   419→   419→        const built: MatchCard[] = [];
+   420→   420→        picks.forEach((w) => {
+   421→   421→          built.push({ id: built.length, side: "en", word: baseWord(w.word), meaning: w.meaning });
+   422→   422→          built.push({ id: built.length, side: "fa", word: baseWord(w.word), meaning: w.meaning });
+   423→   423→          used.add(baseWord(w.word));
+   424→   424→        });
+   425→   425→        setChallenge({ ...blankChallenge(idx, type), cards: shuffle(built) });
+   426→   426→        setPhase("challenge");
+   427→   427→        return;
+   428→   428→      }
+   429→   429→
+   430→   430→      // شنیداری — ۱ واژه با تلفظ و ۴ گزینهٔ معنی
+   431→   431→      if (distinctMeanings.size < 4) {
+   432→   432→        toast.error("برای «شنیداری» حداقل ۴ معنی متمایز لازم است — درس دیگری را انتخاب کن");
+   433→   433→        return;
+   434→   434→      }
+   435→   435→      const pick = draw(1)[0];
+   436→   436→      if (!pick) {
+   437→   437→        toast.error("برای «شنیداری» حداقل ۴ معنی متمایز لازم است — درس دیگری را انتخاب کن");
+   438→   438→        return;
+   439→   439→      }
+   440→   440→      const distractors = pickUnique(
+   441→   441→        pool.filter((d) => d.meaning !== pick.meaning),
+   442→   442→        3,
+   443→   443→        (d) => d.meaning,
+   444→   444→      ).map((d) => d.meaning);
+   445→   445→      const options = shuffle([pick.meaning, ...distractors]);
+   446→   446→      used.add(baseWord(pick.word));
+   447→   447→      const word = baseWord(pick.word);
+   448→   448→      setChallenge({
+   449→   449→        ...blankChallenge(idx, type),
+   450→   450→        word,
+   451→   451→        meaning: pick.meaning,
+   452→   452→        questions: [{ word, meaning: pick.meaning, options, answer: options.indexOf(pick.meaning) }],
+   453→   453→      });
+   454→   454→      setPhase("challenge");
+   455→   455→      speak(word, { speed });
+   456→   456→    },
+   457→   457→    [progress, data.vocab, lesson, speed],
+   458→   458→  );
+   459→   459→
+   460→   460→  // ── پایان مرحله — ستاره‌گذاری + ذخیرهٔ پیشرفت (+ مراسم پایان دور کامل) ──
+   461→   461→
+   462→   462→  const completeStage = useCallback(
+   463→   463→    (finalErrors: number) => {
+   464→   464→      if (!challenge || !progress) return;
+   465→   465→      const stars = starsOf(finalErrors);
+   466→   466→      const idx = challenge.idx;
+   467→   467→      const nextStars = progress.stars.slice();
+   468→   468→      nextStars[idx] = stars;
+   469→   469→      const nextDone = progress.done.slice();
+   470→   470→      nextDone[idx] = true;
+   471→   471→      writeProgress(progressKey, {
+   472→   472→        stars: nextStars,
+   473→   473→        done: nextDone,
+   474→   474→        order: progress.order ?? null,
+   475→   475→      });
+   476→   476→      setChallenge((c) => (c ? { ...c, errors: finalErrors, resultStars: stars } : c));
+   477→   477→
+   478→   478→      if (idx >= TOTAL_STAGES - 1) {
+   479→   479→        // پایان دور کامل — ثبت استریک/جلسه/Attempt/رکورد و مراسم پایان
+   480→   480→        touchStreak();
+   481→   481→        recordStudySession();
+   482→   482→        bumpPlays(activeBookId, GAME_KEY);
+   483→   483→        const perfect = nextStars.filter((s) => s === 3).length;
+   484→   484→        const total = nextStars.reduce((a, b) => a + b, 0);
+   485→   485→        saveAttempt(activeBookId, GAME_KEY, {
+   486→   486→          lesson: lesson === ALL_LESSONS ? 0 : lesson,
+   487→   487→          total: TOTAL_STAGES,
+   488→   488→          correct: perfect,
+   489→   489→          duration: secsRef.current,
+   490→   490→          detail: { stars: nextStars },
+   491→   491→        });
+   492→   492→        const prev = loadBest<BestRec>(activeBookId, GAME_KEY, bestScope);
+   493→   493→        if (!prev || total > prev.score) {
+   494→   494→          saveBest(activeBookId, GAME_KEY, bestScope, { score: total });
+   495→   495→          setIsRecord(true);
+   496→   496→          toast.success(`رکورد جدید! ${faNum(total)} ستاره از ${faNum(MAX_STARS)} 🏆`);
+   497→   497→        }
+   498→   498→      }
+   499→   499→    },
+   500→   500→    [challenge, progress, progressKey, activeBookId, lesson, bestScope],
+   501→   501→  );
+   502→   502→
+   503→   503→  const backToMap = useCallback(() => {
+   504→   504→    stopSpeaking();
+   505→   505→    setChallenge(null);
+   506→   506→    setPhase("map");
+   507→   507→  }, []);
+   508→   508→
+   509→   509→  // ── پاسخ‌دهی مینی‌چالش‌ها ──
+   510→   510→
+   511→   511→  /** آزمون واژه — هر سؤال یک بار پاسخ داده می‌شود؛ غلط = خطا + صفحهٔ مرور */
+   512→   512→  const answerQuiz = useCallback(
+   513→   513→    (choice: number) => {
+   514→   514→      if (!challenge || challenge.type !== 0 || challenge.picked !== null) return;
+   515→   515→      const q = challenge.questions[challenge.qIdx];
+   516→   516→      if (!q) return;
+   517→   517→      const ok = choice === q.answer;
+   518→   518→      if (ok) {
+   519→   519→        recordSRS(q.word, true);
+   520→   520→        speak(q.word, { speed });
+   521→   521→      } else {
+   522→   522→        recordSRS(q.word, false);
+   523→   523→      }
+   524→   524→      const errors = challenge.errors + (ok ? 0 : 1);
+   525→   525→      const isLast = challenge.qIdx >= challenge.questions.length - 1;
+   526→   526→      setChallenge((c) => (c ? { ...c, picked: choice, errors } : c));
+   527→   527→      later(
+   528→   528→        () => {
+   529→   529→          if (isLast) {
+   530→   530→            completeStage(errors);
+   531→   531→          } else {
+   532→   532→            setChallenge((c) => (c ? { ...c, qIdx: c.qIdx + 1, picked: null } : c));
+   533→   533→          }
+   534→   534→        },
+   535→   535→        ok ? 900 : 1500,
+   536→   536→      );
+   537→   537→    },
+   538→   538→    [challenge, speed, later, completeStage],
+   539→   539→  );
+   540→   540→
+   541→   541→  /** شنیداری — انتخاب تا رسیدن به پاسخ درست ادامه دارد؛ هر غلط یک خطا */
+   542→   542→  const answerListen = useCallback(
+   543→   543→    (choice: number) => {
+   544→   544→      if (!challenge || challenge.type !== 3 || challenge.picked !== null) return;
+   545→   545→      const q = challenge.questions[0];
+   546→   546→      if (!q || challenge.saidIds.includes(choice)) return;
+   547→   547→      if (choice === q.answer) {
+   548→   548→        recordSRS(challenge.word, true);
+   549→   549→        speak(challenge.word, { speed });
+   550→   550→        setChallenge((c) => (c ? { ...c, picked: choice } : c));
+   551→   551→        later(() => completeStage(challenge.errors), 900);
+   552→   552→      } else {
+   553→   553→        recordSRS(challenge.word, false);
+   554→   554→        setChallenge((c) =>
+   555→   555→          c ? { ...c, saidIds: [...c.saidIds, choice], errors: c.errors + 1 } : c,
+   556→   556→        );
+   557→   557→      }
+   558→   558→    },
+   559→   559→    [challenge, speed, later, completeStage],
+   560→   560→  );
+   561→   561→
+   562→   562→  /** حروف جابه‌جا — گذاشتن حرف در اولین خانهٔ خالی + سنجش وقتی همه پر شد */
+   563→   563→  const placeTile = useCallback(
+   564→   564→    (tileId: number) => {
+   565→   565→      if (!challenge || challenge.type !== 1 || challenge.shake || challenge.resultStars !== null) {
+   566→   566→        return;
+   567→   567→      }
+   568→   568→      const empty = challenge.slots.indexOf(null);
+   569→   569→      if (empty === -1) return;
+   570→   570→      const tile = challenge.tiles.find((t) => t.id === tileId);
+   571→   571→      if (!tile) return;
+   572→   572→      const nextSlots = challenge.slots.slice();
+   573→   573→      nextSlots[empty] = tileId;
+   574→   574→      if (nextSlots.every((s) => s !== null)) {
+   575→   575→        const attempt = nextSlots
+   576→   576→          .map((s) => challenge.tiles.find((t) => t.id === s)?.letter ?? "")
+   577→   577→          .join("");
+   578→   578→        if (attempt === challenge.word) {
+   579→   579→          recordSRS(challenge.word, true);
+   580→   580→          speak(challenge.word, { speed });
+   581→   581→          setChallenge((c) => (c ? { ...c, slots: nextSlots } : c));
+   582→   582→          later(() => completeStage(challenge.errors), 850);
+   583→   583→        } else {
+   584→   584→          recordSRS(challenge.word, false);
+   585→   585→          setChallenge((c) => (c ? { ...c, slots: nextSlots, shake: true, errors: c.errors + 1 } : c));
+   586→   586→          later(
+   587→   587→            () =>
+   588→   588→              setChallenge((c) =>
+   589→   589→                c
+   590→   590→                  ? { ...c, slots: Array<number | null>(c.word.length).fill(null), shake: false }
+   591→   591→                  : c,
+   592→   592→              ),
+   593→   593→            750,
+   594→   594→          );
+   595→   595→        }
+   596→   596→      } else {
+   597→   597→        setChallenge((c) => (c ? { ...c, slots: nextSlots } : c));
+   598→   598→      }
+   599→   599→    },
+   600→   600→    [challenge, speed, later, completeStage],
+   601→   601→  );
+   602→   602→
+   603→   603→  /** پس گرفتن حرف از یک خانهٔ پر (کلیک روی خانه) */
+   604→   604→  const pullTile = useCallback(
+   605→   605→    (slotIdx: number) => {
+   606→   606→      if (!challenge || challenge.type !== 1 || challenge.shake) return;
+   607→   607→      setChallenge((c) =>
+   608→   608→        c && c.slots[slotIdx] !== null
+   609→   609→          ? { ...c, slots: c.slots.map((s, i) => (i === slotIdx ? null : s)) }
+   610→   610→          : c,
+   611→   611→      );
+   612→   612→    },
+   613→   613→    [challenge],
+   614→   614→  );
+   615→   615→
+   616→   616→  /** جفت‌سازی — دو کارت پشت‌سرهم؛ جفت درست می‌ماند، غلط لرزش می‌گیرد */
+   617→   617→  const tapCard = useCallback(
+   618→   618→    (card: MatchCard) => {
+   619→   619→      if (!challenge || challenge.type !== 2 || challenge.resultStars !== null) return;
+   620→   620→      if (challenge.matchedIds.includes(card.id) || challenge.wrongIds.length > 0) return;
+   621→   621→      if (challenge.sel === null) {
+   622→   622→        setChallenge((c) => (c ? { ...c, sel: card.id } : c));
+   623→   623→        return;
+   624→   624→      }
+   625→   625→      if (challenge.sel === card.id) {
+   626→   626→        setChallenge((c) => (c ? { ...c, sel: null } : c));
+   627→   627→        return;
+   628→   628→      }
+   629→   629→      const first = challenge.cards.find((c) => c.id === challenge.sel);
+   630→   630→      if (!first) {
+   631→   631→        setChallenge((c) => (c ? { ...c, sel: card.id } : c));
+   632→   632→        return;
+   633→   633→      }
+   634→   634→      if (first.side !== card.side && first.word === card.word) {
+   635→   635→        recordSRS(first.word, true);
+   636→   636→        speak(first.word, { speed });
+   637→   637→        const nextMatched = [...challenge.matchedIds, first.id, card.id];
+   638→   638→        setChallenge((c) => (c ? { ...c, matchedIds: nextMatched, sel: null } : c));
+   639→   639→        if (nextMatched.length >= challenge.cards.length) {
+   640→   640→          later(() => completeStage(challenge.errors), 750);
+   641→   641→        }
+   642→   642→      } else {
+   643→   643→        const wrongWord = first.side === "en" ? first.word : card.word;
+   644→   644→        recordSRS(wrongWord, false);
+   645→   645→        setChallenge((c) =>
+   646→   646→          c ? { ...c, wrongIds: [first.id, card.id], sel: null, errors: c.errors + 1 } : c,
+   647→   647→        );
+   648→   648→        later(() => setChallenge((c) => (c ? { ...c, wrongIds: [] } : c)), 800);
+   649→   649→      }
+   650→   650→    },
+   651→   651→    [challenge, speed, later, completeStage],
+   652→   652→  );
+   653→   653→
+   654→   654→  // ── Setup ──
+   655→   655→  if (phase === "setup") {
+   656→   656→    return (
+   657→   657→      <Card className="mx-auto max-w-lg rise-in">
+   658→   658→        <CardContent className="space-y-6 p-6">
+   659→   659→          <div className="flex items-center gap-3">
+   660→   660→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   661→   661→              <Map size={22} />
+   662→   662→            </span>
+   663→   663→            <div>
+   664→   664→              <h2 className="text-lg font-black">نقشه ماجراجویی</h2>
+   665→   665→              <p className="text-xs text-muted-foreground">
+   666→   666→                هشت مرحله روی یک نقشهٔ مارپیچ — گره‌به‌گره جلو برو!
+   667→   667→              </p>
+   668→   668→            </div>
+   669→   669→          </div>
+   670→   670→
+   671→   671→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/10 p-3 text-[11px] leading-5 text-muted-foreground">
+   672→   672→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   673→   673→            <p>
+   674→   674→              هر گره یک مینی‌بازی کوتاه است: آزمون واژه، حروف جابه‌جا، جفت‌سازی یا شنیداری —
+   675→   675→              با ترتیب تازه در هر دور. صفر خطا = ۳ ستاره، یک خطا = ۲ ستاره، بیشتر = ۱ ستاره.
+   676→   676→              پیشرفتت ذخیره می‌شود تا با بستن صفحه از دست نرود.
+   677→   677→            </p>
+   678→   678→          </div>
+   679→   679→
+   680→   680→          <div>
+   681→   681→            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   682→   682→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   683→   683→              <button
+   684→   684→                type="button"
+   685→   685→                onClick={() => setLesson(ALL_LESSONS)}
+   686→   686→                aria-pressed={lesson === ALL_LESSONS}
+   687→   687→                className={cn(
+   688→   688→                  "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   689→   689→                  lesson === ALL_LESSONS
+   690→   690→                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   691→   691→                    : "text-muted-foreground hover:bg-muted",
+   692→   692→                )}
+   693→   693→              >
+   694→   694→                کل کتاب ({faNum(data.vocab.all.length)} واژه)
+   695→   695→              </button>
+   696→   696→              {data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => (
+   697→   697→                <button
+   698→   698→                  key={l.lesson}
+   699→   699→                  type="button"
+   700→   700→                  onClick={() => setLesson(l.lesson)}
+   701→   701→                  aria-pressed={lesson === l.lesson}
+   702→   702→                  className={cn(
+   703→   703→                    "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   704→   704→                    lesson === l.lesson
+   705→   705→                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   706→   706→                      : "text-muted-foreground hover:bg-muted",
+   707→   707→                  )}
+   708→   708→                >
+   709→   709→                  {l.label}
+   710→   710→                </button>
+   711→   711→              ))}
+   712→   712→            </div>
+   713→   713→          </div>
+   714→   714→
+   715→   715→          {best && (
+   716→   716→            <Badge
+   717→   717→              variant="outline"
+   718→   718→              className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400"
+   719→   719→            >
+   720→   720→              <Trophy size={12} />
+   721→   721→              بیشترین ستاره: {faNum(best.score)} از {faNum(MAX_STARS)}
+   722→   722→            </Badge>
+   723→   723→          )}
+   724→   724→
+   725→   725→          {progress && (
+   726→   726→            <div className="space-y-2 rounded-xl border bg-muted/40 p-3">
+   727→   727→              <div className="flex items-center justify-between text-[12px] font-bold">
+   728→   728→                <span>پیشرفت ذخیره‌شده</span>
+   729→   729→                <span className="text-muted-foreground">
+   730→   730→                  {faNum(doneCount)} از {faNum(TOTAL_STAGES)} مرحله — {faNum(totalStars)} ستاره
+   731→   731→                </span>
+   732→   732→              </div>
+   733→   733→              <div className="flex gap-1.5">
+   734→   734→                {progress.stars.map((s, i) => (
+   735→   735→                  <div
+   736→   736→                    key={`prog-${i}`}
+   737→   737→                    className={cn(
+   738→   738→                      "flex h-8 flex-1 items-center justify-center gap-0.5 rounded-lg border text-[11px] font-black",
+   739→   739→                      progress.done[i]
+   740→   740→                        ? "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+   741→   741→                        : "border-dashed border-muted-foreground/30 text-muted-foreground/50",
+   742→   742→                    )}
+   743→   743→                  >
+   744→   744→                    {progress.done[i] ? (
+   745→   745→                      <>
+   746→   746→                        <Star size={10} className="fill-amber-500 text-amber-500" />
+   747→   747→                        {faNum(s)}
+   748→   748→                      </>
+   749→   749→                    ) : (
+   750→   750→                      <Lock size={10} />
+   751→   751→                    )}
+   752→   752→                  </div>
+   753→   753→                ))}
+   754→   754→              </div>
+   755→   755→            </div>
+   756→   756→          )}
+   757→   757→
+   758→   758→          {progress && !allDone && (
+   759→   759→            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={() => beginAdventure("continue")}>
+   760→   760→              <Play size={18} />
+   761→   761→              ادامه ماجراجویی
+   762→   762→            </Button>
+   763→   763→          )}
+   764→   764→          {progress && (
+   765→   765→            <Button
+   766→   766→              size="lg"
+   767→   767→              variant={allDone ? "default" : "outline"}
+   768→   768→              className="h-12 w-full gap-2 text-base"
+   769→   769→              onClick={() => beginAdventure("fresh")}
+   770→   770→            >
+   771→   771→              <RotateCcw size={17} />
+   772→   772→              از اول
+   773→   773→            </Button>
+   774→   774→          )}
+   775→   775→          {progress && allDone && (
+   776→   776→            <Button variant="outline" className="h-12 w-full gap-2 text-base" onClick={() => setPhase("map")}>
+   777→   777→              <Map size={17} />
+   778→   778→              نمایش نقشه
+   779→   779→            </Button>
+   780→   780→          )}
+   781→   781→          {!progress && (
+   782→   782→            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={() => beginAdventure("fresh")}>
+   783→   783→              <Play size={18} />
+   784→   784→              شروع ماجراجویی
+   785→   785→            </Button>
+   786→   786→          )}
+   787→   787→        </CardContent>
+   788→   788→      </Card>
+   789→   789→    );
+   790→   790→  }
+   791→   791→
+   792→   792→  // گارد دفاعی — نقشه/چالش بدون پیشرفت ذخیره‌شده نباید رخ دهد
+   793→   793→  if (!progress && (phase === "map" || phase === "challenge")) {
+   794→   794→    return (
+   795→   795→      <Card className="mx-auto max-w-lg rise-in">
+   796→   796→        <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
+   797→   797→          <Map size={26} className="text-muted-foreground" />
+   798→   798→          <p className="text-[13px] font-bold text-muted-foreground">ماجراجویی فعالی پیدا نشد</p>
+   799→   799→          <Button className="h-11" onClick={() => setPhase("setup")}>
+   800→   800→            بازگشت به راه‌اندازی
+   801→   801→          </Button>
+   802→   802→        </CardContent>
+   803→   803→      </Card>
+   804→   804→    );
+   805→   805→  }
+   806→   806→  if (phase === "challenge" && !challenge) {
+   807→   807→    return (
+   808→   808→      <Card className="mx-auto max-w-lg rise-in">
+   809→   809→        <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
+   810→   810→          <Map size={26} className="text-muted-foreground" />
+   811→   811→          <p className="text-[13px] font-bold text-muted-foreground">مرحله‌ای در جریان نیست</p>
+   812→   812→          <Button className="h-11" onClick={() => setPhase("map")}>
+   813→   813→            بازگشت به نقشه
+   814→   814→          </Button>
+   815→   815→        </CardContent>
+   816→   816→      </Card>
+   817→   817→    );
+   818→   818→  }
+   819→   819→
+   820→   820→  // ── نقشه — ستون مارپیچ ۸ گره با آفست افقی متناوب + خط‌چین میانی ──
+   821→   821→  if (phase === "map" && progress) {
+   822→   822→    const order = orderOf(progress);
+   823→   823→    const openIdx = progress.done.findIndex((d) => !d);
+   824→   824→    return (
+   825→   825→      <div className="mx-auto max-w-lg space-y-4 rise-in" role="group" aria-label="نقشه ماجراجویی">
+   826→   826→        <div className="flex flex-wrap items-center gap-2">
+   827→   827→          <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   828→   828→            <Map size={11} />
+   829→   829→            نقشهٔ ماجراجویی
+   830→   830→          </Badge>
+   831→   831→          <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   832→   832→            <Star size={11} className="fill-amber-400 text-amber-500" />
+   833→   833→            {faNum(totalStars)} ستاره
+   834→   834→          </Badge>
+   835→   835→          <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   836→   836→            <CheckCircle2 size={11} className="text-primary" />
+   837→   837→            {faNum(doneCount)} از {faNum(TOTAL_STAGES)} مرحله
+   838→   838→          </Badge>
+   839→   839→          <div className="mr-auto">
+   840→   840→            <Button
+   841→   841→              variant="ghost"
+   842→   842→              size="sm"
+   843→   843→              className="h-11 text-[11px] text-muted-foreground"
+   844→   844→              onClick={() => {
+   845→   845→                stopSpeaking();
+   846→   846→                setPhase("setup");
+   847→   847→              }}
+   848→   848→            >
+   849→   849→              تنظیمات
+   850→   850→            </Button>
+   851→   851→          </div>
+   852→   852→        </div>
+   853→   853→
+   854→   854→        <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+   855→   855→          <div
+   856→   856→            className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+   857→   857→            style={{ width: `${(doneCount / TOTAL_STAGES) * 100}%` }}
+   858→   858→          />
+   859→   859→        </div>
+   860→   860→
+   861→   861→        <div className="relative rounded-2xl border bg-card/60 p-4">
+   862→   862→          <div
+   863→   863→            aria-hidden
+   864→   864→            className="absolute inset-y-6 left-1/2 -translate-x-1/2 border-r-2 border-dashed border-primary/25"
+   865→   865→          />
+   866→   866→          <div className="relative space-y-6">
+   867→   867→            {progress.done.map((isDone, i) => {
+   868→   868→              const meta = STAGE_META[order[i]];
+   869→   869→              const TypeIcon = meta.icon;
+   870→   870→              const isOpen = i === openIdx;
+   871→   871→              const stars = progress.stars[i] ?? 0;
+   872→   872→              return (
+   873→   873→                <div
+   874→   874→                  key={`node-${i}`}
+   875→   875→                  className={cn(
+   876→   876→                    "flex w-1/2 flex-col items-center gap-1.5",
+   877→   877→                    i % 2 === 1 && "ms-auto",
+   878→   878→                  )}
+   879→   879→                >
+   880→   880→                  {isOpen ? (
+   881→   881→                    <button
+   882→   882→                      type="button"
+   883→   883→                      onClick={() => startStage(i)}
+   884→   884→                      aria-label={`مرحلهٔ ${faNum(i + 1)} — ${meta.label} — شروع`}
+   885→   885→                      className="group flex flex-col items-center gap-1.5"
+   886→   886→                    >
+   887→   887→                      <span className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform group-hover:scale-105 group-active:scale-95">
+   888→   888→                        <TypeIcon size={24} />
+   889→   889→                      </span>
+   890→   890→                    </button>
+   891→   891→                  ) : (
+   892→   892→                    <span
+   893→   893→                      className={cn(
+   894→   894→                        "flex h-16 w-16 items-center justify-center rounded-full border-2",
+   895→   895→                        isDone
+   896→   896→                          ? "border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+   897→   897→                          : "border-border bg-muted text-muted-foreground/60",
+   898→   898→                      )}
+   899→   899→                    >
+   900→   900→                      <TypeIcon size={22} />
+   901→   901→                    </span>
+   902→   902→                  )}
+   903→   903→                  <span
+   904→   904→                    className={cn(
+   905→   905→                      "text-[11px] font-black",
+   906→   906→                      isDone
+   907→   907→                        ? "text-amber-600 dark:text-amber-400"
+   908→   908→                        : isOpen
+   909→   909→                          ? "text-primary"
+   910→   910→                          : "text-muted-foreground",
+   911→   911→                    )}
+   912→   912→                  >
+   913→   913→                    مرحلهٔ {faNum(i + 1)}
+   914→   914→                  </span>
+   915→   915→                  <span className="text-[10px] text-muted-foreground">{meta.label}</span>
+   916→   916→                  {isDone ? (
+   917→   917→                    <span className="flex gap-0.5" aria-label={`${faNum(stars)} ستاره از ۳`}>
+   918→   918→                      {[0, 1, 2].map((s) => (
+   919→   919→                        <Star
+   920→   920→                          key={`st-${i}-${s}`}
+   921→   921→                          size={11}
+   922→   922→                          className={s < stars ? "fill-amber-400 text-amber-500" : "text-muted-foreground/25"}
+   923→   923→                        />
+   924→   924→                      ))}
+   925→   925→                    </span>
+   926→   926→                  ) : isOpen ? (
+   927→   927→                    <span className="flex items-center gap-1 text-[10px] font-bold text-primary">
+   928→   928→                      <Sparkles size={11} />
+   929→   929→                      شروع
+   930→   930→                    </span>
+   931→   931→                  ) : (
+   932→   932→                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground/70">
+   933→   933→                      <Lock size={10} />
+   934→   934→                      قفل
+   935→   935→                    </span>
+   936→   936→                  )}
+   937→   937→                </div>
+   938→   938→              );
+   939→   939→            })}
+   940→   940→          </div>
+   941→   941→        </div>
+   942→   942→
+   943→   943→        {allDone ? (
+   944→   944→          <div className="flex flex-col items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-center">
+   945→   945→            <p className="text-[13px] font-black text-amber-600 dark:text-amber-400">
+   946→   946→              همهٔ گره‌ها روشن شد — ماجراجویی کامل شد! 🎉
+   947→   947→            </p>
+   948→   948→            <Button size="sm" className="h-11 gap-2" onClick={() => setPhase("done")}>
+   949→   949→              <PartyPopper size={15} />
+   950→   950→              مراسم پایان
+   951→   951→            </Button>
+   952→   952→          </div>
+   953→   953→        ) : (
+   954→   954→          <p className="text-center text-[11px] text-muted-foreground">
+   955→   955→            گرهٔ روشنِ نقشه را بزن تا مرحلهٔ بعدی شروع شود
+   956→   956→          </p>
+   957→   957→        )}
+   958→   958→      </div>
+   959→   959→    );
+   960→   960→  }
+   961→   961→
+   962→   962→  // ── چالش جاری ──
+   963→   963→  if (phase === "challenge" && challenge) {
+   964→   964→    const meta = STAGE_META[challenge.type];
+   965→   965→    const TypeIcon = meta.icon;
+   966→   966→    return (
+   967→   967→      <Card className="mx-auto max-w-xl rise-in">
+   968→   968→        <CardContent className="space-y-5 p-6">
+   969→   969→          {challenge.resultStars === null ? (
+   970→   970→            <>
+   971→   971→              <div className="flex flex-wrap items-center gap-2">
+   972→   972→                <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   973→   973→                  <TypeIcon size={11} />
+   974→   974→                  {meta.label}
+   975→   975→                </Badge>
+   976→   976→                <Badge variant="secondary" className="gap-1.5 text-[11px]">
+   977→   977→                  مرحلهٔ {faNum(challenge.idx + 1)} از {faNum(TOTAL_STAGES)}
+   978→   978→                </Badge>
+   979→   979→                <Badge
+   980→   980→                  variant="outline"
+   981→   981→                  className={cn(
+   982→   982→                    "gap-1.5 text-[11px]",
+   983→   983→                    challenge.errors > 0 && "border-destructive/40 text-destructive",
+   984→   984→                  )}
+   985→   985→                >
+   986→   986→                  <XCircle size={11} />
+   987→   987→                  {faNum(challenge.errors)} خطا
+   988→   988→                </Badge>
+   989→   989→                <div className="mr-auto">
+   990→   990→                  <Button
+   991→   991→                    variant="ghost"
+   992→   992→                    size="sm"
+   993→   993→                    className="h-11 text-[11px] text-muted-foreground"
+   994→   994→                    onClick={() => setExitAsk(true)}
+   995→   995→                  >
+   996→   996→                    بازگشت به نقشه
+   997→   997→                  </Button>
+   998→   998→                </div>
+   999→   999→              </div>
+  1000→  1000→
+  1001→  1001→              {challenge.type === 0 && challenge.questions[challenge.qIdx]
+  1002→  1002→                ? (() => {
+  1003→  1003→                    const q = challenge.questions[challenge.qIdx];
+  1004→  1004→                    const locked = challenge.picked !== null;
+  1005→  1005→                    return (
+  1006→  1006→                      <div className="space-y-4">
+  1007→  1007→                        <div className="rounded-xl border bg-muted/40 p-6 text-center">
+  1008→  1008→                          <p className="text-[11px] text-muted-foreground">
+  1009→  1009→                            سؤال {faNum(challenge.qIdx + 1)} از {faNum(challenge.questions.length)} —
+  1010→  1010→                            معنی این واژه چیست؟
+  1011→  1011→                          </p>
+  1012→  1012→                          <p dir="ltr" className="font-en mt-2 text-2xl font-black">
+  1013→  1013→                            {q.word}
+  1014→  1014→                          </p>
+  1015→  1015→                        </div>
+  1016→  1016→                        <div className="grid gap-2">
+  1017→  1017→                          {q.options.map((opt, oi) => {
+  1018→  1018→                            const isCorrect = oi === q.answer;
+  1019→  1019→                            const isPicked = challenge.picked === oi;
+  1020→  1020→                            return (
+  1021→  1021→                              <button
+  1022→  1022→                                key={`opt-${oi}`}
+  1023→  1023→                                type="button"
+  1024→  1024→                                disabled={locked}
+  1025→  1025→                                onClick={() => answerQuiz(oi)}
+  1026→  1026→                                aria-pressed={isPicked}
+  1027→  1027→                                className={cn(
+  1028→  1028→                                  "flex min-h-11 items-center justify-between gap-2 rounded-xl border-2 px-4 py-2.5 text-right text-[13px] font-bold transition-all",
+  1029→  1029→                                  !locked && "border-border bg-card hover:border-primary/50 hover:bg-muted/60",
+  1030→  1030→                                  locked && isCorrect && "border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  1031→  1031→                                  locked && isPicked && !isCorrect && "border-destructive bg-destructive/10",
+  1032→  1032→                                  locked && !isCorrect && !isPicked && "opacity-50",
+  1033→  1033→                                )}
+  1034→  1034→                              >
+  1035→  1035→                                <span>{opt}</span>
+  1036→  1036→                                {locked && isCorrect && (
+  1037→  1037→                                  <CheckCircle2 size={16} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
+  1038→  1038→                                )}
+  1039→  1039→                                {locked && isPicked && !isCorrect && (
+  1040→  1040→                                  <XCircle size={16} className="shrink-0 text-destructive" />
+  1041→  1041→                                )}
+  1042→  1042→                              </button>
+  1043→  1043→                            );
+  1044→  1044→                          })}
+  1045→  1045→                        </div>
+  1046→  1046→                      </div>
+  1047→  1047→                    );
+  1048→  1048→                  })()
+  1049→  1049→                : null}
+  1050→  1050→
+  1051→  1051→              {challenge.type === 1 && (
+  1052→  1052→                <div className="space-y-4">
+  1053→  1053→                  <div className="rounded-xl border bg-muted/40 p-5 text-center">
+  1054→  1054→                    <p className="text-[11px] text-muted-foreground">این واژه را با حروف پایین بساز:</p>
+  1055→  1055→                    <p className="mt-1.5 text-lg font-black leading-7">{challenge.meaning}</p>
+  1056→  1056→                  </div>
+  1057→  1057→                  <div dir="ltr" className="flex flex-wrap justify-center gap-1.5">
+  1058→  1058→                    {challenge.slots.map((tid, si) => {
+  1059→  1059→                      const letter =
+  1060→  1060→                        tid !== null
+  1061→  1061→                          ? challenge.tiles.find((t) => t.id === tid)?.letter ?? null
+  1062→  1062→                          : null;
+  1063→  1063→                      return (
+  1064→  1064→                        <button
+  1065→  1065→                          key={`slot-${si}`}
+  1066→  1066→                          type="button"
+  1067→  1067→                          disabled={tid === null || challenge.shake}
+  1068→  1068→                          onClick={() => pullTile(si)}
+  1069→  1069→                          aria-label={`خانهٔ ${faNum(si + 1)}${letter ? ` — حرف ${letter}` : " — خالی"}`}
+  1070→  1070→                          className={cn(
+  1071→  1071→                            "flex h-11 w-10 items-center justify-center rounded-lg border-2 border-dashed font-en text-lg font-black transition-all",
+  1072→  1072→                            letter
+  1073→  1073→                              ? "border-primary/60 bg-primary/10 text-primary"
+  1074→  1074→                              : "border-muted-foreground/25 text-muted-foreground/30",
+  1075→  1075→                            challenge.shake && "match-shake border-destructive/60 bg-destructive/10",
+  1076→  1076→                          )}
+  1077→  1077→                        >
+  1078→  1078→                          {letter ?? "·"}
+  1079→  1079→                        </button>
+  1080→  1080→                      );
+  1081→  1081→                    })}
+  1082→  1082→                  </div>
+  1083→  1083→                  <div dir="ltr" className="flex flex-wrap justify-center gap-1.5">
+  1084→  1084→                    {challenge.tiles.map((t) => {
+  1085→  1085→                      const placed = challenge.slots.includes(t.id);
+  1086→  1086→                      return (
+  1087→  1087→                        <button
+  1088→  1088→                          key={`tile-${t.id}`}
+  1089→  1089→                          type="button"
+  1090→  1090→                          disabled={placed || challenge.shake}
+  1091→  1091→                          onClick={() => placeTile(t.id)}
+  1092→  1092→                          aria-label={`حرف ${t.letter}`}
+  1093→  1093→                          className={cn(
+  1094→  1094→                            "flex h-12 w-12 items-center justify-center rounded-lg border-2 font-en text-lg font-black transition-all",
+  1095→  1095→                            placed
+  1096→  1096→                              ? "border-transparent bg-muted/50 text-muted-foreground/25"
+  1097→  1097→                              : "border-primary/40 bg-card text-foreground shadow-sm hover:border-primary hover:bg-primary/10 active:scale-95",
+  1098→  1098→                          )}
+  1099→  1099→                        >
+  1100→  1100→                          {t.letter}
+  1101→  1101→                        </button>
+  1102→  1102→                      );
+  1103→  1103→                    })}
+  1104→  1104→                  </div>
+  1105→  1105→                  <p className="text-center text-[10px] text-muted-foreground">
+  1106→  1106→                    حرف‌ها را به ترتیب بزن؛ برای پس گرفتن یک حرف، روی خانه‌اش بزن
+  1107→  1107→                  </p>
+  1108→  1108→                </div>
+  1109→  1109→              )}
+  1110→  1110→
+  1111→  1111→              {challenge.type === 2 && (
+  1112→  1112→                <div className="space-y-4">
+  1113→  1113→                  <p className="text-center text-[11px] text-muted-foreground">
+  1114→  1114→                    دو کارت را بزن — واژه و معنی‌اش باید جور شوند
+  1115→  1115→                  </p>
+  1116→  1116→                  <div className="grid grid-cols-2 gap-2">
+  1117→  1117→                    {challenge.cards.map((card) => {
+  1118→  1118→                      const isMatched = challenge.matchedIds.includes(card.id);
+  1119→  1119→                      const isSelected = challenge.sel === card.id;
+  1120→  1120→                      const isWrong = challenge.wrongIds.includes(card.id);
+  1121→  1121→                      return (
+  1122→  1122→                        <button
+  1123→  1123→                          key={`card-${card.id}`}
+  1124→  1124→                          type="button"
+  1125→  1125→                          disabled={isMatched || challenge.wrongIds.length > 0}
+  1126→  1126→                          onClick={() => tapCard(card)}
+  1127→  1127→                          aria-pressed={isSelected}
+  1128→  1128→                          aria-label={
+  1129→  1129→                            card.side === "en"
+  1130→  1130→                              ? `کارت واژه ${card.word}`
+  1131→  1131→                              : `کارت معنی ${card.meaning}`
+  1132→  1132→                          }
+  1133→  1133→                          className={cn(
+  1134→  1134→                            "flex min-h-20 items-center justify-center rounded-xl border-2 p-3 text-center transition-all",
+  1135→  1135→                            isMatched && "match-pop border-emerald-500/60 bg-emerald-500/10 opacity-70",
+  1136→  1136→                            !isMatched && isSelected && "border-primary bg-primary/10 ring-2 ring-primary/25",
+  1137→  1137→                            isWrong && "match-shake border-destructive bg-destructive/10",
+  1138→  1138→                            !isMatched && !isSelected && !isWrong && "border-border bg-card hover:border-primary/40",
+  1139→  1139→                          )}
+  1140→  1140→                        >
+  1141→  1141→                          {card.side === "en" ? (
+  1142→  1142→                            <span dir="ltr" className="font-en text-sm font-black">
+  1143→  1143→                              {card.word}
+  1144→  1144→                            </span>
+  1145→  1145→                          ) : (
+  1146→  1146→                            <span className="text-[13px] font-bold leading-6">{card.meaning}</span>
+  1147→  1147→                          )}
+  1148→  1148→                        </button>
+  1149→  1149→                      );
+  1150→  1150→                    })}
+  1151→  1151→                  </div>
+  1152→  1152→                </div>
+  1153→  1153→              )}
+  1154→  1154→
+  1155→  1155→              {challenge.type === 3 && challenge.questions[0]
+  1156→  1156→                ? (() => {
+  1157→  1157→                    const q = challenge.questions[0];
+  1158→  1158→                    const win = challenge.picked !== null;
+  1159→  1159→                    return (
+  1160→  1160→                      <div className="space-y-4">
+  1161→  1161→                        <div className="rounded-xl border bg-muted/40 p-6 text-center">
+  1162→  1162→                          <p className="text-[11px] text-muted-foreground">
+  1163→  1163→                            گوش کن و معنی درست را پیدا کن
+  1164→  1164→                          </p>
+  1165→  1165→                          <button
+  1166→  1166→                            type="button"
+  1167→  1167→                            onClick={() => speak(challenge.word, { speed })}
+  1168→  1168→                            aria-label="پخش دوبارهٔ تلفظ"
+  1169→  1169→                            className="mx-auto mt-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
+  1170→  1170→                          >
+  1171→  1171→                            <Volume2 size={26} />
+  1172→  1172→                          </button>
+  1173→  1173→                        </div>
+  1174→  1174→                        <div className="grid gap-2">
+  1175→  1175→                          {q.options.map((opt, oi) => {
+  1176→  1176→                            const isCorrect = oi === q.answer;
+  1177→  1177→                            const said = challenge.saidIds.includes(oi);
+  1178→  1178→                            return (
+  1179→  1179→                              <button
+  1180→  1180→                                key={`lopt-${oi}`}
+  1181→  1181→                                type="button"
+  1182→  1182→                                disabled={said || win}
+  1183→  1183→                                onClick={() => answerListen(oi)}
+  1184→  1184→                                className={cn(
+  1185→  1185→                                  "min-h-11 rounded-xl border-2 px-4 py-2.5 text-right text-[13px] font-bold transition-all",
+  1186→  1186→                                  !said && !win && "border-border bg-card hover:border-primary/50 hover:bg-muted/60",
+  1187→  1187→                                  win && isCorrect && "border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  1188→  1188→                                  said && !isCorrect && "border-destructive/50 bg-destructive/5 text-destructive/70 line-through",
+  1189→  1189→                                  win && !isCorrect && !said && "opacity-50",
+  1190→  1190→                                )}
+  1191→  1191→                              >
+  1192→  1192→                                {opt}
+  1193→  1193→                              </button>
+  1194→  1194→                            );
+  1195→  1195→                          })}
+  1196→  1196→                        </div>
+  1197→  1197→                      </div>
+  1198→  1198→                    );
+  1199→  1199→                  })()
+  1200→  1200→                : null}
+  1201→  1201→            </>
+  1202→  1202→          ) : (
+  1203→  1203→            (() => {
+  1204→  1204→              const stars = challenge.resultStars ?? 0;
+  1205→  1205→              const msg =
+  1206→  1206→                stars === 3
+  1207→  1207→                  ? "بی‌نقص! بدون حتی یک خطا"
+  1208→  1208→                  : stars === 2
+  1209→  1209→                    ? "خیلی خوب — فقط یک خطا"
+  1210→  1210→                    : "مرحله تمام شد — گرهٔ بعدی باز شد!";
+  1211→  1211→              return (
+  1212→  1212→                <div className="flex flex-col items-center gap-4 py-6 text-center">
+  1213→  1213→                  <span
+  1214→  1214→                    className={cn(
+  1215→  1215→                      "flex h-14 w-14 items-center justify-center rounded-full",
+  1216→  1216→                      stars >= 2
+  1217→  1217→                        ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+  1218→  1218→                        : "bg-muted text-muted-foreground",
+  1219→  1219→                    )}
+  1220→  1220→                  >
+  1221→  1221→                    <Star size={26} className={stars >= 2 ? "fill-amber-400" : undefined} />
+  1222→  1222→                  </span>
+  1223→  1223→                  <p className="text-sm font-bold text-muted-foreground">
+  1224→  1224→                    مرحلهٔ {faNum(challenge.idx + 1)} تمام شد — {meta.label}
+  1225→  1225→                  </p>
+  1226→  1226→                  <div className="flex gap-1.5">
+  1227→  1227→                    {[0, 1, 2].map((s) => (
+  1228→  1228→                      <Star
+  1229→  1229→                        key={`res-${s}`}
+  1230→  1230→                        size={30}
+  1231→  1231→                        className={s < stars ? "fill-amber-400 text-amber-500" : "text-muted-foreground/25"}
+  1232→  1232→                      />
+  1233→  1233→                    ))}
+  1234→  1234→                  </div>
+  1235→  1235→                  <p className="text-lg font-black">{msg}</p>
+  1236→  1236→                  {challenge.idx >= TOTAL_STAGES - 1 ? (
+  1237→  1237→                    <Button
+  1238→  1238→                      className="h-12 w-full gap-2 text-base"
+  1239→  1239→                      onClick={() => {
+  1240→  1240→                        setChallenge(null);
+  1241→  1241→                        setPhase("done");
+  1242→  1242→                      }}
+  1243→  1243→                    >
+  1244→  1244→                      <PartyPopper size={17} />
+  1245→  1245→                      مراسم پایان
+  1246→  1246→                    </Button>
+  1247→  1247→                  ) : (
+  1248→  1248→                    <Button className="h-12 w-full gap-2 text-base" onClick={backToMap}>
+  1249→  1249→                      <Map size={16} />
+  1250→  1250→                      بازگشت به نقشه
+  1251→  1251→                    </Button>
+  1252→  1252→                  )}
+  1253→  1253→                </div>
+  1254→  1254→              );
+  1255→  1255→            })()
+  1256→  1256→          )}
+  1257→  1257→
+  1258→  1258→          {/* نگهبان خروج (فاز G0-06) — تأیید رهاکردن مرحلهٔ نیمه‌کاره؛ Esc/کلیک بیرون = ادامهٔ مرحله */}
+  1259→  1259→          <AlertDialog open={exitAsk} onOpenChange={setExitAsk}>
+  1260→  1260→            <AlertDialogContent>
+  1261→  1261→              <AlertDialogHeader className="text-center sm:text-right">
+  1262→  1262→                <AlertDialogTitle>مرحله را رها کنم؟ 🗺️</AlertDialogTitle>
+  1263→  1263→                <AlertDialogDescription>
+  1264→  1264→                  مرحلهٔ فعال هنوز تمام نشده — با برگشتن به نقشه، پیشرفت این دور از دست می‌رود و مرحله از اول شروع می‌شود.
+  1265→  1265→                </AlertDialogDescription>
+  1266→  1266→              </AlertDialogHeader>
+  1267→  1267→              <AlertDialogFooter className="sm:justify-start">
+  1268→  1268→                <AlertDialogCancel className="min-h-11">نه، ادامه می‌دهم</AlertDialogCancel>
+  1269→  1269→                <AlertDialogAction
+  1270→  1270→                  className="min-h-11 bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
+  1271→  1271→                  onClick={() => {
+  1272→  1272→                    setExitAsk(false);
+  1273→  1273→                    backToMap();
+  1274→  1274→                  }}
+  1275→  1275→                >
+  1276→  1276→                  آره، برو به نقشه
+  1277→  1277→                </AlertDialogAction>
+  1278→  1278→              </AlertDialogFooter>
+  1279→  1279→            </AlertDialogContent>
+  1280→  1280→          </AlertDialog>
+  1281→  1281→        </CardContent>
+  1282→  1282→      </Card>
+  1283→  1283→    );
+  1284→  1284→  }
+  1285→  1285→
+  1286→  1286→  // ── مراسم پایان دور کامل ──
+  1287→  1287→  if (phase === "done" && progress) {
+  1288→  1288→    const rank =
+  1289→  1289→      totalStars >= 21
+  1290→  1290→        ? {
+  1291→  1291→            icon: Trophy as LucideIcon,
+  1292→  1292→            label: "کاشف افسانه‌ای!",
+  1293→  1293→            cls: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  1294→  1294→          }
+  1295→  1295→        : totalStars >= 15
+  1296→  1296→          ? {
+  1297→  1297→              icon: Compass as LucideIcon,
+  1298→  1298→              label: "کاشف ماهر!",
+  1299→  1299→              cls: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  1300→  1300→            }
+  1301→  1301→          : totalStars >= 9
+  1302→  1302→            ? {
+  1303→  1303→                icon: Compass as LucideIcon,
+  1304→  1304→                label: "کاشف کوشا",
+  1305→  1305→                cls: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
+  1306→  1306→              }
+  1307→  1307→            : {
+  1308→  1308→                icon: Sprout as LucideIcon,
+  1309→  1309→                label: "تازه‌کار — دوباره امتحان کن",
+  1310→  1310→                cls: "bg-muted text-muted-foreground",
+  1311→  1311→              };
+  1312→  1312→    const RankIcon = rank.icon;
+  1313→  1313→    return (
+  1314→  1314→      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+  1315→  1315→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+  1316→  1316→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+  1317→  1317→            <PartyPopper size={30} />
+  1318→  1318→          </span>
+  1319→  1319→          <h2 className="text-xl font-black">ماجراجویی کامل شد!</h2>
+  1320→  1320→          {isRecord && (
+  1321→  1321→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+  1322→  1322→              <Trophy size={13} />
+  1323→  1323→              رکورد جدید! بیشترین ستاره 🏆
+  1324→  1324→            </Badge>
+  1325→  1325→          )}
+  1326→  1326→          <div
+  1327→  1327→            className={cn(
+  1328→  1328→              "flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-black",
+  1329→  1329→              rank.cls,
+  1330→  1330→            )}
+  1331→  1331→          >
+  1332→  1332→            <RankIcon size={15} />
+  1333→  1333→            {rank.label}
+  1334→  1334→          </div>
+  1335→  1335→          <p className="text-4xl font-black">
+  1336→  1336→            {faNum(totalStars)}
+  1337→  1337→            <span className="mr-2 text-base font-bold text-muted-foreground">
+  1338→  1338→              از {faNum(MAX_STARS)} ستاره
+  1339→  1339→            </span>
+  1340→  1340→          </p>
+  1341→  1341→          <div className="grid w-full grid-cols-4 gap-2">
+  1342→  1342→            {progress.stars.map((s, i) => (
+  1343→  1343→              <div key={`fin-${i}`} className="rounded-xl bg-muted/60 p-2.5">
+  1344→  1344→                <p className="text-[10px] font-bold text-muted-foreground">مرحلهٔ {faNum(i + 1)}</p>
+  1345→  1345→                <div className="mt-1 flex justify-center gap-0.5">
+  1346→  1346→                  {[0, 1, 2].map((k) => (
+  1347→  1347→                    <Star
+  1348→  1348→                      key={`fin-${i}-${k}`}
+  1349→  1349→                      size={10}
+  1350→  1350→                      className={k < s ? "fill-amber-400 text-amber-500" : "text-muted-foreground/25"}
+  1351→  1351→                    />
+  1352→  1352→                  ))}
+  1353→  1353→                </div>
+  1354→  1354→              </div>
+  1355→  1355→            ))}
+  1356→  1356→          </div>
+  1357→  1357→          <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-center">
+  1358→  1358→            <Button className="h-12 gap-2" onClick={() => beginAdventure("fresh")}>
+  1359→  1359→              <RotateCcw size={16} />
+  1360→  1360→              ماجراجویی جدید
+  1361→  1361→            </Button>
+  1362→  1362→            <Button variant="outline" className="h-12" onClick={() => setPhase("map")}>
+  1363→  1363→              نقشه
+  1364→  1364→            </Button>
+  1365→  1365→          </div>
+  1366→  1366→        </CardContent>
+  1367→  1367→      </Card>
+  1368→  1368→    );
+  1369→  1369→  }
+  1370→  1370→
+  1371→  1371→  // گارد نهایی — حالت‌های ترکیبی غیرممکن به نقشه برمی‌گردند
+  1372→  1372→  return (
+  1373→  1373→    <Card className="mx-auto max-w-lg rise-in">
+  1374→  1374→      <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
+  1375→  1375→        <Map size={26} className="text-muted-foreground" />
+  1376→  1376→        <Button className="h-11" onClick={() => setPhase("map")}>
+  1377→  1377→          بازگشت به نقشه
+  1378→  1378→        </Button>
+  1379→  1379→      </CardContent>
+  1380→  1380→    </Card>
+  1381→  1381→  );
+  1382→  1382→}
+  1383→  1383→

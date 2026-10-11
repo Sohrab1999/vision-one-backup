@@ -9,7 +9,15 @@
  * اسکوپ رکورد: درس (یا کل کتاب) × تعداد جفت.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import {
   LayoutGrid,
   HeartHandshake,
@@ -81,6 +89,8 @@ const PAIR_OPTIONS = [4, 6, 8];
 const MATCH_LOCK_MS = 400;
 /** مدت لرزش جفت غلط تا بسته‌شدن کارت‌ها (ms) */
 const WRONG_LOCK_MS = 650;
+/** فاز G2-a — تعداد ستون‌های گرید برای پیمایش کیبورد چهارجهته (گرید ۴ ستونه — COLS ثابت) */
+const GRID_COLS = 4;
 
 /** آموزش ۳-گامی استاندارد (فاز G1-08) — یک‌بارنمایش + دکمهٔ راهنمای شِل */
 const TUTORIAL_STEPS: TutorialStep[] = [
@@ -122,6 +132,13 @@ export function MemoryGame() {
   const [missedWords, setMissedWords] = useState<{ front: string; back: string }[]>([]);
   /** پیام باکس aria-live — اعلام جفت درست/غلط برای فناوری‌های کمکی */
   const [liveMsg, setLiveMsg] = useState("");
+  /**
+   * فاز G2-a — کیبورد چهارجهته: نشانگر سیار روی گرید (ایندکس کارت).
+   * null یعنی هنوز با فلش وارد گرید نشده؛ اولین فلش از کارت ۱ شروع می‌کند.
+   */
+  const [focusIdx, setFocusIdx] = useState<number | null>(null);
+  /** فاز G2-a — ریشهٔ گرید برای گارد اسکرول (رندر کارتِ نشانگرشده در دید) */
+  const gridRef = useRef<HTMLDivElement | null>(null);
 
   // فاز G1 (پایلوت کیت بازی) — توقف/ادامهٔ استاندارد + نگهبان خروج + کلید صدا/لرزش
   // توقف خودکار در تب مخفی هم همین‌جا اعمال می‌شود (سطح بالاتر از گارد G0-05: کاربر
@@ -261,6 +278,8 @@ export function MemoryGame() {
     setIsRecord(false);
     setMissedWords([]);
     busy.current = false;
+    // فاز G2-a — نشانگر کیبورد گرید هم برای دور تازه از نو شروع شود
+    setFocusIdx(null);
     resume();
     setExitAsk(false);
     // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور
@@ -372,6 +391,86 @@ export function MemoryGame() {
     },
     [cards, finish, matchedIds, moves, openIds, paused, speed],
   );
+
+  // ── فاز G2-a — کیبورد چهارجهته روی گرید کارت‌ها (رفع شکاف کیبورد سند §۵-G2-a) ──
+  // الگو: نشانگر سیار (roving cursor) — فقط wrapper گرید تاب‌پذیر است؛ فلش‌ها focusIdx را
+  // با گارد مرز سطر/ستون جابه‌جا می‌کنند و Enter/Space همان handleCardClick را صدا می‌زند
+  // (گاردهای busy/paused/matched/open داخل همان تابع موجود رعایت می‌شوند — هیچ منطق جدیدی نیست).
+  const handleGridKeyDown = useCallback(
+    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (paused || cards.length === 0) return;
+      const key = e.key;
+
+      // Enter/Space — برگرداندن کارتِ زیر نشانگر کیبورد
+      if (key === "Enter" || key === " ") {
+        e.preventDefault(); // مهار اسکرول Space و مهار فعال‌سازی دوبارهٔ native دکمه‌ها
+        if (focusIdx === null) return;
+        const card = cards[focusIdx];
+        if (!card) return;
+        // اعلام محتوای کارتِ برگشته — فقط وقتی واقعاً باز می‌شود (همان گاردهای handleCardClick)؛
+        // برای کارت دوم، پیام جفت درست/غلطِ خودِ بازی جایگزین همین پیام می‌شود
+        if (!busy.current && !matchedIds.has(card.id) && !openIds.includes(card.id)) {
+          setLiveMsg(
+            `کارت شمارهٔ ${faNum(focusIdx + 1)} — ${
+              card.side === "en" ? `واژه ${card.word}` : `معنی ${card.meaning}`
+            }`,
+          );
+        }
+        handleCardClick(card);
+        return;
+      }
+
+      if (!key.startsWith("Arrow")) return;
+      e.preventDefault(); // فلش‌ها نباید صفحه را اسکرول کنند
+      // ورود اول با کیبورد — از ابتدای گرید شروع کن
+      if (focusIdx === null) {
+        setFocusIdx(0);
+        setLiveMsg(`کارت شمارهٔ ${faNum(1)}`);
+        return;
+      }
+      const last = cards.length - 1;
+      let next = focusIdx;
+      switch (key) {
+        case "ArrowRight":
+          // فلش راست = +۱ — گارد مرز: از آخرین ستون عبور نکند
+          if (focusIdx % GRID_COLS < GRID_COLS - 1 && focusIdx < last) next = focusIdx + 1;
+          break;
+        case "ArrowLeft":
+          // فلش چپ = کاهش ایندکس — گارد مرز: از اولین ستون عبور نکند
+          if (focusIdx % GRID_COLS > 0) next = focusIdx - 1;
+          break;
+        case "ArrowDown":
+          // فلش پایین = +COLS با clamp به انتهای گرید
+          next = Math.min(last, focusIdx + GRID_COLS);
+          break;
+        case "ArrowUp":
+          // فلش بالا = منهای COLS با clamp به ابتدای گرید
+          next = Math.max(0, focusIdx - GRID_COLS);
+          break;
+        default:
+          return;
+      }
+      if (next === focusIdx) return;
+      setFocusIdx(next);
+      // حلقهٔ aria-live — اعلام مقصد؛ کارت بسته فقط شماره می‌گیرد (محتوایش لو نمی‌رود)
+      const dest = cards[next];
+      const face = dest.side === "en" ? `واژه ${dest.word}` : `معنی ${dest.meaning}`;
+      const destMatched = matchedIds.has(dest.id);
+      const revealed = destMatched || openIds.includes(dest.id);
+      setLiveMsg(
+        `کارت شمارهٔ ${faNum(next + 1)}${revealed ? ` — ${face}${destMatched ? " — جفت شد" : ""}` : ""}`,
+      );
+    },
+    [cards, focusIdx, handleCardClick, matchedIds, openIds, paused],
+  );
+
+  // فاز G2-a — گارد اسکرول: کارتِ نشانگرشده همیشه در دید بماند (block: nearest = بدون پرش صفحه)
+  useEffect(() => {
+    if (focusIdx === null) return;
+    gridRef.current
+      ?.querySelector<HTMLButtonElement>('button[data-focused="true"]')
+      ?.scrollIntoView({ block: "nearest" });
+  }, [focusIdx]);
 
   // انصراف حین بازی — با پیشرفت، نگهبان خروج؛ بدون پیشرفت، خروج مستقیم
   const handleExitClick = useCallback(() => {
@@ -557,7 +656,13 @@ export function MemoryGame() {
         onExit={handleExitClick}
       >
       <div className="relative">
+      {/* فاز G2-a — wrapper گرید با tabIndex=0 نقطهٔ ورود Tab است؛ این‌جا onKeyDown می‌گذاریم نه روی هر کارت */}
       <div
+        ref={gridRef}
+        role="group"
+        aria-label="گرید کارت‌ها — با فلش‌ها بین کارت‌ها جابه‌جا شو و با Enter کارت را برگردان"
+        tabIndex={paused ? -1 : 0}
+        onKeyDown={handleGridKeyDown}
         className={cn("grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3", paused && "pointer-events-none blur-sm")}
         aria-hidden={paused}
       >
@@ -565,27 +670,35 @@ export function MemoryGame() {
           const isMatched = matchedIds.has(c.id);
           const isOpen = isMatched || openIds.includes(c.id);
           const isWrong = wrongIds.includes(c.id);
+          // فاز G2-a — aria-label وضعیت‌مند (الگوی describeOption سند): کارت بسته فقط شماره؛
+          // کارت باز/جفت‌شده متن واقعی (واژهٔ انگلیسی یا معنی فارسی) با موقعیت روی گرید
+          const face = c.side === "en" ? `واژه ${c.word}` : `معنی ${c.meaning}`;
           const label = isMatched
-            ? c.side === "en"
-              ? `واژه ${c.word} — جفت شد`
-              : `معنی ${c.meaning} — جفت شد`
+            ? `کارت شمارهٔ ${faNum(i + 1)} — ${face} — جفت شد`
             : isOpen
-              ? c.side === "en"
-                ? `واژه ${c.word}`
-                : `معنی: ${c.meaning}`
-              : `کارت ${faNum(i + 1)} رو به پایین`;
+              ? `کارت شمارهٔ ${faNum(i + 1)} — ${face}`
+              : `کارت شمارهٔ ${faNum(i + 1)}`;
+          // فاز G2-a — الگوی نشانگر سیار: دکمه‌ها از ترتیب Tab خارج‌اند تا دو نشانگر موازی نسازد
           return (
             <button
               key={c.id}
               type="button"
-              onClick={() => handleCardClick(c)}
+              tabIndex={-1}
+              onClick={() => {
+                // فاز G2-a — همگام‌سازی نشانگر کیبورد با لمس/کلیک
+                setFocusIdx(i);
+                handleCardClick(c);
+              }}
               disabled={isMatched}
               aria-pressed={isOpen}
               aria-label={label}
+              data-focused={i === focusIdx ? "true" : undefined}
               className={cn(
-                "flip-scene h-24 sm:h-28 cursor-pointer select-none",
+                "flip-scene h-24 sm:h-28 cursor-pointer select-none rounded-lg",
                 isMatched && "match-pop",
                 isWrong && "match-shake",
+                // فاز G2-a — حلقهٔ کهربایی نشانگر کیبورد چهارجهته
+                i === focusIdx && "ring-2 ring-amber-400 ring-offset-1",
               )}
             >
               <div className={cn("flip-inner", isOpen && "flipped")}>

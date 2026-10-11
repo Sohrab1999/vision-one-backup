@@ -1,20 +1,26 @@
 "use client";
 
 /**
- * بازی «حروف جابه‌جا» (Word Scramble) — فاز ۳ نقشه راه جامع ۲۰۲۶.
+ * بازی «حروف جابه‌جا» (Word Scramble) — فاز ۳ نقشه راه جامع ۲۰۲۶ + مهاجرت GameKit v2 (فاز G2-a-2).
  *
  * حروف واژه‌های انگلیسی به‌هم ریخته می‌شوند؛ بازیکن با معنی فارسی حروف را
  * با کلیک (یا کیبورد) سر جای خودش می‌چیند.
- * - حل درست: recordSRS(✓) + پخش تلفظ
+ * - حل درست: recordSRS(✓) + پخش تلفظ + بازخورد سه‌کانالهٔ کیت (صدا + لرزش + متن)
  * - رد کردن: recordSRS(✗) + نمایش واژهٔ درست برای ۱ ثانیه
+ * - راهنمای هزینه‌دار (کار اختصاصی G2-a): هر بار استفاده −۳۰ امتیاز (کف صفر) +
+ *   شمارندهٔ راهنما + اعلام متنی؛ رکورد دور هم می‌سوزد (قاعدهٔ قبلی، دست‌نخورده)
  * - رکورد: سریع‌ترین اجرای کامل (بدون رد/راهنما) به تفکیک درس و تعداد واژه
+ *
+ * مهاجرت کیت (الگوی پایلوت memory): GameShell + ResultScreen + TutorialOverlay +
+ * useGamePause + GameExitGuard + تله‌متری جلسه — امضاهای shared.ts
+ * (saveAttempt/saveBest/bumpPlays) و کلیدهای localStorage هیچ تغییری نکرده‌اند
+ * (قانون حفظ‌شوندگی §۳-۴ سند نقشه راه بازی‌ها).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   Shuffle,
   Play,
-  RotateCcw,
   Trophy,
   Timer,
   Target,
@@ -25,7 +31,9 @@ import {
   SkipForward,
   Volume2,
   Sparkles,
-  PartyPopper,
+  Pause,
+  Coins,
+  Keyboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,10 +58,22 @@ import {
   saveAttempt,
   subscribeGameData,
 } from "./shared";
+import { playSound, toggleSoundMuted, isSoundMuted } from "./kit/sound-engine";
+import { buzz } from "./kit/haptics";
+import { useGamePause } from "./kit/use-pause";
+import { GameExitGuard } from "./kit/exit-guard";
+import { GameShell } from "./kit/game-shell";
+import { ResultScreen } from "./kit/result-screen";
+import {
+  TutorialOverlay,
+  useAutoTutorial,
+  type TutorialStep,
+} from "./kit/tutorial-overlay";
+import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
 
 type Phase = "setup" | "playing" | "done";
 
-/** کلید بازی — الگوی مشترک همهٔ بازی‌ها (فاز G0-04) */
+/** کلید بازی — الگوی مشترک همهٔ بازی‌ها (فاز G0-04) — هرگز تغییر نمی‌کند */
 const GAME_KEY = "scramble";
 
 /** حرف با شناسه یکتا — حروف تکراری مستقل مدیریت می‌شوند (اینکس‌محور) */
@@ -62,12 +82,12 @@ interface Tile {
   letter: string;
 }
 
-/** شکل رکورد شخصی این بازی */
+/** شکل رکورد شخصی این بازی — سریع‌ترین اجرا (ثانیه) */
 interface BestRec {
   time: number;
 }
 
-/** ردیف جزئیات دور — برای Attempt سروری و فهرست ردشده‌ها */
+/** ردیف جزئیات دور — برای Attempt سروری و مرور خطاهای صفحهٔ نتیجه */
 interface DetailRow {
   word: string;
   ok: boolean;
@@ -79,10 +99,33 @@ const ROUND_OPTIONS = [5, 8, 12];
 /** فقط واژه‌های تک‌کلمه‌ای لاتینِ ۳ تا ۱۲ حرفی وارد بازی می‌شوند */
 const WORD_RE = /^[A-Za-z]{3,12}$/;
 
+/** کار اختصاصی G2-a — امتیاز هر واژهٔ حل‌شده و هزینهٔ هر بار راهنما */
+const SOLVE_POINTS = 100;
+const HINT_COST = 30;
+
 /** واژهٔ پایه — حذف نشانه‌های دستوری داخل پرانتز: "dry (adj.)" → "dry" */
 function baseWord(w: string): string {
   return w.replace(/\s*\([^)]*\)\s*/g, " ").trim();
 }
+
+/** آموزش ۳-گامی استاندارد (فاز G1-08) — گام سوم هزینهٔ راهنما را مستند می‌کند */
+const TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    icon: <Shuffle size={24} />,
+    title: "حروف به‌هم ریخته‌اند",
+    text: "معنی فارسی را بخوان و روی حروف به ترتیب بزن تا واژهٔ انگلیسی ساخته شود.",
+  },
+  {
+    icon: <Keyboard size={24} />,
+    title: "با کیبورد هم سریع‌تری",
+    text: "حرف‌ها را تایپ کن تا سر جایشان بنشینند؛ Backspace حرف آخر را برمی‌گرداند. تلفظ واژه را هم می‌توانی بشنوی.",
+  },
+  {
+    icon: <Lightbulb size={24} />,
+    title: "راهنما هزینه دارد",
+    text: `دکمهٔ راهنما یک حرف درست را سر جایش می‌گذارد، ولی هر بار ${faNum(HINT_COST)} امتیاز می‌سوزاند و رکورد دور هم از دست می‌رود!`,
+  },
+];
 
 export function ScrambleGame() {
   const data = useBookData();
@@ -103,6 +146,8 @@ export function ScrambleGame() {
   const [solved, setSolved] = useState(0);
   const [skipped, setSkipped] = useState(0);
   const [hinted, setHinted] = useState(0);
+  /** کار اختصاصی G2-a — امتیاز دور: هر حل +۱۰۰، هر راهنما −۳۰ (کف صفر) */
+  const [roundScore, setRoundScore] = useState(0);
   const [detail, setDetail] = useState<DetailRow[]>([]);
   const [secs, setSecs] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
@@ -111,6 +156,44 @@ export function ScrambleGame() {
   const [pop, setPop] = useState(false);
   /** واژهٔ درستی که بعد از رد کردن برای ۱ ثانیه نشان داده می‌شود */
   const [reveal, setReveal] = useState<string | null>(null);
+  /** پیام باکس aria-live شِل — بازخورد سه‌کانالهٔ کیت (صدا + لرزش + متن) */
+  const [liveMsg, setLiveMsg] = useState("");
+
+  // فاز G2 — توقف/ادامهٔ استاندارد کیت (تایمر خودکار در تب مخفی هم می‌ایستد) + نگهبان خروج
+  const { paused, resume, pause: pauseGame, toggle: togglePause } = useGamePause((p) => {
+    if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
+  });
+  const [exitAsk, setExitAsk] = useState(false);
+  const [muted, setMuted] = useState(isSoundMuted());
+  // فاز G1-08 — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
+  const {
+    open: tutorialOpen,
+    openHelp: openTutorial,
+    close: closeTutorial,
+  } = useAutoTutorial(GAME_KEY, phase === "setup");
+  const pausedForHelpRef = useRef(false);
+  const handleHelp = useCallback(() => {
+    if (phase === "playing") {
+      pausedForHelpRef.current = true;
+      pauseGame();
+    }
+    openTutorial();
+  }, [openTutorial, pauseGame, phase]);
+  const handleTutorialClose = useCallback(() => {
+    closeTutorial();
+    if (pausedForHelpRef.current) {
+      pausedForHelpRef.current = false;
+      resume();
+    }
+  }, [closeTutorial, resume]);
+  const handleTutorialOpenChange = useCallback(
+    (o: boolean) => {
+      if (!o) handleTutorialClose();
+    },
+    [handleTutorialClose],
+  );
+  // فاز G1-10 — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
+  const sessionRef = useRef<GameSessionTracker | null>(null);
 
   const locked = useRef(false);
   const timer = useRef<number | undefined>(undefined);
@@ -135,19 +218,20 @@ export function ScrambleGame() {
     () => null,
   );
 
-  // ── تایمر (functional) + شمارندهٔ دقیق برای رکورد ──
+  // ── تایمر (functional) + شمارندهٔ دقیق برای رکورد — روی paused گیت می‌شود (فاز G1-03) ──
   useEffect(() => {
-    if (phase !== "playing") return;
+    if (phase !== "playing" || paused) return;
     const t = window.setInterval(() => {
       secsRef.current += 1;
       setSecs((s) => s + 1);
     }, 1000);
     return () => window.clearInterval(t);
-  }, [phase]);
+  }, [phase, paused]);
 
-  // ── پاک‌سازی نهایی: تلفظ + تایمرهای معلق ──
+  // ── پاک‌سازی نهایی: تلفظ + تایمرهای معلق + تله‌متری دورِ باز (tracker اگر گزارش‌شده باشد no-op است) ──
   useEffect(() => {
     return () => {
+      sessionRef.current?.abandon("unmount");
       stopSpeaking();
       if (timer.current !== undefined) window.clearTimeout(timer.current);
     };
@@ -161,12 +245,18 @@ export function ScrambleGame() {
     setPop(false);
   }, []);
 
-  /** پایان دور — استریک/جلسه/Attempt/رکورد */
+  /** پایان دور — استریک/جلسه/Attempt/رکورد + بازخورد سه‌کانالهٔ کیت */
   const finishRun = useCallback(
     (finalSolved: number, finalSkipped: number, finalDetail: DetailRow[]) => {
       touchStreak();
       recordStudySession();
       bumpPlays(bookId, GAME_KEY);
+      // فاز G1-10 — پایان عادی جلسهٔ تله‌متری
+      sessionRef.current?.end("finish");
+      // فاز G2 — پایان دور: برد کامل (بدون هیچ رد) = صدای برد، بقیه = صدای پایان
+      const perfectRun = finalSkipped === 0 && finalSolved === deck.length;
+      playSound(perfectRun ? "win" : "finish");
+      buzz("success");
       saveAttempt(bookId, GAME_KEY, {
         lesson: lesson === ALL_LESSONS ? 0 : lesson,
         total: deck.length,
@@ -174,14 +264,21 @@ export function ScrambleGame() {
         duration: secsRef.current,
         detail: finalDetail,
       });
-      // رکورد فقط برای اجرای کاملِ بدون رد کردن و بدون راهنما
+      // رکورد فقط برای اجرای کاملِ بدون رد کردن و بدون راهنما — قاعدهٔ قبلی (دست‌نخورده)
       if (finalSkipped === 0 && hinted === 0) {
         const recScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`;
         const prev = loadBest<BestRec>(bookId, GAME_KEY, recScope);
         if (!prev || secsRef.current < prev.time) {
           saveBest<BestRec>(bookId, GAME_KEY, recScope, { time: secsRef.current });
           setIsRecord(true);
+          playSound("record");
+          buzz("record");
+          setLiveMsg("دور تمام شد — رکورد جدید! 🏆");
+        } else {
+          setLiveMsg("دور تمام شد! 🎉");
         }
+      } else {
+        setLiveMsg("دور تمام شد! 🎉");
       }
       setPhase("done");
     },
@@ -201,14 +298,19 @@ export function ScrambleGame() {
     [deck, loadWord, finishRun],
   );
 
-  /** حل درست — پاپ + تلفظ + SRS(✓) و بعد واژهٔ بعد */
+  /** حل درست — پاپ + تلفظ + SRS(✓) + امتیاز + بازخورد کیت و بعد واژهٔ بعد */
   const solveWord = useCallback(
     (entry: VocabEntry, finalSolved: number, finalDetail: DetailRow[]) => {
       locked.current = true;
       setPop(true);
+      // کار اختصاصی G2-a — هر واژهٔ حل‌شده امتیاز مثبت دارد
+      setRoundScore((s) => s + SOLVE_POINTS);
       const base = baseWord(entry.word);
       recordSRS(base, true);
       speak(base, { speed });
+      setLiveMsg(`«${base}» حل شد — درست بود! 🎉`);
+      playSound("correct");
+      buzz("success");
       timer.current = window.setTimeout(() => {
         locked.current = false;
         setPop(false);
@@ -221,7 +323,7 @@ export function ScrambleGame() {
   /** گذاشتن یک حرف از استخر در اولین خانهٔ خالی + بررسی حل شدن */
   const placeTile = useCallback(
     (tileId: number) => {
-      if (locked.current) return;
+      if (locked.current || paused) return;
       const current = deck[idx];
       if (!current) return;
       const empty = slots.indexOf(null);
@@ -243,26 +345,42 @@ export function ScrambleGame() {
           setSolved(finalSolved);
           setDetail(nextDetail);
           solveWord(current, finalSolved, nextDetail);
+        } else {
+          // چیده‌شدن غلط — رفتار قبلی (ردیف سر جایش می‌ماند) + بازخورد کیت
+          playSound("wrong");
+          buzz("error");
+          setLiveMsg("چیدمان غلط از آب درآمد — یک حرف را برگردان و دوباره بچین");
         }
+      } else {
+        // فاز G2 — بازخورد کلیکِ حرف (وقتی هنوز واژه کامل نشده)
+        playSound("click");
+        buzz("light");
       }
     },
-    [deck, idx, slots, tiles, solved, detail, solveWord],
+    [deck, idx, slots, tiles, solved, detail, solveWord, paused],
   );
 
   /** برگرداندن حرفِ یک خانه به استخر (کلیک روی خانهٔ پر) */
-  const returnAt = useCallback((index: number) => {
-    if (locked.current) return;
-    setSlots((prev) => {
-      if (prev[index] === null) return prev;
-      const next = [...prev];
-      next[index] = null;
-      return next;
-    });
-  }, []);
+  const returnAt = useCallback(
+    (index: number) => {
+      if (locked.current || paused) return;
+      playSound("click");
+      buzz("light");
+      setSlots((prev) => {
+        if (prev[index] === null) return prev;
+        const next = [...prev];
+        next[index] = null;
+        return next;
+      });
+    },
+    [paused],
+  );
 
   /** پاک کردن آخرین حرف (دکمه یا Backspace) */
   const returnLast = useCallback(() => {
-    if (locked.current) return;
+    if (locked.current || paused) return;
+    playSound("click");
+    buzz("light");
     setSlots((prev) => {
       for (let i = prev.length - 1; i >= 0; i--) {
         if (prev[i] !== null) {
@@ -273,11 +391,15 @@ export function ScrambleGame() {
       }
       return prev;
     });
-  }, []);
+  }, [paused]);
 
-  /** راهنما — یک حرف درستِ بعدی را جای‌گذاری می‌کند (رکورد دور می‌سوزد) */
+  /**
+   * راهنمای هزینه‌دار (کار اختصاصی G2-a) — یک حرف درستِ بعدی را جای‌گذاری می‌کند.
+   * هر بار استفاده: امتیاز دور −۳۰ (کف صفر) + شمارندهٔ راهنما + بازخورد سه‌کاناله
+   * (صدا click + لرزش light + اعلام متنی). رکورد دور هم طبق قاعدهٔ قبلی می‌سوزد.
+   */
   const applyHint = useCallback(() => {
-    if (locked.current) return;
+    if (locked.current || paused) return;
     const current = deck[idx];
     if (!current) return;
     const empty = slots.indexOf(null);
@@ -287,12 +409,16 @@ export function ScrambleGame() {
     const tile = tiles.find((t) => !used.has(t.id) && t.letter === base[empty]);
     if (!tile) return;
     setHinted((h) => h + 1);
+    setRoundScore((s) => Math.max(0, s - HINT_COST));
+    playSound("click");
+    buzz("light");
+    setLiveMsg(`راهنما فعال شد — ${faNum(HINT_COST)} امتیاز کم شد`);
     placeTile(tile.id);
-  }, [deck, idx, slots, tiles, placeTile]);
+  }, [deck, idx, slots, tiles, placeTile, paused]);
 
   /** رد کردن — SRS(✗) + نمایش واژهٔ درست برای ۱ ثانیه (رکورد دور می‌سوزد) */
   const skipWord = useCallback(() => {
-    if (locked.current) return;
+    if (locked.current || paused) return;
     const current = deck[idx];
     if (!current) return;
     locked.current = true;
@@ -303,22 +429,17 @@ export function ScrambleGame() {
     setSkipped(nextSkipped);
     setDetail(nextDetail);
     setReveal(base);
+    setLiveMsg("واژه رد شد — پاسخ درست نشان داده می‌شود");
+    playSound("wrong");
+    buzz("error");
     timer.current = window.setTimeout(() => {
       locked.current = false;
       setReveal(null);
       advanceOrFinish(idx + 1, solved, nextSkipped, nextDetail);
     }, 1000);
-  }, [deck, idx, skipped, detail, solved, advanceOrFinish]);
+  }, [deck, idx, skipped, detail, solved, advanceOrFinish, paused]);
 
-  /** انصراف — تایمرهای معلق پاک و به تنظیمات برگردیم */
-  const cancel = useCallback(() => {
-    if (timer.current !== undefined) window.clearTimeout(timer.current);
-    locked.current = false;
-    stopSpeaking();
-    setPhase("setup");
-  }, []);
-
-  /** شروع دور — انتخاب واژه‌های یکتا از استخر قابل بازی */
+  /** شروع دور — انتخاب واژه‌های یکتا از استخر قابل بازی + جلسهٔ تازهٔ تله‌متری */
   const start = useCallback(() => {
     const chosen = pickUnique(pool, rounds, (w) => baseWord(w.word));
     if (chosen.length < 3) {
@@ -333,17 +454,30 @@ export function ScrambleGame() {
     setSolved(0);
     setSkipped(0);
     setHinted(0);
+    setRoundScore(0);
     setDetail([]);
     setSecs(0);
     setIsRecord(false);
     setReveal(null);
+    setLiveMsg("");
     loadWord(chosen[0]);
+    resume();
+    setExitAsk(false);
+    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور
+    sessionRef.current = createGameSession({
+      game: GAME_KEY,
+      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`,
+    });
+    sessionRef.current.start();
+    // فاز G2 — بازخورد شروع دور
+    playSound("click");
+    buzz("light");
     setPhase("playing");
-  }, [pool, rounds, loadWord]);
+  }, [pool, rounds, loadWord, resume, lesson]);
 
-  // ── کیبورد: فقط در فاز بازی؛ حروف → جای‌گذاری، Backspace → برگرداندن ──
+  // ── کیبورد: فقط در فاز بازی و بدون توقف؛ حروف → جای‌گذاری، Backspace → برگرداندن ──
   useEffect(() => {
-    if (phase !== "playing") return;
+    if (phase !== "playing" || paused) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.key === "Backspace") {
@@ -361,7 +495,21 @@ export function ScrambleGame() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [phase, slots, tiles, placeTile, returnLast]);
+  }, [phase, paused, slots, tiles, placeTile, returnLast]);
+
+  // انصراف حین بازی — با حداقل یک تلاش، نگهبان خروج؛ بدون پیشرفت، خروج مستقیم
+  const handleExitClick = useCallback(() => {
+    stopSpeaking();
+    const hasAttempt =
+      solved > 0 || skipped > 0 || hinted > 0 || slots.some((s) => s !== null);
+    if (hasAttempt) {
+      setExitAsk(true);
+    } else {
+      // فاز G1-10 — دور بدون پیشرفت هم یک جلسه است؛ همین‌جا رهاشده ثبت می‌شود
+      sessionRef.current?.abandon("exit");
+      setPhase("setup");
+    }
+  }, [slots, solved, skipped, hinted]);
 
   const current = deck[idx];
   const usedIds = new Set(slots.filter((s): s is number => s !== null));
@@ -371,349 +519,381 @@ export function ScrambleGame() {
   // ── Setup ──
   if (phase === "setup") {
     return (
-      <Card className="mx-auto max-w-xl rise-in">
-        <CardContent className="space-y-6 p-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
-              <Shuffle size={22} />
-            </span>
+      <>
+        <Card className="mx-auto max-w-xl rise-in">
+          <CardContent className="space-y-6 p-6">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                <Shuffle size={22} />
+              </span>
+              <div>
+                <h2 className="text-lg font-black">حروف جابه‌جا</h2>
+                <p className="text-xs text-muted-foreground">
+                  حروف واژه‌ها ریخته شده — با معنی فارسی سرهمشان کن!
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+              <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+              <p>
+                روی حروف به ترتیب بزن تا واژه ساخته شود؛ کیبورد هم کار می‌کند. هر واژهٔ حل‌شده{" "}
+                {faNum(SOLVE_POINTS)} امتیاز دارد و دکمهٔ راهنما هر بار {faNum(HINT_COST)} امتیاز
+                می‌گیرد — رد کردن یا راهنما رکوردِ دور را هم می‌سوزاند!
+              </p>
+            </div>
+
             <div>
-              <h2 className="text-lg font-black">حروف جابه‌جا</h2>
-              <p className="text-xs text-muted-foreground">
-                حروف واژه‌ها ریخته شده — با معنی فارسی سرهمشان کن!
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
-            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
-            <p>
-              روی حروف به ترتیب بزن تا واژه ساخته شود؛ کیبورد هم کار می‌کند. واژه‌های سخت را می‌توانی رد کنی ولی رکورد می‌سوزد!
-            </p>
-          </div>
-
-          <div>
-            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setLesson(ALL_LESSONS)}
-                className={cn(
-                  "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
-                  lesson === ALL_LESSONS
-                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
-                    : "text-muted-foreground hover:bg-muted",
-                )}
-              >
-                کل کتاب ({faNum(data.vocab.all.length)} واژه)
-              </button>
-              {data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => (
+              <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
                 <button
-                  key={l.lesson}
                   type="button"
-                  onClick={() => setLesson(l.lesson)}
+                  onClick={() => setLesson(ALL_LESSONS)}
+                  aria-pressed={lesson === ALL_LESSONS}
                   className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
-                    lesson === l.lesson
+                    "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                    lesson === ALL_LESSONS
                       ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
                       : "text-muted-foreground hover:bg-muted",
                   )}
                 >
-                  {l.label}
+                  کل کتاب ({faNum(data.vocab.all.length)} واژه)
                 </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-2 text-[13px] font-bold">چند واژه؟</p>
-            <div className="flex flex-wrap gap-2">
-              {ROUND_OPTIONS.map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setRounds(n)}
-                  className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
-                    rounds === n
-                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
-                      : "text-muted-foreground hover:bg-muted",
-                  )}
-                >
-                  {faNum(n)} واژه
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {best !== null && (
-            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
-              <Trophy size={12} />
-              سریع‌ترین اجرا: {fmtTime(best)}
-            </Badge>
-          )}
-
-          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
-            <Play size={18} />
-            شروع بازی
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // ── Done ──
-  if (phase === "done") {
-    const skippedRows = detail
-      .filter((d) => !d.ok)
-      .map((d) => ({
-        word: d.word,
-        meaning: deck.find((w) => baseWord(w.word) === d.word)?.meaning ?? "",
-      }));
-    return (
-      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
-        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
-            <PartyPopper size={30} />
-          </span>
-          <h2 className="text-xl font-black">تمام شد!</h2>
-          {isRecord && (
-            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
-              <Trophy size={13} />
-              رکورد جدید! 🏆
-            </Badge>
-          )}
-
-          <div className="grid w-full grid-cols-3 gap-2 text-center">
-            <div className="rounded-xl bg-muted/60 p-3">
-              <Timer size={16} className="mx-auto text-primary" />
-              <p className="mt-1.5 text-lg font-black leading-none">{fmtTime(secs)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">زمان</p>
-            </div>
-            <div className="rounded-xl bg-muted/60 p-3">
-              <CheckCircle2 size={16} className="mx-auto text-emerald-500" />
-              <p className="mt-1.5 text-lg font-black leading-none">{faNum(solved)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">حل‌شده</p>
-            </div>
-            <div className="rounded-xl bg-muted/60 p-3">
-              <SkipForward size={16} className="mx-auto text-amber-500" />
-              <p className="mt-1.5 text-lg font-black leading-none">{faNum(skipped)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">ردشده</p>
-            </div>
-          </div>
-
-          {skippedRows.length > 0 && (
-            <div className="w-full space-y-1.5 rounded-xl border bg-muted/30 p-3 text-right">
-              <p className="text-[11px] font-bold text-muted-foreground">
-                این‌ها را رد کردی — به مرور هوشمند اضافه شدند:
-              </p>
-              <div className="max-h-44 space-y-1.5 overflow-y-auto">
-                {skippedRows.map((r) => (
-                  <div
-                    key={r.word}
-                    className="flex items-center justify-between gap-2 rounded-lg border bg-card px-3 py-2"
+                {data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => (
+                  <button
+                    key={l.lesson}
+                    type="button"
+                    onClick={() => setLesson(l.lesson)}
+                    aria-pressed={lesson === l.lesson}
+                    className={cn(
+                      "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                      lesson === l.lesson
+                        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                        : "text-muted-foreground hover:bg-muted",
+                    )}
                   >
-                    <span dir="ltr" className="shrink-0 font-en text-[13px] font-black">
-                      {r.word}
-                    </span>
-                    <span className="min-w-0 flex-1 truncate text-[12px] font-bold">{r.meaning}</span>
-                    <Badge
-                      variant="outline"
-                      className="shrink-0 gap-1 border-emerald-500/40 text-[9px] text-emerald-600 dark:text-emerald-400"
-                    >
-                      <CheckCircle2 size={10} />
-                      به مرور اضافه شد
-                    </Badge>
-                  </div>
+                    {l.label}
+                  </button>
                 ))}
               </div>
             </div>
-          )}
 
-          <div className="flex gap-2">
-            <Button onClick={start} className="min-h-11 gap-2">
-              <RotateCcw size={16} />
-              دور جدید
+            <div>
+              <p className="mb-2 text-[13px] font-bold">چند واژه؟</p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="تعداد واژه‌های دور">
+                {ROUND_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setRounds(n)}
+                    aria-pressed={rounds === n}
+                    className={cn(
+                      "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                      rounds === n
+                        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                        : "text-muted-foreground hover:bg-muted",
+                    )}
+                  >
+                    {faNum(n)} واژه
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {best !== null && (
+              <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+                <Trophy size={12} />
+                سریع‌ترین اجرا: {fmtTime(best)}
+              </Badge>
+            )}
+
+            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+              <Play size={18} />
+              شروع بازی
             </Button>
-            <Button variant="outline" className="min-h-11" onClick={() => setPhase("setup")}>
-              تنظیمات
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+        {/* فاز G1-08 — آموزش یک‌بارنمایش در اولین ورود */}
+        <TutorialOverlay
+          game={GAME_KEY}
+          steps={TUTORIAL_STEPS}
+          open={tutorialOpen}
+          onOpenChange={handleTutorialOpenChange}
+        />
+      </>
     );
   }
 
-  // ── Playing ──
+  // ── Done — صفحهٔ نتیجهٔ استاندارد کیت (فاز G1-06) ──
+  if (phase === "done") {
+    // ستاره‌بندی per-game: دقت ≥۹۰٪ → ۳ ستاره، ≥۶۵٪ → ۲، بقیه → ۱
+    const acc = Math.round((solved / Math.max(deck.length, 1)) * 100);
+    const stars = acc >= 90 ? 3 : acc >= 65 ? 2 : 1;
+    const reviewRows = detail
+      .filter((d) => !d.ok)
+      .map((d) => ({
+        front: d.word,
+        back: deck.find((w) => baseWord(w.word) === d.word)?.meaning ?? "",
+      }));
+    return (
+      <ResultScreen
+        title={`دور تمام شد — ${fmtTime(secs)}`}
+        stars={stars}
+        isRecord={isRecord}
+        errorCount={skipped}
+        reviewItems={reviewRows}
+        stats={[
+          {
+            label: "امتیاز",
+            value: faNum(roundScore),
+            icon: <Coins size={16} className="text-amber-500" />,
+          },
+          {
+            label: "دقت",
+            value: `${faNum(acc)}٪`,
+            icon: <Target size={16} className="text-teal-500" />,
+          },
+          {
+            label: "راهنما",
+            value: faNum(hinted),
+            icon: <Lightbulb size={16} className="text-primary" />,
+          },
+        ]}
+        onReplay={start}
+        onExit={() => setPhase("setup")}
+        exitLabel="تنظیمات"
+      />
+    );
+  }
+
+  // ── Playing — قاب استاندارد GameShell (فاز G1-05) ──
   return (
-    <div className="mx-auto max-w-xl space-y-4 rise-in">
-      {/* نوار بالا */}
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="secondary" className="gap-1 text-[11px]">
-          <Target size={11} className="text-amber-500" />
-          واژه {faNum(idx + 1)} از {faNum(deck.length)}
-        </Badge>
-        <Badge variant="secondary" className="gap-1 text-[11px]">
-          <Timer size={11} />
-          {fmtTime(secs)}
-        </Badge>
-        <Badge variant="secondary" className="gap-1 text-[11px]">
-          <CheckCircle2 size={11} className="text-primary" />
-          {faNum(solved)} حل‌شده
-        </Badge>
-        {skipped > 0 && (
-          <Badge variant="outline" className="gap-1 border-destructive/40 text-[11px] text-destructive">
-            <XCircle size={11} />
-            {faNum(skipped)} ردشده
-          </Badge>
-        )}
-        <div className="mr-auto">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={cancel}
-            className="h-11 text-[11px] text-muted-foreground"
-          >
-            انصراف
-          </Button>
-        </div>
-      </div>
-
-      {/* نوار پیشرفت */}
-      <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-
-      {/* کارت واژه */}
-      {current && (
-        <div className="space-y-5 rounded-2xl border bg-card p-6">
-          {/* ردیف متا */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <Badge variant="secondary" className="text-[10px]">
-                {current.lessonLabel}
+    <>
+      <GameShell
+        title="حروف جابه‌جا"
+        icon={<Shuffle size={18} />}
+        stats={
+          <>
+            <Badge variant="secondary" className="gap-1 text-[11px]">
+              <Target size={11} className="text-amber-500" />
+              واژه {faNum(idx + 1)} از {faNum(deck.length)}
+            </Badge>
+            <Badge variant="secondary" className="gap-1 text-[11px]">
+              <Timer size={11} />
+              {fmtTime(secs)}
+            </Badge>
+            <Badge variant="secondary" className="gap-1 text-[11px]">
+              <Coins size={11} className="text-amber-500" />
+              {faNum(roundScore)} امتیاز
+            </Badge>
+            <Badge variant="secondary" className="gap-1 text-[11px]">
+              <CheckCircle2 size={11} className="text-primary" />
+              {faNum(solved)} حل‌شده
+            </Badge>
+            {skipped > 0 && (
+              <Badge variant="outline" className="gap-1 border-destructive/40 text-[11px] text-destructive">
+                <XCircle size={11} />
+                {faNum(skipped)} ردشده
               </Badge>
-              {current.pos && (
-                <Badge variant="outline" dir="ltr" className="font-en text-[10px]">
-                  {current.pos}
-                </Badge>
+            )}
+            {hinted > 0 && (
+              <Badge variant="outline" className="gap-1 border-amber-500/40 text-[11px] text-amber-600 dark:text-amber-400">
+                <Lightbulb size={11} />
+                {faNum(hinted)} راهنما
+              </Badge>
+            )}
+          </>
+        }
+        liveMsg={liveMsg}
+        progress={
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        }
+        paused={paused}
+        onPauseToggle={togglePause}
+        muted={muted}
+        onMuteToggle={() => setMuted(toggleSoundMuted())}
+        onHelp={handleHelp}
+        onExit={handleExitClick}
+      >
+        <div className="relative">
+          {current && (
+            <div
+              className={cn(
+                "space-y-5 rounded-2xl border bg-card p-4 sm:p-6",
+                paused && "pointer-events-none select-none blur-sm",
               )}
-            </div>
-            <button
-              type="button"
-              dir="ltr"
-              aria-label="پخش تلفظ"
-              onClick={() => speak(baseWord(current.word), { speed })}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+              aria-hidden={paused}
             >
-              <Volume2 size={18} />
-            </button>
-          </div>
+              {/* ردیف متا */}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <Badge variant="secondary" className="text-[10px]">
+                    {current.lessonLabel}
+                  </Badge>
+                  {current.pos && (
+                    <Badge variant="outline" dir="ltr" className="font-en text-[10px]">
+                      {current.pos}
+                    </Badge>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  dir="ltr"
+                  aria-label="پخش تلفظ"
+                  onClick={() => speak(baseWord(current.word), { speed })}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+                >
+                  <Volume2 size={18} />
+                </button>
+              </div>
 
-          {/* راهنمای فارسی */}
-          <div className="rounded-xl bg-muted/50 p-3 text-center">
-            <p className="text-[10px] font-bold text-muted-foreground">معنی</p>
-            <p className="mt-0.5 text-[15px] font-black leading-7">{current.meaning}</p>
-          </div>
+              {/* راهنمای فارسی */}
+              <div className="rounded-xl bg-muted/50 p-3 text-center">
+                <p className="text-[10px] font-bold text-muted-foreground">معنی</p>
+                <p className="mt-0.5 text-[15px] font-black leading-7">{current.meaning}</p>
+              </div>
 
-          {/* نمایش واژهٔ درست پس از رد کردن */}
-          {reveal && (
-            <div className="flex justify-center">
-              <Badge className="gap-1.5 border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                <CheckCircle2 size={12} />
-                <span dir="ltr" className="font-en">
-                  {reveal}
-                </span>
-              </Badge>
+              {/* نمایش واژهٔ درست پس از رد کردن */}
+              {reveal && (
+                <div className="flex justify-center">
+                  <Badge className="gap-1.5 border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                    <CheckCircle2 size={12} />
+                    <span dir="ltr" className="font-en">
+                      {reveal}
+                    </span>
+                  </Badge>
+                </div>
+              )}
+
+              {/* ردیف پاسخ */}
+              <div
+                dir="ltr"
+                className={cn(
+                  "flex min-h-14 flex-wrap items-center justify-center gap-1.5",
+                  pop && "match-pop",
+                )}
+              >
+                {slots.map((slotId, i) =>
+                  slotId === null ? (
+                    <div
+                      key={`slot-${i}`}
+                      className="h-12 w-12 rounded-xl border-2 border-dashed border-muted-foreground/30"
+                    />
+                  ) : (
+                    <button
+                      key={`slot-${i}`}
+                      type="button"
+                      onClick={() => returnAt(i)}
+                      disabled={busy}
+                      aria-label={`برگرداندن حرف ${letterOf(slotId)}`}
+                      className="h-12 w-12 rounded-xl border-2 border-primary/40 bg-primary/10 font-en text-xl font-black text-primary transition-all hover:border-primary/70 hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-60"
+                    >
+                      {letterOf(slotId)}
+                    </button>
+                  ),
+                )}
+              </div>
+
+              {/* استخر حروف */}
+              <div dir="ltr" className="flex flex-wrap items-center justify-center gap-2">
+                {tiles.map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => placeTile(t.id)}
+                    disabled={usedIds.has(t.id) || busy}
+                    aria-label={`حرف ${t.letter}`}
+                    className={cn(
+                      "h-12 w-12 rounded-xl border bg-card font-en text-lg font-black shadow-sm transition-all",
+                      "hover:border-primary/50 hover:bg-primary/5",
+                      "disabled:pointer-events-none disabled:opacity-25",
+                    )}
+                  >
+                    {t.letter}
+                  </button>
+                ))}
+              </div>
+
+              {/* دکمه‌های کمکی — در موبایل ستونی تا لیبل هزینه‌دار راهنما کامل جا شود */}
+              <div className="grid gap-2 sm:grid-cols-3">
+                <Button
+                  variant="outline"
+                  onClick={returnLast}
+                  disabled={busy}
+                  className="min-h-11 gap-1.5 text-[12px]"
+                >
+                  <Eraser size={15} />
+                  پاک کردن
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={applyHint}
+                  disabled={busy}
+                  className="min-h-11 gap-1.5 border-amber-500/40 text-[12px] text-amber-600 hover:bg-amber-500/10 hover:text-amber-600 dark:text-amber-400"
+                >
+                  <Lightbulb size={15} />
+                  {`راهنما (−${faNum(HINT_COST)} امتیاز)`}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={skipWord}
+                  disabled={busy}
+                  className="min-h-11 gap-1.5 text-[12px] text-destructive hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <SkipForward size={15} />
+                  رد کردن
+                </Button>
+              </div>
+
+              <p className="text-center text-[10px] text-muted-foreground">
+                کیبورد: حروف انگلیسی جای‌گذاری می‌کنند · Backspace حرف آخر را برمی‌گرداند
+              </p>
             </div>
           )}
 
-          {/* ردیف پاسخ */}
-          <div
-            dir="ltr"
-            className={cn(
-              "flex min-h-14 flex-wrap items-center justify-center gap-1.5",
-              pop && "match-pop",
-            )}
-          >
-            {slots.map((slotId, i) =>
-              slotId === null ? (
-                <div
-                  key={`slot-${i}`}
-                  className="h-12 w-12 rounded-xl border-2 border-dashed border-muted-foreground/30"
-                />
-              ) : (
-                <button
-                  key={`slot-${i}`}
-                  type="button"
-                  onClick={() => returnAt(i)}
-                  disabled={busy}
-                  className="h-12 w-12 rounded-xl border-2 border-primary/40 bg-primary/10 font-en text-xl font-black text-primary transition-all hover:border-primary/70 hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-60"
-                >
-                  {letterOf(slotId)}
-                </button>
-              ),
-            )}
-          </div>
-
-          {/* استخر حروف */}
-          <div dir="ltr" className="flex flex-wrap items-center justify-center gap-2">
-            {tiles.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => placeTile(t.id)}
-                disabled={usedIds.has(t.id) || busy}
-                className={cn(
-                  "h-12 w-12 rounded-xl border bg-card font-en text-lg font-black shadow-sm transition-all",
-                  "hover:border-primary/50 hover:bg-primary/5",
-                  "disabled:pointer-events-none disabled:opacity-25",
-                )}
-              >
-                {t.letter}
-              </button>
-            ))}
-          </div>
-
-          {/* دکمه‌های کمکی */}
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={returnLast}
-              disabled={busy}
-              className="min-h-11 flex-1 gap-1.5 text-[12px]"
-            >
-              <Eraser size={15} />
-              پاک کردن
-            </Button>
-            <Button
-              variant="outline"
-              onClick={applyHint}
-              disabled={busy}
-              className="min-h-11 flex-1 gap-1.5 border-amber-500/40 text-[12px] text-amber-600 hover:bg-amber-500/10 hover:text-amber-600 dark:text-amber-400"
-            >
-              <Lightbulb size={15} />
-              راهنما
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={skipWord}
-              disabled={busy}
-              className="min-h-11 flex-1 gap-1.5 text-[12px] text-destructive hover:bg-destructive/10 hover:text-destructive"
-            >
-              <SkipForward size={15} />
-              رد کردن
-            </Button>
-          </div>
-
-          <p className="text-center text-[10px] text-muted-foreground">
-            کیبورد: حروف انگلیسی جای‌گذاری می‌کنند · Backspace حرف آخر را برمی‌گرداند
-          </p>
+          {/* فاز G1-03 — اورلی توقف: بدنه تار و غیرقابل‌کلیک؛ اعلام متنی در liveMsg شِل */}
+          {paused && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <Pause size={26} />
+              </span>
+              <p className="text-sm font-black">بازی متوقف شد</p>
+              <Button onClick={resume} className="h-11 gap-2">
+                <Play size={16} />
+                ادامهٔ بازی
+              </Button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+
+        {/* فاز G1-04 — نگهبان خروج استاندارد کیت */}
+        <GameExitGuard
+          open={exitAsk}
+          onOpenChange={setExitAsk}
+          onConfirm={() => {
+            // فاز G1-10 — رهاکردن دور نیمه‌کاره
+            sessionRef.current?.abandon("exit");
+            if (timer.current !== undefined) window.clearTimeout(timer.current);
+            locked.current = false;
+            stopSpeaking();
+            setExitAsk(false);
+            resume();
+            setPhase("setup");
+          }}
+        />
+      </GameShell>
+      {/* فاز G1-08 — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
+      <TutorialOverlay
+        game={GAME_KEY}
+        steps={TUTORIAL_STEPS}
+        open={tutorialOpen}
+        onOpenChange={handleTutorialOpenChange}
+      />
+    </>
   );
 }

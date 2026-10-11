@@ -1,25 +1,34 @@
 "use client";
 
 /**
- * بازی «جای خالی» (Cloze) — فاز ۳ نقشه راه جامع ۲۰۲۶.
+ * بازی «جای خالی» (Cloze) — فاز ۳ نقشه راه جامع ۲۰۲۶ + فاز G2-b نقشه راه بازی‌ها.
  *
  * جمله‌های واقعی متن‌ها (readings) و مکالمه‌ها (conversations) خود کتاب با جای خالیِ
  * واژه هدف؛ انتخاب از ۳ گزینه. پاسخ درست در SRS ثبت و تلفظش پخش می‌شود؛ پاسخ غلط
  * واژه را به صف «مرور هوشمند» می‌فرستد (همان مسیر غلط آزمون).
+ *
+ * فاز G2-b (کیت GameKit v2 — الگوی پایلوت memory / دارباز):
+ * - GameShell + ResultScreen + آموزش ۳گامی (useAutoTutorial) + Pause (تایمر گیت روی
+ *   paused) + نگهبان خروج + تله‌متری جلسه (start/end/abandon) + صدا/لرزش سه‌کاناله
+ * - کار اختصاصی G2-b: کیبورد ۱..۳ برای انتخاب گزینه — حین playing کلیدهای ۱/۲/۳
+ *   (لاتین و فارسی) همان گزینهٔ N را پاسخ می‌دهند (گارد فاز/توقف/پنجرهٔ باز نگهبان)؛
+ *   هر گزینهٔ دکمه‌ای <kbd> شماره‌دار + aria-keyshortcuts دارد و liveMsg «گزینه N»
+ *   را برای فناوری‌های کمکی اعلام می‌کند.
+ * - امضاهای shared.ts (saveAttempt/saveBest/bumpPlays) و کلیدهای localStorage
+ *   دست‌نخورده — قانون حفظ‌شوندگی §۳-۴ سند بازی‌ها.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   PencilLine,
   Play,
-  RotateCcw,
   Trophy,
   Timer,
   Target,
   CheckCircle2,
-  XCircle,
   Sparkles,
-  PartyPopper,
+  Pause,
+  Keyboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -46,6 +55,19 @@ import {
   subscribeGameData,
   bestKeyOf,
 } from "./shared";
+// فاز G2-b — کیت GameKit v2 (قرارداد API سند)
+import { playSound, toggleSoundMuted, isSoundMuted } from "./kit/sound-engine";
+import { buzz } from "./kit/haptics";
+import { useGamePause } from "./kit/use-pause";
+import { GameExitGuard } from "./kit/exit-guard";
+import { GameShell } from "./kit/game-shell";
+import { ResultScreen } from "./kit/result-screen";
+import {
+  TutorialOverlay,
+  useAutoTutorial,
+  type TutorialStep,
+} from "./kit/tutorial-overlay";
+import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
 
 const GAME_KEY = "cloze";
 const ALL_LESSONS = -1;
@@ -53,6 +75,15 @@ const MAX_ITEMS = 40;
 const BLANK = "______";
 const ROUND_OPTIONS = [6, 10, 14];
 const WORD_RE = /^[A-Za-z]{3,14}$/;
+/** فاز G2-b — نگاشت کلیدهای کیبورد ۱..۳ (لاتین + فارسی) به شمارهٔ گزینه */
+const OPTION_KEYS: Record<string, number> = {
+  "1": 1,
+  "2": 2,
+  "3": 3,
+  "۱": 1,
+  "۲": 2,
+  "۳": 3,
+};
 
 type Phase = "setup" | "playing" | "done";
 
@@ -84,6 +115,25 @@ interface SourceSentence {
   en: string;
   fa: string;
 }
+
+/** فاز G2-b — آموزش ۳-گامی استاندارد (الگوی پایلوت memory / G1-08) */
+const TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    icon: <PencilLine size={24} />,
+    title: "واژهٔ گم‌شده را پیدا کن",
+    text: "جمله از متن‌ها و مکالمه‌های خود کتاب آمده؛ با کمک ترجمهٔ فارسی، جای خالی را پر کن.",
+  },
+  {
+    icon: <Keyboard size={24} />,
+    title: "سه گزینه، یک درست",
+    text: "از بین ۳ گزینه واژهٔ درست را انتخاب کن — با کلیدهای ۱ و ۲ و ۳ روی کیبورد هم می‌توانی جواب بدهی.",
+  },
+  {
+    icon: <Trophy size={24} />,
+    title: "دقت بالاتر = ستارهٔ بیشتر",
+    text: "پاسخ درست تلفظ می‌شود و در مرور هوشمند ثبت می‌شود؛ غلط‌ها به صف مرور می‌روند — تا ۳ ستاره جمع کن!",
+  },
+];
 
 /** واژه هدف بدون پرانتز توضیح — «order (n)» → «order» */
 function toBase(word: string): string {
@@ -217,11 +267,58 @@ export function ClozeGame() {
   const [wrongList, setWrongList] = useState<WrongItem[]>([]);
   const [secs, setSecs] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
+  /** فاز G2-b — پیام باکس aria-live (اعلام پاسخ/توقف/گزینهٔ کیبورد) برای فناوری‌های کمکی */
+  const [liveMsg, setLiveMsg] = useState("");
+
+  // فاز G2-b — توقف/ادامهٔ استاندارد کیت + نگهبان خروج + کلید صدا (الگوی پایلوت memory/دارباز)
+  // توقف خودکار در تب مخفی از خود هوک می‌آید — در بازگشت اورلی «متوقف شد» دیده می‌شود
+  const { paused, resume, pause: pauseGame, toggle: togglePause } = useGamePause((p) => {
+    if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
+  });
+  const [exitAsk, setExitAsk] = useState(false);
+  // الگوی دارباز: state بی‌صدا + همگام‌سازی با کلید سراسری (storage بین-تب) و toggle در هندلر
+  const [muted, setMuted] = useState(isSoundMuted());
+  useEffect(() => {
+    const sync = () => setMuted(isSoundMuted());
+    sync();
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
+  }, []);
+  // فاز G2-b — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
+  const {
+    open: tutorialOpen,
+    openHelp: openTutorial,
+    close: closeTutorial,
+  } = useAutoTutorial(GAME_KEY, phase === "setup");
+  const pausedForHelpRef = useRef(false);
+  const handleHelp = useCallback(() => {
+    if (phase === "playing") {
+      pausedForHelpRef.current = true;
+      pauseGame();
+    }
+    openTutorial();
+  }, [openTutorial, pauseGame, phase]);
+  const handleTutorialClose = useCallback(() => {
+    closeTutorial();
+    if (pausedForHelpRef.current) {
+      pausedForHelpRef.current = false;
+      resume();
+    }
+  }, [closeTutorial, resume]);
+  const handleTutorialOpenChange = useCallback(
+    (o: boolean) => {
+      if (!o) handleTutorialClose();
+    },
+    [handleTutorialClose],
+  );
+  // فاز G2-b — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
+  const sessionRef = useRef<GameSessionTracker | null>(null);
 
   const { speed } = useVoiceSpeed();
   const busy = useRef(false);
   const advanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrongRef = useRef<WrongItem[]>([]);
+  const secsRef = useRef(0);
 
   // استخر پازل هر محدوده — یک‌بار برای کل کتاب + هر درس (تابع خالص)
   const pools = useMemo(() => {
@@ -251,21 +348,34 @@ export function ClozeGame() {
     () => null,
   );
 
-  // تایمر — آپدیت functional
+  // تایمر — آپدیت functional + شمارندهٔ دقیق برای Attempt
+  // فاز G2-b — گیت روی paused: توقف دستی یا خودکارِ تب مخفی هیچ تیکی جلو نمی‌برد
   useEffect(() => {
-    if (phase !== "playing") return;
-    const t = setInterval(() => setSecs((s) => s + 1), 1000);
-    return () => clearInterval(t);
-  }, [phase]);
+    if (phase !== "playing" || paused) return;
+    const t = window.setInterval(() => {
+      secsRef.current += 1;
+      setSecs((s) => s + 1);
+    }, 1000);
+    return () => window.clearInterval(t);
+  }, [phase, paused]);
 
-  useEffect(() => () => stopSpeaking(), []);
-
-  useEffect(
-    () => () => {
+  // فاز G2-b — پاک‌سازی نهایی: تلفظ + تایمر پیشروی + ثبت «رهاشده» تله‌متری (اگر باز باشد no-op)
+  useEffect(() => {
+    return () => {
+      sessionRef.current?.abandon("unmount");
+      stopSpeaking();
       if (advanceRef.current) clearTimeout(advanceRef.current);
-    },
-    [],
-  );
+    };
+  }, []);
+
+  /** پاک‌سازی تایمر پیشروی — مسیرهای خروج/شروع دوباره */
+  const clearAdvance = useCallback(() => {
+    if (advanceRef.current) {
+      clearTimeout(advanceRef.current);
+      advanceRef.current = null;
+    }
+    busy.current = false;
+  }, []);
 
   const start = useCallback(() => {
     const pool = pools.get(lesson) ?? [];
@@ -273,10 +383,10 @@ export function ClozeGame() {
       toast.error("در این محدوده جمله مناسب پیدا نشد — درس دیگری را امتحان کن");
       return;
     }
-    if (advanceRef.current) {
-      clearTimeout(advanceRef.current);
-      advanceRef.current = null;
-    }
+    // فاز G2-b — بازخورد کلیک شروع دور (از setup و «دور جدید» نتیجه)
+    playSound("click");
+    buzz("light");
+    clearAdvance();
     stopSpeaking();
     setDeck(shuffle(pool).slice(0, Math.min(rounds, pool.length)));
     setIdx(0);
@@ -285,61 +395,96 @@ export function ClozeGame() {
     setWrongList([]);
     wrongRef.current = [];
     setSecs(0);
+    secsRef.current = 0;
     setIsRecord(false);
-    busy.current = false;
+    setLiveMsg("");
+    resume();
+    setExitAsk(false);
+    // فاز G2-b — جلسهٔ تازهٔ تله‌متری برای این دور
+    sessionRef.current = createGameSession({
+      game: GAME_KEY,
+      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`,
+    });
+    sessionRef.current.start();
     setPhase("playing");
-  }, [pools, lesson, rounds]);
+  }, [pools, lesson, rounds, resume, clearAdvance]);
 
   const finish = useCallback(
     (finalCorrect: number) => {
       touchStreak();
       recordStudySession();
       bumpPlays(bookId, GAME_KEY);
+      // فاز G2-b — پایان عادی جلسهٔ تله‌متری
+      sessionRef.current?.end("finish");
+      // فاز G2-b — بازخورد سه‌کانالهٔ پایان دور (دور بی‌نقص = صدای win — الگوی دارباز)
+      const perfect = deck.length > 0 && finalCorrect === deck.length;
+      playSound(perfect ? "win" : "finish");
+      buzz("success");
       saveAttempt(bookId, GAME_KEY, {
         lesson: lesson === ALL_LESSONS ? 0 : lesson,
         total: deck.length,
         correct: finalCorrect,
-        duration: secs,
+        duration: secsRef.current,
         detail: deck.map((it) => ({
           word: it.answer,
           ok: !wrongRef.current.some((w) => w.word === it.answer),
         })),
       });
+      let newRecord = false;
       try {
         const prev = loadBest<BestRecord>(bookId, GAME_KEY, scope);
         if (!prev || finalCorrect > prev.score) {
           saveBest<BestRecord>(bookId, GAME_KEY, scope, { score: finalCorrect, total: deck.length });
           setIsRecord(true);
+          newRecord = true;
         }
       } catch {
         /* noop */
       }
       const acc = Math.round((finalCorrect / Math.max(deck.length, 1)) * 100);
-      toast.success(`جای خالی‌ها پر شد — ${faNum(acc)}٪ دقت! ✏️`);
+      if (newRecord) {
+        // فاز G2-b — رکورد جدید: صدا + لرزش رکورد (الگوی پایلوت)
+        playSound("record");
+        buzz("record");
+        toast.success(`رکورد جدید! ${faNum(finalCorrect)} از ${faNum(deck.length)} پاسخ درست 🏆`);
+      } else {
+        toast.success(`جای خالی‌ها پر شد — ${faNum(acc)}٪ دقت! ✏️`);
+      }
+      setLiveMsg(perfect ? "همه واژه‌ها درست بود — بی‌نقص! 🎉" : "دور تمام شد!");
       setPhase("done");
     },
-    [bookId, deck, lesson, scope, secs],
+    [bookId, deck, lesson, scope],
   );
 
   const answer = useCallback(
-    (opt: string) => {
-      if (busy.current || picked !== null) return;
+    (opt: string, viaKey?: number) => {
+      if (busy.current || picked !== null || paused) return;
       const item = deck[idx];
       if (!item) return;
       const ok = opt === item.answer;
       busy.current = true;
       setPicked(opt);
+      // فاز G2-b — اعلام aria: با کیبورد «گزینه N» هم ابتدا اعلام می‌شود (کار اختصاصی G2-b)
+      const keyPrefix = viaKey ? `گزینه ${faNum(viaKey)} — ` : "";
       let finalCorrect = correctCount;
       if (ok) {
         finalCorrect = correctCount + 1;
         setCorrectCount(finalCorrect);
         recordSRS(item.answer, true);
         speak(item.answer, { speed });
+        // فاز G2-b — بازخورد سه‌کانالهٔ پاسخ درست
+        playSound("correct");
+        buzz("success");
+        setLiveMsg(`${keyPrefix}درست بود! «${item.answer}» 🎉`);
       } else {
         seedReviewFromQuiz(item.answer);
         const w: WrongItem = { word: item.answer, meaning: item.meaning };
         wrongRef.current = [...wrongRef.current, w];
         setWrongList((prev) => [...prev, w]);
+        // فاز G2-b — بازخورد سه‌کانالهٔ پاسخ غلط
+        playSound("wrong");
+        buzz("error");
+        setLiveMsg(`${keyPrefix}غلط بود — پاسخ «${item.answer}» بود`);
       }
       const nextIdx = idx + 1;
       advanceRef.current = setTimeout(() => {
@@ -352,186 +497,209 @@ export function ClozeGame() {
         }
       }, 1000);
     },
-    [picked, deck, idx, correctCount, speed, finish],
+    [picked, deck, idx, correctCount, speed, finish, paused],
   );
 
-  const cancel = useCallback(() => {
-    if (advanceRef.current) {
-      clearTimeout(advanceRef.current);
-      advanceRef.current = null;
-    }
+  // ── فاز G2-b — کار اختصاصی: کیبورد ۱..۳ برای انتخاب گزینه (رفع شکاف کیبورد سند §۵-G2-b) ──
+  // الگوی latest-ref (دارباز): listener پایدار روی window فقط حین playing — کلیدهای
+  // ۱/۲/۳ لاتین یا فارسی همان گزینهٔ N را پاسخ می‌دهند. گاردها: فاز playing + توقف +
+  // پنجرهٔ باز نگهبان خروج (سطح effect) و قفل busy/پاسخ‌داده‌شده (داخل answer).
+  const pickByKeyRef = useRef<(n: number) => void>(() => {});
+  useEffect(() => {
+    pickByKeyRef.current = (n: number) => {
+      const item = deck[idx];
+      if (!item) return;
+      const opt = item.options[n - 1];
+      if (!opt) return;
+      answer(opt, n);
+    };
+  });
+
+  useEffect(() => {
+    if (phase !== "playing" || paused || exitAsk) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.repeat) return; // نگه‌داشتن کلید نباید چند پرسش را پشت‌سرهم پاسخ دهد
+      const n = OPTION_KEYS[e.key];
+      if (!n) return;
+      e.preventDefault();
+      pickByKeyRef.current(n);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phase, paused, exitAsk]);
+
+  // انصراف حین دور — فاز G2-b (نگهبان خروج): با حداقل یک پاسخ، GameExitGuard؛
+  // بدون هیچ پاسخی، خروج مستقیم + تله‌متری abandon
+  const handleExitClick = useCallback(() => {
     stopSpeaking();
-    busy.current = false;
-    setPhase("setup");
-  }, []);
+    if (idx > 0 || picked !== null) {
+      setExitAsk(true);
+    } else {
+      clearAdvance();
+      // دور بدون پیشرفت هم یک جلسه است؛ همین‌جا رهاشده ثبت می‌شود
+      sessionRef.current?.abandon("exit");
+      resume();
+      setPhase("setup");
+    }
+  }, [idx, picked, resume, clearAdvance]);
 
   // ── Setup ──
   if (phase === "setup") {
     return (
-      <Card className="mx-auto max-w-xl rise-in">
-        <CardContent className="space-y-6 p-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
-              <PencilLine size={22} />
-            </span>
-            <div>
-              <h2 className="text-lg font-black">جای خالی</h2>
-              <p className="text-xs text-muted-foreground">جمله‌های خود کتاب — واژه گم‌شده را پیدا کن!</p>
+      <>
+        <Card className="mx-auto max-w-xl rise-in">
+          <CardContent className="space-y-6 p-6">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
+                <PencilLine size={22} />
+              </span>
+              <div>
+                <h2 className="text-lg font-black">جای خالی</h2>
+                <p className="text-xs text-muted-foreground">جمله‌های خود کتاب — واژه گم‌شده را پیدا کن!</p>
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
-            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
-            <p>
-              جمله از متن‌ها و مکالمه‌های همین جزوه آمده؛ ترجمه فارسی پایین کارت کمکت می‌کند. غلط بزنی، واژه به صف
-              مرور هوشمند می‌رود.
-            </p>
-          </div>
+            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+              <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+              <p>
+                جمله از متن‌ها و مکالمه‌های همین جزوه آمده؛ ترجمه فارسی پایین کارت کمکت می‌کند. غلط بزنی، واژه به صف
+                مرور هوشمند می‌رود.
+              </p>
+            </div>
 
-          <div>
-            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
-            <div className="flex flex-wrap gap-2">
-              {lessonOptions.map((o) => {
-                const count = pools.get(o.lesson)?.length ?? 0;
-                const active = lesson === o.lesson;
-                return (
-                  <button
-                    key={o.lesson}
-                    type="button"
-                    disabled={count === 0}
-                    onClick={() => setLesson(o.lesson)}
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
-                      active
-                        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
-                        : "text-muted-foreground hover:bg-muted",
-                      count === 0 && "opacity-50",
-                    )}
-                  >
-                    {o.label}
-                    <Badge
+            <div>
+              <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+                {lessonOptions.map((o) => {
+                  const count = pools.get(o.lesson)?.length ?? 0;
+                  const active = lesson === o.lesson;
+                  return (
+                    <button
+                      key={o.lesson}
+                      type="button"
+                      disabled={count === 0}
+                      aria-pressed={active}
+                      onClick={() => {
+                        playSound("click");
+                        buzz("light");
+                        setLesson(o.lesson);
+                      }}
                       className={cn(
-                        "rounded-full border-0 px-1.5 py-0 text-[9px] font-bold",
-                        active ? "bg-primary-foreground/20 text-primary-foreground" : "bg-muted text-muted-foreground",
+                        "flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                        active
+                          ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                          : "text-muted-foreground hover:bg-muted",
+                        count === 0 && "opacity-50",
                       )}
                     >
-                      {faNum(count)} جمله آماده
-                    </Badge>
+                      {o.label}
+                      <Badge
+                        className={cn(
+                          "rounded-full border-0 px-1.5 py-0 text-[9px] font-bold",
+                          active
+                            ? "bg-primary-foreground/20 text-primary-foreground"
+                            : "bg-muted text-muted-foreground",
+                        )}
+                      >
+                        {faNum(count)} جمله آماده
+                      </Badge>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 text-[13px] font-bold">چند پرسش؟</p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="تعداد پرسش‌های دور">
+                {ROUND_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    aria-pressed={rounds === n}
+                    onClick={() => {
+                      playSound("click");
+                      buzz("light");
+                      setRounds(n);
+                    }}
+                    className={cn(
+                      "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                      rounds === n
+                        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                        : "text-muted-foreground hover:bg-muted",
+                    )}
+                  >
+                    {faNum(n)} پرسش
                   </button>
-                );
-              })}
+                ))}
+              </div>
+              {poolCount > 0 && poolCount < rounds && (
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  در این محدوده فقط {faNum(poolCount)} پرسش آماده است — همین تعداد پرسیده می‌شود.
+                </p>
+              )}
             </div>
-          </div>
 
-          <div>
-            <p className="mb-2 text-[13px] font-bold">چند پرسش؟</p>
-            <div className="flex flex-wrap gap-2">
-              {ROUND_OPTIONS.map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setRounds(n)}
-                  className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
-                    rounds === n
-                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
-                      : "text-muted-foreground hover:bg-muted",
-                  )}
-                >
-                  {faNum(n)} پرسش
-                </button>
-              ))}
-            </div>
-            {poolCount > 0 && poolCount < rounds && (
-              <p className="mt-2 text-[11px] text-muted-foreground">
-                در این محدوده فقط {faNum(poolCount)} پرسش آماده است — همین تعداد پرسیده می‌شود.
-              </p>
+            {best && (
+              <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+                <Trophy size={12} />
+                بهترین: {faNum(best.score)} از {faNum(best.total)}
+              </Badge>
             )}
-          </div>
 
-          {best && (
-            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
-              <Trophy size={12} />
-              بهترین: {faNum(best.score)} از {faNum(best.total)}
-            </Badge>
-          )}
-
-          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
-            <Play size={18} />
-            شروع بازی
-          </Button>
-        </CardContent>
-      </Card>
+            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+              <Play size={18} />
+              شروع بازی
+            </Button>
+          </CardContent>
+        </Card>
+        {/* فاز G2-b — آموزش یک‌بارنمایش در اولین ورود */}
+        <TutorialOverlay
+          game={GAME_KEY}
+          steps={TUTORIAL_STEPS}
+          open={tutorialOpen}
+          onOpenChange={handleTutorialOpenChange}
+        />
+      </>
     );
   }
 
-  // ── Done ──
+  // ── Done — فاز G2-b: صفحهٔ نتیجهٔ استاندارد کیت ──
   if (phase === "done") {
     const total = deck.length;
     const acc = Math.round((correctCount / Math.max(total, 1)) * 100);
+    // ستاره‌بندی per-game (فاز G2-b): دقت ≥۹۰٪ = ۳ ستاره، ≥۶۵٪ = ۲ ستاره
+    const stars = acc >= 90 ? 3 : acc >= 65 ? 2 : 1;
+    const perfect = total > 0 && correctCount === total;
     return (
-      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
-        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
-            <PartyPopper size={30} />
-          </span>
-          <h2 className="text-xl font-black">جای خالی‌ها پر شد!</h2>
-          {isRecord && (
-            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
-              <Trophy size={13} />
-              رکورد جدید! 🏆
-            </Badge>
-          )}
-          <div className="grid w-full grid-cols-3 gap-2 text-center">
-            <div className="rounded-xl bg-muted/60 p-3">
-              <Target size={16} className="mx-auto text-teal-500" />
-              <p className="mt-1.5 text-lg font-black leading-none">{faNum(acc)}٪</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">دقت</p>
-            </div>
-            <div className="rounded-xl bg-muted/60 p-3">
-              <CheckCircle2 size={16} className="mx-auto text-emerald-500" />
-              <p className="mt-1.5 text-lg font-black leading-none">{faNum(correctCount)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">درست</p>
-            </div>
-            <div className="rounded-xl bg-muted/60 p-3">
-              <XCircle size={16} className="mx-auto text-destructive" />
-              <p className="mt-1.5 text-lg font-black leading-none">{faNum(wrongList.length)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">غلط</p>
-            </div>
-          </div>
-
-          {wrongList.length > 0 ? (
-            <div className="w-full text-right">
-              <p className="mb-1.5 text-[12px] font-bold text-muted-foreground">واژه‌های غلط — به صف مرور رفتند:</p>
-              <div className="max-h-44 divide-y overflow-y-auto rounded-xl border">
-                {wrongList.map((w) => (
-                  <div key={w.word} className="flex items-center justify-between gap-3 px-3 py-2">
-                    <span dir="ltr" className="font-en text-[13px] font-black text-amber-600 dark:text-amber-400">
-                      {w.word}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">{w.meaning}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <Badge className="gap-1.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-              <CheckCircle2 size={13} />
-              بدون غلط — عالی!
-            </Badge>
-          )}
-
-          <div className="flex gap-2">
-            <Button onClick={start} className="min-h-11 gap-2">
-              <RotateCcw size={16} />
-              دور جدید
-            </Button>
-            <Button variant="outline" className="min-h-11" onClick={() => setPhase("setup")}>
-              تنظیمات
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <ResultScreen
+        title={perfect ? "همه واژه‌ها درست بود!" : "جای خالی‌ها پر شد!"}
+        stars={stars}
+        isRecord={isRecord}
+        errorCount={wrongList.length}
+        reviewItems={wrongList.map((w) => ({ front: w.word, back: w.meaning }))}
+        stats={[
+          {
+            label: "درست",
+            value: faNum(correctCount),
+            icon: <CheckCircle2 size={16} className="text-emerald-500" />,
+          },
+          {
+            label: "دقت",
+            value: `${faNum(acc)}٪`,
+            icon: <Target size={16} className="text-teal-500" />,
+          },
+          {
+            label: "زمان",
+            value: fmtTime(secs),
+            icon: <Timer size={16} className="text-primary" />,
+          },
+        ]}
+        onReplay={start}
+        onExit={() => setPhase("setup")}
+        exitLabel="تنظیمات"
+      />
     );
   }
 
@@ -545,91 +713,153 @@ export function ClozeGame() {
   const pct = Math.round((answered / Math.max(deck.length, 1)) * 100);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4 rise-in">
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="secondary" className="gap-1 text-[11px]">
-          <PencilLine size={11} />
-          {faNum(idx + 1)} / {faNum(deck.length)}
-        </Badge>
-        <Badge variant="secondary" className="gap-1 text-[11px]">
-          <Timer size={11} />
-          {fmtTime(secs)}
-        </Badge>
-        <Badge variant="secondary" className="gap-1 text-[11px]">
-          <CheckCircle2 size={11} className="text-emerald-500" />
-          {faNum(correctCount)} درست
-        </Badge>
-        <div className="mr-auto">
-          <Button variant="ghost" size="sm" onClick={cancel} className="text-[11px] text-muted-foreground">
-            انصراف
-          </Button>
-        </div>
-      </div>
-
-      <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-
-      {item && (
-        <div className="space-y-4 rounded-2xl border bg-card p-6">
-          <div>
-            <Badge variant="outline" className="border-teal-500/40 text-[10px] text-teal-600 dark:text-teal-400">
-              {item.lessonLabel}
+    <>
+      {/* فاز G2-b — هدر یکنواخت از کیت (الگوی پایلوت memory/دارباز) */}
+      <GameShell
+        title="جای خالی"
+        icon={<PencilLine size={18} />}
+        stats={
+          <>
+            <Badge variant="secondary" className="gap-1 text-[11px]">
+              <PencilLine size={11} />
+              {faNum(idx + 1)} / {faNum(deck.length)}
             </Badge>
+            <Badge variant="secondary" className="gap-1 text-[11px]">
+              <Timer size={11} />
+              {fmtTime(secs)}
+            </Badge>
+            <Badge variant="secondary" className="gap-1 text-[11px]">
+              <CheckCircle2 size={11} className="text-emerald-500" />
+              {faNum(correctCount)} درست
+            </Badge>
+          </>
+        }
+        liveMsg={liveMsg}
+        progress={
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+              style={{ width: `${pct}%` }}
+            />
           </div>
+        }
+        paused={paused}
+        onPauseToggle={togglePause}
+        muted={muted}
+        onMuteToggle={() => setMuted(toggleSoundMuted())}
+        onHelp={handleHelp}
+        onExit={handleExitClick}
+      >
+        <div className="relative">
+          <div className={cn("space-y-4", paused && "pointer-events-none blur-sm")} aria-hidden={paused}>
+            {item && (
+              <div className="space-y-4 rounded-2xl border bg-card p-6">
+                <div>
+                  <Badge variant="outline" className="border-teal-500/40 text-[10px] text-teal-600 dark:text-teal-400">
+                    {item.lessonLabel}
+                  </Badge>
+                </div>
 
-          <p dir="ltr" className="font-en text-[15px] leading-8 sm:text-base">
-            {splitAt >= 0 ? (
-              <>
-                {before}
-                <span className="mx-1 inline-block min-w-16 rounded-md border-b-2 border-amber-500/70 bg-amber-500/10 px-2 text-center font-black text-amber-600 dark:text-amber-400">
-                  {revealed ? item.answer : "؟"}
-                </span>
-                {after}
-              </>
-            ) : (
-              item.sentence
-            )}
-          </p>
-
-          <p className="border-r-2 border-primary/30 pr-3 text-[12px] leading-6 text-muted-foreground">
-            ترجمه: {item.fa}
-          </p>
-
-          <div className="grid gap-2 sm:grid-cols-3">
-            {item.options.map((opt) => {
-              const isAnswer = opt === item.answer;
-              const isPicked = picked === opt;
-              return (
-                <button
-                  key={opt}
-                  type="button"
-                  dir="ltr"
-                  disabled={revealed}
-                  onClick={() => answer(opt)}
-                  className={cn(
-                    "min-h-12 rounded-xl border bg-card px-3 py-2.5 text-center font-en text-[15px] font-black transition-all",
-                    revealed && isAnswer
-                      ? isPicked
-                        ? "match-pop border-primary bg-primary/10 text-primary"
-                        : "border-primary/50 ring-1 ring-primary"
-                      : revealed
-                        ? isPicked
-                          ? "match-shake border-destructive/60 bg-destructive/10 text-destructive"
-                          : "border-border opacity-60"
-                        : "border-border hover:border-primary/50",
+                <p dir="ltr" className="font-en text-[15px] leading-8 sm:text-base">
+                  {splitAt >= 0 ? (
+                    <>
+                      {before}
+                      <span className="mx-1 inline-block min-w-16 rounded-md border-b-2 border-amber-500/70 bg-amber-500/10 px-2 text-center font-black text-amber-600 dark:text-amber-400">
+                        {revealed ? item.answer : "؟"}
+                      </span>
+                      {after}
+                    </>
+                  ) : (
+                    item.sentence
                   )}
-                >
-                  {opt}
-                </button>
-              );
-            })}
+                </p>
+
+                <p className="border-r-2 border-primary/30 pr-3 text-[12px] leading-6 text-muted-foreground">
+                  ترجمه: {item.fa}
+                </p>
+
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {item.options.map((opt, i) => {
+                    const isAnswer = opt === item.answer;
+                    const isPicked = picked === opt;
+                    return (
+                      <button
+                        key={opt}
+                        type="button"
+                        dir="ltr"
+                        disabled={revealed}
+                        onClick={() => answer(opt)}
+                        aria-keyshortcuts={String(i + 1)}
+                        className={cn(
+                          "relative min-h-12 rounded-xl border bg-card px-3 py-2.5 text-center font-en text-[15px] font-black transition-all",
+                          revealed && isAnswer
+                            ? isPicked
+                              ? "match-pop border-primary bg-primary/10 text-primary"
+                              : "border-primary/50 ring-1 ring-primary"
+                            : revealed
+                              ? isPicked
+                                ? "match-shake border-destructive/60 bg-destructive/10 text-destructive"
+                                : "border-border opacity-60"
+                              : "border-border hover:border-primary/50",
+                        )}
+                      >
+                        {/* فاز G2-b — سرنخ کیبورد: کلید ۱..۳ همین گزینه را انتخاب می‌کند */}
+                        <kbd
+                          aria-hidden
+                          className="absolute left-1.5 top-1/2 -translate-y-1/2 rounded-md border bg-muted px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground"
+                        >
+                          {faNum(i + 1)}
+                        </kbd>
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <p className="text-center text-[10px] text-muted-foreground">
+                  با کلیدهای {faNum(1)} تا {faNum(3)} هم می‌توانی گزینه را انتخاب کنی
+                </p>
+              </div>
+            )}
           </div>
+
+          {/* فاز G2-b — اورلی توقف (الگوی پایلوت memory): محتوا تار و غیرقابل‌کلیک */}
+          {paused && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <Pause size={26} />
+              </span>
+              <p className="text-sm font-black">بازی متوقف شد</p>
+              <Button onClick={resume} className="h-11 gap-2">
+                <Play size={16} />
+                ادامهٔ بازی
+              </Button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+
+        {/* فاز G2-b — نگهبان خروج استاندارد کیت */}
+        <GameExitGuard
+          open={exitAsk}
+          onOpenChange={setExitAsk}
+          onConfirm={() => {
+            // فاز G2-b — رهاکردن دور نیمه‌کاره + تله‌متری
+            sessionRef.current?.abandon("exit");
+            clearAdvance();
+            stopSpeaking();
+            setExitAsk(false);
+            resume();
+            setPhase("setup");
+          }}
+        />
+      </GameShell>
+      {/* فاز G2-b — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
+      <TutorialOverlay
+        game={GAME_KEY}
+        steps={TUTORIAL_STEPS}
+        open={tutorialOpen}
+        onOpenChange={handleTutorialOpenChange}
+      />
+    </>
   );
 }

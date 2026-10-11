@@ -1,0 +1,1171 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * بازی «فلپی گزینش» (Flappy Quiz) — فاز ۴ نقشه راه جامع ۲۰۲۶ + فاز G2-c نقشه راه بازی‌ها.
+     5→ *
+     6→ * پرندهٔ فلپی‌برد روی بانک واژگان خود جزوه پرواز می‌کند (data.quiz.seed فقط category === "vocabulary"):
+     7→ * - به‌جای لوله‌ها «دروازهٔ گزینه» می‌آید: نوار عمودی emerald با ۲ تا ۴ دهانه که روی هر دهانه
+     8→ *   یک گزینهٔ انگلیسی نوشته شده — پرنده باید دقیقاً از گزینهٔ درستِ سؤال رد شود.
+     9→ * - عبور درست: امتیاز ۱۰ + بونوس کمبو، کمبو++ و سرعت = پایه + کمبو × گام (با سقف) + پخش تلفظ گزینه.
+    10→ * - دهانهٔ غلط یا برخورد با بدنهٔ دیوار: یک ❤ کم، کمبو صفر، فلاش قرمز، واژهٔ درست با
+    11→ *   seedReviewFromQuiz به صف «مرور هوشمند» برمی‌گردد و ۱ ثانیه مصونیت دارد.
+    12→ * - زمین/سقف: یک ❤ کم و پرنده به میانه برمی‌گردد. صفر قلب = پایان دور.
+    13→ * - اتمام استخر سؤال → reshuffle و ادامه (چرخهٔ بی‌پایان، الگوی speed-quiz).
+    14→ *
+    15→ * فاز G2-c (کیت GameKit v2 — الگوی پایلوت memory / جای خالی):
+    16→ * - کمبو به موتور مشترک منتقل شد (G1-09): useCombo({ mode: "bonus", base: 10, bonusCap: 5,
+    17→ *   bonusStep: 2 }) — فرمول امتیاز مو‌به‌مو همان قبل است: ۱۰ + min(کمبو−۱, ۵) × ۲
+    18→ *   (عبور اول ۱۰، دوم ۱۲، … تا سقف ۲۰). refs هوک (comboRef/maxComboRef) مستقیم در حلقهٔ
+    19→ *   rAF مصرف می‌شوند و state کمبو دوبل نگه‌داشته نمی‌شود.
+    20→ * - بازخورد سه‌کاناله: عبور درست = correct + لرزش سبک، خطای دیوار/زمین = wrong + error
+    21→ *   (هر دو فقط در لحظهٔ resolve رویداد داخل rAF، نه هر فریم)؛ پایان = finish؛ رکورد = record.
+    22→ * - GameShell (هدر یکنواخت: امتیاز/کمبو با کلاس واحد combo-fire/قلب + سؤال دیوار در progress
+    23→ *   + liveMsg) + Pause با گیت روی زنجیرهٔ rAF (اورلی «متوقف شد»؛ auto-pause تب مخفی از هوک
+    24→ *   و منطق توقف همان مسیر G0-05) + نگهبان خروج حین پرواز + ResultScreen (ستاره‌بندی per-game
+    25→ *   و مرور خطاها با معنی واژه) + آموزش ۳گامی (useAutoTutorial) + تله‌متری جلسه.
+    26→ *
+    27→ * نکتهٔ فنی: کل دنیای بازی (پرنده، دیوارها، سرعت، کمبو، قلب‌ها) در useRef زندگی می‌کند و حلقهٔ
+    28→ * requestAnimationFrame مالک آن است — setState فقط روی رویدادهای گسسته (عبور/برخورد/پایان)
+    29→ * صدا می‌زند، نه در هر فریم. فیزیک dt-based است (مستقل از نرخ فریم) با clamp dt≤۵۰ms و
+    30→ * rAF/شنونده‌ها در cleanup پاک می‌شوند. رکورد شخصی per-scope ("easy" | "normal") و Attempt
+    31→ * سروری فقط پس از پایان. امضاهای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage
+    32→ * دست‌نخورده — قانون حفظ‌شوندگی §۳-۴ سند بازی‌ها.
+    33→ */
+    34→
+    35→import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    36→import {
+    37→  Bird,
+    38→  CheckCircle2,
+    39→  Flame,
+    40→  Heart,
+    41→  MousePointerClick,
+    42→  Pause,
+    43→  Play,
+    44→  Sparkles,
+    45→  Star,
+    46→  Trophy,
+    47→} from "lucide-react";
+    48→import { Button } from "@/components/ui/button";
+    49→import { Card, CardContent } from "@/components/ui/card";
+    50→import { Badge } from "@/components/ui/badge";
+    51→import { cn } from "@/lib/utils";
+    52→import { toast } from "sonner";
+    53→import type { QuizQuestionSeed } from "@/data/types";
+    54→import { useBook, useBookData } from "@/lib/book-context";
+    55→import { seedReviewFromQuiz } from "@/lib/srs-store";
+    56→import { touchStreak } from "@/lib/streak-store";
+    57→import { recordStudySession } from "@/lib/goal-store";
+    58→import { speak, stopSpeaking } from "@/lib/speak";
+    59→import { useVoiceSpeed } from "@/lib/voice-store";
+    60→import {
+    61→  bumpPlays,
+    62→  faNum,
+    63→  loadBest,
+    64→  pickUnique,
+    65→  saveAttempt,
+    66→  saveBest,
+    67→  shuffle,
+    68→  subscribeGameData,
+    69→} from "./shared";
+    70→// فاز G2-c — کیت GameKit v2 (قرارداد API سند)
+    71→import { playSound, toggleSoundMuted, isSoundMuted } from "./kit/sound-engine";
+    72→import { buzz } from "./kit/haptics";
+    73→import { useGamePause } from "./kit/use-pause";
+    74→import { GameExitGuard } from "./kit/exit-guard";
+    75→import { GameShell } from "./kit/game-shell";
+    76→import { ResultScreen } from "./kit/result-screen";
+    77→import {
+    78→  TutorialOverlay,
+    79→  useAutoTutorial,
+    80→  type TutorialStep,
+    81→} from "./kit/tutorial-overlay";
+    82→import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+    83→import { useCombo, COMBO_FIRE_CLASS } from "./kit/combo-engine";
+    84→
+    85→// ─── ثابت‌ها و انواع ───
+    86→
+    87→const GAME_KEY = "flappy-quiz";
+    88→const ALL_LESSONS = -1;
+    89→/** گارد استخر سؤال (تسک: استخر < ۳ → خطا) */
+    90→const MIN_POOL = 3;
+    91→/** ارتفاع منطقی بوم (پیکسل) — عرض از اندازهٔ واقعی خوانده می‌شود */
+    92→const H = 480;
+    93→const WALL_W = 84;
+    94→const BIRD_R = 13;
+    95→const GROUND_H = 24;
+    96→const HEARTS = 3;
+    97→/** مصونیت پس از عبور غلط (تسک: ۱ ثانیه) */
+    98→const INVULN_MS = 1000;
+    99→/** فلاش قرمز کل بوم پس از خطا */
+   100→const FLASH_MS = 320;
+   101→/** ماندگاری هایلایت سبز/قرمز روی دیوارِ تازه‌حل‌شده */
+   102→const WALL_FLASH_MS = 700;
+   103→
+   104→type Phase = "setup" | "playing" | "done";
+   105→
+   106→/** پیکربندی فیزیک — حالت آسان جاذبه/سرعت ملایم‌تری دارد */
+   107→interface Cfg {
+   108→  base: number;
+   109→  cap: number;
+   110→  step: number;
+   111→  gravity: number;
+   112→  flap: number;
+   113→}
+   114→
+   115→const NORMAL_CFG: Cfg = { base: 150, cap: 330, step: 13, gravity: 1400, flap: -380 };
+   116→const EASY_CFG: Cfg = { base: 112, cap: 235, step: 10, gravity: 1150, flap: -345 };
+   117→
+   118→interface FlappyGap {
+   119→  y0: number;
+   120→  y1: number;
+   121→  text: string;
+   122→  correct: boolean;
+   123→}
+   124→
+   125→interface FlappyWall {
+   126→  x: number;
+   127→  gaps: FlappyGap[];
+   128→  q: QuizQuestionSeed;
+   129→  resolved: boolean;
+   130→  ok: boolean;
+   131→  flashUntil: number;
+   132→}
+   133→
+   134→interface BirdState {
+   135→  y: number;
+   136→  vy: number;
+   137→}
+   138→
+   139→interface Popup {
+   140→  x: number;
+   141→  y: number;
+   142→  text: string;
+   143→  born: number;
+   144→}
+   145→
+   146→/** شکل رکورد شخصی این بازی — بهتر = امتیاز بیشتر */
+   147→interface BestRecord {
+   148→  score: number;
+   149→}
+   150→
+   151→/** فاز G2-c — آموزش ۳-گامی استاندارد (الگوی پایلوت memory / G1-08) */
+   152→const TUTORIAL_STEPS: TutorialStep[] = [
+   153→  {
+   154→    icon: <Bird size={24} />,
+   155→    title: "از گزینهٔ درست رد شو",
+   156→    text: "سؤالِ «دیوار پیش‌رو» را بالای بوم بخوان و دقیقاً از دهانهٔ گزینهٔ درستش عبور کن.",
+   157→  },
+   158→  {
+   159→    icon: <MousePointerClick size={24} />,
+   160→    title: "پرش با تپ یا Space",
+   161→    text: "کلیک/لمس روی بوم یا کلید Space بال می‌زند و پرنده را بالا می‌برد؛ جاذبه همیشه پایینش می‌کشد.",
+   162→  },
+   163→  {
+   164→    icon: <Heart size={24} />,
+   165→    title: "قلب‌ها و کمبو",
+   166→    text: "هر خطا یک ❤ کم می‌کند و کمبو را صفر می‌کند؛ عبورهای پشت‌سرهم بونوس می‌گیرند (۱۰ تا ۲۰ امتیاز). با صفر شدن قلب‌ها پرواز تمام است.",
+   167→  },
+   168→];
+   169→
+   170→// ─── کمکی‌های خالص ───
+   171→
+   172→/** نمایش جای خالی سؤال به شکل فشرده: «________» → «.....» */
+   173→function qLabel(text: string): string {
+   174→  return text.replace(/_+/g, ".....");
+   175→}
+   176→
+   177→function lessonLabel(l: number): string {
+   178→  return l === 0 ? "جمع‌بندی" : `درس ${faNum(l)}`;
+   179→}
+   180→
+   181→/** چیدمان عمودی k دهانه در باند بازی‌پذیر — ارتفاع دهانه سقف‌دار، مازاد به دیواره‌ها می‌رود */
+   182→function layoutGaps(k: number): Array<{ y0: number; y1: number }> {
+   183→  const top = 34;
+   184→  const bottom = H - GROUND_H - 12;
+   185→  const avail = bottom - top;
+   186→  const barMin = 34;
+   187→  const gapCap = 150;
+   188→  let gapH = (avail - (k - 1) * barMin) / k;
+   189→  let barH = barMin;
+   190→  if (gapH > gapCap) {
+   191→    barH = barMin + ((gapH - gapCap) * k) / (k - 1);
+   192→    gapH = gapCap;
+   193→  }
+   194→  const out: Array<{ y0: number; y1: number }> = [];
+   195→  let y = top;
+   196→  for (let i = 0; i < k; i++) {
+   197→    out.push({ y0: y, y1: y + gapH });
+   198→    y += gapH + barH;
+   199→  }
+   200→  return out;
+   201→}
+   202→
+   203→function roundRectPath(c: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+   204→  c.beginPath();
+   205→  c.moveTo(x + r, y);
+   206→  c.arcTo(x + w, y, x + w, y + h, r);
+   207→  c.arcTo(x + w, y + h, x, y + h, r);
+   208→  c.arcTo(x, y + h, x, y, r);
+   209→  c.arcTo(x, y, x + w, y, r);
+   210→  c.closePath();
+   211→}
+   212→
+   213→/** ابرهای ملایم teal — عمق پس‌زمینه بدون رنگ ممنوع */
+   214→function drawSky(c: CanvasRenderingContext2D, now: number, w: number) {
+   215→  c.fillStyle = "rgba(45, 212, 191, 0.16)";
+   216→  for (let i = 0; i < 3; i++) {
+   217→    const cx = ((i * 270 + now * (0.012 + i * 0.005)) % (w + 220)) - 110;
+   218→    const cy = 54 + i * 64;
+   219→    c.beginPath();
+   220→    c.arc(cx, cy, 22, 0, Math.PI * 2);
+   221→    c.arc(cx + 25, cy + 6, 15, 0, Math.PI * 2);
+   222→    c.arc(cx - 23, cy + 8, 13, 0, Math.PI * 2);
+   223→    c.fill();
+   224→  }
+   225→  c.fillStyle = "#059669";
+   226→  c.fillRect(0, 0, w, 4);
+   227→}
+   228→
+   229→function drawGround(c: CanvasRenderingContext2D, now: number, w: number, speed: number) {
+   230→  const gy = H - GROUND_H;
+   231→  c.fillStyle = "#059669";
+   232→  c.fillRect(0, gy, w, GROUND_H);
+   233→  c.fillStyle = "#10b981";
+   234→  c.fillRect(0, gy, w, 4);
+   235→  const off = (now * speed * 0.05) % 30;
+   236→  c.fillStyle = "#fbbf24";
+   237→  for (let x = 0; x < w + 30; x += 30) c.fillRect(x - off, gy + 13, 16, 3);
+   238→}
+   239→
+   240→/** دیوار emerald با کلاهک + گزینه‌ها با auto-shrink تا در دهانه جا شوند */
+   241→function drawWall(c: CanvasRenderingContext2D, wall: FlappyWall, now: number) {
+   242→  const segs: Array<[number, number]> = [];
+   243→  let y = 0;
+   244→  for (const g of wall.gaps) {
+   245→    segs.push([y, g.y0]);
+   246→    y = g.y1;
+   247→  }
+   248→  segs.push([y, H - GROUND_H]);
+   249→  c.fillStyle = "#059669";
+   250→  for (const [a, b] of segs) if (b > a) c.fillRect(wall.x, a, WALL_W, b - a);
+   251→  c.fillStyle = "#047857";
+   252→  for (const g of wall.gaps) {
+   253→    c.fillRect(wall.x - 4, g.y0 - 10, WALL_W + 8, 10);
+   254→    c.fillRect(wall.x - 4, g.y1, WALL_W + 8, 10);
+   255→  }
+   256→  c.textAlign = "center";
+   257→  c.textBaseline = "middle";
+   258→  for (const g of wall.gaps) {
+   259→    const cy = (g.y0 + g.y1) / 2;
+   260→    let fs = 15;
+   261→    c.font = `800 ${fs}px system-ui, sans-serif`;
+   262→    while (c.measureText(g.text).width > WALL_W - 16 && fs > 8) {
+   263→      fs -= 1;
+   264→      c.font = `800 ${fs}px system-ui, sans-serif`;
+   265→    }
+   266→    const tw = Math.min(c.measureText(g.text).width, WALL_W - 16);
+   267→    c.fillStyle = "rgba(255, 255, 255, 0.92)";
+   268→    roundRectPath(c, wall.x + WALL_W / 2 - tw / 2 - 8, cy - 11, tw + 16, 22, 8);
+   269→    c.fill();
+   270→    c.fillStyle = "#065f46";
+   271→    c.fillText(g.text, wall.x + WALL_W / 2, cy + 1);
+   272→  }
+   273→  if (wall.flashUntil > now) {
+   274→    if (wall.ok) {
+   275→      const g = wall.gaps.find((gp) => gp.correct);
+   276→      if (g) {
+   277→        c.fillStyle = "rgba(16, 185, 129, 0.30)";
+   278→        c.fillRect(wall.x - 4, g.y0, WALL_W + 8, g.y1 - g.y0);
+   279→      }
+   280→    } else {
+   281→      c.fillStyle = "rgba(239, 68, 68, 0.22)";
+   282→      c.fillRect(wall.x - 4, 0, WALL_W + 8, H - GROUND_H);
+   283→    }
+   284→  }
+   285→}
+   286→
+   287→/** پرنده = دایره amber + بال/چشم/منقار ساده + چرخش بر اساس سرعت عمودی + چشمک مصونیت */
+   288→function drawBird(
+   289→  c: CanvasRenderingContext2D,
+   290→  now: number,
+   291→  y: number,
+   292→  vy: number,
+   293→  bx: number,
+   294→  invulnUntil: number,
+   295→  lastFlapAt: number,
+   296→) {
+   297→  c.save();
+   298→  if (now < invulnUntil) c.globalAlpha = 0.45 + 0.3 * Math.abs(Math.sin(now / 60));
+   299→  c.translate(bx, y);
+   300→  c.rotate(Math.max(-0.38, Math.min(0.6, vy / 650)));
+   301→  c.beginPath();
+   302→  c.arc(0, 0, BIRD_R, 0, Math.PI * 2);
+   303→  c.fillStyle = "#f59e0b";
+   304→  c.fill();
+   305→  c.lineWidth = 2.5;
+   306→  c.strokeStyle = "#b45309";
+   307→  c.stroke();
+   308→  const flapT = Math.max(0, 1 - (now - lastFlapAt) / 350);
+   309→  const wy = 3 + Math.sin(now / (flapT > 0 ? 45 : 110)) * (2.5 + flapT * 3);
+   310→  c.beginPath();
+   311→  c.ellipse(-4, wy, 6.5, 4.2, -0.5, 0, Math.PI * 2);
+   312→  c.fillStyle = "#fcd34d";
+   313→  c.fill();
+   314→  c.stroke();
+   315→  c.beginPath();
+   316→  c.arc(5, -4.5, 3.4, 0, Math.PI * 2);
+   317→  c.fillStyle = "#ffffff";
+   318→  c.fill();
+   319→  c.beginPath();
+   320→  c.arc(6.3, -4.5, 1.6, 0, Math.PI * 2);
+   321→  c.fillStyle = "#1c1917";
+   322→  c.fill();
+   323→  c.beginPath();
+   324→  c.moveTo(11, -1);
+   325→  c.lineTo(18.5, 2);
+   326→  c.lineTo(11, 5.5);
+   327→  c.closePath();
+   328→  c.fillStyle = "#d97706";
+   329→  c.fill();
+   330→  c.restore();
+   331→}
+   332→
+   333→export function FlappyQuizGame() {
+   334→  const data = useBookData();
+   335→  const { bookId } = useBook();
+   336→  // بازی‌ها فقط داخل کتاب فعال رندر می‌شوند (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   337→  const activeBookId: string = bookId ?? "";
+   338→  const { speed } = useVoiceSpeed();
+   339→
+   340→  const [phase, setPhase] = useState<Phase>("setup");
+   341→  const [lesson, setLesson] = useState<number>(ALL_LESSONS);
+   342→  const [easy, setEasy] = useState(false);
+   343→
+   344→  // ── HUD حین بازی (فقط روی رویدادهای گسسته به‌روز می‌شود) ──
+   345→  const [hudQ, setHudQ] = useState<QuizQuestionSeed | null>(null);
+   346→  const [score, setScore] = useState(0);
+   347→  const [hearts, setHearts] = useState(HEARTS);
+   348→  /** فاز G2-c — پیام باکس aria-live شِل (عبور/خطا/توقف) برای فناوری‌های کمکی */
+   349→  const [liveMsg, setLiveMsg] = useState("");
+   350→
+   351→  // ── فاز G2-c — موتور کمبو مشترک کیت (G1-09) ──
+   352→  // حالت bonus = دقیقاً قانون فعلی فلپی: gained = ۱۰ + min(کمبو−۱, ۵) × ۲ (امتیاز یکسان می‌ماند)
+   353→  const {
+   354→    combo,
+   355→    maxCombo,
+   356→    comboRef: comboCountRef,
+   357→    maxComboRef: bestComboRef,
+   358→    registerCorrect,
+   359→    registerMiss,
+   360→    reset: resetCombo,
+   361→  } = useCombo({ mode: "bonus", base: 10, bonusCap: 5, bonusStep: 2 });
+   362→
+   363→  // ── stateهای فاز done ──
+   364→  const [isRecord, setIsRecord] = useState(false);
+   365→  const [correctCount, setCorrectCount] = useState(0);
+   366→  const [wrongWords, setWrongWords] = useState<string[]>([]);
+   367→
+   368→  // ── فاز G2-c — توقف/ادامهٔ استاندارد کیت + نگهبان خروج + کلید صدا ──
+   369→  // هوک فقط state توقف را می‌دهد؛ منطق توقف/ادامهٔ حلقهٔ rAF همان مسیر G0-05 است:
+   370→  // onChange → pausedRef (آینه برای حلقه) + loopCtl (cancel/resume زنجیرهٔ فعلی).
+   371→  // auto-pause در تب مخفی هم از خود هوک می‌آید — در بازگشت اورلی «متوقف شد» دیده می‌شود.
+   372→  const pausedRef = useRef(false);
+   373→  const loopCtlRef = useRef<((p: boolean) => void) | null>(null);
+   374→  /** جمع زمان‌های توقف — مدت Attempt نباید توقف‌ها را حساب کند (تایمر گیت روی paused) */
+   375→  const pausedAccumRef = useRef(0);
+   376→  const pauseStartRef = useRef(0);
+   377→  const { paused, resume, pause: pauseGame, toggle: togglePause } = useGamePause((p) => {
+   378→    pausedRef.current = p;
+   379→    if (p) {
+   380→      pauseStartRef.current = performance.now();
+   381→    } else if (pauseStartRef.current > 0) {
+   382→      pausedAccumRef.current += performance.now() - pauseStartRef.current;
+   383→      pauseStartRef.current = 0;
+   384→    }
+   385→    loopCtlRef.current?.(p);
+   386→    if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
+   387→  });
+   388→  const [exitAsk, setExitAsk] = useState(false);
+   389→  /** آینهٔ exitAsk برای گارد پرش با کیبورد حین باز بودن دیالوگ */
+   390→  const exitAskRef = useRef(false);
+   391→  const setExitAskSafe = useCallback((v: boolean) => {
+   392→    exitAskRef.current = v;
+   393→    setExitAsk(v);
+   394→  }, []);
+   395→  // الگوی دارباز: state بی‌صدا + همگام‌سازی با کلید سراسری (storage بین-تب) و toggle در هندلر
+   396→  const [muted, setMuted] = useState(isSoundMuted());
+   397→  useEffect(() => {
+   398→    const sync = () => setMuted(isSoundMuted());
+   399→    sync();
+   400→    window.addEventListener("storage", sync);
+   401→    return () => window.removeEventListener("storage", sync);
+   402→  }, []);
+   403→  // فاز G2-c — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
+   404→  const {
+   405→    open: tutorialOpen,
+   406→    openHelp: openTutorial,
+   407→    close: closeTutorial,
+   408→  } = useAutoTutorial(GAME_KEY, phase === "setup");
+   409→  const pausedForHelpRef = useRef(false);
+   410→  const handleHelp = useCallback(() => {
+   411→    if (phase === "playing") {
+   412→      pausedForHelpRef.current = true;
+   413→      pauseGame();
+   414→    }
+   415→    openTutorial();
+   416→  }, [openTutorial, pauseGame, phase]);
+   417→  const handleTutorialClose = useCallback(() => {
+   418→    closeTutorial();
+   419→    if (pausedForHelpRef.current) {
+   420→      pausedForHelpRef.current = false;
+   421→      resume();
+   422→    }
+   423→  }, [closeTutorial, resume]);
+   424→  const handleTutorialOpenChange = useCallback(
+   425→    (o: boolean) => {
+   426→      if (!o) handleTutorialClose();
+   427→    },
+   428→    [handleTutorialClose],
+   429→  );
+   430→  // فاز G2-c — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
+   431→  const sessionRef = useRef<GameSessionTracker | null>(null);
+   432→
+   433→  // ── دنیای بازی — مالک: حلقهٔ rAF ──
+   434→  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+   435→  const dimRef = useRef<{ w: number }>({ w: 640 });
+   436→  const birdRef = useRef<BirdState>({ y: H / 2, vy: 0 });
+   437→  const wallsRef = useRef<FlappyWall[]>([]);
+   438→  const popupsRef = useRef<Popup[]>([]);
+   439→  const hudWallRef = useRef<FlappyWall | null>(null);
+   440→  const deckRef = useRef<QuizQuestionSeed[]>([]);
+   441→  const deckIdxRef = useRef(0);
+   442→  const cfgRef = useRef<Cfg>(NORMAL_CFG);
+   443→  const speedRef = useRef(NORMAL_CFG.base);
+   444→  const scoreRef = useRef(0);
+   445→  const heartsRef = useRef(HEARTS);
+   446→  const totalRef = useRef(0);
+   447→  const correctRef = useRef(0);
+   448→  const wrongRef = useRef<string[]>([]);
+   449→  const invulnUntilRef = useRef(0);
+   450→  const flashUntilRef = useRef(0);
+   451→  const lastFlapAtRef = useRef(0);
+   452→  const startedAtRef = useRef(0);
+   453→  const overRef = useRef(false);
+   454→  const finishRef = useRef<() => void>(() => {});
+   455→  const voiceSpeedRef = useRef(speed);
+   456→
+   457→  // ── داده‌های مشتق ──
+   458→  const vocabSeed = useMemo(
+   459→    () => data.quiz.seed.filter((q) => q.category === "vocabulary"),
+   460→    [data.quiz.seed],
+   461→  );
+   462→
+   463→  const lessons = useMemo(
+   464→    () => [...new Set(vocabSeed.map((q) => q.lesson))].sort((a, b) => a - b),
+   465→    [vocabSeed],
+   466→  );
+   467→
+   468→  const countFor = useCallback(
+   469→    (l: number) => (l === ALL_LESSONS ? vocabSeed.length : vocabSeed.filter((q) => q.lesson === l).length),
+   470→    [vocabSeed],
+   471→  );
+   472→
+   473→  const pool = useMemo(
+   474→    () => (lesson === ALL_LESSONS ? vocabSeed : vocabSeed.filter((q) => q.lesson === lesson)),
+   475→    [vocabSeed, lesson],
+   476→  );
+   477→
+   478→  // فاز G2-c — نگاشت واژه → معنی برای «مرور خطاها»ی صفحهٔ نتیجه (پسوند مثل (n) حذف می‌شود)
+   479→  const meaningMap = useMemo(() => {
+   480→    const m = new Map<string, string>();
+   481→    for (const w of data.vocab.all) {
+   482→      const base = w.word.replace(/\s*\([^)]*\)\s*/g, " ").trim().toLowerCase();
+   483→      if (base && !m.has(base)) m.set(base, w.meaning);
+   484→    }
+   485→    return m;
+   486→  }, [data.vocab.all]);
+   487→
+   488→  const meaningOf = useCallback(
+   489→    (word: string) =>
+   490→      meaningMap.get(word.replace(/\s*\([^)]*\)\s*/g, " ").trim().toLowerCase()) ?? "—",
+   491→    [meaningMap],
+   492→  );
+   493→
+   494→  // رکورد شخصی این اسکوپ — الگوی speed-quiz (اسنپ‌شات عددی پایدار)
+   495→  const best = useSyncExternalStore(
+   496→    subscribeGameData,
+   497→    () => loadBest<BestRecord>(activeBookId, GAME_KEY, easy ? "easy" : "normal")?.score ?? null,
+   498→    () => null,
+   499→  );
+   500→
+   501→  // ── جریان بازی ──
+   502→
+   503→  /** سؤال بعدی از دستهٔ یکتا — اتمام استخر → reshuffle و ادامه */
+   504→  const nextQuestion = useCallback((): QuizQuestionSeed => {
+   505→    if (deckIdxRef.current >= deckRef.current.length) {
+   506→      deckRef.current = shuffle(deckRef.current);
+   507→      deckIdxRef.current = 0;
+   508→    }
+   509→    const q = deckRef.current[deckIdxRef.current];
+   510→    deckIdxRef.current += 1;
+   511→    return q;
+   512→  }, []);
+   513→
+   514→  /** ساخت یک دروازهٔ گزینه: ۲ تا ۴ دهانه (گزینهٔ درست + حواس‌پرتی‌ها، شافل) */
+   515→  const makeWall = useCallback(
+   516→    (x: number): FlappyWall => {
+   517→      const q = nextQuestion();
+   518→      const correctText = q.options[q.answer];
+   519→      const k = 2 + Math.floor(Math.random() * 3);
+   520→      const distractors = shuffle(q.options.filter((_, i) => i !== q.answer)).slice(0, k - 1);
+   521→      const texts = shuffle([correctText, ...distractors]);
+   522→      const slots = layoutGaps(k);
+   523→      return {
+   524→        x,
+   525→        gaps: slots.map((s, i) => ({
+   526→          y0: s.y0,
+   527→          y1: s.y1,
+   528→          text: texts[i],
+   529→          correct: texts[i] === correctText,
+   530→        })),
+   531→        q,
+   532→        resolved: false,
+   533→        ok: false,
+   534→        flashUntil: 0,
+   535→      };
+   536→    },
+   537→    [nextQuestion],
+   538→  );
+   539→
+   540→  const start = useCallback(() => {
+   541→    if (pool.length < MIN_POOL) {
+   542→      toast.error(`سؤال واژگانی کافی در این محدوده نیست — دست‌کم ${faNum(MIN_POOL)} سؤال لازم است`);
+   543→      return;
+   544→    }
+   545→    // فاز G2-c — بازخورد کلیک شروع دور (از setup و «دور جدید» نتیجه)
+   546→    playSound("click");
+   547→    buzz("light");
+   548→    const cfg = easy ? EASY_CFG : NORMAL_CFG;
+   549→    cfgRef.current = cfg;
+   550→    speedRef.current = cfg.base;
+   551→    birdRef.current = { y: H / 2, vy: 0 };
+   552→    wallsRef.current = [];
+   553→    popupsRef.current = [];
+   554→    hudWallRef.current = null;
+   555→    scoreRef.current = 0;
+   556→    heartsRef.current = HEARTS;
+   557→    totalRef.current = 0;
+   558→    correctRef.current = 0;
+   559→    wrongRef.current = [];
+   560→    invulnUntilRef.current = 0;
+   561→    flashUntilRef.current = 0;
+   562→    lastFlapAtRef.current = 0;
+   563→    startedAtRef.current = performance.now();
+   564→    pausedAccumRef.current = 0;
+   565→    pauseStartRef.current = 0;
+   566→    overRef.current = false;
+   567→    // فاز G2-c — کمبوی تازه از موتور مشترک کیت
+   568→    resetCombo();
+   569→    const deck = pickUnique(pool, pool.length, (q) => q.text);
+   570→    deckRef.current = deck;
+   571→    deckIdxRef.current = 0;
+   572→    // سؤال دیوار اول — دیوار واقعی در effect «playing» با nextQuestion از همین سرِ دسته زده می‌شود
+   573→    setHudQ(deck.length > 0 ? deck[0] : null);
+   574→    setScore(0);
+   575→    setHearts(HEARTS);
+   576→    setIsRecord(false);
+   577→    setCorrectCount(0);
+   578→    setWrongWords([]);
+   579→    setLiveMsg("");
+   580→    resume();
+   581→    setExitAskSafe(false);
+   582→    // فاز G2-c — جلسهٔ تازهٔ تله‌متری برای این دور
+   583→    sessionRef.current = createGameSession({
+   584→      game: GAME_KEY,
+   585→      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${easy ? "easy" : "normal"}`,
+   586→    });
+   587→    sessionRef.current.start();
+   588→    setPhase("playing");
+   589→  }, [pool, easy, lesson, resetCombo, resume, setExitAskSafe]);
+   590→
+   591→  /** پایان دور — فقط یک‌بار (overRef قفل)؛ ثبت streak/session/plays/attempt/best */
+   592→  const finish = useCallback(() => {
+   593→    if (overRef.current) return;
+   594→    overRef.current = true;
+   595→    const total = totalRef.current;
+   596→    const finalScore = scoreRef.current;
+   597→    // مدت دور بدون احتساب زمان توقف (گیت paused روی «تایمر»)
+   598→    const elapsed = Math.max(
+   599→      1,
+   600→      Math.round((performance.now() - startedAtRef.current - pausedAccumRef.current) / 1000),
+   601→    );
+   602→    touchStreak();
+   603→    recordStudySession();
+   604→    bumpPlays(activeBookId, GAME_KEY);
+   605→    // فاز G2-c — پایان عادی جلسهٔ تله‌متری
+   606→    sessionRef.current?.end("finish");
+   607→    // فاز G2-c — بازخورد سه‌کانالهٔ پایان دور
+   608→    playSound("finish");
+   609→    buzz("success");
+   610→    if (total > 0) {
+   611→      saveAttempt(activeBookId, GAME_KEY, {
+   612→        lesson: lesson === ALL_LESSONS ? 0 : lesson,
+   613→        total,
+   614→        correct: correctRef.current,
+   615→        duration: elapsed,
+   616→        detail: { score: finalScore, maxCombo: bestComboRef.current },
+   617→      });
+   618→    }
+   619→    const scope = easy ? "easy" : "normal";
+   620→    const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+   621→    if (finalScore > 0 && finalScore > (prev?.score ?? 0)) {
+   622→      saveBest(activeBookId, GAME_KEY, scope, { score: finalScore });
+   623→      setIsRecord(prev !== null);
+   624→      if (prev !== null) {
+   625→        // فاز G2-c — رکورد جدید: صدا + لرزش رکورد (الگوی پایلوت)
+   626→        playSound("record");
+   627→        buzz("record");
+   628→        toast.success(`رکورد جدید! ${faNum(finalScore)} امتیاز 🏆`);
+   629→      }
+   630→    } else {
+   631→      setIsRecord(false);
+   632→    }
+   633→    setCorrectCount(correctRef.current);
+   634→    setWrongWords([...wrongRef.current]);
+   635→    setScore(finalScore);
+   636→    setPhase("done");
+   637→  }, [activeBookId, lesson, easy, bestComboRef]);
+   638→
+   639→  // انصراف حین پرواز — فاز G2-c (نگهبان خروج): با هر پیشرفت، GameExitGuard؛
+   640→  // پیش از اولین دیوار، خروج مستقیم + تله‌متری abandon
+   641→  const handleExitClick = useCallback(() => {
+   642→    stopSpeaking();
+   643→    if (totalRef.current > 0 || scoreRef.current > 0) {
+   644→      // پرواز حین خواندن دیالوگ فریز شود (بازی فیزیکی است — پشت دیالوگ نمی‌میرد)
+   645→      pauseGame();
+   646→      setExitAskSafe(true);
+   647→    } else {
+   648→      overRef.current = true;
+   649→      // دور بدون پیشرفت هم یک جلسه است؛ همین‌جا رهاشده ثبت می‌شود
+   650→      sessionRef.current?.abandon("exit");
+   651→      resume();
+   652→      setExitAskSafe(false);
+   653→      setPhase("setup");
+   654→    }
+   655→  }, [pauseGame, resume, setExitAskSafe]);
+   656→
+   657→  // آخرین نسخهٔ finish + سرعت صدا برای حلقهٔ rAF (الگوی latest-ref — effect بدون dep)
+   658→  useEffect(() => {
+   659→    finishRef.current = finish;
+   660→    voiceSpeedRef.current = speed;
+   661→  });
+   662→
+   663→  // فاز G2-c — دورِ باز در unmount «رهاشده» ثبت می‌شود (اگر قبلاً گزارش شده باشد no-op)
+   664→  useEffect(
+   665→    () => () => {
+   666→      sessionRef.current?.abandon("unmount");
+   667→      stopSpeaking();
+   668→    },
+   669→    [],
+   670→  );
+   671→
+   672→  // ── حلقهٔ بازی: اندازه‌گیری بوم، ورودی‌ها، فیزیک dt-based و رسم ──
+   673→  useEffect(() => {
+   674→    if (phase !== "playing") return;
+   675→
+   676→    const canvas = canvasRef.current;
+   677→    const ctx = canvas?.getContext("2d");
+   678→    if (!canvas || !ctx) return;
+   679→
+   680→    // اندازه و وضوح — یک‌بار در شروع دور
+   681→    const rect = canvas.getBoundingClientRect();
+   682→    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+   683→    canvas.width = Math.max(1, Math.round(rect.width * dpr));
+   684→    canvas.height = Math.round(H * dpr);
+   685→    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+   686→    dimRef.current = { w: Math.round(rect.width) || 640 };
+   687→
+   688→    // نخستین دیوار (سؤالش همان deck[0] است که در start به HUD داده شده)
+   689→    if (wallsRef.current.length === 0) {
+   690→      wallsRef.current.push(makeWall(dimRef.current.w + 40));
+   691→      hudWallRef.current = wallsRef.current[0];
+   692→    }
+   693→
+   694→    const flap = () => {
+   695→      if (overRef.current || pausedRef.current || exitAskRef.current) return;
+   696→      birdRef.current.vy = cfgRef.current.flap;
+   697→      lastFlapAtRef.current = performance.now();
+   698→    };
+   699→
+   700→    const syncHud = () => {
+   701→      setScore(scoreRef.current);
+   702→      setHearts(heartsRef.current);
+   703→    };
+   704→
+   705→    const showWallQ = (wl: FlappyWall) => {
+   706→      hudWallRef.current = wl;
+   707→      setHudQ(wl.q);
+   708→    };
+   709→
+   710→    const step = (now: number, dt: number) => {
+   711→      const cfg = cfgRef.current;
+   712→      const bird = birdRef.current;
+   713→      const { w } = dimRef.current;
+   714→      const birdX = Math.min(w * 0.28, 190);
+   715→
+   716→      // فیزیک پرنده (dt-based)
+   717→      bird.vy = Math.min(bird.vy + cfg.gravity * dt, 640);
+   718→      bird.y += bird.vy * dt;
+   719→
+   720→      // حرکت دیوارها به چپ + حذف خارج‌شده‌ها
+   721→      const walls = wallsRef.current;
+   722→      for (const wl of walls) wl.x -= speedRef.current * dt;
+   723→      while (walls.length > 0 && walls[0].x < -WALL_W - 40) walls.shift();
+   724→
+   725→      // زادن دیوار بعدی
+   726→      const spacing = Math.max(280, w * 0.62);
+   727→      const lastW = walls[walls.length - 1];
+   728→      if (!lastW || lastW.x < w - spacing) {
+   729→        const nw = makeWall(w + 30);
+   730→        walls.push(nw);
+   731→        if (!hudWallRef.current || hudWallRef.current.resolved) showWallQ(nw);
+   732→      }
+   733→
+   734→      // عبور از دیوار — لحظه‌ای که مرکز دیوار از پرنده رد می‌شود
+   735→      for (const wl of walls) {
+   736→        if (wl.resolved || wl.x + WALL_W / 2 > birdX) continue;
+   737→        wl.resolved = true;
+   738→        totalRef.current += 1;
+   739→        const gap = wl.gaps.find((g) => bird.y >= g.y0 && bird.y <= g.y1) ?? null;
+   740→        if (gap !== null && gap.correct) {
+   741→          // عبور درست — فاز G2-c: امتیاز از موتور کمبو کیت (فرمول مو‌به‌مو یکسان) + شتاب + تلفظ
+   742→          const gained = registerCorrect();
+   743→          scoreRef.current += gained;
+   744→          speedRef.current = Math.min(cfg.cap, cfg.base + comboCountRef.current * cfg.step);
+   745→          wl.ok = true;
+   746→          wl.flashUntil = now + WALL_FLASH_MS;
+   747→          popupsRef.current.push({
+   748→            x: wl.x + WALL_W / 2,
+   749→            y: bird.y - 26,
+   750→            text: `+${faNum(gained)}`,
+   751→            born: now,
+   752→          });
+   753→          correctRef.current += 1;
+   754→          void speak(gap.text, { speed: voiceSpeedRef.current });
+   755→          // فاز G2-c — بازخورد سه‌کانالهٔ عبور درست (لرزش سبک — فقط در لحظهٔ resolve دیوار)
+   756→          playSound("correct");
+   757→          buzz("light");
+   758→          setLiveMsg(`+${faNum(gained)} امتیاز — کمبو ×${faNum(comboCountRef.current)} 🔥`);
+   759→        } else {
+   760→          // دهانهٔ غلط یا برخورد با بدنهٔ دیوار — یک ❤ کم، کمبو صفر (کیت)، فلاش، صف مرور، مصونیت ۱ث
+   761→          heartsRef.current -= 1;
+   762→          registerMiss();
+   763→          speedRef.current = cfg.base;
+   764→          wl.ok = false;
+   765→          wl.flashUntil = now + WALL_FLASH_MS;
+   766→          flashUntilRef.current = now + FLASH_MS;
+   767→          invulnUntilRef.current = now + INVULN_MS;
+   768→          const word = wl.q.options[wl.q.answer];
+   769→          if (!wrongRef.current.includes(word)) wrongRef.current.push(word);
+   770→          seedReviewFromQuiz(word);
+   771→          // فاز G2-c — بازخورد سه‌کانالهٔ خطای دیوار
+   772→          playSound("wrong");
+   773→          buzz("error");
+   774→          setLiveMsg(`دهانهٔ غلط — پاسخ درست «${word}» بود — یک ❤ کم شد`);
+   775→        }
+   776→        syncHud();
+   777→        if (hudWallRef.current === wl) {
+   778→          const nxt = walls.find((c) => !c.resolved);
+   779→          if (nxt) showWallQ(nxt);
+   780→          else {
+   781→            hudWallRef.current = null;
+   782→            setHudQ(null);
+   783→          }
+   784→        }
+   785→      }
+   786→
+   787→      // زمین/سقف — یک ❤ کم و پرنده به میانه برمی‌گردد
+   788→      if (bird.y + BIRD_R >= H - GROUND_H || bird.y - BIRD_R <= 0) {
+   789→        if (now >= invulnUntilRef.current) {
+   790→          heartsRef.current -= 1;
+   791→          flashUntilRef.current = now + FLASH_MS;
+   792→          invulnUntilRef.current = now + 700;
+   793→          syncHud();
+   794→          // فاز G2-c — بازخورد سه‌کانالهٔ برخورد با زمین/سقف (لحظهٔ رویداد، نه هر فریم)
+   795→          playSound("wrong");
+   796→          buzz("error");
+   797→          setLiveMsg("برخورد با زمین/سقف — یک ❤ کم شد");
+   798→        }
+   799→        bird.y = H / 2;
+   800→        bird.vy = 0;
+   801→      }
+   802→    };
+   803→
+   804→    const draw = (c: CanvasRenderingContext2D, now: number) => {
+   805→      const { w } = dimRef.current;
+   806→      const bird = birdRef.current;
+   807→      const birdX = Math.min(w * 0.28, 190);
+   808→      c.clearRect(0, 0, w, H);
+   809→      drawSky(c, now, w);
+   810→      for (const wl of wallsRef.current) drawWall(c, wl, now);
+   811→      drawGround(c, now, w, speedRef.current);
+   812→      popupsRef.current = popupsRef.current.filter((p) => now - p.born < 700);
+   813→      c.textAlign = "center";
+   814→      c.textBaseline = "middle";
+   815→      for (const p of popupsRef.current) {
+   816→        const t = now - p.born;
+   817→        c.globalAlpha = Math.max(0, 1 - t / 700);
+   818→        c.fillStyle = "#047857";
+   819→        c.font = "800 15px system-ui, sans-serif";
+   820→        c.fillText(p.text, p.x, p.y - t * 0.04);
+   821→        c.globalAlpha = 1;
+   822→      }
+   823→      drawBird(c, now, bird.y, bird.vy, birdX, invulnUntilRef.current, lastFlapAtRef.current);
+   824→      if (now < flashUntilRef.current) {
+   825→        c.fillStyle = "rgba(239, 68, 68, 0.16)";
+   826→        c.fillRect(0, 0, w, H);
+   827→      }
+   828→    };
+   829→
+   830→    const onPointer = (e: PointerEvent) => {
+   831→      e.preventDefault();
+   832→      flap();
+   833→    };
+   834→    const onKey = (e: KeyboardEvent) => {
+   835→      const t = e.target as HTMLElement | null;
+   836→      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+   837→      if (e.code === "Space" || e.code === "ArrowUp") {
+   838→        e.preventDefault();
+   839→        flap();
+   840→      }
+   841→    };
+   842→    canvas.addEventListener("pointerdown", onPointer);
+   843→    window.addEventListener("keydown", onKey);
+   844→
+   845→    let raf = 0;
+   846→    let last = performance.now();
+   847→    // فاز G0-05 + G2-c — فلگ توقف زنجیرهٔ rAF: هم onChange هوک Pause و هم گارد
+   848→    // visibilitychange از همین مسیر توقف/ادامه می‌کنند (توقف = cancelAnimationFrame،
+   849→    // ادامه = resumeLoop با last تازه تا پرنده وسط پرواز نپرد — dt از قبل ≤۵۰ms clamp است)
+   850→    let paused = false;
+   851→    const resumeLoop = () => {
+   852→      paused = false;
+   853→      last = performance.now();
+   854→      cancelAnimationFrame(raf); // گارد لبه: زنجیرهٔ معوق دوباره زده نشود (شروع دور در تب مخفی)
+   855→      raf = requestAnimationFrame(tick);
+   856→    };
+   857→    const applyLoopPause = (p: boolean) => {
+   858→      if (p === paused) return; // idempotent — هوک و onVis هر دو ممکن است صدا بزنند
+   859→      paused = p;
+   860→      if (p) {
+   861→        cancelAnimationFrame(raf);
+   862→      } else if (!overRef.current) {
+   863→        resumeLoop();
+   864→      }
+   865→    };
+   866→    loopCtlRef.current = applyLoopPause;
+   867→
+   868→    const tick = (now: number) => {
+   869→      raf = requestAnimationFrame(tick);
+   870→      if (overRef.current || paused) return;
+   871→      const dt = Math.min((now - last) / 1000, 0.05);
+   872→      last = now;
+   873→      step(now, dt);
+   874→      draw(ctx, now);
+   875→      if (heartsRef.current <= 0) finishRef.current();
+   876→    };
+   877→    raf = requestAnimationFrame(tick);
+   878→
+   879→    // فاز G0-05 — گارد visibilitychange/pageshow: در تب مخفی حلقهٔ rAF متوقف می‌شود.
+   880→    // فاز G2-c — توقف خودکارِ «ادامه‌دار» اکنون از هوک Pause می‌آید (کاربر در بازگشت
+   881→    // اورلی «متوقف شد» می‌بیند و خودش ادامه می‌دهد)؛ همین مسیر فقط در حالتی که هوک
+   882→    // متوقفش نکرده (pausedRef=false) بی‌صدا از سر می‌گیرد — دو مکانیزم تداخل ندارند.
+   883→    const onVis = () => {
+   884→      if (document.visibilityState === "hidden") {
+   885→        applyLoopPause(true);
+   886→      } else if (!overRef.current && !pausedRef.current) {
+   887→        applyLoopPause(false);
+   888→      }
+   889→    };
+   890→    const onPageshow = (e: PageTransitionEvent) => {
+   891→      if (!e.persisted) return;
+   892→      cancelAnimationFrame(raf);
+   893→      if (!overRef.current && !pausedRef.current) resumeLoop();
+   894→    };
+   895→    document.addEventListener("visibilitychange", onVis);
+   896→    window.addEventListener("pageshow", onPageshow);
+   897→
+   898→    return () => {
+   899→      cancelAnimationFrame(raf);
+   900→      loopCtlRef.current = null;
+   901→      document.removeEventListener("visibilitychange", onVis);
+   902→      window.removeEventListener("pageshow", onPageshow);
+   903→      canvas.removeEventListener("pointerdown", onPointer);
+   904→      window.removeEventListener("keydown", onKey);
+   905→    };
+   906→  }, [phase, makeWall, registerCorrect, registerMiss, comboCountRef]);
+   907→
+   908→  const chipCls = (active: boolean) =>
+   909→    cn(
+   910→      "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   911→      active
+   912→        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   913→        : "text-muted-foreground hover:bg-muted",
+   914→    );
+   915→
+   916→  // ── Setup ──
+   917→  if (phase === "setup") {
+   918→    return (
+   919→      <>
+   920→        <Card className="mx-auto max-w-xl rise-in">
+   921→          <CardContent className="space-y-6 p-6">
+   922→            <div className="flex items-center gap-3">
+   923→              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   924→                <Bird size={22} />
+   925→              </span>
+   926→              <div>
+   927→                <h2 className="text-lg font-black">فلپی گزینش</h2>
+   928→                <p className="text-xs text-muted-foreground">پرواز کن و از دروازهٔ گزینهٔ درست رد شو!</p>
+   929→              </div>
+   930→            </div>
+   931→
+   932→            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   933→              <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   934→              <p>
+   935→                روی هر دیوار چند گزینه نوشته شده — دقیقاً از گزینهٔ درستِ سؤالِ «دیوار پیش‌رو» رد شو. هر عبور درست
+   936→                کمبو و سرعت را بالا می‌برد و هر خطا یک ❤ کم می‌کند؛ با صفر شدن قلب‌ها پرواز تمام است.
+   937→              </p>
+   938→            </div>
+   939→
+   940→            <div>
+   941→              <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   942→              <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   943→                <button
+   944→                  type="button"
+   945→                  aria-pressed={lesson === ALL_LESSONS}
+   946→                  onClick={() => setLesson(ALL_LESSONS)}
+   947→                  className={chipCls(lesson === ALL_LESSONS)}
+   948→                >
+   949→                  کل کتاب ({faNum(vocabSeed.length)} سؤال)
+   950→                </button>
+   951→                {lessons.map((l) => (
+   952→                  <button
+   953→                    key={l}
+   954→                    type="button"
+   955→                    aria-pressed={lesson === l}
+   956→                    onClick={() => setLesson(l)}
+   957→                    className={chipCls(lesson === l)}
+   958→                  >
+   959→                    {lessonLabel(l)} ({faNum(countFor(l))} سؤال)
+   960→                  </button>
+   961→                ))}
+   962→              </div>
+   963→            </div>
+   964→
+   965→            <div>
+   966→              <p className="mb-2 text-[13px] font-bold">سرعت پرواز</p>
+   967→              <button type="button" aria-pressed={easy} onClick={() => setEasy((v) => !v)} className={chipCls(easy)}>
+   968→                حالت آسان {easy ? "— فعال" : ""}
+   969→              </button>
+   970→              <p className="mt-2 text-[11px] text-muted-foreground">
+   971→                در حالت آسان جاذبه و سرعت پایه کمتر است؛ رکورد هر دو حالت جداگانه ثبت می‌شود.
+   972→              </p>
+   973→            </div>
+   974→
+   975→            {best !== null && (
+   976→              <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   977→                <Trophy size={12} />
+   978→                بهترین امتیاز: {faNum(best)}
+   979→              </Badge>
+   980→            )}
+   981→
+   982→            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   983→              <Play size={18} />
+   984→              شروع پرواز
+   985→            </Button>
+   986→          </CardContent>
+   987→        </Card>
+   988→        {/* فاز G2-c — آموزش یک‌بارنمایش در اولین ورود */}
+   989→        <TutorialOverlay
+   990→          game={GAME_KEY}
+   991→          steps={TUTORIAL_STEPS}
+   992→          open={tutorialOpen}
+   993→          onOpenChange={handleTutorialOpenChange}
+   994→        />
+   995→      </>
+   996→    );
+   997→  }
+   998→
+   999→  // ── Done — فاز G2-c: صفحهٔ نتیجهٔ استاندارد کیت ──
+  1000→  if (phase === "done") {
+  1001→    // ستاره‌بندی per-game: دور معمول ۶-۱۵ عبور × ۱۰-۲۰ امتیاز است →
+  1002→    // ≥۱۲۰ = پرواز قوی (۳ ستاره)، ≥۷۰ = خوب (۲ ستاره)، بقیه ۱ ستاره
+  1003→    const stars = score >= 120 ? 3 : score >= 70 ? 2 : 1;
+  1004→    return (
+  1005→      <ResultScreen
+  1006→        title="پرواز تمام شد!"
+  1007→        stars={stars}
+  1008→        isRecord={isRecord}
+  1009→        errorCount={wrongWords.length}
+  1010→        reviewItems={wrongWords.map((w) => ({ front: w, back: meaningOf(w) }))}
+  1011→        stats={[
+  1012→          {
+  1013→            label: "امتیاز",
+  1014→            value: faNum(score),
+  1015→            icon: <Star size={16} className="text-amber-500" />,
+  1016→          },
+  1017→          {
+  1018→            label: "عبور درست",
+  1019→            value: faNum(correctCount),
+  1020→            icon: <CheckCircle2 size={16} className="text-emerald-500" />,
+  1021→          },
+  1022→          {
+  1023→            label: "بهترین کمبو",
+  1024→            value: `×${faNum(maxCombo)}`,
+  1025→            icon: <Flame size={16} className="text-teal-500" />,
+  1026→          },
+  1027→        ]}
+  1028→        onReplay={start}
+  1029→        onExit={() => setPhase("setup")}
+  1030→        exitLabel="تنظیمات"
+  1031→      />
+  1032→    );
+  1033→  }
+  1034→
+  1035→  // ── Playing ──
+  1036→  return (
+  1037→    <>
+  1038→      {/* فاز G2-c — هدر یکنواخت از کیت (الگوی پایلوت memory/جای خالی) */}
+  1039→      <GameShell
+  1040→        title="فلپی گزینش"
+  1041→        icon={<Bird size={18} />}
+  1042→        stats={
+  1043→          <>
+  1044→            <Badge key={score} variant="secondary" className="match-pop gap-1.5 px-2.5 py-1 text-[13px] font-black">
+  1045→              <Star size={13} className="text-amber-500" />
+  1046→              {faNum(score)}
+  1047→            </Badge>
+  1048→            {combo >= 2 ? (
+  1049→              <Badge
+  1050→                key={combo}
+  1051→                variant="outline"
+  1052→                className={cn(
+  1053→                  "gap-1.5 border-amber-500/50 bg-amber-500/10 px-2.5 py-1 text-[13px] font-black text-amber-600 dark:text-amber-400",
+  1054→                  // فاز G2-c — افکت بصری واحد بج کمبو (کیت) + pulse ساده با گارد reduced-motion
+  1055→                  COMBO_FIRE_CLASS,
+  1056→                  "animate-pulse motion-reduce:animate-none",
+  1057→                )}
+  1058→              >
+  1059→                <Flame size={13} />
+  1060→                ×{faNum(combo)}
+  1061→              </Badge>
+  1062→            ) : (
+  1063→              <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px] text-muted-foreground">
+  1064→                <Flame size={12} />
+  1065→                کمبو ×۱
+  1066→              </Badge>
+  1067→            )}
+  1068→            <span
+  1069→              role="img"
+  1070→              aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`}
+  1071→              className="flex items-center gap-1"
+  1072→            >
+  1073→              {Array.from({ length: HEARTS }, (_, i) => (
+  1074→                <Heart
+  1075→                  key={i}
+  1076→                  size={15}
+  1077→                  fill={i < hearts ? "currentColor" : "none"}
+  1078→                  className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
+  1079→                />
+  1080→              ))}
+  1081→            </span>
+  1082→          </>
+  1083→        }
+  1084→        liveMsg={liveMsg}
+  1085→        progress={
+  1086→          hudQ ? (
+  1087→            <div className="flex items-center gap-3 rounded-xl border bg-card px-4 py-2.5">
+  1088→              <Badge
+  1089→                variant="outline"
+  1090→                className="shrink-0 border-teal-500/40 text-[10px] text-teal-600 dark:text-teal-400"
+  1091→              >
+  1092→                دیوار پیش‌رو
+  1093→              </Badge>
+  1094→              <p dir="ltr" className="font-en min-w-0 flex-1 truncate text-left text-[13px] font-bold sm:text-sm">
+  1095→                {qLabel(hudQ.text)}
+  1096→              </p>
+  1097→            </div>
+  1098→          ) : undefined
+  1099→        }
+  1100→        paused={paused}
+  1101→        onPauseToggle={togglePause}
+  1102→        muted={muted}
+  1103→        onMuteToggle={() => setMuted(toggleSoundMuted())}
+  1104→        onHelp={handleHelp}
+  1105→        onExit={handleExitClick}
+  1106→      >
+  1107→        <div className="relative">
+  1108→          <div
+  1109→            className={cn(
+  1110→              "overflow-hidden rounded-2xl border bg-card shadow-sm",
+  1111→              paused && "pointer-events-none blur-sm",
+  1112→            )}
+  1113→            aria-hidden={paused}
+  1114→          >
+  1115→            <canvas
+  1116→              ref={canvasRef}
+  1117→              role="img"
+  1118→              aria-label="بازی فلپی گزینش — برای بال زدن کلیک کن یا Space بزن"
+  1119→              className="block h-[480px] w-full touch-none select-none bg-gradient-to-b from-teal-50 via-emerald-50/60 to-emerald-100 dark:from-teal-950 dark:via-emerald-950/70 dark:to-emerald-950"
+  1120→            />
+  1121→          </div>
+  1122→
+  1123→          {/* فاز G2-c — اورلی توقف (الگوی پایلوت memory): بوم تار و غیرقابل‌کلیک */}
+  1124→          {paused && (
+  1125→            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
+  1126→              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+  1127→                <Pause size={26} />
+  1128→              </span>
+  1129→              <p className="text-sm font-black">بازی متوقف شد</p>
+  1130→              <Button onClick={resume} className="h-11 gap-2">
+  1131→                <Play size={16} />
+  1132→                ادامهٔ بازی
+  1133→              </Button>
+  1134→            </div>
+  1135→          )}
+  1136→        </div>
+  1137→
+  1138→        <p className="text-center text-[11px] text-muted-foreground">
+  1139→          کلیک/لمس روی بوم یا Space = بال زدن — از دهانهٔ گزینهٔ درست رد شو
+  1140→        </p>
+  1141→
+  1142→        {/* فاز G2-c — نگهبان خروج استاندارد کیت (حین پرواز با پیشرفت) */}
+  1143→        <GameExitGuard
+  1144→          open={exitAsk}
+  1145→          onOpenChange={(o) => {
+  1146→            setExitAskSafe(o);
+  1147→            // انصراف از خروج (Esc/کلیک بیرون/«نه») → پرواز از همان‌جا ادامه یابد
+  1148→            if (!o) resume();
+  1149→          }}
+  1150→          onConfirm={() => {
+  1151→            // فاز G2-c — رهاکردن دور نیمه‌کاره + تله‌متری
+  1152→            sessionRef.current?.abandon("exit");
+  1153→            stopSpeaking();
+  1154→            overRef.current = true;
+  1155→            setExitAskSafe(false);
+  1156→            resume();
+  1157→            setPhase("setup");
+  1158→          }}
+  1159→        />
+  1160→      </GameShell>
+  1161→      {/* فاز G2-c — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
+  1162→      <TutorialOverlay
+  1163→        game={GAME_KEY}
+  1164→        steps={TUTORIAL_STEPS}
+  1165→        open={tutorialOpen}
+  1166→        onOpenChange={handleTutorialOpenChange}
+  1167→      />
+  1168→    </>
+  1169→  );
+  1170→}
+  1171→

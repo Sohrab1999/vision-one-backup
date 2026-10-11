@@ -1,0 +1,747 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * بازی «سازنده جمله» (Sentence Builder) — فاز ۴ نقشه راه ویژن‌وان.
+     5→ *
+     6→ * واژه‌های یک جملهٔ انگلیسی از متن خود جزوه (ریدینگ/مکالمه/مثال دیکشنری)
+     7→ * به‌هم ریخته می‌شوند؛ بازیکن با کمک ترجمهٔ فارسی جمله، آن را درست می‌چیند.
+     8→ * - مدل ایندکس‌محور tiles/slots (الگوی scramble) — واژه‌های تکراری جمله با
+     9→ *   شناسهٔ مستقل مدیریت می‌شوند و هیچ Set واژه‌ای در کار نیست.
+    10→ * - چیدن کامل: match-pop + پخش تلفظ جملهٔ کامل و رفتن به جملهٔ بعد
+    11→ * - رد کردن: بدون SRS، فقط شمارش (رکورد دور را می‌سوزاند)
+    12→ * - رکورد: سریع‌ترین دور (فقط بدون رد/راهنما) به تفکیک درس و تعداد جمله
+    13→ */
+    14→
+    15→import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    16→import {
+    17→  Blocks,
+    18→  Play,
+    19→  RotateCcw,
+    20→  Trophy,
+    21→  Timer,
+    22→  CheckCircle2,
+    23→  XCircle,
+    24→  Eraser,
+    25→  Lightbulb,
+    26→  SkipForward,
+    27→  Sparkles,
+    28→  PartyPopper,
+    29→  ListOrdered,
+    30→} from "lucide-react";
+    31→import { Button } from "@/components/ui/button";
+    32→import { Card, CardContent } from "@/components/ui/card";
+    33→import { Badge } from "@/components/ui/badge";
+    34→import { cn } from "@/lib/utils";
+    35→import { toast } from "sonner";
+    36→import type { BookData } from "@/data/books/types";
+    37→import { useBook, useBookData } from "@/lib/book-context";
+    38→import { touchStreak } from "@/lib/streak-store";
+    39→import { recordStudySession } from "@/lib/goal-store";
+    40→import { speak, stopSpeaking } from "@/lib/speak";
+    41→import { useVoiceSpeed } from "@/lib/voice-store";
+    42→import {
+    43→  shuffle,
+    44→  faNum,
+    45→  fmtTime,
+    46→  loadBest,
+    47→  saveBest,
+    48→  bumpPlays,
+    49→  saveAttempt,
+    50→  subscribeGameData,
+    51→} from "./shared";
+    52→
+    53→type Phase = "setup" | "playing" | "done";
+    54→type SentenceKind = "reading" | "conversation" | "dict";
+    55→
+    56→/** یک جملهٔ بازی — متن انگلیسی + ترجمهٔ فارسی (مثال دیکشنری ترجمهٔ ثبت‌شده ندارد) */
+    57→interface SentenceItem {
+    58→  en: string;
+    59→  fa: string;
+    60→  lesson: number;
+    61→  kind: SentenceKind;
+    62→  /** برای مثال دیکشنری: واژهٔ سردرِمدخل */
+    63→  src?: string;
+    64→}
+    65→
+    66→/** واژه با شناسهٔ یکتا — واژه‌های تکراری مستقل مدیریت می‌شوند (اینکس‌محور) */
+    67→interface Tile {
+    68→  id: number;
+    69→  word: string;
+    70→}
+    71→
+    72→/** شکل رکورد شخصی این بازی — سریع‌ترین دور کامل */
+    73→interface BestRec {
+    74→  time: number;
+    75→}
+    76→
+    77→const ALL_LESSONS = -1;
+    78→const GAME_KEY = "sentence-builder";
+    79→const COUNT_OPTIONS = [3, 5];
+    80→/** بازهٔ تعداد واژه در حالت عادی */
+    81→const MIN_WORDS = 4;
+    82→const MAX_WORDS = 12;
+    83→/** اگر جمله‌های بازهٔ عادی کمتر از این شد، بازه گسترده می‌شود */
+    84→const WIDEN_THRESHOLD = 10;
+    85→const MIN_WORDS_WIDE = 3;
+    86→const MAX_WORDS_WIDE = 16;
+    87→/** مکث پس از چیدن کامل جمله (ms) */
+    88→const SOLVE_LOCK_MS = 700;
+    89→/** مکث پس از رد کردن (ms) */
+    90→const SKIP_LOCK_MS = 400;
+    91→
+    92→const KIND_LABEL: Record<SentenceKind, string> = {
+    93→  reading: "ریدینگ",
+    94→  conversation: "مکالمه",
+    95→  dict: "دیکشنری",
+    96→};
+    97→
+    98→/**
+    99→ * واژهٔ مجاز: فقط حروف/رقم/آندرلاین + آپاستروف، با حداکثر یک نقطه/کاما/علامت
+   100→ * سؤال پایانی — جمله‌های دارای dash خاص یا گیومهٔ تایپوگرافی حذف می‌شوند.
+   101→ */
+   102→const WORD_OK = /^[\w']+[.,?]?$/;
+   103→
+   104→/** استخر جمله‌های یک محدوده — با سنجش بازهٔ واژه و یکتاسازی متن */
+   105→function buildPool(
+   106→  data: BookData,
+   107→  lesson: number,
+   108→  minW: number,
+   109→  maxW: number,
+   110→): SentenceItem[] {
+   111→  const seen = new Set<string>();
+   112→  const items: SentenceItem[] = [];
+   113→  const push = (en: string, fa: string, lessonNo: number, kind: SentenceKind, src?: string) => {
+   114→    const text = en.trim();
+   115→    if (!text) return;
+   116→    const words = text.split(/\s+/);
+   117→    if (words.length < minW || words.length > maxW) return;
+   118→    for (const w of words) {
+   119→      if (!WORD_OK.test(w)) return;
+   120→    }
+   121→    const key = text.toLowerCase();
+   122→    if (seen.has(key)) return;
+   123→    seen.add(key);
+   124→    items.push({ en: text, fa: fa.trim(), lesson: lessonNo, kind, src });
+   125→  };
+   126→  const inScope = (l: number) => lesson === ALL_LESSONS || l === lesson;
+   127→
+   128→  for (const r of data.readings) {
+   129→    if (!inScope(r.lesson)) continue;
+   130→    for (const p of r.paragraphs) push(p.en, p.fa, r.lesson, "reading");
+   131→  }
+   132→  for (const c of data.conversations) {
+   133→    if (!inScope(c.lesson)) continue;
+   134→    for (const line of c.lines) push(line.en, line.fa, c.lesson, "conversation");
+   135→  }
+   136→  for (const d of data.dictionary) {
+   137→    if (!inScope(d.lesson)) continue;
+   138→    for (const ex of d.examples) push(ex, "", d.lesson, "dict", d.word);
+   139→  }
+   140→  return items;
+   141→}
+   142→
+   143→export function SentenceBuilderGame() {
+   144→  const data = useBookData();
+   145→  const { bookId } = useBook();
+   146→  // بازی فقط داخل کتاب فعال رندر می‌شود (useBookData بالا تضمینش می‌کند) — در عمل هرگز تهی نیست
+   147→  const activeBookId: string = bookId ?? "";
+   148→  const { speed } = useVoiceSpeed();
+   149→
+   150→  const [phase, setPhase] = useState<Phase>("setup");
+   151→  const [lesson, setLesson] = useState<number>(ALL_LESSONS);
+   152→  const [count, setCount] = useState<number>(3);
+   153→
+   154→  const [deck, setDeck] = useState<SentenceItem[]>([]);
+   155→  const [idx, setIdx] = useState(0);
+   156→  const [words, setWords] = useState<string[]>([]);
+   157→  const [tiles, setTiles] = useState<Tile[]>([]);
+   158→  const [slots, setSlots] = useState<(number | null)[]>([]);
+   159→
+   160→  const [solved, setSolved] = useState(0);
+   161→  const [skipped, setSkipped] = useState(0);
+   162→  const [hinted, setHinted] = useState(0);
+   163→  const [secs, setSecs] = useState(0);
+   164→  const [isRecord, setIsRecord] = useState(false);
+   165→
+   166→  /** انیمیشن match-pop روی ردیف جمله هنگام چیدن کامل درست */
+   167→  const [pop, setPop] = useState(false);
+   168→
+   169→  const locked = useRef(false);
+   170→  const timer = useRef<number | undefined>(undefined);
+   171→  const secsRef = useRef(0);
+   172→
+   173→  const busy = pop;
+   174→
+   175→  // استخر جملهٔ محدودهٔ انتخابی — اگر بازهٔ عادی کم آمد، بازهٔ واژه گسترده می‌شود
+   176→  const poolInfo = useMemo<{ items: SentenceItem[]; widened: boolean }>(() => {
+   177→    const base = buildPool(data, lesson, MIN_WORDS, MAX_WORDS);
+   178→    if (base.length >= WIDEN_THRESHOLD) return { items: base, widened: false };
+   179→    return { items: buildPool(data, lesson, MIN_WORDS_WIDE, MAX_WORDS_WIDE), widened: true };
+   180→  }, [data, lesson]);
+   181→
+   182→  // رکورد شخصی — snapshot عددی (پایدار برای useSyncExternalStore؛ سرور null)
+   183→  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`;
+   184→  const best = useSyncExternalStore(
+   185→    subscribeGameData,
+   186→    () => {
+   187→      const b = loadBest<BestRec>(activeBookId, GAME_KEY, scope);
+   188→      return b ? b.time : null;
+   189→    },
+   190→    () => null,
+   191→  );
+   192→
+   193→  // ── تایمر (functional) + شمارندهٔ دقیق برای رکورد ──
+   194→  useEffect(() => {
+   195→    if (phase !== "playing") return;
+   196→    const t = window.setInterval(() => {
+   197→      secsRef.current += 1;
+   198→      setSecs((s) => s + 1);
+   199→    }, 1000);
+   200→    return () => window.clearInterval(t);
+   201→  }, [phase]);
+   202→
+   203→  // ── پاک‌سازی نهایی: تلفظ + تایمر معلق ──
+   204→  useEffect(() => {
+   205→    return () => {
+   206→      stopSpeaking();
+   207→      if (timer.current !== undefined) window.clearTimeout(timer.current);
+   208→    };
+   209→  }, []);
+   210→
+   211→  /** بارگذاری جملهٔ بعدی — واژه‌های به‌هم‌ریخته + خانه‌های خالی */
+   212→  const loadSentence = useCallback((item: SentenceItem) => {
+   213→    const ws = item.en.trim().split(/\s+/);
+   214→    setWords(ws);
+   215→    setTiles(shuffle(ws.map((word, i) => ({ id: i, word }))));
+   216→    setSlots(Array.from({ length: ws.length }, () => null as number | null));
+   217→    setPop(false);
+   218→  }, []);
+   219→
+   220→  /** پایان دور — استریک/جلسه/Attempt/رکورد */
+   221→  const finishRun = useCallback(
+   222→    (finalSolved: number) => {
+   223→      touchStreak();
+   224→      recordStudySession();
+   225→      bumpPlays(activeBookId, GAME_KEY);
+   226→      saveAttempt(activeBookId, GAME_KEY, {
+   227→        lesson: lesson === ALL_LESSONS ? 0 : lesson,
+   228→        total: deck.length,
+   229→        correct: finalSolved,
+   230→        duration: secsRef.current,
+   231→        detail: { hints: hinted, skipped },
+   232→      });
+   233→      // رکورد فقط برای دورِ کاملِ بدون رد کردن و بدون راهنما
+   234→      if (skipped === 0 && hinted === 0) {
+   235→        const recScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${count}`;
+   236→        const prev = loadBest<BestRec>(activeBookId, GAME_KEY, recScope);
+   237→        if (!prev || secsRef.current < prev.time) {
+   238→          saveBest<BestRec>(activeBookId, GAME_KEY, recScope, { time: secsRef.current });
+   239→          setIsRecord(true);
+   240→        }
+   241→      }
+   242→      setSecs(secsRef.current);
+   243→      setPhase("done");
+   244→    },
+   245→    [activeBookId, lesson, count, deck.length, hinted, skipped],
+   246→  );
+   247→
+   248→  /** ادامه به جملهٔ بعد یا پایان دور */
+   249→  const advanceOrFinish = useCallback(
+   250→    (nextIdx: number, finalSolved: number) => {
+   251→      if (nextIdx >= deck.length) {
+   252→        finishRun(finalSolved);
+   253→        return;
+   254→      }
+   255→      setIdx(nextIdx);
+   256→      loadSentence(deck[nextIdx]);
+   257→    },
+   258→    [deck, loadSentence, finishRun],
+   259→  );
+   260→
+   261→  /** چیدن کامل درست — پاپ + تلفظ جملهٔ کامل و بعد جملهٔ بعد */
+   262→  const solveSentence = useCallback(
+   263→    (item: SentenceItem, finalSolved: number) => {
+   264→      locked.current = true;
+   265→      setPop(true);
+   266→      speak(item.en, { speed });
+   267→      timer.current = window.setTimeout(() => {
+   268→        locked.current = false;
+   269→        setPop(false);
+   270→        advanceOrFinish(idx + 1, finalSolved);
+   271→      }, SOLVE_LOCK_MS);
+   272→    },
+   273→    [speed, idx, advanceOrFinish],
+   274→  );
+   275→
+   276→  /** گذاشتن یک واژه از استخر در اولین خانهٔ خالی + بررسی چیدن کامل */
+   277→  const placeTile = useCallback(
+   278→    (tileId: number) => {
+   279→      if (locked.current) return;
+   280→      const current = deck[idx];
+   281→      if (!current) return;
+   282→      const empty = slots.indexOf(null);
+   283→      if (empty === -1) return;
+   284→      const tile = tiles.find((t) => t.id === tileId);
+   285→      if (!tile) return;
+   286→      const nextSlots = [...slots];
+   287→      nextSlots[empty] = tileId;
+   288→      setSlots(nextSlots);
+   289→      // همهٔ خانه‌ها پر شد؟ ترتیب چیده‌شده را با جملهٔ پایه بسنجیم
+   290→      if (nextSlots.every((s) => s !== null)) {
+   291→        const attempt = nextSlots.map((s) => tiles.find((t) => t.id === s)?.word ?? "");
+   292→        const ok = attempt.every((w, i) => w === words[i]);
+   293→        if (ok) {
+   294→          const finalSolved = solved + 1;
+   295→          setSolved(finalSolved);
+   296→          solveSentence(current, finalSolved);
+   297→        }
+   298→      }
+   299→    },
+   300→    [deck, idx, slots, tiles, words, solved, solveSentence],
+   301→  );
+   302→
+   303→  /** برگرداندن واژهٔ یک خانه به استخر (کلیک روی خانهٔ پر) */
+   304→  const returnAt = useCallback((index: number) => {
+   305→    if (locked.current) return;
+   306→    setSlots((prev) => {
+   307→      if (prev[index] === null) return prev;
+   308→      const next = [...prev];
+   309→      next[index] = null;
+   310→      return next;
+   311→    });
+   312→  }, []);
+   313→
+   314→  /** پاک کردن آخرین واژه (دکمه یا Backspace) */
+   315→  const returnLast = useCallback(() => {
+   316→    if (locked.current) return;
+   317→    setSlots((prev) => {
+   318→      for (let i = prev.length - 1; i >= 0; i--) {
+   319→        if (prev[i] !== null) {
+   320→          const next = [...prev];
+   321→          next[i] = null;
+   322→          return next;
+   323→        }
+   324→      }
+   325→      return prev;
+   326→    });
+   327→  }, []);
+   328→
+   329→  /** پاک کردن همه — همهٔ واژه‌ها به استخر برمی‌گردند */
+   330→  const clearAll = useCallback(() => {
+   331→    if (locked.current) return;
+   332→    setSlots((prev) => (prev.every((s) => s === null) ? prev : prev.map(() => null)));
+   333→  }, []);
+   334→
+   335→  /** راهنمای دوم — یک واژهٔ درستِ بعدی را جای‌گذاری می‌کند (رکورد دور می‌سوزد) */
+   336→  const applyHint = useCallback(() => {
+   337→    if (locked.current) return;
+   338→    const empty = slots.indexOf(null);
+   339→    if (empty === -1) return;
+   340→    const used = new Set(slots.filter((s): s is number => s !== null));
+   341→    const tile = tiles.find((t) => !used.has(t.id) && t.word === words[empty]);
+   342→    if (!tile) return;
+   343→    setHinted((h) => h + 1);
+   344→    placeTile(tile.id);
+   345→  }, [slots, tiles, words, placeTile]);
+   346→
+   347→  /** رد کردن — بدون SRS، فقط شمارش و جملهٔ بعد (رکورد دور می‌سوزاند) */
+   348→  const skipSentence = useCallback(() => {
+   349→    if (locked.current) return;
+   350→    const current = deck[idx];
+   351→    if (!current) return;
+   352→    locked.current = true;
+   353→    setSkipped((s) => s + 1);
+   354→    timer.current = window.setTimeout(() => {
+   355→      locked.current = false;
+   356→      advanceOrFinish(idx + 1, solved);
+   357→    }, SKIP_LOCK_MS);
+   358→  }, [deck, idx, solved, advanceOrFinish]);
+   359→
+   360→  /** انصراف — تایمر معلق پاک و به تنظیمات برگردیم */
+   361→  const cancel = useCallback(() => {
+   362→    if (timer.current !== undefined) window.clearTimeout(timer.current);
+   363→    locked.current = false;
+   364→    stopSpeaking();
+   365→    setPhase("setup");
+   366→  }, []);
+   367→
+   368→  /** شروع دور — انتخاب جمله‌ها از استخر (اگر کم بود، تکرار با shuffle مجاز است) */
+   369→  const start = useCallback(() => {
+   370→    const items = poolInfo.items;
+   371→    if (items.length === 0) {
+   372→      toast.error("جملهٔ قابل بازی در این محدوده پیدا نشد — درس دیگری را امتحان کن");
+   373→      return;
+   374→    }
+   375→    const picked: SentenceItem[] = [];
+   376→    while (picked.length < count) {
+   377→      const batch = shuffle(items).slice(0, Math.min(count - picked.length, items.length));
+   378→      picked.push(...batch);
+   379→    }
+   380→    if (timer.current !== undefined) window.clearTimeout(timer.current);
+   381→    locked.current = false;
+   382→    secsRef.current = 0;
+   383→    setDeck(picked);
+   384→    setIdx(0);
+   385→    setSolved(0);
+   386→    setSkipped(0);
+   387→    setHinted(0);
+   388→    setSecs(0);
+   389→    setIsRecord(false);
+   390→    loadSentence(picked[0]);
+   391→    setPhase("playing");
+   392→  }, [poolInfo, count, loadSentence]);
+   393→
+   394→  // ── کیبورد (latest-ref): Backspace آخرین واژهٔ چیده‌شده را برمی‌گرداند ──
+   395→  const returnLastRef = useRef<() => void>(() => {});
+   396→  useEffect(() => {
+   397→    returnLastRef.current = returnLast;
+   398→  });
+   399→  useEffect(() => {
+   400→    if (phase !== "playing") return;
+   401→    const onKey = (e: KeyboardEvent) => {
+   402→      if (e.ctrlKey || e.metaKey || e.altKey) return;
+   403→      if (e.key === "Backspace") {
+   404→        e.preventDefault();
+   405→        returnLastRef.current();
+   406→      }
+   407→    };
+   408→    window.addEventListener("keydown", onKey);
+   409→    return () => window.removeEventListener("keydown", onKey);
+   410→  }, [phase]);
+   411→
+   412→  const current = deck[idx];
+   413→  const usedIds = new Set(slots.filter((s): s is number => s !== null));
+   414→  const wordOf = (id: number): string => tiles.find((t) => t.id === id)?.word ?? "";
+   415→  const pct = Math.round(((solved + skipped) / Math.max(deck.length, 1)) * 100);
+   416→
+   417→  // ── Setup ──
+   418→  if (phase === "setup") {
+   419→    return (
+   420→      <Card className="mx-auto max-w-xl rise-in">
+   421→        <CardContent className="space-y-6 p-6">
+   422→          <div className="flex items-center gap-3">
+   423→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
+   424→              <Blocks size={22} />
+   425→            </span>
+   426→            <div>
+   427→              <h2 className="text-lg font-black">سازنده جمله</h2>
+   428→              <p className="text-xs text-muted-foreground">
+   429→                واژه‌های جمله به‌هم ریخته‌اند — از روی ترجمه، جمله را درست بچین!
+   430→              </p>
+   431→            </div>
+   432→          </div>
+   433→
+   434→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   435→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   436→            <p>
+   437→              روی واژه‌ها به ترتیب بزن تا جملهٔ انگلیسی ساخته شود؛ ترجمهٔ فارسی از ابتدا نمایان است.
+   438→              رد کردن یا راهنما رکورد را می‌سوزاند — رکورد: سریع‌ترین دور کامل!
+   439→            </p>
+   440→          </div>
+   441→
+   442→          <div>
+   443→            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   444→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   445→              <button
+   446→                type="button"
+   447→                onClick={() => setLesson(ALL_LESSONS)}
+   448→                aria-pressed={lesson === ALL_LESSONS}
+   449→                className={cn(
+   450→                  "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   451→                  lesson === ALL_LESSONS
+   452→                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   453→                    : "text-muted-foreground hover:bg-muted",
+   454→                )}
+   455→              >
+   456→                کل کتاب
+   457→              </button>
+   458→              {data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => (
+   459→                <button
+   460→                  key={l.lesson}
+   461→                  type="button"
+   462→                  onClick={() => setLesson(l.lesson)}
+   463→                  aria-pressed={lesson === l.lesson}
+   464→                  className={cn(
+   465→                    "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   466→                    lesson === l.lesson
+   467→                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   468→                      : "text-muted-foreground hover:bg-muted",
+   469→                  )}
+   470→                >
+   471→                  {l.label}
+   472→                </button>
+   473→              ))}
+   474→            </div>
+   475→          </div>
+   476→
+   477→          <div>
+   478→            <p className="mb-2 text-[13px] font-bold">چند جمله؟</p>
+   479→            <div className="flex flex-wrap gap-2" role="group" aria-label="تعداد جمله‌ها">
+   480→              {COUNT_OPTIONS.map((n) => (
+   481→                <button
+   482→                  key={n}
+   483→                  type="button"
+   484→                  onClick={() => setCount(n)}
+   485→                  aria-pressed={count === n}
+   486→                  className={cn(
+   487→                    "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   488→                    count === n
+   489→                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   490→                      : "text-muted-foreground hover:bg-muted",
+   491→                  )}
+   492→                >
+   493→                  {faNum(n)} جمله
+   494→                </button>
+   495→              ))}
+   496→            </div>
+   497→          </div>
+   498→
+   499→          <p className="text-center text-[11px] text-muted-foreground">
+   500→            استخر این محدوده: <span className="font-black text-foreground">{faNum(poolInfo.items.length)}</span>{" "}
+   501→            جملهٔ {poolInfo.widened ? "۳ تا ۱۶ واژه‌ای" : "۴ تا ۱۲ واژه‌ای"}
+   502→            {poolInfo.widened && " (بازه گسترده شد)"}
+   503→          </p>
+   504→
+   505→          {best !== null && (
+   506→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   507→              <Trophy size={12} />
+   508→              سریع‌ترین دور: {fmtTime(best)}
+   509→            </Badge>
+   510→          )}
+   511→
+   512→          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   513→            <Play size={18} />
+   514→            شروع بازی
+   515→          </Button>
+   516→        </CardContent>
+   517→      </Card>
+   518→    );
+   519→  }
+   520→
+   521→  // ── Done ──
+   522→  if (phase === "done") {
+   523→    return (
+   524→      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+   525→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   526→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   527→            <PartyPopper size={30} />
+   528→          </span>
+   529→          <h2 className="text-xl font-black">همه جمله‌ها چیده شد!</h2>
+   530→          {isRecord && (
+   531→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   532→              <Trophy size={13} />
+   533→              رکورد جدید! 🏆
+   534→            </Badge>
+   535→          )}
+   536→
+   537→          <div className="grid w-full grid-cols-2 gap-2 text-center sm:grid-cols-4">
+   538→            <div className="rounded-xl bg-muted/60 p-3">
+   539→              <Timer size={16} className="mx-auto text-primary" />
+   540→              <p className="mt-1.5 text-lg font-black leading-none">{fmtTime(secs)}</p>
+   541→              <p className="mt-1 text-[10px] text-muted-foreground">زمان</p>
+   542→            </div>
+   543→            <div className="rounded-xl bg-muted/60 p-3">
+   544→              <CheckCircle2 size={16} className="mx-auto text-emerald-500" />
+   545→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(solved)}</p>
+   546→              <p className="mt-1 text-[10px] text-muted-foreground">درست</p>
+   547→            </div>
+   548→            <div className="rounded-xl bg-muted/60 p-3">
+   549→              <XCircle size={16} className="mx-auto text-amber-500" />
+   550→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(skipped)}</p>
+   551→              <p className="mt-1 text-[10px] text-muted-foreground">ردشده</p>
+   552→            </div>
+   553→            <div className="rounded-xl bg-muted/60 p-3">
+   554→              <Lightbulb size={16} className="mx-auto text-teal-500" />
+   555→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(hinted)}</p>
+   556→              <p className="mt-1 text-[10px] text-muted-foreground">راهنما</p>
+   557→            </div>
+   558→          </div>
+   559→
+   560→          <div className="flex gap-2">
+   561→            <Button onClick={start} className="min-h-11 gap-2">
+   562→              <RotateCcw size={16} />
+   563→              دور جدید
+   564→            </Button>
+   565→            <Button variant="outline" className="min-h-11" onClick={() => setPhase("setup")}>
+   566→              تنظیمات
+   567→            </Button>
+   568→          </div>
+   569→        </CardContent>
+   570→      </Card>
+   571→    );
+   572→  }
+   573→
+   574→  // ── Playing ──
+   575→  return (
+   576→    <div role="group" aria-label="بازی سازنده جمله" className="mx-auto max-w-2xl space-y-4 rise-in">
+   577→      {/* نوار بالا */}
+   578→      <div className="flex flex-wrap items-center gap-2">
+   579→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   580→          <ListOrdered size={11} className="text-teal-500" />
+   581→          جمله {faNum(idx + 1)} از {faNum(deck.length)}
+   582→        </Badge>
+   583→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   584→          <Timer size={11} />
+   585→          {fmtTime(secs)}
+   586→        </Badge>
+   587→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   588→          <CheckCircle2 size={11} className="text-primary" />
+   589→          {faNum(solved)} درست
+   590→        </Badge>
+   591→        {skipped > 0 && (
+   592→          <Badge variant="outline" className="gap-1 border-destructive/40 text-[11px] text-destructive">
+   593→            <XCircle size={11} />
+   594→            {faNum(skipped)} ردشده
+   595→          </Badge>
+   596→        )}
+   597→        <div className="mr-auto">
+   598→          <Button
+   599→            variant="ghost"
+   600→            size="sm"
+   601→            onClick={cancel}
+   602→            className="h-11 text-[11px] text-muted-foreground"
+   603→          >
+   604→            انصراف
+   605→          </Button>
+   606→        </div>
+   607→      </div>
+   608→
+   609→      {/* نوار پیشرفت */}
+   610→      <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+   611→        <div
+   612→          className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+   613→          style={{ width: `${pct}%` }}
+   614→        />
+   615→      </div>
+   616→
+   617→      {/* کارت جمله */}
+   618→      {current && (
+   619→        <div className="space-y-5 rounded-2xl border bg-card p-5 sm:p-6">
+   620→          {/* ردیف متا */}
+   621→          <div className="flex flex-wrap items-center justify-between gap-2">
+   622→            <div className="flex flex-wrap items-center gap-1.5">
+   623→              <Badge variant="secondary" className="text-[10px]">
+   624→                {KIND_LABEL[current.kind]}
+   625→              </Badge>
+   626→              {current.lesson > 0 && (
+   627→                <Badge variant="outline" className="text-[10px]">
+   628→                  درس {faNum(current.lesson)}
+   629→                </Badge>
+   630→              )}
+   631→              <Badge variant="outline" className="text-[10px]">
+   632→                {faNum(words.length)} واژه
+   633→              </Badge>
+   634→            </div>
+   635→          </div>
+   636→
+   637→          {/* سرنخ اصلی — ترجمهٔ فارسی جمله (از ابتدا نمایان) */}
+   638→          <div className="rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-center">
+   639→            <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
+   640→              ترجمهٔ جمله — از روی معنی بچین
+   641→            </p>
+   642→            {current.fa ? (
+   643→              <p className="mt-1 text-[14px] font-black leading-7">{current.fa}</p>
+   644→            ) : (
+   645→              <p className="mt-1 text-[12px] font-bold leading-6 text-muted-foreground">
+   646→                برای این مثال ترجمه‌ای ثبت نشده
+   647→                {current.src && (
+   648→                  <>
+   649→                    {" "}— مثالِ واژهٔ{" "}
+   650→                    <span dir="ltr" className="font-en text-[13px] font-black text-foreground">
+   651→                      {current.src}
+   652→                    </span>
+   653→                  </>
+   654→                )}
+   655→              </p>
+   656→            )}
+   657→          </div>
+   658→
+   659→          {/* ردیف جمله — خانه‌های چیدمان (LTR) */}
+   660→          <div
+   661→            dir="ltr"
+   662→            className={cn(
+   663→              "flex min-h-14 flex-wrap items-center justify-center gap-1.5",
+   664→              pop && "match-pop",
+   665→            )}
+   666→          >
+   667→            {slots.map((slotId, i) =>
+   668→              slotId === null ? (
+   669→                <div
+   670→                  key={`slot-${i}`}
+   671→                  className="h-11 min-w-16 rounded-xl border-2 border-dashed border-muted-foreground/30"
+   672→                />
+   673→              ) : (
+   674→                <button
+   675→                  key={`slot-${i}`}
+   676→                  type="button"
+   677→                  onClick={() => returnAt(i)}
+   678→                  disabled={busy}
+   679→                  aria-label={`برگشت واژه ${wordOf(slotId)} به استخر`}
+   680→                  className="h-11 rounded-xl border-2 border-primary/40 bg-primary/10 px-3 font-en text-[13px] font-black text-primary transition-all hover:border-primary/70 hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-60 sm:text-[15px]"
+   681→                >
+   682→                  {wordOf(slotId)}
+   683→                </button>
+   684→              ),
+   685→            )}
+   686→          </div>
+   687→
+   688→          {/* استخر واژه‌ها */}
+   689→          <div dir="ltr" className="flex flex-wrap items-center justify-center gap-2">
+   690→            {tiles.map((t) => (
+   691→              <button
+   692→                key={t.id}
+   693→                type="button"
+   694→                onClick={() => placeTile(t.id)}
+   695→                disabled={usedIds.has(t.id) || busy}
+   696→                aria-label={`جای‌گذاری واژه ${t.word}`}
+   697→                className={cn(
+   698→                  "h-11 min-h-11 rounded-xl border bg-card px-3 font-en text-[13px] font-black shadow-sm transition-all sm:text-[15px]",
+   699→                  "hover:border-primary/50 hover:bg-primary/5",
+   700→                  "disabled:pointer-events-none disabled:opacity-25",
+   701→                )}
+   702→              >
+   703→                {t.word}
+   704→              </button>
+   705→            ))}
+   706→          </div>
+   707→
+   708→          {/* دکمه‌های کمکی */}
+   709→          <div className="flex gap-2">
+   710→            <Button
+   711→              variant="outline"
+   712→              onClick={clearAll}
+   713→              disabled={busy}
+   714→              className="min-h-11 flex-1 gap-1.5 text-[12px]"
+   715→            >
+   716→              <Eraser size={15} />
+   717→              پاک کردن
+   718→            </Button>
+   719→            <Button
+   720→              variant="outline"
+   721→              onClick={applyHint}
+   722→              disabled={busy}
+   723→              className="min-h-11 flex-1 gap-1.5 border-amber-500/40 text-[12px] text-amber-600 hover:bg-amber-500/10 hover:text-amber-600 dark:text-amber-400"
+   724→            >
+   725→              <Lightbulb size={15} />
+   726→              راهنما
+   727→            </Button>
+   728→            <Button
+   729→              variant="ghost"
+   730→              onClick={skipSentence}
+   731→              disabled={busy}
+   732→              className="min-h-11 flex-1 gap-1.5 text-[12px] text-destructive hover:bg-destructive/10 hover:text-destructive"
+   733→            >
+   734→              <SkipForward size={15} />
+   735→              رد کردن
+   736→            </Button>
+   737→          </div>
+   738→
+   739→          <p className="text-center text-[10px] text-muted-foreground">
+   740→            کیبورد: Backspace آخرین واژه را برمی‌گرداند · کلیک روی واژهٔ چیده‌شده آن را به استخر برمی‌گرداند
+   741→          </p>
+   742→        </div>
+   743→      )}
+   744→    </div>
+   745→  );
+   746→}
+   747→

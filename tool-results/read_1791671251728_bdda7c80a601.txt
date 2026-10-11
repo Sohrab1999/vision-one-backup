@@ -1,0 +1,702 @@
+    55→    55→import { playSound, toggleSoundMuted, isSoundMuted } from "./kit/sound-engine";
+    56→    56→import { buzz } from "./kit/haptics";
+    57→    57→import { useGamePause } from "./kit/use-pause";
+    58→    58→import { GameExitGuard } from "./kit/exit-guard";
+    59→    59→import { GameShell } from "./kit/game-shell";
+    60→    60→import { ResultScreen } from "./kit/result-screen";
+    61→    61→import {
+    62→    62→  TutorialOverlay,
+    63→    63→  useAutoTutorial,
+    64→    64→  type TutorialStep,
+    65→    65→} from "./kit/tutorial-overlay";
+    66→    66→import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+    67→    67→
+    68→    68→type Phase = "setup" | "playing" | "done";
+    69→    69→type Side = "en" | "fa";
+    70→    70→
+    71→    71→/** یک کارت بازی — هر واژه دو کارت می‌سازد (یک انگلیسی + یک فارسی) */
+    72→    72→interface CardItem {
+    73→    73→  id: number;
+    74→    74→  side: Side;
+    75→    75→  word: string;
+    76→    76→  meaning: string;
+    77→    77→}
+    78→    78→
+    79→    79→/** شکل رکورد شخصی — بهتر = حرکت کمتر، تساوی → زمان کمتر */
+    80→    80→interface BestRecord {
+    81→    81→  moves: number;
+    82→    82→  time: number;
+    83→    83→}
+    84→    84→
+    85→    85→const ALL_LESSONS = -1;
+    86→    86→const GAME_KEY = "memory";
+    87→    87→const PAIR_OPTIONS = [4, 6, 8];
+    88→    88→/** قفل کلیک پس از جفت درست تا مکث کوتاه روی فلیپ (ms) */
+    89→    89→const MATCH_LOCK_MS = 400;
+    90→    90→/** مدت لرزش جفت غلط تا بسته‌شدن کارت‌ها (ms) */
+    91→    91→const WRONG_LOCK_MS = 650;
+    92→    92→/** فاز G2-a — تعداد ستون‌های گرید برای پیمایش کیبورد چهارجهته (گرید ۴ ستونه — COLS ثابت) */
+    93→    93→const GRID_COLS = 4;
+    94→    94→
+    95→    95→/** آموزش ۳-گامی استاندارد (فاز G1-08) — یک‌بارنمایش + دکمهٔ راهنمای شِل */
+    96→    96→const TUTORIAL_STEPS: TutorialStep[] = [
+    97→    97→  {
+    98→    98→    icon: <LayoutGrid size={24} />,
+    99→    99→    title: "کارت‌ها رو به پایین‌اند",
+   100→   100→    text: "در هر نوبت دو کارت برگردان — یک واژه انگلیسی و یک معنی فارسی.",
+   101→   101→  },
+   102→   102→  {
+   103→   103→    icon: <HeartHandshake size={24} />,
+   104→   104→    title: "جفت درست می‌ماند",
+   105→   105→    text: "اگر واژه و معنی هم‌خوان باشند باز می‌مانند و تلفظش را می‌شنوی؛ جفت غلط دوباره بسته می‌شود.",
+   106→   106→  },
+   107→   107→  {
+   108→   108→    icon: <Trophy size={24} />,
+   109→   109→    title: "کمترین حرکت = رکورد",
+   110→   110→    text: "با حرکت و زمان کمتر، ستاره‌های بیشتری می‌گیری — سه ستاره یعنی تقریباً بی‌خطا!",
+   111→   111→  },
+   112→   112→];
+   113→   113→
+   114→   114→export function MemoryGame() {
+   115→   115→  const data = useBookData();
+   116→   116→  const { bookId } = useBook();
+   117→   117→  // بازی‌ها فقط داخل کتاب فعال رندر می‌شوند (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   118→   118→  const activeBookId: string = bookId ?? "";
+   119→   119→
+   120→   120→  const [phase, setPhase] = useState<Phase>("setup");
+   121→   121→  const [lesson, setLesson] = useState(1);
+   122→   122→  const [pairCount, setPairCount] = useState(6);
+   123→   123→
+   124→   124→  const [cards, setCards] = useState<CardItem[]>([]);
+   125→   125→  const [openIds, setOpenIds] = useState<number[]>([]);
+   126→   126→  const [matchedIds, setMatchedIds] = useState<Set<number>>(new Set());
+   127→   127→  const [wrongIds, setWrongIds] = useState<number[]>([]);
+   128→   128→  const [moves, setMoves] = useState(0);
+   129→   129→  const [secs, setSecs] = useState(0);
+   130→   130→  const [isRecord, setIsRecord] = useState(false);
+   131→   131→  /** فاز G1-06 — واژه‌های جفت‌غلط این دور (برای «مرور خطاها»ی صفحهٔ نتیجه) */
+   132→   132→  const [missedWords, setMissedWords] = useState<{ front: string; back: string }[]>([]);
+   133→   133→  /** پیام باکس aria-live — اعلام جفت درست/غلط برای فناوری‌های کمکی */
+   134→   134→  const [liveMsg, setLiveMsg] = useState("");
+   135→   135→  /**
+   136→   136→   * فاز G2-a — کیبورد چهارجهته: نشانگر سیار روی گرید (ایندکس کارت).
+   137→   137→   * null یعنی هنوز با فلش وارد گرید نشده؛ اولین فلش از کارت ۱ شروع می‌کند.
+   138→   138→   */
+   139→   139→  const [focusIdx, setFocusIdx] = useState<number | null>(null);
+   140→   140→  /** فاز G2-a — ریشهٔ گرید برای گارد اسکرول (رندر کارتِ نشانگرشده در دید) */
+   141→   141→  const gridRef = useRef<HTMLDivElement | null>(null);
+   142→   142→
+   143→   143→  // فاز G1 (پایلوت کیت بازی) — توقف/ادامهٔ استاندارد + نگهبان خروج + کلید صدا/لرزش
+   144→   144→  // توقف خودکار در تب مخفی هم همین‌جا اعمال می‌شود (سطح بالاتر از گارد G0-05: کاربر
+   145→   145→  // هنگام بازگشت اورلی «متوقف شد» می‌بیند و خودش ادامه می‌دهد)
+   146→   146→  const { paused, resume, pause: pauseGame, toggle: togglePause } = useGamePause((p) => {
+   147→   147→    if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
+   148→   148→  });
+   149→   149→  const [exitAsk, setExitAsk] = useState(false);
+   150→   150→  const [muted, setMuted] = useState(isSoundMuted());
+   151→   151→  // فاز G1-08 — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
+   152→   152→  const {
+   153→   153→    open: tutorialOpen,
+   154→   154→    openHelp: openTutorial,
+   155→   155→    close: closeTutorial,
+   156→   156→  } = useAutoTutorial(GAME_KEY, phase === "setup");
+   157→   157→  const pausedForHelpRef = useRef(false);
+   158→   158→  const handleHelp = useCallback(() => {
+   159→   159→    if (phase === "playing") {
+   160→   160→      pausedForHelpRef.current = true;
+   161→   161→      pauseGame();
+   162→   162→    }
+   163→   163→    openTutorial();
+   164→   164→  }, [openTutorial, pauseGame, phase]);
+   165→   165→  const handleTutorialClose = useCallback(() => {
+   166→   166→    closeTutorial();
+   167→   167→    if (pausedForHelpRef.current) {
+   168→   168→      pausedForHelpRef.current = false;
+   169→   169→      resume();
+   170→   170→    }
+   171→   171→  }, [closeTutorial, resume]);
+   172→   172→  const handleTutorialOpenChange = useCallback(
+   173→   173→    (o: boolean) => {
+   174→   174→      if (!o) handleTutorialClose();
+   175→   175→    },
+   176→   176→    [handleTutorialClose],
+   177→   177→  );
+   178→   178→  // فاز G1-10 — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
+   179→   179→  const sessionRef = useRef<GameSessionTracker | null>(null);
+   180→   180→
+   181→   181→  const { speed } = useVoiceSpeed();
+   182→   182→  const busy = useRef(false);
+   183→   183→  const secsRef = useRef(0);
+   184→   184→
+   185→   185→  // رکورد شخصی این اسکوپ — اسنپ‌شات رشته‌ای (primitive مثل best در match-game) تا هر خواندن آبجکت تازه نسازد
+   186→   186→  const bestScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${pairCount}`;
+   187→   187→  const bestRaw = useSyncExternalStore(
+   188→   188→    subscribeGameData,
+   189→   189→    () => {
+   190→   190→      const b = loadBest<BestRecord>(activeBookId, GAME_KEY, bestScope);
+   191→   191→      return b ? JSON.stringify(b) : null;
+   192→   192→    },
+   193→   193→    () => null,
+   194→   194→  );
+   195→   195→  const best = useMemo<BestRecord | null>(
+   196→   196→    () => (bestRaw ? (JSON.parse(bestRaw) as BestRecord) : null),
+   197→   197→    [bestRaw],
+   198→   198→  );
+   199→   199→
+   200→   200→  // تایمر — بدون setState مستقیم در effect (react-hooks v6)؛ secsRef برای زمان دقیقِ لحظه پایان
+   201→   201→  // فاز G0-05 — گارد visibilitychange: شمارش زمان سپری‌شده (ملاک رکورد) در تب مخفی می‌ایستد
+   202→   202→  // (interval پاک می‌شود) و در بازگشت با همان secsRef ادامه می‌یابد — شمارنده افزایشی است و
+   203→   203→  // از Date.now() محاسبه نمی‌شود، پس نیازی به offset نیست. بازگشت از bfcache با pageshow
+   204→   204→  // پوشش داده می‌شود؛ unmount همیشه پاک می‌کند.
+   205→   205→  useEffect(() => {
+   206→   206→    if (phase !== "playing" || paused) return;
+   207→   207→    let t: number | null = null;
+   208→   208→    const startTimer = () => {
+   209→   209→      if (t !== null) return;
+   210→   210→      t = window.setInterval(() => {
+   211→   211→        secsRef.current += 1;
+   212→   212→        setSecs((s) => s + 1);
+   213→   213→      }, 1000);
+   214→   214→    };
+   215→   215→    const stopTimer = () => {
+   216→   216→      if (t !== null) {
+   217→   217→        window.clearInterval(t);
+   218→   218→        t = null;
+   219→   219→      }
+   220→   220→    };
+   221→   221→    const onVis = () => {
+   222→   222→      if (document.visibilityState === "hidden") stopTimer();
+   223→   223→      else startTimer();
+   224→   224→    };
+   225→   225→    const onPageshow = (e: PageTransitionEvent) => {
+   226→   226→      if (!e.persisted) return;
+   227→   227→      stopTimer(); // interval تازه می‌شود تا تیک معوقِ دورهٔ انجماد یک‌جا شمرده نشود
+   228→   228→      if (document.visibilityState === "visible") startTimer();
+   229→   229→    };
+   230→   230→    startTimer();
+   231→   231→    document.addEventListener("visibilitychange", onVis);
+   232→   232→    window.addEventListener("pageshow", onPageshow);
+   233→   233→    return () => {
+   234→   234→      stopTimer();
+   235→   235→      document.removeEventListener("visibilitychange", onVis);
+   236→   236→      window.removeEventListener("pageshow", onPageshow);
+   237→   237→    };
+   238→   238→  }, [phase, paused]);
+   239→   239→
+   240→   240→  // فاز G1-10 — دورِ باز در unmount «رهاشده» ثبت می‌شود (اگر قبلاً گزارش شده باشد no-op)
+   241→   241→  useEffect(
+   242→   242→    () => () => {
+   243→   243→      sessionRef.current?.abandon("unmount");
+   244→   244→      stopSpeaking();
+   245→   245→    },
+   246→   246→    [],
+   247→   247→  );
+   248→   248→
+   249→   249→  const start = useCallback(() => {
+   250→   250→    const pool = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
+   251→   251→    // حذف معنی‌های تکراری (الگوی match-game) — تا دو کارت فارسی یکسان بازی را گمراه نکند
+   252→   252→    const seenMeanings = new Set<string>();
+   253→   253→    const deduped = pool.filter((w) => {
+   254→   254→      if (seenMeanings.has(w.meaning)) return false;
+   255→   255→      seenMeanings.add(w.meaning);
+   256→   256→      return true;
+   257→   257→    });
+   258→   258→    // استخر واژه یکتا — برای N جفت باید N واژه متمایز موجود باشد
+   259→   259→    const chosen = pickUnique(deduped, pairCount, (w) => w.word);
+   260→   260→    if (chosen.length < pairCount) {
+   261→   261→      toast.error(
+   262→   262→        `واژه کافی برای ${faNum(pairCount)} جفت پیدا نشد — درس دیگری را امتحان کن یا تعداد جفت را کمتر کن`,
+   263→   263→      );
+   264→   264→      return;
+   265→   265→    }
+   266→   266→    const built: CardItem[] = [];
+   267→   267→    chosen.forEach((w) => {
+   268→   268→      built.push({ id: built.length, side: "en", word: w.word, meaning: w.meaning });
+   269→   269→      built.push({ id: built.length, side: "fa", word: w.word, meaning: w.meaning });
+   270→   270→    });
+   271→   271→    setCards(shuffle(built));
+   272→   272→    setOpenIds([]);
+   273→   273→    setMatchedIds(new Set());
+   274→   274→    setWrongIds([]);
+   275→   275→    setMoves(0);
+   276→   276→    setSecs(0);
+   277→   277→    secsRef.current = 0;
+   278→   278→    setIsRecord(false);
+   279→   279→    setMissedWords([]);
+   280→   280→    busy.current = false;
+   281→   281→    // فاز G2-a — نشانگر کیبورد گرید هم برای دور تازه از نو شروع شود
+   282→   282→    setFocusIdx(null);
+   283→   283→    resume();
+   284→   284→    setExitAsk(false);
+   285→   285→    // فاز G1-10 — جلسهٔ تازهٔ تله‌متری برای این دور
+   286→   286→    sessionRef.current = createGameSession({
+   287→   287→      game: GAME_KEY,
+   288→   288→      level: `${lesson === ALL_LESSONS ? "all" : lesson}:${pairCount}`,
+   289→   289→    });
+   290→   290→    sessionRef.current.start();
+   291→   291→    setPhase("playing");
+   292→   292→  }, [data.vocab, lesson, pairCount, resume]);
+   293→   293→
+   294→   294→  const finish = useCallback(
+   295→   295→    (finalMoves: number, finalSecs: number) => {
+   296→   296→      touchStreak();
+   297→   297→      recordStudySession();
+   298→   298→      bumpPlays(activeBookId, GAME_KEY);
+   299→   299→      // فاز G1-10 — پایان عادی جلسه
+   300→   300→      sessionRef.current?.end("finish");
+   301→   301→      // فاز G1 — بازخورد سه‌کانالهٔ پایان دور (صدا + لرزش + متن/toast موجود)
+   302→   302→      playSound("finish");
+   303→   303→      buzz("success");
+   304→   304→      saveAttempt(activeBookId, GAME_KEY, {
+   305→   305→        lesson: lesson === ALL_LESSONS ? 0 : lesson,
+   306→   306→        total: pairCount,
+   307→   307→        correct: pairCount,
+   308→   308→        duration: finalSecs,
+   309→   309→        detail: [{ moves: finalMoves, time: finalSecs }],
+   310→   310→      });
+   311→   311→      setSecs(finalSecs);
+   312→   312→      const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${pairCount}`;
+   313→   313→      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+   314→   314→      if (!prev || finalMoves < prev.moves || (finalMoves === prev.moves && finalSecs < prev.time)) {
+   315→   315→        saveBest(activeBookId, GAME_KEY, scope, { moves: finalMoves, time: finalSecs });
+   316→   316→        setIsRecord(true);
+   317→   317→        playSound("record");
+   318→   318→        buzz("record");
+   319→   319→        toast.success(`رکورد جدید! ${faNum(finalMoves)} حرکت در ${fmtTime(finalSecs)} 🏆`);
+   320→   320→      } else {
+   321→   321→        toast.success(`همه جفت‌ها پیدا شد — ${faNum(finalMoves)} حرکت در ${fmtTime(finalSecs)} 🎉`);
+   322→   322→      }
+   323→   323→      setLiveMsg("همه جفت‌ها پیدا شد! 🎉");
+   324→   324→      setPhase("done");
+   325→   325→    },
+   326→   326→    [activeBookId, lesson, pairCount],
+   327→   327→  );
+   328→   328→
+   329→   329→  const handleCardClick = useCallback(
+   330→   330→    (card: CardItem) => {
+   331→   331→      if (busy.current || paused) return;
+   332→   332→      if (matchedIds.has(card.id)) return;
+   333→   333→      if (openIds.includes(card.id)) return;
+   334→   334→
+   335→   335→      // کارت اول — فاز G1: بازخورد کلیک
+   336→   336→      if (openIds.length === 0) {
+   337→   337→        playSound("click");
+   338→   338→        buzz("light");
+   339→   339→        setOpenIds([card.id]);
+   340→   340→        return;
+   341→   341→      }
+   342→   342→
+   343→   343→      // کارت دوم → یک حرکت کامل (هر بار دو کارت باز می‌شوند = یک حرکت، نه هر کلیک)
+   344→   344→      const first = cards.find((c) => c.id === openIds[0]);
+   345→   345→      if (!first) {
+   346→   346→        setOpenIds([card.id]);
+   347→   347→        return;
+   348→   348→      }
+   349→   349→      const finalMoves = moves + 1;
+   350→   350→      setMoves(finalMoves);
+   351→   351→      setOpenIds([first.id, card.id]);
+   352→   352→      busy.current = true;
+   353→   353→
+   354→   354→      if (first.side !== card.side && first.word === card.word) {
+   355→   355→        // جفت درست — باز می‌ماند؛ در SRS ثبت می‌شود و تلفظش پخش می‌شود
+   356→   356→        setLiveMsg(`«${first.word}» جفت شد — درست بود! 🎉`);
+   357→   357→        recordSRS(first.word, true);
+   358→   358→        speak(first.word, { speed });
+   359→   359→        playSound("correct");
+   360→   360→        buzz("success");
+   361→   361→        const willFinish = matchedIds.size + 2 >= cards.length;
+   362→   362→        setTimeout(() => {
+   363→   363→          setMatchedIds((prev) => {
+   364→   364→            const next = new Set(prev);
+   365→   365→            next.add(first.id);
+   366→   366→            next.add(card.id);
+   367→   367→            return next;
+   368→   368→          });
+   369→   369→          setOpenIds([]);
+   370→   370→          busy.current = false;
+   371→   371→          if (willFinish) finish(finalMoves, secsRef.current);
+   372→   372→        }, MATCH_LOCK_MS);
+   373→   373→      } else {
+   374→   374→        // جفت غلط — لرزش و بسته‌شدن (کاوش است؛ هیچ چیزی ثبت نمی‌شود)
+   375→   375→        setWrongIds([first.id, card.id]);
+   376→   376→        setLiveMsg("جفت غلط — کارت‌ها بسته می‌شوند، دوباره تلاش کن");
+   377→   377→        playSound("wrong");
+   378→   378→        buzz("error");
+   379→   379→        // فاز G1-06 — واژهٔ خطاخورده برای «مرور خطاها»ی صفحهٔ نتیجه (بدون تکرار)
+   380→   380→        setMissedWords((prev) =>
+   381→   381→          prev.some((m) => m.front === first.word)
+   382→   382→            ? prev
+   383→   383→            : [...prev, { front: first.word, back: first.meaning }],
+   384→   384→        );
+   385→   385→        setTimeout(() => {
+   386→   386→          setWrongIds([]);
+   387→   387→          setOpenIds([]);
+   388→   388→          busy.current = false;
+   389→   389→        }, WRONG_LOCK_MS);
+   390→   390→      }
+   391→   391→    },
+   392→   392→    [cards, finish, matchedIds, moves, openIds, paused, speed],
+   393→   393→  );
+   394→   394→
+   395→   395→  // ── فاز G2-a — کیبورد چهارجهته روی گرید کارت‌ها (رفع شکاف کیبورد سند §۵-G2-a) ──
+   396→   396→  // الگو: نشانگر سیار (roving cursor) — فقط wrapper گرید تاب‌پذیر است؛ فلش‌ها focusIdx را
+   397→   397→  // با گارد مرز سطر/ستون جابه‌جا می‌کنند و Enter/Space همان handleCardClick را صدا می‌زند
+   398→   398→  // (گاردهای busy/paused/matched/open داخل همان تابع موجود رعایت می‌شوند — هیچ منطق جدیدی نیست).
+   399→   399→  const handleGridKeyDown = useCallback(
+   400→   400→    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+   401→   401→      if (paused || cards.length === 0) return;
+   402→   402→      const key = e.key;
+   403→   403→
+   404→   404→      // Enter/Space — برگرداندن کارتِ زیر نشانگر کیبورد
+   405→   405→      if (key === "Enter" || key === " ") {
+   406→   406→        e.preventDefault(); // مهار اسکرول Space و مهار فعال‌سازی دوبارهٔ native دکمه‌ها
+   407→   407→        if (focusIdx === null) return;
+   408→   408→        const card = cards[focusIdx];
+   409→   409→        if (!card) return;
+   410→   410→        // اعلام محتوای کارتِ برگشته — فقط وقتی واقعاً باز می‌شود (همان گاردهای handleCardClick)؛
+   411→   411→        // برای کارت دوم، پیام جفت درست/غلطِ خودِ بازی جایگزین همین پیام می‌شود
+   412→   412→        if (!busy.current && !matchedIds.has(card.id) && !openIds.includes(card.id)) {
+   413→   413→          setLiveMsg(
+   414→   414→            `کارت شمارهٔ ${faNum(focusIdx + 1)} — ${
+   415→   415→              card.side === "en" ? `واژه ${card.word}` : `معنی ${card.meaning}`
+   416→   416→            }`,
+   417→   417→          );
+   418→   418→        }
+   419→   419→        handleCardClick(card);
+   420→   420→        return;
+   421→   421→      }
+   422→   422→
+   423→   423→      if (!key.startsWith("Arrow")) return;
+   424→   424→      e.preventDefault(); // فلش‌ها نباید صفحه را اسکرول کنند
+   425→   425→      // ورود اول با کیبورد — از ابتدای گرید شروع کن
+   426→   426→      if (focusIdx === null) {
+   427→   427→        setFocusIdx(0);
+   428→   428→        setLiveMsg(`کارت شمارهٔ ${faNum(1)}`);
+   429→   429→        return;
+   430→   430→      }
+   431→   431→      const last = cards.length - 1;
+   432→   432→      let next = focusIdx;
+   433→   433→      switch (key) {
+   434→   434→        case "ArrowRight":
+   435→   435→          // فلش راست = +۱ — گارد مرز: از آخرین ستون عبور نکند
+   436→   436→          if (focusIdx % GRID_COLS < GRID_COLS - 1 && focusIdx < last) next = focusIdx + 1;
+   437→   437→          break;
+   438→   438→        case "ArrowLeft":
+   439→   439→          // فلش چپ = کاهش ایندکس — گارد مرز: از اولین ستون عبور نکند
+   440→   440→          if (focusIdx % GRID_COLS > 0) next = focusIdx - 1;
+   441→   441→          break;
+   442→   442→        case "ArrowDown":
+   443→   443→          // فلش پایین = +COLS با clamp به انتهای گرید
+   444→   444→          next = Math.min(last, focusIdx + GRID_COLS);
+   445→   445→          break;
+   446→   446→        case "ArrowUp":
+   447→   447→          // فلش بالا = منهای COLS با clamp به ابتدای گرید
+   448→   448→          next = Math.max(0, focusIdx - GRID_COLS);
+   449→   449→          break;
+   450→   450→        default:
+   451→   451→          return;
+   452→   452→      }
+   453→   453→      if (next === focusIdx) return;
+   454→   454→      setFocusIdx(next);
+   455→   455→      // حلقهٔ aria-live — اعلام مقصد؛ کارت بسته فقط شماره می‌گیرد (محتوایش لو نمی‌رود)
+   456→   456→      const dest = cards[next];
+   457→   457→      const face = dest.side === "en" ? `واژه ${dest.word}` : `معنی ${dest.meaning}`;
+   458→   458→      const destMatched = matchedIds.has(dest.id);
+   459→   459→      const revealed = destMatched || openIds.includes(dest.id);
+   460→   460→      setLiveMsg(
+   461→   461→        `کارت شمارهٔ ${faNum(next + 1)}${revealed ? ` — ${face}${destMatched ? " — جفت شد" : ""}` : ""}`,
+   462→   462→      );
+   463→   463→    },
+   464→   464→    [cards, focusIdx, handleCardClick, matchedIds, openIds, paused],
+   465→   465→  );
+   466→   466→
+   467→   467→  // فاز G2-a — گارد اسکرول: کارتِ نشانگرشده همیشه در دید بماند (block: nearest = بدون پرش صفحه)
+   468→   468→  useEffect(() => {
+   469→   469→    if (focusIdx === null) return;
+   470→   470→    gridRef.current
+   471→   471→      ?.querySelector<HTMLButtonElement>('button[data-focused="true"]')
+   472→   472→      ?.scrollIntoView({ block: "nearest" });
+   473→   473→  }, [focusIdx]);
+   474→   474→
+   475→   475→  // انصراف حین بازی — با پیشرفت، نگهبان خروج؛ بدون پیشرفت، خروج مستقیم
+   476→   476→  const handleExitClick = useCallback(() => {
+   477→   477→    stopSpeaking();
+   478→   478→    // نگهبان خروج (فاز G1-04) — هر پیشرفتی یعنی دور نیمه‌کاره
+   479→   479→    if (moves > 0 || openIds.length > 0 || matchedIds.size > 0) {
+   480→   480→      setExitAsk(true);
+   481→   481→    } else {
+   482→   482→      // فاز G1-10 — دور بدون پیشرفت هم یک جلسه است؛ همین‌جا رهاشده ثبت می‌شود
+   483→   483→      sessionRef.current?.abandon("exit");
+   484→   484→      setPhase("setup");
+   485→   485→    }
+   486→   486→  }, [matchedIds, moves, openIds]);
+   487→   487→
+   488→   488→  // ── Setup ──
+   489→   489→  if (phase === "setup") {
+   490→   490→    return (
+   491→   491→      <>
+   492→   492→      <Card className="mx-auto max-w-xl rise-in">
+   493→   493→        <CardContent className="space-y-6 p-6">
+   494→   494→          <div className="flex items-center gap-3">
+   495→   495→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   496→   496→              <LayoutGrid size={22} />
+   497→   497→            </span>
+   498→   498→            <div>
+   499→   499→              <h2 className="text-lg font-black">تطبیق حافظه</h2>
+   500→   500→              <p className="text-xs text-muted-foreground">
+   501→   501→                کارت‌ها رو به پایین‌اند — هر واژه و معنی‌اش را از حفظ پیدا کن!
+   502→   502→              </p>
+   503→   503→            </div>
+   504→   504→          </div>
+   505→   505→
+   506→   506→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   507→   507→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   508→   508→            <p>
+   509→   509→              دو کارت را برگردان؛ اگر واژه انگلیسی و معنی فارسی هم باشند می‌مانند. کمترین حرکت و زمان = رکورد!
+   510→   510→            </p>
+   511→   511→          </div>
+   512→   512→
+   513→   513→          <div>
+   514→   514→            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   515→   515→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   516→   516→              <button
+   517→   517→                type="button"
+   518→   518→                onClick={() => setLesson(ALL_LESSONS)}
+   519→   519→                aria-pressed={lesson === ALL_LESSONS}
+   520→   520→                className={cn(
+   521→   521→                  "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   522→   522→                  lesson === ALL_LESSONS
+   523→   523→                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   524→   524→                    : "text-muted-foreground hover:bg-muted",
+   525→   525→                )}
+   526→   526→              >
+   527→   527→                کل کتاب ({faNum(data.vocab.all.length)} واژه)
+   528→   528→              </button>
+   529→   529→              {data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => (
+   530→   530→                <button
+   531→   531→                  key={l.lesson}
+   532→   532→                  type="button"
+   533→   533→                  onClick={() => setLesson(l.lesson)}
+   534→   534→                  aria-pressed={lesson === l.lesson}
+   535→   535→                  className={cn(
+   536→   536→                    "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   537→   537→                    lesson === l.lesson
+   538→   538→                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   539→   539→                      : "text-muted-foreground hover:bg-muted",
+   540→   540→                  )}
+   541→   541→                >
+   542→   542→                  {l.label}
+   543→   543→                </button>
+   544→   544→              ))}
+   545→   545→            </div>
+   546→   546→          </div>
+   547→   547→
+   548→   548→          <div>
+   549→   549→            <p className="mb-2 text-[13px] font-bold">چند جفت؟</p>
+   550→   550→            <div className="flex flex-wrap gap-2" role="group" aria-label="تعداد جفت کارت‌ها">
+   551→   551→              {PAIR_OPTIONS.map((n) => (
+   552→   552→                <button
+   553→   553→                  key={n}
+   554→   554→                  type="button"
+   555→   555→                  onClick={() => setPairCount(n)}
+   556→   556→                  aria-pressed={pairCount === n}
+   557→   557→                  className={cn(
+   558→   558→                    "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   559→   559→                    pairCount === n
+   560→   560→                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   561→   561→                      : "text-muted-foreground hover:bg-muted",
+   562→   562→                  )}
+   563→   563→                >
+   564→   564→                  {faNum(n)} جفت
+   565→   565→                </button>
+   566→   566→              ))}
+   567→   567→            </div>
+   568→   568→          </div>
+   569→   569→
+   570→   570→          {best && (
+   571→   571→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   572→   572→              <Trophy size={12} />
+   573→   573→              بهترین رکورد: {faNum(best.moves)} حرکت در {fmtTime(best.time)}
+   574→   574→            </Badge>
+   575→   575→          )}
+   576→   576→
+   577→   577→          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   578→   578→            <Play size={18} />
+   579→   579→            شروع بازی
+   580→   580→          </Button>
+   581→   581→        </CardContent>
+   582→   582→      </Card>
+   583→   583→      {/* فاز G1-08 — آموزش یک‌بارنمایش در اولین ورود */}
+   584→   584→      <TutorialOverlay
+   585→   585→        game={GAME_KEY}
+   586→   586→        steps={TUTORIAL_STEPS}
+   587→   587→        open={tutorialOpen}
+   588→   588→        onOpenChange={handleTutorialOpenChange}
+   589→   589→      />
+   590→   590→      </>
+   591→   591→    );
+   592→   592→  }
+   593→   593→
+   594→   594→  // ── Done ──
+   595→   595→  if (phase === "done") {
+   596→   596→    // ستاره‌بندی per-game (فاز G1-06): بازی بی‌نقص = ۱۰۰٪ دقت
+   597→   597→    const acc = Math.round((pairCount / Math.max(moves, 1)) * 100);
+   598→   598→    const stars = acc >= 85 ? 3 : acc >= 60 ? 2 : 1;
+   599→   599→    return (
+   600→   600→      <ResultScreen
+   601→   601→        title="همه جفت‌ها پیدا شد!"
+   602→   602→        stars={stars}
+   603→   603→        isRecord={isRecord}
+   604→   604→        errorCount={missedWords.length}
+   605→   605→        reviewItems={missedWords}
+   606→   606→        stats={[
+   607→   607→          { label: "زمان", value: fmtTime(secs), icon: <Timer size={16} className="text-primary" /> },
+   608→   608→          { label: "حرکت", value: faNum(moves), icon: <MousePointerClick size={16} className="text-teal-500" /> },
+   609→   609→          { label: "دقت", value: `${faNum(acc)}٪`, icon: <Target size={16} className="text-amber-500" /> },
+   610→   610→        ]}
+   611→   611→        onReplay={start}
+   612→   612→        onExit={() => setPhase("setup")}
+   613→   613→        exitLabel="تنظیمات"
+   614→   614→      />
+   615→   615→    );
+   616→   616→  }
+   617→   617→
+   618→   618→  // ── Playing ──
+   619→   619→  const pct = Math.round((matchedIds.size / Math.max(cards.length, 1)) * 100);
+   620→   620→  return (
+   621→   621→    <>
+   622→   622→      {/* فاز G1-05 — هدر یکنواخت از کیت: نام + بج‌ها + راهنما/توقف/صدا/انصراف */}
+   623→   623→      <GameShell
+   624→   624→        title="تطبیق حافظه"
+   625→   625→        icon={<LayoutGrid size={18} />}
+   626→   626→        stats={
+   627→   627→          <>
+   628→   628→            <Badge variant="secondary" className="gap-1 text-[11px]">
+   629→   629→              <Timer size={11} />
+   630→   630→              {fmtTime(secs)}
+   631→   631→            </Badge>
+   632→   632→            <Badge variant="secondary" className="gap-1 text-[11px]">
+   633→   633→              <Target size={11} className="text-amber-500" />
+   634→   634→              {faNum(moves)} حرکت
+   635→   635→            </Badge>
+   636→   636→            <Badge variant="secondary" className="gap-1 text-[11px]">
+   637→   637→              <CheckCircle2 size={11} className="text-primary" />
+   638→   638→              {faNum(matchedIds.size / 2)} / {faNum(pairCount)}
+   639→   639→            </Badge>
+   640→   640→          </>
+   641→   641→        }
+   642→   642→        liveMsg={liveMsg}
+   643→   643→        progress={
+   644→   644→          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+   645→   645→            <div
+   646→   646→              className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+   647→   647→              style={{ width: `${pct}%` }}
+   648→   648→            />
+   649→   649→          </div>
+   650→   650→        }
+   651→   651→        paused={paused}
+   652→   652→        onPauseToggle={togglePause}
+   653→   653→        muted={muted}
+   654→   654→        onMuteToggle={() => setMuted(toggleSoundMuted())}
+   655→   655→        onHelp={handleHelp}
+   656→   656→        onExit={handleExitClick}
+   657→   657→      >
+   658→   658→      <div className="relative">
+   659→   659→      {/* فاز G2-a — wrapper گرید با tabIndex=0 نقطهٔ ورود Tab است؛ این‌جا onKeyDown می‌گذاریم نه روی هر کارت */}
+   660→   660→      <div
+   661→   661→        ref={gridRef}
+   662→   662→        role="group"
+   663→   663→        aria-label="گرید کارت‌ها — با فلش‌ها بین کارت‌ها جابه‌جا شو و با Enter کارت را برگردان"
+   664→   664→        tabIndex={paused ? -1 : 0}
+   665→   665→        onKeyDown={handleGridKeyDown}
+   666→   666→        className={cn("grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3", paused && "pointer-events-none blur-sm")}
+   667→   667→        aria-hidden={paused}
+   668→   668→      >
+   669→   669→        {cards.map((c, i) => {
+   670→   670→          const isMatched = matchedIds.has(c.id);
+   671→   671→          const isOpen = isMatched || openIds.includes(c.id);
+   672→   672→          const isWrong = wrongIds.includes(c.id);
+   673→   673→          // فاز G2-a — aria-label وضعیت‌مند (الگوی describeOption سند): کارت بسته فقط شماره؛
+   674→   674→          // کارت باز/جفت‌شده متن واقعی (واژهٔ انگلیسی یا معنی فارسی) با موقعیت روی گرید
+   675→   675→          const face = c.side === "en" ? `واژه ${c.word}` : `معنی ${c.meaning}`;
+   676→   676→          const label = isMatched
+   677→   677→            ? `کارت شمارهٔ ${faNum(i + 1)} — ${face} — جفت شد`
+   678→   678→            : isOpen
+   679→   679→              ? `کارت شمارهٔ ${faNum(i + 1)} — ${face}`
+   680→   680→              : `کارت شمارهٔ ${faNum(i + 1)}`;
+   681→   681→          // فاز G2-a — الگوی نشانگر سیار: دکمه‌ها از ترتیب Tab خارج‌اند تا دو نشانگر موازی نسازد
+   682→   682→          return (
+   683→   683→            <button
+   684→   684→              key={c.id}
+   685→   685→              type="button"
+   686→   686→              tabIndex={-1}
+   687→   687→              onClick={() => {
+   688→   688→                // فاز G2-a — همگام‌سازی نشانگر کیبورد با لمس/کلیک
+   689→   689→                setFocusIdx(i);
+   690→   690→                handleCardClick(c);
+   691→   691→              }}
+   692→   692→              disabled={isMatched}
+   693→   693→              aria-pressed={isOpen}
+   694→   694→              aria-label={label}
+   695→   695→              data-focused={i === focusIdx ? "true" : undefined}
+   696→   696→              className={cn(
+   697→   697→                "flip-scene h-24 sm:h-28 cursor-pointer select-none rounded-lg",
+   698→   698→                isMatched && "match-pop",
+   699→   699→                isWrong && "match-shake",
+   700→   700→                // فاز G2-a — حلقهٔ کهربایی نشانگر کیبورد چهارجهته
+   701→   701→                i === focusIdx && "ring-2 ring-amber-400 ring-offset-1",
+   702→   702→              )}
+   703→   703→            >
+   704→   704→              <div className={cn("flip-inner", isOpen && "flipped")}>
+   705→   705→                {/* روی کارت — رو به پایین */}
+   706→   706→                <div className="flip-face flex h-full w-full items-center justify-center rounded-xl border-2 border-primary/25 bg-gradient-to-br from-primary/15 to-amber-500/10 shadow-md">
+   707→   707→                  <span className="text-2xl font-black text-primary/40">؟</span>
+   708→   708→                </div>
+   709→   709→                {/* پشت کارت — محتوای واقعی */}
+   710→   710→                <div
+   711→   711→                  className={cn(
+   712→   712→                    "flip-face flip-back flex h-full w-full items-center justify-center rounded-xl border bg-card p-2 shadow-md",
+   713→   713→                    isMatched && "border-primary/50 opacity-60",
+   714→   714→                    isWrong && "border-destructive/60 bg-destructive/10",
+   715→   715→                  )}
+   716→   716→                >
+   717→   717→                  {c.side === "en" ? (
+   718→   718→                    <span dir="ltr" className="font-en text-center text-[13px] font-black sm:text-[15px]">
+   719→   719→                      {c.word}
+   720→   720→                    </span>
+   721→   721→                  ) : (
+   722→   722→                    <span className="text-center text-[12px] font-bold leading-6 sm:text-[13px]">
+   723→   723→                      {c.meaning}
+   724→   724→                    </span>
+   725→   725→                  )}
+   726→   726→                </div>
+   727→   727→              </div>
+   728→   728→            </button>
+   729→   729→          );
+   730→   730→        })}
+   731→   731→      </div>
+   732→   732→
+   733→   733→      {/* فاز G1-03 — اورلی توقف: کارت‌ها تار و غیرقابل‌کلیک؛ اعلام متنی در liveMsg سراسری */}
+   734→   734→      {paused && (
+   735→   735→        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
+   736→   736→          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+   737→   737→            <Pause size={26} />
+   738→   738→          </span>
+   739→   739→          <p className="text-sm font-black">بازی متوقف شد</p>
+   740→   740→          <Button onClick={resume} className="h-11 gap-2">
+   741→   741→            <Play size={16} />
+   742→   742→            ادامهٔ بازی
+   743→   743→          </Button>
+   744→   744→        </div>
+   745→   745→      )}
+   746→   746→      </div>
+   747→   747→
+   748→   748→      {/* فاز G1-04 — نگهبان خروج استاندارد کیت */}
+   749→   749→      <GameExitGuard
+   750→   750→        open={exitAsk}
+   751→   751→        onOpenChange={setExitAsk}
+   752→   752→        onConfirm={() => {
+   753→   753→          // فاز G1-10 — رهاکردن دور نیمه‌کاره
+   754→   754→          sessionRef.current?.abandon("exit");
+
+[showing lines 55-754 of 772; use offset=755 with limit to continue reading]

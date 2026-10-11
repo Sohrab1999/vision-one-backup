@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * بازی «شوتر آموزشی اول‌شخص» (Educational FPS) — فاز ۵ نقشه راه جامع ۲۰۲۶.
+ * بازی «شوتر آموزشی اول‌شخص» (Educational FPS) — فاز ۵ نقشه راه جامع ۲۰۲۶ + فاز G2-e نقشه راه بازی‌ها.
  *
  * میدان low-poly رنگی با three.js/@react-three/fiber (چانک جدا و lazy — صفر تأثیر روی بقیهٔ اپ):
  * - «شکار واژه»: معنی فارسی روی HUD، هدف‌های متحرک واژهٔ انگلیسی دارند.
@@ -13,27 +13,50 @@
  * - کنترل لمسی: کشیدن = نگاه، تپ روی هدف = شلیک همان هدف.
  * - حالت دسترس‌پذیری «تپ ساده»: بدون قفل نشانگر و شلیک دقیق — تپ روی هدف کافی است؛
  *   روی کیبورد هم کلیدهای ۱ تا ۴ از چپ به راست هدف انتخاب می‌کنند.
- * - کارایی: هندسهٔ رویه‌ای بدون بافت سنگین، دو نور ساده، سقف draw-call، dpr محدود و
- *   تشخیص خودکار دستگاه ضعیف (کاهش ذرات انفجار، antialias و dpr).
  * - امتیاز با مدل Attempt (category = fps-shooter) ثبت و رکورد شخصی per-scope ذخیره می‌شود.
+ *
+ * فاز G2-e — کیت GameKit v2 (الگوی پایلوت memory / flappy G2-c-2):
+ * - صدا/لرزش فقط در لحظهٔ رویداد، نه هر فریم: شلیک = «shoot» (داخل cooldown-gate تابع
+ *   request — گارد «نه هر فریم»)، برخورد درست به واژهٔ هدف = «correct» + لرزش success،
+ *   برخورد غلط / پایان زمان = «wrong» + لرزش error (هردو از handleHit/handleTimeout که
+ *   R3F از useFrame صدا می‌زند — فقط لحظهٔ resolve برخورد)، پایان دور = «finish» (دور
+ *   بی‌خطا = «win» — الگوی دارباز)، رکورد = «record». AudioContext با اولین ژست (چیپ‌های
+ *   setup) آپ‌لاک می‌شود؛ شکست صدا هرگز بازی را نمی‌شکند (try/catch داخل کیت).
+ * - تنظیم کیفیت گرافیک: دو چیپ «کیفیت عادی» / «کیفیت سبک (گوشی)» در setup — سبک:
+ *   dpr پایین‌تر [0.7,1]، antialias خاموش، سایه‌ها صریحاً off، اجسام تزئینی/ذرات انفجار
+ *   کمتر و ۳ هدف هم‌زمان به‌جای ۴؛ عادی: رفتار فعلی. انتخاب در Attempt detail افزودنی
+ *   (detail.quality) و localStorage کلید افزودنی «visionone:game-pref:fps-quality»
+ *   (پیش‌فرض عادی) می‌ماند — امضای saveAttempt/saveBest/bumpPlays و کلیدهای رکورد
+ *   (scopeOf) دست‌نخورده.
+ * - کمبو به موتور مشترک کیت منتقل شد (G1-09): useCombo({mode:"bonus", base:10,
+ *   bonusCap:6, bonusStep:2}) — فرمول امتیاز مو‌به‌مو همان قبل: ۱۰ + min(کمبو−۱,۶)×۲.
+ * - GameShell (هدر یکنواخت: امتیاز/کمبو/قلب/زمان در stats + liveMsg + کنترل‌های h-11 که
+ *   حین صحنهٔ سه‌بعدی هم کار می‌کنند) + Pause با فریز واقعی حلقهٔ R3F (frameloop
+ *   "never"/"always" — معادل cancel/resume الگوی flappy + آینهٔ pausedRef برای ورودی‌ها)
+ *   + جبران دقیق مبدأ تایمر سؤال و زنجیرهٔ «فریز برخورد → سؤال بعد» با جمع زمان توقف از
+ *   duration Attempt (pausedAccum — الگوی flappy/duel) + نگهبان خروج حین دور (تأیید →
+ *   abandon("exit")) + ResultScreen استاندارد (ستارهٔ per-game: دقت ≥۹۰→۳ / ≥۷۰→۲ / بقیه ۱)
+ *   + آموزش ۳گامی (هدف / نشانه‌گیری-شلیک / کیفیت گرافیک) با useAutoTutorial و راهنمای
+ *   حین صحنه با توقف (pausedForHelpRef) + تله‌متری جلسه (level = حالت+کیفیت مثل word-tap:low).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {
-  CheckCircle2,
   Crosshair,
   Flame,
   Heart,
+  MonitorSmartphone,
   MousePointerClick,
+  Pause,
   Play,
-  RotateCcw,
   Sparkles,
   Star,
   Swords,
+  Target as TargetIcon,
+  Timer,
   Trophy,
-  XCircle,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -58,6 +81,20 @@ import {
   shuffle,
   subscribeGameData,
 } from "./shared";
+// فاز G2-e — کیت GameKit v2 (قرارداد API سند)
+import { playSound, toggleSoundMuted, isSoundMuted } from "./kit/sound-engine";
+import { buzz } from "./kit/haptics";
+import { useGamePause } from "./kit/use-pause";
+import { GameExitGuard } from "./kit/exit-guard";
+import { GameShell } from "./kit/game-shell";
+import { ResultScreen } from "./kit/result-screen";
+import {
+  TutorialOverlay,
+  useAutoTutorial,
+  type TutorialStep,
+} from "./kit/tutorial-overlay";
+import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+import { useCombo, COMBO_FIRE_CLASS } from "./kit/combo-engine";
 
 // ─── ثابت‌ها ───
 
@@ -80,6 +117,29 @@ const MIN_POOL_WORD = 4;
 const MIN_POOL_QUIZ = 3;
 const BURST_FULL = 36;
 const BURST_WEAK = 16;
+
+// ── فاز G2-e — تنظیم کیفیت گرافیک (افزودنی؛ کلید جدید، بدون دست‌زدن به کلیدهای موجود) ──
+
+type Quality = "high" | "low";
+/** کلید افزودنی ماندگاری انتخاب کیفیت — پیش‌فرض «عادی» */
+const QUALITY_KEY = "visionone:game-pref:fps-quality";
+/** کیفیت عادی: ۴ هدف (۳ حواس‌پرتی) — رفتار فعلی */
+const DISTRACTORS_HIGH = 3;
+/** کیفیت سبک: ۳ هدف هم‌زمان (۲ حواس‌پرتی) */
+const DISTRACTORS_LOW = 2;
+/** کیفیت سبک: اجسام تزئینی شناور کمتر */
+const DECO_LOW = 5;
+/** کیفیت سبک: ذرات انفجار کمتر */
+const BURST_LOW = 12;
+
+function loadQuality(): Quality {
+  if (typeof window === "undefined") return "high";
+  try {
+    return window.localStorage.getItem(QUALITY_KEY) === "low" ? "low" : "high";
+  } catch {
+    return "high";
+  }
+}
 
 type Phase = "setup" | "playing" | "done";
 type Mode = "word-hunt" | "grammar-gate";
@@ -145,6 +205,26 @@ interface BestRecord {
   score: number;
 }
 
+// ─── فاز G2-e — آموزش ۳-گامی استاندارد (الگوی پایلوت memory / flappy) ───
+
+const TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    icon: <Crosshair size={24} />,
+    title: "هدف‌ها را شکار کن",
+    text: "سؤال روی HUD بالای میدان می‌ماند و هر هدف متحرک یک گزینهٔ انگلیسی روی بیلبورد دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست انفجار رنگین‌کمانی و امتیاز با کمبو دارد.",
+  },
+  {
+    icon: <MousePointerClick size={24} />,
+    title: "نشانه‌گیری و شلیک",
+    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری و کلیک بعدی شلیک — موبایل: کشیدن = نگاه و تپ روی هدف = شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند.",
+  },
+  {
+    icon: <MonitorSmartphone size={24} />,
+    title: "کیفیت گرافیک",
+    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن: رزولوشن کمتر، ذرات و اجسام تزئینی کمتر و ۳ هدف هم‌زمان به‌جای ۴ — انتخابت برای دفعات بعد ذخیره می‌شود.",
+  },
+];
+
 // ─── کمکی‌های خالص ───
 
 function clamp(v: number, a: number, b: number): number {
@@ -165,6 +245,11 @@ function scopeOf(mode: Mode, tap: boolean): string {
 
 function modeName(mode: Mode): string {
   return mode === "word-hunt" ? "شکار واژه" : "سد گرامری";
+}
+
+/** نمایش زمان نتیجه به شکل م:ث‌ث (الگوی سایر بازی‌های کیت) */
+function fmtTime(s: number): string {
+  return `${faNum(Math.floor(s / 60))}:${faNum(s % 60).padStart(2, "۰")}`;
 }
 
 function easeOutCubic(t: number): number {
@@ -240,10 +325,17 @@ function layoutTargets(
   }));
 }
 
-function buildWordQuestion(seq: number, target: VocabEntry, distrPool: VocabEntry[], lesson: number): Question {
+/** فاز G2-e — maxOthers: تعداد حواس‌پرتی (کیفیت سبک = ۳ هدف هم‌زمان) */
+function buildWordQuestion(
+  seq: number,
+  target: VocabEntry,
+  distrPool: VocabEntry[],
+  lesson: number,
+  maxOthers: number,
+): Question {
   const others = pickUnique(
     distrPool.filter((w) => w.word !== target.word),
-    3,
+    maxOthers,
     (w) => w.word,
   );
   const opts = shuffle([
@@ -264,8 +356,10 @@ function buildWordQuestion(seq: number, target: VocabEntry, distrPool: VocabEntr
   };
 }
 
-function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number): Question {
-  const opts = s.options.map((text, i) => ({ text, correct: i === s.answer }));
+/** فاز G2-e — maxOthers: در کیفیت سبک گزینهٔ درست + ۲ حواس‌پرتی (چیدمان لِین‌ها شافل است) */
+function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, maxOthers: number): Question {
+  const optsAll = s.options.map((text, i) => ({ text, correct: i === s.answer }));
+  const opts = [optsAll[s.answer], ...optsAll.filter((o) => !o.correct).slice(0, maxOthers)];
   return {
     seq,
     mode: "grammar-gate",
@@ -308,12 +402,12 @@ function Rig({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   return null;
 }
 
-/** میدان low-poly: زمین، کوه‌های دوردست و اجسام شناور تزئینی */
-function Arena({ weak }: { weak: boolean }) {
-  const deco = useMemo(
+/** میدان low-poly: زمین، کوه‌های دوردست و اجسام شناور تزئینی — فاز G2-e: تعداد deco پارامتر شد */
+function Arena({ deco }: { deco: number }) {
+  const decoShapes = useMemo(
     () =>
       shuffle(
-        Array.from({ length: weak ? 8 : 14 }, (_, i) => ({
+        Array.from({ length: deco }, (_, i) => ({
           key: `d${i}`,
           kind: (i % 3 === 0 ? "octa" : i % 3 === 1 ? "box" : "dodeca") as "octa" | "box" | "dodeca",
           pos: [
@@ -327,7 +421,7 @@ function Arena({ weak }: { weak: boolean }) {
           scale: 0.5 + Math.random() * 1.1,
         })),
       ),
-    [weak],
+    [deco],
   );
   const mounts = useMemo(
     () =>
@@ -366,7 +460,7 @@ function Arena({ weak }: { weak: boolean }) {
         </mesh>
       ))}
       {/* اجسام شناور تزئینی */}
-      {deco.map((d) => (
+      {decoShapes.map((d) => (
         <DecoShape key={d.key} spec={d} />
       ))}
     </>
@@ -615,21 +709,35 @@ export function FpsShooterGame() {
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [tapMode, setTapMode] = useState(false);
   const [locked, setLocked] = useState(false);
+  // فاز G2-e — کیفیت گرافیک (ماندگار؛ پیش‌فرض عادی)
+  const [quality, setQuality] = useState<Quality>(() => loadQuality());
 
   // ── HUD حین بازی ──
   const [q, setQ] = useState<Question | null>(null);
   const [score, setScore] = useState(0);
-  const [combo, setCombo] = useState(0);
   const [hearts, setHearts] = useState(HEARTS);
   const [timeLeft, setTimeLeft] = useState(Q_TIME_SHOOT);
+  /** فاز G2-e — پیام باکس aria-live شِل (برخورد/خطا/توقف) برای فناوری‌های کمکی */
+  const [liveMsg, setLiveMsg] = useState("");
+
+  // ── فاز G2-e — موتور کمبو مشترک کیت (G1-09) ──
+  // حالت bonus = دقیقاً قانون فعلی شوتر: gained = ۱۰ + min(کمبو−۱, ۶) × ۲ (امتیاز یکسان می‌ماند)
+  const {
+    combo,
+    comboRef: comboCountRef,
+    maxComboRef,
+    registerCorrect,
+    registerMiss,
+    reset: resetCombo,
+  } = useCombo({ mode: "bonus", base: SHOOT_BASE, bonusCap: COMBO_CAP, bonusStep: COMBO_STEP });
 
   // ── stateهای فاز done ──
   const [isRecord, setIsRecord] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
-  const [maxCombo, setMaxCombo] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
   const [wrongList, setWrongList] = useState<WrongItem[]>([]);
+  const [elapsed, setElapsed] = useState(0);
 
   // ── استخر داده ──
   const vocabAll = data.vocab.all;
@@ -650,7 +758,7 @@ export function FpsShooterGame() {
   const poolOk = mode === "word-hunt" ? wordPool.length >= MIN_POOL_WORD : quizPool.length >= MIN_POOL_QUIZ;
   const poolCount = mode === "word-hunt" ? wordPool.length : quizPool.length;
 
-  // تشخیص دستگاه ضعیف — کاهش ذرات/antialias/dpr
+  // تشخیص دستگاه ضعیف — کاهش ذرات/antialias/dpr در کیفیت عادی
   const weak = useMemo(() => {
     if (typeof navigator === "undefined") return false;
     const nav = navigator as Navigator & { deviceMemory?: number };
@@ -660,6 +768,13 @@ export function FpsShooterGame() {
     if (typeof window === "undefined") return false;
     return window.matchMedia("(pointer: coarse)").matches;
   }, []);
+
+  // ── فاز G2-e — توقف/ادامهٔ استاندارد کیت + آینه‌ها و جمع زمان توقف (الگوی flappy) ──
+  const pausedRef = useRef(false);
+  /** مبدأ توقف جاری برای جبران دقیق مبدأ تایمر سؤال */
+  const pauseStartRef = useRef(0);
+  /** جمع زمان‌های توقف — مدت Attempt نباید توقف‌ها را حساب کند */
+  const pausedAccumRef = useRef(0);
 
   // ── دنیای بازی — مالک: رویدادها و refs ──
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -685,38 +800,147 @@ export function FpsShooterGame() {
   const startedAtRef = useRef(0);
   const seqRef = useRef(0);
   const scoreRef = useRef(0);
-  const comboRef = useRef(0);
   const heartsRef = useRef(HEARTS);
   const totalRef = useRef(0);
   const correctRef = useRef(0);
-  const maxComboRef = useRef(0);
   const wrongRef = useRef<WrongItem[]>([]);
-  const timersRef = useRef<number[]>([]);
   const finishRef = useRef<() => void>(() => {});
   const timeoutRef = useRef<() => void>(() => {});
   const advanceRef = useRef<() => void>(() => {});
   const voiceSpeedRef = useRef(speed);
   const tapRef = useRef(tapMode);
+  const qualityRef = useRef<Quality>(quality);
   const qRef = useRef<Question | null>(null);
+
+  // ── فاز G2-e — زنجیرهٔ «فریز برخورد → سؤال بعد/پایان» مقاوم به توقف (الگوی دوئل G2-d) ──
+  // به‌جای setTimeout خام: زمان سررسید با «ساعت جبران‌شده» نگه داشته می‌شود؛ حین توقف
+  // تایمر کامل برچیده می‌شود و بعد از ادامه با همان زمان باقی‌مانده دوباره مسلح می‌شود.
+  const chainTimerRef = useRef<number | null>(null);
+  const chainPendingRef = useRef<{ due: number; fn: () => void } | null>(null);
+
+  const clearTimers = useCallback(() => {
+    if (chainTimerRef.current !== null) {
+      window.clearTimeout(chainTimerRef.current);
+      chainTimerRef.current = null;
+    }
+    chainPendingRef.current = null;
+  }, []);
+
+  const scheduleChain = useCallback(() => {
+    if (chainTimerRef.current !== null) {
+      window.clearTimeout(chainTimerRef.current);
+      chainTimerRef.current = null;
+    }
+    const pend = chainPendingRef.current;
+    if (!pend || pausedRef.current || overRef.current) return;
+    chainTimerRef.current = window.setTimeout(() => {
+      chainTimerRef.current = null;
+      const cur = chainPendingRef.current;
+      chainPendingRef.current = null;
+      cur?.fn();
+    }, Math.max(0, pend.due - performance.now()));
+  }, []);
+
+  /** زمان‌بندی داخل زنجیرهٔ مقاوم به توقف — جایگزین setTimeout خام الگوی قبلی */
+  const later = useCallback(
+    (fn: () => void, ms: number) => {
+      chainPendingRef.current = { due: performance.now() + ms, fn };
+      if (pausedRef.current) return; // حین توقف فقط ثبت می‌شود — ادامه با resume (scheduleChain)
+      scheduleChain();
+    },
+    [scheduleChain],
+  );
+
+  // فاز G2-e — هوک توقف کیت: onChange → آینهٔ pausedRef (گارد ورودی‌ها) + فریز/احیای حلقهٔ
+  // R3F با frameloop + جبران دو-نیمهٔ مبدأ تایمر سؤال + جمع زمان توقف برای duration Attempt.
+  // auto-pause در تب مخفی از خود هوک می‌آید — در بازگشت اورلی «متوقف شد» دیده می‌شود.
+  const { paused, resume, pause: pauseGame, toggle: togglePause } = useGamePause((p) => {
+    pausedRef.current = p;
+    if (p) {
+      pauseStartRef.current = performance.now();
+      // قفل نشانگر حین توقف آزاد شود تا اورلی با موس قابل استفاده باشد
+      if (document.pointerLockElement) document.exitPointerLock();
+    } else if (pauseStartRef.current > 0) {
+      // جبران دو-نیمهٔ امن (تعمیم الگوی G0-05/duel): مدت توقف به مبدأ تایمر سؤال و
+      // سررسید زنجیرهٔ برخورد افزوده می‌شود و به جمع زمان توقف Attempt می‌رود.
+      const gap = performance.now() - pauseStartRef.current;
+      pauseStartRef.current = 0;
+      if (gap > 0) {
+        pausedAccumRef.current += gap;
+        if (phase === "playing" && !overRef.current) {
+          deadlineRef.current += gap;
+          if (chainPendingRef.current) chainPendingRef.current.due += gap;
+        }
+      }
+    }
+    // فریز/احیای زنجیرهٔ «فریز برخورد → سؤال بعد/پایان»
+    scheduleChain();
+    if (phase === "playing" && !overRef.current) setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
+  });
+
+  const [exitAsk, setExitAsk] = useState(false);
+  /** آینهٔ exitAsk برای گارد شلیک/کیبورد حین باز بودن دیالوگ نگهبان */
+  const exitAskRef = useRef(false);
+  const setExitAskSafe = useCallback((v: boolean) => {
+    exitAskRef.current = v;
+    setExitAsk(v);
+  }, []);
+
+  // الگوی دارباز/فلپی: state بی‌صدا + همگام‌سازی با کلید سراسری (storage بین-تب) و toggle در هندلر
+  const [muted, setMuted] = useState(isSoundMuted());
+  useEffect(() => {
+    const sync = () => setMuted(isSoundMuted());
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
+  }, []);
+
+  // فاز G2-e — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین صحنه (با توقف)
+  const {
+    open: tutorialOpen,
+    openHelp: openTutorial,
+    close: closeTutorial,
+  } = useAutoTutorial(GAME_KEY, phase === "setup");
+  const pausedForHelpRef = useRef(false);
+  const handleHelp = useCallback(() => {
+    if (phase === "playing") {
+      pausedForHelpRef.current = true;
+      pauseGame();
+    }
+    openTutorial();
+  }, [openTutorial, pauseGame, phase]);
+  const handleTutorialClose = useCallback(() => {
+    closeTutorial();
+    if (pausedForHelpRef.current) {
+      pausedForHelpRef.current = false;
+      resume();
+    }
+  }, [closeTutorial, resume]);
+  const handleTutorialOpenChange = useCallback(
+    (o: boolean) => {
+      if (!o) handleTutorialClose();
+    },
+    [handleTutorialClose],
+  );
+
+  // فاز G2-e — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
+  const sessionRef = useRef<GameSessionTracker | null>(null);
 
   // الگوی latest-ref — effect بدون dep
   useEffect(() => {
     voiceSpeedRef.current = speed;
     tapRef.current = tapMode;
+    qualityRef.current = quality;
     qRef.current = q;
   });
 
-  useEffect(() => () => stopSpeaking(), []);
-
-  const clearTimers = useCallback(() => {
-    for (const id of timersRef.current) window.clearTimeout(id);
-    timersRef.current = [];
-  }, []);
-
-  const later = useCallback((fn: () => void, ms: number) => {
-    const id = window.setTimeout(fn, ms);
-    timersRef.current.push(id);
-  }, []);
+  // فاز G2-e — دورِ باز در unmount «رهاشده» ثبت می‌شود (اگر قبلاً گزارش شده باشد no-op)
+  useEffect(
+    () => () => {
+      sessionRef.current?.abandon("unmount");
+      stopSpeaking();
+    },
+    [],
+  );
 
   // ── سؤال بعدی (reshuffle در اتمام استخر) ──
   const advanceImpl = useCallback(() => {
@@ -731,10 +955,12 @@ export function FpsShooterGame() {
       deckIdxRef.current = 0;
     }
     const item = deckRef.current[deckIdxRef.current++] as VocabEntry | QuizQuestionSeed;
+    // فاز G2-e — کیفیت سبک: ۳ هدف هم‌زمان به‌جای ۴
+    const maxOthers = qualityRef.current === "low" ? DISTRACTORS_LOW : DISTRACTORS_HIGH;
     const next =
       modeRef.current === "word-hunt"
-        ? buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson)
-        : buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson);
+        ? buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers)
+        : buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson, maxOthers);
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
     lockedRef.current = false;
@@ -756,17 +982,30 @@ export function FpsShooterGame() {
     stopSpeaking();
     const total = totalRef.current;
     const final = scoreRef.current;
-    const elapsed = Math.max(1, Math.round((performance.now() - startedAtRef.current) / 1000));
+    // فاز G2-e — مدت دور بدون احتساب جمع زمان‌های توقف (الگوی flappy)
+    const took = Math.max(
+      1,
+      Math.round((performance.now() - startedAtRef.current - pausedAccumRef.current) / 1000),
+    );
     touchStreak();
     recordStudySession();
     bumpPlays(activeBookId, GAME_KEY);
+    // فاز G2-e — پایان عادی جلسهٔ تله‌متری
+    sessionRef.current?.end("finish");
     if (total > 0) {
       saveAttempt(activeBookId, GAME_KEY, {
         lesson: lesson === ALL_LESSONS ? 0 : lesson,
         total,
         correct: correctRef.current,
-        duration: elapsed,
-        detail: { score: final, maxCombo: maxComboRef.current, mode: modeRef.current, tap: tapRef.current },
+        duration: took,
+        // فاز G2-e — detail افزودنی: quality (امضای AttemptPayload دست‌نخورده)
+        detail: {
+          score: final,
+          maxCombo: maxComboRef.current,
+          mode: modeRef.current,
+          tap: tapRef.current,
+          quality: qualityRef.current,
+        },
       });
     }
     const scope = scopeOf(modeRef.current, tapRef.current);
@@ -774,68 +1013,95 @@ export function FpsShooterGame() {
     if (final > 0 && final > (prev?.score ?? 0)) {
       saveBest(activeBookId, GAME_KEY, scope, { score: final });
       setIsRecord(prev !== null);
-      if (prev !== null) toast.success(`رکورد جدید! ${faNum(final)} امتیاز 🏆`);
+      if (prev !== null) {
+        // فاز G2-e — رکورد جدید: صدا + لرزش رکورد (الگوی پایلوت)
+        playSound("record");
+        buzz("record");
+        toast.success(`رکورد جدید! ${faNum(final)} امتیاز 🏆`);
+      }
     } else {
       setIsRecord(false);
     }
+    // فاز G2-e — بازخورد پایان دور: برد کامل (بی‌خطا) = win — الگوی دارباز؛ بقیه = finish
+    if (total > 0 && correctRef.current === total) {
+      playSound("win");
+      buzz("success");
+    } else {
+      playSound("finish");
+      buzz("success");
+    }
     setFinalScore(final);
-    setMaxCombo(maxComboRef.current);
     setCorrectCount(correctRef.current);
     setWrongCount(total - correctRef.current);
     setWrongList([...wrongRef.current]);
+    setElapsed(took);
     setPhase("done");
-  }, [activeBookId, lesson, clearTimers]);
+  }, [activeBookId, lesson, clearTimers, maxComboRef]);
   useEffect(() => {
     finishRef.current = finish;
   });
 
-  const quit = useCallback(() => {
-    overRef.current = true;
-    clearTimers();
-    stopSpeaking();
+  // ── فاز G2-e — نگهبان خروج: انصراف حین صحنه ──
+  // با هر پیشرفت، GameExitGuard (صحنه حین دیالوگ فریز شود)؛ پیش از اولین شلیک، خروج مستقیم.
+  const handleExitClick = useCallback(() => {
     if (document.pointerLockElement) document.exitPointerLock();
-    setPhase("setup");
-  }, [clearTimers]);
+    if (totalRef.current > 0 || scoreRef.current > 0) {
+      pauseGame();
+      setExitAskSafe(true);
+    } else {
+      overRef.current = true;
+      clearTimers();
+      stopSpeaking();
+      // دور بدون پیشرفت هم یک جلسه است؛ همین‌جا رهاشده ثبت می‌شود
+      sessionRef.current?.abandon("exit");
+      resume();
+      setExitAskSafe(false);
+      setPhase("setup");
+    }
+  }, [pauseGame, resume, setExitAskSafe, clearTimers]);
 
-  // ── پاسخ به شلیک/تپ ──
+  // ── پاسخ به شلیک/تپ — فاز G2-e: بازخورد سه‌کاناله فقط در لحظهٔ رویداد برخورد ──
   const handleHit = useCallback(
     (id: string | null) => {
       const cur = qRef.current;
       if (overRef.current || lockedRef.current || !cur || id === null) return;
+      if (pausedRef.current || exitAskRef.current) return;
       const target = cur.targets.find((t) => t.id === id);
       if (!target) return;
       const now = performance.now();
       if (target.correct) {
-        comboRef.current += 1;
-        const bonus = Math.min(comboRef.current - 1, COMBO_CAP) * COMBO_STEP;
-        scoreRef.current += SHOOT_BASE + bonus;
+        // برخورد درست — امتیاز از موتور کمبو کیت (فرمول مو‌به‌مو: ۱۰ + min(کمبو−۱,۶)×۲)
+        const gained = registerCorrect();
+        scoreRef.current += gained;
         totalRef.current += 1;
         correctRef.current += 1;
-        maxComboRef.current = Math.max(maxComboRef.current, comboRef.current);
         setScore(scoreRef.current);
-        setCombo(comboRef.current);
         lockedRef.current = true;
         bridge.current.flashes = [{ id: target.id, kind: "ok", until: now + HIT_FREEZE_MS }];
         void speak(cur.speakText, { speed: voiceSpeedRef.current });
+        // فاز G2-e — بازخورد سه‌کانالهٔ برخورد درست (لحظهٔ رویداد داخل حلقهٔ R3F، نه هر فریم)
+        playSound("correct");
+        buzz("success");
+        setLiveMsg(`+${faNum(gained)} امتیاز — کمبو ×${faNum(comboCountRef.current)} 🔥`);
         later(() => advance(), HIT_FREEZE_MS);
       } else {
-        comboRef.current = 0;
+        // برخورد غلط — کمبو صفر (کیت)، یک ❤ کم، صف مرور
+        registerMiss();
         totalRef.current += 1;
-        wrongRef.current.push(
-          cur.mode === "word-hunt"
-            ? { label: cur.srsKey, sub: cur.promptMain }
-            : { label: cur.srsKey, sub: cur.promptMain },
-        );
+        wrongRef.current.push({ label: cur.srsKey, sub: cur.promptMain });
         seedReviewFromQuiz(cur.srsKey);
         heartsRef.current -= 1;
         setHearts(heartsRef.current);
-        setCombo(0);
         lockedRef.current = true;
         const good = cur.targets.find((t) => t.correct);
         bridge.current.flashes = [
           { id: target.id, kind: "bad", until: now + HIT_FREEZE_MS },
           ...(good ? [{ id: good.id, kind: "ok" as const, until: now + HIT_FREEZE_MS }] : []),
         ];
+        // فاز G2-e — بازخورد سه‌کانالهٔ برخورد غلط
+        playSound("wrong");
+        buzz("error");
+        setLiveMsg(`گزینهٔ غلط — پاسخ درست «${cur.srsKey}» بود — یک ❤ کم شد`);
         if (heartsRef.current <= 0) {
           later(() => finishRef.current(), HIT_FREEZE_MS);
         } else {
@@ -843,44 +1109,48 @@ export function FpsShooterGame() {
         }
       }
     },
-    [advance, later],
+    [advance, later, registerCorrect, registerMiss, comboCountRef],
   );
   useEffect(() => {
     bridge.current.onHit = handleHit;
   });
 
-  // ── پایان زمان سؤال ──
+  // ── پایان زمان سؤال — فاز G2-e: بازخورد سه‌کانالهٔ خطا ──
   const handleTimeout = useCallback(() => {
     const cur = qRef.current;
     if (overRef.current || lockedRef.current || !cur) return;
-    comboRef.current = 0;
+    registerMiss();
     totalRef.current += 1;
     wrongRef.current.push({ label: cur.srsKey, sub: cur.promptMain });
     seedReviewFromQuiz(cur.srsKey);
     heartsRef.current -= 1;
     setHearts(heartsRef.current);
-    setCombo(0);
     setTimeLeft(0);
     lockedRef.current = true;
     const good = cur.targets.find((t) => t.correct);
     bridge.current.flashes = good
       ? [{ id: good.id, kind: "ok", until: performance.now() + HIT_FREEZE_MS }]
       : [];
+    playSound("wrong");
+    buzz("error");
+    setLiveMsg(`زمان تمام شد — پاسخ «${cur.srsKey}» بود — یک ❤ کم شد`);
     if (heartsRef.current <= 0) {
       later(() => finishRef.current(), HIT_FREEZE_MS);
     } else {
       later(() => advance(), HIT_FREEZE_MS);
     }
-  }, [advance, later]);
+  }, [later, registerMiss]);
   useEffect(() => {
     timeoutRef.current = handleTimeout;
   });
 
   // ── تایمر سؤال — ۵ بار در ثانیه، فقط روی رویداد گسسته setState ──
+  // فاز G2-e: حین توقف فریز است؛ مبدأ deadline بعد از ادامه با جبران دقیق gap جبران می‌شود.
   useEffect(() => {
     if (phase !== "playing") return;
     const iv = window.setInterval(() => {
       if (overRef.current) return;
+      if (pausedRef.current) return; // فریز حین توقف — جبران در onChange ادامه
       if (lockedRef.current) {
         deadlineRef.current += 200; // توقف زمان در فاصلهٔ بین سؤال‌ها
         return;
@@ -893,6 +1163,7 @@ export function FpsShooterGame() {
   }, [phase]);
 
   // ── ورودی: Pointer Lock دسکتاپ + درگ/تپ لمسی + کیبورد ۱..۴ ──
+  // فاز G2-e: گارد pausedRef/exitAskRef روی همهٔ مسیرها + صدای شلیک فقط در رویداد شلیک.
   useEffect(() => {
     if (phase !== "playing") return;
     const el = wrapRef.current;
@@ -904,11 +1175,15 @@ export function FpsShooterGame() {
       return [((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1];
     };
     const request = (x: number, y: number) => {
+      // گارد «نه هر فریم»: شلیک فقط رویداد کاربر + cooldown؛ حین توقف/دیالوگ هم شلیک نیست
+      if (pausedRef.current || exitAskRef.current || overRef.current) return;
       const b = bridge.current;
       const now = performance.now();
       if (now - b.lastShotAt < SHOOT_COOLDOWN) return;
       b.lastShotAt = now;
       b.shoot = { x, y, seq: b.shoot.seq + 1 };
+      // فاز G2-e — صدای شلیک (رویداد شلیک، با cooldown — اسپم ندارد)
+      playSound("shoot");
     };
 
     let gest: { x0: number; y0: number; t0: number; moved: boolean; lx: number; ly: number; active: boolean } | null =
@@ -916,7 +1191,7 @@ export function FpsShooterGame() {
 
     const onPointerDown = (e: PointerEvent) => {
       const t = e.target as Node | null;
-      if (overRef.current || !t || !el.contains(t)) return;
+      if (pausedRef.current || exitAskRef.current || overRef.current || !t || !el.contains(t)) return;
       if (!coarse && !tapRef.current) {
         if (document.pointerLockElement !== el) {
           try {
@@ -968,11 +1243,12 @@ export function FpsShooterGame() {
       const t = e.target as HTMLElement | null;
       if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
       if (!tapRef.current) return;
+      if (pausedRef.current || exitAskRef.current || overRef.current) return;
       const map: Record<string, number> = { "1": 0, "2": 1, "3": 2, "4": 3, "۱": 0, "۲": 1, "۳": 2, "۴": 3 };
       const idx = map[e.key];
       if (idx === undefined) return;
       const cur = qRef.current;
-      if (!cur || lockedRef.current || overRef.current) return;
+      if (!cur || lockedRef.current) return;
       const ordered = [...cur.targets].sort((a, b) => a.lane - b.lane);
       const target = ordered[idx];
       if (target) bridge.current.onHit(target.id);
@@ -1002,6 +1278,9 @@ export function FpsShooterGame() {
         ? (lesson === ALL_LESSONS ? vocabAll : vocabAll.filter((w) => w.lesson === lesson))
         : (lesson === ALL_LESSONS ? quizSeed : quizSeed.filter((s) => s.lesson === lesson));
     if (pool.length < (mode === "word-hunt" ? MIN_POOL_WORD : MIN_POOL_QUIZ)) return;
+    // فاز G2-e — بازخورد کلیک شروع دور (الگوی کیت)
+    playSound("click");
+    buzz("light");
     modeRef.current = mode;
     qTimeRef.current = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
     poolRef.current = pool;
@@ -1010,27 +1289,57 @@ export function FpsShooterGame() {
     deckIdxRef.current = 0;
     seqRef.current = 0;
     scoreRef.current = 0;
-    comboRef.current = 0;
     heartsRef.current = HEARTS;
     totalRef.current = 0;
     correctRef.current = 0;
-    maxComboRef.current = 0;
     wrongRef.current = [];
     overRef.current = false;
     lockedRef.current = false;
     startedAtRef.current = performance.now();
+    // فاز G2-e — کمبوی تازه از موتور مشترک کیت + ریست وضعیت توقف
+    resetCombo();
+    pausedAccumRef.current = 0;
+    pauseStartRef.current = 0;
+    clearTimers();
     bridge.current.aim = { yaw: 0, pitch: 0 };
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
     setScore(0);
-    setCombo(0);
     setHearts(HEARTS);
     setQ(null);
     setLocked(false);
+    setIsRecord(false);
+    setLiveMsg("مأموریت شروع شد — به گزینهٔ درست شلیک کن!");
+    setExitAskSafe(false);
+    resume();
+    // فاز G2-e — جلسهٔ تازهٔ تله‌متری: level = حالت (+تپ) : کیفیت — مثل «word-tap:low»
+    sessionRef.current = createGameSession({
+      game: GAME_KEY,
+      level: `${mode === "word-hunt" ? "word" : "grammar"}${tapMode ? "-tap" : ""}:${quality}`,
+    });
+    sessionRef.current.start();
     setPhase("playing");
     // سؤال اول پس از سوار شدن صحنه
     later(() => advanceRef.current(), 60);
-  }, [mode, lesson, tapMode, vocabAll, quizSeed, later]);
+  }, [mode, lesson, tapMode, quality, vocabAll, quizSeed, resetCombo, resume, setExitAskSafe, clearTimers, later]);
+
+  // ── فاز G2-e — انتخاب کیفیت گرافیک (ماندگار؛ کلید افزودنی) ──
+  const setQualityPref = useCallback((q: Quality) => {
+    playSound("click");
+    buzz("light");
+    setQuality(q);
+    try {
+      window.localStorage.setItem(QUALITY_KEY, q);
+    } catch {
+      /* noop */
+    }
+  }, []);
+
+  // کلیک چیپ‌های setup — بازخورد کیت (الگوی جای خالی)
+  const chipFeedback = useCallback(() => {
+    playSound("click");
+    buzz("light");
+  }, []);
 
   // ── رکوردهای شخصی هر دو اسکوپ ──
   const bestWord = useSyncExternalStore(
@@ -1065,345 +1374,443 @@ export function FpsShooterGame() {
   // ── Setup ──
   if (phase === "setup") {
     return (
-      <Card className="mx-auto max-w-xl rise-in">
-        <CardContent className="space-y-6 p-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-              <Crosshair size={22} />
-            </span>
-            <div>
-              <h2 className="text-lg font-black">شوتر آموزشی</h2>
-              <p className="text-xs text-muted-foreground">میدان سه‌بعدی low-poly — به گزینهٔ درست شلیک کن!</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
-            <Sparkles size={15} className="mt-0.5 shrink-0 text-emerald-500" />
-            <p>
-              سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
-              شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
-              (شلیک به خالی) جریمه ندارد!
-            </p>
-          </div>
-
-          <div>
-            <p className="mb-2 text-[13px] font-bold">حالت بازی</p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {(
-                [
-                  {
-                    key: "word-hunt" as const,
-                    title: "شکار واژه",
-                    desc: "معنی فارسی روی HUD؛ واژهٔ انگلیسی درست را بین اهداف شکار کن.",
-                    icon: Star,
-                  },
-                  {
-                    key: "grammar-gate" as const,
-                    title: "سد گرامری",
-                    desc: "جملهٔ ناقص سؤال‌ها؛ گزینهٔ درست را نشانه بگیر و شلیک کن.",
-                    icon: Swords,
-                  },
-                ] satisfies Array<{ key: Mode; title: string; desc: string; icon: typeof Star }>
-              ).map((m) => (
-                <button
-                  key={m.key}
-                  type="button"
-                  aria-pressed={mode === m.key}
-                  onClick={() => {
-                    setMode(m.key);
-                    setLesson(ALL_LESSONS);
-                  }}
-                  className={cn(
-                    "min-h-11 rounded-2xl border p-3 text-right transition-all",
-                    mode === m.key
-                      ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
-                      : "hover:border-primary/30 hover:bg-muted/50",
-                  )}
-                >
-                  <span className="flex items-center gap-2 text-[13px] font-black">
-                    <m.icon size={16} className={mode === m.key ? "text-primary" : "text-muted-foreground"} />
-                    {m.title}
-                  </span>
-                  <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">{m.desc}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
-            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
-              <button type="button" aria-pressed={lesson === ALL_LESSONS} onClick={() => setLesson(ALL_LESSONS)} className={chipCls(lesson === ALL_LESSONS)}>
-                کل کتاب ({faNum(poolCount)} {mode === "word-hunt" ? "واژه" : "سؤال"})
-              </button>
-              {mode === "word-hunt"
-                ? wordLessons.map((l) => (
-                    <button key={l.lesson} type="button" aria-pressed={lesson === l.lesson} onClick={() => setLesson(l.lesson)} className={chipCls(lesson === l.lesson)}>
-                      {l.label} ({faNum(vocabAll.filter((w) => w.lesson === l.lesson).length)})
-                    </button>
-                  ))
-                : quizLessons.map((l) => (
-                    <button key={l} type="button" aria-pressed={lesson === l} onClick={() => setLesson(l)} className={chipCls(lesson === l)}>
-                      {lessonLabel(l)} ({faNum(quizSeed.filter((s) => s.lesson === l).length)})
-                    </button>
-                  ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-2 text-[13px] font-bold">سبک کنترل</p>
-            <button type="button" aria-pressed={tapMode} onClick={() => setTapMode((v) => !v)} className={chipCls(tapMode)}>
-              <span className="inline-flex items-center gap-1.5">
-                <MousePointerClick size={14} />
-                تپ ساده (بدون شلیک) {tapMode ? "— فعال" : ""}
+      <>
+        <Card className="mx-auto max-w-xl rise-in">
+          <CardContent className="space-y-6 p-6">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                <Crosshair size={22} />
               </span>
-            </button>
-            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
-              {tapMode ? (
-                <>تپ روی هدف کافی است؛ روی دسکتاپ هم کلیک روی هدف می‌زند و کلیدهای ۱ تا ۴ هدف را انتخاب می‌کنند.</>
-              ) : (
-                <>دسکتاپ: کلیک قفلِ نشانگر، حرکت موس نشانه‌گیری، کلیک بعدی شلیک — موبایل: کشیدن نگاه، تپ روی هدف شلیک.</>
-              )}
-            </p>
-          </div>
-
-          {!poolOk && (
-            <div className="rounded-xl border border-destructive/30 bg-destructive/8 p-3 text-[11px] leading-5 text-destructive">
-              {mode === "word-hunt"
-                ? `برای این انتخاب دست‌کم ${faNum(MIN_POOL_WORD)} واژه لازم است — درس دیگری یا «کل کتاب» را انتخاب کن.`
-                : `برای این انتخاب دست‌کم ${faNum(MIN_POOL_QUIZ)} سؤال لازم است — محدودهٔ دیگری را انتخاب کن.`}
-            </div>
-          )}
-
-          {bestVal !== null && (
-            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
-              <Trophy size={12} />
-              بهترین امتیاز ({modeName(mode)}{tapMode ? " · تپ ساده" : ""}): {faNum(bestVal)}
-            </Badge>
-          )}
-
-          <Button size="lg" className="h-12 w-full gap-2 text-base" disabled={!poolOk} onClick={start}>
-            <Play size={18} />
-            شروع مأموریت
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // ── Done ──
-  if (phase === "done") {
-    return (
-      <Card className="mx-auto max-w-xl rise-in border-emerald-500/30">
-        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-            <Crosshair size={30} />
-          </span>
-          <h2 className="text-xl font-black">مأموریت تمام شد!</h2>
-          <p className="-mt-3 text-[11px] text-muted-foreground">
-            {modeName(mode)}{tapMode ? " · تپ ساده" : ""} · {lesson === ALL_LESSONS ? "کل کتاب" : lessonLabel(lesson)}
-          </p>
-          {isRecord && (
-            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
-              <Trophy size={13} />
-              رکورد جدید! 🏆
-            </Badge>
-          )}
-
-          <div className="w-full rounded-2xl bg-gradient-to-bl from-primary/10 to-emerald-500/10 p-5">
-            <p className="text-5xl font-black leading-none">{faNum(finalScore)}</p>
-            <p className="mt-2 text-[11px] text-muted-foreground">امتیاز این مأموریت</p>
-          </div>
-
-          <div className="grid w-full grid-cols-3 gap-2 text-center">
-            <div className="rounded-xl bg-muted/60 p-3">
-              <Flame size={16} className="mx-auto text-amber-500" />
-              <p className="mt-1.5 text-lg font-black leading-none">×{faNum(maxCombo)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">بیشترین کمبو</p>
-            </div>
-            <div className="rounded-xl bg-muted/60 p-3">
-              <CheckCircle2 size={16} className="mx-auto text-emerald-500" />
-              <p className="mt-1.5 text-lg font-black leading-none">{faNum(correctCount)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">شلیک درست</p>
-            </div>
-            <div className="rounded-xl bg-muted/60 p-3">
-              <XCircle size={16} className="mx-auto text-destructive" />
-              <p className="mt-1.5 text-lg font-black leading-none">{faNum(wrongCount)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">خطا / پایان زمان</p>
-            </div>
-          </div>
-
-          {wrongList.length > 0 ? (
-            <div className="w-full space-y-2 rounded-xl border p-3 text-right">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-[12px] font-bold">واژه‌های غلط‌زده</p>
-                <Badge
-                  variant="outline"
-                  className="shrink-0 border-emerald-500/40 text-[10px] text-emerald-600 dark:text-emerald-400"
-                >
-                  به مرور اضافه شد
-                </Badge>
+              <div>
+                <h2 className="text-lg font-black">شوتر آموزشی</h2>
+                <p className="text-xs text-muted-foreground">میدان سه‌بعدی low-poly — به گزینهٔ درست شلیک کن!</p>
               </div>
-              <div className="flex max-h-44 flex-wrap gap-1.5 overflow-y-auto">
-                {wrongList.map((w, i) => (
-                  <span
-                    key={`${w.label}-${i}`}
-                    dir={mode === "word-hunt" ? "ltr" : "rtl"}
-                    className="rounded-lg bg-muted/70 px-2.5 py-1 text-[12px] font-bold"
-                    title={w.sub}
+            </div>
+
+            <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+              <Sparkles size={15} className="mt-0.5 shrink-0 text-emerald-500" />
+              <p>
+                سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
+                شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
+                (شلیک به خالی) جریمه ندارد!
+              </p>
+            </div>
+
+            <div>
+              <p className="mb-2 text-[13px] font-bold">حالت بازی</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {(
+                  [
+                    {
+                      key: "word-hunt" as const,
+                      title: "شکار واژه",
+                      desc: "معنی فارسی روی HUD؛ واژهٔ انگلیسی درست را بین اهداف شکار کن.",
+                      icon: Star,
+                    },
+                    {
+                      key: "grammar-gate" as const,
+                      title: "سد گرامری",
+                      desc: "جملهٔ ناقص سؤال‌ها؛ گزینهٔ درست را نشانه بگیر و شلیک کن.",
+                      icon: Swords,
+                    },
+                  ] satisfies Array<{ key: Mode; title: string; desc: string; icon: typeof Star }>
+                ).map((m) => (
+                  <button
+                    key={m.key}
+                    type="button"
+                    aria-pressed={mode === m.key}
+                    onClick={() => {
+                      chipFeedback();
+                      setMode(m.key);
+                      setLesson(ALL_LESSONS);
+                    }}
+                    className={cn(
+                      "min-h-11 rounded-2xl border p-3 text-right transition-all",
+                      mode === m.key
+                        ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
+                        : "hover:border-primary/30 hover:bg-muted/50",
+                    )}
                   >
-                    {w.label}
-                  </span>
+                    <span className="flex items-center gap-2 text-[13px] font-black">
+                      <m.icon size={16} className={mode === m.key ? "text-primary" : "text-muted-foreground"} />
+                      {m.title}
+                    </span>
+                    <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">{m.desc}</span>
+                  </button>
                 ))}
               </div>
             </div>
-          ) : (
-            <Badge variant="outline" className="border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
-              بدون خطا — تک‌تیرانداز واقعی! 🎯
-            </Badge>
-          )}
 
-          <div className="flex gap-2">
-            <Button onClick={start} className="h-11 gap-2">
-              <RotateCcw size={16} />
-              مأموریت جدید
+            <div>
+              <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+                <button
+                  type="button"
+                  aria-pressed={lesson === ALL_LESSONS}
+                  onClick={() => {
+                    chipFeedback();
+                    setLesson(ALL_LESSONS);
+                  }}
+                  className={chipCls(lesson === ALL_LESSONS)}
+                >
+                  کل کتاب ({faNum(poolCount)} {mode === "word-hunt" ? "واژه" : "سؤال"})
+                </button>
+                {mode === "word-hunt"
+                  ? wordLessons.map((l) => (
+                      <button
+                        key={l.lesson}
+                        type="button"
+                        aria-pressed={lesson === l.lesson}
+                        onClick={() => {
+                          chipFeedback();
+                          setLesson(l.lesson);
+                        }}
+                        className={chipCls(lesson === l.lesson)}
+                      >
+                        {l.label} ({faNum(vocabAll.filter((w) => w.lesson === l.lesson).length)})
+                      </button>
+                    ))
+                  : quizLessons.map((l) => (
+                      <button
+                        key={l}
+                        type="button"
+                        aria-pressed={lesson === l}
+                        onClick={() => {
+                          chipFeedback();
+                          setLesson(l);
+                        }}
+                        className={chipCls(lesson === l)}
+                      >
+                        {lessonLabel(l)} ({faNum(quizSeed.filter((s) => s.lesson === l).length)})
+                      </button>
+                    ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 text-[13px] font-bold">سبک کنترل</p>
+              <button
+                type="button"
+                aria-pressed={tapMode}
+                onClick={() => {
+                  chipFeedback();
+                  setTapMode((v) => !v);
+                }}
+                className={chipCls(tapMode)}
+              >
+                <span className="inline-flex items-center gap-1.5">
+                  <MousePointerClick size={14} />
+                  تپ ساده (بدون شلیک) {tapMode ? "— فعال" : ""}
+                </span>
+              </button>
+              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                {tapMode ? (
+                  <>تپ روی هدف کافی است؛ روی دسکتاپ هم کلیک روی هدف می‌زند و کلیدهای ۱ تا ۴ هدف را انتخاب می‌کنند.</>
+                ) : (
+                  <>دسکتاپ: کلیک قفلِ نشانگر، حرکت موس نشانه‌گیری، کلیک بعدی شلیک — موبایل: کشیدن نگاه، تپ روی هدف شلیک.</>
+                )}
+              </p>
+            </div>
+
+            {/* فاز G2-e — تنظیم کیفیت گرافیک */}
+            <div>
+              <p className="mb-2 text-[13px] font-bold">کیفیت گرافیک</p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب کیفیت گرافیک">
+                <button
+                  type="button"
+                  aria-pressed={quality === "high"}
+                  onClick={() => setQualityPref("high")}
+                  className={chipCls(quality === "high")}
+                >
+                  کیفیت عادی
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={quality === "low"}
+                  onClick={() => setQualityPref("low")}
+                  className={chipCls(quality === "low")}
+                >
+                  کیفیت سبک (گوشی)
+                </button>
+              </div>
+              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                {quality === "low"
+                  ? "کیفیت سبک: رزولوشن کمتر، بدون antialias، ذرات و اجسام تزئینی کمتر و ۳ هدف هم‌زمان به‌جای ۴ — روی گوشی‌های ضعیف روان‌تر است."
+                  : "کیفیت عادی: کامل‌ترین نمای صحنه (رفتار همیشگی بازی). انتخابت برای دفعات بعد ذخیره می‌شود."}
+              </p>
+            </div>
+
+            {!poolOk && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/8 p-3 text-[11px] leading-5 text-destructive">
+                {mode === "word-hunt"
+                  ? `برای این انتخاب دست‌کم ${faNum(MIN_POOL_WORD)} واژه لازم است — درس دیگری یا «کل کتاب» را انتخاب کن.`
+                  : `برای این انتخاب دست‌کم ${faNum(MIN_POOL_QUIZ)} سؤال لازم است — محدودهٔ دیگری را انتخاب کن.`}
+              </div>
+            )}
+
+            {bestVal !== null && (
+              <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+                <Trophy size={12} />
+                بهترین امتیاز ({modeName(mode)}{tapMode ? " · تپ ساده" : ""}): {faNum(bestVal)}
+              </Badge>
+            )}
+
+            <Button size="lg" className="h-12 w-full gap-2 text-base" disabled={!poolOk} onClick={start}>
+              <Play size={18} />
+              شروع مأموریت
             </Button>
-            <Button variant="outline" className="h-11" onClick={() => setPhase("setup")}>
-              تنظیمات
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+        {/* فاز G2-e — آموزش یک‌بارنمایش در اولین ورود */}
+        <TutorialOverlay
+          game={GAME_KEY}
+          steps={TUTORIAL_STEPS}
+          open={tutorialOpen}
+          onOpenChange={handleTutorialOpenChange}
+        />
+      </>
     );
   }
 
-  // ── Playing ──
+  // ── Done — فاز G2-e: صفحهٔ نتیجهٔ استاندارد کیت ──
+  if (phase === "done") {
+    // ستاره‌بندی per-game این بازی (طبق تسک): دقت ≥۹۰ → ۳ / ≥۷۰ → ۲ / بقیه ۱
+    const shots = correctCount + wrongCount;
+    const acc = shots > 0 ? Math.round((correctCount / shots) * 100) : 0;
+    const stars = acc >= 90 ? 3 : acc >= 70 ? 2 : 1;
+    return (
+      <ResultScreen
+        title="مأموریت تمام شد!"
+        stars={stars}
+        isRecord={isRecord}
+        errorCount={wrongList.length}
+        reviewItems={wrongList.map((w) => ({ front: w.label, back: w.sub ?? "" }))}
+        stats={[
+          {
+            label: "امتیاز",
+            value: faNum(finalScore),
+            icon: <Star size={16} className="text-amber-500" />,
+          },
+          {
+            label: "دقت",
+            value: `${faNum(acc)}٪`,
+            icon: <TargetIcon size={16} className="text-emerald-500" />,
+          },
+          {
+            label: "زمان",
+            value: fmtTime(elapsed),
+            icon: <Timer size={16} className="text-teal-500" />,
+          },
+        ]}
+        onReplay={start}
+        onExit={() => setPhase("setup")}
+        exitLabel="تنظیمات"
+      />
+    );
+  }
+
+  // ── Playing — فاز G2-e: شِل استاندارد کیت + فریز حلقهٔ R3F حین توقف ──
   const qTime = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
   const timePct = Math.max(0, Math.min(100, (timeLeft / qTime) * 100));
+  const qualityLow = quality === "low";
   return (
-    <div role="group" aria-label="بازی شوتر آموزشی سه‌بعدی" className="mx-auto max-w-3xl space-y-3 rise-in">
-      {/* نوار وضعیت */}
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge key={score} variant="secondary" className="match-pop gap-1.5 px-2.5 py-1 text-[13px] font-black">
-          <Star size={13} className="text-amber-500" />
-          {faNum(score)}
-        </Badge>
-        {combo >= 2 ? (
-          <Badge
-            variant="outline"
-            className="gap-1.5 border-amber-500/50 bg-amber-500/10 px-2.5 py-1 text-[13px] font-black text-amber-600 dark:text-amber-400"
-          >
-            <Flame size={13} />
-            ×{faNum(combo)}
-          </Badge>
-        ) : (
-          <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px] text-muted-foreground">
-            <Zap size={12} />
-            کمبو ×۱
-          </Badge>
-        )}
-        <span role="img" aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`} className="flex items-center gap-1">
-          {Array.from({ length: HEARTS }, (_, i) => (
-            <Heart
-              key={i}
-              size={15}
-              fill={i < hearts ? "currentColor" : "none"}
-              className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
-            />
-          ))}
-        </span>
-        <span className="ms-auto text-[11px] font-bold text-muted-foreground">
-          ⏱ {faNum(Math.ceil(timeLeft))} ثانیه
-        </span>
-        <Button variant="outline" size="sm" className="h-9 gap-1.5 text-[12px]" onClick={quit}>
-          پایان دور
-        </Button>
-      </div>
-
-      {/* میدان سه‌بعدی */}
-      <div
-        ref={wrapRef}
-        className="relative h-[60vh] max-h-[580px] min-h-[400px] touch-none overflow-hidden rounded-2xl border bg-[#062e24] shadow-lg"
-      >
-        <Canvas
-          dpr={weak ? [1, 1] : [1, 1.75]}
-          camera={{ fov: 72, near: 0.1, far: 60, position: [0, 1.7, 7] }}
-          gl={{ antialias: !weak, powerPreference: "high-performance" }}
-        >
-          <Rig bridge={bridge} />
-          <Arena weak={weak} />
-          {q?.targets.map((t) => (
-            <Target key={`q${q.seq}-${t.id}`} spec={t} registry={meshRegistry} bridge={bridge} />
-          ))}
-          <Burst apiRef={burstApi} count={weak ? BURST_WEAK : BURST_FULL} />
-          <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
-        </Canvas>
-
-        {/* سؤال — HUD بالای میدان */}
-        {q && (
-          <div className="pointer-events-none absolute inset-x-3 top-3 z-10">
-            <div className="mx-auto max-w-lg rounded-2xl border bg-background/85 p-3 text-center shadow-lg backdrop-blur">
-              <p className="text-[10px] font-bold text-muted-foreground">{q.promptFa}</p>
-              <p
-                dir={q.ltr ? "ltr" : "rtl"}
+    <>
+      <GameShell
+        title="شوتر آموزشی"
+        icon={<Crosshair size={18} />}
+        stats={
+          <>
+            <Badge key={score} variant="secondary" className="match-pop gap-1.5 px-2.5 py-1 text-[13px] font-black">
+              <Star size={13} className="text-amber-500" />
+              {faNum(score)}
+            </Badge>
+            {combo >= 2 ? (
+              <Badge
+                key={combo}
+                variant="outline"
                 className={cn(
-                  "mt-1 font-black leading-6",
-                  q.ltr ? "font-en text-[15px]" : "text-[17px]",
+                  "gap-1.5 border-amber-500/50 bg-amber-500/10 px-2.5 py-1 text-[13px] font-black text-amber-600 dark:text-amber-400",
+                  // فاز G2-e — افکت بصری واحد بج کمبو (کیت) + pulse ساده با گارد reduced-motion
+                  COMBO_FIRE_CLASS,
+                  "animate-pulse motion-reduce:animate-none",
                 )}
               >
-                {q.promptMain}
-              </p>
-              {q.promptSub && <p className="mt-0.5 text-[10px] text-muted-foreground">{q.promptSub}</p>}
-              {/* نوار زمان */}
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-                <div
-                  className={cn(
-                    "h-full rounded-full transition-[width] duration-200",
-                    timePct > 50 ? "bg-emerald-500" : timePct > 25 ? "bg-amber-500" : "bg-red-500",
-                  )}
-                  style={{ width: `${timePct}%` }}
+                <Flame size={13} />
+                ×{faNum(combo)}
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px] text-muted-foreground">
+                <Zap size={12} />
+                کمبو ×۱
+              </Badge>
+            )}
+            <span
+              role="img"
+              aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`}
+              className="flex items-center gap-1"
+            >
+              {Array.from({ length: HEARTS }, (_, i) => (
+                <Heart
+                  key={i}
+                  size={15}
+                  fill={i < hearts ? "currentColor" : "none"}
+                  className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
                 />
+              ))}
+            </span>
+            <span className="text-[11px] font-bold text-muted-foreground">
+              ⏱ {faNum(Math.ceil(timeLeft))} ثانیه
+            </span>
+          </>
+        }
+        liveMsg={liveMsg}
+        paused={paused}
+        onPauseToggle={togglePause}
+        muted={muted}
+        onMuteToggle={() => setMuted(toggleSoundMuted())}
+        onHelp={handleHelp}
+        onExit={handleExitClick}
+        exitLabel="پایان دور"
+      >
+        <div className="relative">
+          <div
+            ref={wrapRef}
+            role="group"
+            aria-label="میدان سه‌بعدی شوتر آموزشی"
+            className={cn(
+              "relative h-[60vh] max-h-[580px] min-h-[400px] touch-none overflow-hidden rounded-2xl border bg-[#062e24] shadow-lg",
+              // فاز G2-e — حین توقف صحنه تار و غیرقابل‌کلیک (الگوی flappy)
+              paused && "pointer-events-none blur-sm",
+            )}
+            aria-hidden={paused}
+          >
+            <Canvas
+              // فاز G2-e — فریز واقعی حلقهٔ R3F حین توقف: frameloop "never" معادل
+              // cancelAnimationFrame و بازگشت به "always" معادل resumeLoop الگوی flappy است.
+              frameloop={paused ? "never" : "always"}
+              // فاز G2-e — کیفیت سبک: dpr پایین‌تر؛ عادی: رفتار فعلی (با ملاحظهٔ دستگاه ضعیف)
+              dpr={qualityLow ? [0.7, 1] : weak ? [1, 1] : [1, 1.75]}
+              camera={{ fov: 72, near: 0.1, far: 60, position: [0, 1.7, 7] }}
+              gl={{ antialias: qualityLow ? false : !weak, powerPreference: "high-performance" }}
+              // سایه‌ها در هر دو کیفیت off — سبک همیشه و عادی همان رفتار فعلی صحنه (سقف draw-call)
+              shadows={false}
+            >
+              <Rig bridge={bridge} />
+              <Arena deco={qualityLow ? DECO_LOW : weak ? 8 : 14} />
+              {q?.targets.map((t) => (
+                <Target key={`q${q.seq}-${t.id}`} spec={t} registry={meshRegistry} bridge={bridge} />
+              ))}
+              <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
+              <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
+            </Canvas>
+
+            {/* سؤال — HUD بالای میدان */}
+            {q && (
+              <div className="pointer-events-none absolute inset-x-3 top-3 z-10">
+                <div className="mx-auto max-w-lg rounded-2xl border bg-background/85 p-3 text-center shadow-lg backdrop-blur">
+                  <p className="text-[10px] font-bold text-muted-foreground">{q.promptFa}</p>
+                  <p
+                    dir={q.ltr ? "ltr" : "rtl"}
+                    className={cn(
+                      "mt-1 font-black leading-6",
+                      q.ltr ? "font-en text-[15px]" : "text-[17px]",
+                    )}
+                  >
+                    {q.promptMain}
+                  </p>
+                  {q.promptSub && <p className="mt-0.5 text-[10px] text-muted-foreground">{q.promptSub}</p>}
+                  {/* نوار زمان */}
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={cn(
+                        "h-full rounded-full transition-[width] duration-200",
+                        timePct > 50 ? "bg-emerald-500" : timePct > 25 ? "bg-amber-500" : "bg-red-500",
+                      )}
+                      style={{ width: `${timePct}%` }}
+                    />
+                  </div>
+                </div>
               </div>
+            )}
+
+            {/* رتیکل — فقط در حالت شلیک دسکتاپ/لمس‌ندار */}
+            {!tapMode && (
+              <div
+                aria-hidden
+                className={cn(
+                  "pointer-events-none absolute start-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transition-opacity",
+                  locked ? "opacity-100" : isCoarse ? "opacity-0" : "opacity-60",
+                )}
+              >
+                <span className="relative block h-7 w-7">
+                  <span className="absolute inset-0 rounded-full border-2 border-white/80 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                  <span className="absolute start-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400" />
+                </span>
+              </div>
+            )}
+
+            {/* راهنمای کنترل */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 text-center">
+              <span className="rounded-full bg-black/45 px-3 py-1 text-[10px] text-white/90 backdrop-blur">
+                {tapMode
+                  ? isCoarse
+                    ? "تپ روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
+                    : "کلیک روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
+                  : isCoarse
+                    ? "بکش تا نگاه کنی · تپ روی هدف = شلیک"
+                    : locked
+                      ? "حرکت موس = نشانه‌گیری · کلیک = شلیک"
+                      : "برای شروع نشانه‌گیری کلیک کن (Pointer Lock)"}
+              </span>
             </div>
           </div>
-        )}
 
-        {/* رتیکل — فقط در حالت شلیک دسکتاپ/لمس‌ندار */}
-        {!tapMode && (
-          <div
-            aria-hidden
-            className={cn(
-              "pointer-events-none absolute start-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transition-opacity",
-              locked ? "opacity-100" : isCoarse ? "opacity-0" : "opacity-60",
-            )}
-          >
-            <span className="relative block h-7 w-7">
-              <span className="absolute inset-0 rounded-full border-2 border-white/80 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-              <span className="absolute start-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400" />
-            </span>
-          </div>
-        )}
-
-        {/* راهنمای کنترل */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 text-center">
-          <span className="rounded-full bg-black/45 px-3 py-1 text-[10px] text-white/90 backdrop-blur">
-            {tapMode
-              ? isCoarse
-                ? "تپ روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
-                : "کلیک روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
-              : isCoarse
-                ? "بکش تا نگاه کنی · تپ روی هدف = شلیک"
-                : locked
-                  ? "حرکت موس = نشانه‌گیری · کلیک = شلیک"
-                  : "برای شروع نشانه‌گیری کلیک کن (Pointer Lock)"}
-          </span>
+          {/* فاز G2-e — اورلی توقف (الگوی پایلوت memory/flappy): صحنهٔ تار پشت آن فریز است */}
+          {paused && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <Pause size={26} />
+              </span>
+              <p className="text-sm font-black">بازی متوقف شد</p>
+              <Button onClick={resume} className="h-11 gap-2">
+                <Play size={16} />
+                ادامهٔ بازی
+              </Button>
+            </div>
+          )}
         </div>
-      </div>
 
-      <p className="text-center text-[11px] leading-5 text-muted-foreground">
-        شلیک درست +{faNum(SHOOT_BASE)} امتیاز و هر حلقهٔ کمبو +{faNum(COMBO_STEP)}تا سقف ×{faNum(COMBO_CAP + 1)} —
-        پاسخ‌های غلط به صف «مرور هوشمند» هم می‌روند.
-      </p>
-    </div>
+        <p className="text-center text-[11px] leading-5 text-muted-foreground">
+          شلیک درست +{faNum(SHOOT_BASE)} امتیاز و هر حلقهٔ کمبو +{faNum(COMBO_STEP)}تا سقف ×{faNum(COMBO_CAP + 1)} —
+          پاسخ‌های غلط به صف «مرور هوشمند» هم می‌روند.
+        </p>
+      </GameShell>
+      {/* فاز G2-e — راهنمای دکمهٔ شِل (حین صحنه با توقف باز می‌شود) */}
+      <TutorialOverlay
+        game={GAME_KEY}
+        steps={TUTORIAL_STEPS}
+        open={tutorialOpen}
+        onOpenChange={handleTutorialOpenChange}
+      />
+      {/* فاز G2-e — نگهبان خروج استاندارد کیت (حین دور با پیشرفت) */}
+      <GameExitGuard
+        open={exitAsk}
+        onOpenChange={(o) => {
+          setExitAskSafe(o);
+          // انصراف از خروج (Esc/کلیک بیرون/«نه») → صحنه از همان‌جا ادامه یابد
+          if (!o) resume();
+        }}
+        onConfirm={() => {
+          // فاز G2-e — رهاکردن دور نیمه‌کاره + تله‌متری
+          sessionRef.current?.abandon("exit");
+          stopSpeaking();
+          overRef.current = true;
+          clearTimers();
+          setExitAskSafe(false);
+          resume();
+          setPhase("setup");
+        }}
+      />
+    </>
   );
 }

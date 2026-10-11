@@ -1,0 +1,900 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * بازی «دوئل دونفره» (Same-device Duel) — فاز ۴ نقشه راه ویژن‌وان.
+     5→ *
+     6→ * یک صفحه، دو بازیکن، همان سؤال‌ها — رو در رو:
+     7→ * - Setup: نام دو بازیکن + تعداد دور (۵/۷/۹) + دسته + محزودهٔ درس + Badge رکورد
+     8→ *   «بیشترین برد دور بازیکن ۱» (اسکوپ درس|all:تعداد دور).
+     9→ * - نیمهٔ بالا = بازیکن ۱ (emerald)، نیمهٔ پایین = بازیکن ۲ (amber)؛ وسط، نوار سؤال
+    10→ *   مشترک با Badge شمارهٔ دور و تایمر ۱۰ ثانیه‌ای هر دور (نوار width).
+    11→ * - هر نیمه ۴ دکمهٔ گزینه دارد؛ ترتیب گزینه‌ها بین دو نیمه shuffle متفاوت است تا
+    12→ *   رقیب نتواند از جای انگشت دیگری تقلب کند.
+    13→ * - هر بازیکن یک‌بار پاسخ می‌دهد؛ دور وقتی داوری می‌شود که هر دو پاسخ بدهند یا وقت
+    14→ *   تمام شود (بی‌پاسخ = غلط). هر دو درست → سریع‌تر برنده؛ یکی درست → همان؛ هیچ‌کدام
+    15→ *   → تساوی بدون امتیاز. نتیجهٔ دور ~۱.۲ ثانیه نمایش داده می‌شود و دور بعد می‌آید.
+    16→ * - واژه‌های غلط‌زدهٔ واژگانی (فقط وقتی بازیکن واقعاً گزینه‌ای زده باشد) با
+    17→ *   seedReviewFromQuiz — متن گزینهٔ درست = خود واژهٔ انگلیسی — به صف مرور برمی‌گردند.
+    18→ * - پایان دورها: صفحهٔ برنده + جدول امتیاز (برد دور / پاسخ درست / دقت) + «دوئل جدید» و «تنظیمات».
+    19→ * - پایان: touchStreak + recordStudySession + bumpPlays + saveAttempt (total = تعداد دور،
+    20→ *   correct = دورهای بردهٔ بازیکن ۱، detail {p1,p2,p1Name,p2Name,winner}) + saveBest
+    21→ *   {score} = بیشترین برد دور بازیکن ۱ با اسکوپ `${درس|all}:${تعداد دور}`.
+    22→ *
+    23→ * نکتهٔ تایمر: interval هر دور مالک شمارش است؛ مقدار واقعی در timeRef (با شروع هر دور
+    24→ * ریست می‌شود) و setTimeLeft فقط نمایش را همگام نگه می‌دارد. داوریِ هر دور دقیقاً
+    25→ * یک‌بار با judgedRef قفل می‌شود؛ زنجیرهٔ «نمایش نتیجه → دور بعد» در timersRef است و
+    26→ * در انصراف/unmount کامل پاک می‌شود (الگوی react-hooks v6: صفر setState در بدنهٔ effect).
+    27→ */
+    28→
+    29→import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    30→import {
+    31→  Check,
+    32→  Clock,
+    33→  Crown,
+    34→  Play,
+    35→  RotateCcw,
+    36→  Sparkles,
+    37→  Swords,
+    38→  Trophy,
+    39→  X,
+    40→} from "lucide-react";
+    41→import { Button } from "@/components/ui/button";
+    42→import { Card, CardContent } from "@/components/ui/card";
+    43→import { Badge } from "@/components/ui/badge";
+    44→import { Input } from "@/components/ui/input";
+    45→import { cn } from "@/lib/utils";
+    46→import { toast } from "sonner";
+    47→import type { QuizQuestionSeed } from "@/data/types";
+    48→import { useBook, useBookData } from "@/lib/book-context";
+    49→import { seedReviewFromQuiz } from "@/lib/srs-store";
+    50→import { touchStreak } from "@/lib/streak-store";
+    51→import { recordStudySession } from "@/lib/goal-store";
+    52→import {
+    53→  faNum,
+    54→  loadBest,
+    55→  saveBest,
+    56→  bumpPlays,
+    57→  saveAttempt,
+    58→  pickUnique,
+    59→  shuffle,
+    60→  subscribeGameData,
+    61→} from "./shared";
+    62→
+    63→// ─── ثابت‌ها و کمکی‌ها ───
+    64→
+    65→const GAME_KEY = "duel";
+    66→const ALL_LESSON = -1;
+    67→/** ثانیهٔ وقت هر دور */
+    68→const ROUND_TIME = 10;
+    69→const ROUNDS = [5, 7, 9] as const;
+    70→/** مدت نمایش نتیجهٔ هر دور (میلی‌ثانیه) */
+    71→const RESULT_MS = 1200;
+    72→/** ترتیب پایهٔ گزینه‌ها — برای هر نیمه جداگانه شافل می‌شود */
+    73→const BASE_ORDER = [0, 1, 2, 3];
+    74→
+    75→type Phase = "setup" | "playing" | "done";
+    76→type CatKey = "all" | "vocabulary" | "grammar";
+    77→/** برندهٔ دور: ۰ = بازیکن ۱، ۱ = بازیکن ۲، ‎-۱ = تساوی */
+    78→type RoundWinner = 0 | 1 | -1;
+    79→
+    80→/** شکل رکورد شخصی این بازی — اسکوپ: درس|all:تعداد دور */
+    81→interface BestRecord {
+    82→  score: number;
+    83→}
+    84→
+    85→/** نتیجهٔ داوری یک دور */
+    86→interface RoundOutcome {
+    87→  c1: boolean;
+    88→  c2: boolean;
+    89→  winner: RoundWinner;
+    90→}
+    91→
+    92→/** پیکربندی مسابقه — آینهٔ ref برای callbackهای تایمر */
+    93→interface DuelConfig {
+    94→  lesson: number;
+    95→  rounds: number;
+    96→  p1: string;
+    97→  p2: string;
+    98→}
+    99→
+   100→function lessonLabel(l: number): string {
+   101→  return l === 0 ? "جمع‌بندی" : `درس ${faNum(l)}`;
+   102→}
+   103→
+   104→export function DuelGame() {
+   105→  const data = useBookData();
+   106→  const { bookId } = useBook();
+   107→  // بازی فقط داخل کتاب فعال رندر می‌شود (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   108→  const activeBookId: string = bookId ?? "";
+   109→
+   110→  const [phase, setPhase] = useState<Phase>("setup");
+   111→  const [p1Name, setP1Name] = useState("بازیکن ۱");
+   112→  const [p2Name, setP2Name] = useState("بازیکن ۲");
+   113→  const [rounds, setRounds] = useState<number>(7);
+   114→  const [lesson, setLesson] = useState<number>(ALL_LESSON);
+   115→  const [cat, setCat] = useState<CatKey>("all");
+   116→
+   117→  // ── stateهای حین بازی ──
+   118→  const [q, setQ] = useState<QuizQuestionSeed | null>(null);
+   119→  const [roundNum, setRoundNum] = useState(0);
+   120→  const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
+   121→  const [p1Order, setP1Order] = useState<number[]>(BASE_ORDER);
+   122→  const [p2Order, setP2Order] = useState<number[]>(BASE_ORDER);
+   123→  /** گزینهٔ انتخابی هر بازیکن بر اساس اندیس اصلی q.options (null = هنوز پاسخ نداده) */
+   124→  const [p1Pick, setP1Pick] = useState<number | null>(null);
+   125→  const [p2Pick, setP2Pick] = useState<number | null>(null);
+   126→  /** نتیجهٔ داوری دور جاری — null یعنی هنوز در حال بازی */
+   127→  const [result, setResult] = useState<RoundOutcome | null>(null);
+   128→  const [wins1, setWins1] = useState(0);
+   129→  const [wins2, setWins2] = useState(0);
+   130→  /** پاسخ‌های درست هر بازیکن (برای دقت — با تعداد بردها یکی نیست) */
+   131→  const [correct1, setCorrect1] = useState(0);
+   132→  const [correct2, setCorrect2] = useState(0);
+   133→
+   134→  // ── stateهای فاز done ──
+   135→  const [winner, setWinner] = useState<RoundWinner>(-1);
+   136→  const [isRecord, setIsRecord] = useState(false);
+   137→
+   138→  // ── refs — منبع حقیقت منطق بازی (همهٔ callbackهای تایمر از این‌ها می‌خوانند) ──
+   139→  const qRef = useRef<QuizQuestionSeed | null>(null);
+   140→  const deckRef = useRef<QuizQuestionSeed[]>([]);
+   141→  const qiRef = useRef(0);
+   142→  /** شمارهٔ دور نمایشی (۱-مبنا) */
+   143→  const roundNoRef = useRef(0);
+   144→  /** تایمر دور — مالک واقعی زمان (با شروع هر دور ریست می‌شود) */
+   145→  const timeRef = useRef(ROUND_TIME);
+   146→  /** شروع دور برای محاسبهٔ سرعت پاسخ هر بازیکن */
+   147→  const roundStartRef = useRef(0);
+   148→  const p1PickRef = useRef<number | null>(null);
+   149→  const p2PickRef = useRef<number | null>(null);
+   150→  /** زمان پاسخ (میلی‌ثانیه از شروع دور) — ملاک برنده در «هر دو درست» */
+   151→  const p1MsRef = useRef(0);
+   152→  const p2MsRef = useRef(0);
+   153→  const p1OrderRef = useRef<number[]>(BASE_ORDER);
+   154→  const p2OrderRef = useRef<number[]>(BASE_ORDER);
+   155→  /** قفل داوری — هر دور دقیقاً یک‌بار داوری می‌شود */
+   156→  const judgedRef = useRef(false);
+   157→  /** مسابقه تمام/لغو شده؟ */
+   158→  const overRef = useRef(false);
+   159→  const wins1Ref = useRef(0);
+   160→  const wins2Ref = useRef(0);
+   161→  const corr1Ref = useRef(0);
+   162→  const corr2Ref = useRef(0);
+   163→  const configRef = useRef<DuelConfig>({ lesson: ALL_LESSON, rounds: 7, p1: "بازیکن ۱", p2: "بازیکن ۲" });
+   164→  /** لحظهٔ شروع مسابقه برای محاسبهٔ duration */
+   165→  const startAtRef = useRef(0);
+   166→  /** زنجیرهٔ همهٔ setTimeoutها (نمایش نتیجه → دور بعد) — در انصراف/unmount پاک می‌شود */
+   167→  const timersRef = useRef<number[]>([]);
+   168→  /** آخرین نسخهٔ judge برای فراخوانی تازه از تایمر (الگوی latest-ref) */
+   169→  const judgeRef = useRef<(() => void) | null>(null);
+   170→
+   171→  // ── داده‌های مشتق ──
+   172→  const pool = useMemo(
+   173→    () =>
+   174→      data.quiz.seed.filter(
+   175→        (item) =>
+   176→          (lesson === ALL_LESSON || item.lesson === lesson) &&
+   177→          (cat === "all" || item.category === cat),
+   178→      ),
+   179→    [data.quiz.seed, lesson, cat],
+   180→  );
+   181→
+   182→  const lessons = useMemo(
+   183→    () => [...new Set(data.quiz.seed.map((item) => item.lesson))].sort((a, b) => a - b),
+   184→    [data.quiz.seed],
+   185→  );
+   186→
+   187→  /** تعداد واقعی سؤال هر چیپ محدوده (با اعمال دستهٔ فعال) */
+   188→  const countFor = (l: number) =>
+   189→    data.quiz.seed.filter(
+   190→      (item) => (l === ALL_LESSON || item.lesson === l) && (cat === "all" || item.category === cat),
+   191→    ).length;
+   192→
+   193→  // رکورد «بیشترین برد دور بازیکن ۱» این اسکوپ — اسنپ‌شات عددی پایدار (الگوی match-game)
+   194→  const bestScope = `${lesson === ALL_LESSON ? "all" : lesson}:${rounds}`;
+   195→  const best = useSyncExternalStore(
+   196→    subscribeGameData,
+   197→    () => loadBest<BestRecord>(activeBookId, GAME_KEY, bestScope)?.score ?? null,
+   198→    () => null,
+   199→  );
+   200→
+   201→  // نام‌های نهایی (پیش‌فرض اگر خالی باشند) — محاسبهٔ خالص در رندر
+   202→  const name1 = p1Name.trim() || "بازیکن ۱";
+   203→  const name2 = p2Name.trim() || "بازیکن ۲";
+   204→
+   205→  // ── مدیریت تایمرها ──
+   206→
+   207→  /** زمان‌بندی داخل زنجیرهٔ ref‌شده — بعد از اجرا خودش را از فهرست حذف می‌کند */
+   208→  function later(fn: () => void, ms: number): void {
+   209→    const t = window.setTimeout(() => {
+   210→      timersRef.current = timersRef.current.filter((x) => x !== t);
+   211→      fn();
+   212→    }, ms);
+   213→    timersRef.current.push(t);
+   214→  }
+   215→
+   216→  function clearTimers(): void {
+   217→    for (const t of timersRef.current) window.clearTimeout(t);
+   218→    timersRef.current = [];
+   219→  }
+   220→
+   221→  // ── جریان بازی ──
+   222→
+   223→  /** شروع یک دور: سؤال بعدی + دو ترتیب گزینهٔ متفاوت + ریست تایمر و قفل‌ها */
+   224→  function startRound(idx: number): void {
+   225→    let deck = deckRef.current;
+   226→    let i = idx;
+   227→    if (i >= deck.length) {
+   228→      // استخر تمام شد → از نو شافل و ادامه (چرخهٔ بی‌پایان مثل speed-quiz)
+   229→      deck = shuffle(deck);
+   230→      deckRef.current = deck;
+   231→      i = 0;
+   232→    }
+   233→    qiRef.current = i;
+   234→    const nq = deck[i];
+   235→    qRef.current = nq;
+   236→    // ترتیب گزینه‌ها بین دو نیمه باید متفاوت باشد
+   237→    const o1 = shuffle(BASE_ORDER);
+   238→    let o2 = shuffle(BASE_ORDER);
+   239→    let tries = 0;
+   240→    while (o2.join(",") === o1.join(",") && tries < 8) {
+   241→      o2 = shuffle(BASE_ORDER);
+   242→      tries += 1;
+   243→    }
+   244→    p1OrderRef.current = o1;
+   245→    p2OrderRef.current = o2;
+   246→    p1PickRef.current = null;
+   247→    p2PickRef.current = null;
+   248→    p1MsRef.current = 0;
+   249→    p2MsRef.current = 0;
+   250→    judgedRef.current = false;
+   251→    timeRef.current = ROUND_TIME;
+   252→    roundStartRef.current = Date.now();
+   253→    roundNoRef.current += 1;
+   254→    setQ(nq);
+   255→    setP1Order(o1);
+   256→    setP2Order(o2);
+   257→    setP1Pick(null);
+   258→    setP2Pick(null);
+   259→    setResult(null);
+   260→    setTimeLeft(ROUND_TIME);
+   261→    setRoundNum(roundNoRef.current);
+   262→  }
+   263→
+   264→  /** داوری دور — دقیقاً یک‌بار (قفل judgedRef): هر دو درست → سریع‌تر، یکی درست → همان، هیچ‌کدام → تساوی */
+   265→  function judge(): void {
+   266→    if (judgedRef.current || !qRef.current) return;
+   267→    judgedRef.current = true;
+   268→    const nq = qRef.current;
+   269→    const a1 = p1PickRef.current;
+   270→    const a2 = p2PickRef.current;
+   271→    const c1 = a1 !== null && a1 === nq.answer;
+   272→    const c2 = a2 !== null && a2 === nq.answer;
+   273→    let w: RoundWinner;
+   274→    if (c1 && c2) w = p1MsRef.current <= p2MsRef.current ? 0 : 1;
+   275→    else if (c1) w = 0;
+   276→    else if (c2) w = 1;
+   277→    else w = -1;
+   278→    // واژه‌های غلط‌زدهٔ واژگانی به صف مرور برمی‌گردند (گزینهٔ درست = خود واژهٔ انگلیسی)
+   279→    if (nq.category === "vocabulary") {
+   280→      if (a1 !== null && !c1) seedReviewFromQuiz(nq.options[nq.answer]);
+   281→      if (a2 !== null && !c2) seedReviewFromQuiz(nq.options[nq.answer]);
+   282→    }
+   283→    if (w === 0) wins1Ref.current += 1;
+   284→    else if (w === 1) wins2Ref.current += 1;
+   285→    if (c1) corr1Ref.current += 1;
+   286→    if (c2) corr2Ref.current += 1;
+   287→    setWins1(wins1Ref.current);
+   288→    setWins2(wins2Ref.current);
+   289→    setCorrect1(corr1Ref.current);
+   290→    setCorrect2(corr2Ref.current);
+   291→    setResult({ c1, c2, winner: w });
+   292→    // نمایش نتیجه ~۱.۲ ثانیه → دور بعد یا پایان مسابقه
+   293→    later(() => {
+   294→      if (overRef.current) return;
+   295→      if (qiRef.current + 1 >= configRef.current.rounds) finish();
+   296→      else startRound(qiRef.current + 1);
+   297→    }, RESULT_MS);
+   298→  }
+   299→
+   300→  /** ثبت پاسخ یک بازیکن (displayIdx = جای گزینه در نیمهٔ او؛ به اندیس اصلی ترجمه می‌شود) */
+   301→  function pick(player: 0 | 1, displayIdx: number): void {
+   302→    if (overRef.current || judgedRef.current || !qRef.current) return;
+   303→    const order = player === 0 ? p1OrderRef.current : p2OrderRef.current;
+   304→    const orig = order[displayIdx];
+   305→    if (orig === undefined) return;
+   306→    if (player === 0) {
+   307→      if (p1PickRef.current !== null) return;
+   308→      p1PickRef.current = orig;
+   309→      p1MsRef.current = Math.max(0, Date.now() - roundStartRef.current);
+   310→      setP1Pick(orig);
+   311→    } else {
+   312→      if (p2PickRef.current !== null) return;
+   313→      p2PickRef.current = orig;
+   314→      p2MsRef.current = Math.max(0, Date.now() - roundStartRef.current);
+   315→      setP2Pick(orig);
+   316→    }
+   317→    // هر دو پاسخ دادند؟ دور همان‌جا داوری می‌شود
+   318→    if (p1PickRef.current !== null && p2PickRef.current !== null) judge();
+   319→  }
+   320→
+   321→  /** پایان مسابقه: آمار، Attempt، رکورد و صفحهٔ نتیجه */
+   322→  function finish(): void {
+   323→    if (overRef.current) return;
+   324→    overRef.current = true;
+   325→    judgedRef.current = true;
+   326→    clearTimers();
+   327→    const cf = configRef.current;
+   328→    const w1 = wins1Ref.current;
+   329→    const w2 = wins2Ref.current;
+   330→    const finalWinner: RoundWinner = w1 > w2 ? 0 : w2 > w1 ? 1 : -1;
+   331→    const spent = Math.max(1, Math.round((Date.now() - startAtRef.current) / 1000));
+   332→    touchStreak();
+   333→    recordStudySession();
+   334→    bumpPlays(activeBookId, GAME_KEY);
+   335→    saveAttempt(activeBookId, GAME_KEY, {
+   336→      lesson: cf.lesson === ALL_LESSON ? 0 : cf.lesson,
+   337→      total: cf.rounds,
+   338→      correct: w1,
+   339→      duration: spent,
+   340→      detail: { p1: w1, p2: w2, p1Name: cf.p1, p2Name: cf.p2, winner: finalWinner },
+   341→    });
+   342→    // رکورد: بیشترین برد دور بازیکن ۱ — اسکوپ درس|all:تعداد دور
+   343→    const scope = `${cf.lesson === ALL_LESSON ? "all" : cf.lesson}:${cf.rounds}`;
+   344→    const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+   345→    const rec = w1 > 0 && (prev === null || w1 > prev.score);
+   346→    if (rec) saveBest(activeBookId, GAME_KEY, scope, { score: w1 });
+   347→    setIsRecord(rec);
+   348→    setWinner(finalWinner);
+   349→    setPhase("done");
+   350→  }
+   351→
+   352→  /** شروع مسابقه — گارد استخر سؤال یکتا < تعداد دور */
+   353→  function start(): void {
+   354→    const uniq = pickUnique(pool, pool.length, (item) => item.text);
+   355→    if (uniq.length < rounds) {
+   356→      toast.error("سؤال یکتای کافی در این محدوده نیست — محدودهٔ دیگری را انتخاب کن");
+   357→      return;
+   358→    }
+   359→    clearTimers();
+   360→    deckRef.current = uniq;
+   361→    qiRef.current = 0;
+   362→    roundNoRef.current = 0;
+   363→    overRef.current = false;
+   364→    judgedRef.current = false;
+   365→    wins1Ref.current = 0;
+   366→    wins2Ref.current = 0;
+   367→    corr1Ref.current = 0;
+   368→    corr2Ref.current = 0;
+   369→    configRef.current = { lesson, rounds, p1: name1, p2: name2 };
+   370→    startAtRef.current = Date.now();
+   371→    timeRef.current = ROUND_TIME;
+   372→    setWins1(0);
+   373→    setWins2(0);
+   374→    setCorrect1(0);
+   375→    setCorrect2(0);
+   376→    setResult(null);
+   377→    setWinner(-1);
+   378→    setIsRecord(false);
+   379→    setPhase("playing");
+   380→    startRound(0);
+   381→  }
+   382→
+   383→  function quit(): void {
+   384→    overRef.current = true;
+   385→    clearTimers();
+   386→    setPhase("setup");
+   387→  }
+   388→
+   389→  // ── effectها ──
+   390→
+   391→  // آخرین نسخهٔ judge برای فراخوانی تازه از تایمر (الگوی latest-ref —
+   392→  // قاعدهٔ react-hooks/refs نوشتن ref در رندر را نمی‌پذیرد)
+   393→  useEffect(() => {
+   394→    judgeRef.current = judge;
+   395→  });
+   396→
+   397→  // تایمر هر دور — صفر شدن یعنی داوری فوری (بی‌پاسخ = غلط)؛ بدون setState مستقیم
+   398→  // در بدنهٔ effect (react-hooks v6) — شمارش واقعی در timeRef که با شروع هر دور ریست می‌شود
+   399→  // فاز G0-05 — گارد visibilitychange: در تب مخفی interval پاک می‌شود (شمارش دور می‌ایستد)
+   400→  // و در بازگشت با همان timeRef ادامه می‌یابد؛ زمانِ مخفی‌بودن به مبدأ سنجش سرعت پاسخ
+   401→  // (roundStartRef) و مدت کل مسابقه (startAtRef) هم اضافه نمی‌شود تا داوری «سریع‌تر» و
+   402→  // duration دست نخورد. بازگشت از bfcache با pageshow پوشش داده می‌شود؛ unmount همیشه پاک می‌کند.
+   403→  useEffect(() => {
+   404→    if (phase !== "playing") return;
+   405→    let iv: number | null = null;
+   406→    let hiddenAt = 0;
+   407→    const startTimer = () => {
+   408→      if (iv !== null) return;
+   409→      iv = window.setInterval(() => {
+   410→        if (timeRef.current > 0 && !judgedRef.current) {
+   411→          timeRef.current -= 1;
+   412→          setTimeLeft((t) => Math.max(0, t - 1));
+   413→        }
+   414→        if (timeRef.current <= 0) {
+   415→          judgeRef.current?.();
+   416→        }
+   417→      }, 1000);
+   418→    };
+   419→    const stopTimer = () => {
+   420→      if (iv !== null) {
+   421→        window.clearInterval(iv);
+   422→        iv = null;
+   423→      }
+   424→    };
+   425→    const onVis = () => {
+   426→      if (document.visibilityState === "hidden") {
+   427→        stopTimer();
+   428→        hiddenAt = Date.now();
+   429→      } else {
+   430→        startTimer();
+   431→        if (hiddenAt > 0) {
+   432→          const gap = Date.now() - hiddenAt;
+   433→          hiddenAt = 0;
+   434→          if (gap > 0) {
+   435→            // جبران زمان مخفی — فقط با تب‌سوییچ فعال می‌شود (کاربر عادی: بدون تغییر)
+   436→            roundStartRef.current += gap;
+   437→            startAtRef.current += gap;
+   438→          }
+   439→        }
+   440→      }
+   441→    };
+   442→    const onPageshow = (e: PageTransitionEvent) => {
+   443→      if (!e.persisted) return;
+   444→      stopTimer(); // interval تازه می‌شود تا تیک معوقِ دورهٔ انجماد یک‌جا نپرد
+   445→      if (document.visibilityState === "visible") onVis();
+   446→    };
+   447→    startTimer();
+   448→    document.addEventListener("visibilitychange", onVis);
+   449→    window.addEventListener("pageshow", onPageshow);
+   450→    return () => {
+   451→      stopTimer();
+   452→      document.removeEventListener("visibilitychange", onVis);
+   453→      window.removeEventListener("pageshow", onPageshow);
+   454→    };
+   455→  }, [phase]);
+   456→
+   457→  // پاک‌سازی کامل زنجیرهٔ تایمرها در unmount
+   458→  useEffect(
+   459→    () => () => {
+   460→      for (const t of timersRef.current) window.clearTimeout(t);
+   461→      timersRef.current = [];
+   462→    },
+   463→    [],
+   464→  );
+   465→
+   466→  const chipCls = (active: boolean) =>
+   467→    cn(
+   468→      "flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   469→      active
+   470→        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   471→        : "text-muted-foreground hover:bg-muted",
+   472→    );
+   473→
+   474→  // ── Setup ──
+   475→  if (phase === "setup") {
+   476→    return (
+   477→      <Card className="mx-auto max-w-xl rise-in">
+   478→        <CardContent className="space-y-6 p-6">
+   479→          <div className="flex items-center gap-3">
+   480→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   481→              <Swords size={22} />
+   482→            </span>
+   483→            <div>
+   484→              <h2 className="text-lg font-black">دوئل دونفره</h2>
+   485→              <p className="text-xs text-muted-foreground">رو در رو روی یک صفحه — هر دو هم‌زمان جواب می‌دهید!</p>
+   486→            </div>
+   487→          </div>
+   488→
+   489→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   490→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   491→            <p>
+   492→              هر دور {faNum(ROUND_TIME)} ثانیه وقت دارید؛ دور وقتی داوری می‌شود که هر دو جواب بدهید یا وقت تمام شود
+   493→              (بی‌پاسخ = غلط). اگر هر دو درست جواب بدهید، سریع‌تر برندهٔ دور است. ترتیب گزینه‌ها برای دو بازیکن فرق دارد!
+   494→            </p>
+   495→          </div>
+   496→
+   497→          <div>
+   498→            <p className="mb-2 text-[13px] font-bold">اسم بازیکن‌ها؟</p>
+   499→            <div className="grid grid-cols-2 gap-2">
+   500→              <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/5 px-3">
+   501→                <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500" aria-hidden="true" />
+   502→                <Input
+   503→                  value={p1Name}
+   504→                  onChange={(e) => setP1Name(e.target.value)}
+   505→                  aria-label="نام بازیکن ۱"
+   506→                  maxLength={18}
+   507→                  className="h-11 border-0 bg-transparent px-0 text-[13px] font-bold shadow-none focus-visible:ring-0"
+   508→                />
+   509→              </div>
+   510→              <div className="flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 px-3">
+   511→                <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-amber-500" aria-hidden="true" />
+   512→                <Input
+   513→                  value={p2Name}
+   514→                  onChange={(e) => setP2Name(e.target.value)}
+   515→                  aria-label="نام بازیکن ۲"
+   516→                  maxLength={18}
+   517→                  className="h-11 border-0 bg-transparent px-0 text-[13px] font-bold shadow-none focus-visible:ring-0"
+   518→                />
+   519→              </div>
+   520→            </div>
+   521→          </div>
+   522→
+   523→          <div>
+   524→            <p className="mb-2 text-[13px] font-bold">چند دور؟</p>
+   525→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب تعداد دور">
+   526→              {ROUNDS.map((r) => (
+   527→                <button
+   528→                  key={r}
+   529→                  type="button"
+   530→                  aria-pressed={rounds === r}
+   531→                  onClick={() => setRounds(r)}
+   532→                  className={chipCls(rounds === r)}
+   533→                >
+   534→                  {faNum(r)} دور
+   535→                </button>
+   536→              ))}
+   537→            </div>
+   538→          </div>
+   539→
+   540→          <div>
+   541→            <p className="mb-2 text-[13px] font-bold">کدام دسته؟</p>
+   542→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب دستهٔ سؤال">
+   543→              {(
+   544→                [
+   545→                  ["all", "همه"],
+   546→                  ["vocabulary", "واژگان"],
+   547→                  ["grammar", "گرامر"],
+   548→                ] as const
+   549→              ).map(([key, label]) => (
+   550→                <button
+   551→                  key={key}
+   552→                  type="button"
+   553→                  aria-pressed={cat === key}
+   554→                  onClick={() => setCat(key)}
+   555→                  className={chipCls(cat === key)}
+   556→                >
+   557→                  {label}
+   558→                </button>
+   559→              ))}
+   560→            </div>
+   561→          </div>
+   562→
+   563→          <div>
+   564→            <p className="mb-2 text-[13px] font-bold">محدوده؟</p>
+   565→            <div className="flex flex-wrap gap-2">
+   566→              <button
+   567→                type="button"
+   568→                aria-pressed={lesson === ALL_LESSON}
+   569→                onClick={() => setLesson(ALL_LESSON)}
+   570→                className={chipCls(lesson === ALL_LESSON)}
+   571→              >
+   572→                کل بانک ({faNum(countFor(ALL_LESSON))} سؤال)
+   573→              </button>
+   574→              {lessons.map((l) => (
+   575→                <button
+   576→                  key={l}
+   577→                  type="button"
+   578→                  aria-pressed={lesson === l}
+   579→                  onClick={() => setLesson(l)}
+   580→                  className={chipCls(lesson === l)}
+   581→                >
+   582→                  {lessonLabel(l)} ({faNum(countFor(l))})
+   583→                </button>
+   584→              ))}
+   585→            </div>
+   586→          </div>
+   587→
+   588→          {best !== null && (
+   589→            <Badge variant="outline" className="gap-1.5 border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+   590→              <Trophy size={12} />
+   591→              رکورد — بیشترین برد دور بازیکن ۱: {faNum(best)}
+   592→            </Badge>
+   593→          )}
+   594→
+   595→          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   596→            <Swords size={18} />
+   597→            شروع دوئل
+   598→          </Button>
+   599→        </CardContent>
+   600→      </Card>
+   601→    );
+   602→  }
+   603→
+   604→  // ── Done ──
+   605→  if (phase === "done") {
+   606→    const acc1 = rounds > 0 ? Math.round((correct1 / rounds) * 100) : 0;
+   607→    const acc2 = rounds > 0 ? Math.round((correct2 / rounds) * 100) : 0;
+   608→    const rows = [
+   609→      {
+   610→        name: name1,
+   611→        wins: wins1,
+   612→        correct: correct1,
+   613→        acc: acc1,
+   614→        isWin: winner === 0,
+   615→        avatarCls: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+   616→        rowCls: winner === 0 ? "border-emerald-500/50 bg-emerald-500/8" : "",
+   617→      },
+   618→      {
+   619→        name: name2,
+   620→        wins: wins2,
+   621→        correct: correct2,
+   622→        acc: acc2,
+   623→        isWin: winner === 1,
+   624→        avatarCls: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+   625→        rowCls: winner === 1 ? "border-amber-500/50 bg-amber-500/8" : "",
+   626→      },
+   627→    ];
+   628→    return (
+   629→      <Card className="mx-auto max-w-xl rise-in border-emerald-500/30">
+   630→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   631→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   632→            <Swords size={30} />
+   633→          </span>
+   634→          {winner === -1 ? (
+   635→            <h2 className="text-xl font-black">مساوی!</h2>
+   636→          ) : (
+   637→            <h2
+   638→              className={cn(
+   639→                "flex items-center gap-2 text-xl font-black",
+   640→                winner === 0 && "text-emerald-600 dark:text-emerald-400",
+   641→                winner === 1 && "text-amber-600 dark:text-amber-400",
+   642→              )}
+   643→            >
+   644→              <Crown size={22} className="text-amber-500" />
+   645→              {winner === 0 ? name1 : name2} برنده شد!
+   646→            </h2>
+   647→          )}
+   648→          {isRecord && (
+   649→            <Badge className="gap-1.5 bg-emerald-500 text-emerald-950 shadow-md shadow-emerald-500/30">
+   650→              <Trophy size={13} />
+   651→              رکورد جدید! بیشترین برد بازیکن ۱ 🏆
+   652→            </Badge>
+   653→          )}
+   654→          <p className="text-[11px] text-muted-foreground">نتیجهٔ {faNum(rounds)} دور دوئل</p>
+   655→
+   656→          {/* جدول امتیاز دو بازیکن */}
+   657→          <div className="w-full space-y-2">
+   658→            {rows.map((row, i) => (
+   659→              <div
+   660→                key={row.name + String(i)}
+   661→                className={cn("flex items-center gap-3 rounded-xl border bg-card p-3 text-right", row.rowCls)}
+   662→              >
+   663→                <span
+   664→                  className={cn(
+   665→                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[12px] font-black",
+   666→                    row.avatarCls,
+   667→                  )}
+   668→                >
+   669→                  {faNum(i + 1)}
+   670→                </span>
+   671→                <div className="min-w-0 flex-1">
+   672→                  <p className="flex items-center gap-1 truncate text-[13px] font-black">
+   673→                    {row.name}
+   674→                    {row.isWin && <Crown size={13} className="shrink-0 text-amber-500" aria-label="برنده" />}
+   675→                  </p>
+   676→                  <p className="text-[10px] text-muted-foreground">
+   677→                    {faNum(row.correct)} پاسخ درست از {faNum(rounds)} دور
+   678→                  </p>
+   679→                </div>
+   680→                <div className="text-center">
+   681→                  <p className="text-base font-black leading-none">{faNum(row.wins)}</p>
+   682→                  <p className="mt-1 text-[9px] text-muted-foreground">برد دور</p>
+   683→                </div>
+   684→                <div className="text-center">
+   685→                  <p className="text-base font-black leading-none">{faNum(row.acc)}٪</p>
+   686→                  <p className="mt-1 text-[9px] text-muted-foreground">دقت</p>
+   687→                </div>
+   688→              </div>
+   689→            ))}
+   690→          </div>
+   691→
+   692→          <div className="flex gap-2">
+   693→            <Button onClick={start} className="gap-2">
+   694→              <Play size={16} />
+   695→              دوئل جدید
+   696→            </Button>
+   697→            <Button variant="outline" onClick={() => setPhase("setup")}>
+   698→              <RotateCcw size={16} />
+   699→              تنظیمات
+   700→            </Button>
+   701→          </div>
+   702→        </CardContent>
+   703→      </Card>
+   704→    );
+   705→  }
+   706→
+   707→  // ── Playing ──
+   708→  if (!q) return null;
+   709→  const urgent = timeLeft <= 3;
+   710→  const pct = Math.max(0, Math.min(100, Math.round((timeLeft / ROUND_TIME) * 100)));
+   711→  const halves = [
+   712→    {
+   713→      player: 0 as const,
+   714→      name: name1,
+   715→      order: p1Order,
+   716→      pick: p1Pick,
+   717→      wins: wins1,
+   718→      avatarCls: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+   719→      pickCls: "border-emerald-500/60 bg-emerald-500/10",
+   720→      numCls: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+   721→    },
+   722→    {
+   723→      player: 1 as const,
+   724→      name: name2,
+   725→      order: p2Order,
+   726→      pick: p2Pick,
+   727→      wins: wins2,
+   728→      avatarCls: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+   729→      pickCls: "border-amber-500/60 bg-amber-500/10",
+   730→      numCls: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+   731→    },
+   732→  ];
+   733→  return (
+   734→    <div className="mx-auto flex max-w-xl flex-col gap-2.5 rise-in">
+   735→      {halves.map((h) => {
+   736→        const isCorrectOpt = (orig: number) => result !== null && orig === q.answer;
+   737→        const isMyWrongPick = (orig: number) =>
+   738→          result !== null && h.pick === orig && orig !== q.answer;
+   739→        return (
+   740→          <Card
+   741→            key={h.player}
+   742→            className={cn(
+   743→              "transition-colors",
+   744→              result?.winner === h.player && "border-emerald-500/60",
+   745→              result !== null && result.winner !== h.player && result.winner !== -1 && "border-destructive/40",
+   746→            )}
+   747→          >
+   748→            <CardContent className="space-y-2.5 p-3.5">
+   749→              {/* سربرگ نیمه: نام + برد دورها + نتیجهٔ دور */}
+   750→              <div className="flex items-center gap-2">
+   751→                <span
+   752→                  className={cn(
+   753→                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[12px] font-black",
+   754→                    h.avatarCls,
+   755→                  )}
+   756→                  aria-hidden="true"
+   757→                >
+   758→                  {faNum(h.player + 1)}
+   759→                </span>
+   760→                <p className="truncate text-[13px] font-black">{h.name}</p>
+   761→                <Badge variant="secondary" className="shrink-0 px-2 py-0.5 text-[10px] font-black">
+   762→                  {faNum(h.wins)} برد
+   763→                </Badge>
+   764→                <span className="mr-auto shrink-0">
+   765→                  {result &&
+   766→                    (result.winner === -1 ? (
+   767→                      <Badge
+   768→                        variant="outline"
+   769→                        className="border-muted-foreground/40 text-[10px] text-muted-foreground"
+   770→                      >
+   771→                        تساوی
+   772→                      </Badge>
+   773→                    ) : result.winner === h.player ? (
+   774→                      <Badge
+   775→                        variant="outline"
+   776→                        className="border-emerald-500/50 bg-emerald-500/10 text-[10px] text-emerald-600 dark:text-emerald-400"
+   777→                      >
+   778→                        دور را برد
+   779→                      </Badge>
+   780→                    ) : (
+   781→                      <Badge variant="destructive" className="text-[10px]">
+   782→                        باخت
+   783→                      </Badge>
+   784→                    ))}
+   785→                </span>
+   786→              </div>
+   787→
+   788→              {/* چهار گزینه — ترتیب مخصوص همین نیمه */}
+   789→              <div className="grid grid-cols-2 gap-2">
+   790→                {h.order.map((orig, i) => {
+   791→                  const pickedWaiting = result === null && h.pick === orig;
+   792→                  const dim = result !== null && !isCorrectOpt(orig) && !isMyWrongPick(orig);
+   793→                  const done = result !== null;
+   794→                  return (
+   795→                    <button
+   796→                      key={`${roundNum}-${h.player}-${i}`}
+   797→                      type="button"
+   798→                      disabled={done || h.pick !== null}
+   799→                      aria-label={`${h.name} — گزینهٔ ${faNum(i + 1)}`}
+   800→                      aria-pressed={pickedWaiting}
+   801→                      onClick={() => pick(h.player, i)}
+   802→                      className={cn(
+   803→                        "flex min-h-11 items-center gap-2 rounded-xl border bg-card px-3 py-1.5 text-right transition-all",
+   804→                        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+   805→                        !done && "hover:border-primary/50 hover:bg-muted/40",
+   806→                        pickedWaiting && h.pickCls,
+   807→                        isCorrectOpt(orig) && "border-emerald-500/60 bg-emerald-500/10",
+   808→                        isMyWrongPick(orig) && "border-destructive/60 bg-destructive/10",
+   809→                        dim && "opacity-50",
+   810→                      )}
+   811→                    >
+   812→                      <span
+   813→                        className={cn(
+   814→                          "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[11px] font-black",
+   815→                          h.numCls,
+   816→                        )}
+   817→                      >
+   818→                        {faNum(i + 1)}
+   819→                      </span>
+   820→                      <span dir="ltr" className="flex-1 font-en text-[13px] font-bold leading-6">
+   821→                        {q.options[orig]}
+   822→                      </span>
+   823→                      {isCorrectOpt(orig) && (
+   824→                        <Check size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
+   825→                      )}
+   826→                      {isMyWrongPick(orig) && <X size={15} className="shrink-0 text-destructive" />}
+   827→                    </button>
+   828→                  );
+   829→                })}
+   830→              </div>
+   831→            </CardContent>
+   832→          </Card>
+   833→        );
+   834→      })}
+   835→
+   836→      {/* نوار سؤال مشترک — وسط صفحه */}
+   837→      <Card className="border-teal-500/30">
+   838→        <CardContent className="space-y-2.5 p-3.5">
+   839→          <div className="flex flex-wrap items-center gap-1.5">
+   840→            <Badge variant="secondary" className="text-[11px] font-black">
+   841→              دور {faNum(roundNum)} از {faNum(rounds)}
+   842→            </Badge>
+   843→            <Badge
+   844→              variant="outline"
+   845→              className={cn(
+   846→                "gap-1 px-2 py-0.5 text-[11px] font-black",
+   847→                urgent && "border-destructive/60 bg-destructive/10 text-destructive",
+   848→              )}
+   849→            >
+   850→              <Clock size={12} />
+   851→              {faNum(timeLeft)} ثانیه
+   852→            </Badge>
+   853→            <Badge variant="outline" className="text-[10px] text-muted-foreground">
+   854→              {lessonLabel(q.lesson)}
+   855→            </Badge>
+   856→            <Badge variant="outline" className="text-[10px] text-muted-foreground">
+   857→              {q.level}
+   858→            </Badge>
+   859→            <Badge variant="outline" className="text-[10px] text-muted-foreground">
+   860→              {q.category === "vocabulary" ? "واژگان" : "گرامر"}
+   861→            </Badge>
+   862→            <div className="mr-auto">
+   863→              <Button
+   864→                variant="ghost"
+   865→                size="sm"
+   866→                onClick={quit}
+   867→                className="h-7 px-2 text-[11px] text-muted-foreground"
+   868→              >
+   869→                انصراف
+   870→              </Button>
+   871→            </div>
+   872→          </div>
+   873→
+   874→          <p dir="ltr" className="font-en text-[14px] font-bold leading-7">
+   875→            {q.text.replace(/_{3,}/g, ".....")}
+   876→          </p>
+   877→
+   878→          {/* تایمر ۱۰ ثانیه‌ای هر دور */}
+   879→          <div
+   880→            className="h-1.5 overflow-hidden rounded-full bg-muted"
+   881→            role="progressbar"
+   882→            aria-label="زمان باقی‌ماندهٔ دور"
+   883→            aria-valuenow={pct}
+   884→            aria-valuemin={0}
+   885→            aria-valuemax={100}
+   886→          >
+   887→            <div
+   888→              className={cn(
+   889→                "h-full rounded-full transition-all duration-1000 ease-linear",
+   890→                urgent ? "bg-destructive" : "bg-teal-500",
+   891→              )}
+   892→              style={{ width: `${pct}%` }}
+   893→            />
+   894→          </div>
+   895→        </CardContent>
+   896→      </Card>
+   897→    </div>
+   898→  );
+   899→}
+   900→

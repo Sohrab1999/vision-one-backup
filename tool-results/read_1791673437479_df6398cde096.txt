@@ -1,0 +1,992 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * بازی «وردل ویژن» (Vision Wordle) — فاز ۴ نقشه راه جامع ۲۰۲۶.
+     5→ *
+     6→ * حدس زدن یک واژهٔ ۵حرفی از واژگان ۵حرفی خود کتاب در ۶ تلاش، با رنگ‌بندی
+     7→ * دو-گذرهٔ حروف (سبز/زرد/خاکستری — دقیقاً با احترام به حروف تکراری):
+     8→ * - «روزانه»: واژهٔ روز با seed پایدار = hash(`${bookId}:${YYYY-MM-DD}`) روی
+     9→ *   استخر مرتب‌شده؛ وضعیت روز در localStorage (`visionone:wordle-daily:{book}`)
+    10→ *   ذخیره و در mount (حتی بعد از رفرش) بازیابی می‌شود.
+    11→ * - «بی‌نهایت»: هر دور یک واژهٔ تصادفی تازه.
+    12→ * - رکوردها: بی‌نهایت = کمترین حدسِ برد (scope "infinite")؛
+    13→ *   روزانه = طولانی‌ترین زنجیرهٔ برد پیاپی (scope "daily-streak").
+    14→ * - پایان برد: تلفظ + SRS(✓) — پایان باخت: واژهٔ درست + SRS(✗) + صف مرور.
+    15→ */
+    16→
+    17→import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    18→import {
+    19→  Keyboard,
+    20→  Sun,
+    21→  Infinity as InfinityIcon,
+    22→  Play,
+    23→  RotateCcw,
+    24→  Trophy,
+    25→  PartyPopper,
+    26→  CheckCircle2,
+    27→  XCircle,
+    28→  Sparkles,
+    29→  Clock,
+    30→  Target,
+    31→} from "lucide-react";
+    32→import { Button } from "@/components/ui/button";
+    33→import { Card, CardContent } from "@/components/ui/card";
+    34→import { Badge } from "@/components/ui/badge";
+    35→import { cn } from "@/lib/utils";
+    36→import { toast } from "sonner";
+    37→import type { VocabEntry } from "@/data/types";
+    38→import { useBook, useBookData } from "@/lib/book-context";
+    39→import { recordSRS } from "@/lib/srs-store";
+    40→import { touchStreak } from "@/lib/streak-store";
+    41→import { recordStudySession } from "@/lib/goal-store";
+    42→import { speak, stopSpeaking } from "@/lib/speak";
+    43→import { useVoiceSpeed } from "@/lib/voice-store";
+    44→import {
+    45→  bumpPlays,
+    46→  faNum,
+    47→  loadBest,
+    48→  notifyGameData,
+    49→  saveAttempt,
+    50→  saveBest,
+    51→  subscribeGameData,
+    52→} from "./shared";
+    53→
+    54→type Phase = "setup" | "playing" | "done";
+    55→type Mode = "daily" | "infinite";
+    56→/** حکم یک حرف بعد از ارسال حدس */
+    57→type Verdict = "correct" | "present" | "absent";
+    58→
+    59→/** وضعیت بازی روزانهٔ یک کتاب — در `visionone:wordle-daily:{bookId}` */
+    60→interface DailyState {
+    61→  date: string;
+    62→  guesses: string[];
+    63→  status: "playing" | "won" | "lost";
+    64→}
+    65→
+    66→/** زنجیرهٔ برد پیاپی روزانه — در `visionone:wordle-streak:{bookId}` */
+    67→interface DailyStreakState {
+    68→  /** تاریخ آخرین برد روزانه */
+    69→  date: string;
+    70→  streak: number;
+    71→}
+    72→
+    73→/** رکورد بی‌نهایت — کمترین حدسِ برد */
+    74→interface BestMoves {
+    75→  moves: number;
+    76→}
+    77→
+    78→/** رکورد روزانه — طولانی‌ترین زنجیرهٔ برد پیاپی */
+    79→interface BestScore {
+    80→  score: number;
+    81→}
+    82→
+    83→const GAME_KEY = "wordle";
+    84→const WORD_LEN = 5;
+    85→const MAX_ROWS = 6;
+    86→/** فاصلهٔ پله‌ای فلیپ بین ستون‌ها (ms) */
+    87→const FLIP_STAGGER_MS = 200;
+    88→/** مکث بعد از آخرین فلیپ تا آزادشدن ورودی/نمایش نتیجه (ms) */
+    89→const FLIP_SETTLE_MS = 450;
+    90→/** حداقل واژهٔ ۵حرفی استخر برای شروع */
+    91→const MIN_POOL = 10;
+    92→
+    93→/** فقط واژه‌های لاتین دقیقاً ۵حرفی وارد بازی می‌شوند */
+    94→const WORD_RE = /^[a-zA-Z]{5}$/;
+    95→
+    96→// ─── توابع خالص (module-scope) ───
+    97→
+    98→function pad2(n: number): string {
+    99→  return n < 10 ? `0${n}` : String(n);
+   100→}
+   101→
+   102→/** تاریخ امروز به شکل YYYY-MM-DD (تقویم محلی — پایدار بین رفرش‌ها) */
+   103→function todayKey(): string {
+   104→  const d = new Date();
+   105→  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+   106→}
+   107→
+   108→/** جابه‌جایی تقویمی تاریخ YYYY-MM-DD (بدون وابستگی به منطقهٔ زمانی) */
+   109→function shiftDate(date: string, days: number): string {
+   110→  const parts = date.split("-").map(Number);
+   111→  const t = new Date(Date.UTC(parts[0], (parts[1] ?? 1) - 1, parts[2] ?? 1) + days * 86400000);
+   112→  return `${t.getUTCFullYear()}-${pad2(t.getUTCMonth() + 1)}-${pad2(t.getUTCDate())}`;
+   113→}
+   114→
+   115→/** هش ساده و پایدار (djb2) برای انتخاب واژهٔ روز */
+   116→function hashStr(s: string): number {
+   117→  let h = 5381;
+   118→  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+   119→  return Math.abs(h);
+   120→}
+   121→
+   122→/**
+   123→ * رنگ‌بندی دو-گذرهٔ وردل — گذر اول فقط سبزها را می‌شمارد، گذر دوم
+   124→ * زرد/خاکستری را با شمارش حروف باقی‌ماندهٔ پاسخ تعیین می‌کند
+   125→ * (پاسخ کلاسیک: answer "speed" × guess "erase" → Eسبز، Rخاکستری، Aخاکستری، Sسبز، Eزرد).
+   126→ */
+   127→function judgeVerdicts(guess: string, answer: string): Verdict[] {
+   128→  const res: Verdict[] = Array<Verdict>(WORD_LEN).fill("absent");
+   129→  const remaining: Record<string, number> = {};
+   130→  for (let i = 0; i < WORD_LEN; i++) {
+   131→    if (guess[i] === answer[i]) {
+   132→      res[i] = "correct";
+   133→    } else {
+   134→      remaining[answer[i]] = (remaining[answer[i]] ?? 0) + 1;
+   135→    }
+   136→  }
+   137→  for (let i = 0; i < WORD_LEN; i++) {
+   138→    if (res[i] === "correct") continue;
+   139→    const ch = guess[i];
+   140→    if ((remaining[ch] ?? 0) > 0) {
+   141→      res[i] = "present";
+   142→      remaining[ch] -= 1;
+   143→    }
+   144→  }
+   145→  return res;
+   146→}
+   147→
+   148→const VERDICT_RANK: Record<Verdict, number> = { absent: 1, present: 2, correct: 3 };
+   149→
+   150→/** کلاس رنگ هر حکم — سبز = emerald، زرد = amber، خاکستری = muted */
+   151→const VERDICT_FACE: Record<Verdict, string> = {
+   152→  correct: "border-emerald-600 bg-emerald-600 text-white",
+   153→  present: "border-amber-500 bg-amber-500 text-amber-950",
+   154→  absent: "border-muted bg-muted text-muted-foreground",
+   155→};
+   156→
+   157→/** توضیح فارسی هر حکم — برای aria-label سلول‌ها */
+   158→const VERDICT_FA: Record<Verdict, string> = {
+   159→  correct: "سبز — جای درست",
+   160→  present: "زرد — حرف هست ولی جای دیگر",
+   161→  absent: "خاکستری — در واژه نیست",
+   162→};
+   163→
+   164→/** چیدمان QWERTY کیبورد روی صفحه (dir=ltr) */
+   165→const KEY_ROWS: string[][] = [
+   166→  ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+   167→  ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+   168→  ["enter", "z", "x", "c", "v", "b", "n", "m", "back"],
+   169→];
+   170→
+   171→// ─── localStorage روزانه ───
+   172→
+   173→function dailyKeyOf(bookId: string): string {
+   174→  return `visionone:wordle-daily:${bookId}`;
+   175→}
+   176→
+   177→function streakKeyOf(bookId: string): string {
+   178→  return `visionone:wordle-streak:${bookId}`;
+   179→}
+   180→
+   181→function loadDailyState(bookId: string): DailyState | null {
+   182→  try {
+   183→    const raw = localStorage.getItem(dailyKeyOf(bookId));
+   184→    if (!raw) return null;
+   185→    const p = JSON.parse(raw) as Partial<DailyState> | null;
+   186→    if (!p || typeof p.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(p.date)) return null;
+   187→    if (p.status !== "playing" && p.status !== "won" && p.status !== "lost") return null;
+   188→    if (!Array.isArray(p.guesses)) return null;
+   189→    const guesses = p.guesses
+   190→      .filter((g): g is string => typeof g === "string" && WORD_RE.test(g))
+   191→      .slice(0, MAX_ROWS);
+   192→    return { date: p.date, guesses, status: p.status };
+   193→  } catch {
+   194→    return null;
+   195→  }
+   196→}
+   197→
+   198→function writeDailyState(bookId: string, s: DailyState): void {
+   199→  try {
+   200→    localStorage.setItem(dailyKeyOf(bookId), JSON.stringify(s));
+   201→  } catch {
+   202→    /* noop */
+   203→  }
+   204→  notifyGameData();
+   205→}
+   206→
+   207→function loadDailyStreak(bookId: string): DailyStreakState | null {
+   208→  try {
+   209→    const raw = localStorage.getItem(streakKeyOf(bookId));
+   210→    if (!raw) return null;
+   211→    const p = JSON.parse(raw) as Partial<DailyStreakState> | null;
+   212→    if (!p || typeof p.date !== "string" || typeof p.streak !== "number") return null;
+   213→    return { date: p.date, streak: p.streak };
+   214→  } catch {
+   215→    return null;
+   216→  }
+   217→}
+   218→
+   219→function saveDailyStreak(bookId: string, s: DailyStreakState): void {
+   220→  try {
+   221→    localStorage.setItem(streakKeyOf(bookId), JSON.stringify(s));
+   222→  } catch {
+   223→    /* noop */
+   224→  }
+   225→  notifyGameData();
+   226→}
+   227→
+   228→export function WordleGame() {
+   229→  const data = useBookData();
+   230→  const { bookId } = useBook();
+   231→  // بازی فقط داخل کتاب فعال رندر می‌شود (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   232→  const activeBookId: string = bookId ?? "";
+   233→
+   234→  const [phase, setPhase] = useState<Phase>("setup");
+   235→  const [mode, setMode] = useState<Mode>("daily");
+   236→
+   237→  // وضعیت دور «بی‌نهایت»
+   238→  const [guesses, setGuesses] = useState<string[]>([]);
+   239→  const [answer, setAnswer] = useState("");
+   240→
+   241→  // ورودی جاری + انیمیشن‌ها (مشترک بین دو حالت)
+   242→  const [input, setInput] = useState("");
+   243→  /** ردیف در حال فلیپ (-1 = هیچ) */
+   244→  const [revealRow, setRevealRow] = useState(-1);
+   245→  /** چند ستونِ ردیف در حال فلیپ برگشته‌اند */
+   246→  const [flipCols, setFlipCols] = useState(0);
+   247→  /** کلید لرزش ردیف جاری — با تغییر key انیمیشن دوباره اجرا می‌شود */
+   248→  const [shakeKey, setShakeKey] = useState(0);
+   249→  const [isRecord, setIsRecord] = useState(false);
+   250→  /** پیام باکس aria-live — اعلام نتیجهٔ هر حدس برای فناوری‌های کمکی */
+   251→  const [liveMsg, setLiveMsg] = useState("");
+   252→
+   253→  /** بازی روزانه بسته شده (کاربر به تنظیمات برگشته)؟ — بازیابی خودکار mount مستقل از این است */
+   254→  const [dailyClosed, setDailyClosed] = useState(false);
+   255→
+   256→  const { speed } = useVoiceSpeed();
+   257→  const locked = useRef(false);
+   258→  const timers = useRef<number[]>([]);
+   259→  const startedAt = useRef(0);
+   260→
+   261→  // ── استخر واژگان ۵حرفی — یکتا (lowercase) و مرتب (seed پایدار روزانه) ──
+   262→  const pool = useMemo<VocabEntry[]>(() => {
+   263→    const seen = new Set<string>();
+   264→    const out: VocabEntry[] = [];
+   265→    for (const w of data.vocab.all) {
+   266→      if (!WORD_RE.test(w.word)) continue;
+   267→      const key = w.word.toLowerCase();
+   268→      if (seen.has(key)) continue;
+   269→      seen.add(key);
+   270→      out.push(w);
+   271→    }
+   272→    out.sort((a, b) => {
+   273→      const x = a.word.toLowerCase();
+   274→      const y = b.word.toLowerCase();
+   275→      return x < y ? -1 : x > y ? 1 : 0;
+   276→    });
+   277→    return out;
+   278→  }, [data.vocab]);
+   279→
+   280→  const poolSet = useMemo(() => new Set(pool.map((w) => w.word.toLowerCase())), [pool]);
+   281→
+   282→  /** واژهٔ روز — hash پایدار از `${bookId}:${YYYY-MM-DD}` روی استخر مرتب‌شده */
+   283→  const dailyAnswer = useMemo(() => {
+   284→    if (pool.length === 0) return "";
+   285→    return pool[hashStr(`${activeBookId}:${todayKey()}`) % pool.length].word.toLowerCase();
+   286→  }, [pool, activeBookId]);
+   287→
+   288→  // ── وضعیت روزانه از localStorage — استور بیرونی (بازیابی mount بدون setState در effect) ──
+   289→  const dailyJson = useSyncExternalStore(
+   290→    subscribeGameData,
+   291→    () => {
+   292→      const s = loadDailyState(activeBookId);
+   293→      return s ? JSON.stringify(s) : "null";
+   294→    },
+   295→    () => "null",
+   296→  );
+   297→  const dailyRaw = useMemo<DailyState | null>(
+   298→    () => (dailyJson === "null" ? null : (JSON.parse(dailyJson) as DailyState)),
+   299→    [dailyJson],
+   300→  );
+   301→
+   302→  /** وضعیت روزانهٔ «امروز» — با نرمال‌سازی (رفرش وسط انیمیشن حدس آخر = وضعیت نهایی) */
+   303→  const dailyToday = useMemo<DailyState | null>(() => {
+   304→    if (!dailyRaw || dailyRaw.date !== todayKey()) return null;
+   305→    if (pool.length === 0 || !dailyAnswer) return null;
+   306→    if (dailyRaw.status === "playing") {
+   307→      if (dailyRaw.guesses.some((g) => g === dailyAnswer)) return { ...dailyRaw, status: "won" };
+   308→      if (dailyRaw.guesses.length >= MAX_ROWS) return { ...dailyRaw, status: "lost" };
+   309→    }
+   310→    return dailyRaw;
+   311→  }, [dailyRaw, pool.length, dailyAnswer]);
+   312→
+   313→  // ── رکوردها و زنجیره — اسنپ‌شات رشته‌ای پایدار (الگوی match-game) ──
+   314→  const metaJson = useSyncExternalStore(
+   315→    subscribeGameData,
+   316→    () =>
+   317→      JSON.stringify({
+   318→        infBest: loadBest<BestMoves>(activeBookId, GAME_KEY, "infinite"),
+   319→        dailyBest: loadBest<BestScore>(activeBookId, GAME_KEY, "daily-streak"),
+   320→        streak: loadDailyStreak(activeBookId),
+   321→      }),
+   322→    () => "null",
+   323→  );
+   324→  const meta = useMemo<{ infBest: BestMoves | null; dailyBest: BestScore | null; streak: DailyStreakState | null }>(
+   325→    () =>
+   326→      metaJson === "null"
+   327→        ? { infBest: null, dailyBest: null, streak: null }
+   328→        : (JSON.parse(metaJson) as { infBest: BestMoves | null; dailyBest: BestScore | null; streak: DailyStreakState | null }),
+   329→    [metaJson],
+   330→  );
+   331→
+   332→  // ── تفکیک نماها ──
+   333→  /** روزانهٔ امروز فعال است (بازیابی mount یا شروع دستی) */
+   334→  const dailyLive = mode === "daily" && !dailyClosed && dailyToday !== null;
+   335→  /** نمای بازی روزانه — حتی حین انیمیشن حدس آخر (وضعیت استور هنوز «playing» یا فلیپ تمام‌نشده) */
+   336→  const dailyPlayingView = dailyLive && (dailyToday.status === "playing" || revealRow !== -1);
+   337→  const dailyDoneView = dailyLive && !dailyPlayingView;
+   338→  const infinitePlaying = phase === "playing" && !dailyLive;
+   339→
+   340→  const activeAnswer = dailyLive ? dailyAnswer : answer;
+   341→  const activeCommitted = dailyPlayingView ? dailyToday.guesses : guesses;
+   342→
+   343→  const answerEntry = useMemo<VocabEntry | null>(
+   344→    () => pool.find((w) => w.word.toLowerCase() === activeAnswer) ?? null,
+   345→    [pool, activeAnswer],
+   346→  );
+   347→
+   348→  /** بهترین وضعیت هر حرف روی کیبورد — از همهٔ حدس‌های ثبت‌شده */
+   349→  const keyStatus = useMemo(() => {
+   350→    const map = new Map<string, Verdict>();
+   351→    for (const g of activeCommitted) {
+   352→      const vs = judgeVerdicts(g, activeAnswer);
+   353→      for (let i = 0; i < WORD_LEN; i++) {
+   354→        const prev = map.get(g[i]);
+   355→        if (!prev || VERDICT_RANK[vs[i]] > VERDICT_RANK[prev]) map.set(g[i], vs[i]);
+   356→      }
+   357→    }
+   358→    return map;
+   359→  }, [activeCommitted, activeAnswer]);
+   360→
+   361→  // ── تایمرهای پله‌ای فلیپ — همیشه پاک‌شونده ──
+   362→  const clearTimers = useCallback(() => {
+   363→    for (const t of timers.current) window.clearTimeout(t);
+   364→    timers.current = [];
+   365→  }, []);
+   366→
+   367→  useEffect(() => {
+   368→    return () => {
+   369→      stopSpeaking();
+   370→      for (const t of timers.current) window.clearTimeout(t);
+   371→    };
+   372→  }, []);
+   373→
+   374→  // ── پایان دور — استریک/جلسه/Attempt/SRS/رکورد ──
+   375→  const finishGame = useCallback(
+   376→    (win: boolean, rowsUsed: number, gameMode: Mode, word: string) => {
+   377→      touchStreak();
+   378→      recordStudySession();
+   379→      bumpPlays(activeBookId, GAME_KEY);
+   380→      const started = startedAt.current || Date.now();
+   381→      startedAt.current = 0;
+   382→      const duration = Math.max(1, Math.round((Date.now() - started) / 1000));
+   383→      saveAttempt(activeBookId, GAME_KEY, {
+   384→        lesson: 0, // وردل کتاب‌محور است (بدون انتخاب درس)
+   385→        total: 1,
+   386→        correct: win ? 1 : 0,
+   387→        duration,
+   388→        detail: { word, rows: rowsUsed, mode: gameMode },
+   389→      });
+   390→      recordSRS(word, win);
+   391→      if (win) {
+   392→        speak(word, { speed });
+   393→        if (gameMode === "infinite") {
+   394→          const prev = loadBest<BestMoves>(activeBookId, GAME_KEY, "infinite");
+   395→          if (!prev || rowsUsed < prev.moves) {
+   396→            saveBest<BestMoves>(activeBookId, GAME_KEY, "infinite", { moves: rowsUsed });
+   397→            setIsRecord(true);
+   398→            toast.success(`رکورد جدید! برد با ${faNum(rowsUsed)} حدس 🏆`);
+   399→          } else {
+   400→            toast.success(`واژه را با ${faNum(rowsUsed)} حدس پیدا کردی! 🎉`);
+   401→          }
+   402→        } else {
+   403→          // زنجیرهٔ برد پیاپی روزانه — از localStorage خود بازی
+   404→          const today = todayKey();
+   405→          const prevStreak = loadDailyStreak(activeBookId);
+   406→          const streak = prevStreak && prevStreak.date === shiftDate(today, -1) ? prevStreak.streak + 1 : 1;
+   407→          saveDailyStreak(activeBookId, { date: today, streak });
+   408→          const prevBest = loadBest<BestScore>(activeBookId, GAME_KEY, "daily-streak");
+   409→          if (!prevBest || streak > prevBest.score) {
+   410→            saveBest<BestScore>(activeBookId, GAME_KEY, "daily-streak", { score: streak });
+   411→            setIsRecord(true);
+   412→            toast.success(`رکورد زنجیره! ${faNum(streak)} برد پیاپی 🏆`);
+   413→          } else {
+   414→            toast.success(`واژهٔ امروز پیدا شد — زنجیرهٔ ${faNum(streak)} روزه! 🎉`);
+   415→          }
+   416→        }
+   417→      } else {
+   418→        toast.error("این‌بار پیدا نشد — واژهٔ درست را ببین");
+   419→      }
+   420→      if (gameMode === "infinite") setPhase("done"); // روزانه: نما از استور مشتق می‌شود
+   421→    },
+   422→    [activeBookId, speed],
+   423→  );
+   424→
+   425→  // ── ارسال حدس ──
+   426→  const submitGuess = useCallback(() => {
+   427→    if (locked.current || !activeAnswer) return;
+   428→    const rowIdx = activeCommitted.length;
+   429→    if (rowIdx >= MAX_ROWS) return;
+   430→    const guess = input.toLowerCase();
+   431→    if (guess.length < WORD_LEN) {
+   432→      setShakeKey((k) => k + 1);
+   433→      toast.error("حدس باید ۵ حرف باشد");
+   434→      return;
+   435→    }
+   436→    if (!poolSet.has(guess)) {
+   437→      setShakeKey((k) => k + 1);
+   438→      toast.error("این واژه در واژگان کتاب نیست");
+   439→      return;
+   440→    }
+   441→    const gameMode: Mode = dailyPlayingView ? "daily" : "infinite";
+   442→    const nextCommitted = [...activeCommitted, guess];
+   443→    const win = guess === activeAnswer;
+   444→    const rowsUsed = nextCommitted.length;
+   445→    const finished = win || rowsUsed >= MAX_ROWS;
+   446→
+   447→    // اعلام زندهٔ نتیجهٔ حدس برای فناوری‌های کمکی (WCAG 4.1.3) — رنگ به‌تنهایی کافی نیست
+   448→    const verdicts = judgeVerdicts(guess, activeAnswer);
+   449→    const greens = verdicts.filter((v) => v === "correct").length;
+   450→    const yellows = verdicts.filter((v) => v === "present").length;
+   451→    setLiveMsg(
+   452→      win
+   453→        ? `«${guess.toUpperCase()}» درست بود! 🎉`
+   454→        : `حدس ${faNum(rowsUsed)}: ${faNum(greens)} حرف سبز، ${faNum(yellows)} زرد، ${faNum(WORD_LEN - greens - yellows)} خاکستری`,
+   455→    );
+   456→
+   457→    locked.current = true;
+   458→    setInput("");
+   459→    setRevealRow(rowIdx);
+   460→    setFlipCols(0);
+   461→    if (dailyPlayingView) {
+   462→      // ثبت فوری در localStorage — رفرش وسط بازی پیشرفت را از دست نمی‌دهد
+   463→      writeDailyState(activeBookId, {
+   464→        date: todayKey(),
+   465→        guesses: nextCommitted,
+   466→        status: finished ? (win ? "won" : "lost") : "playing",
+   467→      });
+   468→    } else {
+   469→      setGuesses(nextCommitted);
+   470→    }
+   471→
+   472→    // فلیپ پله‌ای ستون‌ها — ۲۰۰ms فاصله
+   473→    for (let c = 0; c < WORD_LEN; c++) {
+   474→      timers.current.push(window.setTimeout(() => setFlipCols((f) => f + 1), FLIP_STAGGER_MS * (c + 1)));
+   475→    }
+   476→    timers.current.push(
+   477→      window.setTimeout(
+   478→        () => {
+   479→          setRevealRow(-1);
+   480→          setFlipCols(0);
+   481→          locked.current = false;
+   482→          if (finished) finishGame(win, rowsUsed, gameMode, guess);
+   483→        },
+   484→        FLIP_STAGGER_MS * WORD_LEN + FLIP_SETTLE_MS,
+   485→      ),
+   486→    );
+   487→  }, [input, activeCommitted, activeAnswer, dailyPlayingView, activeBookId, poolSet, finishGame]);
+   488→
+   489→  const typeLetter = useCallback((letter: string) => {
+   490→    if (locked.current) return;
+   491→    setInput((prev) => (prev.length < WORD_LEN ? prev + letter : prev));
+   492→  }, []);
+   493→
+   494→  const eraseLetter = useCallback(() => {
+   495→    if (locked.current) return;
+   496→    setInput((prev) => prev.slice(0, -1));
+   497→  }, []);
+   498→
+   499→  // ── شروع‌ها ──
+   500→  const startDaily = useCallback(() => {
+   501→    if (pool.length < MIN_POOL) {
+   502→      toast.error(`استخر واژگان ۵حرفی این کتاب کم است — حداقل ${faNum(MIN_POOL)} واژه لازم است`);
+   503→      return;
+   504→    }
+   505→    clearTimers();
+   506→    locked.current = false;
+   507→    setInput("");
+   508→    setRevealRow(-1);
+   509→    setFlipCols(0);
+   510→    setIsRecord(false);
+   511→    if (!dailyToday && dailyAnswer) {
+   512→      writeDailyState(activeBookId, { date: todayKey(), guesses: [], status: "playing" });
+   513→    }
+   514→    setDailyClosed(false);
+   515→    setMode("daily");
+   516→    startedAt.current = Date.now();
+   517→  }, [pool.length, dailyToday, dailyAnswer, activeBookId, clearTimers]);
+   518→
+   519→  const startInfinite = useCallback(() => {
+   520→    if (pool.length < MIN_POOL) {
+   521→      toast.error(`استخر واژگان ۵حرفی این کتاب کم است — حداقل ${faNum(MIN_POOL)} واژه لازم است`);
+   522→      return;
+   523→    }
+   524→    clearTimers();
+   525→    locked.current = false;
+   526→    const picked = pool[Math.floor(Math.random() * pool.length)];
+   527→    setAnswer(picked.word.toLowerCase());
+   528→    setGuesses([]);
+   529→    setInput("");
+   530→    setRevealRow(-1);
+   531→    setFlipCols(0);
+   532→    setIsRecord(false);
+   533→    setMode("infinite");
+   534→    setPhase("playing");
+   535→    startedAt.current = Date.now();
+   536→  }, [pool, clearTimers]);
+   537→
+   538→  /** بازگشت به تنظیمات — پیشرفت روزانه در localStorage می‌ماند */
+   539→  const backToSetup = useCallback(() => {
+   540→    clearTimers();
+   541→    locked.current = false;
+   542→    stopSpeaking();
+   543→    setInput("");
+   544→    setRevealRow(-1);
+   545→    setFlipCols(0);
+   546→    setDailyClosed(true);
+   547→    setPhase("setup");
+   548→  }, [clearTimers]);
+   549→
+   550→  // ── کیبورد فیزیکی — در effect با cleanup ──
+   551→  useEffect(() => {
+   552→    if (!dailyPlayingView && !infinitePlaying) return;
+   553→    const onKey = (e: KeyboardEvent) => {
+   554→      if (e.ctrlKey || e.metaKey || e.altKey) return;
+   555→      if (e.key === "Enter") {
+   556→        e.preventDefault();
+   557→        submitGuess();
+   558→        return;
+   559→      }
+   560→      if (e.key === "Backspace") {
+   561→        e.preventDefault();
+   562→        eraseLetter();
+   563→        return;
+   564→      }
+   565→      if (/^[a-zA-Z]$/.test(e.key)) typeLetter(e.key.toLowerCase());
+   566→    };
+   567→    window.addEventListener("keydown", onKey);
+   568→    return () => window.removeEventListener("keydown", onKey);
+   569→  }, [dailyPlayingView, infinitePlaying, submitGuess, eraseLetter, typeLetter]);
+   570→
+   571→  // ── Setup ──
+   572→  if (dailyDoneView) {
+   573→    // ── Done: روزانه (نمای مشتق‌شده از استور — رفرش‌پذیر) ──
+   574→    const won = dailyToday.status === "won";
+   575→    const rowsUsed = dailyToday.guesses.length;
+   576→    return (
+   577→      <Card className={cn("mx-auto max-w-xl rise-in", won ? "border-emerald-500/30" : "border-amber-500/30")}>
+   578→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   579→          <span
+   580→            className={cn(
+   581→              "flex h-16 w-16 items-center justify-center rounded-full",
+   582→              won ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+   583→            )}
+   584→          >
+   585→            {won ? <PartyPopper size={30} /> : <XCircle size={30} />}
+   586→          </span>
+   587→          <h2 className="text-xl font-black">{won ? "واژهٔ امروز پیدا شد!" : "امروز پیدا نشد"}</h2>
+   588→          {won && isRecord && (
+   589→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   590→              <Trophy size={13} />
+   591→              رکورد جدید! 🏆
+   592→            </Badge>
+   593→          )}
+   594→
+   595→          <div className="w-full space-y-2 rounded-xl border bg-muted/40 p-4">
+   596→            <p dir="ltr" className="font-en text-2xl font-black tracking-wider">
+   597→              {dailyAnswer.toUpperCase()}
+   598→            </p>
+   599→            {answerEntry && <p className="text-[13px] font-bold leading-6">{answerEntry.meaning}</p>}
+   600→            <div className="flex flex-wrap items-center justify-center gap-1.5">
+   601→              {answerEntry && <Badge variant="secondary" className="text-[10px]">{answerEntry.lessonLabel}</Badge>}
+   602→              {answerEntry?.pos && (
+   603→                <Badge variant="outline" dir="ltr" className="font-en text-[10px]">
+   604→                  {answerEntry.pos}
+   605→                </Badge>
+   606→              )}
+   607→              <Badge variant="secondary" className="gap-1 text-[10px]">
+   608→                <Target size={10} />
+   609→                {faNum(rowsUsed)} از {faNum(MAX_ROWS)} حدس
+   610→              </Badge>
+   611→            </div>
+   612→            {!won && (
+   613→              <div className="flex justify-center">
+   614→                <Badge
+   615→                  variant="outline"
+   616→                  className="gap-1 border-emerald-500/40 text-[10px] text-emerald-600 dark:text-emerald-400"
+   617→                >
+   618→                  <CheckCircle2 size={10} />
+   619→                  به مرور اضافه شد
+   620→                </Badge>
+   621→              </div>
+   622→            )}
+   623→          </div>
+   624→
+   625→          {won && meta.streak && meta.streak.streak > 1 && (
+   626→            <Badge variant="outline" className="gap-1.5 border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+   627→              <Trophy size={12} />
+   628→              زنجیرهٔ برد فعلی: {faNum(meta.streak.streak)} روز
+   629→            </Badge>
+   630→          )}
+   631→
+   632→          {/* شمارش معکوس متنی — بدون تایمر زنده */}
+   633→          <p className="flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground">
+   634→            <Clock size={14} className="text-teal-500" />
+   635→            واژهٔ بعدی فردا آماده می‌شود
+   636→          </p>
+   637→
+   638→          <div className="flex flex-wrap justify-center gap-2">
+   639→            <Button className="min-h-11 gap-2" onClick={startInfinite}>
+   640→              <InfinityIcon size={16} />
+   641→              حالت بی‌نهایت
+   642→            </Button>
+   643→            <Button variant="outline" className="min-h-11" onClick={backToSetup}>
+   644→              بازگشت
+   645→            </Button>
+   646→          </div>
+   647→        </CardContent>
+   648→      </Card>
+   649→    );
+   650→  }
+   651→
+   652→  if (dailyPlayingView || infinitePlaying) {
+   653→    // ── Playing: گرید ۶×۵ + کیبورد (مشترک بین دو حالت) ──
+   654→    const isDaily = dailyPlayingView;
+   655→    return (
+   656→      <div role="group" aria-label="بازی وردل ویژن" className="mx-auto max-w-sm space-y-4 rise-in">
+   657→        <div className="flex flex-wrap items-center gap-2">
+   658→          <Badge variant="secondary" className="gap-1 text-[11px]">
+   659→            {isDaily ? (
+   660→              <Sun size={11} className="text-amber-500" />
+   661→            ) : (
+   662→              <InfinityIcon size={11} className="text-teal-500" />
+   663→            )}
+   664→            {isDaily ? "واژهٔ امروز" : "بی‌نهایت"}
+   665→          </Badge>
+   666→          <Badge variant="secondary" className="gap-1 text-[11px]">
+   667→            <Target size={11} className="text-primary" />
+   668→            حدس {faNum(Math.min(activeCommitted.length + 1, MAX_ROWS))} از {faNum(MAX_ROWS)}
+   669→          </Badge>
+   670→          <div className="mr-auto">
+   671→            <Button variant="ghost" size="sm" className="h-11 text-[11px] text-muted-foreground" onClick={backToSetup}>
+   672→              انصراف
+   673→            </Button>
+   674→          </div>
+   675→        </div>
+   676→
+   677→        {/* گرید ۶×۵ */}
+   678→        <div dir="ltr" className="space-y-1.5" aria-label="جدول حدس‌ها">
+   679→          {Array.from({ length: MAX_ROWS }, (_, r) => {
+   680→            const isJudged = r < activeCommitted.length;
+   681→            const isActiveRow = r === activeCommitted.length;
+   682→            const verdicts = isJudged ? judgeVerdicts(activeCommitted[r], activeAnswer) : null;
+   683→            return (
+   684→              <div
+   685→                key={isActiveRow ? `active-${r}-${shakeKey}` : r}
+   686→                className={cn("grid grid-cols-5 gap-1.5", isActiveRow && shakeKey > 0 && "match-shake")}
+   687→              >
+   688→                {Array.from({ length: WORD_LEN }, (_, c) => {
+   689→                  const letter = isJudged
+   690→                    ? activeCommitted[r][c]
+   691→                    : isActiveRow
+   692→                      ? (input[c] ?? "")
+   693→                      : "";
+   694→                  const v = verdicts ? verdicts[c] : null;
+   695→                  const flipped = isJudged && (r !== revealRow || c < flipCols);
+   696→                  const label = isJudged && v
+   697→                    ? `ردیف ${faNum(r + 1)} حرف ${faNum(c + 1)}: ${letter.toUpperCase()} — ${VERDICT_FA[v]}`
+   698→                    : `ردیف ${faNum(r + 1)} حرف ${faNum(c + 1)}${letter ? `: ${letter.toUpperCase()}` : " — خالی"}`;
+   699→                  return (
+   700→                    <div key={c} aria-label={label} className="flip-scene aspect-square">
+   701→                      <div className={cn("flip-inner", flipped && "flipped")}>
+   702→                        {/* روی سلول — حرف روی زمینهٔ خالی */}
+   703→                        <div
+   704→                          className={cn(
+   705→                            "flip-face flex h-full w-full items-center justify-center rounded-lg border-2",
+   706→                            letter ? "border-foreground/40 bg-card" : "border-muted-foreground/25 bg-card",
+   707→                          )}
+   708→                        >
+   709→                          {letter && (
+   710→                            <span className="font-en text-xl font-black uppercase sm:text-2xl">
+   711→                              {letter.toUpperCase()}
+   712→                            </span>
+   713→                          )}
+   714→                        </div>
+   715→                        {/* پشت سلول — رنگ حکم */}
+   716→                        <div
+   717→                          className={cn(
+   718→                            "flip-face flip-back flex h-full w-full items-center justify-center rounded-lg border-2",
+   719→                            v ? VERDICT_FACE[v] : "border-muted bg-card",
+   720→                          )}
+   721→                        >
+   722→                          {letter && (
+   723→                            <span className="font-en text-xl font-black uppercase sm:text-2xl">
+   724→                              {letter.toUpperCase()}
+   725→                            </span>
+   726→                          )}
+   727→                        </div>
+   728→                      </div>
+   729→                    </div>
+   730→                  );
+   731→                })}
+   732→              </div>
+   733→            );
+   734→          })}
+   735→        </div>
+   736→
+   737→        {/* اعلام زندهٔ نتیجهٔ حدس برای فناوری‌های کمکی (WCAG 4.1.3) */}
+   738→        <p role="status" aria-live="polite" className="sr-only">
+   739→          {liveMsg}
+   740→        </p>
+   741→
+   742→        {/* کیبورد QWERTY */}
+   743→        <div dir="ltr" role="group" aria-label="کیبورد حدس" className="space-y-1.5">
+   744→          {KEY_ROWS.map((row, ri) => (
+   745→            <div key={ri} className="flex justify-center gap-1 sm:gap-1.5">
+   746→              {row.map((k) => {
+   747→                if (k === "enter" || k === "back") {
+   748→                  const isEnter = k === "enter";
+   749→                  return (
+   750→                    <button
+   751→                      key={k}
+   752→                      type="button"
+   753→                      onClick={isEnter ? submitGuess : eraseLetter}
+   754→                      aria-label={isEnter ? "ارسال حدس" : "حذف حرف آخر"}
+   755→                      className="flex min-h-11 flex-[1.6] items-center justify-center rounded-lg border border-border bg-muted/60 px-1 font-en text-[11px] font-black text-foreground transition-all hover:bg-muted active:scale-95"
+   756→                    >
+   757→                      {isEnter ? "ENTER" : "⌫"}
+   758→                    </button>
+   759→                  );
+   760→                }
+   761→                const st = keyStatus.get(k) ?? null;
+   762→                return (
+   763→                  <button
+   764→                    key={k}
+   765→                    type="button"
+   766→                    onClick={() => typeLetter(k)}
+   767→                    aria-label={`حرف ${k.toUpperCase()}`}
+   768→                    className={cn(
+   769→                      "flex min-h-11 flex-1 items-center justify-center rounded-lg border font-en text-[13px] font-black uppercase transition-all active:scale-95",
+   770→                      !st && "border-border bg-muted/50 text-foreground hover:bg-muted",
+   771→                      st === "correct" && VERDICT_FACE.correct,
+   772→                      st === "present" && VERDICT_FACE.present,
+   773→                      st === "absent" && VERDICT_FACE.absent,
+   774→                    )}
+   775→                  >
+   776→                    {k.toUpperCase()}
+   777→                  </button>
+   778→                );
+   779→              })}
+   780→            </div>
+   781→          ))}
+   782→        </div>
+   783→
+   784→        <p className="text-center text-[10px] leading-5 text-muted-foreground">
+   785→          کیبورد فیزیکی هم کار می‌کند — تایپ کن، Enter بفرست، Backspace پاک کن. حدس باید واژه‌ای از واژگان ۵حرفی کتاب باشد.
+   786→        </p>
+   787→      </div>
+   788→    );
+   789→  }
+   790→
+   791→  if (phase === "done") {
+   792→    // ── Done: بی‌نهایت ──
+   793→    const won = guesses[guesses.length - 1] === answer;
+   794→    return (
+   795→      <Card className={cn("mx-auto max-w-xl rise-in", won ? "border-emerald-500/30" : "border-amber-500/30")}>
+   796→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   797→          <span
+   798→            className={cn(
+   799→              "flex h-16 w-16 items-center justify-center rounded-full",
+   800→              won ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+   801→            )}
+   802→          >
+   803→            {won ? <PartyPopper size={30} /> : <XCircle size={30} />}
+   804→          </span>
+   805→          <h2 className="text-xl font-black">{won ? "واژه پیدا شد!" : "این‌بار پیدا نشد"}</h2>
+   806→          {won && isRecord && (
+   807→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   808→              <Trophy size={13} />
+   809→              رکورد جدید! 🏆
+   810→            </Badge>
+   811→          )}
+   812→
+   813→          <div className="w-full space-y-2 rounded-xl border bg-muted/40 p-4">
+   814→            <p dir="ltr" className="font-en text-2xl font-black tracking-wider">
+   815→              {answer.toUpperCase()}
+   816→            </p>
+   817→            {answerEntry && <p className="text-[13px] font-bold leading-6">{answerEntry.meaning}</p>}
+   818→            <div className="flex flex-wrap items-center justify-center gap-1.5">
+   819→              {answerEntry && <Badge variant="secondary" className="text-[10px]">{answerEntry.lessonLabel}</Badge>}
+   820→              {answerEntry?.pos && (
+   821→                <Badge variant="outline" dir="ltr" className="font-en text-[10px]">
+   822→                  {answerEntry.pos}
+   823→                </Badge>
+   824→              )}
+   825→              <Badge variant="secondary" className="gap-1 text-[10px]">
+   826→                <Target size={10} />
+   827→                {faNum(guesses.length)} از {faNum(MAX_ROWS)} حدس
+   828→              </Badge>
+   829→            </div>
+   830→            {!won && (
+   831→              <div className="flex justify-center">
+   832→                <Badge
+   833→                  variant="outline"
+   834→                  className="gap-1 border-emerald-500/40 text-[10px] text-emerald-600 dark:text-emerald-400"
+   835→                >
+   836→                  <CheckCircle2 size={10} />
+   837→                  به مرور اضافه شد
+   838→                </Badge>
+   839→              </div>
+   840→            )}
+   841→          </div>
+   842→
+   843→          <div className="flex gap-2">
+   844→            <Button className="min-h-11 gap-2" onClick={startInfinite}>
+   845→              <RotateCcw size={16} />
+   846→              دور جدید
+   847→            </Button>
+   848→            <Button variant="outline" className="min-h-11" onClick={() => setPhase("setup")}>
+   849→              تنظیمات
+   850→            </Button>
+   851→          </div>
+   852→        </CardContent>
+   853→      </Card>
+   854→    );
+   855→  }
+   856→
+   857→  // ── Setup ──
+   858→  const dailyStatusText = !dailyToday
+   859→    ? "واژهٔ امروز منتظر توست"
+   860→    : dailyToday.status === "playing"
+   861→      ? `نیمه‌کاره — ${faNum(dailyToday.guesses.length)} حدس`
+   862→      : dailyToday.status === "won"
+   863→        ? "امروز پیدا شد ✓"
+   864→        : "امروز پیدا نشد";
+   865→  return (
+   866→    <Card className="mx-auto max-w-xl rise-in">
+   867→      <CardContent className="space-y-6 p-6">
+   868→        <div className="flex items-center gap-3">
+   869→          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
+   870→            <Keyboard size={22} />
+   871→          </span>
+   872→          <div>
+   873→            <h2 className="text-lg font-black">وردل ویژن</h2>
+   874→            <p className="text-xs text-muted-foreground">
+   875→              واژهٔ ۵حرفی از واژگان کتاب را در ۶ حدس پیدا کن — با رنگ‌بندی حروف!
+   876→            </p>
+   877→          </div>
+   878→        </div>
+   879→
+   880→        <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   881→          <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   882→          <div className="flex-1 space-y-2">
+   883→            <p>
+   884→              هر حدس باید یک واژهٔ واقعی ۵حرفی از واژگان همین کتاب باشد. بعد از هر حدس رنگ حروف راهنمایت می‌کند:
+   885→            </p>
+   886→            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+   887→              <span className="flex items-center gap-1.5">
+   888→                <span aria-hidden className="h-3.5 w-3.5 rounded border border-emerald-600 bg-emerald-600" />
+   889→                سبز — جای درست
+   890→              </span>
+   891→              <span className="flex items-center gap-1.5">
+   892→                <span aria-hidden className="h-3.5 w-3.5 rounded border border-amber-500 bg-amber-500" />
+   893→                زرد — هست ولی جابه‌جا
+   894→              </span>
+   895→              <span className="flex items-center gap-1.5">
+   896→                <span aria-hidden className="h-3.5 w-3.5 rounded border border-muted bg-muted" />
+   897→                خاکستری — در واژه نیست
+   898→              </span>
+   899→            </div>
+   900→          </div>
+   901→        </div>
+   902→
+   903→        <div>
+   904→          <p className="mb-2 text-[13px] font-bold">کدام حالت؟</p>
+   905→          <div className="grid gap-2 sm:grid-cols-2" role="group" aria-label="انتخاب حالت بازی">
+   906→            <button
+   907→              type="button"
+   908→              onClick={() => setMode("daily")}
+   909→              aria-pressed={mode === "daily"}
+   910→              className={cn(
+   911→                "min-h-11 rounded-2xl border p-3 text-right transition-all",
+   912→                mode === "daily"
+   913→                  ? "border-primary bg-primary/5 shadow-md shadow-primary/10"
+   914→                  : "text-muted-foreground hover:bg-muted",
+   915→              )}
+   916→            >
+   917→              <span className="flex items-center gap-2">
+   918→                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   919→                  <Sun size={16} />
+   920→                </span>
+   921→                <span className="text-[13px] font-black text-foreground">روزانه</span>
+   922→              </span>
+   923→              <span className="mt-1.5 block text-[11px] leading-5">هر روز یک واژه برای همه — فقط یک فرصت!</span>
+   924→              <span className="mt-1 block text-[10px] font-bold text-muted-foreground">{dailyStatusText}</span>
+   925→            </button>
+   926→            <button
+   927→              type="button"
+   928→              onClick={() => setMode("infinite")}
+   929→              aria-pressed={mode === "infinite"}
+   930→              className={cn(
+   931→                "min-h-11 rounded-2xl border p-3 text-right transition-all",
+   932→                mode === "infinite"
+   933→                  ? "border-primary bg-primary/5 shadow-md shadow-primary/10"
+   934→                  : "text-muted-foreground hover:bg-muted",
+   935→              )}
+   936→            >
+   937→              <span className="flex items-center gap-2">
+   938→                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-400">
+   939→                  <InfinityIcon size={16} />
+   940→                </span>
+   941→                <span className="text-[13px] font-black text-foreground">بی‌نهایت</span>
+   942→              </span>
+   943→              <span className="mt-1.5 block text-[11px] leading-5">هر دور یک واژهٔ تصادفی تازه — بدون محدودیت.</span>
+   944→              <span className="mt-1 block text-[10px] font-bold text-muted-foreground">
+   945→                {meta.infBest ? `کمترین حدسِ برد تو: ${faNum(meta.infBest.moves)}` : "رکوردی ثبت نشده"}
+   946→              </span>
+   947→            </button>
+   948→          </div>
+   949→        </div>
+   950→
+   951→        <div className="flex flex-wrap items-center gap-2">
+   952→          <Badge variant="secondary" className="gap-1 text-[11px]">
+   953→            <Keyboard size={11} />
+   954→            استخر واژگان ۵حرفی: {faNum(pool.length)} واژه
+   955→          </Badge>
+   956→          {meta.infBest && (
+   957→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   958→              <Trophy size={12} />
+   959→              بهترین برد بی‌نهایت: {faNum(meta.infBest.moves)} حدس
+   960→            </Badge>
+   961→          )}
+   962→          {meta.dailyBest && (
+   963→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   964→              <Trophy size={12} />
+   965→              بهترین زنجیرهٔ روزانه: {faNum(meta.dailyBest.score)} روز
+   966→            </Badge>
+   967→          )}
+   968→        </div>
+   969→
+   970→        {pool.length < MIN_POOL && (
+   971→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   972→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   973→            <p>
+   974→              این کتاب فقط {faNum(pool.length)} واژهٔ ۵حرفی دارد — برای بازی حداقل {faNum(MIN_POOL)} واژه لازم است.
+   975→            </p>
+   976→          </div>
+   977→        )}
+   978→
+   979→        <Button
+   980→          size="lg"
+   981→          className="h-12 w-full gap-2 text-base"
+   982→          onClick={mode === "daily" ? startDaily : startInfinite}
+   983→          disabled={pool.length < MIN_POOL}
+   984→        >
+   985→          <Play size={18} />
+   986→          {mode === "daily" ? (dailyToday ? "نمایش بازی امروز" : "شروع واژهٔ امروز") : "شروع دور بی‌نهایت"}
+   987→        </Button>
+   988→      </CardContent>
+   989→    </Card>
+   990→  );
+   991→}
+   992→

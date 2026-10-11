@@ -1,0 +1,1083 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * بازی «شکار کلمه» (Word Search) — فاز ۳ نقشه راه جامع ۲۰۲۶ + فاز G2-b نقشه راه بازی‌ها.
+     5→ *
+     6→ * جدول حروف انگلیسی با واژه‌های پنهانِ درس؛ سرنخ = معنی فارسی.
+     7→ * هر شکارِ درست تلفظ را پخش می‌کند و در SRS ثبت می‌شود.
+     8→ * رکورد = کمترین زمان؛ اسکوپ رکورد: `${درس}:${تعداد واژه}`.
+     9→ *
+    10→ * دو مسیر انتخاب موازی که هر دو به یک تابع confirm مشترک می‌رسند:
+    11→ * - کلیک دو-مرحله‌ای (موجود از فاز ۳): اول حرف اول، بعد حرف آخر — با کیبورد هم کار می‌کند
+    12→ *   (سلول‌ها دکمه‌های واقعی‌اند؛ Enter/Space همان onClick را می‌زند).
+    13→ * - فاز G2-b — درگ لمسی/ماوس (Pointer Events): pointerDown روی سلول شروع، حرکت با
+    14→ *   onPointerMove روی container + `document.elementFromPoint` (مقابل pointer-capture
+    15→ *   ضمنی لمس مقاوم است)، رهاکردن (pointerUp/cancel/leave روی container) = ثبت انتخاب.
+    16→ *   حین درگ، مسیر موقت با snap به نزدیک‌ترین جهتِ مجاز (۸ جهت) هایلایت می‌شود و
+    17→ *   `touch-action: none` اسکرول صفحه حین درگ را می‌بندد.
+    18→ *
+    19→ * فاز G2-b (کیت GameKit v2 — الگوی پایلوت memory و دارباز): GameShell + ResultScreen +
+    20→ * آموزش ۳گامی (useAutoTutorial) + Pause (تایمر گیت روی paused) + نگهبان خروج +
+    21→ * تله‌متری جلسه (start/end/abandon) + صدا/لرزش — امضاهای shared.ts و کلیدهای
+    22→ * localStorage دست‌نخورده (قانون حفظ‌شوندگی §۳-۴ سند).
+    23→ */
+    24→
+    25→import {
+    26→  useCallback,
+    27→  useEffect,
+    28→  useMemo,
+    29→  useRef,
+    30→  useState,
+    31→  useSyncExternalStore,
+    32→  type PointerEvent as ReactPointerEvent,
+    33→} from "react";
+    34→import {
+    35→  Search,
+    36→  Play,
+    37→  Trophy,
+    38→  Timer,
+    39→  Target,
+    40→  CheckCircle2,
+    41→  Eye,
+    42→  Sparkles,
+    43→  Pause,
+    44→  Hand,
+    45→  XCircle,
+    46→} from "lucide-react";
+    47→import { Button } from "@/components/ui/button";
+    48→import { Card, CardContent } from "@/components/ui/card";
+    49→import { Badge } from "@/components/ui/badge";
+    50→import { cn } from "@/lib/utils";
+    51→import { toast } from "sonner";
+    52→import type { VocabEntry } from "@/data/types";
+    53→import { useBook, useBookData } from "@/lib/book-context";
+    54→import { recordSRS } from "@/lib/srs-store";
+    55→import { touchStreak } from "@/lib/streak-store";
+    56→import { recordStudySession } from "@/lib/goal-store";
+    57→import { speak, stopSpeaking } from "@/lib/speak";
+    58→import { useVoiceSpeed } from "@/lib/voice-store";
+    59→import {
+    60→  shuffle,
+    61→  faNum,
+    62→  fmtTime,
+    63→  pickUnique,
+    64→  loadBest,
+    65→  saveBest,
+    66→  bumpPlays,
+    67→  saveAttempt,
+    68→  subscribeGameData,
+    69→} from "./shared";
+    70→// فاز G2-b — کیت GameKit v2 (قرارداد API سند)
+    71→import { playSound, toggleSoundMuted, isSoundMuted } from "./kit/sound-engine";
+    72→import { buzz } from "./kit/haptics";
+    73→import { useGamePause } from "./kit/use-pause";
+    74→import { GameExitGuard } from "./kit/exit-guard";
+    75→import { GameShell } from "./kit/game-shell";
+    76→import { ResultScreen } from "./kit/result-screen";
+    77→import {
+    78→  TutorialOverlay,
+    79→  useAutoTutorial,
+    80→  type TutorialStep,
+    81→} from "./kit/tutorial-overlay";
+    82→import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+    83→
+    84→// ─── تایپ‌ها ───
+    85→
+    86→type Phase = "setup" | "playing" | "done";
+    87→
+    88→/** یک خانه جدول */
+    89→interface Cell {
+    90→  row: number;
+    91→  col: number;
+    92→}
+    93→
+    94→/** فاز G2-b — وضعیت درگ فعال: سلول شروع + آخرین سلول زیر اشاره‌گر */
+    95→interface DragState {
+    96→  from: Cell;
+    97→  to: Cell;
+    98→}
+    99→
+   100→/** واژه ورودی الگوریتم — base برای جدول، raw برای SRS/نمایش */
+   101→interface PuzzleWord {
+   102→  base: string;
+   103→  raw: string;
+   104→  meaning: string;
+   105→}
+   106→
+   107→/** یک واژه جاگرفته در جدول */
+   108→interface Placement {
+   109→  base: string;
+   110→  raw: string;
+   111→  meaning: string;
+   112→  cells: [number, number][];
+   113→}
+   114→
+   115→interface Puzzle {
+   116→  grid: string[][];
+   117→  placements: Placement[];
+   118→}
+   119→
+   120→/** شکل رکورد شخصی — کمترین زمان (ثانیه) */
+   121→interface BestRecord {
+   122→  time: number;
+   123→}
+   124→
+   125→const GAME_KEY = "word-search";
+   126→const ALL_LESSONS = -1;
+   127→const WORD_COUNT_OPTIONS = [6, 8, 10];
+   128→const SIZE_OPTIONS = [8, 10];
+   129→/** جهت‌های مجاز جای‌گذاری (فقط forward): راست · پایین · قطر راست-پایین · قطر دیگر */
+   130→const DIRS: [number, number][] = [
+   131→  [0, 1],
+   132→  [1, 0],
+   133→  [1, 1],
+   134→  [1, -1],
+   135→];
+   136→/** فاز G2-b — مکث پس از شکار آخرین واژه تا انیمیشن pop دیده شود، سپس پایان دور (ms) */
+   137→const FINISH_DELAY_MS = 650;
+   138→
+   139→/** فاز G2-b — آموزش ۳-گامی استاندارد (الگوی پایلوت memory / G1-08) — درگ و دو-ضربه هر دو */
+   140→const TUTORIAL_STEPS: TutorialStep[] = [
+   141→  {
+   142→    icon: <Search size={24} />,
+   143→    title: "واژه‌ها در جدول پنهان‌اند",
+   144→    text: "سرنخ تو معنی فارسی است — واژه‌ها افقی، عمودی یا مورب (۸ جهت) در جدول قایم شده‌اند.",
+   145→  },
+   146→  {
+   147→    icon: <Hand size={24} />,
+   148→    title: "بکش و رها کن — یا دو-ضربه بزن",
+   149→    text: "انگشت (یا ماوس) را از حرف اول تا آخر واژه بکش و رها کن؛ یا اول حرف اول و بعد حرف آخر را ضربه بزن — هر دو راه شکار است.",
+   150→  },
+   151→  {
+   152→    icon: <Trophy size={24} />,
+   153→    title: "سریع‌تر شکار کن",
+   154→    text: "رکورد = کمترین زمان! بدون انتخاب غلط ۳ ستاره می‌گیری. واژهٔ شکارشده تلفظ می‌شود و در مرور هوشمند ثبت می‌گردد.",
+   155→  },
+   156→];
+   157→
+   158→// ─── توابع خالص ───
+   159→
+   160→/** واژهٔ کتاب → واژهٔ جدول: حذف پرانتزها + حروف بزرگ (مثل «commit (a crime)» → «COMMIT») */
+   161→function baseWordOf(word: string): string {
+   162→  return word.replace(/\s*\([^)]*\)\s*/g, " ").trim().toUpperCase();
+   163→}
+   164→
+   165→/** استخر معتبر: پایه ۳..۹ حرف لاتینِ خالص (بدون فاصله) + حذف تکراری بر اساس پایه */
+   166→function validWordList(pool: VocabEntry[]): VocabEntry[] {
+   167→  const seen = new Set<string>();
+   168→  return pool.filter((w) => {
+   169→    const base = baseWordOf(w.word);
+   170→    if (!/^[A-Z]{3,9}$/.test(base)) return false;
+   171→    if (seen.has(base)) return false;
+   172→    seen.add(base);
+   173→    return true;
+   174→  });
+   175→}
+   176→
+   177→/** خانه‌های بین دو خانهٔ هم‌خط (سطر/ستون/قطر) — غیرهم‌خط = null */
+   178→function pathBetween(a: Cell, b: Cell): Cell[] | null {
+   179→  const dr = Math.sign(b.row - a.row);
+   180→  const dc = Math.sign(b.col - a.col);
+   181→  const aligned = a.row === b.row || a.col === b.col || Math.abs(b.row - a.row) === Math.abs(b.col - a.col);
+   182→  if (!aligned) return null;
+   183→  const cells: Cell[] = [{ row: a.row, col: a.col }];
+   184→  let r = a.row;
+   185→  let c = a.col;
+   186→  while (r !== b.row || c !== b.col) {
+   187→    r += dr;
+   188→    c += dc;
+   189→    cells.push({ row: r, col: c });
+   190→  }
+   191→  return cells;
+   192→}
+   193→
+   194→/**
+   195→ * فاز G2-b — مسیر موقت درگ با snap به نزدیک‌ترین جهت مجاز (۸ جهت):
+   196→ * بردار حرکت (سطر/ستون) زاویه‌اش به نزدیک‌ترین ضریب ۴۵° گرد می‌شود و طول مسیر
+   197→ * تصویر بردار روی همان جهت است (حداقل ۱) — همیشه داخل جدول clamp می‌شود.
+   198→ * نتیجه هرگز null نیست؛ انحراف دست کاربر به نزدیک‌ترین جهت درست snap می‌شود.
+   199→ */
+   200→function dragPathBetween(from: Cell, to: Cell, size: number): Cell[] {
+   201→  const dr = to.row - from.row;
+   202→  const dc = to.col - from.col;
+   203→  if (dr === 0 && dc === 0) return [{ row: from.row, col: from.col }];
+   204→  const step = Math.PI / 4;
+   205→  const snapIdx = Math.round(Math.atan2(dr, dc) / step); // ‎-4..4
+   206→  const dirR = Math.round(Math.sin(snapIdx * step));
+   207→  const dirC = Math.round(Math.cos(snapIdx * step));
+   208→  // طول بر حسب «گام» — تصویر بردار روی جهت snap بر طول همان بردار گام (۱ یا √۲)
+   209→  let len = Math.round((dr * dirR + dc * dirC) / (dirR * dirR + dirC * dirC));
+   210→  if (len < 1) len = 1;
+   211→  const roomR = dirR > 0 ? size - 1 - from.row : dirR < 0 ? from.row : size - 1;
+   212→  const roomC = dirC > 0 ? size - 1 - from.col : dirC < 0 ? from.col : size - 1;
+   213→  len = Math.min(len, dirR === 0 ? roomC : dirC === 0 ? roomR : Math.min(roomR, roomC));
+   214→  const cells: Cell[] = [{ row: from.row, col: from.col }];
+   215→  for (let i = 1; i <= len; i++) {
+   216→    cells.push({ row: from.row + i * dirR, col: from.col + i * dirC });
+   217→  }
+   218→  return cells;
+   219→}
+   220→
+   221→/**
+   222→ * فاز G2-b — سلول زیر نقطهٔ اشاره‌گر (برای درگ): با elementFromPoint و data-cell
+   223→ * سلول واقعی زیر انگشت پیدا می‌شود — برخلاف e.target، مقاوم به pointer-capture
+   224→ * ضمنی لمس و به فاصله‌های بین سلول‌ها است. فقط سمت کلاینت صدا زده می‌شود.
+   225→ */
+   226→function cellFromPoint(x: number, y: number): Cell | null {
+   227→  const el = document.elementFromPoint(x, y);
+   228→  const key = el?.closest("[data-cell]")?.getAttribute("data-cell");
+   229→  if (!key) return null;
+   230→  const [r, c] = key.split(":").map(Number);
+   231→  return Number.isFinite(r) && Number.isFinite(c) ? { row: r, col: c } : null;
+   232→}
+   233→
+   234→/** ساخت پازل — تابع خالص؛ اگر کمتر از ۴ واژه جا شد از نو می‌سازد (تا ۱۰ بار) */
+   235→function generatePuzzle(words: PuzzleWord[], size: number): Puzzle {
+   236→  let last: Puzzle = { grid: [], placements: [] };
+   237→  for (let round = 0; round < 10; round++) {
+   238→    const p = buildOnce(words, size);
+   239→    last = p;
+   240→    if (p.placements.length >= 4) break;
+   241→  }
+   242→  return last;
+   243→}
+   244→
+   245→/** یک دور ساخت جدول — واژه‌های جا نشده حذف می‌شوند */
+   246→function buildOnce(words: PuzzleWord[], size: number): Puzzle {
+   247→  const grid: (string | null)[][] = Array.from({ length: size }, () => Array<string | null>(size).fill(null));
+   248→  const placements: Placement[] = [];
+   249→  const sorted = words
+   250→    .filter((w) => w.base.length <= size) // واژه بلندتر از جدول هرگز جا نمی‌شود
+   251→    .sort((a, b) => b.base.length - a.base.length); // بلندها اول — شانس جا شدن بیشتر
+   252→  for (const w of sorted) {
+   253→    const L = w.base.length;
+   254→    for (let t = 0; t < 200; t++) {
+   255→      const [dr, dc] = DIRS[Math.floor(Math.random() * DIRS.length)];
+   256→      // بازهٔ مجاز نقطهٔ شروع برای این جهت — اگر خالی باشد واژه در این جهت جا نمی‌شود
+   257→      const rMin = dr === -1 ? L - 1 : 0;
+   258→      const rMax = dr === 1 ? size - L : size - 1;
+   259→      const cMin = dc === -1 ? L - 1 : 0;
+   260→      const cMax = dc === 1 ? size - L : size - 1;
+   261→      if (rMin > rMax || cMin > cMax) continue;
+   262→      const r0 = rMin + Math.floor(Math.random() * (rMax - rMin + 1));
+   263→      const c0 = cMin + Math.floor(Math.random() * (cMax - cMin + 1));
+   264→      // برخورد فقط با همان حرف مجاز است
+   265→      let ok = true;
+   266→      for (let i = 0; i < L; i++) {
+   267→        const cell = grid[r0 + i * dr][c0 + i * dc];
+   268→        if (cell !== null && cell !== w.base[i]) {
+   269→          ok = false;
+   270→          break;
+   271→        }
+   272→      }
+   273→      if (!ok) continue;
+   274→      const cells: [number, number][] = [];
+   275→      for (let i = 0; i < L; i++) {
+   276→        const r = r0 + i * dr;
+   277→        const c = c0 + i * dc;
+   278→        grid[r][c] = w.base[i];
+   279→        cells.push([r, c]);
+   280→      }
+   281→      placements.push({ base: w.base, raw: w.raw, meaning: w.meaning, cells });
+   282→      break; // همین واژه جا شد — سراغ بعدی
+   283→    }
+   284→  }
+   285→  // خانه‌های خالی: ۵۰٪ حرف از خود واژه‌های پازل (استتار) + ۵۰٪ A-Z تصادفی
+   286→  const bag: string[] = [];
+   287→  for (const p of placements) {
+   288→    for (const ch of p.base) bag.push(ch);
+   289→  }
+   290→  const finalGrid: string[][] = grid.map((row) =>
+   291→    row.map((cell) => {
+   292→      if (cell !== null) return cell;
+   293→      if (bag.length > 0 && Math.random() < 0.5) return bag[Math.floor(Math.random() * bag.length)];
+   294→      return String.fromCharCode(65 + Math.floor(Math.random() * 26));
+   295→    }),
+   296→  );
+   297→  return { grid: finalGrid, placements };
+   298→}
+   299→
+   300→// ─── کامپوننت ───
+   301→
+   302→export function WordSearchGame() {
+   303→  const data = useBookData();
+   304→  const { bookId } = useBook();
+   305→  const bid = bookId ?? "vision-one"; // عملاً همیشه کتاب فعال است (بازی فقط داخل کتاب رندر می‌شود)
+   306→
+   307→  const [phase, setPhase] = useState<Phase>("setup");
+   308→  const [lesson, setLesson] = useState(1);
+   309→  const [wordCount, setWordCount] = useState(6);
+   310→  const [size, setSize] = useState(8);
+   311→  const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
+   312→  const [clues, setClues] = useState<Placement[]>([]);
+   313→  const [found, setFound] = useState<Set<string>>(new Set());
+   314→  const [sel, setSel] = useState<Cell | null>(null);
+   315→  const [popKeys, setPopKeys] = useState<string[] | null>(null);
+   316→  const [wrongKeys, setWrongKeys] = useState<string[] | null>(null);
+   317→  const [showWords, setShowWords] = useState(false);
+   318→  const [secs, setSecs] = useState(0);
+   319→  const [finalSecs, setFinalSecs] = useState<number | null>(null);
+   320→  const [isRecord, setIsRecord] = useState(false);
+   321→  /** فاز G2-b — پیام باکس aria-live (اعلام انتخاب/یافتن/توقف برای فناوری‌های کمکی) */
+   322→  const [liveMsg, setLiveMsg] = useState("");
+   323→  /** فاز G2-b — تعداد انتخاب‌های غلط این دور (مبنای ستاره و «مرور خطاها») */
+   324→  const [wrongCount, setWrongCount] = useState(0);
+   325→  /** فاز G2-b — واژه‌های خطاخورده برای مرور انتهای دور (نگاشت مسیر غلط به واژه) */
+   326→  const [missedWords, setMissedWords] = useState<{ front: string; back: string }[]>([]);
+   327→  /** فاز G2-b — درگ فعال: سلول شروع + آخرین سلول زیر اشاره‌گر */
+   328→  const [drag, setDrag] = useState<DragState | null>(null);
+   329→
+   330→  const startedAtRef = useRef(0);
+   331→  /** فاز G2-b — لحظهٔ شکار آخرین واژه (زمان دقیق دور؛ تأخیر پایان در آن حساب نمی‌شود) */
+   332→  const endedAtRef = useRef(0);
+   333→  const popTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+   334→  const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+   335→  /** فاز G2-b — تایمر پایان دور با تأخیر (پنجرهٔ انیمیشن pop آخرین واژه) */
+   336→  const finishTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+   337→  // فاز G2-b — وضعیت اشاره‌گر درگ: شناسهٔ اشاره‌گر فعال + کپچرشدن به container +
+   338→  // مهار کلیکِ همان ژستِ درگ (کلیک بعد از pointerUp نباید دوباره confirm کند)
+   339→  const gridRef = useRef<HTMLDivElement | null>(null);
+   340→  const activePointerRef = useRef<number | null>(null);
+   341→  const capturedRef = useRef(false);
+   342→  const suppressClickUntilRef = useRef(0);
+   343→  const secsRef = useRef(0);
+   344→  const { speed } = useVoiceSpeed();
+   345→
+   346→  // فاز G2-b — توقف/ادامهٔ استاندارد کیت + نگهبان خروج + کلید صدا (الگوی پایلوت memory)
+   347→  // توقف خودکار در تب مخفی (useGamePause) — در بازگشت اورلی «متوقف شد» دیده می‌شود
+   348→  const { paused, resume, pause: pauseGame, toggle: togglePause } = useGamePause((p) => {
+   349→    if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
+   350→  });
+   351→  const [exitAsk, setExitAsk] = useState(false);
+   352→  // الگوی memory: state بی‌صدا + toggle در هندلر (بدون setState-in-effect)
+   353→  const [muted, setMuted] = useState(isSoundMuted());
+   354→  // فاز G2-b — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
+   355→  const {
+   356→    open: tutorialOpen,
+   357→    openHelp: openTutorial,
+   358→    close: closeTutorial,
+   359→  } = useAutoTutorial(GAME_KEY, phase === "setup");
+   360→  const pausedForHelpRef = useRef(false);
+   361→  const handleHelp = useCallback(() => {
+   362→    if (phase === "playing") {
+   363→      pausedForHelpRef.current = true;
+   364→      pauseGame();
+   365→    }
+   366→    openTutorial();
+   367→  }, [openTutorial, pauseGame, phase]);
+   368→  const handleTutorialClose = useCallback(() => {
+   369→    closeTutorial();
+   370→    if (pausedForHelpRef.current) {
+   371→      pausedForHelpRef.current = false;
+   372→      resume();
+   373→    }
+   374→  }, [closeTutorial, resume]);
+   375→  const handleTutorialOpenChange = useCallback(
+   376→    (o: boolean) => {
+   377→      if (!o) handleTutorialClose();
+   378→    },
+   379→    [handleTutorialClose],
+   380→  );
+   381→  // فاز G2-b — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
+   382→  const sessionRef = useRef<GameSessionTracker | null>(null);
+   383→
+   384→  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${wordCount}`;
+   385→
+   386→  // استخر معتبر درس انتخابی + شمارندهٔ قابل‌شکار کل کتاب (برچسب چیپ)
+   387→  const candidates = useMemo(
+   388→    () => validWordList(lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson)),
+   389→    [data.vocab, lesson],
+   390→  );
+   391→  const allValidCount = useMemo(() => validWordList(data.vocab.all).length, [data.vocab]);
+   392→
+   393→  // رکورد شخصی — اسنپ‌شات عددیِ پایدار (primitive) با الگوی match-game
+   394→  const best = useSyncExternalStore(
+   395→    subscribeGameData,
+   396→    () => {
+   397→      const b = loadBest<BestRecord>(bid, GAME_KEY, scope);
+   398→      return b && typeof b.time === "number" ? b.time : null;
+   399→    },
+   400→    () => null,
+   401→  );
+   402→
+   403→  // تایمر — functional setState (بدون setState مستقیم در effect)
+   404→  // فاز G2-b — گیت روی paused: هنگام توقف (دستی یا خودکارِ تب مخفی) هیچ تیکی جلو نمی‌رود
+   405→  useEffect(() => {
+   406→    if (phase !== "playing" || paused) return;
+   407→    const t = window.setInterval(() => {
+   408→      secsRef.current += 1;
+   409→      setSecs((s) => s + 1);
+   410→    }, 1000);
+   411→    return () => window.clearInterval(t);
+   412→  }, [phase, paused]);
+   413→
+   414→  /** پاک‌سازی تایمرهای معلق دور (انیمیشن‌ها + پایان با تأخیر) */
+   415→  const clearRoundTimers = useCallback(() => {
+   416→    if (popTimer.current) clearTimeout(popTimer.current);
+   417→    if (shakeTimer.current) clearTimeout(shakeTimer.current);
+   418→    if (finishTimer.current) clearTimeout(finishTimer.current);
+   419→  }, []);
+   420→
+   421→  // cleanup: قطع تلفظ + تایمرهای معلق + ثبت «رهاشده» تله‌متری (فاز G2-b)
+   422→  useEffect(() => {
+   423→    return () => {
+   424→      sessionRef.current?.abandon("unmount");
+   425→      stopSpeaking();
+   426→      clearRoundTimers();
+   427→    };
+   428→  }, [clearRoundTimers]);
+   429→
+   430→  /** شروع دور — ساخت پازل + ریست کامل وضعیت + جلسهٔ تازهٔ تله‌متری */
+   431→  const start = useCallback(() => {
+   432→    // اگر واژه‌های جاگیرنده به تعداد خواستی کافی بود از همان‌ها بگیر (برای ۸×۸ واژهٔ ۹حرفی بی‌فایده است)
+   433→    const fitting = candidates.filter((w) => baseWordOf(w.word).length <= size);
+   434→    const pool = fitting.length >= wordCount ? fitting : candidates;
+   435→    const chosen = pickUnique(pool, wordCount, (w) => baseWordOf(w.word)).map((w) => ({
+   436→      base: baseWordOf(w.word),
+   437→      raw: w.word,
+   438→      meaning: w.meaning,
+   439→    }));
+   440→    if (chosen.length < 4) {
+   441→      toast.error("واژهٔ قابل‌شکار کافی در این محدوده نیست — درس دیگری را امتحان کن");
+   442→      return;
+   443→    }
+   444→    const p = generatePuzzle(chosen, size);
+   445→    if (p.placements.length < 4) {
+   446→      toast.error("جدول با این تنظیمات ساخته نشد — اندازهٔ جدول یا درس را عوض کن");
+   447→      return;
+   448→    }
+   449→    clearRoundTimers();
+   450→    setPuzzle(p);
+   451→    setClues(shuffle(p.placements)); // ترتیب سرنخ‌ها بی‌ربط به ترتیب جای‌گذاری
+   452→    setFound(new Set());
+   453→    setSel(null);
+   454→    setPopKeys(null);
+   455→    setWrongKeys(null);
+   456→    setShowWords(false);
+   457→    setSecs(0);
+   458→    secsRef.current = 0;
+   459→    setFinalSecs(null);
+   460→    setIsRecord(false);
+   461→    setLiveMsg("");
+   462→    setWrongCount(0);
+   463→    setMissedWords([]);
+   464→    setDrag(null);
+   465→    activePointerRef.current = null;
+   466→    capturedRef.current = false;
+   467→    suppressClickUntilRef.current = 0;
+   468→    endedAtRef.current = 0;
+   469→    startedAtRef.current = Date.now();
+   470→    resume();
+   471→    setExitAsk(false);
+   472→    // فاز G2-b — جلسهٔ تازهٔ تله‌متری برای این دور
+   473→    sessionRef.current = createGameSession({
+   474→      game: GAME_KEY,
+   475→      level: scope,
+   476→    });
+   477→    sessionRef.current.start();
+   478→    setPhase("playing");
+   479→  }, [candidates, wordCount, size, scope, resume, clearRoundTimers]);
+   480→
+   481→  /** پایان دور — استریک/جلسه/Attempt/رکورد (کمترین زمان) — الگوی کیت */
+   482→  const finish = useCallback(
+   483→    (foundCount: number) => {
+   484→      const total = puzzle?.placements.length ?? foundCount;
+   485→      // فاز G2-b — زمان واقعی دور (لحظهٔ شکار آخرین واژه، نه لحظهٔ فراخوانی با تأخیر)
+   486→      const finalTime = Math.max(
+   487→        1,
+   488→        Math.round(((endedAtRef.current || Date.now()) - (startedAtRef.current || Date.now())) / 1000),
+   489→      );
+   490→      setFinalSecs(finalTime);
+   491→      touchStreak();
+   492→      recordStudySession();
+   493→      bumpPlays(bid, GAME_KEY);
+   494→      // فاز G2-b — پایان عادی جلسهٔ تله‌متری
+   495→      sessionRef.current?.end("finish");
+   496→      // فاز G2-b — بازخورد سه‌کانالهٔ پایان دور (الگوی پایلوت memory)
+   497→      playSound("finish");
+   498→      buzz("success");
+   499→      saveAttempt(bid, GAME_KEY, {
+   500→        lesson: lesson === ALL_LESSONS ? 0 : lesson,
+   501→        total,
+   502→        correct: foundCount,
+   503→        duration: finalTime,
+   504→        detail: (puzzle?.placements ?? []).map((p) => ({ word: p.raw, ok: true })),
+   505→      });
+   506→      const prev = loadBest<BestRecord>(bid, GAME_KEY, scope);
+   507→      if (!prev || typeof prev.time !== "number" || finalTime < prev.time) {
+   508→        saveBest(bid, GAME_KEY, scope, { time: finalTime });
+   509→        setIsRecord(true);
+   510→        playSound("record");
+   511→        buzz("record");
+   512→        toast.success(`رکورد جدید! ${faNum(total)} واژه در ${fmtTime(finalTime)} 🏆`);
+   513→      } else {
+   514→        toast.success(`همه شکار شدند — ${faNum(total)} واژه در ${fmtTime(finalTime)}! 🎯`);
+   515→      }
+   516→      setPhase("done");
+   517→    },
+   518→    [puzzle, bid, lesson, scope],
+   519→  );
+   520→
+   521→  /**
+   522→   * فاز G2-b — هستهٔ مشترک تأیید انتخاب (هر دو مسیر کلیکِ دو-مرحله‌ای و درگ لمسی):
+   523→   * مسیر هم‌خط را با واژه‌های پیدانشده می‌سنجد — درست: pop + SRS + تلفظ + صدا؛
+   524→   * غلط: wrong/error + لرزش دو سر مسیر + شمارش خطا + نگاشت به واژهٔ مرور.
+   525→   */
+   526→  const confirmPath = useCallback(
+   527→    (cells: Cell[], viaDrag: boolean) => {
+   528→      if (!puzzle || paused) return;
+   529→      const { grid, placements } = puzzle;
+   530→      if (found.size >= placements.length) return; // دور در حال بستن است (پنجرهٔ تأخیر پایان)
+   531→      // انتخاب جدید هر لرزش قبلی را تمام می‌کند
+   532→      if (shakeTimer.current) {
+   533→        clearTimeout(shakeTimer.current);
+   534→        shakeTimer.current = null;
+   535→        setWrongKeys(null);
+   536→      }
+   537→      const str = cells.map((k) => grid[k.row][k.col]).join("");
+   538→      const rev = [...str].reverse().join("");
+   539→      const hit = placements.find((p) => !found.has(p.base) && (p.base === str || p.base === rev));
+   540→      if (hit) {
+   541→        const next = new Set(found);
+   542→        next.add(hit.base);
+   543→        const isLast = next.size >= placements.length;
+   544→        setFound(next);
+   545→        setSel(null);
+   546→        const keys = cells.map((k) => `${k.row}:${k.col}`);
+   547→        setPopKeys(keys);
+   548→        if (popTimer.current) clearTimeout(popTimer.current);
+   549→        popTimer.current = setTimeout(() => setPopKeys(null), 500);
+   550→        recordSRS(hit.raw, true); // کلید SRS = واژهٔ خام کتاب (سازگار با بقیهٔ اپ)
+   551→        speak(hit.base.toLowerCase(), { speed });
+   552→        // فاز G2-b — سه‌کانالهٔ یافتن واژه (صدا + لرزش + اعلام aria)
+   553→        if (isLast) {
+   554→          // همه یافت شدند — فانفار برد؛ پایان دور با تأخیر کوتاه (پس از انیمیشن pop)
+   555→          playSound("win");
+   556→          buzz("record");
+   557→          setLiveMsg(
+   558→            viaDrag
+   559→              ? `انتخاب: ${hit.base} — همه شکار شدند! 🎉`
+   560→              : `«${hit.base}» پیدا شد — همه شکار شدند! 🎉`,
+   561→          );
+   562→          endedAtRef.current = Date.now();
+   563→          if (finishTimer.current) clearTimeout(finishTimer.current);
+   564→          finishTimer.current = setTimeout(() => finish(next.size), FINISH_DELAY_MS);
+   565→        } else {
+   566→          playSound("correct");
+   567→          buzz("success");
+   568→          setLiveMsg(
+   569→            viaDrag
+   570→              ? `انتخاب: ${hit.base} — واژه پیدا شد! 🎉`
+   571→              : `«${hit.base}» پیدا شد! 🎉`,
+   572→          );
+   573→        }
+   574→      } else {
+   575→        // انتخاب غلط — فاز G2-b: صدا + لرزش + اعلام (سه‌کاناله)
+   576→        playSound("wrong");
+   577→        buzz("error");
+   578→        setWrongCount((n) => n + 1);
+   579→        setLiveMsg(
+   580→          viaDrag
+   581→            ? `انتخاب: ${str} — این واژه در فهرست نیست`
+   582→            : `«${str}» در فهرست واژه‌ها نیست — دوباره تلاش کن`,
+   583→        );
+   584→        // فاز G2-b — نگاشت خطا به واژهٔ مرور: اگر مسیر اشتباه بخشی از یک واژهٔ
+   585→        // پیدانشده بود (کاربر آن را ناقص به یاد داشته)، همان واژه برای «مرور خطاها»
+   586→        // صفحهٔ نتیجه ثبت می‌شود؛ وگرنه فقط شمارندهٔ خطا بالا می‌رود.
+   587→        const guess = [str, rev].find((s) => s.length >= 3);
+   588→        const target = guess
+   589→          ? placements.find((p) => !found.has(p.base) && p.base.includes(guess))
+   590→          : undefined;
+   591→        if (target) {
+   592→          setMissedWords((prev) =>
+   593→            prev.some((m) => m.front === target.raw)
+   594→              ? prev
+   595→              : [...prev, { front: target.raw, back: target.meaning }],
+   596→          );
+   597→        }
+   598→        // لرزش بصری روی دو سر مسیر غلط
+   599→        const first = cells[0];
+   600→        const last = cells[cells.length - 1];
+   601→        setWrongKeys([`${first.row}:${first.col}`, `${last.row}:${last.col}`]);
+   602→        setSel(null);
+   603→        shakeTimer.current = setTimeout(() => setWrongKeys(null), 600);
+   604→      }
+   605→    },
+   606→    [puzzle, paused, found, speed, finish],
+   607→  );
+   608→
+   609→  /** مسیر کلیک دو-مرحله‌ای (موجود فاز ۳) — تأیید نهایی از confirmPath مشترک */
+   610→  const tapCell = useCallback(
+   611→    (row: number, col: number) => {
+   612→      if (!puzzle || paused) return;
+   613→      if (found.size >= puzzle.placements.length) return; // دور در حال بستن است
+   614→      // لمس جدید هر لرزش قبلی را تمام می‌کند
+   615→      if (shakeTimer.current) {
+   616→        clearTimeout(shakeTimer.current);
+   617→        shakeTimer.current = null;
+   618→        setWrongKeys(null);
+   619→      }
+   620→      // tap اول → شروع انتخاب
+   621→      if (!sel) {
+   622→        setSel({ row, col });
+   623→        return;
+   624→      }
+   625→      // tap روی همان خانه → لغو انتخاب
+   626→      if (sel.row === row && sel.col === col) {
+   627→        setSel(null);
+   628→        return;
+   629→      }
+   630→      // tap دوم غیرهم‌خط → تغییر شروع انتخاب (تجربهٔ روان)
+   631→      const cells = pathBetween(sel, { row, col });
+   632→      if (!cells) {
+   633→        setSel({ row, col });
+   634→        return;
+   635→      }
+   636→      confirmPath(cells, false);
+   637→    },
+   638→    [puzzle, paused, found.size, sel, confirmPath],
+   639→  );
+   640→
+   641→  // ── فاز G2-b — درگ لمسی/ماوس (Pointer Events) روی شبکه ──
+   642→  // pointerDown روی سلول = شروع درگ (کلیک دو-مرحله‌ای دست نمی‌خورد: تپ ساده بدون
+   643→  // جابه‌جایی، confirm نمی‌شود و onClick خودش هندل می‌کند)؛ حرکت با elementFromPoint
+   644→  // روی container ردیابی و با اولین حرکتِ واقعی، اشاره‌گر به container کپچر می‌شود تا
+   645→  // رهاکردن بیرون شبکه هم دریافت شود؛ رهاکردن = ثبت مسیر snap‌شده با confirmPath مشترک.
+   646→  const onCellPointerDown = useCallback(
+   647→    (row: number, col: number, e: ReactPointerEvent<HTMLButtonElement>) => {
+   648→      if (paused || !puzzle) return;
+   649→      if (found.size >= puzzle.placements.length) return; // دور در حال بستن است
+   650→      activePointerRef.current = e.pointerId;
+   651→      capturedRef.current = false;
+   652→      suppressClickUntilRef.current = 0;
+   653→      // فاز G2-b — شروع درگ: بازخورد کلیک (صدا + لرزش)
+   654→      playSound("click");
+   655→      buzz("light");
+   656→      setDrag({ from: { row, col }, to: { row, col } });
+   657→    },
+   658→    [paused, puzzle, found.size],
+   659→  );
+   660→
+   661→  const onGridPointerMove = useCallback(
+   662→    (e: ReactPointerEvent<HTMLDivElement>) => {
+   663→      if (!drag || activePointerRef.current !== e.pointerId) return;
+   664→      const cell = cellFromPoint(e.clientX, e.clientY);
+   665→      if (!cell || (cell.row === drag.to.row && cell.col === drag.to.col)) return;
+   666→      // اولین حرکت واقعی → کپچر به container تا حرکت/رهاکردن بیرون شبکه هم برسد
+   667→      if (!capturedRef.current) {
+   668→        try {
+   669→          gridRef.current?.setPointerCapture(e.pointerId);
+   670→          capturedRef.current = true;
+   671→        } catch {
+   672→          /* کپچر اختیاری است — مسیر داخل شبکه بدون آن هم کار می‌کند */
+   673→        }
+   674→      }
+   675→      setDrag((d) => (d ? { ...d, to: cell } : d));
+   676→    },
+   677→    [drag],
+   678→  );
+   679→
+   680→  /** پایان درگ — confirm برای pointerUp/leave، cancel برای pointercancel */
+   681→  const endDrag = useCallback(
+   682→    (e: ReactPointerEvent<HTMLDivElement>, mode: "confirm" | "cancel") => {
+   683→      if (!drag || activePointerRef.current !== e.pointerId) return;
+   684→      const { from, to } = drag;
+   685→      activePointerRef.current = null;
+   686→      if (capturedRef.current) {
+   687→        try {
+   688→          gridRef.current?.releasePointerCapture(e.pointerId);
+   689→        } catch {
+   690→          /* noop */
+   691→        }
+   692→        capturedRef.current = false;
+   693→      }
+   694→      setDrag(null);
+   695→      if (mode !== "confirm") return;
+   696→      // تپ ساده (بدون ورود به سلول دیگر) — مسیر کلیک/کیبورد خودش هندل می‌کند
+   697→      if (from.row === to.row && from.col === to.col) return;
+   698→      // کلیکِ همان ژستِ درگ نباید دوباره confirm کند (هدف click بعد از pointerUp)
+   699→      suppressClickUntilRef.current = Date.now() + 600;
+   700→      confirmPath(dragPathBetween(from, to, size), true);
+   701→    },
+   702→    [drag, size, confirmPath],
+   703→  );
+   704→
+   705→  // خانه‌های واژه‌های پیدا‌شده — برای رنگ‌آمیزی دائمی جدول
+   706→  const foundCellKeys = useMemo(() => {
+   707→    const s = new Set<string>();
+   708→    if (puzzle) {
+   709→      for (const p of puzzle.placements) {
+   710→        if (found.has(p.base)) {
+   711→          for (const [r, c] of p.cells) s.add(`${r}:${c}`);
+   712→        }
+   713→      }
+   714→    }
+   715→    return s;
+   716→  }, [puzzle, found]);
+   717→
+   718→  // فاز G2-b — خانه‌های مسیر موقت درگ (هایلایت کهربایی تا رهاکردن)
+   719→  const dragCellKeys = useMemo(() => {
+   720→    const s = new Set<string>();
+   721→    if (drag && puzzle) {
+   722→      for (const c of dragPathBetween(drag.from, drag.to, size)) s.add(`${c.row}:${c.col}`);
+   723→    }
+   724→    return s;
+   725→  }, [drag, puzzle, size]);
+   726→
+   727→  const chipCls = (active: boolean) =>
+   728→    cn(
+   729→      "flex min-h-11 items-center rounded-full border px-3.5 text-[12px] font-bold transition-all",
+   730→      active
+   731→        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   732→        : "text-muted-foreground hover:bg-muted",
+   733→    );
+   734→
+   735→  // انصراف حین دور — فاز G2-b نگهبان خروج: با ≥۱ واژه یافته (یا انتخاب آغازشده)،
+   736→  // GameExitGuard؛ بدون هیچ پیشرفتی، خروج مستقیم + تله‌متری abandon
+   737→  const handleExitClick = useCallback(() => {
+   738→    stopSpeaking();
+   739→    if (found.size > 0 || sel !== null) {
+   740→      setExitAsk(true);
+   741→    } else {
+   742→      clearRoundTimers();
+   743→      // دور بدون پیشرفت هم یک جلسه است؛ همین‌جا رهاشده ثبت می‌شود
+   744→      sessionRef.current?.abandon("exit");
+   745→      resume();
+   746→      setPhase("setup");
+   747→    }
+   748→  }, [found.size, sel, clearRoundTimers, resume]);
+   749→
+   750→  // ── Setup ──
+   751→  if (phase === "setup") {
+   752→    return (
+   753→      <>
+   754→        <Card className="mx-auto max-w-xl rise-in">
+   755→          <CardContent className="space-y-6 p-6">
+   756→            <div className="flex items-center gap-3">
+   757→              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   758→                <Search size={22} />
+   759→              </span>
+   760→              <div>
+   761→                <h2 className="text-lg font-black">شکار کلمه</h2>
+   762→                <p className="text-xs text-muted-foreground">
+   763→                  واژه‌های درس در جدول پنهان‌اند — با معنی فارسی شکارشان کن!
+   764→                </p>
+   765→              </div>
+   766→            </div>
+   767→
+   768→            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   769→              <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   770→              <p>
+   771→                انگشت یا ماوس را از حرف اول تا آخر واژه بکش و رها کن؛ یا اول حرف اول و بعد حرف آخر را
+   772→                بزن — افقی، عمودی یا مورب. سرنخ‌ها معنی فارسی‌اند.
+   773→              </p>
+   774→            </div>
+   775→
+   776→            <div>
+   777→              <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   778→              <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   779→                <button
+   780→                  type="button"
+   781→                  aria-pressed={lesson === ALL_LESSONS}
+   782→                  onClick={() => setLesson(ALL_LESSONS)}
+   783→                  className={chipCls(lesson === ALL_LESSONS)}
+   784→                >
+   785→                  کل کتاب ({faNum(allValidCount)} واژه)
+   786→                </button>
+   787→                {data.vocab.lessons
+   788→                  .filter((l) => l.lesson > 0)
+   789→                  .map((l) => (
+   790→                    <button
+   791→                      key={l.lesson}
+   792→                      type="button"
+   793→                      aria-pressed={lesson === l.lesson}
+   794→                      onClick={() => setLesson(l.lesson)}
+   795→                      className={chipCls(lesson === l.lesson)}
+   796→                    >
+   797→                      {l.label}
+   798→                    </button>
+   799→                  ))}
+   800→              </div>
+   801→            </div>
+   802→
+   803→            <div>
+   804→              <p className="mb-2 text-[13px] font-bold">چند واژه؟</p>
+   805→              <div className="flex flex-wrap gap-2" role="group" aria-label="تعداد واژه‌ها">
+   806→                {WORD_COUNT_OPTIONS.map((n) => (
+   807→                  <button
+   808→                    key={n}
+   809→                    type="button"
+   810→                    aria-pressed={wordCount === n}
+   811→                    onClick={() => setWordCount(n)}
+   812→                    className={chipCls(wordCount === n)}
+   813→                  >
+   814→                    {faNum(n)} واژه
+   815→                  </button>
+   816→                ))}
+   817→              </div>
+   818→            </div>
+   819→
+   820→            <div>
+   821→              <p className="mb-2 text-[13px] font-bold">اندازه جدول؟</p>
+   822→              <div className="flex flex-wrap gap-2" role="group" aria-label="اندازه جدول">
+   823→                {SIZE_OPTIONS.map((n) => (
+   824→                  <button
+   825→                    key={n}
+   826→                    type="button"
+   827→                    aria-pressed={size === n}
+   828→                    onClick={() => setSize(n)}
+   829→                    className={chipCls(size === n)}
+   830→                  >
+   831→                    {faNum(n)}×{faNum(n)}
+   832→                  </button>
+   833→                ))}
+   834→              </div>
+   835→            </div>
+   836→
+   837→            {best !== null && (
+   838→              <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   839→                <Trophy size={12} />
+   840→                سریع‌ترین شکار: {fmtTime(best)}
+   841→              </Badge>
+   842→            )}
+   843→
+   844→            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   845→              <Play size={18} />
+   846→              شروع شکار
+   847→            </Button>
+   848→          </CardContent>
+   849→        </Card>
+   850→        {/* فاز G2-b — آموزش یک‌بارنمایش در اولین ورود */}
+   851→        <TutorialOverlay
+   852→          game={GAME_KEY}
+   853→          steps={TUTORIAL_STEPS}
+   854→          open={tutorialOpen}
+   855→          onOpenChange={handleTutorialOpenChange}
+   856→        />
+   857→      </>
+   858→    );
+   859→  }
+   860→
+   861→  // ── Done — فاز G2-b: صفحهٔ نتیجهٔ استاندارد کیت ──
+   862→  if (phase === "done") {
+   863→    // ستاره‌بندی per-game: بدون انتخاب غلط = ۳ / حداکثر ۲ خطا = ۲ / بیشتر = ۱
+   864→    // (دور فقط وقتی تمام می‌شود که همه واژه‌ها پیدا شده باشند)
+   865→    const stars = wrongCount === 0 ? 3 : wrongCount <= 2 ? 2 : 1;
+   866→    return (
+   867→      <ResultScreen
+   868→        title="همه شکار شدند!"
+   869→        stars={stars}
+   870→        isRecord={isRecord}
+   871→        errorCount={wrongCount}
+   872→        reviewItems={missedWords}
+   873→        stats={[
+   874→          {
+   875→            label: "زمان",
+   876→            value: fmtTime(finalSecs ?? secs),
+   877→            icon: <Timer size={16} className="text-primary" />,
+   878→          },
+   879→          {
+   880→            label: "واژه",
+   881→            value: faNum(clues.length),
+   882→            icon: <Target size={16} className="text-teal-500" />,
+   883→          },
+   884→          {
+   885→            label: "خطا",
+   886→            value: faNum(wrongCount),
+   887→            icon: <XCircle size={16} className="text-amber-500" />,
+   888→          },
+   889→        ]}
+   890→        onReplay={start}
+   891→        onExit={() => setPhase("setup")}
+   892→        exitLabel="تنظیمات"
+   893→      />
+   894→    );
+   895→  }
+   896→
+   897→  // ── Playing ──
+   898→  if (!puzzle) return null; // عملاً رخ نمی‌دهد — playing فقط بعد از ساخت پازل
+   899→  const { grid, placements } = puzzle;
+   900→  const pct = Math.round((found.size / Math.max(placements.length, 1)) * 100);
+   901→
+   902→  return (
+   903→    <>
+   904→      {/* فاز G2-b — هدر یکنواخت از کیت (الگوی پایلوت memory) */}
+   905→      <GameShell
+   906→        title="شکار کلمه"
+   907→        icon={<Search size={18} />}
+   908→        stats={
+   909→          <>
+   910→            <Badge variant="secondary" className="gap-1 text-[11px]">
+   911→              <Timer size={11} />
+   912→              {fmtTime(secs)}
+   913→            </Badge>
+   914→            <Badge variant="secondary" className="gap-1 text-[11px]">
+   915→              <CheckCircle2 size={11} className="text-primary" />
+   916→              {faNum(found.size)} / {faNum(placements.length)}
+   917→            </Badge>
+   918→          </>
+   919→        }
+   920→        liveMsg={liveMsg}
+   921→        progress={
+   922→          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+   923→            <div
+   924→              className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+   925→              style={{ width: `${pct}%` }}
+   926→            />
+   927→          </div>
+   928→        }
+   929→        paused={paused}
+   930→        onPauseToggle={togglePause}
+   931→        muted={muted}
+   932→        onMuteToggle={() => setMuted(toggleSoundMuted())}
+   933→        onHelp={handleHelp}
+   934→        onExit={handleExitClick}
+   935→      >
+   936→        <div className="relative">
+   937→          <div
+   938→            className={cn("space-y-4", paused && "pointer-events-none blur-sm")}
+   939→            aria-hidden={paused}
+   940→          >
+   941→            {/* dir=ltr تا ستون/سطر جدول در RTL جابه‌جا نشود · فاز G2-b: touch-none تا
+   942→                درگ لمسی اسکرول صفحه را بالا نکشد + select-none ضد انتخاب متن */}
+   943→            <div
+   944→              ref={gridRef}
+   945→              dir="ltr"
+   946→              aria-label="جدول حروف پنهان‌شده — با کشیدن روی حروف یا دو ضربه، واژه را انتخاب کن"
+   947→              className="mx-auto grid w-full max-w-md touch-none select-none gap-1 rounded-2xl border bg-card p-2 shadow-sm"
+   948→              style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
+   949→              onPointerMove={onGridPointerMove}
+   950→              onPointerUp={(e) => endDrag(e, "confirm")}
+   951→              onPointerCancel={(e) => endDrag(e, "cancel")}
+   952→              onPointerLeave={(e) => endDrag(e, "confirm")}
+   953→            >
+   954→              {grid.map((row, r) =>
+   955→                row.map((ch, c) => {
+   956→                  const key = `${r}:${c}`;
+   957→                  const isFound = foundCellKeys.has(key);
+   958→                  const isSelected = sel?.row === r && sel?.col === c;
+   959→                  const isDragPath = dragCellKeys.has(key);
+   960→                  const isWrong = wrongKeys?.includes(key) ?? false;
+   961→                  const isPop = popKeys?.includes(key) ?? false;
+   962→                  return (
+   963→                    <button
+   964→                      key={key}
+   965→                      type="button"
+   966→                      data-cell={`${r}:${c}`}
+   967→                      aria-label={`حرف ${ch} — ردیف ${faNum(r + 1)}، ستون ${faNum(c + 1)}`}
+   968→                      aria-pressed={isSelected || isDragPath}
+   969→                      onClick={() => {
+   970→                        // فاز G2-b — کلیکِ همان ژستِ درگ خورده شده (تأیید با pointerUp انجام شده)
+   971→                        if (Date.now() < suppressClickUntilRef.current) return;
+   972→                        tapCell(r, c);
+   973→                      }}
+   974→                      onPointerDown={(e) => onCellPointerDown(r, c, e)}
+   975→                      className={cn(
+   976→                        "aspect-square min-h-6 w-full cursor-pointer rounded-md border text-center font-en text-[11px] font-black transition-all sm:text-sm",
+   977→                        isFound
+   978→                          ? cn("border-primary/50 bg-primary/20 text-primary", isPop && "match-pop")
+   979→                          : isWrong
+   980→                            ? "match-shake border-destructive/70 bg-destructive/10 text-destructive"
+   981→                            : isSelected
+   982→                              ? "border-amber-500/70 bg-amber-500/15 ring-2 ring-amber-500"
+   983→                              : isDragPath
+   984→                                ? "border-amber-500/40 bg-amber-500/25" // فاز G2-b — هایلایت موقت مسیر درگ
+   985→                                : "border-transparent hover:border-primary/40",
+   986→                      )}
+   987→                    >
+   988→                      {ch}
+   989→                    </button>
+   990→                  );
+   991→                }),
+   992→              )}
+   993→            </div>
+   994→
+   995→            <p className="text-center text-[10px] text-muted-foreground">
+   996→              با کشیدن انگشت/ماوس روی حروف واژه را شکار کن — یا اول حرف اول و بعد حرف آخر را بزن
+   997→              (با کیبورد: Tab و Enter)
+   998→            </p>
+   999→
+  1000→            <div className="space-y-2">
+  1001→              <div className="flex items-center justify-between">
+  1002→                <p className="text-[13px] font-bold">سرنخ‌ها (معنی فارسی)</p>
+  1003→                <button
+  1004→                  type="button"
+  1005→                  aria-pressed={showWords}
+  1006→                  onClick={() => setShowWords((v) => !v)}
+  1007→                  className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground transition-colors hover:text-foreground"
+  1008→                >
+  1009→                  <Eye size={13} />
+  1010→                  {showWords ? "پنهان‌کردن واژه‌ها" : "نمایش واژه‌ها"}
+  1011→                </button>
+  1012→              </div>
+  1013→              <div className="grid gap-1.5 sm:grid-cols-2">
+  1014→                {clues.map((p, i) => {
+  1015→                  const done = found.has(p.base);
+  1016→                  return (
+  1017→                    <div
+  1018→                      key={p.base}
+  1019→                      className={cn(
+  1020→                        "flex items-center gap-1.5 rounded-lg border p-2 text-[11px] sm:text-xs",
+  1021→                        done
+  1022→                          ? "border-primary/30 bg-primary/5 text-muted-foreground line-through"
+  1023→                          : "border-border bg-card",
+  1024→                      )}
+  1025→                    >
+  1026→                      <span className="shrink-0 font-black text-amber-600 dark:text-amber-400">
+  1027→                        {faNum(i + 1)}.
+  1028→                      </span>
+  1029→                      <span className="min-w-0 flex-1 truncate">{p.meaning}</span>
+  1030→                      {showWords && (
+  1031→                        <span dir="ltr" className="shrink-0 font-en font-black text-teal-600 dark:text-teal-400">
+  1032→                          {p.base}
+  1033→                        </span>
+  1034→                      )}
+  1035→                      {done && <CheckCircle2 size={13} className="shrink-0 text-primary" />}
+  1036→                    </div>
+  1037→                  );
+  1038→                })}
+  1039→              </div>
+  1040→            </div>
+  1041→          </div>
+  1042→
+  1043→          {/* فاز G2-b — اورلی توقف (الگوی پایلوت memory): محتوا تار و غیرقابل‌تعامل */}
+  1044→          {paused && (
+  1045→            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
+  1046→              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+  1047→                <Pause size={26} />
+  1048→              </span>
+  1049→              <p className="text-sm font-black">بازی متوقف شد</p>
+  1050→              <Button onClick={resume} className="h-11 gap-2">
+  1051→                <Play size={16} />
+  1052→                ادامهٔ بازی
+  1053→              </Button>
+  1054→            </div>
+  1055→          )}
+  1056→        </div>
+  1057→
+  1058→        {/* فاز G2-b — نگهبان خروج استاندارد کیت */}
+  1059→        <GameExitGuard
+  1060→          open={exitAsk}
+  1061→          onOpenChange={setExitAsk}
+  1062→          onConfirm={() => {
+  1063→            // فاز G2-b — رهاکردن دور نیمه‌کاره + تله‌متری
+  1064→            sessionRef.current?.abandon("exit");
+  1065→            clearRoundTimers();
+  1066→            stopSpeaking();
+  1067→            setExitAsk(false);
+  1068→            resume();
+  1069→            setPhase("setup");
+  1070→          }}
+  1071→        />
+  1072→      </GameShell>
+  1073→      {/* فاز G2-b — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
+  1074→      <TutorialOverlay
+  1075→        game={GAME_KEY}
+  1076→        steps={TUTORIAL_STEPS}
+  1077→        open={tutorialOpen}
+  1078→        onOpenChange={handleTutorialOpenChange}
+  1079→      />
+  1080→    </>
+  1081→  );
+  1082→}
+  1083→

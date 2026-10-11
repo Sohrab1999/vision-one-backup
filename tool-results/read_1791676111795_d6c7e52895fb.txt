@@ -1,0 +1,660 @@
+     1→   751→  // ── پایان دور — الگوی طلایی فاز ۳/۴ ──
+     2→   752→  const finish = useCallback(() => {
+     3→   753→    if (overRef.current) return;
+     4→   754→    overRef.current = true;
+     5→   755→    clearTimers();
+     6→   756→    stopSpeaking();
+     7→   757→    const total = totalRef.current;
+     8→   758→    const final = scoreRef.current;
+     9→   759→    const elapsed = Math.max(1, Math.round((performance.now() - startedAtRef.current) / 1000));
+    10→   760→    touchStreak();
+    11→   761→    recordStudySession();
+    12→   762→    bumpPlays(activeBookId, GAME_KEY);
+    13→   763→    if (total > 0) {
+    14→   764→      saveAttempt(activeBookId, GAME_KEY, {
+    15→   765→        lesson: lesson === ALL_LESSONS ? 0 : lesson,
+    16→   766→        total,
+    17→   767→        correct: correctRef.current,
+    18→   768→        duration: elapsed,
+    19→   769→        detail: { score: final, maxCombo: maxComboRef.current, mode: modeRef.current, tap: tapRef.current },
+    20→   770→      });
+    21→   771→    }
+    22→   772→    const scope = scopeOf(modeRef.current, tapRef.current);
+    23→   773→    const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+    24→   774→    if (final > 0 && final > (prev?.score ?? 0)) {
+    25→   775→      saveBest(activeBookId, GAME_KEY, scope, { score: final });
+    26→   776→      setIsRecord(prev !== null);
+    27→   777→      if (prev !== null) toast.success(`رکورد جدید! ${faNum(final)} امتیاز 🏆`);
+    28→   778→    } else {
+    29→   779→      setIsRecord(false);
+    30→   780→    }
+    31→   781→    setFinalScore(final);
+    32→   782→    setMaxCombo(maxComboRef.current);
+    33→   783→    setCorrectCount(correctRef.current);
+    34→   784→    setWrongCount(total - correctRef.current);
+    35→   785→    setWrongList([...wrongRef.current]);
+    36→   786→    setPhase("done");
+    37→   787→  }, [activeBookId, lesson, clearTimers]);
+    38→   788→  useEffect(() => {
+    39→   789→    finishRef.current = finish;
+    40→   790→  });
+    41→   791→
+    42→   792→  const quit = useCallback(() => {
+    43→   793→    overRef.current = true;
+    44→   794→    clearTimers();
+    45→   795→    stopSpeaking();
+    46→   796→    if (document.pointerLockElement) document.exitPointerLock();
+    47→   797→    setPhase("setup");
+    48→   798→  }, [clearTimers]);
+    49→   799→
+    50→   800→  // ── پاسخ به شلیک/تپ ──
+    51→   801→  const handleHit = useCallback(
+    52→   802→    (id: string | null) => {
+    53→   803→      const cur = qRef.current;
+    54→   804→      if (overRef.current || lockedRef.current || !cur || id === null) return;
+    55→   805→      const target = cur.targets.find((t) => t.id === id);
+    56→   806→      if (!target) return;
+    57→   807→      const now = performance.now();
+    58→   808→      if (target.correct) {
+    59→   809→        comboRef.current += 1;
+    60→   810→        const bonus = Math.min(comboRef.current - 1, COMBO_CAP) * COMBO_STEP;
+    61→   811→        scoreRef.current += SHOOT_BASE + bonus;
+    62→   812→        totalRef.current += 1;
+    63→   813→        correctRef.current += 1;
+    64→   814→        maxComboRef.current = Math.max(maxComboRef.current, comboRef.current);
+    65→   815→        setScore(scoreRef.current);
+    66→   816→        setCombo(comboRef.current);
+    67→   817→        lockedRef.current = true;
+    68→   818→        bridge.current.flashes = [{ id: target.id, kind: "ok", until: now + HIT_FREEZE_MS }];
+    69→   819→        void speak(cur.speakText, { speed: voiceSpeedRef.current });
+    70→   820→        later(() => advance(), HIT_FREEZE_MS);
+    71→   821→      } else {
+    72→   822→        comboRef.current = 0;
+    73→   823→        totalRef.current += 1;
+    74→   824→        wrongRef.current.push(
+    75→   825→          cur.mode === "word-hunt"
+    76→   826→            ? { label: cur.srsKey, sub: cur.promptMain }
+    77→   827→            : { label: cur.srsKey, sub: cur.promptMain },
+    78→   828→        );
+    79→   829→        seedReviewFromQuiz(cur.srsKey);
+    80→   830→        heartsRef.current -= 1;
+    81→   831→        setHearts(heartsRef.current);
+    82→   832→        setCombo(0);
+    83→   833→        lockedRef.current = true;
+    84→   834→        const good = cur.targets.find((t) => t.correct);
+    85→   835→        bridge.current.flashes = [
+    86→   836→          { id: target.id, kind: "bad", until: now + HIT_FREEZE_MS },
+    87→   837→          ...(good ? [{ id: good.id, kind: "ok" as const, until: now + HIT_FREEZE_MS }] : []),
+    88→   838→        ];
+    89→   839→        if (heartsRef.current <= 0) {
+    90→   840→          later(() => finishRef.current(), HIT_FREEZE_MS);
+    91→   841→        } else {
+    92→   842→          later(() => advance(), HIT_FREEZE_MS);
+    93→   843→        }
+    94→   844→      }
+    95→   845→    },
+    96→   846→    [advance, later],
+    97→   847→  );
+    98→   848→  useEffect(() => {
+    99→   849→    bridge.current.onHit = handleHit;
+   100→   850→  });
+   101→   851→
+   102→   852→  // ── پایان زمان سؤال ──
+   103→   853→  const handleTimeout = useCallback(() => {
+   104→   854→    const cur = qRef.current;
+   105→   855→    if (overRef.current || lockedRef.current || !cur) return;
+   106→   856→    comboRef.current = 0;
+   107→   857→    totalRef.current += 1;
+   108→   858→    wrongRef.current.push({ label: cur.srsKey, sub: cur.promptMain });
+   109→   859→    seedReviewFromQuiz(cur.srsKey);
+   110→   860→    heartsRef.current -= 1;
+   111→   861→    setHearts(heartsRef.current);
+   112→   862→    setCombo(0);
+   113→   863→    setTimeLeft(0);
+   114→   864→    lockedRef.current = true;
+   115→   865→    const good = cur.targets.find((t) => t.correct);
+   116→   866→    bridge.current.flashes = good
+   117→   867→      ? [{ id: good.id, kind: "ok", until: performance.now() + HIT_FREEZE_MS }]
+   118→   868→      : [];
+   119→   869→    if (heartsRef.current <= 0) {
+   120→   870→      later(() => finishRef.current(), HIT_FREEZE_MS);
+   121→   871→    } else {
+   122→   872→      later(() => advance(), HIT_FREEZE_MS);
+   123→   873→    }
+   124→   874→  }, [advance, later]);
+   125→   875→  useEffect(() => {
+   126→   876→    timeoutRef.current = handleTimeout;
+   127→   877→  });
+   128→   878→
+   129→   879→  // ── تایمر سؤال — ۵ بار در ثانیه، فقط روی رویداد گسسته setState ──
+   130→   880→  useEffect(() => {
+   131→   881→    if (phase !== "playing") return;
+   132→   882→    const iv = window.setInterval(() => {
+   133→   883→      if (overRef.current) return;
+   134→   884→      if (lockedRef.current) {
+   135→   885→        deadlineRef.current += 200; // توقف زمان در فاصلهٔ بین سؤال‌ها
+   136→   886→        return;
+   137→   887→      }
+   138→   888→      const left = Math.max(0, (deadlineRef.current - performance.now()) / 1000);
+   139→   889→      setTimeLeft(Math.round(left * 10) / 10);
+   140→   890→      if (left <= 0) timeoutRef.current();
+   141→   891→    }, 200);
+   142→   892→    return () => window.clearInterval(iv);
+   143→   893→  }, [phase]);
+   144→   894→
+   145→   895→  // ── ورودی: Pointer Lock دسکتاپ + درگ/تپ لمسی + کیبورد ۱..۴ ──
+   146→   896→  useEffect(() => {
+   147→   897→    if (phase !== "playing") return;
+   148→   898→    const el = wrapRef.current;
+   149→   899→    if (!el) return;
+   150→   900→    const coarse = window.matchMedia("(pointer: coarse)").matches;
+   151→   901→
+   152→   902→    const ndcOf = (cx: number, cy: number): [number, number] => {
+   153→   903→      const r = el.getBoundingClientRect();
+   154→   904→      return [((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1];
+   155→   905→    };
+   156→   906→    const request = (x: number, y: number) => {
+   157→   907→      const b = bridge.current;
+   158→   908→      const now = performance.now();
+   159→   909→      if (now - b.lastShotAt < SHOOT_COOLDOWN) return;
+   160→   910→      b.lastShotAt = now;
+   161→   911→      b.shoot = { x, y, seq: b.shoot.seq + 1 };
+   162→   912→    };
+   163→   913→
+   164→   914→    let gest: { x0: number; y0: number; t0: number; moved: boolean; lx: number; ly: number; active: boolean } | null =
+   165→   915→      null;
+   166→   916→
+   167→   917→    const onPointerDown = (e: PointerEvent) => {
+   168→   918→      const t = e.target as Node | null;
+   169→   919→      if (overRef.current || !t || !el.contains(t)) return;
+   170→   920→      if (!coarse && !tapRef.current) {
+   171→   921→        if (document.pointerLockElement !== el) {
+   172→   922→          try {
+   173→   923→            const r = el.requestPointerLock() as unknown as Promise<void> | undefined;
+   174→   924→            if (r && typeof r.catch === "function") r.catch(() => {});
+   175→   925→          } catch {
+   176→   926→            /* noop */
+   177→   927→          }
+   178→   928→          return;
+   179→   929→        }
+   180→   930→        request(0, 0);
+   181→   931→        return;
+   182→   932→      }
+   183→   933→      gest = { x0: e.clientX, y0: e.clientY, t0: performance.now(), moved: false, lx: e.clientX, ly: e.clientY, active: true };
+   184→   934→    };
+   185→   935→
+   186→   936→    const onPointerMove = (e: PointerEvent) => {
+   187→   937→      if (document.pointerLockElement === el) {
+   188→   938→        const b = bridge.current;
+   189→   939→        b.aim.yaw -= e.movementX * 0.0026;
+   190→   940→        b.aim.pitch = clamp(b.aim.pitch - e.movementY * 0.0024, -0.6, 0.48);
+   191→   941→        return;
+   192→   942→      }
+   193→   943→      if (!gest?.active) return;
+   194→   944→      const dx = e.clientX - gest.lx;
+   195→   945→      const dy = e.clientY - gest.ly;
+   196→   946→      gest.lx = e.clientX;
+   197→   947→      gest.ly = e.clientY;
+   198→   948→      if (Math.hypot(e.clientX - gest.x0, e.clientY - gest.y0) > 12) gest.moved = true;
+   199→   949→      if (gest.moved) {
+   200→   950→        const b = bridge.current;
+   201→   951→        b.aim.yaw -= dx * 0.005;
+   202→   952→        b.aim.pitch = clamp(b.aim.pitch - dy * 0.0045, -0.6, 0.48);
+   203→   953→      }
+   204→   954→    };
+   205→   955→
+   206→   956→    const onPointerUp = (e: PointerEvent) => {
+   207→   957→      if (!gest?.active) return;
+   208→   958→      const dt = performance.now() - gest.t0;
+   209→   959→      const moved = gest.moved;
+   210→   960→      gest.active = false;
+   211→   961→      if (!moved && dt < 600) {
+   212→   962→        const [x, y] = ndcOf(e.clientX, e.clientY);
+   213→   963→        request(x, y);
+   214→   964→      }
+   215→   965→    };
+   216→   966→
+   217→   967→    const onKey = (e: KeyboardEvent) => {
+   218→   968→      const t = e.target as HTMLElement | null;
+   219→   969→      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+   220→   970→      if (!tapRef.current) return;
+   221→   971→      const map: Record<string, number> = { "1": 0, "2": 1, "3": 2, "4": 3, "۱": 0, "۲": 1, "۳": 2, "۴": 3 };
+   222→   972→      const idx = map[e.key];
+   223→   973→      if (idx === undefined) return;
+   224→   974→      const cur = qRef.current;
+   225→   975→      if (!cur || lockedRef.current || overRef.current) return;
+   226→   976→      const ordered = [...cur.targets].sort((a, b) => a.lane - b.lane);
+   227→   977→      const target = ordered[idx];
+   228→   978→      if (target) bridge.current.onHit(target.id);
+   229→   979→    };
+   230→   980→
+   231→   981→    const onLockChange = () => setLocked(document.pointerLockElement === el);
+   232→   982→
+   233→   983→    window.addEventListener("pointerdown", onPointerDown);
+   234→   984→    window.addEventListener("pointermove", onPointerMove);
+   235→   985→    window.addEventListener("pointerup", onPointerUp);
+   236→   986→    window.addEventListener("keydown", onKey);
+   237→   987→    document.addEventListener("pointerlockchange", onLockChange);
+   238→   988→    return () => {
+   239→   989→      window.removeEventListener("pointerdown", onPointerDown);
+   240→   990→      window.removeEventListener("pointermove", onPointerMove);
+   241→   991→      window.removeEventListener("pointerup", onPointerUp);
+   242→   992→      window.removeEventListener("keydown", onKey);
+   243→   993→      document.removeEventListener("pointerlockchange", onLockChange);
+   244→   994→      if (document.pointerLockElement === el) document.exitPointerLock();
+   245→   995→    };
+   246→   996→  }, [phase]);
+   247→   997→
+   248→   998→  // ── شروع دور ──
+   249→   999→  const start = useCallback(() => {
+   250→  1000→    const pool: Array<VocabEntry | QuizQuestionSeed> =
+   251→  1001→      mode === "word-hunt"
+   252→  1002→        ? (lesson === ALL_LESSONS ? vocabAll : vocabAll.filter((w) => w.lesson === lesson))
+   253→  1003→        : (lesson === ALL_LESSONS ? quizSeed : quizSeed.filter((s) => s.lesson === lesson));
+   254→  1004→    if (pool.length < (mode === "word-hunt" ? MIN_POOL_WORD : MIN_POOL_QUIZ)) return;
+   255→  1005→    modeRef.current = mode;
+   256→  1006→    qTimeRef.current = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
+   257→  1007→    poolRef.current = pool;
+   258→  1008→    distrRef.current = vocabAll;
+   259→  1009→    deckRef.current = shuffle(pool);
+   260→  1010→    deckIdxRef.current = 0;
+   261→  1011→    seqRef.current = 0;
+   262→  1012→    scoreRef.current = 0;
+   263→  1013→    comboRef.current = 0;
+   264→  1014→    heartsRef.current = HEARTS;
+   265→  1015→    totalRef.current = 0;
+   266→  1016→    correctRef.current = 0;
+   267→  1017→    maxComboRef.current = 0;
+   268→  1018→    wrongRef.current = [];
+   269→  1019→    overRef.current = false;
+   270→  1020→    lockedRef.current = false;
+   271→  1021→    startedAtRef.current = performance.now();
+   272→  1022→    bridge.current.aim = { yaw: 0, pitch: 0 };
+   273→  1023→    bridge.current.flashes = [];
+   274→  1024→    bridge.current.lastShotAt = 0;
+   275→  1025→    setScore(0);
+   276→  1026→    setCombo(0);
+   277→  1027→    setHearts(HEARTS);
+   278→  1028→    setQ(null);
+   279→  1029→    setLocked(false);
+   280→  1030→    setPhase("playing");
+   281→  1031→    // سؤال اول پس از سوار شدن صحنه
+   282→  1032→    later(() => advanceRef.current(), 60);
+   283→  1033→  }, [mode, lesson, tapMode, vocabAll, quizSeed, later]);
+   284→  1034→
+   285→  1035→  // ── رکوردهای شخصی هر دو اسکوپ ──
+   286→  1036→  const bestWord = useSyncExternalStore(
+   287→  1037→    subscribeGameData,
+   288→  1038→    () => {
+   289→  1039→      const s = activeBookId ? loadBest<BestRecord>(activeBookId, GAME_KEY, scopeOf("word-hunt", tapMode)) : null;
+   290→  1040→      return s ? JSON.stringify(s) : "";
+   291→  1041→    },
+   292→  1042→    () => "",
+   293→  1043→  );
+   294→  1044→  const bestGrammar = useSyncExternalStore(
+   295→  1045→    subscribeGameData,
+   296→  1046→    () => {
+   297→  1047→      const s = activeBookId ? loadBest<BestRecord>(activeBookId, GAME_KEY, scopeOf("grammar-gate", tapMode)) : null;
+   298→  1048→      return s ? JSON.stringify(s) : "";
+   299→  1049→    },
+   300→  1050→    () => "",
+   301→  1051→  );
+   302→  1052→  const bestVal = useMemo(() => {
+   303→  1053→    const raw = mode === "word-hunt" ? bestWord : bestGrammar;
+   304→  1054→    return raw ? (JSON.parse(raw) as BestRecord).score : null;
+   305→  1055→  }, [mode, bestWord, bestGrammar]);
+   306→  1056→
+   307→  1057→  const chipCls = (active: boolean) =>
+   308→  1058→    cn(
+   309→  1059→      "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   310→  1060→      active
+   311→  1061→        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   312→  1062→        : "text-muted-foreground hover:bg-muted",
+   313→  1063→    );
+   314→  1064→
+   315→  1065→  // ── Setup ──
+   316→  1066→  if (phase === "setup") {
+   317→  1067→    return (
+   318→  1068→      <Card className="mx-auto max-w-xl rise-in">
+   319→  1069→        <CardContent className="space-y-6 p-6">
+   320→  1070→          <div className="flex items-center gap-3">
+   321→  1071→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   322→  1072→              <Crosshair size={22} />
+   323→  1073→            </span>
+   324→  1074→            <div>
+   325→  1075→              <h2 className="text-lg font-black">شوتر آموزشی</h2>
+   326→  1076→              <p className="text-xs text-muted-foreground">میدان سه‌بعدی low-poly — به گزینهٔ درست شلیک کن!</p>
+   327→  1077→            </div>
+   328→  1078→          </div>
+   329→  1079→
+   330→  1080→          <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   331→  1081→            <Sparkles size={15} className="mt-0.5 shrink-0 text-emerald-500" />
+   332→  1082→            <p>
+   333→  1083→              سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
+   334→  1084→              شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
+   335→  1085→              (شلیک به خالی) جریمه ندارد!
+   336→  1086→            </p>
+   337→  1087→          </div>
+   338→  1088→
+   339→  1089→          <div>
+   340→  1090→            <p className="mb-2 text-[13px] font-bold">حالت بازی</p>
+   341→  1091→            <div className="grid gap-2 sm:grid-cols-2">
+   342→  1092→              {(
+   343→  1093→                [
+   344→  1094→                  {
+   345→  1095→                    key: "word-hunt" as const,
+   346→  1096→                    title: "شکار واژه",
+   347→  1097→                    desc: "معنی فارسی روی HUD؛ واژهٔ انگلیسی درست را بین اهداف شکار کن.",
+   348→  1098→                    icon: Star,
+   349→  1099→                  },
+   350→  1100→                  {
+   351→  1101→                    key: "grammar-gate" as const,
+   352→  1102→                    title: "سد گرامری",
+   353→  1103→                    desc: "جملهٔ ناقص سؤال‌ها؛ گزینهٔ درست را نشانه بگیر و شلیک کن.",
+   354→  1104→                    icon: Swords,
+   355→  1105→                  },
+   356→  1106→                ] satisfies Array<{ key: Mode; title: string; desc: string; icon: typeof Star }>
+   357→  1107→              ).map((m) => (
+   358→  1108→                <button
+   359→  1109→                  key={m.key}
+   360→  1110→                  type="button"
+   361→  1111→                  aria-pressed={mode === m.key}
+   362→  1112→                  onClick={() => {
+   363→  1113→                    setMode(m.key);
+   364→  1114→                    setLesson(ALL_LESSONS);
+   365→  1115→                  }}
+   366→  1116→                  className={cn(
+   367→  1117→                    "min-h-11 rounded-2xl border p-3 text-right transition-all",
+   368→  1118→                    mode === m.key
+   369→  1119→                      ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
+   370→  1120→                      : "hover:border-primary/30 hover:bg-muted/50",
+   371→  1121→                  )}
+   372→  1122→                >
+   373→  1123→                  <span className="flex items-center gap-2 text-[13px] font-black">
+   374→  1124→                    <m.icon size={16} className={mode === m.key ? "text-primary" : "text-muted-foreground"} />
+   375→  1125→                    {m.title}
+   376→  1126→                  </span>
+   377→  1127→                  <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">{m.desc}</span>
+   378→  1128→                </button>
+   379→  1129→              ))}
+   380→  1130→            </div>
+   381→  1131→          </div>
+   382→  1132→
+   383→  1133→          <div>
+   384→  1134→            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   385→  1135→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   386→  1136→              <button type="button" aria-pressed={lesson === ALL_LESSONS} onClick={() => setLesson(ALL_LESSONS)} className={chipCls(lesson === ALL_LESSONS)}>
+   387→  1137→                کل کتاب ({faNum(poolCount)} {mode === "word-hunt" ? "واژه" : "سؤال"})
+   388→  1138→              </button>
+   389→  1139→              {mode === "word-hunt"
+   390→  1140→                ? wordLessons.map((l) => (
+   391→  1141→                    <button key={l.lesson} type="button" aria-pressed={lesson === l.lesson} onClick={() => setLesson(l.lesson)} className={chipCls(lesson === l.lesson)}>
+   392→  1142→                      {l.label} ({faNum(vocabAll.filter((w) => w.lesson === l.lesson).length)})
+   393→  1143→                    </button>
+   394→  1144→                  ))
+   395→  1145→                : quizLessons.map((l) => (
+   396→  1146→                    <button key={l} type="button" aria-pressed={lesson === l} onClick={() => setLesson(l)} className={chipCls(lesson === l)}>
+   397→  1147→                      {lessonLabel(l)} ({faNum(quizSeed.filter((s) => s.lesson === l).length)})
+   398→  1148→                    </button>
+   399→  1149→                  ))}
+   400→  1150→            </div>
+   401→  1151→          </div>
+   402→  1152→
+   403→  1153→          <div>
+   404→  1154→            <p className="mb-2 text-[13px] font-bold">سبک کنترل</p>
+   405→  1155→            <button type="button" aria-pressed={tapMode} onClick={() => setTapMode((v) => !v)} className={chipCls(tapMode)}>
+   406→  1156→              <span className="inline-flex items-center gap-1.5">
+   407→  1157→                <MousePointerClick size={14} />
+   408→  1158→                تپ ساده (بدون شلیک) {tapMode ? "— فعال" : ""}
+   409→  1159→              </span>
+   410→  1160→            </button>
+   411→  1161→            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+   412→  1162→              {tapMode ? (
+   413→  1163→                <>تپ روی هدف کافی است؛ روی دسکتاپ هم کلیک روی هدف می‌زند و کلیدهای ۱ تا ۴ هدف را انتخاب می‌کنند.</>
+   414→  1164→              ) : (
+   415→  1165→                <>دسکتاپ: کلیک قفلِ نشانگر، حرکت موس نشانه‌گیری، کلیک بعدی شلیک — موبایل: کشیدن نگاه، تپ روی هدف شلیک.</>
+   416→  1166→              )}
+   417→  1167→            </p>
+   418→  1168→          </div>
+   419→  1169→
+   420→  1170→          {!poolOk && (
+   421→  1171→            <div className="rounded-xl border border-destructive/30 bg-destructive/8 p-3 text-[11px] leading-5 text-destructive">
+   422→  1172→              {mode === "word-hunt"
+   423→  1173→                ? `برای این انتخاب دست‌کم ${faNum(MIN_POOL_WORD)} واژه لازم است — درس دیگری یا «کل کتاب» را انتخاب کن.`
+   424→  1174→                : `برای این انتخاب دست‌کم ${faNum(MIN_POOL_QUIZ)} سؤال لازم است — محدودهٔ دیگری را انتخاب کن.`}
+   425→  1175→            </div>
+   426→  1176→          )}
+   427→  1177→
+   428→  1178→          {bestVal !== null && (
+   429→  1179→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   430→  1180→              <Trophy size={12} />
+   431→  1181→              بهترین امتیاز ({modeName(mode)}{tapMode ? " · تپ ساده" : ""}): {faNum(bestVal)}
+   432→  1182→            </Badge>
+   433→  1183→          )}
+   434→  1184→
+   435→  1185→          <Button size="lg" className="h-12 w-full gap-2 text-base" disabled={!poolOk} onClick={start}>
+   436→  1186→            <Play size={18} />
+   437→  1187→            شروع مأموریت
+   438→  1188→          </Button>
+   439→  1189→        </CardContent>
+   440→  1190→      </Card>
+   441→  1191→    );
+   442→  1192→  }
+   443→  1193→
+   444→  1194→  // ── Done ──
+   445→  1195→  if (phase === "done") {
+   446→  1196→    return (
+   447→  1197→      <Card className="mx-auto max-w-xl rise-in border-emerald-500/30">
+   448→  1198→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   449→  1199→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   450→  1200→            <Crosshair size={30} />
+   451→  1201→          </span>
+   452→  1202→          <h2 className="text-xl font-black">مأموریت تمام شد!</h2>
+   453→  1203→          <p className="-mt-3 text-[11px] text-muted-foreground">
+   454→  1204→            {modeName(mode)}{tapMode ? " · تپ ساده" : ""} · {lesson === ALL_LESSONS ? "کل کتاب" : lessonLabel(lesson)}
+   455→  1205→          </p>
+   456→  1206→          {isRecord && (
+   457→  1207→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   458→  1208→              <Trophy size={13} />
+   459→  1209→              رکورد جدید! 🏆
+   460→  1210→            </Badge>
+   461→  1211→          )}
+   462→  1212→
+   463→  1213→          <div className="w-full rounded-2xl bg-gradient-to-bl from-primary/10 to-emerald-500/10 p-5">
+   464→  1214→            <p className="text-5xl font-black leading-none">{faNum(finalScore)}</p>
+   465→  1215→            <p className="mt-2 text-[11px] text-muted-foreground">امتیاز این مأموریت</p>
+   466→  1216→          </div>
+   467→  1217→
+   468→  1218→          <div className="grid w-full grid-cols-3 gap-2 text-center">
+   469→  1219→            <div className="rounded-xl bg-muted/60 p-3">
+   470→  1220→              <Flame size={16} className="mx-auto text-amber-500" />
+   471→  1221→              <p className="mt-1.5 text-lg font-black leading-none">×{faNum(maxCombo)}</p>
+   472→  1222→              <p className="mt-1 text-[10px] text-muted-foreground">بیشترین کمبو</p>
+   473→  1223→            </div>
+   474→  1224→            <div className="rounded-xl bg-muted/60 p-3">
+   475→  1225→              <CheckCircle2 size={16} className="mx-auto text-emerald-500" />
+   476→  1226→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(correctCount)}</p>
+   477→  1227→              <p className="mt-1 text-[10px] text-muted-foreground">شلیک درست</p>
+   478→  1228→            </div>
+   479→  1229→            <div className="rounded-xl bg-muted/60 p-3">
+   480→  1230→              <XCircle size={16} className="mx-auto text-destructive" />
+   481→  1231→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(wrongCount)}</p>
+   482→  1232→              <p className="mt-1 text-[10px] text-muted-foreground">خطا / پایان زمان</p>
+   483→  1233→            </div>
+   484→  1234→          </div>
+   485→  1235→
+   486→  1236→          {wrongList.length > 0 ? (
+   487→  1237→            <div className="w-full space-y-2 rounded-xl border p-3 text-right">
+   488→  1238→              <div className="flex items-center justify-between gap-2">
+   489→  1239→                <p className="text-[12px] font-bold">واژه‌های غلط‌زده</p>
+   490→  1240→                <Badge
+   491→  1241→                  variant="outline"
+   492→  1242→                  className="shrink-0 border-emerald-500/40 text-[10px] text-emerald-600 dark:text-emerald-400"
+   493→  1243→                >
+   494→  1244→                  به مرور اضافه شد
+   495→  1245→                </Badge>
+   496→  1246→              </div>
+   497→  1247→              <div className="flex max-h-44 flex-wrap gap-1.5 overflow-y-auto">
+   498→  1248→                {wrongList.map((w, i) => (
+   499→  1249→                  <span
+   500→  1250→                    key={`${w.label}-${i}`}
+   501→  1251→                    dir={mode === "word-hunt" ? "ltr" : "rtl"}
+   502→  1252→                    className="rounded-lg bg-muted/70 px-2.5 py-1 text-[12px] font-bold"
+   503→  1253→                    title={w.sub}
+   504→  1254→                  >
+   505→  1255→                    {w.label}
+   506→  1256→                  </span>
+   507→  1257→                ))}
+   508→  1258→              </div>
+   509→  1259→            </div>
+   510→  1260→          ) : (
+   511→  1261→            <Badge variant="outline" className="border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
+   512→  1262→              بدون خطا — تک‌تیرانداز واقعی! 🎯
+   513→  1263→            </Badge>
+   514→  1264→          )}
+   515→  1265→
+   516→  1266→          <div className="flex gap-2">
+   517→  1267→            <Button onClick={start} className="h-11 gap-2">
+   518→  1268→              <RotateCcw size={16} />
+   519→  1269→              مأموریت جدید
+   520→  1270→            </Button>
+   521→  1271→            <Button variant="outline" className="h-11" onClick={() => setPhase("setup")}>
+   522→  1272→              تنظیمات
+   523→  1273→            </Button>
+   524→  1274→          </div>
+   525→  1275→        </CardContent>
+   526→  1276→      </Card>
+   527→  1277→    );
+   528→  1278→  }
+   529→  1279→
+   530→  1280→  // ── Playing ──
+   531→  1281→  const qTime = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
+   532→  1282→  const timePct = Math.max(0, Math.min(100, (timeLeft / qTime) * 100));
+   533→  1283→  return (
+   534→  1284→    <div role="group" aria-label="بازی شوتر آموزشی سه‌بعدی" className="mx-auto max-w-3xl space-y-3 rise-in">
+   535→  1285→      {/* نوار وضعیت */}
+   536→  1286→      <div className="flex flex-wrap items-center gap-2">
+   537→  1287→        <Badge key={score} variant="secondary" className="match-pop gap-1.5 px-2.5 py-1 text-[13px] font-black">
+   538→  1288→          <Star size={13} className="text-amber-500" />
+   539→  1289→          {faNum(score)}
+   540→  1290→        </Badge>
+   541→  1291→        {combo >= 2 ? (
+   542→  1292→          <Badge
+   543→  1293→            variant="outline"
+   544→  1294→            className="gap-1.5 border-amber-500/50 bg-amber-500/10 px-2.5 py-1 text-[13px] font-black text-amber-600 dark:text-amber-400"
+   545→  1295→          >
+   546→  1296→            <Flame size={13} />
+   547→  1297→            ×{faNum(combo)}
+   548→  1298→          </Badge>
+   549→  1299→        ) : (
+   550→  1300→          <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px] text-muted-foreground">
+   551→  1301→            <Zap size={12} />
+   552→  1302→            کمبو ×۱
+   553→  1303→          </Badge>
+   554→  1304→        )}
+   555→  1305→        <span role="img" aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`} className="flex items-center gap-1">
+   556→  1306→          {Array.from({ length: HEARTS }, (_, i) => (
+   557→  1307→            <Heart
+   558→  1308→              key={i}
+   559→  1309→              size={15}
+   560→  1310→              fill={i < hearts ? "currentColor" : "none"}
+   561→  1311→              className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
+   562→  1312→            />
+   563→  1313→          ))}
+   564→  1314→        </span>
+   565→  1315→        <span className="ms-auto text-[11px] font-bold text-muted-foreground">
+   566→  1316→          ⏱ {faNum(Math.ceil(timeLeft))} ثانیه
+   567→  1317→        </span>
+   568→  1318→        <Button variant="outline" size="sm" className="h-9 gap-1.5 text-[12px]" onClick={quit}>
+   569→  1319→          پایان دور
+   570→  1320→        </Button>
+   571→  1321→      </div>
+   572→  1322→
+   573→  1323→      {/* میدان سه‌بعدی */}
+   574→  1324→      <div
+   575→  1325→        ref={wrapRef}
+   576→  1326→        className="relative h-[60vh] max-h-[580px] min-h-[400px] touch-none overflow-hidden rounded-2xl border bg-[#062e24] shadow-lg"
+   577→  1327→      >
+   578→  1328→        <Canvas
+   579→  1329→          dpr={weak ? [1, 1] : [1, 1.75]}
+   580→  1330→          camera={{ fov: 72, near: 0.1, far: 60, position: [0, 1.7, 7] }}
+   581→  1331→          gl={{ antialias: !weak, powerPreference: "high-performance" }}
+   582→  1332→        >
+   583→  1333→          <Rig bridge={bridge} />
+   584→  1334→          <Arena weak={weak} />
+   585→  1335→          {q?.targets.map((t) => (
+   586→  1336→            <Target key={`q${q.seq}-${t.id}`} spec={t} registry={meshRegistry} bridge={bridge} />
+   587→  1337→          ))}
+   588→  1338→          <Burst apiRef={burstApi} count={weak ? BURST_WEAK : BURST_FULL} />
+   589→  1339→          <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
+   590→  1340→        </Canvas>
+   591→  1341→
+   592→  1342→        {/* سؤال — HUD بالای میدان */}
+   593→  1343→        {q && (
+   594→  1344→          <div className="pointer-events-none absolute inset-x-3 top-3 z-10">
+   595→  1345→            <div className="mx-auto max-w-lg rounded-2xl border bg-background/85 p-3 text-center shadow-lg backdrop-blur">
+   596→  1346→              <p className="text-[10px] font-bold text-muted-foreground">{q.promptFa}</p>
+   597→  1347→              <p
+   598→  1348→                dir={q.ltr ? "ltr" : "rtl"}
+   599→  1349→                className={cn(
+   600→  1350→                  "mt-1 font-black leading-6",
+   601→  1351→                  q.ltr ? "font-en text-[15px]" : "text-[17px]",
+   602→  1352→                )}
+   603→  1353→              >
+   604→  1354→                {q.promptMain}
+   605→  1355→              </p>
+   606→  1356→              {q.promptSub && <p className="mt-0.5 text-[10px] text-muted-foreground">{q.promptSub}</p>}
+   607→  1357→              {/* نوار زمان */}
+   608→  1358→              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+   609→  1359→                <div
+   610→  1360→                  className={cn(
+   611→  1361→                    "h-full rounded-full transition-[width] duration-200",
+   612→  1362→                    timePct > 50 ? "bg-emerald-500" : timePct > 25 ? "bg-amber-500" : "bg-red-500",
+   613→  1363→                  )}
+   614→  1364→                  style={{ width: `${timePct}%` }}
+   615→  1365→                />
+   616→  1366→              </div>
+   617→  1367→            </div>
+   618→  1368→          </div>
+   619→  1369→        )}
+   620→  1370→
+   621→  1371→        {/* رتیکل — فقط در حالت شلیک دسکتاپ/لمس‌ندار */}
+   622→  1372→        {!tapMode && (
+   623→  1373→          <div
+   624→  1374→            aria-hidden
+   625→  1375→            className={cn(
+   626→  1376→              "pointer-events-none absolute start-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transition-opacity",
+   627→  1377→              locked ? "opacity-100" : isCoarse ? "opacity-0" : "opacity-60",
+   628→  1378→            )}
+   629→  1379→          >
+   630→  1380→            <span className="relative block h-7 w-7">
+   631→  1381→              <span className="absolute inset-0 rounded-full border-2 border-white/80 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+   632→  1382→              <span className="absolute start-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400" />
+   633→  1383→            </span>
+   634→  1384→          </div>
+   635→  1385→        )}
+   636→  1386→
+   637→  1387→        {/* راهنمای کنترل */}
+   638→  1388→        <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 text-center">
+   639→  1389→          <span className="rounded-full bg-black/45 px-3 py-1 text-[10px] text-white/90 backdrop-blur">
+   640→  1390→            {tapMode
+   641→  1391→              ? isCoarse
+   642→  1392→                ? "تپ روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
+   643→  1393→                : "کلیک روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
+   644→  1394→              : isCoarse
+   645→  1395→                ? "بکش تا نگاه کنی · تپ روی هدف = شلیک"
+   646→  1396→                : locked
+   647→  1397→                  ? "حرکت موس = نشانه‌گیری · کلیک = شلیک"
+   648→  1398→                  : "برای شروع نشانه‌گیری کلیک کن (Pointer Lock)"}
+   649→  1399→          </span>
+   650→  1400→        </div>
+   651→  1401→      </div>
+   652→  1402→
+   653→  1403→      <p className="text-center text-[11px] leading-5 text-muted-foreground">
+   654→  1404→        شلیک درست +{faNum(SHOOT_BASE)} امتیاز و هر حلقهٔ کمبو +{faNum(COMBO_STEP)}تا سقف ×{faNum(COMBO_CAP + 1)} —
+   655→  1405→        پاسخ‌های غلط به صف «مرور هوشمند» هم می‌روند.
+   656→  1406→      </p>
+   657→  1407→    </div>
+   658→  1408→  );
+   659→  1409→}
+   660→  1410→

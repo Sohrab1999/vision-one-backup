@@ -1,0 +1,720 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * بازی «حروف جابه‌جا» (Word Scramble) — فاز ۳ نقشه راه جامع ۲۰۲۶.
+     5→ *
+     6→ * حروف واژه‌های انگلیسی به‌هم ریخته می‌شوند؛ بازیکن با معنی فارسی حروف را
+     7→ * با کلیک (یا کیبورد) سر جای خودش می‌چیند.
+     8→ * - حل درست: recordSRS(✓) + پخش تلفظ
+     9→ * - رد کردن: recordSRS(✗) + نمایش واژهٔ درست برای ۱ ثانیه
+    10→ * - رکورد: سریع‌ترین اجرای کامل (بدون رد/راهنما) به تفکیک درس و تعداد واژه
+    11→ */
+    12→
+    13→import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+    14→import {
+    15→  Shuffle,
+    16→  Play,
+    17→  RotateCcw,
+    18→  Trophy,
+    19→  Timer,
+    20→  Target,
+    21→  CheckCircle2,
+    22→  XCircle,
+    23→  Eraser,
+    24→  Lightbulb,
+    25→  SkipForward,
+    26→  Volume2,
+    27→  Sparkles,
+    28→  PartyPopper,
+    29→} from "lucide-react";
+    30→import { Button } from "@/components/ui/button";
+    31→import { Card, CardContent } from "@/components/ui/card";
+    32→import { Badge } from "@/components/ui/badge";
+    33→import { cn } from "@/lib/utils";
+    34→import { toast } from "sonner";
+    35→import type { VocabEntry } from "@/data/types";
+    36→import { useBook, useBookData } from "@/lib/book-context";
+    37→import { recordSRS } from "@/lib/srs-store";
+    38→import { touchStreak } from "@/lib/streak-store";
+    39→import { recordStudySession } from "@/lib/goal-store";
+    40→import { speak, stopSpeaking } from "@/lib/speak";
+    41→import { useVoiceSpeed } from "@/lib/voice-store";
+    42→import {
+    43→  shuffle,
+    44→  faNum,
+    45→  fmtTime,
+    46→  pickUnique,
+    47→  loadBest,
+    48→  saveBest,
+    49→  bumpPlays,
+    50→  saveAttempt,
+    51→  subscribeGameData,
+    52→} from "./shared";
+    53→
+    54→type Phase = "setup" | "playing" | "done";
+    55→
+    56→/** کلید بازی — الگوی مشترک همهٔ بازی‌ها (فاز G0-04) */
+    57→const GAME_KEY = "scramble";
+    58→
+    59→/** حرف با شناسه یکتا — حروف تکراری مستقل مدیریت می‌شوند (اینکس‌محور) */
+    60→interface Tile {
+    61→  id: number;
+    62→  letter: string;
+    63→}
+    64→
+    65→/** شکل رکورد شخصی این بازی */
+    66→interface BestRec {
+    67→  time: number;
+    68→}
+    69→
+    70→/** ردیف جزئیات دور — برای Attempt سروری و فهرست ردشده‌ها */
+    71→interface DetailRow {
+    72→  word: string;
+    73→  ok: boolean;
+    74→}
+    75→
+    76→const ALL_LESSONS = -1;
+    77→const ROUND_OPTIONS = [5, 8, 12];
+    78→
+    79→/** فقط واژه‌های تک‌کلمه‌ای لاتینِ ۳ تا ۱۲ حرفی وارد بازی می‌شوند */
+    80→const WORD_RE = /^[A-Za-z]{3,12}$/;
+    81→
+    82→/** واژهٔ پایه — حذف نشانه‌های دستوری داخل پرانتز: "dry (adj.)" → "dry" */
+    83→function baseWord(w: string): string {
+    84→  return w.replace(/\s*\([^)]*\)\s*/g, " ").trim();
+    85→}
+    86→
+    87→export function ScrambleGame() {
+    88→  const data = useBookData();
+    89→  const { bookId: activeBookId } = useBook();
+    90→  // بازی فقط داخل کتاب فعال رندر می‌شود (useBookData بالا تضمینش می‌کند) — در عمل هرگز تهی نیست
+    91→  const bookId: string = activeBookId ?? "";
+    92→  const { speed } = useVoiceSpeed();
+    93→
+    94→  const [phase, setPhase] = useState<Phase>("setup");
+    95→  const [lesson, setLesson] = useState<number>(ALL_LESSONS);
+    96→  const [rounds, setRounds] = useState<number>(8);
+    97→
+    98→  const [deck, setDeck] = useState<VocabEntry[]>([]);
+    99→  const [idx, setIdx] = useState(0);
+   100→  const [tiles, setTiles] = useState<Tile[]>([]);
+   101→  const [slots, setSlots] = useState<(number | null)[]>([]);
+   102→
+   103→  const [solved, setSolved] = useState(0);
+   104→  const [skipped, setSkipped] = useState(0);
+   105→  const [hinted, setHinted] = useState(0);
+   106→  const [detail, setDetail] = useState<DetailRow[]>([]);
+   107→  const [secs, setSecs] = useState(0);
+   108→  const [isRecord, setIsRecord] = useState(false);
+   109→
+   110→  /** انیمیشن match-pop روی ردیف پاسخ هنگام حل درست */
+   111→  const [pop, setPop] = useState(false);
+   112→  /** واژهٔ درستی که بعد از رد کردن برای ۱ ثانیه نشان داده می‌شود */
+   113→  const [reveal, setReveal] = useState<string | null>(null);
+   114→
+   115→  const locked = useRef(false);
+   116→  const timer = useRef<number | undefined>(undefined);
+   117→  const secsRef = useRef(0);
+   118→
+   119→  const busy = pop || reveal !== null;
+   120→
+   121→  // استخر قابل بازی — فقط واژه‌های تک‌کلمه‌ای ۳ تا ۱۲ حرفی
+   122→  const pool = useMemo(() => {
+   123→    const base = lesson === ALL_LESSONS ? data.vocab.all : data.vocab.ofLesson(lesson);
+   124→    return base.filter((w) => WORD_RE.test(baseWord(w.word)));
+   125→  }, [data.vocab, lesson]);
+   126→
+   127→  // رکورد شخصی — snapshot عددی (پایدار برای useSyncExternalStore؛ سرور null)
+   128→  const scope = `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`;
+   129→  const best = useSyncExternalStore(
+   130→    subscribeGameData,
+   131→    () => {
+   132→      const b = loadBest<BestRec>(bookId, GAME_KEY, scope);
+   133→      return b ? b.time : null;
+   134→    },
+   135→    () => null,
+   136→  );
+   137→
+   138→  // ── تایمر (functional) + شمارندهٔ دقیق برای رکورد ──
+   139→  useEffect(() => {
+   140→    if (phase !== "playing") return;
+   141→    const t = window.setInterval(() => {
+   142→      secsRef.current += 1;
+   143→      setSecs((s) => s + 1);
+   144→    }, 1000);
+   145→    return () => window.clearInterval(t);
+   146→  }, [phase]);
+   147→
+   148→  // ── پاک‌سازی نهایی: تلفظ + تایمرهای معلق ──
+   149→  useEffect(() => {
+   150→    return () => {
+   151→      stopSpeaking();
+   152→      if (timer.current !== undefined) window.clearTimeout(timer.current);
+   153→    };
+   154→  }, []);
+   155→
+   156→  /** بارگذاری واژهٔ بعدی — حروف به‌هم‌ریخته + خانه‌های خالی */
+   157→  const loadWord = useCallback((entry: VocabEntry) => {
+   158→    const base = baseWord(entry.word);
+   159→    setTiles(shuffle(base.split("").map((letter, i) => ({ id: i, letter }))));
+   160→    setSlots(Array.from({ length: base.length }, () => null as number | null));
+   161→    setPop(false);
+   162→  }, []);
+   163→
+   164→  /** پایان دور — استریک/جلسه/Attempt/رکورد */
+   165→  const finishRun = useCallback(
+   166→    (finalSolved: number, finalSkipped: number, finalDetail: DetailRow[]) => {
+   167→      touchStreak();
+   168→      recordStudySession();
+   169→      bumpPlays(bookId, GAME_KEY);
+   170→      saveAttempt(bookId, GAME_KEY, {
+   171→        lesson: lesson === ALL_LESSONS ? 0 : lesson,
+   172→        total: deck.length,
+   173→        correct: finalSolved,
+   174→        duration: secsRef.current,
+   175→        detail: finalDetail,
+   176→      });
+   177→      // رکورد فقط برای اجرای کاملِ بدون رد کردن و بدون راهنما
+   178→      if (finalSkipped === 0 && hinted === 0) {
+   179→        const recScope = `${lesson === ALL_LESSONS ? "all" : lesson}:${rounds}`;
+   180→        const prev = loadBest<BestRec>(bookId, GAME_KEY, recScope);
+   181→        if (!prev || secsRef.current < prev.time) {
+   182→          saveBest<BestRec>(bookId, GAME_KEY, recScope, { time: secsRef.current });
+   183→          setIsRecord(true);
+   184→        }
+   185→      }
+   186→      setPhase("done");
+   187→    },
+   188→    [bookId, lesson, rounds, deck.length, hinted],
+   189→  );
+   190→
+   191→  /** ادامه به واژهٔ بعد یا پایان دور */
+   192→  const advanceOrFinish = useCallback(
+   193→    (nextIdx: number, finalSolved: number, finalSkipped: number, finalDetail: DetailRow[]) => {
+   194→      if (nextIdx >= deck.length) {
+   195→        finishRun(finalSolved, finalSkipped, finalDetail);
+   196→        return;
+   197→      }
+   198→      setIdx(nextIdx);
+   199→      loadWord(deck[nextIdx]);
+   200→    },
+   201→    [deck, loadWord, finishRun],
+   202→  );
+   203→
+   204→  /** حل درست — پاپ + تلفظ + SRS(✓) و بعد واژهٔ بعد */
+   205→  const solveWord = useCallback(
+   206→    (entry: VocabEntry, finalSolved: number, finalDetail: DetailRow[]) => {
+   207→      locked.current = true;
+   208→      setPop(true);
+   209→      const base = baseWord(entry.word);
+   210→      recordSRS(base, true);
+   211→      speak(base, { speed });
+   212→      timer.current = window.setTimeout(() => {
+   213→        locked.current = false;
+   214→        setPop(false);
+   215→        advanceOrFinish(idx + 1, finalSolved, skipped, finalDetail);
+   216→      }, 650);
+   217→    },
+   218→    [speed, idx, skipped, advanceOrFinish],
+   219→  );
+   220→
+   221→  /** گذاشتن یک حرف از استخر در اولین خانهٔ خالی + بررسی حل شدن */
+   222→  const placeTile = useCallback(
+   223→    (tileId: number) => {
+   224→      if (locked.current) return;
+   225→      const current = deck[idx];
+   226→      if (!current) return;
+   227→      const empty = slots.indexOf(null);
+   228→      if (empty === -1) return;
+   229→      const tile = tiles.find((t) => t.id === tileId);
+   230→      if (!tile) return;
+   231→      const nextSlots = [...slots];
+   232→      nextSlots[empty] = tileId;
+   233→      setSlots(nextSlots);
+   234→      // همهٔ خانه‌ها پر شد؟ تطبیق با واژهٔ پایه را بسنجیم
+   235→      if (nextSlots.every((s) => s !== null)) {
+   236→        const base = baseWord(current.word);
+   237→        const attempt = nextSlots
+   238→          .map((s) => tiles.find((t) => t.id === s)?.letter ?? "")
+   239→          .join("");
+   240→        if (attempt === base) {
+   241→          const finalSolved = solved + 1;
+   242→          const nextDetail = [...detail, { word: base, ok: true }];
+   243→          setSolved(finalSolved);
+   244→          setDetail(nextDetail);
+   245→          solveWord(current, finalSolved, nextDetail);
+   246→        }
+   247→      }
+   248→    },
+   249→    [deck, idx, slots, tiles, solved, detail, solveWord],
+   250→  );
+   251→
+   252→  /** برگرداندن حرفِ یک خانه به استخر (کلیک روی خانهٔ پر) */
+   253→  const returnAt = useCallback((index: number) => {
+   254→    if (locked.current) return;
+   255→    setSlots((prev) => {
+   256→      if (prev[index] === null) return prev;
+   257→      const next = [...prev];
+   258→      next[index] = null;
+   259→      return next;
+   260→    });
+   261→  }, []);
+   262→
+   263→  /** پاک کردن آخرین حرف (دکمه یا Backspace) */
+   264→  const returnLast = useCallback(() => {
+   265→    if (locked.current) return;
+   266→    setSlots((prev) => {
+   267→      for (let i = prev.length - 1; i >= 0; i--) {
+   268→        if (prev[i] !== null) {
+   269→          const next = [...prev];
+   270→          next[i] = null;
+   271→          return next;
+   272→        }
+   273→      }
+   274→      return prev;
+   275→    });
+   276→  }, []);
+   277→
+   278→  /** راهنما — یک حرف درستِ بعدی را جای‌گذاری می‌کند (رکورد دور می‌سوزد) */
+   279→  const applyHint = useCallback(() => {
+   280→    if (locked.current) return;
+   281→    const current = deck[idx];
+   282→    if (!current) return;
+   283→    const empty = slots.indexOf(null);
+   284→    if (empty === -1) return;
+   285→    const base = baseWord(current.word);
+   286→    const used = new Set(slots.filter((s): s is number => s !== null));
+   287→    const tile = tiles.find((t) => !used.has(t.id) && t.letter === base[empty]);
+   288→    if (!tile) return;
+   289→    setHinted((h) => h + 1);
+   290→    placeTile(tile.id);
+   291→  }, [deck, idx, slots, tiles, placeTile]);
+   292→
+   293→  /** رد کردن — SRS(✗) + نمایش واژهٔ درست برای ۱ ثانیه (رکورد دور می‌سوزد) */
+   294→  const skipWord = useCallback(() => {
+   295→    if (locked.current) return;
+   296→    const current = deck[idx];
+   297→    if (!current) return;
+   298→    locked.current = true;
+   299→    const base = baseWord(current.word);
+   300→    recordSRS(base, false);
+   301→    const nextSkipped = skipped + 1;
+   302→    const nextDetail = [...detail, { word: base, ok: false }];
+   303→    setSkipped(nextSkipped);
+   304→    setDetail(nextDetail);
+   305→    setReveal(base);
+   306→    timer.current = window.setTimeout(() => {
+   307→      locked.current = false;
+   308→      setReveal(null);
+   309→      advanceOrFinish(idx + 1, solved, nextSkipped, nextDetail);
+   310→    }, 1000);
+   311→  }, [deck, idx, skipped, detail, solved, advanceOrFinish]);
+   312→
+   313→  /** انصراف — تایمرهای معلق پاک و به تنظیمات برگردیم */
+   314→  const cancel = useCallback(() => {
+   315→    if (timer.current !== undefined) window.clearTimeout(timer.current);
+   316→    locked.current = false;
+   317→    stopSpeaking();
+   318→    setPhase("setup");
+   319→  }, []);
+   320→
+   321→  /** شروع دور — انتخاب واژه‌های یکتا از استخر قابل بازی */
+   322→  const start = useCallback(() => {
+   323→    const chosen = pickUnique(pool, rounds, (w) => baseWord(w.word));
+   324→    if (chosen.length < 3) {
+   325→      toast.error("واژه قابل بازی در این محدوده پیدا نشد");
+   326→      return;
+   327→    }
+   328→    if (timer.current !== undefined) window.clearTimeout(timer.current);
+   329→    locked.current = false;
+   330→    secsRef.current = 0;
+   331→    setDeck(chosen);
+   332→    setIdx(0);
+   333→    setSolved(0);
+   334→    setSkipped(0);
+   335→    setHinted(0);
+   336→    setDetail([]);
+   337→    setSecs(0);
+   338→    setIsRecord(false);
+   339→    setReveal(null);
+   340→    loadWord(chosen[0]);
+   341→    setPhase("playing");
+   342→  }, [pool, rounds, loadWord]);
+   343→
+   344→  // ── کیبورد: فقط در فاز بازی؛ حروف → جای‌گذاری، Backspace → برگرداندن ──
+   345→  useEffect(() => {
+   346→    if (phase !== "playing") return;
+   347→    const onKey = (e: KeyboardEvent) => {
+   348→      if (e.ctrlKey || e.metaKey || e.altKey) return;
+   349→      if (e.key === "Backspace") {
+   350→        e.preventDefault();
+   351→        returnLast();
+   352→        return;
+   353→      }
+   354→      if (e.key === "Enter") return; // حل خودکار است — اینتر کاری نمی‌کند
+   355→      if (/^[a-zA-Z]$/.test(e.key)) {
+   356→        const letter = e.key.toLowerCase();
+   357→        const used = new Set(slots.filter((s): s is number => s !== null));
+   358→        const tile = tiles.find((t) => !used.has(t.id) && t.letter.toLowerCase() === letter);
+   359→        if (tile) placeTile(tile.id);
+   360→      }
+   361→    };
+   362→    window.addEventListener("keydown", onKey);
+   363→    return () => window.removeEventListener("keydown", onKey);
+   364→  }, [phase, slots, tiles, placeTile, returnLast]);
+   365→
+   366→  const current = deck[idx];
+   367→  const usedIds = new Set(slots.filter((s): s is number => s !== null));
+   368→  const letterOf = (id: number): string => tiles.find((t) => t.id === id)?.letter ?? "";
+   369→  const pct = Math.round(((solved + skipped) / Math.max(deck.length, 1)) * 100);
+   370→
+   371→  // ── Setup ──
+   372→  if (phase === "setup") {
+   373→    return (
+   374→      <Card className="mx-auto max-w-xl rise-in">
+   375→        <CardContent className="space-y-6 p-6">
+   376→          <div className="flex items-center gap-3">
+   377→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   378→              <Shuffle size={22} />
+   379→            </span>
+   380→            <div>
+   381→              <h2 className="text-lg font-black">حروف جابه‌جا</h2>
+   382→              <p className="text-xs text-muted-foreground">
+   383→                حروف واژه‌ها ریخته شده — با معنی فارسی سرهمشان کن!
+   384→              </p>
+   385→            </div>
+   386→          </div>
+   387→
+   388→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   389→            <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   390→            <p>
+   391→              روی حروف به ترتیب بزن تا واژه ساخته شود؛ کیبورد هم کار می‌کند. واژه‌های سخت را می‌توانی رد کنی ولی رکورد می‌سوزد!
+   392→            </p>
+   393→          </div>
+   394→
+   395→          <div>
+   396→            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   397→            <div className="flex flex-wrap gap-2">
+   398→              <button
+   399→                type="button"
+   400→                onClick={() => setLesson(ALL_LESSONS)}
+   401→                className={cn(
+   402→                  "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   403→                  lesson === ALL_LESSONS
+   404→                    ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   405→                    : "text-muted-foreground hover:bg-muted",
+   406→                )}
+   407→              >
+   408→                کل کتاب ({faNum(data.vocab.all.length)} واژه)
+   409→              </button>
+   410→              {data.vocab.lessons.filter((l) => l.lesson > 0).map((l) => (
+   411→                <button
+   412→                  key={l.lesson}
+   413→                  type="button"
+   414→                  onClick={() => setLesson(l.lesson)}
+   415→                  className={cn(
+   416→                    "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   417→                    lesson === l.lesson
+   418→                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   419→                      : "text-muted-foreground hover:bg-muted",
+   420→                  )}
+   421→                >
+   422→                  {l.label}
+   423→                </button>
+   424→              ))}
+   425→            </div>
+   426→          </div>
+   427→
+   428→          <div>
+   429→            <p className="mb-2 text-[13px] font-bold">چند واژه؟</p>
+   430→            <div className="flex flex-wrap gap-2">
+   431→              {ROUND_OPTIONS.map((n) => (
+   432→                <button
+   433→                  key={n}
+   434→                  type="button"
+   435→                  onClick={() => setRounds(n)}
+   436→                  className={cn(
+   437→                    "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   438→                    rounds === n
+   439→                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   440→                      : "text-muted-foreground hover:bg-muted",
+   441→                  )}
+   442→                >
+   443→                  {faNum(n)} واژه
+   444→                </button>
+   445→              ))}
+   446→            </div>
+   447→          </div>
+   448→
+   449→          {best !== null && (
+   450→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   451→              <Trophy size={12} />
+   452→              سریع‌ترین اجرا: {fmtTime(best)}
+   453→            </Badge>
+   454→          )}
+   455→
+   456→          <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
+   457→            <Play size={18} />
+   458→            شروع بازی
+   459→          </Button>
+   460→        </CardContent>
+   461→      </Card>
+   462→    );
+   463→  }
+   464→
+   465→  // ── Done ──
+   466→  if (phase === "done") {
+   467→    const skippedRows = detail
+   468→      .filter((d) => !d.ok)
+   469→      .map((d) => ({
+   470→        word: d.word,
+   471→        meaning: deck.find((w) => baseWord(w.word) === d.word)?.meaning ?? "",
+   472→      }));
+   473→    return (
+   474→      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+   475→        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   476→          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
+   477→            <PartyPopper size={30} />
+   478→          </span>
+   479→          <h2 className="text-xl font-black">تمام شد!</h2>
+   480→          {isRecord && (
+   481→            <Badge className="gap-1.5 bg-amber-500 text-amber-950 shadow-md shadow-amber-500/30">
+   482→              <Trophy size={13} />
+   483→              رکورد جدید! 🏆
+   484→            </Badge>
+   485→          )}
+   486→
+   487→          <div className="grid w-full grid-cols-3 gap-2 text-center">
+   488→            <div className="rounded-xl bg-muted/60 p-3">
+   489→              <Timer size={16} className="mx-auto text-primary" />
+   490→              <p className="mt-1.5 text-lg font-black leading-none">{fmtTime(secs)}</p>
+   491→              <p className="mt-1 text-[10px] text-muted-foreground">زمان</p>
+   492→            </div>
+   493→            <div className="rounded-xl bg-muted/60 p-3">
+   494→              <CheckCircle2 size={16} className="mx-auto text-emerald-500" />
+   495→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(solved)}</p>
+   496→              <p className="mt-1 text-[10px] text-muted-foreground">حل‌شده</p>
+   497→            </div>
+   498→            <div className="rounded-xl bg-muted/60 p-3">
+   499→              <SkipForward size={16} className="mx-auto text-amber-500" />
+   500→              <p className="mt-1.5 text-lg font-black leading-none">{faNum(skipped)}</p>
+   501→              <p className="mt-1 text-[10px] text-muted-foreground">ردشده</p>
+   502→            </div>
+   503→          </div>
+   504→
+   505→          {skippedRows.length > 0 && (
+   506→            <div className="w-full space-y-1.5 rounded-xl border bg-muted/30 p-3 text-right">
+   507→              <p className="text-[11px] font-bold text-muted-foreground">
+   508→                این‌ها را رد کردی — به مرور هوشمند اضافه شدند:
+   509→              </p>
+   510→              <div className="max-h-44 space-y-1.5 overflow-y-auto">
+   511→                {skippedRows.map((r) => (
+   512→                  <div
+   513→                    key={r.word}
+   514→                    className="flex items-center justify-between gap-2 rounded-lg border bg-card px-3 py-2"
+   515→                  >
+   516→                    <span dir="ltr" className="shrink-0 font-en text-[13px] font-black">
+   517→                      {r.word}
+   518→                    </span>
+   519→                    <span className="min-w-0 flex-1 truncate text-[12px] font-bold">{r.meaning}</span>
+   520→                    <Badge
+   521→                      variant="outline"
+   522→                      className="shrink-0 gap-1 border-emerald-500/40 text-[9px] text-emerald-600 dark:text-emerald-400"
+   523→                    >
+   524→                      <CheckCircle2 size={10} />
+   525→                      به مرور اضافه شد
+   526→                    </Badge>
+   527→                  </div>
+   528→                ))}
+   529→              </div>
+   530→            </div>
+   531→          )}
+   532→
+   533→          <div className="flex gap-2">
+   534→            <Button onClick={start} className="min-h-11 gap-2">
+   535→              <RotateCcw size={16} />
+   536→              دور جدید
+   537→            </Button>
+   538→            <Button variant="outline" className="min-h-11" onClick={() => setPhase("setup")}>
+   539→              تنظیمات
+   540→            </Button>
+   541→          </div>
+   542→        </CardContent>
+   543→      </Card>
+   544→    );
+   545→  }
+   546→
+   547→  // ── Playing ──
+   548→  return (
+   549→    <div className="mx-auto max-w-xl space-y-4 rise-in">
+   550→      {/* نوار بالا */}
+   551→      <div className="flex flex-wrap items-center gap-2">
+   552→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   553→          <Target size={11} className="text-amber-500" />
+   554→          واژه {faNum(idx + 1)} از {faNum(deck.length)}
+   555→        </Badge>
+   556→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   557→          <Timer size={11} />
+   558→          {fmtTime(secs)}
+   559→        </Badge>
+   560→        <Badge variant="secondary" className="gap-1 text-[11px]">
+   561→          <CheckCircle2 size={11} className="text-primary" />
+   562→          {faNum(solved)} حل‌شده
+   563→        </Badge>
+   564→        {skipped > 0 && (
+   565→          <Badge variant="outline" className="gap-1 border-destructive/40 text-[11px] text-destructive">
+   566→            <XCircle size={11} />
+   567→            {faNum(skipped)} ردشده
+   568→          </Badge>
+   569→        )}
+   570→        <div className="mr-auto">
+   571→          <Button
+   572→            variant="ghost"
+   573→            size="sm"
+   574→            onClick={cancel}
+   575→            className="h-11 text-[11px] text-muted-foreground"
+   576→          >
+   577→            انصراف
+   578→          </Button>
+   579→        </div>
+   580→      </div>
+   581→
+   582→      {/* نوار پیشرفت */}
+   583→      <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+   584→        <div
+   585→          className="h-full rounded-full bg-gradient-to-l from-primary to-emerald-400 transition-all duration-500"
+   586→          style={{ width: `${pct}%` }}
+   587→        />
+   588→      </div>
+   589→
+   590→      {/* کارت واژه */}
+   591→      {current && (
+   592→        <div className="space-y-5 rounded-2xl border bg-card p-6">
+   593→          {/* ردیف متا */}
+   594→          <div className="flex items-center justify-between gap-2">
+   595→            <div className="flex flex-wrap items-center gap-1.5">
+   596→              <Badge variant="secondary" className="text-[10px]">
+   597→                {current.lessonLabel}
+   598→              </Badge>
+   599→              {current.pos && (
+   600→                <Badge variant="outline" dir="ltr" className="font-en text-[10px]">
+   601→                  {current.pos}
+   602→                </Badge>
+   603→              )}
+   604→            </div>
+   605→            <button
+   606→              type="button"
+   607→              dir="ltr"
+   608→              aria-label="پخش تلفظ"
+   609→              onClick={() => speak(baseWord(current.word), { speed })}
+   610→              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+   611→            >
+   612→              <Volume2 size={18} />
+   613→            </button>
+   614→          </div>
+   615→
+   616→          {/* راهنمای فارسی */}
+   617→          <div className="rounded-xl bg-muted/50 p-3 text-center">
+   618→            <p className="text-[10px] font-bold text-muted-foreground">معنی</p>
+   619→            <p className="mt-0.5 text-[15px] font-black leading-7">{current.meaning}</p>
+   620→          </div>
+   621→
+   622→          {/* نمایش واژهٔ درست پس از رد کردن */}
+   623→          {reveal && (
+   624→            <div className="flex justify-center">
+   625→              <Badge className="gap-1.5 border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+   626→                <CheckCircle2 size={12} />
+   627→                <span dir="ltr" className="font-en">
+   628→                  {reveal}
+   629→                </span>
+   630→              </Badge>
+   631→            </div>
+   632→          )}
+   633→
+   634→          {/* ردیف پاسخ */}
+   635→          <div
+   636→            dir="ltr"
+   637→            className={cn(
+   638→              "flex min-h-14 flex-wrap items-center justify-center gap-1.5",
+   639→              pop && "match-pop",
+   640→            )}
+   641→          >
+   642→            {slots.map((slotId, i) =>
+   643→              slotId === null ? (
+   644→                <div
+   645→                  key={`slot-${i}`}
+   646→                  className="h-12 w-12 rounded-xl border-2 border-dashed border-muted-foreground/30"
+   647→                />
+   648→              ) : (
+   649→                <button
+   650→                  key={`slot-${i}`}
+   651→                  type="button"
+   652→                  onClick={() => returnAt(i)}
+   653→                  disabled={busy}
+   654→                  className="h-12 w-12 rounded-xl border-2 border-primary/40 bg-primary/10 font-en text-xl font-black text-primary transition-all hover:border-primary/70 hover:bg-primary/20 disabled:pointer-events-none disabled:opacity-60"
+   655→                >
+   656→                  {letterOf(slotId)}
+   657→                </button>
+   658→              ),
+   659→            )}
+   660→          </div>
+   661→
+   662→          {/* استخر حروف */}
+   663→          <div dir="ltr" className="flex flex-wrap items-center justify-center gap-2">
+   664→            {tiles.map((t) => (
+   665→              <button
+   666→                key={t.id}
+   667→                type="button"
+   668→                onClick={() => placeTile(t.id)}
+   669→                disabled={usedIds.has(t.id) || busy}
+   670→                className={cn(
+   671→                  "h-12 w-12 rounded-xl border bg-card font-en text-lg font-black shadow-sm transition-all",
+   672→                  "hover:border-primary/50 hover:bg-primary/5",
+   673→                  "disabled:pointer-events-none disabled:opacity-25",
+   674→                )}
+   675→              >
+   676→                {t.letter}
+   677→              </button>
+   678→            ))}
+   679→          </div>
+   680→
+   681→          {/* دکمه‌های کمکی */}
+   682→          <div className="flex gap-2">
+   683→            <Button
+   684→              variant="outline"
+   685→              onClick={returnLast}
+   686→              disabled={busy}
+   687→              className="min-h-11 flex-1 gap-1.5 text-[12px]"
+   688→            >
+   689→              <Eraser size={15} />
+   690→              پاک کردن
+   691→            </Button>
+   692→            <Button
+   693→              variant="outline"
+   694→              onClick={applyHint}
+   695→              disabled={busy}
+   696→              className="min-h-11 flex-1 gap-1.5 border-amber-500/40 text-[12px] text-amber-600 hover:bg-amber-500/10 hover:text-amber-600 dark:text-amber-400"
+   697→            >
+   698→              <Lightbulb size={15} />
+   699→              راهنما
+   700→            </Button>
+   701→            <Button
+   702→              variant="ghost"
+   703→              onClick={skipWord}
+   704→              disabled={busy}
+   705→              className="min-h-11 flex-1 gap-1.5 text-[12px] text-destructive hover:bg-destructive/10 hover:text-destructive"
+   706→            >
+   707→              <SkipForward size={15} />
+   708→              رد کردن
+   709→            </Button>
+   710→          </div>
+   711→
+   712→          <p className="text-center text-[10px] text-muted-foreground">
+   713→            کیبورد: حروف انگلیسی جای‌گذاری می‌کنند · Backspace حرف آخر را برمی‌گرداند
+   714→          </p>
+   715→        </div>
+   716→      )}
+   717→    </div>
+   718→  );
+   719→}
+   720→
