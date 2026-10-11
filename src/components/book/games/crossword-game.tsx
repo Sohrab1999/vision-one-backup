@@ -77,6 +77,8 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 
 // ─── الگوریتم تولید جدول متقاطع ───
 
@@ -577,6 +579,8 @@ export function CrosswordGame() {
     if (p) stopSpeaking();
     if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
   });
+  // G5-01 — مدرس بازی (نام hintCoach تا با راهنمای درون‌بازی hint تلاقی نکند؛ کارت داخل GameShell)
+  const hintCoach = useHintCoach(GAME_KEY);
   /** نگهبان خروج (از G0-06، حالا روی GameExitGuard کیت) — دیالوگ وقتی ≥۱ خانهٔ جدول پر شده است */
   const [exitAsk, setExitAsk] = useState(false);
   /** آینهٔ exitAsk برای شنوندهٔ کیبورد فیزیکی (بدون ثبت‌مجدد effect) */
@@ -828,6 +832,7 @@ export function CrosswordGame() {
     setIsRecord(false);
     setWrongChecked(0);
     setMissedWords([]);
+    hintCoach.reset(); // G5-01 — دور تازه
     setLiveMsg("");
     setDir("across");
     const startP = built.placements.find((p) => p.dir === "across") ?? built.placements[0];
@@ -1060,6 +1065,16 @@ export function CrosswordGame() {
         return [...prev, ...add];
       });
       setShakeKeys(wrong);
+      // G5-01 — مدرس بازی: هر حرف غلط یک خطا (معنی واژهٔ دارای خانهٔ غلط + حرف درست/انتخابی)
+      for (const k of wrong) {
+        const [r, c] = parseKey(k);
+        const wp = puzzle.placements.find((p) => cellsOf(p).includes(k));
+        hintCoach.recordMistake({
+          prompt: wp?.meaning,
+          answer: puzzle.grid[r]?.[c]?.letter ?? "",
+          chosen: (lettersRef.current[k] ?? "").slice(0, 160),
+        });
+      }
       later(() => {
         setShakeKeys([]);
         const next = { ...lettersRef.current };
@@ -1645,6 +1660,8 @@ export function CrosswordGame() {
           onConfirm={confirmExit}
           description="جدول هنوز نیمه‌کاره‌ست — با خروج، خانه‌های پرشده به‌عنوان پیش‌نویس ذخیره می‌شود تا دفعهٔ بعد از همان‌جا ادامه بدهی."
         />
+        {/* G5-01 — کارت مدرس بازی */}
+        {hintCoach.element}
       </GameShell>
       {/* فاز G2-d — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay

@@ -2715,3 +2715,62 @@ Stage Summary:
 - 🏁 **فاز G4 کامل شد: ۴/۴** — دوئل آنلاین realtime (P0: اتاق ۴رقمی، سؤال مشترک، امتیاز زنده، قطعی‌محور) · رده‌بندی هفتگی هر بازی (تاپ ۱۰ + جای تو + bestScore) · چالش کلاس (معلم تعیین می‌کند، رده‌بندی از Attempts، بدون PII) · اشتراک نتیجه (کارت Canvas + Web Share/دانلود)
 - کلید/الگوهای افزودنی: category «duel-online» · مدل Prisma ClassChallenge · visionone:duel:name · هیچ امضای موجود تغییر نکرد
 - گام بعدی طبق سند: **فاز G5 — پایداری، اندازه‌گیری و رشد** (G5-01 تله‌متری بازی‌ها · G5-02/03 …)
+---
+Task ID: G5-01
+Agent: general-purpose (کد کامل روی دیسک؛ گزارش با timeout شد — ثبت و راستی‌آزمایی توسط orchestrator)
+Task: فاز G5 — مدرس بازی با LLM (G5-01): route /api/game-hint + کیت hint-coach + سیم‌کشی ۸ بازی
+
+Work Log:
+- فایل نو src/app/api/game-hint/route.ts: POST با اعتبارسنجی سخت (game ۱..۴۰، mistakes آرایهٔ ۱..۳، فیلدهای رشته‌ای ≤۱۶۰) + rate-limit قراردادی checkRate(req,"game-hint:post",8,60_000)/rateLimited + LLM بک‌اند (z-ai-web-dev-sdk، thinking disabled، system prompt معلم زبان نوجوان‌پسند فارسی ≤۲ جمله) + shortenHint (خیلی‌بلند → ۲ جملهٔ اول) + شکست SDK/پاسخ خالی → 503 با متن ثابت «راهنما آفلاین در دسترس نیست» + بدون لاگ محتوای کاربر (حریم خصوصی نوجوان)
+- فایل نو src/components/book/games/kit/hint-coach.tsx: useHintCoach(game) → { recordMistake, reset, element } — خطای ۱و۲ فقط شمارش، خطای ۳ fetch خودکار + کارت شناور (kicker «مدرس بازی» کهربایی + Loader2 حین ساخت + متن hint + پیام آفلاین با دکمهٔ «دوباره» min-h-11 + بستن X فقط مخفی) — cooldown هر ۳ خطا یک راهنما، latest-ref/aliveRef + AbortController در unmount، role=status aria-live=polite، پالت زمردی/کهربایی، صفر کلید localStorage جدید
+- سیم‌کشی افزودنی ۸ بازی (هر کدام +۱۳..+۱۷ خط): wordle (باخت دور = mistake با answer) · scramble · hangman ({prompt:معنی، answer:واژه، chosen:حرف}) · wordsearch · crossword · memory · sentence-builder · listening-hunt — الگوی یکسان: import + useHintCoach(GAME_KEY) + hintRef (latest-ref) + recordMistake در شاخهٔ playSound("wrong") + hint.reset() در شروع دور + {hint.element} انتهای GameShell children
+- محدودیت‌های مالکیت رعایت شد: cloze/speed-quiz/snakes-ladders/duel/games-hub دست‌نخورده (مال عوامل G5-02/03)
+
+Stage Summary:
+- G5-01 بسته شد: بعد از ۳ خطا در هر یک از ۸ بازی واژگانی، کارت «مدرس بازی» خودکار باز می‌شود و توضیح ≤۲ جمله‌ای فارسی از LLM می‌گیرد؛ آفلاین/429/503 → «راهنما آفلاین در دسترس نیست» + دوباره
+- راستی‌آزمایی orchestrator: curl 200 «پاکت قسمت کوچکی روی لباس است که وسایل کوچک مثل سکه را داخلش می‌گذارند. 😊» · بدنهٔ غلط → 400 · ۸ درخواست 200 + نهم 429 با پیام فارسی · QA مرورگری دارباز: ۳ حرف غلط X/Q/Z → کارت ظاهر شد و متن واقعی LLM («کلمه BUSINESS با B شروع میشه و حروف I و S هم داره. 💪») نمایش داده شد
+---
+Task ID: G5-02
+Agent: general-purpose (کد کامل روی دیسک؛ گزارش با timeout شد — ثبت و راستی‌آزمایی توسط orchestrator)
+Task: فاز G5 — تولید سؤال دینامیک AI برای cloze/speed-quiz (G5-02) با قالب امن و پرچم detail.source:"ai"
+
+Work Log:
+- فایل نو src/app/api/game-questions/route.ts: POST { game:"cloze"|"speed-quiz", pool ۴..۴۰ عضوی, count ۱..۵ } + rate-limit (10/60s) + LLM با دستور «فقط از واژه‌های پول» + **والیدیشن سمت سرور سخت**: normKey (نیم‌فاصله/ی‌وک عربی/lowercase) + PoolIndex (wordOf/meaningOwnerOf) — هر سؤال رد می‌شود اگر word عضو pool نیست، گزینه‌ها از ستون اشتباه پول‌اند (cloze→word، speed-quiz→meaning)، جمله خالی/>۲۰۰، گزینهٔ درست به واژهٔ سؤال تعلق ندارد؛ stripOptionPrefix برای «a)» مدل‌ها؛ فیلتر کامل → 503 «سؤال هوشمند همین حالا آماده نشد — بعداً تلاش کن»
+- cloze-game.tsx (+۳۰۴ خط): سوییچ setup «✨ سؤال‌های هوشمند» (پیش‌فرض خاموش، state محلی) → fetch با timeout ۸s (Promise.race) + تبدیل به قالب seed بازی (aiQuestionsToSeeds) + سرِ deck نشستن + پرچم source:"ai" در سؤال و سطح بالای detail Attempt + لغو درخواست معلق در unmount/خروج + خطا → toast فارسی و دور کاملاً عادی
+- speed-quiz-game.tsx (+۳۳۸ خط): همان الگو + aiWord (واژهٔ انگلیسی خود جزوه) تا مسیر SRS/تلفظ/مرور خطاها روی واژهٔ واقعی جزوه برود
+- هیچ کلید localStorage جدید، هیچ تغییری در امضای saveAttempt/saveBest/bumpPlays — پرچم source فقط فیلد افزودنی detail
+
+Stage Summary:
+- G5-02 بسته شد: قالب امن دوسطحی (کلاینت از واژگان خود کتاب + سرور فیلتر سخت) — هرگز سؤال بیرون از جزوه نمایش داده نمی‌شود؛ دورِ دارای سؤال هوشمند با detail.source:"ai" ثبت می‌شود
+- راستی‌آزمایی orchestrator: curl با پول واقعی (brave/polite/lazy/clever) → 200 و options فقط از معنی‌های پول؛ تست تله با ۴ واژهٔ جعلی (flurbo/zintak/qravex/miblu) → خروجی فقط همین واژه‌ها؛ pool ۱عضوی → 400؛ QA مرورگری: سوییچ «✨ سؤال‌های هوشمند» در setup هر دو بازی رندر شد
+---
+Task ID: G5-03
+Agent: general-purpose (کد کامل روی دیسک؛ گزارش با timeout شد — ثبت و راستی‌آزمایی توسط orchestrator)
+Task: فاز G5 — ربات تطبیقی مار‌و‌پله/دوئل (G5-03): سختی قاعده‌محور بر اساس نرخ برد کاربر، بدون AI
+
+Work Log:
+- snakes-ladders-game.tsx (+۷۶ خط): فرمول s = clamp(0.35..0.9, 0.65 + (w−0.5)×0.6) + منبع w دوپله‌ای (۱: برد/باخت دورهای vs-bot نشست جاری در متغیر ماژول recordVsBotSessionResult — بدون کلید جدید؛ ۲: fallback محافظه‌کارانه wins از visionone:game-wins ÷ plays از getPlays) + <۳ دور → BOT_SKILL=0.65 بایت‌به‌بایت + botSkillRef در botAnswer + متن صادقانه setup «ربات تطبیقی — سختی بر اساس نتایج تو تنظیم می‌شود» + اسکوپ رکورد vs-bot و تله‌متری players:2+bot دست‌نخورده
+- mini-services/duel-service/index.ts (+۱۹۶ خط): رخداد play_bot {winRate?, pack} → اتاق با بازیکن «ربات هوشمند» (isBot داخلی بدون socket) + همان skill formula + زمان فکر تصادفی ۲..۸s (< مهلت ۱۵s) + همهٔ emitها مثل حریف واقعی (reveal/finished/امتیاز) + پاک‌سازی اتاق در قطع میزبان + bun --hot خودش reload شد (pid جدید ۲۳۶۴۷)
+- duel-arena.tsx (+۸۴ خط): دکمهٔ «تمرین با ربات 🤖» کنار ساخت اتاق (outline زمردی، min-h-11، گارد connected/busy/name) + duelWinRate از visionone:game-wins کلید "duel-online" (<۳ دور → نفرست) + پرچم افزودنی vsBot در detail Attempt + بقیهٔ فلو (تخته/تایمر/Attempt category duel-online/recordGameWin) دست‌نخورده — games-hub.tsx لمس نشد
+- اسکریپت تست موقت (۲ سناریو × ۳ دور × ۱۰ سؤال) بعد از تست حذف شد
+
+Stage Summary:
+- G5-03 بسته شد: پذیرش سند (برد/باخت نزدیک ۵۰٪) با دو سناریوی E2E تأیید شد — winRate=1 → ربات ۲۶/۳۰ (۸۶٫۷٪ درست) و winRate=0 → ۱۱/۳۰ (۳۶٫۷٪)؛ invariants: دو بازیکن در finished + reveal به‌ازای هر سؤال
+- QA مرورگری از گیت‌وی ۸۱: «تمرین با ربات» → اتاق ۸۷۱۲ با «ربات هوشمند» → سؤال ۱ و ۲ با امتیاز زنده (ربات ۲۵+۱۳) — نکته: realtime فقط از پورت ۸۱ (XTransformPort) کار می‌کند، ۳۰۰۰ مستقیم نه (سند G4)
+---
+Task ID: G5-final
+Agent: main orchestrator (Z.ai Code)
+Task: جمع‌بندی و QA مرورگری فاز G5 — هوشمندسازی با AI (ادامهٔ اجرای سند games-roadmap.md)
+
+Work Log:
+- ۳ عامل موازی با مالکیت فایل جدا اجرا شدند (G5-01 مدرس/۸ بازی، G5-02 سؤال AI/دو بازی، G5-03 ربات تطبیقی/مار‌و‌پله+دوئل) — هر سه گزارش نهایی با timeout شدند ولی کد کامل روی دیسک بود؛ راستی‌آزمایی کامل توسط orchestrator انجام و ثبت شد
+- گیت‌های ایستا: bun run lint صفر · bunx tsc --noEmit فیلتر ^src/ خالی · git diff کاملاً افزودنی (۱۰۲۶+/۹۲− در ۱۳ فایل + ۳ فایل نو) — هیچ امضای saveAttempt/saveBest/bumpPlays و هیچ کلید localStorage موجود تغییر نکرد
+- تست زندهٔ APIها: game-hint (200 با hint فارسی ≤۲ جمله / 400 اعتبارسنجی / 429 روی درخواست نهم) · game-questions (200 با گزینه‌های فقط-از-پول / تلهٔ واژهٔ جعلی امن / 400) · دوئل ربات دو سناریو (۸۶٫۷٪ و ۳۶٫۷٪)
+- QA مرورگری (agent-browser): دوئل با ربات از گیت‌وی ۸۱ (اتاق ۸۷۱۲، سؤال ۲/۱۰، امتیاز زنده ربات ۲۵+۱۳) · مار‌و‌پله «ربات تطبیقی» در setup حالت مقابل ربات · سوییچ «✨ سؤال‌های هوشمند» در setup جای خالی و تست برقی · دارباز: ۳ حرف غلط → کارت «مدرس بازی» با hint واقعی LLM · دسکتاپ بدون سرریز افقی؛ اسکرین‌شات tool-results/g5-hangman-coach.png
+- نکتهٔ عملیاتی (تکرار سند G4): تست realtime دوئل فقط از گیت‌وی Caddy پورت ۸۱ ممکن است — localhost:3000 مستقیم socket را وصل نمی‌کند («در حال اتصال…» می‌ماند)؛ یک دیالوگ کهنهٔ pre-reload هم QA را گمراه کرد — با force-reload حل شد
+- سند حاکم به‌روز شد: وضعیت اجرا G4✅ G5✅ + نسخهٔ ۱.۸ در چنگ‌ریز
+
+Stage Summary:
+- 🏁 **فاز G5 کامل شد: ۳/۳** — مدرس بازی LLM (۸ بازی + /api/game-hint) · سؤال دینامیک امن (cloze/speed-quiz + /api/game-questions + پرچم detail.source:"ai") · ربات تطبیقی (مار‌و‌پله + دوئل آنلاین «تمرین با ربات»)
+- کلیدها/الگوهای افزودنی: مسیرهای /api/game-hint و /api/game-questions · kit/hint-coach.tsx · متغیر ماژول vsBotSession (بدون کلید localStorage جدید) · رخداد socket «play_bot» · پرچم detail.source:"ai" و detail.vsBot
+- گام بعدی طبق سند: **فاز G6 — پایش، کارایی و بستن نسخه** (G6-01 P0: ماتریس QA کامل ۱۵ بازی × دسکتاپ/موبایل · G6-02 INP · G6-03 KPIها · G6-04 What's New)

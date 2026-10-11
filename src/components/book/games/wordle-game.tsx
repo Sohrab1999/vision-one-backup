@@ -68,6 +68,8 @@ import { GameShell } from "./kit/game-shell";
 import { ResultScreen } from "./kit/result-screen";
 import { TutorialOverlay, useAutoTutorial, type TutorialStep } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 
 type Phase = "setup" | "playing" | "done";
 type Mode = "daily" | "infinite";
@@ -497,6 +499,12 @@ export function WordleGame() {
 
   // فاز G2-d — تله‌متری جلسه (بدون PII: بازی/سطح/مدت رُند/دلیل) — level مثل daily یا endless:5
   const sessionRef = useRef<GameSessionTracker | null>(null);
+  // G5-01 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
 
   // ── تایمرهای پله‌ای فلیپ — همیشه پاک‌شونده ──
   const clearTimers = useCallback(() => {
@@ -576,6 +584,8 @@ export function WordleGame() {
         // فاز G2-d — بازخورد سه‌کانالهٔ باخت
         playSound("wrong");
         buzz("error");
+        // G5-01 — مدرس بازی: باخت دور یک خطا است (واژهٔ درست برای توضیح مدرس)
+        hintRef.current.recordMistake({ answer: answerWord });
         toast.error("این‌بار پیدا نشد — واژهٔ درست را ببین");
         setLiveMsg(`کلمه این بود: ${answerWord.toUpperCase()}`);
       }
@@ -681,6 +691,7 @@ export function WordleGame() {
     setIsRecord(false);
     setFinalSecs(0);
     setLiveMsg("");
+    hintRef.current.reset(); // G5-01 — دور تازه
     pausedAccumRef.current = 0;
     pauseStartedRef.current = 0;
     if (!dailyToday && dailyAnswer) {
@@ -724,6 +735,7 @@ export function WordleGame() {
     setIsRecord(false);
     setFinalSecs(0);
     setLiveMsg(fellBack ? `استخر ${faNum(wordLen)}حرفی کم بود — دور با واژه‌های ۵حرفی شروع شد` : "");
+    hintRef.current.reset(); // G5-01 — دور تازه
     pausedAccumRef.current = 0;
     pauseStartedRef.current = 0;
     setMode("infinite");
@@ -1041,6 +1053,9 @@ export function WordleGame() {
               </div>
             )}
           </div>
+
+          {/* G5-01 — کارت مدرس بازی */}
+          {hint.element}
         </GameShell>
 
         {/* فاز G2-d — نگهبان خروج استاندارد کیت؛ روزانه: متن مخصوص استریک نیمه‌کاره */}

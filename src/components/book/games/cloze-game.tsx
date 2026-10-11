@@ -23,6 +23,14 @@
  * نمی‌گیرد؛ رکورد آسان/سخت scope پسونددار جدا می‌شود (کلیدهای عادی بایت‌به‌بایت).
  * فاز G3-02 — انتخاب هوشمند پرسش‌های دور: smartPick با اولویت کارت‌های SRS
  * ضعیف/سررسید/نو (شروع سرد = همان شافل قبلی)؛ حواس‌پرتی‌ها همان pickUnique قبلی.
+ *
+ * فاز G5-02 — سؤال‌های هوشمند ✨: سوییچ setup (پیش‌فرض خاموش) → پیش از شروع دور تا
+ * ۳ سؤال از /api/game-questions (سؤال‌ساز AI) گرفته و سرِ deck می‌نشیند — فقط از
+ * واژگان همان محدوده (استخر عادی همین بازی) با والیدیشن دوطرفه سرور+کلاینت؛
+ * هر خطا/تایم‌اوت = توست و دور کاملاً عادی (بازی هرگز بلاک نمی‌شود). ردیف سؤال
+ * هوشمند در detail با source:"ai" پرچم می‌خورد و دورِ دارای سؤال هوشمند detail
+ * را با پرچم سطح بالا source:"ai" ثبت می‌کند. هیچ کلید localStorage جدیدی و هیچ
+ * تغییری در امضای saveAttempt/saveBest/bumpPlays وجود ندارد.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -36,6 +44,7 @@ import {
   Sparkles,
   Pause,
   Keyboard,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -125,6 +134,8 @@ interface ClozeItem {
   options: string[];
   meaning: string;
   lessonLabel: string;
+  /** فاز G5-02 — سؤال تولیدی هوشمند (پرچم نمایش + پرچم detail) */
+  source?: "ai";
 }
 
 /** رکورد شخصی: بیشترین پاسخ درست از همان تعداد پرسش */
@@ -249,6 +260,118 @@ function buildPool(data: BookData, lesson: number, distractorCount = 2): ClozeIt
   return shuffle(items);
 }
 
+// ─── فاز G5-02 — سؤال‌های هوشمند ✨ (تولید دینامیک از واژگان همین کتاب) ───
+
+/** تعداد سؤال هوشمند هر دور — قرارداد API (count ۱..۵) */
+const AI_COUNT = 3;
+/** مهلت انتظار سؤال‌ساز — بعد از آن دور عادی شروع می‌شود */
+const AI_TIMEOUT_MS = 8000;
+/** کف استخر واژه برای صدا زدن سؤال‌ساز (قرارداد API: pool ۴..۴۰ عضو) */
+const AI_MIN_POOL = 4;
+/** سقف نمونهٔ واژهٔ فرستاده‌شده به سؤال‌ساز */
+const AI_POOL_SAMPLE = 20;
+
+/** سؤال تولیدی API — شکل اکید قرارداد */
+interface AiQuestion {
+  word: string;
+  sentence: string;
+  options: string[];
+  answerIndex: number;
+}
+
+/** گارد شکل سؤال تولیدی — دفاع دوم روی والیدیشن سرور (بدون any) */
+function isAiQuestionShape(v: unknown): v is AiQuestion {
+  if (typeof v !== "object" || v === null) return false;
+  const o = v as Record<string, unknown>;
+  return (
+    typeof o.word === "string" &&
+    o.word.trim().length > 0 &&
+    typeof o.sentence === "string" &&
+    o.sentence.trim().length > 0 &&
+    Array.isArray(o.options) &&
+    o.options.length >= 2 &&
+    o.options.length <= 6 &&
+    o.options.every((x) => typeof x === "string" && x.trim().length > 0) &&
+    typeof o.answerIndex === "number" &&
+    Number.isInteger(o.answerIndex) &&
+    o.answerIndex >= 0 &&
+    o.answerIndex < o.options.length
+  );
+}
+
+/**
+ * صدا زدن سؤال‌ساز با مهلت ۸ ثانیه (AbortController + Promise.race با تایمر).
+ * هر خطا/تایم‌اوت/پاسخ بد → null (بدون پرتاب استثنا؛ دور عادی ادامه می‌یابد).
+ */
+async function fetchAiQuestions(
+  game: "cloze" | "speed-quiz",
+  pool: { word: string; meaning: string }[],
+  ctrl: AbortController,
+): Promise<AiQuestion[] | null> {
+  let timerId: number | null = null;
+  const timeout = new Promise<null>((resolve) => {
+    timerId = window.setTimeout(() => {
+      ctrl.abort();
+      resolve(null);
+    }, AI_TIMEOUT_MS);
+  });
+  try {
+    const resPromise = fetch("/api/game-questions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ game, pool, count: AI_COUNT }),
+      signal: ctrl.signal,
+    })
+      .then(async (res) => (res.ok ? ((await res.json()) as { questions?: unknown }) : null))
+      .catch(() => null); // لغو/شبکه → بی‌صدا (مسابقه منتظر نمی‌ماند)
+    const res = await Promise.race([resPromise, timeout]);
+    const raw = res && typeof res === "object" ? (res as { questions?: unknown }).questions : null;
+    if (!Array.isArray(raw)) return null;
+    const valid = raw.filter(isAiQuestionShape);
+    return valid.length > 0 ? valid : null;
+  } catch {
+    return null;
+  } finally {
+    if (timerId !== null) window.clearTimeout(timerId);
+  }
+}
+
+/**
+ * تبدیل سؤال‌های تولیدی به پرسش‌های بازی جای خالی — دفاع دوم سند: واژه باید
+ * دقیقاً عضو استخر همین دور باشد و گزینهٔ درست عین همان واژه؛ جای خالیِ «___»
+ * به قالب خود بازی (BLANK) تبدیل و گزینه‌ها هم‌تعداد سطح دور می‌شوند. سؤال‌های
+ * مشکوک بی‌صدا رد می‌شوند (دور عادی جبران می‌کند).
+ */
+function aiQuestionsToCloze(
+  questions: AiQuestion[],
+  pool: ClozeItem[],
+  optCount: number,
+): ClozeItem[] {
+  const byWord = new Map(pool.map((it) => [it.answer.toLowerCase(), it]));
+  const out: ClozeItem[] = [];
+  for (const q of questions) {
+    const entry = byWord.get(q.word.trim().toLowerCase());
+    if (!entry) continue; // واژه بیرون از استخر این دور → رد
+    const answerOpt = q.options[q.answerIndex]?.trim().toLowerCase();
+    if (answerOpt !== entry.answer.toLowerCase()) continue; // پاسخِ درست‌نما → رد
+    const wrongs = q.options
+      .map((o) => o.trim())
+      .filter((o) => o.toLowerCase() !== entry.answer.toLowerCase());
+    out.push({
+      id: `ai:${entry.answer}`,
+      sentence: q.sentence.replace(/_{3,}/g, BLANK),
+      // جملهٔ AI ترجمهٔ کتاب ندارد — معنی واژهٔ هدف همان راهنمای فارسی پرسش است
+      fa: `معنی واژهٔ گم‌شده: ${entry.meaning}`,
+      answer: entry.answer,
+      options: shuffle([entry.answer, ...shuffle(wrongs).slice(0, Math.max(0, optCount - 1))]),
+      meaning: entry.meaning,
+      lessonLabel: entry.lessonLabel,
+      source: "ai",
+    });
+  }
+  return out;
+}
+
 // ─── اسنپ‌شات پایدار رکورد (JSON.parse هر بار آبجکت تازه می‌سازد — باید کَش شود) ───
 
 let bestCacheKey = "";
@@ -289,6 +412,12 @@ export function ClozeGame() {
   const [rounds, setRounds] = useState<number>(10);
   // فاز G3-01 — سطح دشواری ماندگار (پیش‌فرض «عادی» = دقیقاً رفتار قبلی بازی)
   const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+  // فاز G5-02 — سوییچ «سؤال‌های هوشمند»: state محلی، پیش‌فرض خاموش (بدون کلید localStorage جدید)
+  const [aiOn, setAiOn] = useState(false);
+  /** حین آماده‌سازی سؤال هوشمند (اسپینر دکمهٔ شروع) */
+  const [aiLoading, setAiLoading] = useState(false);
+  const aiBusyRef = useRef(false);
+  const aiAbortRef = useRef<AbortController | null>(null);
 
   const [deck, setDeck] = useState<ClozeItem[]>([]);
   const [idx, setIdx] = useState(0);
@@ -405,11 +534,13 @@ export function ClozeGame() {
   }, [phase, paused]);
 
   // فاز G2-b — پاک‌سازی نهایی: تلفظ + تایمر پیشروی + ثبت «رهاشده» تله‌متری (اگر باز باشد no-op)
+  // فاز G5-02 — درخواست معلق سؤال‌ساز هوشمند هم لغو می‌شود
   useEffect(() => {
     return () => {
       sessionRef.current?.abandon("unmount");
       stopSpeaking();
       if (advanceRef.current) clearTimeout(advanceRef.current);
+      aiAbortRef.current?.abort();
     };
   }, []);
 
@@ -422,39 +553,79 @@ export function ClozeGame() {
     busy.current = false;
   }, []);
 
-  const start = useCallback(() => {
+  /** شروع دور با deck نهایی (عادی یا + سؤال‌های هوشمند) — بدنهٔ قبلی start دست‌نخورده */
+  const startWith = useCallback(
+    (aiItems: ClozeItem[]) => {
+      const pool = pools.get(lesson) ?? [];
+      if (pool.length < 3) {
+        toast.error("در این محدوده جمله مناسب پیدا نشد — درس دیگری را امتحان کن");
+        return;
+      }
+      // فاز G2-b — بازخورد کلیک شروع دور (از setup و «دور جدید» نتیجه)
+      playSound("click");
+      buzz("light");
+      clearAdvance();
+      stopSpeaking();
+      // فاز G3-02 — انتخاب هوشمند پرسش‌های دور (اولویت کارت‌های SRS ضعیف/سررسید/نو؛
+      // شروع سرد = همان شافل قبلی) — جایگزین shuffle().slice() با همان n؛ کلید SRS = پاسخ
+      // فاز G5-02 — سؤال‌های هوشمند سرِ دور می‌نشینند و بقیهٔ ظرفیت از استخر عادی پر می‌شود
+      const capacity = Math.min(rounds, pool.length);
+      const regular = smartPick(pool, Math.max(0, capacity - aiItems.length), (it) => it.answer);
+      setDeck([...aiItems, ...regular]);
+      setIdx(0);
+      setPicked(null);
+      setCorrectCount(0);
+      setWrongList([]);
+      wrongRef.current = [];
+      setSecs(0);
+      secsRef.current = 0;
+      setIsRecord(false);
+      setLiveMsg("");
+      resume();
+      setExitAsk(false);
+      // فاز G2-b — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3-01 — level اسکوپ سطح‌دار)
+      sessionRef.current = createGameSession({
+        game: GAME_KEY,
+        level: scope,
+      });
+      sessionRef.current.start();
+      setPhase("playing");
+    },
+    [pools, lesson, rounds, resume, clearAdvance, scope],
+  );
+
+  /**
+   * فاز G5-02 — شروع دور: اگر سوییچ هوشمند روشن است، اول سؤال‌ساز صدا زده می‌شود
+   * (نمونهٔ تا ۲۰ واژه از همان استخر عادی این دور؛ مهلت ۸ث + AbortController).
+   * هر خطا/تایم‌اوت/پاسخ نامعتبر = توست و دور کاملاً عادی — بازی هرگز بلاک نمی‌شود.
+   */
+  const start = useCallback(async () => {
+    if (aiBusyRef.current) return; // نگهبان دوبار-کلیک حین آماده‌سازی
     const pool = pools.get(lesson) ?? [];
     if (pool.length < 3) {
       toast.error("در این محدوده جمله مناسب پیدا نشد — درس دیگری را امتحان کن");
       return;
     }
-    // فاز G2-b — بازخورد کلیک شروع دور (از setup و «دور جدید» نتیجه)
-    playSound("click");
-    buzz("light");
-    clearAdvance();
-    stopSpeaking();
-    // فاز G3-02 — انتخاب هوشمند پرسش‌های دور (اولویت کارت‌های SRS ضعیف/سررسید/نو؛
-    // شروع سرد = همان شافل قبلی) — جایگزین shuffle().slice() با همان n؛ کلید SRS = پاسخ
-    setDeck(smartPick(pool, Math.min(rounds, pool.length), (it) => it.answer));
-    setIdx(0);
-    setPicked(null);
-    setCorrectCount(0);
-    setWrongList([]);
-    wrongRef.current = [];
-    setSecs(0);
-    secsRef.current = 0;
-    setIsRecord(false);
-    setLiveMsg("");
-    resume();
-    setExitAsk(false);
-    // فاز G2-b — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3-01 — level اسکوپ سطح‌دار)
-    sessionRef.current = createGameSession({
-      game: GAME_KEY,
-      level: scope,
-    });
-    sessionRef.current.start();
-    setPhase("playing");
-  }, [pools, lesson, rounds, resume, clearAdvance, scope]);
+    let aiItems: ClozeItem[] = [];
+    if (aiOn && pool.length >= AI_MIN_POOL) {
+      aiBusyRef.current = true;
+      setAiLoading(true);
+      const ctrl = new AbortController();
+      aiAbortRef.current = ctrl;
+      const sample = shuffle(pool)
+        .slice(0, AI_POOL_SAMPLE)
+        .map((it) => ({ word: it.answer, meaning: it.meaning }));
+      const questions = await fetchAiQuestions("cloze", sample, ctrl);
+      aiBusyRef.current = false;
+      aiAbortRef.current = null;
+      setAiLoading(false);
+      if (questions) aiItems = aiQuestionsToCloze(questions, pool, optCount);
+      if (aiItems.length === 0) {
+        toast.error("سؤال هوشمند آماده نشد — با سؤال‌های عادی ادامه می‌دهیم");
+      }
+    }
+    startWith(aiItems);
+  }, [pools, lesson, aiOn, optCount, startWith]);
 
   const finish = useCallback(
     (finalCorrect: number) => {
@@ -473,11 +644,24 @@ export function ClozeGame() {
         correct: finalCorrect,
         duration: secsRef.current,
         // فاز G3-01 — سطح دور به‌عنوان فیلد افزودنی در هر ردیف detail (شکل آرایه حفظ شده)
-        detail: deck.map((it) => ({
-          word: it.answer,
-          ok: !wrongRef.current.some((w) => w.word === it.answer),
-          level,
-        })),
+        // فاز G5-02 — ردیف سؤال هوشمند source:"ai" می‌گیرد؛ دورِ دارای سؤال هوشمند detail
+        // را با پرچم سطح بالا source:"ai" ثبت می‌کند (بدون سؤال هوشمند = دقیقاً همان
+        // آرایهٔ قبلی بایت‌به‌بایت). امضای saveAttempt تغییر نکرده.
+        detail: deck.some((it) => it.source === "ai")
+          ? {
+              source: "ai" as const,
+              items: deck.map((it) => ({
+                word: it.answer,
+                ok: !wrongRef.current.some((w) => w.word === it.answer),
+                level,
+                ...(it.source === "ai" ? { source: "ai" as const } : {}),
+              })),
+            }
+          : deck.map((it) => ({
+              word: it.answer,
+              ok: !wrongRef.current.some((w) => w.word === it.answer),
+              level,
+            })),
       });
       let newRecord = false;
       try {
@@ -708,6 +892,33 @@ export function ClozeGame() {
                   ? `سخت: ${faNum(optCount)} گزینهٔ مزاحم و ریتم سریع‌تر — رکورد سطح جدا`
                   : `عادی: همان بازی همیشگی — ${faNum(optCount)} گزینه برای هر پرسش`}
             </p>
+            {/* فاز G5-02 — سوییچ «سؤال‌های هوشمند ✨» (state محلی؛ پیش‌فرض خاموش؛
+                اگر سؤال‌ساز در دسترس نباشد دور کاملاً عادی شروع می‌شود) */}
+            <div>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="سؤال‌های هوشمند">
+                <button
+                  type="button"
+                  aria-pressed={aiOn}
+                  onClick={() => {
+                    playSound("click");
+                    buzz("light");
+                    setAiOn((v) => !v);
+                  }}
+                  className={cn(
+                    "flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                    aiOn
+                      ? "border-amber-500 bg-amber-500/15 text-amber-600 shadow-md shadow-amber-500/20 dark:text-amber-400"
+                      : "text-muted-foreground hover:bg-muted",
+                  )}
+                >
+                  ✨ سؤال‌های هوشمند
+                </button>
+              </div>
+              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                چند سؤال از واژه‌های همین کتاب با هوش مصنوعی ساخته می‌شود
+              </p>
+            </div>
+
             {/* فاز G3-02 — پیام تمرکز هوشمند روی واژه‌های ضعیف (aria-live روی والد) */}
             <div aria-live="polite">
               {weakCount > 0 && (
@@ -717,9 +928,19 @@ export function ClozeGame() {
               )}
             </div>
 
-            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start}>
-              <Play size={18} />
-              شروع بازی
+            {/* فاز G5-02 — حین آماده‌سازی سؤال هوشمند: اسپینر + «در حال آماده‌سازی…» (سقف ۸ ثانیه) */}
+            <Button size="lg" className="h-12 w-full gap-2 text-base" onClick={start} disabled={aiLoading}>
+              {aiLoading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  در حال آماده‌سازی…
+                </>
+              ) : (
+                <>
+                  <Play size={18} />
+                  شروع بازی
+                </>
+              )}
             </Button>
           </CardContent>
         </Card>
@@ -823,10 +1044,16 @@ export function ClozeGame() {
           <div className={cn("space-y-4", paused && "pointer-events-none blur-sm")} aria-hidden={paused}>
             {item && (
               <div className="space-y-4 rounded-2xl border bg-card p-6">
-                <div>
+                <div className="flex flex-wrap items-center gap-1.5">
                   <Badge variant="outline" className="border-teal-500/40 text-[10px] text-teal-600 dark:text-teal-400">
                     {item.lessonLabel}
                   </Badge>
+                  {/* فاز G5-02 — بج سؤال هوشمند */}
+                  {item.source === "ai" && (
+                    <Badge variant="outline" className="border-amber-500/40 text-[10px] text-amber-600 dark:text-amber-400">
+                      ✨ هوشمند
+                    </Badge>
+                  )}
                 </div>
 
                 <p dir="ltr" className="font-en text-[15px] leading-8 sm:text-base">
@@ -844,7 +1071,8 @@ export function ClozeGame() {
                 </p>
 
                 <p className="border-r-2 border-primary/30 pr-3 text-[12px] leading-6 text-muted-foreground">
-                  ترجمه: {item.fa}
+                  {/* فاز G5-02 — سؤال هوشمند ترجمهٔ کتاب ندارد؛ معنی واژهٔ هدف راهنمای آن است */}
+                  {item.source === "ai" ? item.fa : `ترجمه: ${item.fa}`}
                 </p>
 
                 <div className="grid gap-2 sm:grid-cols-3">

@@ -76,6 +76,8 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 // فاز G3-01/G3-02 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت؛ فقط مصرف)
 import { DifficultyPicker } from "./kit/difficulty-picker";
 import {
@@ -219,6 +221,12 @@ export function ScrambleGame() {
   }, []);
   // فاز G1-10 — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
+  // G5-01 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
 
   const locked = useRef(false);
   const timer = useRef<number | undefined>(undefined);
@@ -381,6 +389,8 @@ export function ScrambleGame() {
           // چیده‌شدن غلط — رفتار قبلی (ردیف سر جایش می‌ماند) + بازخورد کیت
           playSound("wrong");
           buzz("error");
+          // G5-01 — مدرس بازی: چیدمان غلط (معنی + واژهٔ درست + چیدهٔ کاربر)
+          hintRef.current.recordMistake({ prompt: current.meaning, answer: base, chosen: attempt.slice(0, 160) });
           setLiveMsg("چیدمان غلط از آب درآمد — یک حرف را برگردان و دوباره بچین");
         }
       } else {
@@ -464,6 +474,8 @@ export function ScrambleGame() {
     setLiveMsg("واژه رد شد — پاسخ درست نشان داده می‌شود");
     playSound("wrong");
     buzz("error");
+    // G5-01 — مدرس بازی: واژهٔ ردشده (معنی + پاسخ درست)
+    hintRef.current.recordMistake({ prompt: current.meaning, answer: base });
     timer.current = window.setTimeout(() => {
       locked.current = false;
       setReveal(null);
@@ -494,6 +506,7 @@ export function ScrambleGame() {
     setIsRecord(false);
     setReveal(null);
     setLiveMsg("");
+    hintRef.current.reset(); // G5-01 — دور تازه
     loadWord(chosen[0]);
     resume();
     setExitAsk(false);
@@ -941,6 +954,8 @@ export function ScrambleGame() {
             setPhase("setup");
           }}
         />
+        {/* G5-01 — کارت مدرس بازی */}
+        {hint.element}
       </GameShell>
       {/* فاز G1-08 — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay

@@ -26,6 +26,14 @@
  *   و تله‌متری scopeWithLevel (عادی = همان کلید قدیمی)؛ detail.level افزودنی.
  * - G3-02: ترتیب ورود سؤال‌ها با اولویت SRS ضعیف/سررسید (smartOrderDeck — نیمهٔ اول استخر
  *   وزن‌دار، شروع سرد = همان شافل قبلی) + پیام «مرکز این دور: N واژهٔ ضعیف تو» در setup.
+ *
+ * فاز G5-02 — سؤال‌های هوشمند ✨: سوییچ setup (پیش‌فرض خاموش) → پیش از شروع دور تا ۳
+ * سؤال معنی‌محور از /api/game-questions (سؤال‌ساز AI) گرفته و سرِ deck می‌نشیند — فقط
+ * از واژگان همان محدودهٔ دور (همان منبع واژگانی بازی) با والیدیشن دوطرفه سرور+کلاینت؛
+ * هر خطا/تایم‌اوت = توست و دور کاملاً عادی (بازی هرگز بلاک نمی‌شود). پاسخ درست/غلط
+ * سؤال هوشمند روی همان مسیر SRS/تلفظ/مرور خطاها می‌رود (aiWord = واژهٔ انگلیسی خود
+ * جزوه). دورِ دارای سؤال هوشمند detail را با پرچم source:"ai" ثبت می‌کند. هیچ کلید
+ * localStorage جدیدی و هیچ تغییری در امضای saveAttempt/saveBest/bumpPlays ندارد.
  * - G3-05 تمرین بی‌پایان: دکمهٔ جدا در setup؛ بدون تایمر پایان (شمارندهٔ زمان صعودی)؛
  *   پایان فقط با خروج صریح (نگهبان کیت) — در لحظهٔ تأیید، Attempt با پیشرفت فعلی ثبت
  *   (امتیاز ×۱ بدون levelScore؛ detail.endless=true) + telemetry end + ResultScreen کیت.
@@ -54,6 +62,7 @@ import {
   SkipForward,
   Sparkles,
   Pause,
+  Loader2,
   Infinity as InfinityIcon,
   type LucideIcon,
 } from "lucide-react";
@@ -266,6 +275,146 @@ interface WrongItem {
   back: string;
 }
 
+// ─── فاز G5-02 — سؤال‌های هوشمند ✨ (تولید دینامیک از واژگان همین کتاب) ───
+
+/** تعداد سؤال هوشمند هر دور — قرارداد API (count ۱..۵) */
+const AI_COUNT = 3;
+/** مهلت انتظار سؤال‌ساز — بعد از آن دور عادی شروع می‌شود */
+const AI_TIMEOUT_MS = 8000;
+/** کف استخر واژه برای صدا زدن سؤال‌ساز (قرارداد API: pool ۴..۴۰ عضو) */
+const AI_MIN_POOL = 4;
+/** سقف نمونهٔ واژهٔ فرستاده‌شده به سؤال‌ساز */
+const AI_POOL_SAMPLE = 20;
+
+/** سؤال تولیدی API — شکل اکید قرارداد */
+interface AiQuestion {
+  word: string;
+  sentence: string;
+  options: string[];
+  answerIndex: number;
+}
+
+/** سؤال هوشمند در قالب seed بازی + واژهٔ انگلیسیِ خود جزوه برای مسیر SRS/تلفظ */
+type AiQuizSeed = QuizQuestionSeed & { aiWord: string; source: "ai" };
+
+/** گارد سؤال هوشمند داخل deck (سؤال‌های عادی پرچم ندارند) */
+function isAiSeed(q: QuizQuestionSeed): q is AiQuizSeed {
+  const probe = q as { source?: unknown; aiWord?: unknown };
+  return probe.source === "ai" && typeof probe.aiWord === "string";
+}
+
+/** گارد شکل سؤال تولیدی — دفاع دوم روی والیدیشن سرور (بدون any) */
+function isAiQuestionShape(v: unknown): v is AiQuestion {
+  if (typeof v !== "object" || v === null) return false;
+  const o = v as Record<string, unknown>;
+  return (
+    typeof o.word === "string" &&
+    o.word.trim().length > 0 &&
+    typeof o.sentence === "string" &&
+    o.sentence.trim().length > 0 &&
+    Array.isArray(o.options) &&
+    o.options.length >= 2 &&
+    o.options.length <= 6 &&
+    o.options.every((x) => typeof x === "string" && x.trim().length > 0) &&
+    typeof o.answerIndex === "number" &&
+    Number.isInteger(o.answerIndex) &&
+    o.answerIndex >= 0 &&
+    o.answerIndex < o.options.length
+  );
+}
+
+/**
+ * صدا زدن سؤال‌ساز با مهلت ۸ ثانیه (AbortController + Promise.race با تایمر).
+ * هر خطا/تایم‌اوت/پاسخ بد → null (بدون پرتاب استثنا؛ دور عادی ادامه می‌یابد).
+ */
+async function fetchAiQuestions(
+  game: "cloze" | "speed-quiz",
+  pool: { word: string; meaning: string }[],
+  ctrl: AbortController,
+): Promise<AiQuestion[] | null> {
+  let timerId: number | null = null;
+  const timeout = new Promise<null>((resolve) => {
+    timerId = window.setTimeout(() => {
+      ctrl.abort();
+      resolve(null);
+    }, AI_TIMEOUT_MS);
+  });
+  try {
+    const resPromise = fetch("/api/game-questions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ game, pool, count: AI_COUNT }),
+      signal: ctrl.signal,
+    })
+      .then(async (res) => (res.ok ? ((await res.json()) as { questions?: unknown }) : null))
+      .catch(() => null); // لغو/شبکه → بی‌صدا (مسابقه منتظر نمی‌ماند)
+    const res = await Promise.race([resPromise, timeout]);
+    const raw = res && typeof res === "object" ? (res as { questions?: unknown }).questions : null;
+    if (!Array.isArray(raw)) return null;
+    const valid = raw.filter(isAiQuestionShape);
+    return valid.length > 0 ? valid : null;
+  } catch {
+    return null;
+  } finally {
+    if (timerId !== null) window.clearTimeout(timerId);
+  }
+}
+
+/** نرمال‌سازی مقایسه‌ای معنی‌ها (نیم‌فاصله/ی/ک عربی/فاصله) — فقط برای سنجش تعلق */
+function aiNorm(s: string): string {
+  return s
+    .replace(/\u200c/g, "")
+    .replace(/ي/g, "ی")
+    .replace(/ك/g, "ک")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * تبدیل سؤال‌های تولیدی به seed سؤال واژگانی همین بازی — دفاع دوم سند: واژه باید
+ * دقیقاً عضو استخر واژگان همین دور باشد و گزینهٔ درست عین معنی همان واژه در جزوه؛
+ * سؤال‌های مشکوک بی‌صدا رد می‌شوند. گزینه‌ها با shapeOptions به سطح دور شکل می‌گیرند
+ * (مزاحم سطح سخت فقط از معنی‌های واقعی همان استخر — هیچ محتوای ساختگی).
+ */
+function aiQuestionsToSeeds(
+  questions: AiQuestion[],
+  vocab: { word: string; meaning: string }[],
+  lesson: number,
+  level: DifficultyKey,
+): QuizQuestionSeed[] {
+  const byWord = new Map(vocab.map((v) => [v.word.toLowerCase(), v]));
+  const ownerOf = new Map<string, string>();
+  for (const v of vocab) {
+    const k = aiNorm(v.meaning);
+    if (k && !ownerOf.has(k)) ownerOf.set(k, v.word);
+  }
+  const built: QuizQuestionSeed[] = [];
+  for (const q of questions) {
+    const entry = byWord.get(q.word.trim().toLowerCase());
+    if (!entry) continue; // واژه بیرون از استخر این دور → رد
+    const answer = q.options[q.answerIndex]?.trim() ?? "";
+    if (!answer) continue;
+    if (ownerOf.get(aiNorm(answer)) !== entry.word) continue; // پاسخِ درست‌نما → رد
+    const seed: AiQuizSeed = {
+      category: "vocabulary",
+      lesson,
+      scope: "هوشمند",
+      text: q.sentence,
+      options: q.options.map((o) => o.trim()),
+      answer: q.answerIndex,
+      level: "استاندارد",
+      aiWord: entry.word,
+      source: "ai",
+    };
+    built.push(shapeOptions(seed, level, []));
+  }
+  if (built.length <= 1) return built;
+  // سطح سخت — مزاحم پنجم فقط از معنی‌های واقعی همان استخر
+  const traps = shuffle([...new Set(built.flatMap((s) => s.options))]);
+  return built.map((s) => shapeOptions(s, level, traps));
+}
+
 export function SpeedQuizGame() {
   const data = useBookData();
   const { bookId } = useBook();
@@ -280,6 +429,14 @@ export function SpeedQuizGame() {
   // ── فاز G3 — سطح دشواری ماندگار + حالت دور + شمارندهٔ صعودی بی‌پایان ──
   const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
   const [mode, setMode] = useState<RoundMode>("timed");
+  // فاز G5-02 — سوییچ «سؤال‌های هوشمند»: state محلی، پیش‌فرض خاموش (بدون کلید localStorage جدید)
+  const [aiOn, setAiOn] = useState(false);
+  /** فاز G5-02 — دکمه‌ای که سؤال‌ساز را منتظر است (اسپینر روی همان دکمه) */
+  const [pendingMode, setPendingMode] = useState<RoundMode | null>(null);
+  const aiBusyRef = useRef(false);
+  const aiAbortRef = useRef<AbortController | null>(null);
+  /** فاز G5-02 — دورِ جاری دست‌کم یک سؤال هوشمند دارد؟ (پرچم detail.source) */
+  const aiRoundRef = useRef(false);
   /** فاز G3-05 — ثانیه‌های سپری‌شدهٔ دور بی‌پایان (شمارندهٔ صعودی؛ مالک: تایمر) */
   const [elapsed, setElapsed] = useState(0);
 
@@ -428,6 +585,27 @@ export function SpeedQuizGame() {
     return map;
   }, [data.vocab.all]);
 
+  // فاز G5-02 — استخر واژهٔ سؤال‌ساز هوشمند: واژگان همان محدودهٔ دور (word/meaning خود جزوه؛
+  // فقط اعضای در سقف ۸۰ نویسهٔ قرارداد API)
+  const aiVocabPool = useMemo(() => {
+    const entries =
+      lesson === ALL_LESSON ? data.vocab.all : data.vocab.all.filter((v) => v.lesson === lesson);
+    const seen = new Set<string>();
+    const out: { word: string; meaning: string }[] = [];
+    for (const v of entries) {
+      const word = v.word
+        .replace(/\s*\([^)]*\)\s*/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const meaning = v.meaning.replace(/\s+/g, " ").trim();
+      const key = word.toLowerCase();
+      if (!word || !meaning || word.length > 80 || meaning.length > 80 || seen.has(key)) continue;
+      seen.add(key);
+      out.push({ word, meaning });
+    }
+    return out;
+  }, [data.vocab.all, lesson]);
+
   // رکورد شخصی این اسکوپ — الگوی match-game (بدون mismatch؛ سرور null)
   const best = useSyncExternalStore(
     subscribeGameData,
@@ -456,11 +634,12 @@ export function SpeedQuizGame() {
 
   /**
    * شروع دور — فاز G3: مسابقهٔ تایم‌دار یا تمرین بی‌پایان.
-   * مسیر عادی (level=normal, timed) دقیقاً همان ثابت‌های قبلی را مصرف می‌کند:
-   * shapeOptions در عادی خودش early-return می‌کند و totalSecs = همان مدت انتخابی است.
+   * مسیر عادی (level=normal, timed, بدون سؤال هوشمند) دقیقاً همان ثابت‌های قبلی را
+   * مصرف می‌کند: shapeOptions در عادی خودش early-return می‌کند و totalSecs = همان مدت
+   * انتخابی است. فاز G5-02 — سؤال‌های هوشمند (اگرAi بودند) سرِ deck می‌نشینند.
    */
   const startRound = useCallback(
-    (roundMode: RoundMode) => {
+    (roundMode: RoundMode, aiSeeds: QuizQuestionSeed[]) => {
       if (pool.length < MIN_POOL) {
         toast.error("سؤال کافی در این محدوده نیست");
         return;
@@ -469,16 +648,18 @@ export function SpeedQuizGame() {
         window.clearTimeout(flashTimer.current);
         flashTimer.current = null;
       }
-      // فاز G2-c — بازخورد کلیک شروع دور (از setup و «دور جدید» نتیجه)
-      playSound("click");
-      buzz("light");
+      // (بازخورد کلیک به beginRound منتقل شد — فاز G5-02: قبل از انتظار سؤال‌ساز)
       // فاز G3-01 — گزینه‌های سطح (عادی: سؤال‌ها خام و بدون تغییر — همان رفتار قبلی)
       const trapPool =
         level === "normal" ? [] : shuffle([...new Set(pool.flatMap((q) => q.options))]);
       const base =
         level === "normal" ? shuffle(pool) : pool.map((q) => shapeOptions(q, level, trapPool));
       // فاز G3-02 — ترتیب هوشمند دور بر اساس SRS ضعیف (شروع سرد = همان شافل قبلی)
-      const deck = smartOrderDeck(base, quizKeyOf);
+      // فاز G5-02 — سؤال‌های هوشمند سرِ دور؛ ترتیب هوشمند فقط روی سؤال‌های عادی (کلید SRS
+      // سؤال هوشمند داخل این تابع استفاده نمی‌شود تا با واژهٔ خود جزوه قاطی نشود)
+      const deck = [...aiSeeds, ...smartOrderDeck(base, quizKeyOf)];
+      // فاز G5-02 — پرچم «دور دارای سؤال هوشمند» برای detail.source
+      aiRoundRef.current = aiSeeds.length > 0;
       deckRef.current = deck;
       qiRef.current = 0;
       pendingRef.current = true;
@@ -520,6 +701,50 @@ export function SpeedQuizGame() {
     [pool, duration, lesson, cat, id, level, totalSecs, resetCombo, resume],
   );
 
+  /**
+   * فاز G5-02 — شروع دور: اگر سوییچ هوشمند روشن است، اول سؤال‌ساز صدا زده می‌شود
+   * (نمونهٔ تا ۲۰ واژه از واژگان همان محدوده؛ مهلت ۸ث + AbortController) و بازخورد
+   * کلیک بلافاصله پخش می‌شود. هر خطا/تایم‌اوت/پاسخ نامعتبر = توست و دور کاملاً عادی —
+   * بازی هرگز بلاک نمی‌شود.
+   */
+  const beginRound = useCallback(
+    async (roundMode: RoundMode) => {
+      if (pool.length < MIN_POOL) {
+        toast.error("سؤال کافی در این محدوده نیست");
+        return;
+      }
+      if (aiBusyRef.current) return; // نگهبان دوبار-کلیک حین آماده‌سازی
+      // فاز G2-c — بازخورد کلیک شروع دور (از setup و «دور جدید» نتیجه)
+      playSound("click");
+      buzz("light");
+      let aiSeeds: QuizQuestionSeed[] = [];
+      if (aiOn && aiVocabPool.length >= AI_MIN_POOL) {
+        aiBusyRef.current = true;
+        setPendingMode(roundMode);
+        const ctrl = new AbortController();
+        aiAbortRef.current = ctrl;
+        const sample = shuffle(aiVocabPool).slice(0, AI_POOL_SAMPLE);
+        const questions = await fetchAiQuestions("speed-quiz", sample, ctrl);
+        aiBusyRef.current = false;
+        aiAbortRef.current = null;
+        setPendingMode(null);
+        if (questions) {
+          aiSeeds = aiQuestionsToSeeds(
+            questions,
+            aiVocabPool,
+            lesson === ALL_LESSON ? 0 : lesson,
+            level,
+          );
+        }
+        if (aiSeeds.length === 0) {
+          toast.error("سؤال هوشمند آماده نشد — با سؤال‌های عادی ادامه می‌دهیم");
+        }
+      }
+      startRound(roundMode, aiSeeds);
+    },
+    [pool, aiOn, aiVocabPool, lesson, level, startRound],
+  );
+
   /** پایان مسابقهٔ تایم‌دار — فاز G3-01: امتیاز نهایی = levelScore (عادی = همان عدد قبلی) */
   const finish = useCallback(() => {
     if (overRef.current) return;
@@ -543,7 +768,14 @@ export function SpeedQuizGame() {
         total: answered,
         correct,
         duration: spent,
-        detail: { score: finalScore, maxCombo, level },
+        // فاز G5-02 — دورِ دارای دست‌کم یک سؤال هوشمند → پرچم source:"ai" (بدون سؤال
+        // هوشمند = دقیقاً همان شیء قبلی). امضای saveAttempt تغییر نکرده.
+        detail: {
+          score: finalScore,
+          maxCombo,
+          level,
+          ...(aiRoundRef.current ? { source: "ai" as const } : {}),
+        },
       });
     }
     const prev = prevBest;
@@ -586,7 +818,15 @@ export function SpeedQuizGame() {
         total: answered,
         correct,
         duration: elapsedRef.current,
-        detail: { score, maxCombo, level, endless: true },
+        // فاز G3-05 — detail.level + detail.endless افزودنی
+        // فاز G5-02 — پرچم source:"ai" برای دورِ دارای سؤال هوشمند
+        detail: {
+          score,
+          maxCombo,
+          level,
+          endless: true,
+          ...(aiRoundRef.current ? { source: "ai" as const } : {}),
+        },
       });
     }
     const scope = scopeFor(lesson, cat, duration, level, "endless");
@@ -620,17 +860,22 @@ export function SpeedQuizGame() {
         buzz("success");
         setLiveMsg(`درست بود! کمبو ${faNum(comboRef.current)} — +${faNum(gained)} امتیاز 🎉`);
         // تلفظ گزینهٔ درست فقط برای واژگان — بدون await تا جریان بازی کند نشود
-        if (q.category === "vocabulary") void speak(q.options[idx], { speed });
+        // فاز G5-02 — سؤال هوشمند: گزینه‌ها معنی فارسی‌اند؛ واژهٔ انگلیسی خود جزوه تلفظ می‌شود
+        if (q.category === "vocabulary") void speak(isAiSeed(q) ? q.aiWord : q.options[idx], { speed });
       } else {
         // غلط — کمبو صفر (registerMiss)؛ واژهٔ واژگانیِ غلط‌زده به صف مرور برمی‌گردد (گرامر: هیچ)
         registerMiss();
         playSound("wrong");
         buzz("error");
         if (q.category === "vocabulary") {
-          const word = q.options[q.answer];
+          // فاز G5-02 — سؤال هوشمند: کلید SRS = واژهٔ انگلیسیِ خود جزوه (نه معنی فارسی گزینه)
+          const word = isAiSeed(q) ? q.aiWord : q.options[q.answer];
           seedReviewFromQuiz(word);
           // فاز G2-c — برای «مرور خطاها»ی صفحهٔ نتیجه (معنی از بانک واژگان کتاب)
-          const back = meaningMap.get(word.trim().toLowerCase()) ?? "—";
+          // فاز G5-02 — سؤال هوشمند: معنی درست همان گزینهٔ درست خودش است
+          const back = isAiSeed(q)
+            ? q.options[q.answer]
+            : (meaningMap.get(word.trim().toLowerCase()) ?? "—");
           setWrongList((prevList) =>
             prevList.some((w) => w.front === word) ? prevList : [...prevList, { front: word, back }],
           );
@@ -796,11 +1041,13 @@ export function SpeedQuizGame() {
   }, [phase, paused, exitAsk]);
 
   // فاز G2-c — دورِ باز در unmount «رهاشده» ثبت می‌شود (اگر قبلاً گزارش شده باشد no-op)
+  // فاز G5-02 — درخواست معلق سؤال‌ساز هوشمند هم لغو می‌شود
   useEffect(
     () => () => {
       sessionRef.current?.abandon("unmount");
       stopSpeaking();
       if (flashTimer.current !== null) window.clearTimeout(flashTimer.current);
+      aiAbortRef.current?.abort();
     },
     [],
   );
@@ -931,24 +1178,71 @@ export function SpeedQuizGame() {
               </Badge>
             )}
 
+            {/* فاز G5-02 — سوییچ «سؤال‌های هوشمند ✨» (state محلی؛ پیش‌فرض خاموش؛
+                اگر سؤال‌ساز در دسترس نباشد دور کاملاً عادی شروع می‌شود) */}
+            <div>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="سؤال‌های هوشمند">
+                <button
+                  type="button"
+                  aria-pressed={aiOn}
+                  onClick={() => {
+                    playSound("click");
+                    buzz("light");
+                    setAiOn((v) => !v);
+                  }}
+                  className={cn(
+                    "flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                    aiOn
+                      ? "border-amber-500 bg-amber-500/15 text-amber-600 shadow-md shadow-amber-500/20 dark:text-amber-400"
+                      : "text-muted-foreground hover:bg-muted",
+                  )}
+                >
+                  ✨ سؤال‌های هوشمند
+                </button>
+              </div>
+              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                چند سؤال از واژه‌های همین کتاب با هوش مصنوعی ساخته می‌شود
+              </p>
+            </div>
+
             {/* فاز G3-05 — شروع تایم‌دار یا تمرین بی‌پایان (دکمهٔ جدا — هر دو min-h-11+) */}
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button
                 size="lg"
                 className="h-12 w-full gap-2 text-base sm:flex-1"
-                onClick={() => startRound("timed")}
+                onClick={() => beginRound("timed")}
+                disabled={pendingMode !== null}
               >
-                <Play size={18} />
-                شروع مسابقه
+                {pendingMode === "timed" ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    در حال آماده‌سازی…
+                  </>
+                ) : (
+                  <>
+                    <Play size={18} />
+                    شروع مسابقه
+                  </>
+                )}
               </Button>
               <Button
                 variant="outline"
                 size="lg"
                 className="h-12 w-full gap-2 text-base sm:flex-1"
-                onClick={() => startRound("endless")}
+                onClick={() => beginRound("endless")}
+                disabled={pendingMode !== null}
               >
-                <InfinityIcon size={18} />
-                تمرین بی‌پایان ∞
+                {pendingMode === "endless" ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    در حال آماده‌سازی…
+                  </>
+                ) : (
+                  <>
+                    <InfinityIcon size={18} />
+                    تمرین بی‌پایان ∞
+                  </>
+                )}
               </Button>
             </div>
             <p className="text-center text-[11px] leading-5 text-muted-foreground">
@@ -988,7 +1282,7 @@ export function SpeedQuizGame() {
           { label: "دقت", value: `${faNum(acc)}٪`, icon: <Target size={16} className="text-teal-500" /> },
           { label: "بهترین کمبو", value: `×${faNum(maxCombo)}`, icon: <Flame size={16} className="text-amber-500" /> },
         ]}
-        onReplay={() => startRound(mode)}
+        onReplay={() => beginRound(mode)}
         onExit={() => setPhase("setup")}
         exitLabel="تنظیمات"
       />
@@ -1097,6 +1391,12 @@ export function SpeedQuizGame() {
                 <Badge variant="secondary" className="text-[10px]">
                   {q.category === "vocabulary" ? "واژگان" : "گرامر"}
                 </Badge>
+                {/* فاز G5-02 — بج سؤال هوشمند */}
+                {isAiSeed(q) && (
+                  <Badge variant="outline" className="border-amber-500/40 text-[10px] text-amber-600 dark:text-amber-400">
+                    ✨ هوشمند
+                  </Badge>
+                )}
               </div>
 
               <p dir="ltr" className="font-en text-[15px] font-bold leading-8 sm:text-base">

@@ -6,7 +6,7 @@
  * تختهٔ کلاسیک ۱۰۰ خانه با شماره‌گذاری مارپیچی (۱ پایین-چپ، زیگزاگ تا ۱۰۰ بالا):
  * برای انداختن تاس باید اول سؤال واژگانی خود جزوه (data.quiz.seed) را درست جواب بدهی.
  * - حالت‌ها: «روی یک دستگاه» (۲ تا ۴ بازیکن hot-seat با رنگ‌های emerald/amber/teal/muted)
- *   یا «مقابل ربات» (تو + ربات با ۶۵٪ احتمال پاسخ درست).
+ *   یا «مقابل ربات» (تو + ربات — فاز G5-03: مهارت ربات تطبیقی است؛ بدون داده کافی همان ۶۵٪).
  * - پاسخ درست → انیمیشن تاس (Dice* با match-pop) + حرکت مهره خانه‌به‌خانه (~۱۲۰ms)؛
  *   خانه‌های مار/پله نشان کوچک مقصد دارند (TrendingDown destructive / TrendingUp primary)
  *   و انتقال با toast اعلام می‌شود؛ تاس ۶ = نوبت اضافه.
@@ -90,10 +90,13 @@ import type { QuizQuestionSeed } from "@/data/types";
 import { useBook, useBookData } from "@/lib/book-context";
 import { touchStreak } from "@/lib/streak-store";
 import { recordStudySession } from "@/lib/goal-store";
+// فاز G5-03 — getter شمارندهٔ برد کامل (`visionone:game-wins`) برای نرخ برد ربات تطبیقی
+import { readGameWins } from "@/lib/badge-store";
 import {
   bumpPlays,
   faNum,
   fmtTime,
+  getPlays,
   loadBest,
   pickUnique,
   saveAttempt,
@@ -126,8 +129,64 @@ const STEP_MS = 120;
 const JUMP_MS = 520;
 /** تأخیر «فکر کردن» ربات (ms) */
 const BOT_DELAY = 900;
-/** احتمال پاسخ درست ربات (۶۵٪ — همان عددی که در setup نمایش داده می‌شود) */
+/** احتمال پاسخ درست ربات (۶۵٪ — پیش‌فرض G5-03 وقتی دادهٔ تطبیقی کافی نیست) */
 const BOT_SKILL = 0.65;
+/**
+ * فاز G5-03 — ربات تطبیقی (قاعده‌محور، بدون AI):
+ * نرخ برد کاربر w ∈ [0,1] → مهارت ربات s = clamp(0.35, 0.9, 0.65 + (w − 0.5) × 0.6)
+ * بازیکنی که همیشه می‌برد ربات قوی‌تر (تا ۰٫۹) و بازیکنی که همیشه می‌بازد ربات ضعیف‌تر
+ * (تا ۰٫۳۵) می‌گیرد — کشش برد/باخت کاربر به ~۵۰٪. دادهٔ <۳ دور → همان BOT_SKILL.
+ */
+const BOT_SKILL_MIN = 0.35;
+const BOT_SKILL_MAX = 0.9;
+/** حداقل دورهای دارای داده برای فعال‌شدن تطبیق */
+const ADAPTIVE_MIN_ROUNDS = 3;
+
+/**
+ * فاز G5-03 — برد/باخت دورهای «مقابل ربات» در همین نشست مرورگر (متغیر ماژول —
+ * بدون کلید localStorage جدید؛ با reload صفر می‌شود؛ اسکوپ رکورد vs-bot دست‌نخورده).
+ */
+const vsBotSession = { wins: 0, losses: 0 };
+
+/** بستن مهارت ربات در بازهٔ مجاز */
+function clampBotSkill(s: number): number {
+  return Math.min(BOT_SKILL_MAX, Math.max(BOT_SKILL_MIN, s));
+}
+
+/**
+ * فاز G5-03 — ثبت نتیجهٔ دور «مقابل ربات» در شمارندهٔ نشست مرورگر؛
+ * تابع ماژول-اسکوپ (بیرون از کامپوننت) تا تنها نقطهٔ نوشتن شمارنده همین‌جا باشد.
+ */
+function recordVsBotSessionResult(humanWon: boolean): void {
+  if (humanWon) vsBotSession.wins += 1;
+  else vsBotSession.losses += 1;
+}
+
+/**
+ * فاز G5-03 — مهارت ربات تطبیقی مار و پله برای دور تازه (فقط mode="bot").
+ * منبع نرخ برد w (بدون ساخت هیچ کلید/امضای جدید):
+ *  ۱) برد/باخت دورهای مقابل رباتِ همین نشست مرورگر (vsBotSession) — اگر ≥۳ دور؛
+ *  ۲) وگرنه تخمین محافظه‌کارانه از دادهٔ موجود: wins («visionone:game-wins» کلید
+ *     "snakes-ladders" — دور کامل بی‌نقص به‌عنوان پروکسی برد) ÷ plays (کل دورهای
+ *     این کتاب از شمارندهٔ مشترک — هر دو اسکوپ)؛
+ *  ۳) دادهٔ <۳ دور → BOT_SKILL (رفتار قبلی بایت‌به‌بایت).
+ */
+function computeAdaptiveBotSkill(bookId: string): number {
+  const rounds = vsBotSession.wins + vsBotSession.losses;
+  if (rounds >= ADAPTIVE_MIN_ROUNDS) {
+    return clampBotSkill(BOT_SKILL + (vsBotSession.wins / rounds - 0.5) * 0.6);
+  }
+  try {
+    const wins = readGameWins()[GAME_KEY] ?? 0;
+    const plays = getPlays(bookId)[GAME_KEY] ?? 0;
+    if (plays >= ADAPTIVE_MIN_ROUNDS) {
+      return clampBotSkill(BOT_SKILL + (Math.min(1, wins / plays) - 0.5) * 0.6);
+    }
+  } catch {
+    /* localStorage در دسترس نیست — پیش‌فرض */
+  }
+  return BOT_SKILL;
+}
 /** تعداد چرخش تصادفی تاس قبل از ثابت‌شدن عدد نهایی */
 const DICE_FLIPS = 5;
 
@@ -278,6 +337,8 @@ export function SnakesLaddersGame() {
   const chainPendingRef = useRef<{ due: number; fn: () => void } | null>(null);
   /** آینهٔ همگام paused برای گاردهای داخل callback تایمر/رویداد (الگوی flappy/duel) */
   const pausedRef = useRef(false);
+  /** فاز G5-03 — مهارت ربات این دور (در start برای mode="bot" محاسبه می‌شود؛ پیش‌فرض BOT_SKILL) */
+  const botSkillRef = useRef<number>(BOT_SKILL);
   // فاز G1-10 — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
 
@@ -558,7 +619,8 @@ export function SnakesLaddersGame() {
   function botAnswer(p: number): void {
     const cq = qRef.current;
     if (!cq) return;
-    const ok = Math.random() < BOT_SKILL;
+    // G5-03 — ربات تطبیقی: احتمال پاسخ درست = مهارت محاسبه‌شدهٔ این دور (پیش‌فرض BOT_SKILL)
+    const ok = Math.random() < botSkillRef.current;
     const idx = ok ? cq.answer : wrongIndexOf(cq);
     setReveal({ picked: idx, ok, byBot: true });
     bumpStats(p, ok);
@@ -651,6 +713,8 @@ export function SnakesLaddersGame() {
     pauseStartRef.current = 0;
     resume();
     setExitAsk(false);
+    // فاز G5-03 — مهارت ربات تطبیقی در شروع دور mode="bot" (ref — منبع حقیقت منطق)
+    botSkillRef.current = mode === "bot" ? computeAdaptiveBotSkill(activeBookId) : BOT_SKILL;
     // فاز G1-10 — جلسهٔ تازهٔ تله‌متری (level = ترکیب بازیکن‌ها — قرارداد تسک G2-e)
     sessionRef.current = createGameSession({
       game: GAME_KEY,
@@ -672,6 +736,10 @@ export function SnakesLaddersGame() {
     // فاز G1-10 — پایان عادی جلسهٔ تله‌متری
     sessionRef.current?.end("finish");
     const ps = playersRef.current;
+    // فاز G5-03 — آمار نشست مرورگر برای ربات تطبیقی (برد انسان / برد ربات) — بدون کلید جدید
+    if (mode === "bot") {
+      recordVsBotSessionResult(ps[winnerIdx]?.isBot !== true);
+    }
     // آمار Attempt فقط از بازیکن‌های انسانی (total = سؤال‌های پرسیده‌شده از انسان‌ها)
     const humanIdxs = ps.map((_, i) => i).filter((i) => !ps[i]?.isBot);
     const total = humanIdxs.reduce((a, i) => a + (statsRef.current[i]?.asked ?? 0), 0);
@@ -902,7 +970,7 @@ export function SnakesLaddersGame() {
                   <span className="h-3 w-3 shrink-0 rounded-full bg-amber-500" aria-hidden />
                   <Bot size={14} className="shrink-0 text-muted-foreground" />
                   <span className="font-bold">ربات</span>
-                  <span className="mr-auto text-[10px] text-muted-foreground">۶۵٪ احتمال پاسخ درست</span>
+                  <span className="mr-auto text-[10px] text-muted-foreground">ربات تطبیقی — سختی بر اساس نتایج تو تنظیم می‌شود</span>
                 </div>
               </div>
             )}

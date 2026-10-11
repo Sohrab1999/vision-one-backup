@@ -36,6 +36,7 @@ import {
   Timer,
   Trophy,
   UserRound,
+  Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,7 +48,9 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { QuizQuestionSeed } from "@/data/types";
 import { useBook, useBookData } from "@/lib/book-context";
-import { faNum, pickUnique, saveAttempt } from "../shared";
+import { faNum, getPlays, pickUnique, saveAttempt } from "../shared";
+// فاز G5-03 — getter شمارندهٔ برد کامل (`visionone:game-wins`) برای نرخ برد ربات تطبیقی
+import { readGameWins } from "@/lib/badge-store";
 import { playSound } from "../kit/sound-engine";
 import { buzz } from "../kit/haptics";
 
@@ -113,6 +116,24 @@ function toEnDigits(s: string): string {
     .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));
 }
 
+/**
+ * فاز G5-03 — نرخ برد دوئل آنلاین این مرورگر برای ربات تطبیقی (قاعده‌محور، بدون AI).
+ * منبع (بدون کلید/امضای جدید): wins از `visionone:game-wins` کلید "duel-online"
+ * (getter readGameWins — «برد» یعنی دوئل بی‌نقص، پروکسی محافظه‌کارانهٔ برد واقعی) و
+ * دورهای تمام‌شده از شمارندهٔ مشترک plays (`visionone:game-plays:{book}`).
+ * دورهای <۳ → null (نفرستادن تا سرویس پیش‌فرض ۰٫۵ بگذارد).
+ */
+function duelWinRate(bookId: string): number | null {
+  try {
+    const wins = readGameWins()["duel-online"] ?? 0;
+    const plays = getPlays(bookId)["duel-online"] ?? 0;
+    if (plays < 3) return null;
+    return Math.min(1, Math.max(0, wins / plays));
+  } catch {
+    return null;
+  }
+}
+
 export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
   const data = useBookData();
   const { bookId } = useBook();
@@ -158,6 +179,8 @@ export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
   const lastTickRef = useRef(-1);
   const startedAtRef = useRef(0);
   const attemptSavedRef = useRef(false);
+  /** فاز G5-03 — دور جاری مقابل ربات داخلی است؟ (برای پرچم vsBot در Attempt) */
+  const vsBotRef = useRef(false);
   const idRef = useRef(id);
   useEffect(() => {
     idRef.current = id;
@@ -329,6 +352,8 @@ export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
             opponentScore: opp?.score ?? 0,
             result,
             mode: "online-1v1",
+            // فاز G5-03 — پرچم افزودنی: دور تمرینی مقابل ربات داخلی
+            vsBot: vsBotRef.current,
           },
         });
       }
@@ -456,9 +481,37 @@ export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
     buzz("light");
     startedAtRef.current = 0;
     attemptSavedRef.current = false;
+    vsBotRef.current = false;
     myAnswersRef.current = {};
     setMyAnswers({});
     socketRef.current?.emit("create", { name: name.trim(), pack: buildPack() });
+  };
+
+  /**
+   * فاز G5-03 — تمرین با ربات تطبیقی: همان جریان create/start کلاینت، فقط رخداد
+   * play_bot با winRate تخمینی این مرورگر (دادهٔ <۳ دور نفرستاده می‌شود → سرویس ۰٫۵).
+   */
+  const handlePlayBot = () => {
+    if (!connected || busy) return;
+    if (!name.trim()) {
+      setError("اسمت را بنویس");
+      return;
+    }
+    setError(null);
+    setBusy(true);
+    playSound("click");
+    buzz("light");
+    startedAtRef.current = 0;
+    attemptSavedRef.current = false;
+    vsBotRef.current = true;
+    myAnswersRef.current = {};
+    setMyAnswers({});
+    const winRate = duelWinRate(idRef.current);
+    socketRef.current?.emit("play_bot", {
+      name: name.trim(),
+      pack: buildPack(),
+      ...(winRate !== null ? { winRate } : {}),
+    });
   };
 
   const handleJoin = () => {
@@ -478,6 +531,7 @@ export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
     buzz("light");
     startedAtRef.current = 0;
     attemptSavedRef.current = false;
+    vsBotRef.current = false;
     myAnswersRef.current = {};
     setMyAnswers({});
     socketRef.current?.emit("join", { code, name: name.trim() });
@@ -631,14 +685,26 @@ export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
             </p>
           )}
 
-          <Button
-            onClick={handleCreate}
-            disabled={!connected || busy || !name.trim()}
-            className="h-11 w-full gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
-          >
-            {busy ? <Loader2 size={16} className="animate-spin" /> : <Swords size={16} />}
-            ساخت اتاق
-          </Button>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              onClick={handleCreate}
+              disabled={!connected || busy || !name.trim()}
+              className="h-11 w-full gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+            >
+              {busy ? <Loader2 size={16} className="animate-spin" /> : <Swords size={16} />}
+              ساخت اتاق
+            </Button>
+            {/* فاز G5-03 — تمرین با ربات تطبیقی (هم‌استایل؛ outline زمردی) */}
+            <Button
+              onClick={handlePlayBot}
+              disabled={!connected || busy || !name.trim()}
+              variant="outline"
+              className="h-11 w-full gap-2 border-emerald-500/50 text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400"
+            >
+              {busy ? <Loader2 size={16} className="animate-spin" /> : <Bot size={16} />}
+              تمرین با ربات 🤖
+            </Button>
+          </div>
 
           <div className="flex items-center gap-3">
             <Separator className="flex-1" />

@@ -96,6 +96,8 @@ import {
   type DifficultyKey,
 } from "./kit/difficulty";
 import { countWeak, smartPick } from "./kit/smart-pick";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 
 // ─── تایپ‌ها ───
 
@@ -367,6 +369,12 @@ export function WordSearchGame() {
     if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
   });
   const [exitAsk, setExitAsk] = useState(false);
+  // G5-01 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
   // الگوی memory: state بی‌صدا + toggle در هندلر (بدون setState-in-effect)
   const [muted, setMuted] = useState(isSoundMuted());
   // فاز G2-b — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
@@ -496,6 +504,7 @@ export function WordSearchGame() {
     setLiveMsg("");
     setWrongCount(0);
     setMissedWords([]);
+    hintRef.current.reset(); // G5-01 — دور تازه
     setDrag(null);
     activePointerRef.current = null;
     capturedRef.current = false;
@@ -631,6 +640,8 @@ export function WordSearchGame() {
               : [...prev, { front: target.raw, back: target.meaning }],
           );
         }
+        // G5-01 — مدرس بازی: انتخاب غلط (اگر به واژه‌ای نگاشت شد، معنی و خود واژه هم می‌رود)
+        hintRef.current.recordMistake({ prompt: target?.meaning, answer: target?.raw, chosen: str.slice(0, 160) });
         // لرزش بصری روی دو سر مسیر غلط
         const first = cells[0];
         const last = cells[cells.length - 1];
@@ -1127,6 +1138,8 @@ export function WordSearchGame() {
             setPhase("setup");
           }}
         />
+        {/* G5-01 — کارت مدرس بازی */}
+        {hint.element}
       </GameShell>
       {/* فاز G2-b — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay

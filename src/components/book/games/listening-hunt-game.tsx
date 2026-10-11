@@ -93,6 +93,8 @@ import {
 } from "./kit/difficulty";
 import { DifficultyPicker } from "./kit/difficulty-picker";
 import { countWeak, smartPick } from "./kit/smart-pick";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 
 type Phase = "setup" | "playing" | "done";
 
@@ -278,6 +280,12 @@ export function ListeningHuntGame() {
   );
   // فاز G2-c — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
+  // G5-01 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
 
   // رکورد شخصی این اسکوپ — اسنپ‌شات رشته‌ای (primitive تا هر خواندن آبجکت تازه نسازد)
   // فاز G3-01 — اسکوپ سطح‌دار: عادی = دقیقاً همان کلید قدیمی (scopeWithLevel)
@@ -423,6 +431,8 @@ export function ListeningHuntGame() {
         // فاز G2-c — بازخورد سه‌کانالهٔ پاسخ غلط
         playSound("wrong");
         buzz("error");
+        // G5-01 — مدرس بازی: گزینهٔ غلط (معنی سرنخ + واژهٔ درست + گزینهٔ انتخابی)
+        hintRef.current.recordMistake({ prompt: q.meaning, answer: q.word, chosen: (q.options[optIdx] ?? "").slice(0, 160) });
         setLiveMsg(`غلط بود — واژهٔ درست «${q.word}» بود`);
         advanceTimer.current = setTimeout(advance, WRONG_LOCK_MS);
       }
@@ -530,6 +540,7 @@ export function ListeningHuntGame() {
     setSecs(0);
     setIsRecord(false);
     setLiveMsg("");
+    hintRef.current.reset(); // G5-01 — دور تازه
     setPlays(1);
     setPenalty(0);
     resume();
@@ -955,6 +966,8 @@ export function ListeningHuntGame() {
             setPhase("setup");
           }}
         />
+        {/* G5-01 — کارت مدرس بازی */}
+        {hint.element}
       </GameShell>
       {/* فاز G2-c — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay

@@ -86,6 +86,8 @@ import {
 } from "./kit/difficulty";
 import { DifficultyPicker } from "./kit/difficulty-picker";
 import { countWeak, smartPick } from "./kit/smart-pick";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 
 type Phase = "setup" | "playing" | "done";
 
@@ -222,6 +224,12 @@ export function HangmanGame() {
   const [result, setResult] = useState<boolean | null>(null);
   /** فاز G2-a — ایندکس بادکنکی که همین حالا می‌ترکد (انیمیشن pop؛ پس از POP_MS پاک می‌شود) */
   const [popIdx, setPopIdx] = useState<number | null>(null);
+  // G5-01 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
 
   // فاز G2-a — توقف/ادامهٔ استاندارد کیت + نگهبان خروج + کلید صدا (الگوی پایلوت memory)
   // توقف خودکار در تب مخفی (useGamePause) — در بازگشت اورلی «متوقف شد» دیده می‌شود
@@ -441,6 +449,8 @@ export function HangmanGame() {
         // حرف غلط — فاز G2-a: یک بادکنک می‌ترکد (سه‌کاناله در popBalloon)
         const wrongCount = nextUsed.filter((l) => !current.word.includes(l)).length;
         popBalloon(maxWrong - wrongCount);
+        // G5-01 — مدرس بازی: هر حرف غلط یک خطا (سرنخ معنی + واژهٔ درست + حرف انتخابی)
+        hintRef.current.recordMistake({ prompt: current.meaning, answer: current.word, chosen: letter });
         if (wrongCount >= maxWrong) {
           // باخت واژه — متنی هم: «کلمه X بود» + wrong/error در popBalloon
           setLiveMsg(`واژه «${current.word}» بود — به مرور اضافه شد`);
@@ -543,6 +553,7 @@ export function HangmanGame() {
     setSecs(0);
     secsRef.current = 0;
     setIsRecord(false);
+    hintRef.current.reset(); // G5-01 — دور تازه
     resume();
     setExitAsk(false);
     // فاز G2-a — جلسهٔ تازهٔ تله‌متری برای این دور (فاز G3: اسکوپ سطح‌دار)
@@ -1016,6 +1027,8 @@ export function HangmanGame() {
             setPhase("setup");
           }}
         />
+        {/* G5-01 — کارت مدرس بازی */}
+        {hint.element}
       </GameShell>
       {/* فاز G2-a — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay

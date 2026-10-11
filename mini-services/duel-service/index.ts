@@ -28,6 +28,17 @@ const CODE_TTL_LOBBY_MS = 30 * 60_000; // اتاق بی‌فعال لابی
 const CODE_TTL_ENDED_MS = 15 * 60_000; // اتاق تمام‌شده
 const CLEANUP_INTERVAL_MS = 15_000;
 
+// ── فاز G5-03 — ربات داخلی تطبیقی (قاعده‌محور، بدون AI و بدون socket واقعی) ──
+/** پایهٔ مهارت ربات (همان ۶۵٪ رفتار پیش‌فرض) */
+const BOT_SKILL_BASE = 0.65;
+const BOT_SKILL_MIN = 0.35;
+const BOT_SKILL_MAX = 0.9;
+/** بازهٔ «فکر کردن» ربات (ms) — همیشه < مهلت ۱۵ث */
+const BOT_THINK_MIN_MS = 2_000;
+const BOT_THINK_MAX_MS = 8_000;
+/** نام نمایشی ربات در لابی/تخته/finished */
+const BOT_NAME = "ربات هوشمند";
+
 // ─── تایپ‌ها ───
 
 interface DuelQuestion {
@@ -47,6 +58,10 @@ interface Player {
   connected: boolean;
   socketId: string | null;
   disconnectedAt: number | null;
+  /** فاز G5-03 — ربات داخلی (بدون socket؛ پاسخ‌ها سمت سرور ساخته می‌شود) */
+  isBot?: boolean;
+  /** فاز G5-03 — احتمال پاسخ درست ربات (فقط وقتی isBot) */
+  botSkill?: number;
 }
 
 interface PlayerPublic {
@@ -57,6 +72,8 @@ interface PlayerPublic {
   lastDelta: number;
   lastCorrect: boolean;
   connected: boolean;
+  /** فاز G5-03 — افزودنی؛ فقط برای ربات داخلی true است */
+  isBot?: boolean;
 }
 
 type ScoresMap = Record<string, { name: string; score: number; lastDelta: number; lastCorrect: boolean }>;
@@ -77,6 +94,8 @@ interface Room {
   questionTimer: ReturnType<typeof setTimeout> | null;
   revealTimer: ReturnType<typeof setTimeout> | null;
   graceTimer: ReturnType<typeof setTimeout> | null;
+  /** فاز G5-03 — تایمر «فکر کردن» ربات داخلی */
+  botTimer: ReturnType<typeof setTimeout> | null;
   startedAt: number | null;
   createdAt: number;
   lastActivity: number;
@@ -145,7 +164,13 @@ function playersPublic(room: Room): PlayerPublic[] {
     lastDelta: p.lastDelta,
     lastCorrect: p.lastCorrect,
     connected: p.connected,
+    ...(p.isBot ? { isBot: true } : {}),
   }));
+}
+
+/** فاز G5-03 — آیا همهٔ بازیکنانِ باقی‌ماندهٔ اتاق ربات داخلی‌اند؟ (میزبان رفته) */
+function allBots(room: Room): boolean {
+  return [...room.players.values()].every((p) => p.isBot === true);
 }
 
 function scoresOf(room: Room): ScoresMap {
@@ -158,7 +183,9 @@ function scoresOf(room: Room): ScoresMap {
 
 function emitToSocket(room: Room, playerId: string, event: string, payload: unknown): void {
   const p = room.players.get(playerId);
-  if (!p?.socketId) {
+  // فاز G5-03 — ربات داخلی socket واقعی ندارد؛ ساکت رد شو (بدون لاگ نویز)
+  if (!p || p.isBot) return;
+  if (!p.socketId) {
     console.log(`[duel][DBG] emitToSocket ${event} → ${playerId} SKIP (no socketId)`);
     return;
   }
@@ -193,8 +220,10 @@ function broadcastRoom(room: Room): void {
 function clearTimers(room: Room): void {
   if (room.questionTimer) clearTimeout(room.questionTimer);
   if (room.revealTimer) clearTimeout(room.revealTimer);
+  if (room.botTimer) clearTimeout(room.botTimer);
   room.questionTimer = null;
   room.revealTimer = null;
+  room.botTimer = null;
 }
 
 function deleteRoom(code: string): void {
@@ -239,6 +268,66 @@ function startQuestion(room: Room): void {
   });
   // ۱۵۰ms گاری تأخیر شبکه — قضاوت نهایی با زمان انقضا
   room.questionTimer = setTimeout(() => closeQuestion(room), QUESTION_MS + 150);
+  // فاز G5-03 — ربات داخلی هم مثل حریف واقعی «فکر می‌کند» و جواب می‌دهد
+  scheduleBotAnswer(room);
+}
+
+/**
+ * فاز G5-03 — زمان‌بندی پاسخ ربات داخلی: زمان فکر تصادفی ۲..۸ ثانیه
+ * (همیشه کمتر از مهلت ۱۵ث) سپس همان مسیر registerAnswer پاسخ انسانی.
+ */
+function scheduleBotAnswer(room: Room): void {
+  if (room.botTimer) {
+    clearTimeout(room.botTimer);
+    room.botTimer = null;
+  }
+  if (room.state !== "playing" || room.phase !== "question") return;
+  const bot = [...room.players.values()].find((p) => p.isBot);
+  if (!bot || bot.botSkill === undefined) return;
+  const think = BOT_THINK_MIN_MS + Math.floor(Math.random() * (BOT_THINK_MAX_MS - BOT_THINK_MIN_MS + 1));
+  room.botTimer = setTimeout(() => {
+    room.botTimer = null;
+    botAnswer(room, bot);
+  }, think);
+}
+
+/** پاسخ ربات داخلی به سؤال جاری — با احتمال skill درست، وگرنه یک گزینهٔ غلط تصادفی */
+function botAnswer(room: Room, bot: Player): void {
+  if (room.state !== "playing" || room.phase !== "question" || !room.current) return;
+  if (room.answers.has(bot.id)) return;
+  const q = room.pack[room.currentIndex];
+  const skill = bot.botSkill ?? BOT_SKILL_BASE;
+  const correct = Math.random() < skill;
+  const wrongs = q.options.map((_, i) => i).filter((i) => i !== q.answer);
+  const choice = correct ? q.answer : (wrongs[Math.floor(Math.random() * wrongs.length)] ?? q.answer);
+  registerAnswer(room, bot, choice);
+}
+
+/**
+ * فاز G5-03 — ثبت پاسخ یک بازیکن (انسان یا ربات) — منطق امتیازدهی مشترک؛
+ * بدنه از هندلر `answer` استخراج شد تا ربات دقیقاً همان مسیر را طی کند
+ * (score → بستن زودهنگام اگر همه پاسخ دادند → reveal).
+ */
+function registerAnswer(room: Room, p: Player, choice: number): void {
+  if (room.phase !== "question" || !room.current) return;
+  const q = room.pack[room.currentIndex];
+  const remaining = Math.max(0, room.current.endsAt - now());
+  const bonus = Math.round((MAX_BONUS * remaining) / QUESTION_MS);
+  const correct = choice === q.answer;
+  const delta = correct ? BASE_SCORE + bonus : 0;
+  p.score += delta;
+  if (correct) p.correct += 1;
+  p.lastDelta = delta;
+  p.lastCorrect = correct;
+  room.answers.set(p.id, { choice, correct, delta });
+  touch(room);
+  emitToAll(room, "score", { questionIndex: room.currentIndex, scores: scoresOf(room) });
+
+  // همهٔ بازیکنان آنلاین پاسخ دادند؟ بستن زودهنگام سؤال
+  const connected = [...room.players.values()].filter((pl) => pl.connected);
+  if (connected.length > 0 && room.answers.size > 0 && room.answers.size >= connected.length) {
+    closeQuestion(room);
+  }
 }
 
 function closeQuestion(room: Room): void {
@@ -292,7 +381,7 @@ function armGrace(room: Room): void {
         removed = true;
       }
     }
-    if (room.players.size === 0) {
+    if (room.players.size === 0 || allBots(room)) {
       deleteRoom(room.code);
       return;
     }
@@ -350,6 +439,7 @@ io.on("connection", (socket: Socket) => {
       questionTimer: null,
       revealTimer: null,
       graceTimer: null,
+      botTimer: null,
       startedAt: null,
       createdAt: now(),
       lastActivity: now(),
@@ -370,6 +460,83 @@ io.on("connection", (socket: Socket) => {
     socket.emit("created", { code: room.code, playerId, total: pack.length });
     broadcastRoom(room);
     console.log(`[duel] room ${room.code} created by ${playerId} (${pack.length} questions)`);
+  });
+
+  // ── فاز G5-03 — تمرین با ربات تطبیقی (میزبان + ربات داخلی بدون socket واقعی) ──
+  // ورودی: { name?, pack?, winRate? } — winRate ∈ [0,1] نرخ برد میزبان (پیش‌فرض ۰٫۵).
+  // مهارت ربات: s = clamp(0.35, 0.9, 0.65 + (winRate − 0.5) × 0.6) — کشش برد/باخت به ~۵۰٪.
+  // جریان بعدی همان اتاق کلاسیک است: start → question → answer/reveal → finished؛
+  // ربات همهٔ رخدادهای حریف واقعی را از سمت سرور برای socketId میزبان emit می‌کند.
+  socket.on("play_bot", (raw: unknown) => {
+    const data = (raw ?? {}) as { name?: unknown; pack?: unknown; winRate?: unknown };
+    if (rooms.size >= MAX_ROOMS) {
+      emitError(socket, "سرور شلوغ است — چند لحظه بعد تلاش کن");
+      return;
+    }
+    const pack = sanitizePack(data.pack);
+    if (!pack) {
+      emitError(socket, "بستهٔ سؤال نامعتبر است");
+      return;
+    }
+    const winRate =
+      typeof data.winRate === "number" && Number.isFinite(data.winRate)
+        ? Math.min(1, Math.max(0, data.winRate))
+        : 0.5;
+    const skill = Math.min(BOT_SKILL_MAX, Math.max(BOT_SKILL_MIN, BOT_SKILL_BASE + (winRate - 0.5) * 0.6));
+    const playerId = newPlayerId();
+    const botId = newPlayerId();
+    const room: Room = {
+      code: generateCode(),
+      hostId: playerId,
+      players: new Map(),
+      pack,
+      state: "lobby",
+      currentIndex: 0,
+      phase: "question",
+      answers: new Map(),
+      current: null,
+      revealAnswer: null,
+      questionTimer: null,
+      revealTimer: null,
+      graceTimer: null,
+      botTimer: null,
+      startedAt: null,
+      createdAt: now(),
+      lastActivity: now(),
+    };
+    room.players.set(playerId, {
+      id: playerId,
+      name: sanitizeName(data.name),
+      score: 0,
+      correct: 0,
+      lastDelta: 0,
+      lastCorrect: true,
+      connected: true,
+      socketId: socket.id,
+      disconnectedAt: null,
+    });
+    // بازیکن دوم = ربات داخلی — socket ندارد؛ امتیاز/پاسخ‌هایش با همان منطق registerAnswer ساخته می‌شود
+    room.players.set(botId, {
+      id: botId,
+      name: BOT_NAME,
+      score: 0,
+      correct: 0,
+      lastDelta: 0,
+      lastCorrect: true,
+      connected: true,
+      socketId: null,
+      disconnectedAt: null,
+      isBot: true,
+      botSkill: skill,
+    });
+    rooms.set(room.code, room);
+    socketToRoom.set(socket.id, { code: room.code, playerId });
+    socket.emit("created", { code: room.code, playerId, total: pack.length });
+    broadcastRoom(room); // ربات socket ندارد — فقط میزبان joined می‌گیرد
+    // لاگ فنی کوتاه (بدون PII) برای دیدن رفتار تطبیقی
+    console.log(
+      `[duel] bot room ${room.code} — skill=${skill.toFixed(2)} winRate=${winRate.toFixed(2)} (${pack.length}q)`,
+    );
   });
 
   // ── پیوستن با کد ──
@@ -500,23 +667,8 @@ io.on("connection", (socket: Socket) => {
     if (!p || !p.connected) return;
     if (room.answers.has(p.id)) return; // هر بازیکن فقط یک بار در هر سؤال
 
-    const remaining = Math.max(0, room.current.endsAt - now());
-    const bonus = Math.round((MAX_BONUS * remaining) / QUESTION_MS);
-    const correct = choice === q.answer;
-    const delta = correct ? BASE_SCORE + bonus : 0;
-    p.score += delta;
-    if (correct) p.correct += 1;
-    p.lastDelta = delta;
-    p.lastCorrect = correct;
-    room.answers.set(p.id, { choice, correct, delta });
-    touch(room);
-    emitToAll(room, "score", { questionIndex: room.currentIndex, scores: scoresOf(room) });
-
-    // همهٔ بازیکنان آنلاین پاسخ دادند؟ بستن زودهنگام سؤال
-    const connected = [...room.players.values()].filter((pl) => pl.connected);
-    if (connected.length > 0 && room.answers.size > 0 && room.answers.size >= connected.length) {
-      closeQuestion(room);
-    }
+    // فاز G5-03 — بدنهٔ امتیازدهی به registerAnswer منتقل شد (مشترک با ربات داخلی)
+    registerAnswer(room, p, choice);
   });
 
   // ── شروع دوباره با همان بستهٔ سؤال (فقط میزبان) ──
@@ -558,9 +710,9 @@ io.on("connection", (socket: Socket) => {
     touch(room);
 
     if (room.state === "lobby") {
-      // در لابی چیزی برای حفظ کردن نیست — جایگاه آزاد می‌شود
+      // در لابی چیزی برای حفظ کردن نیست — جایگاه آزاد می‌شود (اتاق فقط‌ربات هم بسته می‌شود)
       room.players.delete(p.id);
-      if (room.players.size === 0) {
+      if (room.players.size === 0 || allBots(room)) {
         deleteRoom(room.code);
         return;
       }
@@ -594,7 +746,7 @@ io.on("connection", (socket: Socket) => {
 setInterval(() => {
   const t = now();
   for (const room of [...rooms.values()]) {
-    if (room.players.size === 0) {
+    if (room.players.size === 0 || allBots(room)) {
       if (t - room.createdAt > GRACE_MS) deleteRoom(room.code);
       continue;
     }

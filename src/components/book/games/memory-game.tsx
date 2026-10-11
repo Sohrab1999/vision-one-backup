@@ -79,6 +79,8 @@ import {
   type DifficultyKey,
 } from "./kit/difficulty";
 import { countWeak, smartPick } from "./kit/smart-pick";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 
 type Phase = "setup" | "playing" | "done";
 type Side = "en" | "fa";
@@ -167,6 +169,12 @@ export function MemoryGame() {
     if (phase === "playing") setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
   });
   const [exitAsk, setExitAsk] = useState(false);
+  // G5-01 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
   const [muted, setMuted] = useState(isSoundMuted());
   // فاز G1-08 — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
   const {
@@ -312,6 +320,7 @@ export function MemoryGame() {
     secsRef.current = 0;
     setIsRecord(false);
     setMissedWords([]);
+    hintRef.current.reset(); // G5-01 — دور تازه
     busy.current = false;
     // فاز G2-a — نشانگر کیبورد گرید هم برای دور تازه از نو شروع شود
     setFocusIdx(null);
@@ -411,6 +420,12 @@ export function MemoryGame() {
         setLiveMsg("جفت غلط — کارت‌ها بسته می‌شوند، دوباره تلاش کن");
         playSound("wrong");
         buzz("error");
+        // G5-01 — مدرس بازی: جفت غلط (معنی + واژهٔ درست + کارت دوم انتخابی)
+        hintRef.current.recordMistake({
+          prompt: first.meaning,
+          answer: first.word,
+          chosen: (card.side === "fa" ? card.meaning : card.word).slice(0, 160),
+        });
         // فاز G1-06 — واژهٔ خطاخورده برای «مرور خطاها»ی صفحهٔ نتیجه (بدون تکرار)
         setMissedWords((prev) =>
           prev.some((m) => m.front === first.word)
@@ -813,6 +828,8 @@ export function MemoryGame() {
           setPhase("setup");
         }}
       />
+      {/* G5-01 — کارت مدرس بازی */}
+      {hint.element}
       </GameShell>
       {/* فاز G1-08 — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay

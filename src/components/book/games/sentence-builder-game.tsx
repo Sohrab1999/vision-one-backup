@@ -92,6 +92,8 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// G5-01 — مدرس بازی با LLM (راهنمای خودکار بعد از ۳ خطا)
+import { useHintCoach } from "./kit/hint-coach";
 // فاز G3 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت GameKit v2 — فقط مصرف)
 import {
   LEVEL_KNOBS,
@@ -278,6 +280,12 @@ export function SentenceBuilderGame() {
   });
   const [exitAsk, setExitAsk] = useState(false);
   const [muted, setMuted] = useState(isSoundMuted());
+  // G5-01 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
   // فاز G1-08 — آموزش یک‌بارنمایش (خودکار در setup) + راهنمای شِل حین بازی (با توقف)
   const {
     open: tutorialOpen,
@@ -526,6 +534,12 @@ export function SentenceBuilderGame() {
         // فاز G2-b — بازخورد سه‌کانالهٔ چیدمان نادرست (بدون تغییر امتیاز؛ ردیف پر می‌ماند)
         playSound("wrong");
         buzz("error");
+        // G5-01 — مدرس بازی: چیدمان نادرست (ترجمه + جملهٔ درست + چیدهٔ کاربر)
+        hintRef.current.recordMistake({
+          prompt: current.fa,
+          answer: current.en,
+          chosen: nextSlots.map((s) => tiles.find((t) => t.id === s)?.word ?? "").join(" ").slice(0, 160),
+        });
         setLiveMsg("چیدمان درست نیست — واژه‌ها را بردار یا با فلش‌ها جابه‌جا کن");
         rememberMissed(current);
         return;
@@ -685,6 +699,7 @@ export function SentenceBuilderGame() {
     setSecs(0);
     setIsRecord(false);
     setMissedWords([]);
+    hintRef.current.reset(); // G5-01 — دور تازه
     setExitAsk(false);
     resume();
     loadSentence(picked[0]); // نشانگر کیبورد را هم از نو می‌کند
@@ -1188,6 +1203,8 @@ export function SentenceBuilderGame() {
             setPhase("setup");
           }}
         />
+        {/* G5-01 — کارت مدرس بازی */}
+        {hint.element}
       </GameShell>
       {/* فاز G2-b — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay
