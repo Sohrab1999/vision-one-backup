@@ -1,0 +1,10 @@
+▲ Next.js 16.1.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://21.0.10.219:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 1948ms
+○ Compiling / ...
+prisma:query SELECT COUNT(*) AS `_count$_all` FROM (SELECT `main`.`User`.`id` FROM `main`.`User` WHERE 1=1 LIMIT ? OFFSET ?) AS `sub`
+ GET /api/health 200 in 18.1s (compile: 17.8s, render: 262ms)
