@@ -70,6 +70,7 @@ import {
   Dice5,
   Dice6,
   Dices,
+  Keyboard,
   Pause,
   Play,
   Sparkles,
@@ -90,6 +91,8 @@ import type { QuizQuestionSeed } from "@/data/types";
 import { useBook, useBookData } from "@/lib/book-context";
 import { touchStreak } from "@/lib/streak-store";
 import { recordStudySession } from "@/lib/goal-store";
+// فاز SL0-01 نقشه راه مار و پله — حلقهٔ یادگیری: خطا → کارت مرور، درست → ارتقای کارت (الگوی cloze)
+import { recordSRS, seedReviewFromQuiz } from "@/lib/srs-store";
 // فاز G5-03 — getter شمارندهٔ برد کامل (`visionone:game-wins`) برای نرخ برد ربات تطبیقی
 import { readGameWins } from "@/lib/badge-store";
 import {
@@ -117,6 +120,8 @@ import {
   type TutorialStep,
 } from "./kit/tutorial-overlay";
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
+// فاز SL0-02 نقشه راه مار و پله — مدرس بازی (همان الگوی ۸ بازی واژگانی G5-01)
+import { useHintCoach } from "./kit/hint-coach";
 
 // ─── ثابت‌ها و نقشهٔ تخته ───
 
@@ -341,6 +346,12 @@ export function SnakesLaddersGame() {
   const botSkillRef = useRef<number>(BOT_SKILL);
   // فاز G1-10 — تله‌متری جلسه (بدون PII: بازی/اسکوپ/مدت رُند/دلیل)
   const sessionRef = useRef<GameSessionTracker | null>(null);
+  // فاز SL0-02 — مدرس بازی (کارت شناور داخل GameShell) — دسترسی در callbackهای پایدار با latest-ref (الگوی کیت)
+  const hint = useHintCoach(GAME_KEY);
+  const hintRef = useRef(hint);
+  useEffect(() => {
+    hintRef.current = hint;
+  });
 
   // اسکوپ رکورد طبق نقشه راه: hotseat | vs-bot
   const modeScope = mode === "bot" ? "vs-bot" : "hotseat";
@@ -639,7 +650,7 @@ export function SnakesLaddersGame() {
     }
   }
 
-  function answerHuman(idx: number): void {
+  function answerHuman(idx: number, viaKey?: number): void {
     // فاز G2-e-1 — گیت توقف: حین «بازی متوقف شد» هیچ پاسخی ثبت نمی‌شود
     if (turnLockRef.current || pausedRef.current || !q) return;
     const p = curRef.current;
@@ -648,17 +659,27 @@ export function SnakesLaddersGame() {
     const ok = idx === q.answer;
     setReveal({ picked: idx, ok, byBot: false });
     bumpStats(p, ok);
+    // فاز SL0-01 — کلید SRS = گزینهٔ درست سؤال (واژهٔ انگلیسی خود جزوه — کتاب فعال خودکار)
+    const srsWord = q.options[q.answer] ?? "";
+    // فاز SL0-03 — پیشوند کیبورد برای فناوری‌های کمکی (الگوی cloze G2-b)
+    const keyPrefix = viaKey !== undefined ? `گزینه ${faNum(viaKey)} — ` : "";
     // فاز G2-e-1 — بازخورد سه‌کانالهٔ پاسخ انسان
     if (ok) {
       playSound("correct");
       buzz("success");
-      setLiveMsg("پاسخ درست — تاس می‌افتد");
+      // فاز SL0-01 — ارتقای کارت واژه در مرور هوشمند (فقط انسان — ربات از این مسیر نمی‌گذرد)
+      recordSRS(srsWord, true);
+      setLiveMsg(`${keyPrefix}پاسخ درست — تاس می‌افتد`);
       later(() => proceedAfterCorrect(p), 350);
     } else {
       playSound("wrong");
       buzz("error");
+      // فاز SL0-01 — خطا → کارت مرور هوشمند (کارت نو: سررسید فردا؛ کارت قدیم: بازآموزی ۱۰ دقیقه‌ای)
+      seedReviewFromQuiz(srsWord);
+      // فاز SL0-02 — شمارش خطا برای مدرس (خطای سوم کارت LLM را خودکار باز می‌کند)
+      hintRef.current.recordMistake({ prompt: q.text, answer: srsWord, chosen: q.options[idx] ?? "" });
       toast.error("بند شدی!");
-      setLiveMsg("پاسخ غلط — بند شدی! نوبت بعدی");
+      setLiveMsg(`${keyPrefix}پاسخ غلط — بند شدی! نوبت بعدی`);
       later(() => beginTurn((p + 1) % playersRef.current.length), 1100);
     }
   }
@@ -713,6 +734,8 @@ export function SnakesLaddersGame() {
     pauseStartRef.current = 0;
     resume();
     setExitAsk(false);
+    // فاز SL0-02 — شمارندهٔ مدرس از نو (دور تازه — الگوی hangman G5-01)
+    hintRef.current.reset();
     // فاز G5-03 — مهارت ربات تطبیقی در شروع دور mode="bot" (ref — منبع حقیقت منطق)
     botSkillRef.current = mode === "bot" ? computeAdaptiveBotSkill(activeBookId) : BOT_SKILL;
     // فاز G1-10 — جلسهٔ تازهٔ تله‌متری (level = ترکیب بازیکن‌ها — قرارداد تسک G2-e)
@@ -861,6 +884,29 @@ export function SnakesLaddersGame() {
     },
     [],
   );
+
+  // فاز SL0-03 — کیبورد: کلیدهای ۱..۴ (فارسی/عربی/انگلیسی) پاسخ گزینه‌ها.
+  // گاردهای نوبت/توقف/ربات داخل answerHuman است؛ اینجا فقط فاز playing و دیالوگ خروجِ باز گیت می‌شود.
+  const answerRef = useRef(answerHuman);
+  useEffect(() => {
+    answerRef.current = answerHuman;
+  });
+  useEffect(() => {
+    if (phase !== "playing") return;
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
+      let i = Number(e.key) - 1;
+      if (!Number.isInteger(i) || i < 0 || i > 3) {
+        const f = "۱۲۳۴".indexOf(e.key);
+        i = f >= 0 ? f : "١٢٣٤".indexOf(e.key);
+      }
+      if (i < 0 || i > 3) return;
+      if (exitAsk) return; // دیالوگ خروج باز است — پاسخ ثبت نشود
+      answerRef.current(i, i + 1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phase, exitAsk]);
 
   // ── Setup ──
   if (phase === "setup") {
@@ -1369,6 +1415,10 @@ export function SnakesLaddersGame() {
                     <Dices size={11} />
                     تاس ۶ = نوبت اضافه
                   </span>
+                  <span className="flex items-center gap-1">
+                    <Keyboard size={11} />
+                    کلید ۱ تا ۴ = پاسخ سریع
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -1399,6 +1449,8 @@ export function SnakesLaddersGame() {
           onConfirm={confirmExit}
           description="دور مار و پله هنوز تمام نشده — با خروج، پیشرفت این دور از دست می‌رود."
         />
+        {/* فاز SL0-02 — کارت مدرس بازی (کاملاً مثل ۸ بازی G5-01) */}
+        {hint.element}
       </GameShell>
       {/* فاز G2-e-1 — راهنمای دکمهٔ شِل (حین بازی با توقف باز می‌شود) */}
       <TutorialOverlay

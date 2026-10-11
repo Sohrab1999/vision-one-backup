@@ -2817,3 +2817,19 @@ Work Log:
 Stage Summary:
 - نقشه راه اختصاصی مار و پله تصویب شد: docs/snakes-roadmap.md v۱.۰ — ۵ فاز / ۱۷ کار / ۵ هدف کمی
 - گام بعدی طبق سند: SL0-01 (اتصال recordSRS) سپس SL0-02 (مدرس LLM) — هر دو P0 و کوچک
+---
+Task ID: SL0
+Agent: main orchestrator (Z.ai Code)
+Task: فاز SL0 نقشه راه مار و پله (docs/snakes-roadmap.md) — حلقهٔ یادگیری و دسترس‌پذیری: SRS + مدرس LLM + کیبورد
+
+Work Log:
+- SL0-01: import `recordSRS/seedReviewFromQuiz` از srs-store (کتاب فعال خودکار scoped) — در answerHuman: درست → `recordSRS(q.options[q.answer], true)`، غلط → `seedReviewFromQuiz(...)` — دقیقاً الگوی cloze؛ ربات از مسیر botAnswer عبور نمی‌کند و هیچ SRS ثبت نمی‌کند
+- SL0-02: `useHintCoach("snakes-ladders")` + hintRef latest-ref (الگوی کیت/hangman) — recordMistake({prompt: q.text, answer: گزینهٔ درست, chosen: گزینهٔ انتخابی}) در شاخهٔ غلط انسان + reset() در start() + `{hint.element}` داخل GameShell بعد از GameExitGuard — نرخ ۸/۶۰s سرور دست‌خورده
+- SL0-03: دو effect کیبورد — answerRef latest-ref + listener window keydown (deps [phase, exitAsk]) — کلیدهای 1..4 انگلیسی/۱۲۳۴ فارسی/١٢٣٤ عربی → answerHuman(i, i+1) با پیشوند aria «گزینه N —» (الگوی cloze G2-b)؛ گیت e.repeat/modifierها/دیالوگ خروج؛ لجند «کلید ۱ تا ۴ = پاسخ سریع» با آیکون Keyboard زیر تخته
+- diff افزودنی خالص در ۱ فایل (+~۴۰ خط): هیچ امضای saveAttempt/saveBest/bumpPlays، هیچ کلید localStorage موجود، هیچ تغییری در زنجیرهٔ توقف/فرمول ربات G5-03
+
+Stage Summary:
+- 🏁 فاز SL0 کامل شد: ۳/۳ — حلقهٔ یادگیری مار و پله وصل شد (خطا → مرور هوشمند) + مدرس LLM + کیبورد کامل
+- راستی‌آزمایی مرورگری (agent-browser دسکتاپ ۱۲۸۰): ۹ خطای واقعی → کارت‌های SRS از ۲ به ۱۲ (embassy/polite/shrines/himself…) · ۳ خطا → کارت «مدرس بازی» با متن واقعی LLM («برای جملهٔ اول، باید از ourselves استفاده کنیم…») + ‏POST /api/game-hint ×۲ در dev.log · کلید 1/2 → aria «گزینه ۱ — پاسخ غلط…» · کلید 4 → درست → «تاس ۴ آمد» و کلید 3 → تاس ۶ (نوبت اضافه سالم) · لجند کیبورد در DOM · موبایل ۳۹۰ بدون سرریز افقی · خطای کنسول صفر · lint 0 · tsc(src) 0
+- نکتهٔ عملی: باندل کهنه — بعد از ادیت، صفحه باید reload شود وگرنه QA گمراه می‌شود (POST game-hint صفر → نشانهٔ باندل کهنه؛ سند در G5 هم بود)
+- گام بعدی طبق سند: فاز SL1 — بصری‌سازی تخته (SL1-01 مسیر SVG مار و پله · SL1-02 پالس مقصد)
