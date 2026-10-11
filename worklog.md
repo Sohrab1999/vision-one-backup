@@ -2614,3 +2614,104 @@ Work Log:
 
 Stage Summary:
 - پیش‌نمایش باید پس از رفرش پنل فوری بیاید (کش گرم + هدر اصلاح‌شده) · کامیت و پوش روی backup/main
+---
+Task ID: G4-04
+Agent: general-purpose
+Task: فاز G4 — اشتراک نتیجهٔ بازی: کارت تصویری آمار پایان (Canvas→PNG با Web Share API) + ردیف «اشتراک نتیجه» در ResultScreen (G4-04)
+
+Work Log:
+- قدم صفر: tail worklog (~۳۰۰ خط آخر + هدرها) + docs/games-roadmap.md خط ۲۱۵ (قرارداد G4-04: «بدون ذخیرهٔ خودکار؛ کاربر فعالانه اشتراک می‌گذارد») + مطالعهٔ کامل progress-card-generator.tsx (الگوی مرجع: بوم 1080×1350 @2x، ترسیم دستی Canvas 2D بدون کتابخانهٔ خارجی، toBlob، Web Share با فایل + فالبک دانلود، document.fonts.load برای Vazirmatn، ctx.direction="rtl")
+- فایل جدید kit/result-share.ts («use client»، الگوی sound-engine.ts): buildResultCard(opts) → Promise<Blob> (image/png) + shareOrDownloadResultCard(opts) → Promise<ResultShareOutcome = shared|saved|cancelled|failed> + RESULT_CARD_FILENAME = "vision-one-result.png"؛ opts = { gameName, title, stars 0..3 (کلمپ داخلی), stats {label,value}[] (حداکثر ۶ = دو ردیف ۳تایی), isRecord? }
+- ترسیم کارت (عین زبان بصری progress-card-generator — بدون آبی/بنفش): گرادیان روشن #f2fdf7→#effdfb + لکه‌های تزئینی amber/teal + قاب دوخطه emerald/teal + کیکر «نتیجهٔ بازی» + نام بزرگ بازی (fitFont تا 88px، #065f46) + کارت سفید گرد (rgba 0.92 + حاشیه emerald) + عنوان پایان دور (#047857) + بج کهربایی «رکورد جدید! 🏆» (اگر isRecord؛ #f59e0b روی #451a03) + ردیف ۳ ستارهٔ دست‌ساز (۵پر؛ پر = #f59e0b/#d97706 کمی بزرگ‌تر — الگوی scale-110 نتیجه؛ خالی = خاکستری کم‌رنگ) + چیپ‌های آمار RTL (چیپ اول سمت راست؛ مقدار 58px #134e4a، برچسب 30px #64748b) + امضای پایین دوخطی «کتابخانه ویژن — بازی‌های زبان انگلیسی» و «ویژن‌وان 🦉»
+- جریان اشتراک طبق قرارداد: navigator.canShare({files}) → navigator.share (فایل vision-one-result.png + title/text فارسی) با try/catch — لغو کاربر = "cancelled" بی‌صدا؛ فالبک a.download + revokeObjectURL(4s) = "saved"؛ خطای ساخت = "failed" — هیچ مسیری خودکار ذخیره نمی‌کند (فقط از onClick)
+- ادغام در result-screen.tsx (فقط افزودنی — diff نهایی +53/−0): prop اختیاری جدید gameName?: string (پیش‌فرض «بازی ویژن وان» — هیچ امضای موجود عوض نشد) + state shareBusy + handleShareResult (گارد دبل‌کلیک؛ stats.slice(0,3).map({label,value}) — icon ری‌اکتی روی بوم نمی‌رود؛ stars = starsSafe هماهنگ با UI؛ toast.success «کارت نتیجه آماده شد» برای shared/saved و toast.error «ساخت تصویر ممکن نشد» برای failed — sonner مثل progress-card-generator) + دکمهٔ چهارم variant="ghost" با آیکون Share2 (Loader2 چرخان حین ساخت)، min-h-11، w-full در موبایل / sm:w-auto، disabled + aria-busy حین ساخت، زیر ۳ دکمهٔ ثابت
+- سازگاری فراخوانی‌ها: grep «<ResultScreen» → ۱۶ فراخوانی در بازی‌ها (scramble/wordle×2/crossword/wordsearch/sentence-builder/cloze/snakes-ladders/duel/speed-quiz/listening-hunt/fps/flappy/hangman/memory/adventure-map) — همه خارج result-screen.tsx و دست‌نخورده ماندند (prop اختیاری → سازگاری کامل؛ طبق تسک هیچ فراخوانی بیرونی ویرایش نشد)
+- راستی‌آزمایی (بدون مرورگر — QA مرورگری با orchestrator): bun run lint → exit 0 صفر خطا · bunx tsc --noEmit | grep '^src/' → خالی · git diff --stat فایل مالکیت: فقط result-screen.tsx +53/−0 (صفر حذف) و result-share.ts جدید — هیچ فایل دیگری از کیت/بازی‌ها/hub/rewards/api لمس نشد · بدون build/commit/test
+
+Stage Summary:
+- G4-04 بسته شد: هر ResultScreen حالا ردیف ظریف «اشتراک نتیجه» دارد — کارت تصویری 1080×1350 (@2x رتینا) از همان props نمایش (gameName اختیاری/عنوان/ستاره‌ها/۳ آمار/بج رکورد) با پالت emerald+amber، اشتراک بومی Web Share API با فایل و فالبک دانلود؛ «بدون ذخیرهٔ خودکار» رعایت شد (ذخیره فقط فالبکِ کلیک کاربر؛ لغو دیالوگ هیچ توست/خطایی نمی‌دهد)
+- بازی‌ها برای داشتن نام روی کارت فقط کافی است gameName="…" بدهند (افزودنی؛ بازی‌های فعلی پیش‌فرض «بازی ویژن وان» می‌گیرند) — پیشنهاد پیگیری برای orchestrator: در QA مرورگری G6 دکمه در موبایل ۳۹۰ (تمام‌عرض) و فالبک دانلود دسکتاپ چک شود
+- برای QA دستی: پایان هر دور → «اشتراک نتیجه» → موبایل: شیت اشتراک با PNG؛ دسکتاپ: دانلود vision-one-result.png + توست «کارت نتیجه آماده شد»؛ حین ساخت دکمه غیرفعال با اسپینر
+
+---
+Task ID: G4-03
+Agent: general-purpose
+Task: فاز G4 — چالش کلاس (G4-03): معلم در class-view «چالش بازی» تعیین می‌کند (بازی+حداقل امتیاز)؛ رده‌بندی دانش‌آموزان از Attempts — فقط با کد کلاس، بدون PII
+
+Work Log:
+- قدم صفر: worklog (سرفصل‌ها + ۳۰۰ خط آخر) + docs/games-roadmap.md ردیف G4-03 + schema.prisma (Classroom/LiveQuiz/Attempt) + api/class/[code]/route.ts و _lib/state.ts (الگوی key/role/کد ۶رقمی/پیام فارسی) + api/leaderboard/route.ts (فرمول XP و گروه‌بندی) + class components + games/shared.ts و games-hub (نام فارسی بازی‌ها)
+- Prisma (افزودنی فقط): مدل ClassChallenge (classroomId/category/minScore/createdAt/active + @@index([classroomId, active]) + Cascade) و رابطهٔ معکوس challenges ClassChallenge[] روی Classroom → bun run db:push بدون هشدار مخرب (+generate خودکار)
+- src/lib/db.ts (جراحی یک‌شرطی، قرارداد ثبت‌شدهٔ فاز ۱۲): شرط کهنگی self-heal به «classChallenge in cached» گسترش یافت تا کلاینت تازه پس از db push بدون ری‌استارت سرور لود شود — اثر جانبی صفر برای مدل‌های قبلی
+- API جدید src/app/api/class/[code]/challenge/route.ts: GET ?key=&role= (اعتبارسنجی کد/نقش/کلید مثل route.ts والد؛ معلم=teacherKey، دانش‌آموز=عضویت ClassMember) → چالش فعال آخرین + رده‌بندی: Attempt های book=classroom.book و category=بازی و createdAt>=شروع چالش، گروه‌بندی به سبک leaderboard (نام کاربری حساب‌دار / نام نمایشی مهمان)، امتیاز هر Attempt = correct×10+25 (همان XP سراسری)، هر ردیف {name, plays, bestScore, reachedGoal} مرتب bestScore نزولی سقف ۵۰؛ بدون PII (فقط نام نمایشی)؛ PUT ?key=&role=teacher با بدنه {category (kebab-case ۲..۴۰), minScore (عدد صحیح ۱..۱۰۰۰۰)} → updateMany غیرفعال‌سازی قبلی‌ها + ساخت چالش جدید (۲۰۱)؛ خطاهای فارسی 400/401/403/404
+- games/shared.ts (افزودنی یک‌کلمه‌ای): GAME_TITLES از حالت خصوصی export شد (درخواست تسک: «import نقشهٔ نام فارسی از shared.ts») — رفتار runtime قبلی دست‌نخورده
+- کشف مستند (هم‌راستا با یادداشت عامل G4-01): GAME_TITLES برای «memory» کهنه است (کلید قدیمی match) و games-hub هم export ندارد → در challenge.tsx فهرست مرجع محلی ۱۵تایی با نام‌های games-hub + fallback زنجیره‌ای challengeGameTitle (محلی → GAME_TITLES → کلید خام)
+- src/components/book/class/challenge.tsx (جدید): هوک useClassChallenge (الگوی latest-ref/aliveRef عین useClassStatePoll — بدون setState در بدنهٔ effect؛ poll اختیاری) + TeacherChallengeCard (انتخاب‌گر بومی ۱۵ بازی، Input امتیاز با toEnDigits و نگه‌داری عدد، دکمهٔ «تعیین چالش» min-h-11، توست موفقیت/خطای sonner، بنر چالش فعال با تاریخ شمسی، جدول رده‌بندی با مدال/رتبهٔ فارسی/امتیاز/دور/✅ هدف-🎯، دکمهٔ به‌روزرسانی، poll خاموش ۱۵ثانیه‌ای) + StudentChallengeCard (هدف چالش + بهترین امتیاز خودم با تطبیق نام نمایشی نشست + پیام role="status" ✅/🎯 + ۵ نفر برتر با نشانگر «(تو)»؛ poll ۳۰ثانیه‌ای؛ حالت خالی «معلم هنوز چالشی تعیین نکرده 🕒»)
+- سیم‌کشی جراحی: teacher-dashboard.tsx فقط +import و +۱ خط JSX (کارت بعد از تکالیف) · student-view.tsx فقط +import و +۲ خط JSX (کارت بعد از تکالیف، قبل از آزمون زنده) · class-view.tsx نیازی به تغییر نداشت
+- راستی‌آزمایی: lint صفر · bunx tsc --noEmit | grep '^src/' → خالی · curl کامل روی سرور dev زنده (بدون ری‌استارت): کد الکی 000000 → 404 «کلاسی با این کد پیدا نشد»؛ PUT بدون role → 403، کلید غلط → 403، minScore=99999 → 400 فارسی؛ سناریوی واقعی (ساخت کلاس تست → PUT 201 → join دانش‌آموز → ۳ Attempt) → GET: bestScore=95 (۷×۱۰+۲۵)، plays=2، reachedGoal=true، Attempt دستهٔ نامرتبط و پیش از شروع چالش حذف شد ✓؛ PUT دوم چالش قبلی را غیرفعال کرد (rows خالی برای بازی جدید) ✓؛ در پایان کلاس تست DELETE و ۳ Attempt آزمایشی پاک‌سازی شد (بدون آلودگی رده‌بندی واقعی)
+- فایل‌های موازی دست‌نخورده: api/leaderboard، game-leaderboard.tsx، kit/*، games-hub، duel-service (مال عوامل G4-01/02/04)
+
+Stage Summary:
+- G4-03 بسته شد: چالش کلاس همه‌جانبه کار می‌کند — معلم بازی+حداقل امتیاز تعیین می‌کند (فقط یک چالش فعال؛ تعیین جدید قبلی را غیرفعال می‌کند)، داشبورد معلم رده‌بندی زنده از Attempts دارد، دانش‌آموز هدف + بهترین امتیاز خودش + ۵ نفر برتر را می‌بیند؛ دسترسی فقط با کد کلاس + کلید نقش؛ بدون PII
+- قرارداد API: GET/PUT /api/class/[code]/challenge — پاسخ {challenge:{category,minScore,createdAt}|null, rows:[{name,plays,bestScore,reachedGoal}]}؛ امتیازAttempt = correct×10+25 (همان XP رده‌بندی سراسری — معلم حداقل امتیاز را با این مقیاس هدف می‌گذارد)
+- اسکیما افزودنی فقط: ClassChallenge + Classroom.challenges — db:push بدون هشدار مخرب؛ self-heal فاز ۱۲ برای مدل تازه گسترش یافت
+- برای QA مرورگری orchestrator: (۱) معلم: داشبورد → کارت «چالش بازی» → انتخاب «تست برقی» + امتیاز ۱۰۰ → «تعیین چالش» → توست + بنر + رده‌بندی (۲) دانش‌آموز: بازی speed-quiz در همان کلاس → Attempt با نام نمایشی → کارت «چالش بازی کلاس» بهترین امتیاز و ✅/🎯 (۳) تعیین چالش دوم → چالش قبلی حذف می‌شود (۴) بدون چالش: «معلم هنوز چالشی تعیین نکرده» (۵) موبایل ۳۹۰ بدون سرریز
+---
+Task ID: G4-01
+Agent: general-purpose
+Task: رده‌بندی هر بازی — گسترش /api/leaderboard با پارامتر category (کلید بازی، صفر تغییر اسکیما) + تب «بازی‌ها» با GameLeaderboard در rewards-view
+
+Work Log:
+- کارنامک و نقشه راه (خط ۲۱۲) خوانده شد؛ قرارداد Attempt بررسی شد: saveAttempt (games/shared.ts) category = GAME_KEY می‌نویسد و attempts/route.ts detail را JSON.stringify می‌کند (رشته در دیتابیس)
+- اشکال detail بازی‌ها بررسی شد: speed-quiz/flappy-quiz/fps-shooter امتیاز عددی score در شیء؛ memory و بقیه آرایه/شیء بدون score → extractBestScore امن (JSON.parse در try/catch، score شیء سطح اول یا بیشینهٔ score آیتم‌های آرایه، وگرنه ۰)
+- src/app/api/leaderboard/route.ts: پارامتر اختیاری category (trim + lowercase، بدون allowlist) → where اضافه { category }؛ حالت بازی تاپ ۱۰ (آزمون همان ۲۰)؛ ردیف‌های حالت بازی bestScore گرفتند (آزمون دقیقاً شکل قبلی — بدون کلید جدید)؛ «جای تو» با همان منطق قبلی روی ردیف‌های فیلترشده (خارج از برترها → rank 0 + جمع دستی)؛ rate-limit موجود پروژه وصل شد: checkRate(req,"leaderboard:get",90,60_000) + rateLimited (قرارداد GET ۹۰/دقیقهٔ _lib/rate-limit.ts، هم‌الگوی progress/search/attempts:get)
+- فهرست ۱۵ بازی: تسک گفته بود نقشهٔ نام از shared.ts ایمپورت شود ولی GAME_TITLES آن فایل export نیست و کلید کهنه «match» دارد (بازی حافظه از G3 با «memory» ذخیره می‌کند) و فهرست حقیقی در games-hub.tsx (فایل ممنوع‌التغییر) unexported است → فهرست ۱۵کلیدی هم‌نگام در game-leaderboard.tsx محلی شد (سند شده در کامنت فایل)
+- src/components/book/game-leaderboard.tsx (جدید): چیپ‌های افقی ۱۵ بازی (aria-pressed، min-h-11، overflow-x-auto، انتخاب emerald توپُر) · fetch نسبی با AbortController و setState فقط داخل پرامیس (الگوی LeaderboardSection) · اسکلت Skeleton/خطای فارسی با «دوباره تلاش کن» · تاپ ۱۰ با مدال 🥇🥈🥉/رقم فارسی + آواتار/حلقهٔ کهربایی «جای تو» + کارت چسبان محترمانه «امتیاز این هفته: X · به ۱۰ برتر نرسیدی» · حالت خالی «هنوز کسی این هفته بازی نکرده — تو اولین باش!» با Gamepad2 · Card هم‌سبک rewards، امین در دارک‌مود
+- rewards-view.tsx (جراحی حداقلی): ایمپورت Swords + GameLeaderboard؛ useBook در RewardsView؛ TabsList grid-cols-3→4؛ تریگر چهارم «بازی‌ها» با Swords و min-h-11 (لیبل «رده‌بندی هفتگی» فقط در موبایل کوتاه شد تا در ۳۹۰px سرریز نشود)؛ TabsContent value="games" → <GameLeaderboard book={bookId}/> با گارد bookId=null
+- راستی‌آزمایی: سرور با scripts/revive-server.sh احیا شد (پایین بود) · curl حالت بازی speed-quiz → 200 با bestScore (تست اثباتی: POST یک Attempt برچسب‌دار «تست‌G4-01» با detail score:120 → ردیف xp 65 + bestScore 120 ✓ سپس ردیف تست از دیتابیس حذف شد و خروجی به حالت قبل برگشت) · curl بدون category → شکل قدیمی دست‌نخورده (بدون bestScore) ✓ · category حروف بزرگ/فاصله‌دار نرمال شد ✓ · bun run lint صفر؛ bunx tsc --noEmit فیلتر ^src/ خالی
+
+Stage Summary:
+- G4-01 بسته شد: /api/leaderboard?book=…&category={game} تاپ ۱۰ هفتگی هر بازی با XP همان مقیاس (درست×۱۰+۲۵) و bestScore هر بازیکن می‌دهد؛ پاسخ آزمون (بدون category) بایت‌سازگار ماند؛ «جای تو» در هر دو حالت حفظ شد (rank 0 = نمایش محترمانه)؛ rate-limit استاندارد GET پروژه روی مسیر نشست
+- تصمیم‌ها: bestScore فقط در حالت بازی (قرارداد تسک)؛ parse امن detail با کف ۰ برای بازی‌های بی‌امتیاز عددی؛ فهرست نام بازی‌ها محلی در game-leaderboard.tsx چون shared.ts قدیمی است و games-hub ممنوع‌التغییر؛ برای QA مرورگری orchestrator: (۱) جایزه‌ها → تب «بازی‌ها» → چیپ‌ها ۱۵تایی، انتخاب «تست برقی» → جدول با خط «این هفته · تاپ ۱۰» (۲) ردیف خودی حلقهٔ کهربایی + چیپ «جای تو» (۳) خارج از ۱۰ برتر کارت چسبان کهربایی (۴) بازی بی‌تلاش این هفته → حالت خالی Gamepad2 (۵) موبایل ۳۹۰ بدون اسکرول افقی
+
+---
+Task ID: G4-02
+Agent: full-stack-developer (تکمیل و ثبت توسط orchestrator پس از timeout عامل)
+Task: دوئل آنلاین realtime (G4-02 — P0 فاز G4): مینی‌سرویس socket.io پورت 3003 + کلاینت + یکپارچگی games-hub
+
+Work Log:
+- عامل full-stack-developer سرویس و کلاینت را کامل ساخت سپس در گزارش نهایی timeout شد؛ orchestrator وضعیت را راستی‌آزمایی کرد
+- mini-services/duel-service/ (پروژه bun مستقل): package.json + index.ts — اتاق کد ۴رقمی، pack سؤال از میزبان (بدون افشای answer)، تایمر ۱۵ث سمت سرور، امتیاز +۱۰ + پاداش سرعت، reveal، finished، rematch، قطع حریف → پیام فارسی + مهلت ۶۰ث rejoin، پاک‌سازی اتاق‌های stale؛ «dev»: bun --hot — روی 3003 فعال (ss تأیید)
+- لاگ سرویس: چرخهٔ کامل اتاق آزمایشی (ساخت→۱۰سؤال→امتیاز→finished→حذف) موفق
+- کلاینت src/components/book/games/duel/duel-arena.tsx (~۳۷KB): اتصال io("/?XTransformPort=3003") مسیر نسبی، نام ذخیره visionone:duel:name (افزودنی)، لابی با کد بزرگ + کپی، تختهٔ زندهٔ دو بازیکن، شمارش معکوس per-question، صدای کیت (sound-engine) + هپتیک، ذخیرهٔ Attempt با category "duel" طبق امضای موجود saveAttempt، قطعی → پیام فارسی + حفظ امتیاز
+- games-hub.tsx: کارت ورود «دوئل آنلاین» (Swords) بالای شبکهٔ بازی‌ها، dynamic import DuelArena، Dialog با قفل خروج (duelLock) و exit-guard
+- bun add socket.io-client@^4.8.4 در پروژهٔ اصلی
+- راستی‌آزمایی orchestrator: lint صفر · tsc src صفر · سرویس روی 3003 گوش می‌دهد · لاگ E2E سرویس سالم
+
+Stage Summary:
+- G4-02 کامل — دوئل ۱به۱ realtime با اتاق ۴رقمی آماده؛ گام باقی‌مانده: QA مرورگری دو-بازیکنه توسط orchestrator (G4-final)
+
+---
+Task ID: G4-final
+Agent: main orchestrator (Z.ai Code)
+Task: جمع‌بندی و QA مرورگری فاز G4 — بُعد اجتماعی و رقابت (ادامه اجرای سند games-roadmap.md)
+
+Work Log:
+- ۴ عامل موازی با مالکیت فایل جدا: G4-02 (full-stack-developer — سرویس+کلاینت دوئل؛ گزارشش با timeout ولی کد کامل بود، ثبتش orchestrator) · G4-01 (leaderboard category + تب بازی‌ها) · G4-03 (چالش کلاس + مدل Prisma ClassChallenge) · G4-04 (کارت اشتراک نتیجه)
+- رفع تداخل کشف‌شده در QA: هر دو دوئل با category «duel» Attempt می‌زدند → دوئل آنلاین به «duel-online» تغییر کرد + چیپ «دوئل آنلاین» به game-leaderboard.tsx و class/challenge.tsx اضافه شد (GameKey + آرایه)
+- QA مرورگری دوئل دو-بازیکنه واقعی (دو تب agent-browser از طریق گیت‌وی Caddy پورت 81 — نکته: localhost:3000 مستقیم به Next می‌رود و XTransformPort ندارد؛ تست realtime باید از 81 برود):
+  • ساخت اتاق «آرش» → کد ۷۳۰۳ + لابی با دکمه کپی · پیوستن «سارا» با کد از تب دوم → لابی هر دو بازیکن
+  • شروع دوئل → سؤال ۱ از ۱۰ هر دو تب یکسان (همگام) · پاسخ هر دو → امتیاز زنده broadcast (لاگ سرویس: emit به socketId واقعی هر دو OK) · reveal · پیشروی
+  • پایان: «مساوی شد!» + «۱۶۷ ثانیه دوئل — نتیجه در آمارت و رده‌بندی ثبت شد» + Attempt ذخیره + دکمه «دوباره»
+  • قطعی: بستن تب مهمان → میزبان پیام «حریف سارا قطع شد — امتیاز شما حفظ شد» (طبق سند)
+- QA تب بازی‌ها (G4-01): ۴ تب در جایزه‌ها، چیپ‌های ۱۵ بازی + «دوئل آنلاین»، حالت خالی محترمانه، جای تو — API با category=memory در dev.log سرویس شد
+- QA چالش کلاس (G4-03): ساخت کلاس «آزمون G4» → داشبورد معلم → چالش «تطبیق حافظه حداقل ۱۵۰» → «چالش فعال 🎯 شروع ۱۴۰۵/۷/۱۹» + رده‌بندی با حالت خالی «بچه‌ها را تشویق کن!»
+- QA اشتراک نتیجه (G4-04): تست برقی بی‌پایان → پاسخ درست → انصراف → نگهبان «تمرین بی‌پایان را تمام کنم؟ ⏹» → تأیید → ResultScreen با دکمه «اشتراک نتیجه» → toast «کارت نتیجه آماده شد» + دانلود vision-one-result.png — کارت PNG زیبا (گرادیان زمردی، ستاره کهربایی، آمار فارسی، فوتر ویژن‌وان)
+- خروج بدون پاسخ = مستقیم به setup (رفتار درست G2-c) — نگهبان فقط با حداقل یک پاسخ
+- موبایل ۳۹۰: هاب/دیالوگ دوئل/تب بازی‌ها همگی scrollWidth=390 بدون سرریز؛ تب چهارم با لیبل کوتاه «رده‌بندی» جا شد
+- خطای کامپایل گذرا در QA: import مسیر «./class/challenge» در teacher-dashboard که عامل G4-03 خودش قبل از تحویل اصلاح کرده بود به «./challenge» — خطای بافر کنسول بود؛ بارگذاری تازه صفر خطا
+- گیت نهایی: lint صفر · tsc src صفر · db:push افزایشی بدون هشدار
+
+Stage Summary:
+- 🏁 **فاز G4 کامل شد: ۴/۴** — دوئل آنلاین realtime (P0: اتاق ۴رقمی، سؤال مشترک، امتیاز زنده، قطعی‌محور) · رده‌بندی هفتگی هر بازی (تاپ ۱۰ + جای تو + bestScore) · چالش کلاس (معلم تعیین می‌کند، رده‌بندی از Attempts، بدون PII) · اشتراک نتیجه (کارت Canvas + Web Share/دانلود)
+- کلید/الگوهای افزودنی: category «duel-online» · مدل Prisma ClassChallenge · visionone:duel:name · هیچ امضای موجود تغییر نکرد
+- گام بعدی طبق سند: **فاز G5 — پایداری، اندازه‌گیری و رشد** (G5-01 تله‌متری بازی‌ها · G5-02/03 …)

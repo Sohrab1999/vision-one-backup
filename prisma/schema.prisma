@@ -144,6 +144,7 @@ model Classroom {
   assignments Assignment[]
   quizzes     LiveQuiz[]
   notifications Notification[]
+  challenges  ClassChallenge[]
 
   @@index([teacherKey])
 }
@@ -204,6 +205,21 @@ model Notification {
   classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
 
   @@index([classroomId, targetKey])
+}
+
+/// چالش بازی کلاس — فاز G4 نقشه راه بازی‌ها (معلم بازی + حداقل امتیاز را تعیین می‌کند)
+model ClassChallenge {
+  id          String    @id @default(cuid())
+  classroomId String
+  /// کلید بازی مثل "speed-quiz" (همان category ردیف‌های Attempt)
+  category    String
+  /// حداقل امتیاز هدف (۱ تا ۱۰۰۰۰)
+  minScore    Int
+  createdAt   DateTime  @default(now())
+  active      Boolean   @default(true)
+  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+
+  @@index([classroomId, active])
 }
 
 /// آزمون زندهٔ کلاسی

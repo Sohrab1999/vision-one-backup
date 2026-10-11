@@ -11,6 +11,9 @@
  *     اول، آیتم‌ها را یک‌بار در SRS به‌عنوان «نامعلوم» ثبت می‌کند (مرورِ صریح
  *     کاربر = واژه باید دوباره تمرین شود) — الگوی recordSRS پروژه
  *  ۵. سه دکمهٔ ثابت: دور جدید / مرور خطاها / خروج (لیبل‌ها قابل تغییر)
+ *  ۶. ردیف ظریف «اشتراک نتیجه» زیر دکمه‌های ثابت (فاز G4-04) — ساخت کارت
+ *     تصویری آمار پایان با kit/result-share (الگوی progress-card-generator)
+ *     و Web Share API؛ فقط با کنش کاربر، بدون ذخیرهٔ خودکار
  *
  * نکتهٔ کانفتی: اعلام رکورد از مسیر موجود می‌آید (saveBest → emitRecord →
  * GamificationToasts → fireConfetti)؛ اینجا دوباره شلیک نمی‌کنیم تا دوبرابر
@@ -21,20 +24,24 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import {
   BookOpenCheck,
   ChevronDown,
+  Loader2,
   PartyPopper,
   RotateCcw,
   Settings2,
+  Share2,
   Star,
   Trophy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { fireConfetti } from "@/components/book/confetti";
 import { recordSRS } from "@/lib/srs-store";
 import { playSound } from "./sound-engine";
 import { buzz } from "./haptics";
 import { faNum } from "../shared";
+import { shareOrDownloadResultCard } from "./result-share";
 
 export interface ResultStat {
   label: string;
@@ -64,6 +71,8 @@ export interface ResultScreenProps {
   onReview?: () => void;
   /** کانفتی اضافه برای بازی‌هایی که رکوردشان از saveBest رد نمی‌شود */
   celebrate?: boolean;
+  /** نام بازی برای کارت «اشتراک نتیجه» (G4-04؛ اختیاری — پیش‌فرض بازی ویژن وان) */
+  gameName?: string;
   onReplay: () => void;
   onExit: () => void;
   exitLabel?: string;
@@ -81,8 +90,11 @@ export function ResultScreen({
   onReplay,
   onExit,
   exitLabel = "تنظیمات",
+  gameName = "بازی ویژن وان",
 }: ResultScreenProps) {
   const [reviewOpen, setReviewOpen] = useState(false);
+  // ساخت کارت اشتراک نتیجه حین اجرا — دکمه تا پایان ساخت غیرفعال می‌ماند
+  const [shareBusy, setShareBusy] = useState(false);
   // ثبت SRS فقط یک‌بار در هر نمایش نتیجه — باز و بسته‌کردن دوباره ثبت نمی‌زند
   const srsRecordedRef = useRef(false);
 
@@ -94,6 +106,31 @@ export function ResultScreen({
   const starsSafe = Math.max(1, Math.min(3, Math.round(stars)));
   const canReview = errorCount > 0;
   const hasItems = canReview && !!reviewItems && reviewItems.length > 0;
+
+  /** ساخت کارت تصویری نتیجه از همین props و اشتراک/دانلود (G4-04) */
+  async function handleShareResult() {
+    if (shareBusy) return;
+    setShareBusy(true);
+    try {
+      const outcome = await shareOrDownloadResultCard({
+        gameName,
+        title,
+        stars: starsSafe,
+        stats: stats.slice(0, 3).map(({ label, value }) => ({ label, value })),
+        isRecord,
+      });
+      if (outcome === "shared" || outcome === "saved") {
+        toast.success("کارت نتیجه آماده شد");
+      } else if (outcome === "failed") {
+        toast.error("ساخت تصویر ممکن نشد");
+      }
+      // «cancelled» = لغو دیالوگ اشتراک توسط کاربر — بی‌صدا رد می‌شود
+    } catch {
+      toast.error("ساخت تصویر ممکن نشد");
+    } finally {
+      setShareBusy(false);
+    }
+  }
 
   const toggleReview = useCallback(() => {
     playSound("click");
@@ -215,6 +252,22 @@ export function ResultScreen({
             {exitLabel}
           </Button>
         </div>
+
+        {/* ردیف چهارم — اشتراک نتیجه (G4-04): فقط با کنش کاربر؛ لغو دیالوگ بی‌صدا */}
+        <Button
+          variant="ghost"
+          onClick={() => void handleShareResult()}
+          disabled={shareBusy}
+          aria-busy={shareBusy}
+          className="min-h-11 w-full gap-2 text-[13px] text-muted-foreground hover:text-foreground sm:w-auto"
+        >
+          {shareBusy ? (
+            <Loader2 size={16} aria-hidden className="animate-spin" />
+          ) : (
+            <Share2 size={16} aria-hidden />
+          )}
+          {shareBusy ? "در حال ساخت کارت…" : "اشتراک نتیجه"}
+        </Button>
       </div>
     </section>
   );

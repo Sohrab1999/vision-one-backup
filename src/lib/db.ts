@@ -50,8 +50,8 @@ function getDb(): PrismaClientType {
     // ⚠️ کهنگی نمونه با «تازه‌ترین» مدل نشانگر سنجیده می‌شود: گارد OR بالا با مدل‌های
     // قدیمی همیشه پاس می‌شود و self-heal هرگز رخ نمی‌دهد (آزمون واقعی فاز ۱۲ — ۵۰۰
     // «db.suggestion is undefined»). نمونه‌ای که suggestion را ندارد حتماً پیش از
-    // db push ساخته شده → باید از دیسک تازه‌سازی شود.
-    if (!("suggestion" in cached)) {
+    // db push ساخته شده → باید از دیسک تازه‌سازی شود. (G4-03: classChallenge هم افزوده شد)
+    if (!("suggestion" in cached) || !("classChallenge" in cached)) {
       const recreated = makeDb();
       globalForPrisma.prismaV9 = recreated;
       return recreated;

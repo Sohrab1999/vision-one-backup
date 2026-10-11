@@ -1,0 +1,778 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * نمای «جایزه‌ها» — فاز ۶ نقشه راه جامع ۲۰۲۶ (گیمیفیکیشن).
+     5→ *
+     6→ * بخش‌ها:
+     7→ *  ۱) کارت خلاصه: حلقهٔ سطح (SVG) + سکه/زنجیره/یخ + سقف روزانهٔ XP
+     8→ *  ۲) ماموریت‌های امروز (۳ کوئست روزانه با claim دستی)
+     9→ *  ۳) تب‌ها: نشان‌ها | فروشگاه (تم‌های رنگی + آواتار + یخ زنجیره) | رده‌بندی هفتگی
+    10→ *
+    11→ * - همهٔ اعداد کاربر-رو با faNum؛ پالت فقط emerald/amber/teal + توکن‌های معنایی.
+    12→ * - claim/خرید فقط از callbackهای رویدادی؛ fetch رده‌بندی با AbortController
+    13→ *   و setState فقط داخل پرامیس (سازگار با react-hooks v6).
+    14→ */
+    15→
+    16→import { useEffect, useState } from "react";
+    17→import {
+    18→  Check,
+    19→  Gift,
+    20→  Info,
+    21→  Medal,
+    22→  Palette,
+    23→  Snowflake,
+    24→  Sparkles,
+    25→  Store,
+    26→  Trophy,
+    27→  UserRound,
+    28→} from "lucide-react";
+    29→import { Card, CardContent } from "@/components/ui/card";
+    30→import { Badge } from "@/components/ui/badge";
+    31→import { Button } from "@/components/ui/button";
+    32→import { Progress } from "@/components/ui/progress";
+    33→import { Separator } from "@/components/ui/separator";
+    34→import { Skeleton } from "@/components/ui/skeleton";
+    35→import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+    36→import { toast } from "sonner";
+    37→import { cn } from "@/lib/utils";
+    38→import { faNum } from "@/components/book/games/shared";
+    39→import { useXp, levelInfo, spendCoins, DAILY_CAP } from "@/lib/xp-store";
+    40→import { useMissions, claimMission } from "@/lib/mission-store";
+    41→import type { MissionView } from "@/lib/mission-store";
+    42→import { BADGES, useBadges } from "@/lib/badge-store";
+    43→import type { BadgeDef } from "@/lib/badge-store";
+    44→import { useStreak, grantFreeze } from "@/lib/streak-store";
+    45→import {
+    46→  ACCENTS,
+    47→  PREMIUM_AVATARS,
+    48→  useAccent,
+    49→  accentOwned,
+    50→  applyAccent,
+    51→  markOwned,
+    52→  equipAvatar,
+    53→} from "@/lib/accent-store";
+    54→import type { AccentTheme } from "@/lib/accent-store";
+    55→import { useBook } from "@/lib/book-context";
+    56→import { SuggestionBoard } from "./suggestion-board";
+    57→
+    58→// ─── قرارداد API رده‌بندی هفتگی: GET /api/leaderboard?book={bookId} ───
+    59→
+    60→interface LeaderRow {
+    61→  name: string;
+    62→  avatar: string | null;
+    63→  xp: number;
+    64→  quizzes: number;
+    65→  answered: number;
+    66→  accuracy: number;
+    67→}
+    68→
+    69→interface BoardData {
+    70→  weekStart: string;
+    71→  rows: LeaderRow[];
+    72→  me: { xp: number; rank: number } | null;
+    73→}
+    74→
+    75→const RANK_MEDALS = ["🥇", "🥈", "🥉"] as const;
+    76→const FREEZE_PRICE = 30;
+    77→const FREEZE_MAX = 7;
+    78→
+    79→// ─── حلقهٔ سطح (SVG با stroke-dasharray) ───
+    80→
+    81→function LevelRing({ level, pct }: { level: number; pct: number }) {
+    82→  const R = 52;
+    83→  const C = 2 * Math.PI * R;
+    84→  const safe = Math.min(100, Math.max(0, pct));
+    85→  const offset = C - (safe / 100) * C;
+    86→  return (
+    87→    <div
+    88→      className="relative h-36 w-36 shrink-0"
+    89→      role="img"
+    90→      aria-label={`سطح ${faNum(level)} — پیشرفت ${faNum(safe)} درصد`}
+    91→    >
+    92→      <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90" aria-hidden>
+    93→        <circle cx="60" cy="60" r={R} fill="none" strokeWidth="10" className="stroke-muted" />
+    94→        <circle
+    95→          cx="60"
+    96→          cy="60"
+    97→          r={R}
+    98→          fill="none"
+    99→          strokeWidth="10"
+   100→          strokeLinecap="round"
+   101→          strokeDasharray={C}
+   102→          strokeDashoffset={offset}
+   103→          className="stroke-primary transition-[stroke-dashoffset] duration-700 ease-out"
+   104→        />
+   105→      </svg>
+   106→      <div className="absolute inset-0 flex flex-col items-center justify-center">
+   107→        <span className="text-4xl font-black tabular-nums text-foreground">{faNum(level)}</span>
+   108→        <span className="text-[11px] text-muted-foreground">سطح</span>
+   109→      </div>
+   110→    </div>
+   111→  );
+   112→}
+   113→
+   114→// ─── ردیف ماموریت امروز ───
+   115→
+   116→function MissionRow({ q }: { q: MissionView }) {
+   117→  const pct = q.def.target > 0 ? Math.min(100, Math.round((q.progress / q.def.target) * 100)) : 0;
+   118→  return (
+   119→    <div className="rounded-2xl border bg-background/50 p-3 sm:p-4">
+   120→      <div className="flex flex-wrap items-center gap-2">
+   121→        <span className="text-xl leading-none" aria-hidden>
+   122→          {q.def.emoji}
+   123→        </span>
+   124→        <span className="text-sm font-bold text-foreground">{q.def.title}</span>
+   125→        <span
+   126→          className="ms-auto text-xs font-extrabold text-amber-600 dark:text-amber-400"
+   127→          aria-label={`جایزه: ${faNum(q.def.xp)} ام‌پی و ${faNum(q.def.coins)} سکه`}
+   128→        >
+   129→          +{faNum(q.def.xp)} XP، +{faNum(q.def.coins)} 🪙
+   130→        </span>
+   131→      </div>
+   132→      <div className="mt-3 flex items-center gap-3">
+   133→        <Progress
+   134→          value={pct}
+   135→          className="h-2 flex-1"
+   136→          aria-label={`پیشرفت ${q.def.title}: ${faNum(q.progress)} از ${faNum(q.def.target)}`}
+   137→        />
+   138→        <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
+   139→          {faNum(q.progress)} / {faNum(q.def.target)}
+   140→        </span>
+   141→      </div>
+   142→      <div className="mt-3 flex items-center">
+   143→        {q.claimed ? (
+   144→          <Badge
+   145→            variant="outline"
+   146→            className="border-muted-foreground/30 text-[11px] text-muted-foreground"
+   147→          >
+   148→            گرفته شد ✓
+   149→          </Badge>
+   150→        ) : (
+   151→          <Button
+   152→            size="sm"
+   153→            className="min-h-11 gap-1.5 rounded-xl px-4 text-xs font-bold"
+   154→            disabled={!q.done}
+   155→            onClick={() => claimMission(q.id)}
+   156→          >
+   157→            <Gift className="size-4" aria-hidden />
+   158→            {q.done ? "گرفتن جایزه" : "در حال انجام…"}
+   159→          </Button>
+   160→        )}
+   161→      </div>
+   162→    </div>
+   163→  );
+   164→}
+   165→
+   166→// ─── کارت نشان ───
+   167→
+   168→function BadgeCard({ def, unlocked }: { def: BadgeDef; unlocked: boolean }) {
+   169→  return (
+   170→    <div
+   171→      className={cn(
+   172→        "rounded-3xl border bg-card/60 p-4 text-center transition-colors",
+   173→        unlocked ? "border-amber-500/40 bg-amber-500/5" : "opacity-60",
+   174→      )}
+   175→      aria-label={`${def.title} — ${unlocked ? "باز شده" : "قفل"}`}
+   176→    >
+   177→      <div className={cn("text-4xl", !unlocked && "grayscale")} aria-hidden>
+   178→        {def.emoji}
+   179→      </div>
+   180→      <div className="mt-2 text-sm font-extrabold text-foreground">{def.title}</div>
+   181→      <p className="mt-1 text-xs leading-5 text-muted-foreground">{def.desc}</p>
+   182→      <div className="mt-3">
+   183→        {unlocked ? (
+   184→          <>
+   185→            <Badge
+   186→              variant="outline"
+   187→              className="border-amber-500/40 text-[10px] text-amber-600 dark:text-amber-400"
+   188→            >
+   189→              🔓 باز شده
+   190→            </Badge>
+   191→            <div className="mt-1.5 text-[11px] font-bold text-amber-600 dark:text-amber-400">
+   192→              +{faNum(def.coins)} 🪙
+   193→            </div>
+   194→          </>
+   195→        ) : (
+   196→          <Badge variant="outline" className="text-[10px] text-muted-foreground">
+   197→            🔒 +{faNum(def.coins)} 🪙
+   198→          </Badge>
+   199→        )}
+   200→      </div>
+   201→    </div>
+   202→  );
+   203→}
+   204→
+   205→// ─── کارت تم رنگی فروشگاه ───
+   206→
+   207→function ThemeCard({
+   208→  theme,
+   209→  active,
+   210→  owned,
+   211→  onBuy,
+   212→  onApply,
+   213→}: {
+   214→  theme: AccentTheme;
+   215→  active: boolean;
+   216→  owned: boolean;
+   217→  onBuy: () => void;
+   218→  onApply: () => void;
+   219→}) {
+   220→  return (
+   221→    <div
+   222→      className={cn(
+   223→        "flex items-center gap-3 rounded-2xl border bg-background/50 p-3 transition-colors",
+   224→        active && "border-primary/50 bg-primary/5",
+   225→      )}
+   226→    >
+   227→      <span
+   228→        className="h-9 w-9 shrink-0 rounded-full border border-foreground/10 shadow-inner"
+   229→        style={{ backgroundColor: theme.swatch }}
+   230→        aria-hidden
+   231→      />
+   232→      <div className="min-w-0 flex-1">
+   233→        <div className="truncate text-sm font-bold text-foreground">{theme.title}</div>
+   234→        <div className="text-[11px] text-muted-foreground">
+   235→          {theme.price === 0 ? "رایگان" : `${faNum(theme.price)} 🪙`}
+   236→        </div>
+   237→      </div>
+   238→      {active ? (
+   239→        <Badge
+   240→          variant="outline"
+   241→          className="shrink-0 border-primary/40 text-[10px] text-primary"
+   242→          aria-label={`${theme.title} — تم فعال`}
+   243→        >
+   244→          فعال
+   245→        </Badge>
+   246→      ) : owned ? (
+   247→        <Button
+   248→          size="sm"
+   249→          variant="outline"
+   250→          className="min-h-11 shrink-0 rounded-xl px-3 text-xs font-bold"
+   251→          onClick={onApply}
+   252→        >
+   253→          فعال‌سازی
+   254→        </Button>
+   255→      ) : (
+   256→        <Button
+   257→          size="sm"
+   258→          className="min-h-11 shrink-0 rounded-xl bg-amber-500 px-3 text-xs font-bold text-amber-950 hover:bg-amber-600 dark:text-amber-950"
+   259→          onClick={onBuy}
+   260→          aria-label={`خرید تم ${theme.title} به قیمت ${faNum(theme.price)} سکه`}
+   261→        >
+   262→          خرید {faNum(theme.price)} 🪙
+   263→        </Button>
+   264→      )}
+   265→    </div>
+   266→  );
+   267→}
+   268→
+   269→// ─── کارت آواتار ویژه ───
+   270→
+   271→function AvatarCard({
+   272→  av,
+   273→  owned,
+   274→  equipped,
+   275→  onBuy,
+   276→  onEquip,
+   277→}: {
+   278→  av: { id: string; emoji: string; price: number };
+   279→  owned: boolean;
+   280→  equipped: boolean;
+   281→  onBuy: () => void;
+   282→  onEquip: () => void;
+   283→}) {
+   284→  return (
+   285→    <div
+   286→      className={cn(
+   287→        "flex flex-col items-center gap-2 rounded-2xl border bg-background/50 p-4 text-center transition-colors",
+   288→        equipped && "border-primary/50 bg-primary/5",
+   289→      )}
+   290→    >
+   291→      <div className="text-4xl" aria-hidden>
+   292→        {av.emoji}
+   293→      </div>
+   294→      {equipped ? (
+   295→        <Badge
+   296→          variant="outline"
+   297→          className="gap-1 border-primary/40 text-[10px] text-primary"
+   298→          aria-label="این آواتار انتخاب شده است"
+   299→        >
+   300→          <Check className="size-3" aria-hidden />
+   301→          پوشیده
+   302→        </Badge>
+   303→      ) : (
+   304→        <div className="text-[11px] text-muted-foreground">{faNum(av.price)} 🪙</div>
+   305→      )}
+   306→      {owned ? (
+   307→        <Button
+   308→          size="sm"
+   309→          variant={equipped ? "outline" : "secondary"}
+   310→          className="min-h-11 w-full rounded-xl text-xs font-bold"
+   311→          disabled={equipped}
+   312→          onClick={onEquip}
+   313→        >
+   314→          {equipped ? "انتخاب‌شده" : "انتخاب"}
+   315→        </Button>
+   316→      ) : (
+   317→        <Button
+   318→          size="sm"
+   319→          className="min-h-11 w-full rounded-xl bg-amber-500 text-xs font-bold text-amber-950 hover:bg-amber-600 dark:text-amber-950"
+   320→          onClick={onBuy}
+   321→          aria-label={`خرید آواتار ${faNum(av.price)} سکه‌ای`}
+   322→        >
+   323→          خرید {faNum(av.price)} 🪙
+   324→        </Button>
+   325→      )}
+   326→    </div>
+   327→  );
+   328→}
+   329→
+   330→// ─── بخش رده‌بندی هفتگی (fetch + skeleton) ───
+   331→
+   332→function LeaderboardSection() {
+   333→  const { bookId } = useBook();
+   334→  const [loaded, setLoaded] = useState<{ bookId: string; data: BoardData } | null>(null);
+   335→  const [failedFor, setFailedFor] = useState<string | null>(null);
+   336→
+   337→  useEffect(() => {
+   338→    if (!bookId) return;
+   339→    let cancelled = false;
+   340→    const ctrl = new AbortController();
+   341→    fetch(`/api/leaderboard?book=${bookId}`, { signal: ctrl.signal })
+   342→      .then((r) => (r.ok ? r.json() : null))
+   343→      .then((raw: unknown) => {
+   344→        if (cancelled || !raw) return;
+   345→        const d = raw as Partial<BoardData>;
+   346→        setLoaded({
+   347→          bookId,
+   348→          data: {
+   349→            weekStart: typeof d.weekStart === "string" ? d.weekStart : "",
+   350→            rows: Array.isArray(d.rows) ? d.rows : [],
+   351→            me: d.me ?? null,
+   352→          },
+   353→        });
+   354→        setFailedFor(null);
+   355→      })
+   356→      .catch(() => {
+   357→        if (!cancelled) setFailedFor(bookId);
+   358→      });
+   359→    return () => {
+   360→      cancelled = true;
+   361→      ctrl.abort();
+   362→    };
+   363→  }, [bookId]);
+   364→
+   365→  const board = loaded && loaded.bookId === bookId ? loaded.data : null;
+   366→  const isFailed = bookId !== null && failedFor === bookId;
+   367→
+   368→  if (!bookId) {
+   369→    return (
+   370→      <div className="rounded-3xl border border-dashed bg-card/40 p-8 text-center text-sm text-muted-foreground">
+   371→        📚 برای دیدن رده‌بندی هفتگی، یک جزوه را از قفسه باز کن.
+   372→      </div>
+   373→    );
+   374→  }
+   375→
+   376→  if (!board) {
+   377→    if (isFailed) {
+   378→      return (
+   379→        <div className="rounded-3xl border border-dashed bg-card/40 p-8 text-center text-sm text-muted-foreground">
+   380→          🌱 رده‌بندی همین حالا در دسترس نیست — بعداً دوباره امتحان کن.
+   381→        </div>
+   382→      );
+   383→    }
+   384→    return (
+   385→      <div className="space-y-3" aria-label="در حال بارگذاری رده‌بندی" aria-busy="true">
+   386→        {Array.from({ length: 5 }).map((_, i) => (
+   387→          <Skeleton key={i} className="h-14 w-full rounded-2xl" />
+   388→        ))}
+   389→      </div>
+   390→    );
+   391→  }
+   392→
+   393→  if (board.rows.length === 0) {
+   394→    return (
+   395→      <div className="rounded-3xl border border-dashed bg-card/40 p-8 text-center">
+   396→        <div className="text-3xl" aria-hidden>
+   397→          🌱
+   398→        </div>
+   399→        <p className="mt-2 text-sm font-bold text-foreground">
+   400→          هنوز این هفته کسی امتیاز نگرفته — تو اولین باش!
+   401→        </p>
+   402→        <p className="mt-1 text-xs text-muted-foreground">
+   403→          با آزمون و بازی امتیاز جمع کن و از شنبه بالای جدول بایست.
+   404→        </p>
+   405→      </div>
+   406→    );
+   407→  }
+   408→
+   409→  return (
+   410→    <div className="space-y-3">
+   411→      {board.me && (
+   412→        <div className="flex items-center gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-700 dark:text-amber-400">
+   413→          <Trophy className="size-3.5 shrink-0" aria-hidden />
+   414→          <span>
+   415→            جای تو در این هفته: ردهٔ {faNum(board.me.rank)} با {faNum(board.me.xp)} XP
+   416→          </span>
+   417→        </div>
+   418→      )}
+   419→      <ul className="space-y-2.5" aria-label="جدول رده‌بندی هفتگی">
+   420→        {board.rows.map((row, i) => {
+   421→          const rank = i + 1;
+   422→          return (
+   423→            <li
+   424→              key={`${row.name}-${rank}`}
+   425→              className={cn(
+   426→                "flex flex-wrap items-center gap-3 rounded-2xl border bg-background/50 px-3 py-2.5",
+   427→                rank <= 3 && "border-amber-500/30 bg-amber-500/5",
+   428→              )}
+   429→            >
+   430→              <span
+   431→                className="w-8 shrink-0 text-center text-sm font-extrabold tabular-nums"
+   432→                aria-label={`ردهٔ ${faNum(rank)}`}
+   433→              >
+   434→                {rank <= 3 ? (RANK_MEDALS[rank - 1] ?? "") : faNum(rank)}
+   435→              </span>
+   436→              {row.avatar ? (
+   437→                <span className="text-2xl leading-none" aria-hidden>
+   438→                  {row.avatar}
+   439→                </span>
+   440→              ) : (
+   441→                <span
+   442→                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground"
+   443→                  aria-hidden
+   444→                >
+   445→                  <UserRound className="size-4" />
+   446→                </span>
+   447→              )}
+   448→              <span className="min-w-0 flex-1 truncate text-sm font-bold text-foreground">
+   449→                {row.name}
+   450→              </span>
+   451→              <span className="flex flex-wrap items-center justify-end gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
+   452→                <span className="font-extrabold text-amber-600 dark:text-amber-400">
+   453→                  {faNum(row.xp)} XP
+   454→                </span>
+   455→                <span>دقت {faNum(Math.round(row.accuracy))}٪</span>
+   456→                <span>{faNum(row.quizzes)} آزمون</span>
+   457→              </span>
+   458→            </li>
+   459→          );
+   460→        })}
+   461→      </ul>
+   462→      <p className="flex items-start gap-1.5 pt-1 text-[11px] leading-5 text-muted-foreground">
+   463→        <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+   464→        رده‌بندی دوستانهٔ هفتهٔ جاری (از شنبه) — XP از آزمون‌ها و بازی‌های همین جزوه.
+   465→      </p>
+   466→    </div>
+   467→  );
+   468→}
+   469→
+   470→// ─── نمای اصلی جایزه‌ها ───
+   471→
+   472→export function RewardsView() {
+   473→  const xp = useXp();
+   474→  const lvl = levelInfo(xp.total);
+   475→  const streak = useStreak();
+   476→  const missions = useMissions();
+   477→  const badges = useBadges();
+   478→  const { accent, shop } = useAccent();
+   479→
+   480→  const allClaimed = missions.quests.length > 0 && missions.quests.every((q) => q.claimed);
+   481→  const dayPct = Math.min(100, Math.round((xp.dayXp / DAILY_CAP) * 100));
+   482→
+   483→  // ── handlerهای فروشگاه (فقط callback رویدادی) ──
+   484→
+   485→  const buyTheme = (id: string, price: number) => {
+   486→    const ok = spendCoins(price, `theme:${id}`);
+   487→    if (ok) {
+   488→      markOwned(`theme:${id}`);
+   489→      applyAccent(id);
+   490→      toast.success("تم تازه فعال شد!");
+   491→    } else {
+   492→      toast.error("سکه کافی نداری");
+   493→    }
+   494→  };
+   495→
+   496→  const buyAvatar = (id: string, price: number) => {
+   497→    const ok = spendCoins(price, id);
+   498→    if (ok) {
+   499→      markOwned(id);
+   500→      toast.success("آواتار تازه به کمدت اضافه شد!", {
+   501→        description: "حالا می‌توانی انتخابش کنی",
+   502→      });
+   503→    } else {
+   504→      toast.error("سکه کافی نداری");
+   505→    }
+   506→  };
+   507→
+   508→  const buyFreeze = () => {
+   509→    if (streak.freezes >= FREEZE_MAX) return;
+   510→    const ok = spendCoins(FREEZE_PRICE, "streak-freeze");
+   511→    if (ok) {
+   512→      grantFreeze();
+   513→      toast.success("❄ یخ به انبار زنجیره اضافه شد", {
+   514→        description: "یک روز غیبت را جبران می‌کند",
+   515→      });
+   516→    } else {
+   517→      toast.error("سکه کافی نداری");
+   518→    }
+   519→  };
+   520→
+   521→  return (
+   522→    <section aria-label="جایزه‌ها" className="mx-auto w-full max-w-4xl space-y-5">
+   523→      {/* ── سربرگ نما ── */}
+   524→      <header className="flex flex-wrap items-center gap-2">
+   525→        <h2 className="text-lg font-black sm:text-xl">🏆 جایزه‌ها</h2>
+   526→        <Badge
+   527→          variant="outline"
+   528→          className="border-amber-500/40 text-[10px] text-amber-600 dark:text-amber-400"
+   529→        >
+   530→          فاز ۶
+   531→        </Badge>
+   532→        <p className="w-full text-xs text-muted-foreground">
+   533→          سطح، زنجیره، ماموریت روزانه و فروشگاه
+   534→        </p>
+   535→      </header>
+   536→
+   537→      {/* ── بخش ۱: کارت خلاصه ── */}
+   538→      <Card className="rise-in overflow-hidden border-primary/20 bg-gradient-to-bl from-primary/10 via-card to-card">
+   539→        <CardContent className="p-4 sm:p-6">
+   540→          <div className="flex flex-col items-center gap-6 lg:flex-row lg:gap-8">
+   541→            <div className="flex flex-col items-center gap-2">
+   542→              <LevelRing level={lvl.level} pct={lvl.pct} />
+   543→              <div className="text-center">
+   544→                <div className="text-sm font-extrabold tabular-nums text-foreground">
+   545→                  {faNum(lvl.inLevel)} / {faNum(lvl.need)} XP
+   546→                </div>
+   547→                <Progress
+   548→                  value={lvl.pct}
+   549→                  className="mt-2 h-2 w-44"
+   550→                  aria-label={`پیشرفت سطح ${faNum(lvl.level)}: ${faNum(lvl.pct)} درصد`}
+   551→                />
+   552→              </div>
+   553→            </div>
+   554→            <div className="w-full flex-1 space-y-4">
+   555→              <div className="flex flex-wrap gap-2">
+   556→                <div className="flex items-center gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm">
+   557→                  <span aria-hidden>🪙</span>
+   558→                  <span
+   559→                    className="font-extrabold tabular-nums text-amber-700 dark:text-amber-400"
+   560→                    aria-label={`سکه: ${faNum(xp.coins)}`}
+   561→                  >
+   562→                    {faNum(xp.coins)}
+   563→                  </span>
+   564→                  <span className="text-xs text-muted-foreground">سکه</span>
+   565→                </div>
+   566→                <div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2 text-sm">
+   567→                  <span aria-hidden>🔥</span>
+   568→                  <span
+   569→                    className="font-extrabold tabular-nums text-foreground"
+   570→                    aria-label={`زنجیرهٔ فعلی: ${faNum(streak.count)} روز`}
+   571→                  >
+   572→                    {faNum(streak.count)}
+   573→                  </span>
+   574→                  <span className="text-xs text-muted-foreground">
+   575→                    روز زنجیره · بهترین: {faNum(streak.best)}
+   576→                  </span>
+   577→                  {streak.freezes > 0 && (
+   578→                    <span
+   579→                      className="rounded-lg bg-teal-500/15 px-1.5 py-0.5 text-[10px] font-bold text-teal-700 dark:text-teal-400"
+   580→                      aria-label={`یخ در انبار: ${faNum(streak.freezes)}`}
+   581→                    >
+   582→                      ❄ ×{faNum(streak.freezes)}
+   583→                    </span>
+   584→                  )}
+   585→                </div>
+   586→                <div className="flex items-center gap-2 rounded-2xl border bg-background/60 px-3 py-2 text-sm">
+   587→                  <span aria-hidden>✨</span>
+   588→                  <span
+   589→                    className="font-extrabold tabular-nums text-foreground"
+   590→                    aria-label={`مجموع تجربه: ${faNum(xp.total)}`}
+   591→                  >
+   592→                    {faNum(xp.total)}
+   593→                  </span>
+   594→                  <span className="text-xs text-muted-foreground">XP کل</span>
+   595→                </div>
+   596→              </div>
+   597→              <div className="rounded-2xl border bg-background/50 p-3 sm:p-4">
+   598→                <div className="flex items-center justify-between gap-2 text-xs">
+   599→                  <span className="font-bold text-foreground">سقف روزانهٔ XP</span>
+   600→                  <span className="tabular-nums text-muted-foreground">
+   601→                    {faNum(xp.dayXp)} / {faNum(DAILY_CAP)}
+   602→                  </span>
+   603→                </div>
+   604→                <Progress
+   605→                  value={dayPct}
+   606→                  className="mt-2 h-2"
+   607→                  aria-label={`XP امروز: ${faNum(xp.dayXp)} از ${faNum(DAILY_CAP)}`}
+   608→                />
+   609→                <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-5 text-muted-foreground">
+   610→                  <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+   611→                  بعد از سقف، XP تکرار سریع کمانه‌ای می‌شود — ارزش هر تکرار کم می‌شود.
+   612→                </p>
+   613→              </div>
+   614→            </div>
+   615→          </div>
+   616→        </CardContent>
+   617→      </Card>
+   618→
+   619→      {/* ── بخش ۲: ماموریت‌های امروز ── */}
+   620→      <Card className="border-border/60 bg-card/60">
+   621→        <CardContent className="space-y-3 p-4 sm:p-6">
+   622→          <div className="flex items-center gap-2">
+   623→            <h3 className="text-base font-extrabold text-foreground">🎯 ماموریت‌های امروز</h3>
+   624→            <Badge variant="outline" className="ms-auto text-[10px] text-muted-foreground">
+   625→              ۳ مأموریت روزانه
+   626→            </Badge>
+   627→          </div>
+   628→          <div className="space-y-3">
+   629→            {missions.quests.map((q) => (
+   630→              <MissionRow key={q.id} q={q} />
+   631→            ))}
+   632→          </div>
+   633→          {allClaimed && (
+   634→            <div className="flex items-start gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs font-bold leading-6 text-amber-700 dark:text-amber-400">
+   635→              <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden />
+   636→              <span>امروز همهٔ ماموریت‌ها را گرفتی! فردا ۳ مأموریت تازه می‌آید.</span>
+   637→            </div>
+   638→          )}
+   639→        </CardContent>
+   640→      </Card>
+   641→
+   642→      {/* ── بخش ۳: تب‌های نشان‌ها / فروشگاه / رده‌بندی ── */}
+   643→      <Tabs defaultValue="badges" className="w-full">
+   644→        <TabsList className="grid w-full grid-cols-3">
+   645→          <TabsTrigger value="badges" className="min-h-11 gap-1.5 text-xs sm:text-sm">
+   646→            <Medal className="size-4" aria-hidden />
+   647→            نشان‌ها
+   648→          </TabsTrigger>
+   649→          <TabsTrigger value="shop" className="min-h-11 gap-1.5 text-xs sm:text-sm">
+   650→            <Store className="size-4" aria-hidden />
+   651→            فروشگاه
+   652→          </TabsTrigger>
+   653→          <TabsTrigger value="board" className="min-h-11 gap-1.5 text-xs sm:text-sm">
+   654→            <Trophy className="size-4" aria-hidden />
+   655→            رده‌بندی هفتگی
+   656→          </TabsTrigger>
+   657→        </TabsList>
+   658→
+   659→        {/* ── تب نشان‌ها ── */}
+   660→        <TabsContent value="badges" className="mt-4">
+   661→          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+   662→            {BADGES.map((b) => (
+   663→              <BadgeCard key={b.id} def={b} unlocked={typeof badges[b.id] === "number"} />
+   664→            ))}
+   665→          </div>
+   666→          <p className="mt-4 flex items-start gap-1.5 text-[11px] leading-5 text-muted-foreground">
+   667→            <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+   668→            نشان‌ها خودکار و با پیشرفت واقعی تو باز می‌شوند — هر نشان سکهٔ جایزه دارد.
+   669→          </p>
+   670→        </TabsContent>
+   671→
+   672→        {/* ── تب فروشگاه ── */}
+   673→        <TabsContent value="shop" className="mt-4">
+   674→          <Card className="border-border/60 bg-card/60">
+   675→            <CardContent className="space-y-4 p-4 sm:p-6">
+   676→              {/* الف) تم‌های رنگی */}
+   677→              <div className="flex flex-wrap items-center gap-2">
+   678→                <h3 className="flex items-center gap-2 text-sm font-extrabold text-foreground">
+   679→                  <Palette className="size-4 text-primary" aria-hidden />
+   680→                  تم‌های رنگی
+   681→                </h3>
+   682→                <span className="ms-auto text-[11px] text-muted-foreground">
+   683→                  رنگ اصلی کل اپ عوض می‌شود
+   684→                </span>
+   685→              </div>
+   686→              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+   687→                {ACCENTS.map((a) => {
+   688→                  const owned = accentOwned(a.id);
+   689→                  const active = accent === a.id;
+   690→                  return (
+   691→                    <ThemeCard
+   692→                      key={a.id}
+   693→                      theme={a}
+   694→                      active={active}
+   695→                      owned={owned}
+   696→                      onBuy={() => buyTheme(a.id, a.price)}
+   697→                      onApply={() => applyAccent(a.id)}
+   698→                    />
+   699→                  );
+   700→                })}
+   701→              </div>
+   702→
+   703→              <Separator />
+   704→
+   705→              {/* ب) آواتارهای ویژه */}
+   706→              <div className="flex flex-wrap items-center gap-2">
+   707→                <h3 className="text-sm font-extrabold text-foreground">🎭 آواتارهای ویژه</h3>
+   708→                <span className="ms-auto text-[11px] text-muted-foreground">
+   709→                  آواتار در رده‌بندی هفتگی نمایش داده می‌شود
+   710→                </span>
+   711→              </div>
+   712→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+   713→                {PREMIUM_AVATARS.map((av) => {
+   714→                  const owned = shop.owned.includes(av.id);
+   715→                  const equipped = shop.equippedAvatar === av.id;
+   716→                  return (
+   717→                    <AvatarCard
+   718→                      key={av.id}
+   719→                      av={av}
+   720→                      owned={owned}
+   721→                      equipped={equipped}
+   722→                      onBuy={() => buyAvatar(av.id, av.price)}
+   723→                      onEquip={() => equipAvatar(av.id)}
+   724→                    />
+   725→                  );
+   726→                })}
+   727→              </div>
+   728→
+   729→              <Separator />
+   730→
+   731→              {/* ب) یخ‌زنندهٔ زنجیره */}
+   732→              <div className="flex flex-col gap-3 rounded-2xl border border-teal-500/30 bg-teal-500/5 p-4 sm:flex-row sm:items-center">
+   733→                <span
+   734→                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-teal-500/15 text-teal-600 dark:text-teal-400"
+   735→                  aria-hidden
+   736→                >
+   737→                  <Snowflake className="size-5" />
+   738→                </span>
+   739→                <div className="min-w-0 flex-1">
+   740→                  <div className="text-sm font-extrabold text-foreground">یخ‌زنندهٔ زنجیره</div>
+   741→                  <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
+   742→                    یک روز غیبت را جبران می‌کند (بیشینهٔ {faNum(FREEZE_MAX)}) — زنجیره‌ات ذوب
+   743→                    نمی‌شود.
+   744→                  </p>
+   745→                </div>
+   746→                <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
+   747→                  <span
+   748→                    className="text-xs font-bold text-teal-700 dark:text-teal-400"
+   749→                    aria-label={`انبار یخ: ${faNum(streak.freezes)} از ${faNum(FREEZE_MAX)}`}
+   750→                  >
+   751→                    انبار: {faNum(streak.freezes)}/{faNum(FREEZE_MAX)}
+   752→                  </span>
+   753→                  <Button
+   754→                    size="sm"
+   755→                    className="min-h-11 rounded-xl bg-teal-600 px-4 text-xs font-bold text-white hover:bg-teal-700 dark:text-white"
+   756→                    disabled={streak.freezes >= FREEZE_MAX}
+   757→                    onClick={buyFreeze}
+   758→                  >
+   759→                    {streak.freezes >= FREEZE_MAX ? "انبار پر است" : `خرید ${faNum(FREEZE_PRICE)} 🪙`}
+   760→                  </Button>
+   761→                </div>
+   762→              </div>
+   763→            </CardContent>
+   764→          </Card>
+   765→        </TabsContent>
+   766→
+   767→        {/* ── تب رده‌بندی هفتگی ── */}
+   768→        <TabsContent value="board" className="mt-4">
+   769→          <LeaderboardSection />
+   770→        </TabsContent>
+   771→      </Tabs>
+   772→
+   773→      {/* تخته پیشنهادها (فاز ۱۲) — انتهای نمای جایزه‌ها */}
+   774→      <SuggestionBoard />
+   775→    </section>
+   776→  );
+   777→}
+   778→

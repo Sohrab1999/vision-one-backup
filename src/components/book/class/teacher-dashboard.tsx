@@ -34,6 +34,7 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { TeacherChallengeCard } from "./challenge";
 import {
   faNum,
   fmtClock,
@@ -60,6 +61,7 @@ export function TeacherDashboard() {
         <ProblemCard state={state} />
       </div>
       <AssignmentsCard state={state} session={session} refresh={refresh} />
+      <TeacherChallengeCard session={session} />
       <TeacherLiveCard session={session} state={state} refresh={refresh} />
       <TeacherNotificationsCard session={session} refresh={refresh} />
     </div>

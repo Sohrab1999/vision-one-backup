@@ -104,8 +104,8 @@ export function notifyGameData(): void {
 
 // ─── گیمیفیکیشن (فاز ۶) ───
 
-/** عنوان فارسی بازی‌ها برای توست رکورد */
-const GAME_TITLES: Record<string, string> = {
+/** عنوان فارسی بازی‌ها برای توست رکورد (G4-03: export برای کارت چالش کلاس) */
+export const GAME_TITLES: Record<string, string> = {
   match: "تطبیق",
   scramble: "اسکرمبل",
   cloze: "جای خالی",

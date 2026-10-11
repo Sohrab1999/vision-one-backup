@@ -1,0 +1,16 @@
+{
+  "name": "duel-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "دوئل آنلاین ۱ به ۱ (G4-02) — مینی‌سرویس socket.io با اتاق کد ۴رقمی، سؤال مشترک و امتیاز زنده",
+  "scripts": {
+    "dev": "bun --hot index.ts",
+    "start": "bun index.ts"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0"
+  }
+}

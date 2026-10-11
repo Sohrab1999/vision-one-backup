@@ -9,7 +9,7 @@
  * و رکوردهای شخصی در localStorage با کتاب/محدوده اسکوپ می‌شوند.
  */
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import {
   Gamepad2,
@@ -36,6 +36,17 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import { useBook, useBookData } from "@/lib/book-context";
 import { faNum, getPlays, subscribeGameData, fmtTime } from "./shared";
@@ -73,6 +84,15 @@ const AdventureMapGame = dynamic(() => import("./adventure-map-game").then((m) =
 
 // بازی فاز ۵ — موتور سه‌بعدی (three + R3F) در چانک جدا و lazy
 const FpsShooterGame = dynamic(() => import("./fps-shooter-game").then((m) => m.FpsShooterGame), {
+  ssr: false,
+  loading: GameChunkLoading,
+});
+
+/**
+ * فاز G4-02 — دوئل آنلاین Realtime (مینی‌سرویس socket.io پورت ۳۰۰۳)؛
+ * چانک جدا و lazy — فقط هنگام باز شدن دیالوگ بارگذاری می‌شود.
+ */
+const DuelArena = dynamic(() => import("./duel/duel-arena").then((m) => m.DuelArena), {
   ssr: false,
   loading: GameChunkLoading,
 });
@@ -278,6 +298,16 @@ export function GamesHub() {
   const { bookId } = useBook();
   const [active, setActive] = useState<GameKey | null>(null);
 
+  // ── فاز G4-02 — دوئل آنلاین (دیالوگ مستقل؛ خارج از شمارنده‌ها و آمار بازی‌ها) ──
+  const [duelOpen, setDuelOpen] = useState(false);
+  const [duelConfirm, setDuelConfirm] = useState(false);
+  const duelLockRef = useRef(false);
+  /** پایدار برای useEffect داخل DuelArena */
+  const handleDuelLockChange = useCallback((locked: boolean) => {
+    duelLockRef.current = locked;
+  }, []);
+  const handleDuelExit = useCallback(() => setDuelOpen(false), []);
+
   // فاز G0-03 — پیش‌بارگذاری چانک بازی‌ها در زمان بیکاری مرورگر، فقط وقتی آزمایشگاه باز است
   useEffect(() => {
     if (active) return;
@@ -395,6 +425,36 @@ export function GamesHub() {
         </CardContent>
       </Card>
 
+      {/* کارت ویژهٔ دوئل آنلاین — فاز G4-02؛ بالای شبکهٔ بازی‌ها، خارج از شمارنده‌ها */}
+      <button
+        type="button"
+        onClick={() => setDuelOpen(true)}
+        aria-label="باز کردن دوئل آنلاین — رقابت زنده ۱ به ۱"
+        className={cn(
+          "group rise-in relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-bl from-emerald-500/15 via-amber-500/10 to-card p-4 text-right transition-all",
+          "hover:-translate-y-0.5 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600",
+        )}
+      >
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 transition-transform group-hover:scale-110 dark:text-emerald-400">
+            <Swords size={22} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-[15px] font-black">دوئل آنلاین</h3>
+              <Badge className="gap-1 bg-amber-500/15 text-[10px] font-bold text-amber-700 dark:text-amber-400">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden />
+                زنده
+              </Badge>
+            </div>
+            <p className="mt-1 text-[12px] leading-5 text-muted-foreground">
+              رقابت زندهٔ ۱ به ۱ با کد اتاق — همزمان با حریفت به سؤال‌های یکسان جواب بده؛ امتیاز لحظه‌ای و پاداش سرعت!
+            </p>
+          </div>
+        </div>
+      </button>
+
       {/* کارت بازی‌ها */}
       <div className="grid gap-3 sm:grid-cols-2">
         {[...GAMES, ...GAMES_EXTRA].map((g, i) => (
@@ -439,6 +499,45 @@ export function GamesHub() {
       <p className="text-center text-[11px] leading-5 text-muted-foreground">
         پاسخ‌های غلط بازی‌ها به صف «مرور هوشمند» هم راه پیدا می‌کنند — بازی کن، یاد بگیر، مرور کن!
       </p>
+
+      {/* دیالوگ دوئل آنلاین — فاز G4-02 */}
+      <Dialog
+        open={duelOpen}
+        onOpenChange={(o) => {
+          // نگهبان خروج: حین اتاق/بازی، بستن دیالوگ تأیید می‌خواهد
+          if (!o && duelLockRef.current) {
+            setDuelConfirm(true);
+            return;
+          }
+          setDuelOpen(o);
+        }}
+      >
+        <DialogContent className="max-w-lg gap-3">
+          <DialogTitle className="sr-only">دوئل آنلاین</DialogTitle>
+          <DialogDescription className="sr-only">رقابت زندهٔ ۱ به ۱ با کد اتاق</DialogDescription>
+          {duelOpen && <DuelArena onLockChange={handleDuelLockChange} onExit={handleDuelExit} />}
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={duelConfirm} onOpenChange={setDuelConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>از دوئل خارج می‌شوی؟</AlertDialogTitle>
+            <AlertDialogDescription>
+              اتاق و امتیاز این دور از دست می‌رود — حریفت منتظر می‌ماند!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="h-10">ماندن</AlertDialogCancel>
+            <AlertDialogAction
+              className="h-10 bg-rose-600 text-white hover:bg-rose-700"
+              onClick={() => setDuelOpen(false)}
+            >
+              خروج از دوئل
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 }

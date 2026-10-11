@@ -6,7 +6,7 @@
  * بخش‌ها:
  *  ۱) کارت خلاصه: حلقهٔ سطح (SVG) + سکه/زنجیره/یخ + سقف روزانهٔ XP
  *  ۲) ماموریت‌های امروز (۳ کوئست روزانه با claim دستی)
- *  ۳) تب‌ها: نشان‌ها | فروشگاه (تم‌های رنگی + آواتار + یخ زنجیره) | رده‌بندی هفتگی
+ *  ۳) تب‌ها: نشان‌ها | فروشگاه (تم‌های رنگی + آواتار + یخ زنجیره) | رده‌بندی هفتگی | بازی‌ها (G4-01)
  *
  * - همهٔ اعداد کاربر-رو با faNum؛ پالت فقط emerald/amber/teal + توکن‌های معنایی.
  * - claim/خرید فقط از callbackهای رویدادی؛ fetch رده‌بندی با AbortController
@@ -23,6 +23,7 @@ import {
   Snowflake,
   Sparkles,
   Store,
+  Swords,
   Trophy,
   UserRound,
 } from "lucide-react";
@@ -54,6 +55,7 @@ import {
 import type { AccentTheme } from "@/lib/accent-store";
 import { useBook } from "@/lib/book-context";
 import { SuggestionBoard } from "./suggestion-board";
+import { GameLeaderboard } from "./game-leaderboard";
 
 // ─── قرارداد API رده‌بندی هفتگی: GET /api/leaderboard?book={bookId} ───
 
@@ -476,6 +478,7 @@ export function RewardsView() {
   const missions = useMissions();
   const badges = useBadges();
   const { accent, shop } = useAccent();
+  const { bookId } = useBook(); // G4-01 — کتاب فعال برای رده‌بندی بازی‌ها
 
   const allClaimed = missions.quests.length > 0 && missions.quests.every((q) => q.claimed);
   const dayPct = Math.min(100, Math.round((xp.dayXp / DAILY_CAP) * 100));
@@ -639,9 +642,9 @@ export function RewardsView() {
         </CardContent>
       </Card>
 
-      {/* ── بخش ۳: تب‌های نشان‌ها / فروشگاه / رده‌بندی ── */}
+      {/* ── بخش ۳: تب‌های نشان‌ها / فروشگاه / رده‌بندی / بازی‌ها ── */}
       <Tabs defaultValue="badges" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="badges" className="min-h-11 gap-1.5 text-xs sm:text-sm">
             <Medal className="size-4" aria-hidden />
             نشان‌ها
@@ -652,7 +655,13 @@ export function RewardsView() {
           </TabsTrigger>
           <TabsTrigger value="board" className="min-h-11 gap-1.5 text-xs sm:text-sm">
             <Trophy className="size-4" aria-hidden />
-            رده‌بندی هفتگی
+            {/* نسخهٔ کوتاه موبایل — جا برای تب چهارم در ۳۹۰px */}
+            <span className="sm:hidden">رده‌بندی</span>
+            <span className="hidden sm:inline">رده‌بندی هفتگی</span>
+          </TabsTrigger>
+          <TabsTrigger value="games" className="min-h-11 gap-1.5 text-xs sm:text-sm">
+            <Swords className="size-4" aria-hidden />
+            بازی‌ها
           </TabsTrigger>
         </TabsList>
 
@@ -767,6 +776,17 @@ export function RewardsView() {
         {/* ── تب رده‌بندی هفتگی ── */}
         <TabsContent value="board" className="mt-4">
           <LeaderboardSection />
+        </TabsContent>
+
+        {/* ── تب رده‌بندی بازی‌ها (G4-01) ── */}
+        <TabsContent value="games" className="mt-4">
+          {bookId ? (
+            <GameLeaderboard book={bookId} />
+          ) : (
+            <div className="rounded-3xl border border-dashed bg-card/40 p-8 text-center text-sm text-muted-foreground">
+              🎮 برای دیدن رده‌بندی بازی‌ها، یک جزوه را از قفسه باز کن.
+            </div>
+          )}
         </TabsContent>
       </Tabs>
 

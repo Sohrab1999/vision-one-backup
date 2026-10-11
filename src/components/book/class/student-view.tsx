@@ -28,6 +28,7 @@ import {
   type ClassState,
 } from "@/lib/class-store";
 import { LivePlayer } from "./live-player";
+import { StudentChallengeCard } from "./challenge";
 
 export function StudentView() {
   const session = useClassSession();
@@ -88,6 +89,9 @@ export function StudentView() {
 
       {/* تکالیف */}
       <StudentAssignmentsCard state={state} session={session} refresh={refresh} />
+
+      {/* چالش بازی کلاس (G4-03) */}
+      <StudentChallengeCard session={session} />
 
       {/* آزمون زنده */}
       <Card
