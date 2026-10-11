@@ -2833,3 +2833,21 @@ Stage Summary:
 - راستی‌آزمایی مرورگری (agent-browser دسکتاپ ۱۲۸۰): ۹ خطای واقعی → کارت‌های SRS از ۲ به ۱۲ (embassy/polite/shrines/himself…) · ۳ خطا → کارت «مدرس بازی» با متن واقعی LLM («برای جملهٔ اول، باید از ourselves استفاده کنیم…») + ‏POST /api/game-hint ×۲ در dev.log · کلید 1/2 → aria «گزینه ۱ — پاسخ غلط…» · کلید 4 → درست → «تاس ۴ آمد» و کلید 3 → تاس ۶ (نوبت اضافه سالم) · لجند کیبورد در DOM · موبایل ۳۹۰ بدون سرریز افقی · خطای کنسول صفر · lint 0 · tsc(src) 0
 - نکتهٔ عملی: باندل کهنه — بعد از ادیت، صفحه باید reload شود وگرنه QA گمراه می‌شود (POST game-hint صفر → نشانهٔ باندل کهنه؛ سند در G5 هم بود)
 - گام بعدی طبق سند: فاز SL1 — بصری‌سازی تخته (SL1-01 مسیر SVG مار و پله · SL1-02 پالس مقصد)
+---
+Task ID: SL1
+Agent: main orchestrator (Z.ai Code)
+Task: فاز SL1 نقشه راه مار و پله — حس بازی و بصری‌سازی تخته (SVG + پالس + confetti + تاس سه‌بعدی)
+
+Work Log:
+- SL1-01: لایهٔ SVG (viewBox ۰..۱۰۰۰، aria-hidden، pointer-events-none، z-[5] زیر لایهٔ مهرهٔ z-10) — helpers ماژول‌اسکوپ cellCenter/snakePath (بزیهٔ S با عمود بردار، w=min(70,len×0.22)) و ladderGeom (۲ ریل offset±۱۳ + پله‌های عرضی هر ~۴۲ واحد) — داده‌ها یک‌بار در سطح ماژول (SNAKE_PATHS/LADDER_GEOMS) → صفر هزینهٔ JS در رندر؛ مار = text-destructive strokeOpacity .5 + دایرهٔ سر r=11؛ پله = text-primary
+- SL1-02: state pulse {cells:[مبدأ,مقصد], kind} — ست در land() هر دو شاخه مار/پله + پاک‌سازی پس از پایان سُرش ۵۲۰ms و در start()؛ کلاس‌های sl-pulse-bad/good با کی‌فریم box-shadow درونی (قرمز/زمردی) ۴۸۰ms×۲ + گارد reduced-motion
+- SL1-03: CONFETTI قطعی ۳۶ ذره (بدون Math.random در رندر — هیدریشن‌امن) در نمای done فقط اگر برنده انسان باشد؛ کی‌فریم سقوط translateY(-10vh→75vh)+چرخش ۵۶۰° با delay/dur درون‌خطی؛ pointer-events-none + aria-hidden؛ reduced-motion → display:none
+- SL1-04: مکعب ۶ وجهی ۴۴px (CUBE_FACES با translateZ(22px)) + cubeTransform(face, turns=dicePop) — هر فلیپ ‎۳۶۰°×n انباشتی روی Y تا هرگز برگشت نزند؛ transition ۹۰ms = دقیقاً فلیپ زنجیره؛ key حذف شد تا transition بین وجه‌ها زنده بماند (match-pop روی mount بیرونی)؛ DiceFace متغیر استفاده‌نشده حذف؛ reduced-motion → transition:none (سوییچ بی‌انیمیشن — انحراف کوچک سند: به‌جای آیکون قدیمی)
+- نکتهٔ عملی مهم: باندل کهنهٔ توربوپک — watcher سرور پس از ادیت‌های پیاپی به‌روز نشد (هیچ «Compiled» جدید در dev.log؛ با cache-bust هم نشد) → ری‌استارت کامل سرور (pkill next dev + setsid nohup bunx next dev) حل کرد؛ در QAهای بعدی اگر کلاس جدید در DOM نبود اول سرور ری‌استارت شود
+- diff افزودنی در همان ۱ فایل — زنجیرهٔ توقف/فرمول ربات/امضاهای کیت دست‌نخورده
+
+Stage Summary:
+- 🏁 فاز SL1 کامل شد: ۴/۴ — تخته زنده شد (مار/پلهٔ کشیده‌شده)، فرود پالس می‌زند، برد انسان confetti دارد، تاس مکعب سه‌بعدی شد
+- راستی‌آزمایی مرورگری: SVG = ۸ مسیر مار + ۸ سر + ۱۶ ریل + ۵۷ پلهٔ عرضی ✓ (دسکتاپ و موبایل) · مکعب تاس: ۶ وجه، transform=rotateX(-90)+rotateY(2160) یعنی وجه ۵ با ۶ دور tumble هم‌علامت بج هدر ✓ · INP با ۳۶ رویداد واقعی CDP (کلید): max ۴۰ms، صفر بالای ۲۰۰ms ✓ · موبایل ۳۹۰: بدون سرریز، تخته ۳۴۸px ✓ · خطای کنسول صفر ✓ · lint 0 / tsc(src) 0 ✓
+- تأیید ساختاری (نه رؤیت زنده — تصادفی‌بودن): کی‌فریم‌های pulse/confetti در استایل DOM تأیید شد + گارد reduced-motion
+- گام بعدی طبق سند: فاز SL2 — عمق گیم‌پلی (SL2-01 قوانین opt-in فرود دقیق/گرفتار · SL2-02 پلهٔ طلایی کمبو)

@@ -246,6 +246,101 @@ const CELL_POS: { col: number; row: number }[] = Array.from({ length: 100 }, (_,
   return { col: 10 - fromLeft, row: 9 - b + 1 };
 });
 
+/** فاز SL1-01 — مرکز هر خانه در مختصات SVG تخته (viewBox ۰..۱۰۰۰ — بدون گپ؛ انحراف ≤۱.۵px مثل لایهٔ مهره) */
+function cellCenter(n: number): { x: number; y: number } {
+  const cpos = CELL_POS[n - 1]!;
+  return { x: (10.5 - cpos.col) * 100, y: (cpos.row - 0.5) * 100 };
+}
+
+/** فاز SL1-01 — مسیر منحنی S-شکل مار از سر (head) تا دُم (tail) — محاسبهٔ یک‌بار در ماژول */
+function snakePath(head: number, tail: number): string {
+  const a = cellCenter(head);
+  const b = cellCenter(tail);
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const px = -dy / len;
+  const py = dx / len;
+  const w = Math.min(70, len * 0.22);
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2;
+  return `M ${a.x} ${a.y} C ${(mx + px * w).toFixed(1)} ${(my + py * w).toFixed(1)}, ${(mx - px * w).toFixed(1)} ${(my - py * w).toFixed(1)}, ${b.x} ${b.y}`;
+}
+
+/** فاز SL1-01 — هندسهٔ پله: دو ریل موازی + پله‌های عرضی — محاسبهٔ یک‌بار در ماژول */
+function ladderGeom(base: number, top: number): { railA: string; railB: string; rungs: string[] } {
+  const a = cellCenter(base);
+  const b = cellCenter(top);
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const px = (-dy / len) * 13;
+  const py = (dx / len) * 13;
+  const rail = (s: number): string =>
+    `M ${(a.x + px * s).toFixed(1)} ${(a.y + py * s).toFixed(1)} L ${(b.x + px * s).toFixed(1)} ${(b.y + py * s).toFixed(1)}`;
+  const n = Math.max(2, Math.round(len / 42));
+  const rungs: string[] = [];
+  for (let i = 1; i < n; i++) {
+    const t = i / n;
+    const cx = a.x + dx * t;
+    const cy = a.y + dy * t;
+    rungs.push(`M ${(cx + px).toFixed(1)} ${(cy + py).toFixed(1)} L ${(cx - px).toFixed(1)} ${(cy - py).toFixed(1)}`);
+  }
+  return { railA: rail(1), railB: rail(-1), rungs };
+}
+
+/** فاز SL1-01 — دادهٔ SVG محاسبه‌شده یک‌بار در سطح ماژول (SNAKES/LADDERS ثابت‌اند — صفر هزینهٔ رندر) */
+const SNAKE_PATHS = Object.entries(SNAKES).map(([head, tail]) => ({
+  head: Number(head),
+  tail,
+  d: snakePath(Number(head), tail),
+  hc: cellCenter(Number(head)),
+}));
+const LADDER_GEOMS = Object.entries(LADDERS).map(([base, top]) => ({
+  base: Number(base),
+  top,
+  ...ladderGeom(Number(base), Number(top)),
+}));
+
+/** فاز SL1-04 — وجه‌های مکعب تاس: تبدیل هر وجه به‌سمت بیرون مکعب ۴۴px (نصف ۲۲px) */
+const CUBE_FACES: ReadonlyArray<{ n: number; t: string }> = [
+  { n: 1, t: "translateZ(22px)" },
+  { n: 2, t: "rotateY(90deg) translateZ(22px)" },
+  { n: 3, t: "rotateY(180deg) translateZ(22px)" },
+  { n: 4, t: "rotateY(-90deg) translateZ(22px)" },
+  { n: 5, t: "rotateX(90deg) translateZ(22px)" },
+  { n: 6, t: "rotateX(-90deg) translateZ(22px)" },
+];
+
+/**
+ * فاز SL1-04 — چرخش مکعب برای نمایش وجه face + چرخش‌های کامل tumble.
+ * هر فلیپ dicePop یکی زیاد می‌شود → ‎۳۶۰°×dicePop روی Y اضافه می‌شود تا مکعب همیشه
+ * رو به جلو بچرخد (هرگز برگشت نزند)؛ عدد نهایی دقیقاً همان d منطقی است.
+ */
+function cubeTransform(face: number, turns: number): string {
+  const base: Record<number, [number, number]> = {
+    1: [0, 0],
+    2: [0, -90],
+    3: [0, -180],
+    4: [0, -270],
+    5: [-90, 0],
+    6: [90, 0],
+  };
+  const [rx, ry] = base[face] ?? [0, 0];
+  return `rotateX(${rx}deg) rotateY(${ry + turns * 360}deg)`;
+}
+
+/** فاز SL1-03 — ذرات confetti — قطعی (بدون Math.random در رندر) با پالت بازی (زمردی/کهربایی/فیروزه‌ای) */
+const CONFETTI: ReadonlyArray<{ left: number; delay: number; dur: number; cls: string; w: number; h: number }> =
+  Array.from({ length: 36 }, (_, i) => ({
+    left: (i * 97) % 100,
+    delay: (i % 9) * 0.13,
+    dur: 2.2 + (i % 5) * 0.3,
+    cls: ["bg-emerald-500", "bg-amber-500", "bg-teal-500"][i % 3]!,
+    w: 6 + (i % 3) * 2,
+    h: 9 + (i % 4) * 2,
+  }));
+
 function lessonLabel(l: number): string {
   return l === 0 ? "جمع‌بندی" : `درس ${faNum(l)}`;
 }
@@ -303,6 +398,8 @@ export function SnakesLaddersGame() {
   const [dicePop, setDicePop] = useState(0);
   /** پیام باکس aria-live مرکزی شِل — نوبت/تاس/مار و پله/توقف (فاز G1-05) */
   const [liveMsg, setLiveMsg] = useState("");
+  /** فاز SL1-02 — پالس خانهٔ مبدأ+مقصد حین انتقال مار/پله (صرفاً بصری — متن/صدا از قبل سه‌کاناله) */
+  const [pulse, setPulse] = useState<{ cells: number[]; kind: "snake" | "ladder" } | null>(null);
   /** تعداد رول تاس این دور — آمار صفحهٔ نتیجه */
   const [rolls, setRolls] = useState(0);
   /** مدت transition مهره‌ها (ms) — پله‌ای STEP_MS یا سُرش مار/پله JUMP_MS (فاز G2-e) */
@@ -575,6 +672,8 @@ export function SnakesLaddersGame() {
       // فاز G2-e-1 — مار = سقوط: صدای نزولی + لرزش خطا
       playSound("wrong");
       buzz("error");
+      // فاز SL1-02 — پالس سرِ مار (خانهٔ فرود) و دُم (مقصد) هم‌زمان با سُرش
+      setPulse({ cells: [pos, snakeTo], kind: "snake" });
       const jr = jumpsRef.current[p];
       if (jr) jr.down += 1;
       toast.error(`مار! برگشتی به خانهٔ ${faNum(snakeTo)}`);
@@ -586,6 +685,7 @@ export function SnakesLaddersGame() {
         setPositions([...posRef.current]);
         later(() => {
           setSlideMs(STEP_MS);
+          setPulse(null);
           afterJump(p, d);
         }, JUMP_MS);
       }, 60);
@@ -593,6 +693,8 @@ export function SnakesLaddersGame() {
       // فاز G2-e-1 — پله = صعود: صدای صعودی + لرزش موفقیت
       playSound("correct");
       buzz("success");
+      // فاز SL1-02 — پالس پایهٔ پله (فرود) و بالای پله (مقصد) هم‌زمان با سُرش
+      setPulse({ cells: [pos, ladderTo], kind: "ladder" });
       const jr = jumpsRef.current[p];
       if (jr) jr.up += 1;
       toast.success(`پله! رفتی به خانهٔ ${faNum(ladderTo)}`);
@@ -603,6 +705,7 @@ export function SnakesLaddersGame() {
         setPositions([...posRef.current]);
         later(() => {
           setSlideMs(STEP_MS);
+          setPulse(null);
           afterJump(p, d);
         }, JUMP_MS);
       }, 60);
@@ -716,6 +819,7 @@ export function SnakesLaddersGame() {
     rollsRef.current = 0;
     setRolls(0);
     setSlideMs(STEP_MS);
+    setPulse(null);
     // سؤال یکتا روی متن — کل استخر شافل‌شده؛ تمام شد؟ در drawNext از نو شافل می‌شود
     deckRef.current = pickUnique(pool, pool.length, (item) => item.text);
     qiRef.current = -1;
@@ -1101,7 +1205,26 @@ export function SnakesLaddersGame() {
     const journeyScore = journey.up - journey.down;
     const stars = journeyScore >= 3 ? 3 : journeyScore >= 1 ? 2 : 1;
     return (
-      <div className="mx-auto max-w-xl space-y-3">
+      <div className="relative mx-auto max-w-xl space-y-3">
+        {/* فاز SL1-03 — confetti برد انسانی (۳۶ ذرهٔ تمام-CSS؛ فقط برد انسان — برد ربات بدون جشن؛
+            reduced-motion → display:none؛ pointer-events-none — کلاً تزئینی) */}
+        {wp && !wp.isBot && (
+          <div aria-hidden className="pointer-events-none absolute inset-0 z-20 overflow-visible">
+            {CONFETTI.map((c, i) => (
+              <span
+                key={i}
+                className={cn("sl-confetti-piece rounded-[2px]", c.cls)}
+                style={{
+                  left: `${c.left}%`,
+                  width: c.w,
+                  height: c.h,
+                  animationDelay: `${c.delay}s`,
+                  animationDuration: `${c.dur}s`,
+                }}
+              />
+            ))}
+          </div>
+        )}
         <ResultScreen
           title={wp ? `${wp.name} برد! 🏆` : "بازی تمام شد!"}
           stars={stars}
@@ -1162,7 +1285,6 @@ export function SnakesLaddersGame() {
   if (!q || players.length === 0) return null;
   const cp = players[cur] ?? players[0];
   const locked = reveal !== null || diceFace !== null || cp.isBot || paused;
-  const DiceFace = diceFace !== null ? (DICE_ICONS[diceFace] ?? Dices) : Dices;
   return (
     <>
       {/* فاز G2-e-1 — هدر یکنواخت از کیت: زمان/سؤال/نوبت/تاس/حالت + کنترل‌های استاندارد */}
@@ -1292,15 +1414,27 @@ export function SnakesLaddersGame() {
               </div>
             </div>
 
-            {/* تاس — فقط بعد از پاسخ درست دیده می‌شود (ارتفاع رزرو شده تا تخته نلرزد)؛
-                عدد تاس به‌صورت بج در هدر شِل هم می‌آید */}
+            {/* فاز SL1-04 — تاس سه‌بعدی CSS — فقط بعد از پاسخ درست دیده می‌شود (ارتفاع رزرو شده تا تخته نلرزد).
+                مکعب با ۶ وجهِ آیکون؛ هر فلیپ ۹۰ms همان زنجیرهٔ قبلی است — زمان‌بندی دست نخورده؛
+                dicePop = شمار چرخش‌های کامل tumble؛ عدد نهایی دقیقاً همان d منطقی؛
+                reduced-motion → transition حذف (سوییچ بی‌انیمیشن) + بج هدر همیشه هست */}
             <div className="flex h-12 items-center justify-center gap-2">
               {diceFace !== null && (
-                <span
-                  key={dicePop}
-                  className="match-pop flex h-11 w-11 items-center justify-center rounded-xl border-2 border-primary/30 bg-primary/10 text-primary shadow-md shadow-primary/15"
-                >
-                  <DiceFace size={26} />
+                <span className="match-pop block" style={{ perspective: "180px" }}>
+                  <span className="sl-cube" style={{ transform: cubeTransform(diceFace, dicePop) }}>
+                    {CUBE_FACES.map(({ n, t }) => {
+                      const F = DICE_ICONS[n] ?? Dices;
+                      return (
+                        <span
+                          key={n}
+                          style={{ transform: t }}
+                          className="sl-cube-face border-2 border-primary/30 bg-primary/10 text-primary shadow-md shadow-primary/15"
+                        >
+                          <F size={22} />
+                        </span>
+                      );
+                    })}
+                  </span>
                 </span>
               )}
             </div>
@@ -1311,8 +1445,22 @@ export function SnakesLaddersGame() {
                 {/* فاز G2-e-1 — سبک transition مهره‌ها + گارد prefers-reduced-motion */}
                 <style>{`
                   .sl-token { transition-property: transform; transition-timing-function: ease; will-change: transform; }
+                  /* فاز SL1-02 — پالس خانهٔ مبدأ/مقصد (صرفاً بصری — reduced-motion خاموش) */
+                  @keyframes slPulseBad { 50% { box-shadow: inset 0 0 0 4px rgb(239 68 68 / 0.75); } }
+                  @keyframes slPulseGood { 50% { box-shadow: inset 0 0 0 4px rgb(16 185 129 / 0.8); } }
+                  .sl-pulse-bad { animation: slPulseBad 480ms ease-in-out 2; }
+                  .sl-pulse-good { animation: slPulseGood 480ms ease-in-out 2; }
+                  /* فاز SL1-04 — مکعب تاس سه‌بعدی (زمان‌بندی transition = فلیپ ۹۰ms زنجیره) */
+                  .sl-cube { position: relative; width: 44px; height: 44px; transform-style: preserve-3d; transition: transform 90ms ease; will-change: transform; }
+                  .sl-cube-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 10px; backface-visibility: hidden; }
+                  /* فاز SL1-03 — confetti برد (تمام-CSS؛ reduced-motion نمایش نمی‌دهد) */
+                  @keyframes slConfettiFall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(75vh) rotate(560deg); opacity: 0; } }
+                  .sl-confetti-piece { position: absolute; top: 0; animation-name: slConfettiFall; animation-timing-function: linear; animation-fill-mode: forwards; }
                   @media (prefers-reduced-motion: reduce) {
                     .sl-token { transition: none !important; }
+                    .sl-pulse-bad, .sl-pulse-good { animation: none !important; }
+                    .sl-confetti-piece { display: none !important; }
+                    .sl-cube { transition: none !important; }
                   }
                 `}</style>
                 <div className="relative">
@@ -1340,6 +1488,7 @@ export function SnakesLaddersGame() {
                                 : (cpos.row + cpos.col) % 2 === 0
                                   ? "bg-muted/40"
                                   : "bg-card",
+                            pulse?.cells.includes(n) && (pulse.kind === "snake" ? "sl-pulse-bad" : "sl-pulse-good"),
                           )}
                         >
                           <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-foreground/75 sm:text-[11px]">
@@ -1367,6 +1516,30 @@ export function SnakesLaddersGame() {
                       );
                     })}
                   </div>
+
+                  {/* فاز SL1-01 — مسیرهای مار و پله (aria-hidden — فقط تزئینی؛ نام‌ها در aria-label خانه‌ها هست).
+                      داده‌ها سطح ماژول محاسبه شده‌اند — صفر هزینهٔ JS در رندر؛ زیر لایهٔ مهره (z-10) */}
+                  <svg aria-hidden viewBox="0 0 1000 1000" className="pointer-events-none absolute inset-0 z-[5]">
+                    <g className="text-destructive" fill="none" stroke="currentColor">
+                      {SNAKE_PATHS.map(({ head, d, hc }) => (
+                        <g key={`snake-${head}`} strokeOpacity={0.5}>
+                          <path d={d} strokeWidth={11} strokeLinecap="round" />
+                          <circle cx={hc.x} cy={hc.y} r={11} fill="currentColor" stroke="none" fillOpacity={0.65} />
+                        </g>
+                      ))}
+                    </g>
+                    <g className="text-primary" fill="none" stroke="currentColor">
+                      {LADDER_GEOMS.map(({ base, railA, railB, rungs }) => (
+                        <g key={`ladder-${base}`} strokeOpacity={0.55} strokeWidth={7} strokeLinecap="round">
+                          <path d={railA} />
+                          <path d={railB} />
+                          {rungs.map((r, i) => (
+                            <path key={i} d={r} strokeWidth={6} strokeOpacity={0.85} />
+                          ))}
+                        </g>
+                      ))}
+                    </g>
+                  </svg>
 
                   {/* فاز G2-e-1 — لایهٔ مهره‌های متحرک (aria-hidden — خانه‌ها نام مهره‌ها را
                       در aria-label دارند). موقعیت با translate درصدی + transition: transform */}
