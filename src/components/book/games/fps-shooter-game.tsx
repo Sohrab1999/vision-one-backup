@@ -60,6 +60,20 @@
  *   شلیک از رتیکل مرکز می‌زند؛ هر دو data-fps-hud تا شلیک صحنه حساب نشوند.
  * - افکت پوکهٔ برنجی: در هر شلیک از پورت خروج تفنگ به فضای جهانی پرتاب می‌شود — گرانش،
  *   اسپین و محو نرم؛ علاوه بر آن صدای «تاک» برخورد گلوله به هدف (صدا فقط لحظهٔ رویداد).
+ *
+ * فاز F5/F6/F7 — سه‌گانهٔ «گزینه‌ها، نقشه، محیط» (نسخهٔ ۲.۰ نقشه راه docs/fps-roadmap.md):
+ * - گزینه‌ها (F5): حساسیت نگاه (۴۰–۲۲۰٪) روی موس و کشیدن لمسی، زاویهٔ دید FOV
+ *   (۶۲–۹۶ درجه — زنده با updateProjectionMatrix) و وارون‌سازی عمودی (Invert Y) —
+ *   همه ماندگار (کلیدهای افزودنی visionone:game-pref:fps-sens/fov/invert) + پنل
+ *   «گزینه‌ها» در setup + تنظیمات سریع داخل اورلی توقف بدون خروج از دور.
+ * - نقشه‌ها (F6): سه پالت کامل میدان با انتخاب ماندگار (visionone:game-pref:fps-map):
+ *   «جنگل زمردی» (کلاسیک سبز)، «کویر کهربا» (غروب شنی با خورشید بزرگ) و «سکوت شب»
+ *   (آسمان پرستاره + ماه + کریستال‌های درخشان) — هر نقشه رنگ پس‌زمینه/مه، زمین،
+ *   حلقه‌ها، کوه‌ها، اجسام تزئینی، نور و بدنهٔ قاب خودش را دارد + detail.map در Attempt.
+ * - محیط (F7): جعبه‌های پوشش با برخورد واقعی بازیکن (resolveCover — دایره‌ای ساده در
+ *   فضای جهان)، ابلیسک‌های طرفین، سنگ‌ریزه و بوتهٔ پراکنده، ابرهای low-poly چرخان،
+ *   آسمان پرستاره و خورشید/ماه با هاله — بودجهٔ عناصر در سه ترتیب کیفیت؛ همهٔ عناصر
+ *   دکور هستند و خارج از registry رِی‌کست شلیک.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -69,23 +83,30 @@ import {
   Crosshair,
   Flame,
   Heart,
+  MapPinned,
   Minimize2,
   MonitorSmartphone,
+  MoonStar,
   MousePointerClick,
   Pause,
   Play,
   RotateCcw,
+  SlidersHorizontal,
   Sparkles,
   Star,
+  Sun,
   Swords,
   Target as TargetIcon,
   Timer,
+  Trees,
   Trophy,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import type { QuizQuestionSeed, VocabEntry } from "@/data/types";
@@ -179,6 +200,177 @@ const DISTRACTORS_LOW = 2;
 const DECO_LOW = 5;
 /** کیفیت سبک: ذرات انفجار کمتر */
 const BURST_LOW = 12;
+
+// ── فاز F6 — نقشه‌های مأموریت (پالت کامل هر میدان) ──
+
+type MapId = "forest" | "desert" | "night";
+
+interface MapConfig {
+  id: MapId;
+  name: string;
+  desc: string;
+  /** رنگ پس‌زمینه/مه صحنه و بدنهٔ قاب */
+  bg: string;
+  ground: string;
+  ringMain: string;
+  ringOther: string;
+  mountain: string;
+  decoColors: [number, number, number, number];
+  /** شدت emissive اجسام تزئینی — نقشهٔ شب درخشان است تا خوانایی حفظ شود */
+  decoGlow: number;
+  hemiSky: string;
+  hemiGround: string;
+  sunColor: string;
+  sunIntensity: number;
+  ambIntensity: number;
+  fogNear: number;
+  fogFar: number;
+  /** خورشید/ماه: موقعیت + شعاع + رنگ */
+  orb: { pos: [number, number, number]; r: number; color: string } | null;
+  stars: boolean;
+  clouds: number;
+  cloudColor: string;
+  /** نمونه‌رنگ گرادیانی کارت نقشه در setup */
+  swatch: string;
+}
+
+const MAPS: Record<MapId, MapConfig> = {
+  forest: {
+    id: "forest",
+    name: "جنگل زمردی",
+    desc: "میدان کلاسیک سبز با کوه‌های دوردست — خانهٔ همیشگی تک‌تیراندازها.",
+    bg: "#062e24",
+    ground: "#0a4335",
+    ringMain: "#f59e0b",
+    ringOther: "#10b981",
+    mountain: "#065f46",
+    decoColors: [0x0d9488, 0x059669, 0xd97706, 0x10b981],
+    decoGlow: 0.14,
+    hemiSky: "#a7f3d0",
+    hemiGround: "#064e3b",
+    sunColor: "#ffffff",
+    sunIntensity: 1.1,
+    ambIntensity: 0.8,
+    fogNear: 10,
+    fogFar: 36,
+    orb: null,
+    stars: false,
+    clouds: 3,
+    cloudColor: "#e7fff4",
+    swatch: "bg-gradient-to-b from-emerald-300 via-emerald-600 to-emerald-950",
+  },
+  desert: {
+    id: "desert",
+    name: "کویر کهربا",
+    desc: "غروب شنی با خورشید بزرگ و صخره‌های سرخ — نشانه‌گیری گرم می‌شود.",
+    bg: "#431407",
+    ground: "#92400e",
+    ringMain: "#fbbf24",
+    ringOther: "#f59e0b",
+    mountain: "#7c2d12",
+    decoColors: [0xd97706, 0xb45309, 0x78350f, 0xf59e0b],
+    decoGlow: 0.12,
+    hemiSky: "#fed7aa",
+    hemiGround: "#7c2d12",
+    sunColor: "#ffd9a0",
+    sunIntensity: 1.25,
+    ambIntensity: 0.85,
+    fogNear: 9,
+    fogFar: 34,
+    orb: { pos: [7, 3.4, -30], r: 3.2, color: "#fbbf24" },
+    stars: false,
+    clouds: 2,
+    cloudColor: "#ffd9a8",
+    swatch: "bg-gradient-to-b from-amber-300 via-orange-600 to-orange-950",
+  },
+  night: {
+    id: "night",
+    name: "سکوت شب",
+    desc: "آسمان پرستاره، ماه کم‌سو و کریستال‌های درخشان — تمرکز دوچندان.",
+    bg: "#020617",
+    ground: "#0f172a",
+    ringMain: "#22d3ee",
+    ringOther: "#155e75",
+    mountain: "#1e293b",
+    decoColors: [0x22d3ee, 0x2dd4bf, 0x38bdf8, 0x818cf8],
+    decoGlow: 0.95,
+    hemiSky: "#334155",
+    hemiGround: "#020617",
+    sunColor: "#93c5fd",
+    sunIntensity: 0.55,
+    ambIntensity: 0.52,
+    fogNear: 8,
+    fogFar: 32,
+    orb: { pos: [-8, 6.6, -26], r: 1.9, color: "#e2e8f0" },
+    stars: true,
+    clouds: 0,
+    cloudColor: "#e2e8f0",
+    swatch: "bg-gradient-to-b from-slate-400 via-slate-700 to-slate-950",
+  },
+};
+
+// ── فاز F5 — گزینه‌های نگاه (کلیدهای افزودنی ماندگار) ──
+
+const MAP_KEY = "visionone:game-pref:fps-map";
+const SENS_KEY = "visionone:game-pref:fps-sens";
+const FOV_KEY = "visionone:game-pref:fps-fov";
+const INVERT_KEY = "visionone:game-pref:fps-invert";
+/** محدودهٔ حساسیت نگاه (ضریب — ۱ = پیش‌فرض) */
+const SENS_MIN = 0.4;
+const SENS_MAX = 2.2;
+const SENS_DEF = 1;
+/** محدودهٔ زاویهٔ دید */
+const FOV_MIN = 62;
+const FOV_MAX = 96;
+const FOV_DEF = 72;
+
+// ── فاز F7 — بودجهٔ عناصر محیطی در سه ترتیب [کیفیت سبک، دستگاه ضعیف، کامل] ──
+
+const ENV_CRATES = [3, 4, 6];
+const ENV_ROCKS = [4, 6, 9];
+const ENV_TUFTS = [4, 7, 10];
+
+function loadMapPref(): MapId {
+  if (typeof window === "undefined") return "forest";
+  try {
+    const v = window.localStorage.getItem(MAP_KEY);
+    return v && v in MAPS ? (v as MapId) : "forest";
+  } catch {
+    return "forest";
+  }
+}
+
+function loadPrefNum(key: string, def: number, min: number, max: number): number {
+  if (typeof window === "undefined") return def;
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (raw === null) return def; // Number(null)=0 است — نباید به min کلمپ شود!
+    const v = Number(raw);
+    return Number.isFinite(v) ? clamp(v, min, max) : def;
+  } catch {
+    return def;
+  }
+}
+
+function loadPrefBool(key: string, def: boolean): boolean {
+  if (typeof window === "undefined") return def;
+  try {
+    const v = window.localStorage.getItem(key);
+    if (v === "1") return true;
+    if (v === "0") return false;
+    return def;
+  } catch {
+    return def;
+  }
+}
+
+function savePref(key: string, value: string): void {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    /* noop */
+  }
+}
 
 function loadQuality(): Quality {
   if (typeof window === "undefined") return "high";
@@ -281,8 +473,8 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     icon: <MonitorSmartphone size={24} />,
-    title: "کیفیت گرافیک",
-    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن: رزولوشن کمتر، ذرات و اجسام تزئینی کمتر و ۳ هدف هم‌زمان به‌جای ۴ — انتخابت برای دفعات بعد ذخیره می‌شود.",
+    title: "کیفیت، نقشه و گزینه‌ها",
+    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. سه نقشهٔ مأموریت داری: جنگل زمردی، کویر کهربا و سکوت شب. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها برای دفعات بعد ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند.",
   },
 ];
 
@@ -446,6 +638,36 @@ function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, 
 
 // ─── اجزای صحنهٔ سه‌بعدی ───
 
+// ── فاز F7 — پوشش‌های میدان با برخورد واقعی بازیکن ──
+
+/** جعبه‌های پوشش — چیدمان ثابت جهان (برخورد بازیکن با همین لیست است) */
+const COVER_CRATES: Array<{ x: number; z: number; h: number }> = [
+  { x: -3.4, z: 4.6, h: 1.15 },
+  { x: 3.1, z: 5.6, h: 0.95 },
+  { x: -1.7, z: 6.9, h: 1.3 },
+  { x: 4.7, z: 4.3, h: 1.05 },
+  { x: -4.9, z: 6.3, h: 1.2 },
+  { x: 1.9, z: 8.0, h: 1.0 },
+];
+/** شعاع برخورد بازیکن (متر) */
+const PLAYER_R = 0.34;
+
+/** فاز F7 — برخورد دایره‌ای سادهٔ بازیکن با جعبه‌ها — جهش درجا روی pos (فضای جهان ↔ آفست دوربین) */
+function resolveCover(pos: { x: number; z: number }, laneK: number): void {
+  const baseZ = 7 + (1 - laneK) * 4.2;
+  const pzW = baseZ + pos.z; // z بازیکن در فضای جهان
+  for (const c of COVER_CRATES) {
+    const dx = pos.x - c.x;
+    const dz = pzW - c.z;
+    const rr = c.h * 0.62 + PLAYER_R;
+    const d = Math.hypot(dx, dz);
+    if (d < rr && d > 1e-4) {
+      pos.x = c.x + (dx / d) * rr;
+      pos.z = c.z + (dz / d) * rr - baseZ;
+    }
+  }
+}
+
 /** فاز F3 — انتگرال حرکت بازیکن از کلیدها + جوی‌استیک آنالوگ (جهش bridge فقط داخل توابع ماژول) */
 function stepPlayer(b: SceneBridge, dt: number): boolean {
   let mx = 0;
@@ -475,6 +697,10 @@ function stepPlayer(b: SceneBridge, dt: number): boolean {
     const sp = MOVE_SPEED * mag * dt;
     b.pos.x = clamp(b.pos.x + (vx / len) * sp, -MOVE_X_LIM, MOVE_X_LIM);
     b.pos.z = clamp(b.pos.z + (vz / len) * sp, MOVE_Z_MIN, MOVE_Z_MAX);
+    // فاز F7 — پوشش‌ها را دور می‌زنی، نه از داخلشان رد می‌شوی
+    resolveCover(b.pos, b.laneK);
+    b.pos.x = clamp(b.pos.x, -MOVE_X_LIM, MOVE_X_LIM);
+    b.pos.z = clamp(b.pos.z, MOVE_Z_MIN, MOVE_Z_MAX);
   }
   b.moveMag = moving ? mag : 0;
   return moving;
@@ -495,6 +721,24 @@ function applyRig(cam: THREE.Camera, b: SceneBridge, aspect: number, bobY: numbe
 function initRig(cam: THREE.Camera): void {
   cam.position.set(0, 1.7, 7);
   cam.rotation.order = "YXZ";
+}
+
+/** فاز F5 — اعمال زاویهٔ دید روی دوربین — تابع ماژول‌سطح (قاعدهٔ immutability کیت) */
+function applyFov(cam: THREE.Camera, fov: number): void {
+  const c = cam as THREE.PerspectiveCamera;
+  if (c.fov !== fov) {
+    c.fov = fov;
+    c.updateProjectionMatrix();
+  }
+}
+
+/** فاز F5 — زاویهٔ دید زنده: تغییر اسلایدر FOV بلافاصله روی دوربین اعمال می‌شود */
+function FovTune({ fov }: { fov: number }) {
+  const { camera } = useThree();
+  useEffect(() => {
+    applyFov(camera, fov);
+  }, [camera, fov]);
+  return null;
 }
 
 /** دوربین اول‌شخص — چرخش + حرکت WASD (فاز F3) + باب سر + تطبیق عرض صحنه در پرتره */
@@ -640,8 +884,160 @@ function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   );
 }
 
-/** میدان low-poly: زمین، کوه‌های دوردست و اجسام شناور تزئینی — فاز G2-e: تعداد deco پارامتر شد */
-function Arena({ deco }: { deco: number }) {
+/** فاز F7 — آسمان پرستارهٔ نقشهٔ شب (Points سبک؛ fog=false تا مه ستاره‌ها را نخورد) */
+function StarField() {
+  const geo = useMemo(() => {
+    const N = 150;
+    const pos = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      // پخش روی گنبد آسمان — بالای افق
+      const a = Math.random() * Math.PI * 2;
+      const el = 0.08 + Math.random() * 1.25;
+      const r = 38 + Math.random() * 14;
+      pos[i * 3] = Math.cos(a) * Math.cos(el) * r;
+      pos[i * 3 + 1] = Math.sin(el) * r;
+      pos[i * 3 + 2] = Math.sin(a) * Math.cos(el) * r;
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    return g;
+  }, []);
+  useEffect(() => () => geo.dispose(), [geo]);
+  return (
+    <points geometry={geo} frustumCulled={false}>
+      <pointsMaterial color="#e2e8f0" size={0.34} sizeAttenuation transparent opacity={0.85} fog={false} />
+    </points>
+  );
+}
+
+/** فاز F7 — خورشید/ماه درخشان با هالهٔ نرم (fog=false — دورتر از مه است) */
+function SkyOrb({ orb }: { orb: NonNullable<MapConfig["orb"]> }) {
+  return (
+    <group position={orb.pos}>
+      <mesh>
+        <sphereGeometry args={[orb.r, 20, 20]} />
+        <meshBasicMaterial color={orb.color} toneMapped={false} fog={false} />
+      </mesh>
+      <mesh scale={1.5}>
+        <sphereGeometry args={[orb.r, 16, 16]} />
+        <meshBasicMaterial color={orb.color} transparent opacity={0.2} toneMapped={false} fog={false} depthWrite={false} />
+      </mesh>
+    </group>
+  );
+}
+
+/** فاز F7 — ابرهای low-poly چرخان دور میدان (دستگیرهٔ دور = حرکت مداری آرام) */
+function CloudDrift({ count, color }: { count: number; color: string }) {
+  const ref = useRef<THREE.Group>(null);
+  const specs = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => ({
+        key: `c${i}`,
+        r: 17 + Math.random() * 9,
+        y: 6.5 + Math.random() * 3.5,
+        speed: 0.014 + Math.random() * 0.012,
+        a0: (i / Math.max(1, count)) * Math.PI * 2,
+        s: 1 + Math.random() * 0.8,
+      })),
+    [count],
+  );
+  useFrame((state) => {
+    const g = ref.current;
+    if (!g) return;
+    const t = state.clock.elapsedTime;
+    for (let i = 0; i < g.children.length; i++) {
+      const sp = specs[i];
+      if (!sp) break;
+      const c = g.children[i];
+      const a = sp.a0 + t * sp.speed;
+      c.position.set(Math.cos(a) * sp.r, sp.y + Math.sin(t * 0.25 + i) * 0.3, Math.sin(a) * sp.r - 7);
+      c.rotation.y = -a;
+    }
+  });
+  const mat = <meshStandardMaterial color={color} flatShading roughness={1} transparent opacity={0.85} />;
+  return (
+    <group ref={ref}>
+      {specs.map((sp) => (
+        <group key={sp.key} scale={sp.s}>
+          <mesh>{mat}</mesh>
+          <mesh position={[1.5, -0.25, 0.3]} scale={0.72}>
+            {mat}
+          </mesh>
+          <mesh position={[-1.5, -0.3, -0.2]} scale={0.6}>
+            {mat}
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+/** فاز F7 — عناصر محیطی میدان: جعبهٔ پوشش + ابلیسک + سنگ‌ریزه + بوته — همه دکور؛ خارج از registry رِی‌کست */
+function FieldProps({ map, tier }: { map: MapConfig; tier: 0 | 1 | 2 }) {
+  const crateColor = map.id === "desert" ? "#a16207" : "#92400e";
+  const obeliskColor = map.mountain;
+  const rockColor = map.id === "night" ? "#334155" : map.mountain;
+  const tuftColor = map.decoColors[1];
+  const crates = useMemo(() => COVER_CRATES.slice(0, ENV_CRATES[tier]), [tier]);
+  const rocks = useMemo(
+    () =>
+      Array.from({ length: ENV_ROCKS[tier] }, (_, i) => ({
+        key: `rk${i}`,
+        x: (i % 2 === 0 ? 1 : -1) * (1.2 + Math.random() * 7.6),
+        z: -1 - Math.random() * 14,
+        s: 0.18 + Math.random() * 0.3,
+        rot: Math.random() * Math.PI,
+      })),
+    [tier],
+  );
+  const tufts = useMemo(
+    () =>
+      Array.from({ length: ENV_TUFTS[tier] }, (_, i) => ({
+        key: `tf${i}`,
+        x: (i % 2 === 0 ? -1 : 1) * (0.7 + Math.random() * 6.8),
+        z: -1.5 - Math.random() * 11,
+        s: 0.7 + Math.random() * 0.7,
+      })),
+    [tier],
+  );
+  return (
+    <group>
+      {/* جعبه‌های پوشش — با برخورد ساده (resolveCover در stepPlayer) */}
+      {crates.map((c) => (
+        <mesh key={`cb${c.x}`} position={[c.x, c.h / 2, c.z]} rotation-y={c.x * 0.7}>
+          <boxGeometry args={[c.h * 1.15, c.h, c.h * 1.05]} />
+          <meshStandardMaterial color={crateColor} roughness={0.85} flatShading />
+        </mesh>
+      ))}
+      {/* ابلیسک‌های دو طرف میدان — قاب‌بندی صحنه */}
+      <mesh position={[-10.5, 2.6, -6]} rotation-y={-10.5}>
+        <cylinderGeometry args={[0.47, 0.85, 5.2, 5]} />
+        <meshStandardMaterial color={obeliskColor} flatShading roughness={1} />
+      </mesh>
+      <mesh position={[11.5, 3.2, -9]} rotation-y={11.5}>
+        <cylinderGeometry args={[0.58, 1.05, 6.4, 5]} />
+        <meshStandardMaterial color={obeliskColor} flatShading roughness={1} />
+      </mesh>
+      {/* سنگ‌ریزه‌های پراکنده */}
+      {rocks.map((r) => (
+        <mesh key={r.key} position={[r.x, r.s * 0.6, r.z]} rotation-y={r.rot}>
+          <dodecahedronGeometry args={[r.s, 0]} />
+          <meshStandardMaterial color={rockColor} flatShading roughness={1} />
+        </mesh>
+      ))}
+      {/* بوته‌ها */}
+      {tufts.map((t) => (
+        <mesh key={t.key} position={[t.x, 0.22 * t.s, t.z]}>
+          <coneGeometry args={[0.16 * t.s, 0.5 * t.s, 6]} />
+          <meshStandardMaterial color={tuftColor} flatShading roughness={0.9} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+/** میدان low-poly با پالت نقشه (فاز F6): زمین، کوه، آسمان زنده و عناصر محیطی — فاز G2-e: deco پارامتر */
+function Arena({ map, deco, tier }: { map: MapConfig; deco: number; tier: 0 | 1 | 2 }) {
   const decoShapes = useMemo(
     () =>
       shuffle(
@@ -653,13 +1049,13 @@ function Arena({ deco }: { deco: number }) {
             0.8 + Math.random() * 4.2,
             -4 - Math.random() * 18,
           ] as [number, number, number],
-          hue: [0x0d9488, 0x059669, 0xd97706, 0x10b981][i % 4],
+          hue: map.decoColors[i % map.decoColors.length],
           spin: 0.2 + Math.random() * 0.4,
           bob: 0.4 + Math.random() * 0.5,
           scale: 0.5 + Math.random() * 1.1,
         })),
       ),
-    [deco],
+    [deco, map],
   );
   const mounts = useMemo(
     () =>
@@ -673,33 +1069,39 @@ function Arena({ deco }: { deco: number }) {
   );
   return (
     <>
-      <color attach="background" args={["#062e24"]} />
-      <fog attach="fog" args={["#062e24", 10, 36]} />
-      <ambientLight intensity={0.8} />
-      <hemisphereLight args={["#a7f3d0", "#064e3b", 0.55]} />
-      <directionalLight position={[5, 9, 3]} intensity={1.1} />
+      <color attach="background" args={[map.bg]} />
+      <fog attach="fog" args={[map.bg, map.fogNear, map.fogFar]} />
+      <ambientLight intensity={map.ambIntensity} />
+      <hemisphereLight args={[map.hemiSky, map.hemiGround, 0.55]} />
+      <directionalLight position={[5, 9, 3]} intensity={map.sunIntensity} color={map.sunColor} />
       {/* زمین دایره‌ای */}
       <mesh rotation-x={-Math.PI / 2} position={[0, 0, -7]}>
         <circleGeometry args={[30, 44]} />
-        <meshStandardMaterial color="#0a4335" roughness={0.95} />
+        <meshStandardMaterial color={map.ground} roughness={0.95} />
       </mesh>
       {/* حلقه‌های راهنمای زمین */}
       {[5.4, 9.2, 13.4].map((r, i) => (
         <mesh key={r} rotation-x={-Math.PI / 2} position={[0, 0.02, -7]}>
           <ringGeometry args={[r, r + 0.22, 52]} />
-          <meshBasicMaterial color={i === 0 ? "#f59e0b" : "#10b981"} transparent opacity={0.3 - i * 0.07} />
+          <meshBasicMaterial color={i === 0 ? map.ringMain : map.ringOther} transparent opacity={0.3 - i * 0.07} />
         </mesh>
       ))}
       {/* کوه‌های low-poly دوردست */}
       {mounts.map((m) => (
         <mesh key={m.key} position={m.pos}>
           <coneGeometry args={[m.r, m.h, 5]} />
-          <meshStandardMaterial color="#065f46" flatShading roughness={1} />
+          <meshStandardMaterial color={map.mountain} flatShading roughness={1} />
         </mesh>
       ))}
+      {/* آسمان زنده — فاز F7 */}
+      {map.orb && <SkyOrb orb={map.orb} />}
+      {map.stars && <StarField />}
+      {map.clouds > 0 && <CloudDrift count={map.clouds} color={map.cloudColor} />}
+      {/* عناصر محیطی — جعبه/ابلیسک/سنگ/بوته */}
+      <FieldProps map={map} tier={tier} />
       {/* اجسام شناور تزئینی */}
       {decoShapes.map((d) => (
-        <DecoShape key={d.key} spec={d} />
+        <DecoShape key={d.key} spec={d} glow={map.decoGlow} />
       ))}
     </>
   );
@@ -715,7 +1117,7 @@ interface DecoSpec {
   scale: number;
 }
 
-function DecoShape({ spec }: { spec: DecoSpec }) {
+function DecoShape({ spec, glow }: { spec: DecoSpec; glow: number }) {
   const ref = useRef<THREE.Mesh>(null);
   const t0 = useMemo(() => Math.random() * 8, []);
   useFrame((state) => {
@@ -735,7 +1137,8 @@ function DecoShape({ spec }: { spec: DecoSpec }) {
       ) : (
         <dodecahedronGeometry args={[1, 0]} />
       )}
-      <meshStandardMaterial color={spec.hue} flatShading roughness={0.6} metalness={0.12} />
+      {/* فاز F6 — emissive پالت نقشه: شب = کریستال درخشان، روز = درخشش ملایم */}
+      <meshStandardMaterial color={spec.hue} flatShading roughness={0.6} metalness={0.12} emissive={spec.hue} emissiveIntensity={glow} />
     </mesh>
   );
 }
@@ -1046,6 +1449,12 @@ export function FpsShooterGame() {
   const [locked, setLocked] = useState(false);
   // فاز G2-e — کیفیت گرافیک (ماندگار؛ پیش‌فرض عادی)
   const [quality, setQuality] = useState<Quality>(() => loadQuality());
+  // ── فاز F5 — گزینه‌های نگاه (ماندگار) ──
+  const [sens, setSens] = useState(() => loadPrefNum(SENS_KEY, SENS_DEF, SENS_MIN, SENS_MAX));
+  const [fov, setFov] = useState(() => loadPrefNum(FOV_KEY, FOV_DEF, FOV_MIN, FOV_MAX));
+  const [invertY, setInvertY] = useState(() => loadPrefBool(INVERT_KEY, false));
+  // ── فاز F6 — نقشهٔ مأموریت (ماندگار) ──
+  const [mapId, setMapId] = useState<MapId>(() => loadMapPref());
   // ── فاز F3 — تمام‌صفحه هنگام شروع مأموریت (Fullscreen API با فال‌بک webkit) ──
   const [isFs, setIsFs] = useState(false);
   const wantFsRef = useRef(false);
@@ -1156,6 +1565,10 @@ export function FpsShooterGame() {
   const tapRef = useRef(tapMode);
   const qualityRef = useRef<Quality>(quality);
   const qRef = useRef<Question | null>(null);
+  // ── فاز F5/F6 — مراجع گزینه‌ها/نقشه برای مسیرهای بدون ری‌رندر (ورودی نگاه + Attempt) ──
+  const sensRef = useRef(sens);
+  const invertRef = useRef(invertY);
+  const mapIdRef = useRef<MapId>(mapId);
   // ── فاز F4 — مراجع خشاب/ریلود (چرخهٔ شلیک داخل effect فقط با ref — بدون dep churn) ──
   const ammoRef = useRef(MAG_SIZE);
   const reloadUntilRef = useRef(0);
@@ -1315,6 +1728,9 @@ export function FpsShooterGame() {
     tapRef.current = tapMode;
     qualityRef.current = quality;
     qRef.current = q;
+    sensRef.current = sens;
+    invertRef.current = invertY;
+    mapIdRef.current = mapId;
   });
 
   // فاز G2-e — دورِ باز در unmount «رهاشده» ثبت می‌شود (اگر قبلاً گزارش شده باشد no-op)
@@ -1383,12 +1799,16 @@ export function FpsShooterGame() {
         correct: correctRef.current,
         duration: took,
         // فاز G2-e — detail افزودنی: quality (امضای AttemptPayload دست‌نخورده)
+        // فاز F5/F6 — افزودنی: گزینه‌های نگاه + نقشهٔ مأموریت
         detail: {
           score: final,
           maxCombo: maxComboRef.current,
           mode: modeRef.current,
           tap: tapRef.current,
           quality: qualityRef.current,
+          map: mapIdRef.current,
+          sens: Math.round(sensRef.current * 100) / 100,
+          invert: invertRef.current,
         },
       });
     }
@@ -1634,8 +2054,11 @@ export function FpsShooterGame() {
     const onPointerMove = (e: PointerEvent) => {
       if (document.pointerLockElement === el) {
         const b = bridge.current;
-        b.aim.yaw -= e.movementX * 0.0026;
-        b.aim.pitch = clamp(b.aim.pitch - e.movementY * 0.0024, -0.6, 0.48);
+        // فاز F5 — حساسیت نگاه + وارون‌سازی عمودی (از تنظیمات گزینه‌ها)
+        const sn = sensRef.current;
+        const iv = invertRef.current ? -1 : 1;
+        b.aim.yaw -= e.movementX * 0.0026 * sn;
+        b.aim.pitch = clamp(b.aim.pitch - e.movementY * 0.0024 * sn * iv, -0.6, 0.48);
         return;
       }
       if (!gest?.active) return;
@@ -1646,8 +2069,11 @@ export function FpsShooterGame() {
       if (Math.hypot(e.clientX - gest.x0, e.clientY - gest.y0) > 12) gest.moved = true;
       if (gest.moved) {
         const b = bridge.current;
-        b.aim.yaw -= dx * 0.005;
-        b.aim.pitch = clamp(b.aim.pitch - dy * 0.0045, -0.6, 0.48);
+        // فاز F5 — حساسیت نگاه لمسی + وارون‌سازی عمودی
+        const sn = sensRef.current;
+        const iv = invertRef.current ? -1 : 1;
+        b.aim.yaw -= dx * 0.005 * sn;
+        b.aim.pitch = clamp(b.aim.pitch - dy * 0.0045 * sn * iv, -0.6, 0.48);
       }
     };
 
@@ -1805,6 +2231,35 @@ export function FpsShooterGame() {
     }
   }, []);
 
+  // ── فاز F5 — تنظیم گزینه‌های نگاه (ماندگار؛ اسلایدر بدون صدا — هر تیک صدا ندارد) ──
+  const setSensPref = useCallback((v: number) => {
+    const c = clamp(v, SENS_MIN, SENS_MAX);
+    setSens(c);
+    savePref(SENS_KEY, String(Math.round(c * 100) / 100));
+  }, []);
+  const setFovPref = useCallback((v: number) => {
+    const c = clamp(Math.round(v), FOV_MIN, FOV_MAX);
+    setFov(c);
+    savePref(FOV_KEY, String(c));
+  }, []);
+  const setInvertPref = useCallback(
+    (v: boolean) => {
+      playSound("click");
+      buzz("light");
+      setInvertY(v);
+      savePref(INVERT_KEY, v ? "1" : "0");
+    },
+    [],
+  );
+
+  // ── فاز F6 — انتخاب نقشهٔ مأموریت (ماندگار؛ کلید افزودنی) ──
+  const setMapPref = useCallback((id: MapId) => {
+    playSound("click");
+    buzz("light");
+    setMapId(id);
+    savePref(MAP_KEY, id);
+  }, []);
+
   // کلیک چیپ‌های setup — بازخورد کیت (الگوی جای خالی)
   const chipFeedback = useCallback(() => {
     playSound("click");
@@ -1908,7 +2363,9 @@ export function FpsShooterGame() {
                 سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
                 شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
                 (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان قدم می‌زنی —
-                خشاب ۸تایی داری (R = ریلود) و روی گوشی جوی‌استیک حرکت و دکمهٔ شلیک داری — دنبال گزینهٔ درست بگرد و بعد شلیک کن!
+                جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی. خشاب ۸تایی داری (R = ریلود)، سه نقشهٔ مأموریت داری
+                (جنگل، کویر، شب)، حساسیت و زاویهٔ دید را در «گزینه‌ها» تنظیم می‌کنی و روی گوشی جوی‌استیک و دکمهٔ شلیک داری —
+                دنبال گزینهٔ درست بگرد و بعد شلیک کن!
               </p>
             </div>
 
@@ -1955,6 +2412,49 @@ export function FpsShooterGame() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* فاز F6 — نقشهٔ مأموریت: سه پالت کامل میدان */}
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+                <MapPinned size={14} className="text-emerald-500" />
+                نقشهٔ مأموریت
+              </p>
+              <div className="grid gap-2 sm:grid-cols-3">
+                {(Object.values(MAPS) as MapConfig[]).map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    aria-pressed={mapId === m.id}
+                    onClick={() => setMapPref(m.id)}
+                    className={cn(
+                      "min-h-11 rounded-2xl border p-2.5 text-right transition-all",
+                      mapId === m.id
+                        ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
+                        : "hover:border-primary/30 hover:bg-muted/50",
+                    )}
+                  >
+                    <span
+                      aria-hidden
+                      className={cn("mb-2 block h-12 w-full rounded-xl border border-black/10 shadow-inner", m.swatch)}
+                    />
+                    <span className="flex items-center gap-1.5 text-[12px] font-black">
+                      {m.id === "forest" ? (
+                        <Trees size={13} className="text-emerald-500" />
+                      ) : m.id === "desert" ? (
+                        <Sun size={13} className="text-amber-500" />
+                      ) : (
+                        <MoonStar size={13} className="text-teal-300" />
+                      )}
+                      {m.name}
+                    </span>
+                    <span className="mt-1 block text-[10px] leading-4 text-muted-foreground">{m.desc}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                انتخابت برای دفعات بعد ذخیره می‌شود — در «سکوت شب» هدف‌ها درخشان‌ترند تا در تاریکی خوانا بمانند.
+              </p>
             </div>
 
             <div>
@@ -2056,6 +2556,67 @@ export function FpsShooterGame() {
               </p>
             </div>
 
+            {/* فاز F5 — گزینه‌های نگاه: حساسیت، FOV و وارون‌سازی عمودی */}
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+                <SlidersHorizontal size={14} className="text-emerald-500" />
+                گزینه‌ها
+              </p>
+              <div className="space-y-4 rounded-2xl border p-4">
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <span id="fps-sens-label" className="text-[12px] font-bold">
+                      حساسیت نگاه
+                    </span>
+                    <Badge variant="secondary" className="text-[11px]">
+                      {faNum(Math.round(sens * 100))}٪
+                    </Badge>
+                  </div>
+                  <Slider
+                    aria-labelledby="fps-sens-label"
+                    min={SENS_MIN * 100}
+                    max={SENS_MAX * 100}
+                    step={5}
+                    value={[Math.round(sens * 100)]}
+                    onValueChange={(v) => setSensPref((v[0] ?? SENS_DEF * 100) / 100)}
+                  />
+                  <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+                    سرعت چرخش با موس و کشیدن لمسی — پیش‌فرض ۱۰۰٪.
+                  </p>
+                </div>
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <span id="fps-fov-label" className="text-[12px] font-bold">
+                      زاویهٔ دید (FOV)
+                    </span>
+                    <Badge variant="secondary" className="text-[11px]">
+                      {faNum(fov)}°
+                    </Badge>
+                  </div>
+                  <Slider
+                    aria-labelledby="fps-fov-label"
+                    min={FOV_MIN}
+                    max={FOV_MAX}
+                    step={2}
+                    value={[fov]}
+                    onValueChange={(v) => setFovPref(v[0] ?? FOV_DEF)}
+                  />
+                  <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+                    عدد بالاتر = دید بازتر در میدان — حین بازی هم زنده اعمال می‌شود.
+                  </p>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[12px] font-bold">وارون‌سازی عمودی</p>
+                    <p className="text-[10px] leading-4 text-muted-foreground">
+                      عادت بازیکنان کنسول — بالا کشیدن، نگاه به پایین.
+                    </p>
+                  </div>
+                  <Switch checked={invertY} onCheckedChange={setInvertPref} aria-label="وارون‌سازی عمودی نگاه" />
+                </div>
+              </div>
+            </div>
+
             {!poolOk && (
               <div className="rounded-xl border border-destructive/30 bg-destructive/8 p-3 text-[11px] leading-5 text-destructive">
                 {mode === "word-hunt"
@@ -2129,6 +2690,9 @@ export function FpsShooterGame() {
   const qTime = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
   const timePct = Math.max(0, Math.min(100, (timeLeft / qTime) * 100));
   const qualityLow = quality === "low";
+  // فاز F6 — پالت نقشهٔ فعال + فاز F7 — ترتیب بودجهٔ عناصر محیطی
+  const activeMap = MAPS[mapId];
+  const envTier: 0 | 1 | 2 = qualityLow ? 0 : weak ? 1 : 2;
   return (
     <>
       <GameShell
@@ -2208,12 +2772,14 @@ export function FpsShooterGame() {
           <div
             ref={wrapRef}
             role="group"
-            aria-label="میدان سه‌بعدی شوتر آموزشی"
+            aria-label={`میدان سه‌بعدی شوتر آموزشی — نقشهٔ ${activeMap.name}`}
             className={cn(
-              "relative touch-none overflow-hidden border bg-[#062e24] shadow-lg",
+              "relative touch-none overflow-hidden border shadow-lg",
               // فاز F3 — تمام‌صفحه: بدون گوشهٔ گرد و ارتفاع کامل صفحه
               isFs ? "h-screen w-screen max-h-none rounded-none" : "h-[60vh] max-h-[580px] min-h-[400px] rounded-2xl",
             )}
+            // فاز F6 — بدنهٔ قاب هم‌رنگ نقشه (قبل از بوت WebGL هم درست دیده می‌شود)
+            style={{ backgroundColor: activeMap.bg }}
           >
             <Canvas
               // فاز G2-e — فریز واقعی حلقهٔ R3F حین توقف: frameloop "never" معادل
@@ -2221,13 +2787,15 @@ export function FpsShooterGame() {
               frameloop={paused ? "never" : "always"}
               // فاز G2-e — کیفیت سبک: dpr پایین‌تر؛ عادی: رفتار فعلی (با ملاحظهٔ دستگاه ضعیف)
               dpr={qualityLow ? [0.7, 1] : weak ? [1, 1] : [1, 1.75]}
-              camera={{ fov: 72, near: 0.1, far: 60, position: [0, 1.7, 7] }}
+              camera={{ fov: FOV_DEF, near: 0.1, far: 60, position: [0, 1.7, 7] }}
               gl={{ antialias: qualityLow ? false : !weak, powerPreference: "high-performance" }}
               // سایه‌ها در هر دو کیفیت off — سبک همیشه و عادی همان رفتار فعلی صحنه (سقف draw-call)
               shadows={false}
             >
+              {/* فاز F5 — زاویهٔ دید زنده از گزینه‌ها */}
+              <FovTune fov={fov} />
               <Rig bridge={bridge} />
-              <Arena deco={qualityLow ? DECO_LOW : weak ? 8 : 14} />
+              <Arena map={activeMap} deco={qualityLow ? DECO_LOW : weak ? 8 : 14} tier={envTier} />
               {q?.targets.map((t) => (
                 <Target key={`q${q.seq}-${t.id}`} spec={t} registry={meshRegistry} bridge={bridge} />
               ))}
@@ -2398,7 +2966,7 @@ export function FpsShooterGame() {
             {paused && (
               <>
                 <div aria-hidden className="absolute inset-0 z-20 bg-background/70 backdrop-blur-sm" />
-                <div data-fps-hud className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3">
+                <div data-fps-hud className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3 overflow-y-auto p-4">
                   <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
                     <Pause size={26} />
                   </span>
@@ -2407,6 +2975,33 @@ export function FpsShooterGame() {
                     <Play size={16} />
                     ادامهٔ بازی
                   </Button>
+                  {/* فاز F5 — تنظیمات سریع حین توقف: بدون خروج از دور */}
+                  <div className="w-full max-w-xs rounded-2xl border bg-background/90 p-3.5 shadow-lg backdrop-blur">
+                    <p className="mb-2.5 flex items-center gap-1.5 text-[12px] font-black">
+                      <SlidersHorizontal size={13} className="text-emerald-500" />
+                      تنظیمات سریع نگاه
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="mb-1 flex items-center justify-between text-[11px]">
+                          <span className="font-bold">حساسیت نگاه</span>
+                          <span className="text-muted-foreground">{faNum(Math.round(sens * 100))}٪</span>
+                        </div>
+                        <Slider
+                          min={SENS_MIN * 100}
+                          max={SENS_MAX * 100}
+                          step={5}
+                          value={[Math.round(sens * 100)]}
+                          onValueChange={(v) => setSensPref((v[0] ?? SENS_DEF * 100) / 100)}
+                          aria-label="حساسیت نگاه"
+                        />
+                      </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-[11px] font-bold">وارون‌سازی عمودی</span>
+                        <Switch checked={invertY} onCheckedChange={setInvertPref} aria-label="وارون‌سازی عمودی نگاه" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </>
             )}
