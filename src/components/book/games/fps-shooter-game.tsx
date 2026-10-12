@@ -6,7 +6,7 @@
  * میدان low-poly رنگی با three.js/@react-three/fiber (چانک جدا و lazy — صفر تأثیر روی بقیهٔ اپ):
  * - «شکار واژه»: معنی فارسی روی HUD، هدف‌های متحرک واژهٔ انگلیسی دارند.
  * - «سد گرامری»: جملهٔ ناقص روی HUD، هدف‌ها همان ۴ گزینهٔ تستاند.
- * - شلیک به هدف درست = انفجار رنگین‌کمانی + امتیاز و کمبو + تلفظ؛ شلیک به هدف غلط یا پایان
+ * - شلیک به هدف درست = انفجار آتش‌و‌دودی + امتیاز و کمبو + تلفظ؛ شلیک به هدف غلط یا پایان
  *   زمان = یک ❤ کم و واژه به صف «مرور هوشمند» برمی‌گردد. شلیک به خالی (خطا رفت) جریمه ندارد
  *   ولی بین شلیک‌ها فاصلهٔ کوتاه هست تا اسپم بی‌فایده نباشد.
  * - کنترل دسکتاپ: کلیک اول Pointer Lock، حرکت موس نشانه‌گیری و کلیک بعدی شلیک از رتیکل.
@@ -84,6 +84,18 @@
  *   بونوس خارج از چرخهٔ سؤال (بدون قلب/بدون جلو رفتن) با صدای جذاب و انفجار؛ زنجیرهٔ
  *   مستقل مقاوم به توقف (جبران gap) تا با زنجیرهٔ «فریز برخورد» تداخل نکند.
  *
+ * فاز T1 — بازطراحی نظامی «ضدکرینج» (نسخهٔ ۲.۴ سند docs/fps-roadmap.md):
+ * - هدف‌ها از اوکتاهدرون‌های رنگی به «پهپادهای متخاصم» تبدیل شدند: بدنهٔ فولادی تیره،
+ *   کپسول‌های روتور دوطرف، بالهٔ رادار و حس‌گر قرمز رو به بازیکن — تشخیص گزینهٔ درست
+ *   فقط با خواندن واژه است (همان قانون آموزشی)، ولی حالا حس «دشمن واقعی» دارد.
+ * - انفجار رنگین‌کمانی → انفجار تاکتیکی آتش/دود: جرقهٔ سفیدِ داغ → نارنجی/قرمز → دودِ خاکستری سرد.
+ * - هدف طلایی → «هدف ویژهٔ HVT» (High-Value Target): پهپاد فرمانده با حلقهٔ هشدار قرمز
+ *   چرخان و حس‌گر پالس‌دار — همان +۲۰ بونوس، با چاشنی نظامی.
+ * - رتبهٔ نظامی پایان مأموریت (S تا D) در صفحهٔ نتیجه + زبان مأموریت‌محور در همهٔ پیام‌ها
+ *   (ایموجی‌های 🌟/⚡ حذف شد — حس حرفه‌ای شوتر).
+ * - نقشهٔ «دروازهٔ دو در» غنی‌تر شد: برج دیدبانی اسپان، طبقهٔ دوم جعبهٔ میانی،
+ *   کیسهٔ شنی A سایت و تونل B.
+ *
  * فاز F9 — تنوع سلاح + اسکوپ (نسخهٔ ۲.۲ سند docs/fps-roadmap.md):
  * - سه سلاح انتخابی در setup با ماندگاری (visionone:game-pref:fps-weapon):
  *   «کلت تک‌تیر» (خشاب ۸، شلیک تند، ریلود کوتاه)، «دژکوب سنگین» (خشاب ۵، لگد +۴۵٪
@@ -105,6 +117,7 @@ import {
   DoorOpen,
   Flame,
   Heart,
+  Medal,
   MapPinned,
   Minimize2,
   MonitorSmartphone,
@@ -566,6 +579,10 @@ const LAYOUTS: Record<MapId, MapLayout> = {
       { k: "post", x: -2.4, z: -8.8, w: 0.7, d: 0.7, h: 3.2 },
       { k: "post", x: 2.4, z: -8.8, w: 0.7, d: 0.7, h: 3.2 },
       { k: "arch", x: 0, z: -8.8, w: 5.5, d: 0.9, h: 0.7, y: 2.85, solid: false },
+      // فاز T1 — دروازهٔ ورود اسپان (طاق دوقلو رو به میدان)
+      { k: "post", x: -4.6, z: 7.6, w: 0.5, d: 0.5, h: 2.6 },
+      { k: "post", x: 4.6, z: 7.6, w: 0.5, d: 0.5, h: 2.6 },
+      { k: "arch", x: 0, z: 7.6, w: 9.7, d: 0.5, h: 0.45, y: 2.35, solid: false },
       { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
       { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
       { k: "crate", x: 4.7, z: 4.3, w: 1.2, d: 1.15, h: 1.05 },
@@ -646,6 +663,17 @@ const LAYOUTS: Record<MapId, MapLayout> = {
       { k: "sandbag", x: -5.4, z: 4.6, w: 2.2, d: 0.7, h: 0.85 },
       { k: "sandbag", x: 5.4, z: 4.6, w: 2.2, d: 0.7, h: 0.85 },
       { k: "sandbag", x: 0, z: 5.4, w: 1.9, d: 0.7, h: 0.8 },
+      // فاز T1 — برج دیدبانی اسپان (پایه‌های دوقلو + سکوی دکوری بالا)
+      { k: "post", x: -10.5, z: 8.4, w: 0.42, d: 0.42, h: 3.3 },
+      { k: "post", x: -9.1, z: 8.4, w: 0.42, d: 0.42, h: 3.3 },
+      { k: "wall", x: -9.8, z: 8.4, w: 1.9, d: 0.72, h: 0.45, y: 3.3, solid: false },
+      { k: "wall", x: -9.8, z: 7.6, w: 0.45, d: 1.4, h: 0.4, y: 3.3, solid: false },
+      // فاز T1 — پوشش میانی: جعبهٔ دوطبقه (طبقهٔ دوم دکوری — پرش روی طبقهٔ اول آزاد)
+      { k: "crate", x: 0, z: 1.9, w: 1.5, d: 1.3, h: 1.3 },
+      { k: "crate", x: 0, z: 1.9, w: 1.15, d: 1.0, h: 0.9, y: 1.3, solid: false },
+      // فاز T1 — کیسهٔ شنی سایت A و تونل B
+      { k: "sandbag", x: 7.3, z: -3.7, w: 2.0, d: 0.7, h: 0.85 },
+      { k: "sandbag", x: -7.7, z: -8.9, w: 1.8, d: 0.7, h: 0.8 },
     ],
   },
 };
@@ -843,8 +871,8 @@ interface BestRecord {
 const TUTORIAL_STEPS: TutorialStep[] = [
   {
     icon: <Crosshair size={24} />,
-    title: "هدف‌ها را شکار کن",
-    text: "سؤال روی HUD بالای میدان می‌ماند و هر هدف متحرک یک گزینهٔ انگلیسی روی بیلبورد دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست انفجار رنگین‌کمانی و امتیاز با کمبو دارد.",
+    title: "پهپادهای متخاصم را حذف کن",
+    text: "سؤال روی HUD بالای میدان می‌ماند و هر پهپاد متخاصم یک گزینهٔ انگلیسی روی پلاک دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست پهپاد را با انفجار آتش‌و‌دودی منفجر می‌کند و امتیاز با کمبو دارد.",
   },
   {
     icon: <MousePointerClick size={24} />,
@@ -858,13 +886,13 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     icon: <Zap size={24} />,
-    title: "هدف‌های هوشمند",
-    text: "هدف‌های غلط وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر نزدیک شو! هر ۵ پاسخ یک «موج» سخت‌تر با هدف‌های سریع‌تر شروع می‌شود. هر از گاهی هم «هدف طلایی» ظاهر می‌شود: ۳ ثانیه فرصت داری شکارش کنی تا ۲۰ امتیاز بونوس بگیری (شکارش قلب کم نمی‌کند).",
+    title: "هدف‌های هوشمند و HVT",
+    text: "پهپادهای غلط وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر نزدیک شو! هر ۵ پاسخ یک «موج» سخت‌تر با دشمنان سریع‌تر شروع می‌شود. هر از گاهی هم «هدف ویژهٔ HVT» با حلقهٔ هشدار قرمز ظاهر می‌شود: ۳ ثانیه فرصت داری حذفش کنی تا ۲۰ امتیاز بونوس بگیری (حذفش قلب کم نمی‌کند).",
   },
   {
     icon: <MonitorSmartphone size={24} />,
     title: "نقشه‌ها و گزینه‌ها",
-    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. چهار نقشهٔ مأموریت با چیدمان واقعی متفاوت داری: جنگل زمردی (درخت و جعبه)، کویر کهربا (دیوار ماسه‌سنگی و طاق)، سکوت شب (جنگل کریستال) و دروازهٔ دو در — الهام از دی‌داست۲ با درِ دوتایی میانه، گذرگاه بلند و تونل B. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند.",
+    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. چهار نقشهٔ مأموریت با چیدمان واقعی متفاوت داری: جنگل زمردی (درخت و جعبه)، کویر کهربا (دیوار ماسه‌سنگی و طاق)، سکوت شب (جنگل کریستال) و دروازهٔ دو در — الهام از دی‌داست۲ با درِ دوتایی میانه، گذرگاه بلند، تونل B و برج دیدبانی. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند. پایان هر مأموریت رتبهٔ نظامی می‌گیری (S تا D).",
   },
 ];
 
@@ -895,6 +923,15 @@ function fmtTime(s: number): string {
   return `${faNum(Math.floor(s / 60))}:${faNum(s % 60).padStart(2, "۰")}`;
 }
 
+/** فاز T1 — رتبهٔ نظامی پایان مأموریت (دقت + امتیاز) */
+function missionRank(acc: number, score: number): { grade: string; title: string } {
+  if (acc >= 95 && score >= 220) return { grade: "S", title: "تک‌تیرانداز افسانه‌ای" };
+  if (acc >= 90) return { grade: "A", title: "تک‌تیرانداز" };
+  if (acc >= 75) return { grade: "B", title: "سرباز زبده" };
+  if (acc >= 55) return { grade: "C", title: "مأمور میدانی" };
+  return { grade: "D", title: "تازه‌کار" };
+}
+
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
@@ -919,7 +956,7 @@ function rrPath(c: CanvasRenderingContext2D, x: number, y: number, w: number, h:
   c.closePath();
 }
 
-/** بافت بیلبورد گزینه — قرص سفید با متن انگلیسی تیره (رویه‌ای، بدون فونت خارجی) */
+/** بافت بیلبورد گزینه — قرص تاکتیکی سفید با متن تیره و حاشیهٔ قرمز نظامی (فاز T1) */
 function makeLabelTexture(text: string): THREE.CanvasTexture {
   const W = 640;
   const Hc = 160;
@@ -939,14 +976,14 @@ function makeLabelTexture(text: string): THREE.CanvasTexture {
     const ph = 102;
     const px = (W - pw) / 2;
     const py = (Hc - ph) / 2;
-    c.fillStyle = "rgba(255,255,255,0.95)";
-    rrPath(c, px, py, pw, ph, 34);
+    c.fillStyle = "rgba(248,250,252,0.96)";
+    rrPath(c, px, py, pw, ph, 26);
     c.fill();
     c.lineWidth = 6;
-    c.strokeStyle = "rgba(6,95,70,0.35)";
-    rrPath(c, px + 3, py + 3, pw - 6, ph - 6, 30);
+    c.strokeStyle = "rgba(220,38,38,0.6)";
+    rrPath(c, px + 3, py + 3, pw - 6, ph - 6, 22);
     c.stroke();
-    c.fillStyle = "#065f46";
+    c.fillStyle = "#1f2937";
     c.textAlign = "center";
     c.textBaseline = "middle";
     c.fillText(text, W / 2, Hc / 2 + 4, W - 90);
@@ -963,7 +1000,8 @@ function layoutTargets(
   wave = 1,
 ): TargetSpec[] {
   const lanes = shuffle([0, 1, 2, 3]);
-  const colors = [0x10b981, 0xf59e0b, 0x14b8a6, 0x34d399];
+  // فاز T1 — همهٔ هدف‌ها «پهپاد متخاصم» با بدنهٔ فولادی تیره‌اند؛ تشخیص گزینهٔ درست فقط با خواندن واژه
+  const colors = [0x3d4654, 0x38424e, 0x424c5a, 0x39424e];
   // فاز F8 — موج‌بندی: حرکت سریع‌تر و چیدمان عمیق‌تر در موج‌های بالاتر
   const sp = 1 + (wave - 1) * 0.16;
   const depthExtra = Math.min(wave - 1, 4) * 0.55;
@@ -1728,7 +1766,7 @@ function DecoShape({ spec, glow }: { spec: DecoSpec; glow: number }) {
   );
 }
 
-/** یک هدف متحرک: اوکتاهدر درخشان + بیلبورد برچسب انگلیسی */
+/** یک هدف متحرک: پهپاد متخاصم (فاز T1) — بدنهٔ فولادی + حس‌گر قرمز + بیلبورد برچسب انگلیسی */
 function Target({
   spec,
   registry,
@@ -1794,7 +1832,7 @@ function Target({
     );
     m.rotation.y += 0.008 * spec.spin * 60 * 0.016;
     m.rotation.x = Math.sin(t * 0.4 + t0) * 0.25;
-    // فلاش سبز/قرمز پس از پاسخ + تنفس ملایم
+    // فلاش سبز/قرمز پس از پاسخ + پالس حس‌گر متخاصم (قرمز کم‌نور — فاز T1)
     const mat = m.material as THREE.MeshStandardMaterial;
     const now = t * 1000;
     const f = b.flashes.find((fl) => fl.id === spec.id && now < fl.until);
@@ -1802,23 +1840,52 @@ function Target({
       mat.emissive.setHex(f.kind === "ok" ? 0x10b981 : 0xef4444);
       mat.emissiveIntensity = 1.15;
     } else {
-      mat.emissive.setHex(spec.colorHex);
-      mat.emissiveIntensity = 0.24 + Math.sin(now / 420 + t0) * 0.09;
+      mat.emissive.setHex(0xff3b30);
+      mat.emissiveIntensity = 0.09 + Math.sin(now / 480 + t0) * 0.05;
     }
   });
 
   return (
     <group ref={groupRef} position={[spec.lane, spec.baseY, spec.baseZ]}>
+      {/* بدنهٔ اصلی — همان مش ثبت‌شده برای رِی‌کست شلیک */}
       <mesh ref={meshRef}>
         <octahedronGeometry args={[TARGET_R, 0]} />
         <meshStandardMaterial
           color={spec.colorHex}
           flatShading
-          roughness={0.35}
-          metalness={0.15}
-          emissive={spec.colorHex}
-          emissiveIntensity={0.25}
+          roughness={0.42}
+          metalness={0.58}
+          emissive={0xff3b30}
+          emissiveIntensity={0.1}
         />
+      </mesh>
+      {/* کپسول‌های روتور دوطرف — حس پهپاد رزمی */}
+      <mesh position={[-TARGET_R * 1.18, 0.06, 0]} rotation-z={Math.PI / 2.6}>
+        <capsuleGeometry args={[0.13, 0.52, 3, 8]} />
+        <meshStandardMaterial color="#23282f" roughness={0.55} metalness={0.6} />
+      </mesh>
+      <mesh position={[TARGET_R * 1.18, 0.06, 0]} rotation-z={-Math.PI / 2.6}>
+        <capsuleGeometry args={[0.13, 0.52, 3, 8]} />
+        <meshStandardMaterial color="#23282f" roughness={0.55} metalness={0.6} />
+      </mesh>
+      {/* دیسک روتور روی هر کپسول */}
+      <mesh position={[-TARGET_R * 1.32, 0.22, 0]} rotation-x={Math.PI / 2}>
+        <cylinderGeometry args={[0.4, 0.4, 0.03, 12]} />
+        <meshStandardMaterial color="#14181d" roughness={0.7} metalness={0.4} transparent opacity={0.85} />
+      </mesh>
+      <mesh position={[TARGET_R * 1.32, 0.22, 0]} rotation-x={Math.PI / 2}>
+        <cylinderGeometry args={[0.4, 0.4, 0.03, 12]} />
+        <meshStandardMaterial color="#14181d" roughness={0.7} metalness={0.4} transparent opacity={0.85} />
+      </mesh>
+      {/* بالهٔ رادار بالا */}
+      <mesh position={[0, TARGET_R * 0.92, 0]}>
+        <boxGeometry args={[0.1, 0.4, 0.3]} />
+        <meshStandardMaterial color="#1d2229" roughness={0.6} metalness={0.5} />
+      </mesh>
+      {/* حس‌گر قرمز رو به بازیکن — چشم دشمن */}
+      <mesh position={[0, 0.02, TARGET_R * 0.78]}>
+        <sphereGeometry args={[0.1, 10, 10]} />
+        <meshStandardMaterial color="#7f1d1d" emissive={0xff2d2d} emissiveIntensity={1.7} roughness={0.3} />
       </mesh>
       <sprite position={[0, 1.55, 0]} scale={[2.9, 0.73, 1]}>
         <spriteMaterial map={tex} transparent depthWrite={false} />
@@ -1827,7 +1894,7 @@ function Target({
   );
 }
 
-/** بافت برچسب طلایی — قرص کهربایی با متن بونوس (فاز F8) */
+/** بافت برچسب HVT — قرص تاکتیکی تیره با حاشیهٔ قرمز و متن بونوس (فاز T1 — جایگزین طلایی) */
 function makeGoldLabelTexture(text: string): THREE.CanvasTexture {
   const W = 512;
   const Hc = 150;
@@ -1847,14 +1914,14 @@ function makeGoldLabelTexture(text: string): THREE.CanvasTexture {
     const ph = 96;
     const px = (W - pw) / 2;
     const py = (Hc - ph) / 2;
-    c.fillStyle = "#fbbf24";
-    rrPath(c, px, py, pw, ph, 32);
+    c.fillStyle = "rgba(24,24,28,0.94)";
+    rrPath(c, px, py, pw, ph, 26);
     c.fill();
     c.lineWidth = 6;
-    c.strokeStyle = "rgba(120,53,15,0.55)";
-    rrPath(c, px + 3, py + 3, pw - 6, ph - 6, 28);
+    c.strokeStyle = "#ef4444";
+    rrPath(c, px + 3, py + 3, pw - 6, ph - 6, 22);
     c.stroke();
-    c.fillStyle = "#78350f";
+    c.fillStyle = "#ffffff";
     c.textAlign = "center";
     c.textBaseline = "middle";
     c.fillText(text, W / 2, Hc / 2 + 4, W - 100);
@@ -1871,7 +1938,7 @@ interface GoldenSpec {
   z: number;
 }
 
-/** فاز F8 — هدف طلایی: پاپ‌آپ ۳ثانیه‌ای بونوس — شکارش +۲۰ امتیاز خارج از چرخهٔ سؤال */
+/** فاز F8/T1 — هدف ویژهٔ HVT: پاپ‌آپ ۳ثانیه‌ای بونوس — پهپاد فرمانده با حلقهٔ هشدار قرمز چرخان */
 function GoldenTarget({
   spec,
   untilRef,
@@ -1885,6 +1952,7 @@ function GoldenTarget({
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
   const tex = useMemo(() => makeGoldLabelTexture(`+${faNum(GOLDEN_BONUS)}`), []);
   useEffect(() => () => tex.dispose(), [tex]);
 
@@ -1923,6 +1991,8 @@ function GoldenTarget({
     m.rotation.x = Math.sin(t * 1.8) * 0.2;
     const mat = m.material as THREE.MeshStandardMaterial;
     mat.emissiveIntensity = 0.85 + Math.sin(now / 130) * 0.3;
+    // حلقهٔ هشدار HVT — چرخش برق‌آسا حول محور عمودی
+    if (ringRef.current) ringRef.current.rotation.z += dt * 2.6;
   });
 
   return (
@@ -1930,18 +2000,28 @@ function GoldenTarget({
       <mesh ref={meshRef}>
         <octahedronGeometry args={[TARGET_R * 1.1, 0]} />
         <meshStandardMaterial
-          color="#fbbf24"
+          color="#3a3f47"
           flatShading
-          roughness={0.25}
-          metalness={0.45}
-          emissive="#f59e0b"
+          roughness={0.4}
+          metalness={0.62}
+          emissive="#ff2d2d"
           emissiveIntensity={0.9}
         />
       </mesh>
-      {/* هالهٔ طلایی */}
+      {/* هالهٔ قرمز هشدار */}
       <mesh scale={1.5}>
         <octahedronGeometry args={[TARGET_R * 1.1, 0]} />
-        <meshBasicMaterial color="#fcd34d" transparent opacity={0.18} toneMapped={false} depthWrite={false} />
+        <meshBasicMaterial color="#ff4444" transparent opacity={0.16} toneMapped={false} depthWrite={false} />
+      </mesh>
+      {/* حلقهٔ هشدار HVT — خط قرمز چرخان دور پهپاد فرمانده */}
+      <mesh ref={ringRef} rotation-x={Math.PI / 2.15}>
+        <torusGeometry args={[TARGET_R * 1.55, 0.045, 8, 26]} />
+        <meshBasicMaterial color="#ef4444" toneMapped={false} transparent opacity={0.85} />
+      </mesh>
+      {/* حس‌گر قرمز رو به بازیکن */}
+      <mesh position={[0, 0.02, TARGET_R * 0.82]}>
+        <sphereGeometry args={[0.11, 10, 10]} />
+        <meshStandardMaterial color="#7f1d1d" emissive={0xff2d2d} emissiveIntensity={2} roughness={0.3} />
       </mesh>
       <sprite position={[0, 1.5, 0]} scale={[2.1, 0.62, 1]}>
         <spriteMaterial map={tex} transparent depthWrite={false} />
@@ -1950,7 +2030,7 @@ function GoldenTarget({
   );
 }
 
-/** استخر انفجار رنگین‌کمانی — InstancedMesh با رنگ هر ذره */
+/** استخر انفجار تاکتیکی آتش/دود (فاز T1) — InstancedMesh با رنگ هر ذره */
 function Burst({ apiRef, count }: { apiRef: React.RefObject<BurstApi | null>; count: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const parts = useMemo(() => {
@@ -1972,11 +2052,13 @@ function Burst({ apiRef, count }: { apiRef: React.RefObject<BurstApi | null>; co
   useEffect(() => {
     const mesh = meshRef.current;
     if (!mesh) return;
-    // رنگ هر ذره — پالت رنگین‌کمان
+    // فاز T1 — پالت آتش/دود: جرقهٔ سفیدِ داغ → نارنجی/قرمز → دود خاکستری سرد
     const c = new THREE.Color();
-    const rainbow = [0xf43f5e, 0xf97316, 0xfacc15, 0x22c55e, 0x14b8a6, 0x38bdf8, 0xa78bfa, 0xf472b6];
-    for (let i = 0; i < count; i++) {
-      c.setHex(rainbow[i % rainbow.length]);
+    const fire = [0xffe9b0, 0xffc94d, 0xff8a1e, 0xf4511e, 0xc2410c, 0x6b4423, 0x3f3f46, 0x27272a];
+    const n = count;
+    for (let i = 0; i < n; i++) {
+      const pick = i < n * 0.28 ? fire[i % 3] : i < n * 0.62 ? fire[2 + (i % 3)] : fire[5 + (i % 3)];
+      c.setHex(pick);
       mesh.setColorAt(i, c);
     }
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
@@ -2476,7 +2558,7 @@ export function FpsShooterGame() {
     setGoldenActive(true);
     setGoldenLeft(3);
     playSound("golden");
-    setLiveMsg(`هدف طلایی ظاهر شد! تا ۳ ثانیه شکارش کن — +${faNum(GOLDEN_BONUS)} امتیاز 🌟`);
+    setLiveMsg(`هدف ویژهٔ HVT ظاهر شد! تا ۳ ثانیه حذفش کن — +${faNum(GOLDEN_BONUS)} امتیاز`);
     goldenLater(() => despawnGoldenRef.current(), GOLDEN_WINDOW_MS);
   }, [goldenLater]);
 
@@ -2623,7 +2705,7 @@ export function FpsShooterGame() {
       setWave(w);
       bridge.current.wave = w;
       playSound("wave");
-      setLiveMsg(`موج ${faNum(w)} شروع شد — هدف‌ها سریع‌تر شدند! ⚡`);
+      setLiveMsg(`موج ${faNum(w)} — پهپادهای متخاصم سریع‌تر شدند`);
     }
     // فاز F8 — فرار هدف‌های غلط فقط در حالت شلیک (تپ ساده = دسترس‌پذیری بدون فرار)
     bridge.current.dodge = !tapRef.current;
@@ -2767,7 +2849,7 @@ export function FpsShooterGame() {
         setScore(scoreRef.current);
         playSound("golden");
         buzz("success");
-        setLiveMsg(`هدف طلایی شکار شد! +${faNum(GOLDEN_BONUS)} امتیاز 🌟`);
+        setLiveMsg(`هدف ویژهٔ HVT حذف شد! +${faNum(GOLDEN_BONUS)} امتیاز`);
         goldenLater(
           () => spawnGoldenRef.current(),
           GOLDEN_EVERY_MIN + Math.floor(Math.random() * (GOLDEN_EVERY_MAX - GOLDEN_EVERY_MIN)),
@@ -3390,12 +3472,12 @@ export function FpsShooterGame() {
             <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
               <Sparkles size={15} className="mt-0.5 shrink-0 text-emerald-500" />
               <p>
-                سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
-                شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
+                سؤال بالای صفحه می‌آید و روی هر پهپاد متخاصم یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
+                شلیک درست = انفجار آتش‌و‌دودی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
                 (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان می‌دوی —
                 حرکت نرم با شتاب واقعی، Shift دویدن، Space پرش و C خم‌شدن؛ دیوارها، درها و جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی.
                 سه سلاح داری — کلت، دژکوب سنگین و پمپ زون‌کن — با R ریلود می‌کنی و با کلیک راست اسکوپ می‌گیری،
-                چهار نقشهٔ مأموریت با چیدمان متفاوت داری (جنگل، کویر، شب و دروازهٔ دو در به سبک دی‌داست۲)،
+                چهار نقشهٔ مأموریت با چیدمان متفاوت داری (جنگل، کویر، شب و دروازهٔ دو در به سبک دی‌داست۲ با برج دیدبانی)،
                 حساسیت و زاویهٔ دید را در «گزینه‌ها» تنظیم می‌کنی و روی گوشی جوی‌استیک، شلیک، پرش و اسکوپ داری —
                 دنبال گزینهٔ درست بگرد و بعد شلیک کن!
               </p>
@@ -3704,9 +3786,10 @@ export function FpsShooterGame() {
             <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
               <Zap size={15} className="mt-0.5 shrink-0 text-amber-500" />
               <p>
-                میدان هوشمند شد: <b>هدف‌های غلط</b> وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر
-                نزدیک شو! هر <b>۵ پاسخ</b> یک موج سخت‌تر با هدف‌های سریع‌تر شروع می‌شود (تا موج ۶) و هر از گاهی
-                <b>هدف طلایی</b> ۳ثانیه‌ای ظاهر می‌شود: شکارش ۲۰ امتیاز بونوس دارد و قلب نمی‌سوزاند.
+                میدان هوشمند شد: <b>پهپادهای غلط</b> وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر
+                نزدیک شو! هر <b>۵ پاسخ</b> یک موج سخت‌تر با دشمنان سریع‌تر شروع می‌شود (تا موج ۶) و هر از گاهی
+                <b>هدف ویژهٔ HVT</b> با حلقهٔ هشدار قرمز ۳ثانیه‌ای ظاهر می‌شود: حذفش ۲۰ امتیاز بونوس دارد و قلب نمی‌سوزاند.
+                پایان مأموریت هم <b>رتبهٔ نظامی</b> می‌گیری (S تا D بر اساس دقت و امتیاز).
               </p>
             </div>
 
@@ -3740,14 +3823,21 @@ export function FpsShooterGame() {
     const shots = correctCount + wrongCount;
     const acc = shots > 0 ? Math.round((correctCount / shots) * 100) : 0;
     const stars = acc >= 90 ? 3 : acc >= 70 ? 2 : 1;
+    // فاز T1 — رتبهٔ نظامی پایان مأموریت
+    const rank = missionRank(acc, finalScore);
     return (
       <ResultScreen
-        title="مأموریت تمام شد!"
+        title="گزارش مأموریت"
         stars={stars}
         isRecord={isRecord}
         errorCount={wrongList.length}
         reviewItems={wrongList.map((w) => ({ front: w.label, back: w.sub ?? "" }))}
         stats={[
+          {
+            label: "رتبهٔ مأموریت",
+            value: `${rank.grade} — ${rank.title}`,
+            icon: <Medal size={16} className="text-amber-500" />,
+          },
           {
             label: "امتیاز",
             value: faNum(finalScore),
@@ -4079,11 +4169,11 @@ export function FpsShooterGame() {
                       style={{ width: `${timePct}%` }}
                     />
                   </div>
-                  {/* فاز F8 — شمارندهٔ فرصت هدف طلایی */}
+                  {/* فاز T1 — شمارندهٔ فرصت هدف ویژهٔ HVT (پالت قرمز تاکتیکی) */}
                   {goldenActive && (
-                    <div className="mt-2 flex items-center justify-center gap-1.5 rounded-full border border-amber-400/50 bg-amber-500/15 px-3 py-1 text-[11px] font-black text-amber-600 dark:text-amber-400">
-                      <Sparkles size={12} className="text-amber-500" />
-                      هدف طلایی! +{faNum(GOLDEN_BONUS)} — {faNum(goldenLeft)} ثانیه
+                    <div className="mt-2 flex items-center justify-center gap-1.5 rounded-full border border-red-500/50 bg-red-500/15 px-3 py-1 text-[11px] font-black text-red-600 dark:text-red-400">
+                      <Crosshair size={12} className="text-red-500" />
+                      هدف ویژهٔ HVT! +{faNum(GOLDEN_BONUS)} — {faNum(goldenLeft)} ثانیه
                     </div>
                   )}
                 </div>
