@@ -2962,3 +2962,28 @@ Stage Summary:
 - 🏁 فاز F9 کامل شد: شوتر حالا سه سلاح با شخصیت متفاوت دارد (کلت دقیق/سنگین لگد‌دار/پمپ سه‌پرتویی)، با Shift اسکوپ می‌گیرد و هر سلاح مدل سه‌بعدی و صدای خودش را دارد
 - نکتهٔ فنی تکرارشدنی: بنر boxShadow درلاین Chrome بازچینی می‌شود («rgba(…) 0px 0px 130px inset») — سلکتور substring در QA باید به box-shadow عمومی باشد
 - گام بعدی طبق سند: F10 — عمق یادگیری (حالت شنیداری / جملهٔ زنجیره‌ای / گزارش AI دستیار)
+
+---
+Task ID: FM
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر — «نوع حرکت شوتر خوب نیست و لگ داره» + «مپ‌های متفاوت و یکی هم الهام‌گرفته از مپ دو در کانتراسترایک (دی‌داست۲) می‌خوام» — فاز FM سند fps-roadmap (نسخهٔ ۲.۳)
+
+Work Log:
+- قدم صفر: خواندن worklog (وضعیت F3…F9 کامل) + سند docs/fps-roadmap.md + مطالعهٔ کامل fps-shooter-game.tsx (۱+۳٫۸هزار خط: stepPlayer/applyRig/FieldProps/MAPS/ورودی‌ها)
+- ① موتور حرکت نرم: rewrite stepPlayer — شتاب/ترمز نمایی مستقل از فریم‌ریت `1−exp(−dt·k)` (ACCEL=۱۳ / STOP_ACCEL=۱۷)، سرعت پایه ۲٫۳→۴٫۳ m/s، دویدن Shift ×۱٫۵، خم‌شدن C ×۰٫۵۵ (ارتفاع چشم −۰٫۶۲ در applyRig)، پرش Space (JUMP_V=۴٫۷/GRAVITY=۱۲٫۵) با wantJump صف‌شده، باب سر از سرعت واقعی (فرکانس ۵٫۴+spd×۱٫۵۵ و دامنه ۰٫۰۱۱+spd×۰٫۰۰۶۲)، کیک FOV دویدن +۴٫۵° (نوشتهٔ stepPlayer، اعمال در applyScope/FovTune با base=fov+speedKick)، ساب‌استپ ×۲ در dt>۲۸ms
+- ② برخورد جدید resolveWorld: دایرهٔ بازیکن (PLAYER_R=۰٫۳۴) در برابر AABB سازه‌ها با دو گذر؛ مانع کوتاه (h≤۱٫۱) حین اوج پرش عبوری؛ جایگزین resolveCover دایره‌ای قدیمی — COVER_CRATES/MOVE_X_LIM/MOVE_Z_MIN/MOVE_Z_MAX/ENV_CRATES حذف
+- ③ سیستم چیدمان LAYOUTS: StructureKind (wall/crate/door/doorOpen/post/arch/tree/crystal/sandbag) + MapLayout با bounds هر نقشه؛ bridge.layout سینک در effect mapId (تعویض حین بازی = ریست امن به اسپان pos.z=۰٫۶)
+- ④ نقشهٔ چهارم «دروازهٔ دو در» (id dust، الهام de_dust2): در دوتایی میانه (لنگه بسته + لنگه باز rot=۱٫۰۵ + طاق)، گذرگاه بلند دوطرفه (دیوار segmented با درز دید در z∈(−۶٫۱،−۲٫۸) + طاق)، تونل B با درهای دوتایی چوبی، سایت A جعبه‌ای، ۳ کیسهٔ شنی اسپان؛ پالت شنی روشن (#d8c294 آسمان، #c9a76b دیوار Adobe، خورشید #fff3d6، مه ۱۳–۴۶) + swatch کارت amber
+- ⑤ چیدمان متمایز سه نقشهٔ دیگر: جنگل (+۴ تنه درخت جامد + ۲ دیوار چوبی)، کویر (+۶ دیوار ماسه‌سنگی + طاق ستون‌دار)، شب (+۸ کریستال emissive scale نابرابر + دیوار ابسیدین) — قاعده: گذر میانی |x|<۳ همیشه باز (خوانایی آموزشی)
+- ⑥ رندر FieldProps: سازه‌ها از LAYOUTS با پالت per-map (wallColor/doorColor/accentColor/crateColor به MapConfig اضافه شد) + نوار تأکیدی طلایی روی درها + درخت (تنه استوانه‌ای + مخروط) + کریستال اکتاهدر emissive؛ سنگ/بوته طبق tier حفظ شد
+- ⑦ ورودی: Space=پرش (+preventDefault اسکرول)، Shift=دویدن، KeyC→«c» در KEY_MOVE، اسکوپ → کلیک راست hold (button===2 در pointerdown/up) + onContextMenu prevent روی wrap؛ blur همه را پاک می‌کند؛ متن‌های آموزش/تولتیپ/آموزش ۵گامی بروز (اسکوپ=کلیک راست، دویدن/پرش/خم‌شدن، چهار نقشه)
+- ⑧ موبایل: دکمهٔ پرش ۴۸px (ArrowBigUp) کنار دکمهٔ اسکوپ در bottom-28؛ dpr عادی [۱,۱٫۷۵]→[۱,۱٫۵] (ضدلگ نمایشگر متراکم)
+- رفع ۱ خطای lint: react-hooks/immutability جهش speedKick داخل useFrame Rig را رد کرد → به stepPlayer (تابع ماژول‌سطح — الگوی ثابت فایل) منتقل شد
+- رفع ۱ خرابی dev server: پورت ۳۰۰۰ مرده بود (فقط ۳۰۰۳ بالا) → bun run dev ری‌استارت؛ Ready + HTTP 200
+- QA مرورگری (agent-browser، session ف10qa): ۴ کارت نقشه در setup ✓ انتخاب «دروازهٔ دو در» → aria-pressed + localStorage=dust ✓ شروع مأموریت → صحنهٔ شنی با در دوتایی میانه/طاق‌ها/جعبه‌ها/ویومدل ✓ (اسکرین‌شات f10-dust-start.png) حرکت W با dispatch مستقیم → نزدیک‌شدن واضح به درها (f10-dust-walking.png) ✓ پرش Space + دویدن Shift+W → عبور از گپ میانهٔ درها به میدان داخلی با خورشید و کوه‌های شنی (f10-sprint.png) ✓ چرخهٔ کامل تا ResultScreen (پایان با تایم‌اوت قلب‌ها در QA آهسته) + خروج امن از منوی توقف ✓ موبایل ۳۹۰ با پچ matchMedia coarse: جوی‌استیک + شلیک + اسکوپ + دکمهٔ پرش هر ۴ حاضر، docW=۳۹۰ بدون سرریز (f10-mobile-playing.png) ✓ خطای کنسول صفر (فقط هشدارهای کهن‌الگوی THREE.Clock/DialogContent) ✓ dev.log بدون error ✓ lint 0 / tsc(src) 0 ✓
+- سند docs/fps-roadmap.md → فاز FM درج شد (نسخهٔ ۲.۳) + آیتم آیندهٔ F6 بروز
+
+Stage Summary:
+- 🏁 فاز FM کامل شد: حرکت شوتر حالا نرم و FPS-وارد است (شتاب واقعی + دویدن + پرش + خم‌شدن + کیک FOV) و ۴ نقشه هرکدام چیدمان واقعی خودشان را دارند — نقشهٔ «دروازهٔ دو در» با درِ دوتایی میانه، گذرگاه بلند و تونل B به سبک دی‌داست۲
+- نکتهٔ تکرارشدنی: در این کیت هر جهش bridge باید داخل تابع ماژول‌سطح باشد (useFrame کامپوننتی با react-hooks/immutability رد می‌شود)؛ QA لمسی = پچ matchMedia coarse بعد از load و قبل از مونت بازی
+- گام بعدی طبق سند: F10 — عمق یادگیری (حالت شنیداری / جملهٔ زنجیره‌ای / گزارش AI دستیار)

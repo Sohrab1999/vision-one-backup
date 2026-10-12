@@ -99,8 +99,10 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {
+  ArrowBigUp,
   Bomb,
   Crosshair,
+  DoorOpen,
   Flame,
   Heart,
   MapPinned,
@@ -283,16 +285,28 @@ const WEAPONS: Record<WeaponId, WeaponConfig> = {
 /** کلید افزودنی ماندگاری سلاح انتخابی — پیش‌فرض کلت */
 const WEAPON_KEY = "visionone:game-pref:fps-weapon";
 
-// ── فاز F3 — حرکت اول‌شخص + تمام‌صفحه ──
-/** سرعت گام بازیکن (متر بر ثانیه) */
-const MOVE_SPEED = 2.3;
-/** محدودهٔ امن حرکت جانبی (چپ/راست) */
-const MOVE_X_LIM = 5.2;
-/** محدودهٔ حرکت عمقی — آفست نسبت به پایهٔ دوربین */
-const MOVE_Z_MIN = -3.4;
-const MOVE_Z_MAX = 2.0;
-/** نگاشت e.code → جهت (مستقل از layout فارسی/انگلیسی) */
-const KEY_MOVE: Record<string, "w" | "a" | "s" | "d"> = {
+// ── فاز F3 — حرکت اول‌شخص + تمام‌صفحه — فاز F10: موتور حرکت نرم FPS ──
+/** سرعت پایهٔ گام بازیکن (متر بر ثانیه) — قبلاً ۲.۳ و کسل‌کننده بود */
+const MOVE_SPEED = 4.3;
+/** فاز F10 — ضریب دویدن (نگه‌داشتن Shift) */
+const SPRINT_MULT = 1.5;
+/** فاز F10 — ضریب خم‌شدن (نگه‌داشتن C) — حرکت آهستهٔ کم‌صدا */
+const CROUCH_MULT = 0.55;
+/** فاز F10 — کاهش ارتفاع چشم حین خم‌شدن (متر) */
+const CROUCH_EYE = 0.62;
+/** فاز F10 — نرمی شروع حرکت (ضریب نمایی — هرچه بیشتر، تندتر رسیدن به سرعت هدف) */
+const ACCEL = 13;
+/** فاز F10 — نرمی توقف/ترمز (بیشتر از ACCEL تا توقف چسبنده نباشد) */
+const STOP_ACCEL = 17;
+/** فاز F10 — سرعت اولیهٔ پرش و گرانش (متر بر ثانیه) */
+const JUMP_V = 4.7;
+const GRAVITY = 12.5;
+/** فاز F10 — کیک FOV حین دویدن — حس سرعت واقعی */
+const SPRINT_FOV_KICK = 4.5;
+/** فاز F10 — لبهٔ تشخیص دویدن بر اساس سرعت واقعی (نسبت به سرعت پایه) */
+const SPRINT_SPEED_RATIO = 1.12;
+/** نگاشت e.code → جهت (مستقل از layout فارسی/انگلیسی) — فاز F10: C = خم‌شدن */
+const KEY_MOVE: Record<string, "w" | "a" | "s" | "d" | "c"> = {
   KeyW: "w",
   ArrowUp: "w",
   KeyS: "s",
@@ -301,6 +315,7 @@ const KEY_MOVE: Record<string, "w" | "a" | "s" | "d"> = {
   ArrowLeft: "a",
   KeyD: "d",
   ArrowRight: "d",
+  KeyC: "c",
 };
 const MIN_POOL_WORD = 4;
 const MIN_POOL_QUIZ = 3;
@@ -323,7 +338,7 @@ const BURST_LOW = 12;
 
 // ── فاز F6 — نقشه‌های مأموریت (پالت کامل هر میدان) ──
 
-type MapId = "forest" | "desert" | "night";
+type MapId = "forest" | "desert" | "night" | "dust";
 
 interface MapConfig {
   id: MapId;
@@ -350,6 +365,11 @@ interface MapConfig {
   stars: boolean;
   clouds: number;
   cloudColor: string;
+  /** فاز F10 — پالت سازه‌های چیدمان: دیوار، درِ چوبی، رنگ تأکیدی و جعبه */
+  wallColor: string;
+  doorColor: string;
+  accentColor: string;
+  crateColor: string;
   /** نمونه‌رنگ گرادیانی کارت نقشه در setup */
   swatch: string;
 }
@@ -358,7 +378,7 @@ const MAPS: Record<MapId, MapConfig> = {
   forest: {
     id: "forest",
     name: "جنگل زمردی",
-    desc: "میدان کلاسیک سبز با کوه‌های دوردست — خانهٔ همیشگی تک‌تیراندازها.",
+    desc: "میدان کلاسیک سبز با تنهٔ درختان، دیوارهای چوبی و کوه‌های دوردست.",
     bg: "#062e24",
     ground: "#0a4335",
     ringMain: "#f59e0b",
@@ -377,12 +397,16 @@ const MAPS: Record<MapId, MapConfig> = {
     stars: false,
     clouds: 3,
     cloudColor: "#e7fff4",
+    wallColor: "#3d2c17",
+    doorColor: "#6b4423",
+    accentColor: "#34d399",
+    crateColor: "#92400e",
     swatch: "bg-gradient-to-b from-emerald-300 via-emerald-600 to-emerald-950",
   },
   desert: {
     id: "desert",
     name: "کویر کهربا",
-    desc: "غروب شنی با خورشید بزرگ و صخره‌های سرخ — نشانه‌گیری گرم می‌شود.",
+    desc: "غروب شنی با دیوارهای ماسه‌سنگی، طاق سنگی و خورشید بزرگ.",
     bg: "#431407",
     ground: "#92400e",
     ringMain: "#fbbf24",
@@ -401,12 +425,16 @@ const MAPS: Record<MapId, MapConfig> = {
     stars: false,
     clouds: 2,
     cloudColor: "#ffd9a8",
+    wallColor: "#c08a4e",
+    doorColor: "#7a4a21",
+    accentColor: "#fbbf24",
+    crateColor: "#a16207",
     swatch: "bg-gradient-to-b from-amber-300 via-orange-600 to-orange-950",
   },
   night: {
     id: "night",
     name: "سکوت شب",
-    desc: "آسمان پرستاره، ماه کم‌سو و کریستال‌های درخشان — تمرکز دوچندان.",
+    desc: "آسمان پرستاره با ستون‌های کریستال درخشان — تمرکز دوچندان.",
     bg: "#020617",
     ground: "#0f172a",
     ringMain: "#22d3ee",
@@ -425,7 +453,200 @@ const MAPS: Record<MapId, MapConfig> = {
     stars: true,
     clouds: 0,
     cloudColor: "#e2e8f0",
+    wallColor: "#253550",
+    doorColor: "#0f766e",
+    accentColor: "#22d3ee",
+    crateColor: "#334155",
     swatch: "bg-gradient-to-b from-slate-400 via-slate-700 to-slate-950",
+  },
+  dust: {
+    id: "dust",
+    name: "دروازهٔ دو در",
+    desc: "الهام از دی‌داست۲: درِ دوتایی میانه، گذرگاه بلند، تونل B و درهای چوبی — نبرد کلاسیک کویری.",
+    bg: "#d8c294",
+    ground: "#c2a36b",
+    ringMain: "#f59e0b",
+    ringOther: "#a16207",
+    mountain: "#a98a55",
+    decoColors: [0xb45309, 0x92400e, 0xd97706, 0x78350f],
+    decoGlow: 0.1,
+    hemiSky: "#fdf3d9",
+    hemiGround: "#8a6d42",
+    sunColor: "#fff1cf",
+    sunIntensity: 1.35,
+    ambIntensity: 0.95,
+    fogNear: 13,
+    fogFar: 46,
+    orb: { pos: [-6, 7, -34], r: 2.6, color: "#fff3d6" },
+    stars: false,
+    clouds: 2,
+    cloudColor: "#fff7e6",
+    wallColor: "#c9a76b",
+    doorColor: "#7a4a21",
+    accentColor: "#eab308",
+    crateColor: "#8a6f3c",
+    swatch: "bg-gradient-to-b from-amber-200 via-amber-400 to-yellow-800",
+  },
+};
+
+// ── فاز F10 — سیستم چیدمان نقشه: هر نقشه سازه‌ها و محدودهٔ حرکت واقعی خودش را دارد ──
+
+/** انواع سازهٔ چیدمان — هرکدام متریال/شکل رندر خودش را دارد */
+type StructureKind = "wall" | "crate" | "door" | "doorOpen" | "post" | "arch" | "tree" | "crystal" | "sandbag";
+
+interface LayoutBox {
+  k: StructureKind;
+  x: number;
+  z: number;
+  /** عرض (x) و عمق (z) و ارتفاع (y) سازه — متر */
+  w: number;
+  d: number;
+  h: number;
+  /** چرخش نمایشی حول y (فقط رندر — برخورد AABB بدون چرخش) */
+  rot?: number;
+  /** آفست عمودی (لینتل طاق) */
+  y?: number;
+  /** پیش‌فرض true — false = دکور آزاد (بدون برخورد) */
+  solid?: boolean;
+}
+
+interface MapLayout {
+  /** محدودهٔ حرکت بازیکن در فضای جهان */
+  minX: number;
+  maxX: number;
+  minZ: number;
+  maxZ: number;
+  boxes: LayoutBox[];
+}
+
+/**
+ * چیدمان چهار نقشه — مختصات جهان (بازیکن حدود z≈7 شروع می‌کند، هدف‌ها z≤−5.5).
+ * گذر میانی (|x|<3) همیشه باز می‌ماند تا هدف‌های وسط از هر نقطه‌ای دیده شوند؛
+ * دیوارهای کناری «درز دید» دارند تا از زاویه‌ها بتوانی سرک بکشی.
+ */
+const LAYOUTS: Record<MapId, MapLayout> = {
+  // جنگل: جعبه‌های کلاسیک + تنهٔ درختان + دیوارهای چوبی کوتاه
+  forest: {
+    minX: -11.4,
+    maxX: 11.4,
+    minZ: -10,
+    maxZ: 10.2,
+    boxes: [
+      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+      { k: "crate", x: -1.7, z: 6.9, w: 1.5, d: 1.35, h: 1.3 },
+      { k: "crate", x: 4.7, z: 4.3, w: 1.2, d: 1.15, h: 1.05 },
+      { k: "crate", x: -4.9, z: 6.3, w: 1.4, d: 1.3, h: 1.2 },
+      { k: "crate", x: 1.9, z: 8.0, w: 1.15, d: 1.1, h: 1.0 },
+      { k: "crate", x: 0, z: -8.8, w: 1.6, d: 1.6, h: 1.45 },
+      { k: "crate", x: 3.2, z: -6.2, w: 1.2, d: 1.2, h: 1.1 },
+      { k: "tree", x: -8.6, z: -2.5, w: 0.55, d: 0.55, h: 2.7 },
+      { k: "tree", x: 8.8, z: -3.2, w: 0.6, d: 0.6, h: 3.1 },
+      { k: "tree", x: -9.6, z: -7.5, w: 0.6, d: 0.6, h: 2.9 },
+      { k: "tree", x: 9.4, z: -8.2, w: 0.55, d: 0.55, h: 2.6 },
+      { k: "wall", x: -8.2, z: 1.2, w: 3.2, d: 0.7, h: 1.15 },
+      { k: "wall", x: 8.2, z: 0.4, w: 3.2, d: 0.7, h: 1.15 },
+      { k: "sandbag", x: -5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+      { k: "sandbag", x: 5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+    ],
+  },
+  // کویر کهربا: دیوارهای ماسه‌سنگی شکسته + طاق سنگی بزرگ + صخره‌های جامد
+  desert: {
+    minX: -11.6,
+    maxX: 11.6,
+    minZ: -10,
+    maxZ: 10.2,
+    boxes: [
+      { k: "wall", x: -6.8, z: -3.4, w: 4.6, d: 0.8, h: 2.0 },
+      { k: "wall", x: 6.9, z: -4.6, w: 5.2, d: 0.8, h: 2.3 },
+      { k: "wall", x: -7.6, z: 2.2, w: 2.6, d: 0.7, h: 1.1 },
+      { k: "wall", x: 7.8, z: 1.6, w: 2.6, d: 0.7, h: 1.1 },
+      { k: "wall", x: -5.7, z: -8.6, w: 3.4, d: 0.8, h: 1.6 },
+      { k: "wall", x: 5.9, z: -9.0, w: 3.0, d: 0.8, h: 1.6 },
+      { k: "post", x: -2.4, z: -8.8, w: 0.7, d: 0.7, h: 3.2 },
+      { k: "post", x: 2.4, z: -8.8, w: 0.7, d: 0.7, h: 3.2 },
+      { k: "arch", x: 0, z: -8.8, w: 5.5, d: 0.9, h: 0.7, y: 2.85, solid: false },
+      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+      { k: "crate", x: 4.7, z: 4.3, w: 1.2, d: 1.15, h: 1.05 },
+      { k: "crate", x: -4.9, z: 6.3, w: 1.4, d: 1.3, h: 1.2 },
+      { k: "crate", x: 0, z: -6.6, w: 1.5, d: 1.5, h: 1.35 },
+      { k: "crate", x: 8.8, z: -7.6, w: 1.4, d: 1.4, h: 1.3 },
+      { k: "sandbag", x: 0, z: 5.4, w: 1.9, d: 0.7, h: 0.8 },
+    ],
+  },
+  // سکوت شب: جنگل کریستال درخشان + دیوارهای ابسیدین کوتاه
+  night: {
+    minX: -11.4,
+    maxX: 11.4,
+    minZ: -10,
+    maxZ: 10.2,
+    boxes: [
+      { k: "crystal", x: -5.2, z: -2.2, w: 0.9, d: 0.9, h: 3.0 },
+      { k: "crystal", x: 5.2, z: -2.2, w: 0.9, d: 0.9, h: 3.2 },
+      { k: "crystal", x: -8.2, z: -7.0, w: 1.0, d: 1.0, h: 3.6 },
+      { k: "crystal", x: 8.2, z: -7.0, w: 1.0, d: 1.0, h: 3.4 },
+      { k: "crystal", x: -3.1, z: 2.8, w: 0.8, d: 0.8, h: 2.4 },
+      { k: "crystal", x: 3.1, z: 2.8, w: 0.8, d: 0.8, h: 2.5 },
+      { k: "crystal", x: -9.6, z: 3.4, w: 0.8, d: 0.8, h: 2.2 },
+      { k: "crystal", x: 9.6, z: 3.4, w: 0.8, d: 0.8, h: 2.3 },
+      { k: "wall", x: -6.5, z: -9.2, w: 3.2, d: 0.8, h: 1.2 },
+      { k: "wall", x: 6.5, z: -9.2, w: 3.2, d: 0.8, h: 1.2 },
+      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+      { k: "crate", x: 0, z: -8.4, w: 1.5, d: 1.5, h: 1.4 },
+      { k: "crate", x: 6.4, z: 1.4, w: 1.2, d: 1.2, h: 1.05 },
+      { k: "sandbag", x: -5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+      { k: "sandbag", x: 5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+    ],
+  },
+  // دروازهٔ دو در (Dust2-inspired): درِ دوتایی میانه + گذرگاه بلند با طاق + تونل B با درهای چوبی
+  dust: {
+    minX: -11.6,
+    maxX: 11.6,
+    minZ: -10,
+    maxZ: 10.2,
+    boxes: [
+      // درِ دوتایی میانه — یک لنگه بسته، یک لنگه باز (نماد مپ)
+      { k: "door", x: -1.5, z: -0.6, w: 1.5, d: 0.26, h: 2.75 },
+      { k: "doorOpen", x: 1.42, z: -0.85, w: 1.4, d: 0.2, h: 2.7, rot: 1.05, solid: false },
+      { k: "post", x: 1.62, z: -0.28, w: 0.34, d: 0.34, h: 2.75 },
+      { k: "arch", x: 0, z: -0.6, w: 4.7, d: 0.32, h: 0.55, y: 2.5, solid: false },
+      // گذرگاه بلند (Long) — دیوار با درز دید + طاق گذرگاه
+      { k: "wall", x: 5.6, z: -7.4, w: 0.6, d: 2.6, h: 2.9 },
+      { k: "wall", x: 5.6, z: -1.2, w: 0.6, d: 3.2, h: 2.9 },
+      { k: "post", x: 5.6, z: -2.95, w: 0.4, d: 0.4, h: 2.9 },
+      { k: "post", x: 5.6, z: -5.95, w: 0.4, d: 0.4, h: 2.9 },
+      { k: "arch", x: 5.6, z: -4.45, w: 0.5, d: 3.4, h: 0.5, y: 2.55, solid: false },
+      // تونل B — قرینهٔ چپ
+      { k: "wall", x: -5.6, z: -7.4, w: 0.6, d: 2.6, h: 2.9 },
+      { k: "wall", x: -5.6, z: -1.2, w: 0.6, d: 3.2, h: 2.9 },
+      { k: "post", x: -5.6, z: -2.95, w: 0.4, d: 0.4, h: 2.9 },
+      { k: "post", x: -5.6, z: -5.95, w: 0.4, d: 0.4, h: 2.9 },
+      { k: "arch", x: -5.6, z: -4.45, w: 0.5, d: 3.4, h: 0.5, y: 2.55, solid: false },
+      // درهای دوتایی B در ته تونل
+      { k: "door", x: -9.6, z: -7.0, w: 1.4, d: 0.24, h: 2.6 },
+      { k: "doorOpen", x: -8.3, z: -7.25, w: 1.3, d: 0.2, h: 2.55, rot: -0.9, solid: false },
+      { k: "post", x: -8.35, z: -6.72, w: 0.3, d: 0.32, h: 2.6 },
+      { k: "arch", x: -8.95, z: -7.0, w: 3.3, d: 0.28, h: 0.5, y: 2.4, solid: false },
+      // سایت A — سکوی جعبه‌ها
+      { k: "crate", x: 8.8, z: -7.4, w: 1.5, d: 1.5, h: 1.4 },
+      { k: "crate", x: 10.3, z: -8.8, w: 1.2, d: 1.2, h: 1.0 },
+      { k: "crate", x: 9.9, z: -5.9, w: 1.1, d: 1.1, h: 0.95 },
+      // جعبه‌های میانه و نزدیک
+      { k: "crate", x: 0, z: -9.6, w: 1.6, d: 1.6, h: 1.5 },
+      { k: "crate", x: 3.1, z: -6.3, w: 1.25, d: 1.2, h: 1.15 },
+      { k: "crate", x: -3.2, z: -6.5, w: 1.3, d: 1.25, h: 1.2 },
+      { k: "crate", x: 3.2, z: -3.2, w: 1.1, d: 1.1, h: 1.0 },
+      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+      { k: "crate", x: 6.6, z: 1.8, w: 1.2, d: 1.2, h: 1.05 },
+      { k: "crate", x: -7.4, z: 2.6, w: 1.3, d: 1.25, h: 1.15 },
+      // کیسه‌های شنی نزدیک اسپان
+      { k: "sandbag", x: -5.4, z: 4.6, w: 2.2, d: 0.7, h: 0.85 },
+      { k: "sandbag", x: 5.4, z: 4.6, w: 2.2, d: 0.7, h: 0.85 },
+      { k: "sandbag", x: 0, z: 5.4, w: 1.9, d: 0.7, h: 0.8 },
+    ],
   },
 };
 
@@ -452,9 +673,8 @@ const SCOPE_FOV_MAX = 56;
 /** کاهش حساسیت نگاه حین اسکوپ — دقت اسنایپری */
 const SCOPE_SENS_RATIO = 0.62;
 
-// ── فاز F7 — بودجهٔ عناصر محیطی در سه ترتیب [کیفیت سبک، دستگاه ضعیف، کامل] ──
+// ── فاز F7 — بودجهٔ عناصر محیطی در سه ترتیب [کیفیت سبک، دستگاه ضعیف، کامل] — فاز F10: سازه‌ها همیشه کامل رندر می‌شوند ──
 
-const ENV_CRATES = [3, 4, 6];
 const ENV_ROCKS = [4, 6, 9];
 const ENV_TUFTS = [4, 7, 10];
 
@@ -570,12 +790,27 @@ interface SceneBridge {
   aim: { yaw: number; pitch: number };
   /** فاز F3 — آفست موقعیت بازیکن نسبت به پایه (متر) */
   pos: { x: number; z: number };
-  /** فاز F3 — کلیدهای حرکت فشرده‌شده */
+  /** فاز F3 — کلیدهای حرکت فشرده‌شده (w/a/s/d + فاز F10: c خم‌شدن) */
   keys: Set<string>;
   /** فاز F3 — در حال گام برداشتن؟ (برای باب سلاح) — فاز F4: بزرگی آنالوگ ۰..۱ */
   moveMag: number;
   /** فاز F4 — بردار آنالوگ جوی‌استیک لمسی (x = راست، y = جلو؛ −۱..۱) */
   stick: { x: number; y: number };
+  /** فاز F10 — سرعت هموارشدهٔ افقی (متر بر ثانیه) — ضدلرزش حرکت */
+  vel: { x: number; z: number };
+  /** فاز F10 — پرش: سرعت عمودی + ارتفاع لحظه‌ای از زمین */
+  vy: number;
+  jumpY: number;
+  /** فاز F10 — درخواست پرش صف‌شده (اسپیس/دکمهٔ موبایل) */
+  wantJump: boolean;
+  /** فاز F10 — خم‌شدن هموارشدهٔ ۰..۱ */
+  crouchAmt: number;
+  /** فاز F10 — دویدن فعال (نگه‌داشتن Shift) */
+  sprint: boolean;
+  /** فاز F10 — کیک FOV هموارشدهٔ دویدن (نوشتهٔ Rig، خواندهٔ FovTune) */
+  speedKick: number;
+  /** فاز F10 — چیدمان نقشهٔ جاری (برخورد + محدودهٔ حرکت) */
+  layout: MapLayout;
   /** فاز F9 — پیلود شلیک: پخش پمپ + مقیاس انفجار سلاح */
   shoot: { x: number; y: number; seq: number; spread: number; burst: number };
   lastShotAt: number;
@@ -614,7 +849,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   {
     icon: <MousePointerClick size={24} />,
     title: "نشانه‌گیری و شلیک",
-    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. نگه‌داشتن Shift اسکوپ می‌گیرد: دید باریک‌تر، نشانه‌گیری دقیق‌تر. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
+    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. نگه‌داشتن کلیک راست اسکوپ می‌گیرد: دید باریک‌تر، نشانه‌گیری دقیق‌تر. حرکت حرفه‌ای: Shift دویدن، Space پرش و C خم‌شدن. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک + دکمهٔ پرش. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
   },
   {
     icon: <TargetIcon size={24} />,
@@ -628,8 +863,8 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   },
   {
     icon: <MonitorSmartphone size={24} />,
-    title: "کیفیت، نقشه و گزینه‌ها",
-    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. سه نقشهٔ مأموریت داری: جنگل زمردی، کویر کهربا و سکوت شب. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها برای دفعات بعد ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند.",
+    title: "نقشه‌ها و گزینه‌ها",
+    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. چهار نقشهٔ مأموریت با چیدمان واقعی متفاوت داری: جنگل زمردی (درخت و جعبه)، کویر کهربا (دیوار ماسه‌سنگی و طاق)، سکوت شب (جنگل کریستال) و دروازهٔ دو در — الهام از دی‌داست۲ با درِ دوتایی میانه، گذرگاه بلند و تونل B. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند.",
   },
 ];
 
@@ -798,38 +1033,44 @@ function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, 
 
 // ─── اجزای صحنهٔ سه‌بعدی ───
 
-// ── فاز F7 — پوشش‌های میدان با برخورد واقعی بازیکن ──
+// ── فاز F7/F10 — برخورد بازیکن با سازه‌های چیدمان نقشه ──
 
-/** جعبه‌های پوشش — چیدمان ثابت جهان (برخورد بازیکن با همین لیست است) */
-const COVER_CRATES: Array<{ x: number; z: number; h: number }> = [
-  { x: -3.4, z: 4.6, h: 1.15 },
-  { x: 3.1, z: 5.6, h: 0.95 },
-  { x: -1.7, z: 6.9, h: 1.3 },
-  { x: 4.7, z: 4.3, h: 1.05 },
-  { x: -4.9, z: 6.3, h: 1.2 },
-  { x: 1.9, z: 8.0, h: 1.0 },
-];
 /** شعاع برخورد بازیکن (متر) */
 const PLAYER_R = 0.34;
 
-/** فاز F7 — برخورد دایره‌ای سادهٔ بازیکن با جعبه‌ها — جهش درجا روی pos (فضای جهان ↔ آفست دوربین) */
-function resolveCover(pos: { x: number; z: number }, laneK: number): void {
-  const baseZ = 7 + (1 - laneK) * 4.2;
-  const pzW = baseZ + pos.z; // z بازیکن در فضای جهان
-  for (const c of COVER_CRATES) {
-    const dx = pos.x - c.x;
-    const dz = pzW - c.z;
-    const rr = c.h * 0.62 + PLAYER_R;
-    const d = Math.hypot(dx, dz);
-    if (d < rr && d > 1e-4) {
-      pos.x = c.x + (dx / d) * rr;
-      pos.z = c.z + (dz / d) * rr - baseZ;
+/**
+ * فاز F10 — برخورد دایرهٔ بازیکن با AABB سازه‌ها (دو گذر برای گوشه‌ها) — جهش درجا روی pos.
+ * سازهٔ کوتاه (h ≤ 1.1) حین اوج پرش قابل عبور است (پرش روی جعبه/کیسهٔ شنی)؛
+ * دیوارهای بلند همیشه جامدند. فضای جهان ↔ آفست دوربین با baseZ جبران می‌شود.
+ */
+function resolveWorld(pos: { x: number; z: number }, baseZ: number, layout: MapLayout, jumpY: number): void {
+  const wz = baseZ + pos.z; // z بازیکن در فضای جهان
+  for (let pass = 0; pass < 2; pass++) {
+    for (const bx of layout.boxes) {
+      if (bx.solid === false) continue;
+      if (bx.h <= 1.1 && jumpY > bx.h - 0.3) continue; // پرش روی مانع کوتاه
+      const hx = bx.w / 2 + PLAYER_R;
+      const hz = bx.d / 2 + PLAYER_R;
+      const dx = pos.x - bx.x;
+      const dz = wz - bx.z;
+      if (Math.abs(dx) < hx && Math.abs(dz) < hz) {
+        const px = hx - Math.abs(dx);
+        const pz = hz - Math.abs(dz);
+        if (px < pz) pos.x = bx.x + Math.sign(dx || 1) * hx;
+        else pos.z = bx.z + Math.sign(dz || 1) * hz - baseZ;
+      }
     }
   }
 }
 
-/** فاز F3 — انتگرال حرکت بازیکن از کلیدها + جوی‌استیک آنالوگ (جهش bridge فقط داخل توابع ماژول) */
-function stepPlayer(b: SceneBridge, dt: number): boolean {
+/**
+ * فاز F3 → فاز F10 — موتور حرکت نرم FPS:
+ * ① شتاب/ترمز نمایی مستقل از فریم‌ریت (ضدلرزش — پایان حرکت پرشی نیست)
+ * ② دویدن (Shift)، خم‌شدن (C)، پرش با گرانش (Space)
+ * ③ برخورد با سازه‌های نقشه در دو ساب‌استپ (بدون رد شدن از دیوار در فریم‌های سنگین)
+ * خروجی: سرعت افقی واقعی (متر بر ثانیه) — برای باب سر هماهنگ با گام.
+ */
+function stepPlayer(b: SceneBridge, dt: number): number {
   let mx = 0;
   let mz = 0;
   if (b.keys.has("w")) mz += 1;
@@ -847,23 +1088,55 @@ function stepPlayer(b: SceneBridge, dt: number): boolean {
       mz /= mag;
       mag = 1;
     }
-    const yaw = b.aim.yaw;
-    const sin = Math.sin(yaw);
-    const cos = Math.cos(yaw);
-    // جلو = −z محلی؛ راست = +x محلی — بدون pitch (گام زمینی)
-    const vx = -sin * mz + cos * mx;
-    const vz = -cos * mz - sin * mx;
-    const len = Math.hypot(vx, vz) || 1;
-    const sp = MOVE_SPEED * mag * dt;
-    b.pos.x = clamp(b.pos.x + (vx / len) * sp, -MOVE_X_LIM, MOVE_X_LIM);
-    b.pos.z = clamp(b.pos.z + (vz / len) * sp, MOVE_Z_MIN, MOVE_Z_MAX);
-    // فاز F7 — پوشش‌ها را دور می‌زنی، نه از داخلشان رد می‌شوی
-    resolveCover(b.pos, b.laneK);
-    b.pos.x = clamp(b.pos.x, -MOVE_X_LIM, MOVE_X_LIM);
-    b.pos.z = clamp(b.pos.z, MOVE_Z_MIN, MOVE_Z_MAX);
   }
-  b.moveMag = moving ? mag : 0;
-  return moving;
+  const crouching = b.keys.has("c");
+  const speed =
+    MOVE_SPEED * (b.sprint && !crouching ? SPRINT_MULT : 1) * (crouching ? CROUCH_MULT : 1);
+  // سرعت هدف — جلو = −z محلی؛ راست = +x محلی — بدون pitch (گام زمینی)
+  const yaw = b.aim.yaw;
+  const sin = Math.sin(yaw);
+  const cos = Math.cos(yaw);
+  const vx = -sin * mz + cos * mx;
+  const vz = -cos * mz - sin * mx;
+  const len = Math.hypot(vx, vz) || 1;
+  const tvx = moving ? (vx / len) * speed * mag : 0;
+  const tvz = moving ? (vz / len) * speed * mag : 0;
+  // ① شتاب/ترمز نمایی — حرکت از جا نپرد و نایستد
+  const kA = 1 - Math.exp(-dt * (moving ? ACCEL : STOP_ACCEL));
+  b.vel.x += (tvx - b.vel.x) * kA;
+  b.vel.z += (tvz - b.vel.z) * kA;
+  // ② پرش با گرانش
+  if (b.wantJump) {
+    b.wantJump = false;
+    if (b.jumpY <= 0.001 && b.vy <= 0) b.vy = JUMP_V;
+  }
+  if (b.vy !== 0 || b.jumpY > 0) {
+    b.vy -= GRAVITY * dt;
+    b.jumpY += b.vy * dt;
+    if (b.jumpY <= 0) {
+      b.jumpY = 0;
+      b.vy = 0;
+    }
+  }
+  // خم‌شدن هموار
+  const cTarget = crouching ? 1 : 0;
+  b.crouchAmt += (cTarget - b.crouchAmt) * Math.min(1, dt * 9);
+  // ③ انتگرال + برخورد + محدوده (ساب‌استپ برای برخورد پایدار)
+  const layout = b.layout;
+  const baseZ = 7 + (1 - b.laneK) * 4.2;
+  const steps = dt > 0.028 ? 2 : 1;
+  const sdt = dt / steps;
+  for (let s = 0; s < steps; s++) {
+    b.pos.x = clamp(b.pos.x + b.vel.x * sdt, layout.minX, layout.maxX);
+    b.pos.z = clamp(b.pos.z + b.vel.z * sdt, layout.minZ - baseZ, layout.maxZ - baseZ);
+    resolveWorld(b.pos, baseZ, layout, b.jumpY);
+  }
+  const spd = Math.hypot(b.vel.x, b.vel.z);
+  b.moveMag = clamp(spd / MOVE_SPEED, 0, 1.5);
+  // فاز F10 — کیک FOV دویدن: فقط وقتی واقعاً تندتر از گام عادی حرکت می‌کنی (هموارشده)
+  const kickT = spd > MOVE_SPEED * SPRINT_SPEED_RATIO ? SPRINT_FOV_KICK : 0;
+  b.speedKick += (kickT - b.speedKick) * Math.min(1, dt * 7);
+  return spd;
 }
 
 /** به‌روزرسانی ترنسفورم دوربین اول‌شخص — تابع ماژول‌سطح (جهش THREE فقط از اینجا) */
@@ -872,7 +1145,8 @@ function applyRig(cam: THREE.Camera, b: SceneBridge, aspect: number, bobY: numbe
   const baseZ = 7 + (1 - b.laneK) * 4.2;
   cam.position.x = b.pos.x;
   cam.position.z = baseZ + b.pos.z;
-  cam.position.y = 1.7 + bobY;
+  // فاز F10 — ارتفاع چشم = پایه − خم‌شدن + پرش + باب گام
+  cam.position.y = 1.7 - b.crouchAmt * CROUCH_EYE + b.jumpY + bobY;
   cam.rotation.y = b.aim.yaw;
   cam.rotation.x = b.aim.pitch;
 }
@@ -892,14 +1166,15 @@ function applyFov(cam: THREE.Camera, fov: number): void {
   }
 }
 
-/** فاز F5 — زاویهٔ دید زنده + فاز F9 — اسکوپ لحظه‌ای: لِرپ نرم FOV (تابع ماژول‌سطح — جهش فقط از اینجا) */
+/** فاز F5 — زاویهٔ دید زنده + فاز F9 — اسکوپ + فاز F10 — کیک FOV دویدن: لِرپ نرم FOV */
 function applyScope(cam: THREE.Camera, b: SceneBridge, fov: number, scoped: boolean, dt: number, amt: { v: number }): void {
   const target = scoped ? 1 : 0;
   amt.v += (target - amt.v) * Math.min(1, dt * 11);
   const a = amt.v < 0.001 ? 0 : amt.v;
   b.scopeAmt = a;
-  const zoomed = clamp(fov * SCOPE_FOV_RATIO, SCOPE_FOV_MIN, SCOPE_FOV_MAX);
-  applyFov(cam, fov + (zoomed - fov) * a);
+  const base = fov + b.speedKick;
+  const zoomed = clamp(base * SCOPE_FOV_RATIO, SCOPE_FOV_MIN, SCOPE_FOV_MAX);
+  applyFov(cam, base + (zoomed - base) * a);
 }
 
 /** فاز F5 — زاویهٔ دید زنده: تغییر اسلایدر FOV بلافاصله + فاز F9 — لِرپ اسکوپ و گزارش scopeAmt */
@@ -915,7 +1190,7 @@ function FovTune({ fov, bridge, scoped }: { fov: number; bridge: React.RefObject
   return null;
 }
 
-/** دوربین اول‌شخص — چرخش + حرکت WASD (فاز F3) + باب سر + تطبیق عرض صحنه در پرتره */
+/** دوربین اول‌شخص — چرخش + حرکت WASD/دویدن/پرش/خم‌شدن (فاز F10) + باب گام هماهنگ با سرعت واقعی */
 function Rig({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   const { camera, size } = useThree();
   const bobT = useRef(0);
@@ -924,10 +1199,13 @@ function Rig({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   }, [camera]);
   useFrame((_state, delta) => {
     const dt = Math.min(delta, 0.05); // سقف delta — پرش برگشت به تب
-    const moving = stepPlayer(bridge.current, dt);
-    bobT.current += dt * (moving ? 8.5 : 2.2);
-    const bobY = Math.sin(bobT.current) * (moving ? 0.042 : 0.012);
-    applyRig(camera, bridge.current, size.width / Math.max(1, size.height), bobY);
+    const b = bridge.current;
+    const spd = stepPlayer(b, dt);
+    // باب سر هماهنگ با گام — فرکانس و دامنه از سرعت واقعی (نه ثابت)
+    bobT.current += dt * (spd > 0.2 ? 5.4 + spd * 1.55 : 2.0);
+    const amp = spd > 0.2 ? Math.min(0.05, 0.011 + spd * 0.0062) : 0.011;
+    const bobY = Math.sin(bobT.current) * amp;
+    applyRig(camera, b, size.width / Math.max(1, size.height), bobY);
   });
   return null;
 }
@@ -1243,13 +1521,11 @@ function CloudDrift({ count, color }: { count: number; color: string }) {
   );
 }
 
-/** فاز F7 — عناصر محیطی میدان: جعبهٔ پوشش + ابلیسک + سنگ‌ریزه + بوته — همه دکور؛ خارج از registry رِی‌کست */
+/** فاز F10 — سازه‌های چیدمان نقشه: دیوار/در/طاق/جعبه/درخت/کریستال/کیسهٔ شنی + برخورد واقعی */
 function FieldProps({ map, tier }: { map: MapConfig; tier: 0 | 1 | 2 }) {
-  const crateColor = map.id === "desert" ? "#a16207" : "#92400e";
-  const obeliskColor = map.mountain;
   const rockColor = map.id === "night" ? "#334155" : map.mountain;
   const tuftColor = map.decoColors[1];
-  const crates = useMemo(() => COVER_CRATES.slice(0, ENV_CRATES[tier]), [tier]);
+  const boxes = LAYOUTS[map.id].boxes;
   const rocks = useMemo(
     () =>
       Array.from({ length: ENV_ROCKS[tier] }, (_, i) => ({
@@ -1273,22 +1549,60 @@ function FieldProps({ map, tier }: { map: MapConfig; tier: 0 | 1 | 2 }) {
   );
   return (
     <group>
-      {/* جعبه‌های پوشش — با برخورد ساده (resolveCover در stepPlayer) */}
-      {crates.map((c) => (
-        <mesh key={`cb${c.x}`} position={[c.x, c.h / 2, c.z]} rotation-y={c.x * 0.7}>
-          <boxGeometry args={[c.h * 1.15, c.h, c.h * 1.05]} />
-          <meshStandardMaterial color={crateColor} roughness={0.85} flatShading />
-        </mesh>
-      ))}
-      {/* ابلیسک‌های دو طرف میدان — قاب‌بندی صحنه */}
-      <mesh position={[-10.5, 2.6, -6]} rotation-y={-10.5}>
-        <cylinderGeometry args={[0.47, 0.85, 5.2, 5]} />
-        <meshStandardMaterial color={obeliskColor} flatShading roughness={1} />
-      </mesh>
-      <mesh position={[11.5, 3.2, -9]} rotation-y={11.5}>
-        <cylinderGeometry args={[0.58, 1.05, 6.4, 5]} />
-        <meshStandardMaterial color={obeliskColor} flatShading roughness={1} />
-      </mesh>
+      {/* سازه‌های چیدمان — همان لیستی که برخورد بازیکن با آن است */}
+      {boxes.map((bx, i) => {
+        if (bx.k === "tree") {
+          return (
+            <group key={`bx${i}`} position={[bx.x, 0, bx.z]}>
+              <mesh position={[0, bx.h / 2, 0]}>
+                <cylinderGeometry args={[0.22, 0.3, bx.h, 7]} />
+                <meshStandardMaterial color="#4a3620" roughness={0.9} flatShading />
+              </mesh>
+              <mesh position={[0, bx.h + 0.75, 0]}>
+                <coneGeometry args={[1.05, 1.8, 7]} />
+                <meshStandardMaterial color="#15803d" roughness={0.9} flatShading />
+              </mesh>
+            </group>
+          );
+        }
+        if (bx.k === "crystal") {
+          return (
+            <mesh key={`bx${i}`} position={[bx.x, bx.h / 2, bx.z]} rotation-y={i * 0.7} scale={[bx.w * 0.95, bx.h, bx.d * 0.95]}>
+              <octahedronGeometry args={[0.5, 0]} />
+              <meshStandardMaterial
+                color={map.accentColor}
+                emissive={map.accentColor}
+                emissiveIntensity={map.decoGlow * 1.3 + 0.35}
+                flatShading
+                roughness={0.3}
+                metalness={0.1}
+              />
+            </mesh>
+          );
+        }
+        const color =
+          bx.k === "crate" || bx.k === "sandbag"
+            ? map.crateColor
+            : bx.k === "door" || bx.k === "doorOpen" || bx.k === "post"
+              ? map.doorColor
+              : map.wallColor;
+        const rough = bx.k === "door" || bx.k === "doorOpen" ? 0.75 : 0.95;
+        return (
+          <group key={`bx${i}`}>
+            <mesh position={[bx.x, (bx.y ?? 0) + bx.h / 2, bx.z]} rotation-y={bx.rot ?? 0}>
+              <boxGeometry args={[bx.w, bx.h, bx.d]} />
+              <meshStandardMaterial color={color} roughness={rough} flatShading />
+            </mesh>
+            {/* نوار تأکیدی روی درها — خواناییِ «در» در نگاه اول */}
+            {(bx.k === "door" || bx.k === "doorOpen") && (
+              <mesh position={[bx.x, (bx.y ?? 0) + bx.h - 0.18, bx.z]} rotation-y={bx.rot ?? 0}>
+                <boxGeometry args={[bx.w * 0.92, 0.09, bx.d + 0.04]} />
+                <meshStandardMaterial color={map.accentColor} roughness={0.5} metalness={0.2} />
+              </mesh>
+            )}
+          </group>
+        );
+      })}
       {/* سنگ‌ریزه‌های پراکنده */}
       {rocks.map((r) => (
         <mesh key={r.key} position={[r.x, r.s * 0.6, r.z]} rotation-y={r.rot}>
@@ -1985,6 +2299,14 @@ export function FpsShooterGame() {
     keys: new Set<string>(),
     moveMag: 0,
     stick: { x: 0, y: 0 },
+    vel: { x: 0, z: 0 },
+    vy: 0,
+    jumpY: 0,
+    wantJump: false,
+    crouchAmt: 0,
+    sprint: false,
+    speedKick: 0,
+    layout: LAYOUTS.forest,
     shoot: { x: 0, y: 0, seq: 0, spread: 0, burst: 1 },
     lastShotAt: 0,
     laneK: 1,
@@ -2650,6 +2972,11 @@ export function FpsShooterGame() {
       if (pausedRef.current || exitAskRef.current || overRef.current || !t || !el.contains(t)) return;
       // فاز F3 — دکمه‌های HUD داخل صحنه (توقف/خروج تمام‌صفحه/ادامه) شلیک حساب نمی‌شوند
       if (t instanceof HTMLElement && t.closest("[data-fps-hud]")) return;
+      // فاز F10 — اسکوپ با نگه‌داشتن کلیک راست (الگوی استاندارد ADS — جایگزین Shift)
+      if (e.button === 2) {
+        if (!coarse && !tapRef.current) setScopeSafe(true);
+        return;
+      }
       if (!coarse && !tapRef.current) {
         if (document.pointerLockElement !== el) {
           // فاز F3 — اولین کلیک صحنه: تمام‌صفحه + قفل نشانگر با هم (در همان ژست)
@@ -2697,6 +3024,11 @@ export function FpsShooterGame() {
     };
 
     const onPointerUp = (e: PointerEvent) => {
+      // فاز F10 — رهاکردن کلیک راست = بستن اسکوپ
+      if (e.button === 2) {
+        setScopeSafe(false);
+        return;
+      }
       if (!gest?.active) return;
       const dt = performance.now() - gest.t0;
       const moved = gest.moved;
@@ -2742,7 +3074,8 @@ export function FpsShooterGame() {
     };
   }, [phase]);
 
-  // ── فاز F3/F4 — حرکت WASD/جهت‌نما (e.code = مستقل از چیدمان کیبورد فارسی/انگلیسی) + R = ریلود + فاز F9 — Shift = اسکوپ ──
+  // ── فاز F3/F4 — حرکت WASD/جهت‌نما (e.code = مستقل از چیدمان کیبورد فارسی/انگلیسی)
+  // + R = ریلود + فاز F10 — Shift = دویدن، Space = پرش، C = خم‌شدن (اسکوپ = کلیک راست) ──
   useEffect(() => {
     if (phase !== "playing") return;
     const keys = bridge.current.keys;
@@ -2753,9 +3086,16 @@ export function FpsShooterGame() {
         if (!pausedRef.current && !exitAskRef.current) reloadNowRef.current();
         return;
       }
-      // فاز F9 — اسکوپ لحظه‌ای: نگه‌داشتن Shift (خارج از تپ ساده — تپ ساده نشانه‌گیری ندارد)
+      // فاز F10 — پرش با اسپیس (خارج از تپ ساده) — جلوگیری از اسکرول صفحه
+      if (e.code === "Space") {
+        if (tapRef.current) return;
+        e.preventDefault();
+        if (!pausedRef.current && !exitAskRef.current && !overRef.current) bridge.current.wantJump = true;
+        return;
+      }
+      // فاز F10 — دویدن با نگه‌داشتن Shift (اسکوپ به کلیک راست منتقل شد)
       if (!tapRef.current && (e.code === "ShiftLeft" || e.code === "ShiftRight")) {
-        setScopeSafe(true);
+        bridge.current.sprint = true;
         return;
       }
       const k = KEY_MOVE[e.code];
@@ -2764,7 +3104,7 @@ export function FpsShooterGame() {
     };
     const up = (e: KeyboardEvent) => {
       if (e.code === "ShiftLeft" || e.code === "ShiftRight") {
-        setScopeSafe(false);
+        bridge.current.sprint = false;
         return;
       }
       const k = KEY_MOVE[e.code];
@@ -2772,6 +3112,8 @@ export function FpsShooterGame() {
     };
     const clear = () => {
       keys.clear();
+      bridge.current.sprint = false;
+      bridge.current.wantJump = false;
       setScopeSafe(false);
     };
     window.addEventListener("keydown", down);
@@ -2782,6 +3124,7 @@ export function FpsShooterGame() {
       window.removeEventListener("keyup", up);
       window.removeEventListener("blur", clear);
       keys.clear();
+      bridge.current.sprint = false;
     };
   }, [phase, setScopeSafe]);
 
@@ -2820,6 +3163,15 @@ export function FpsShooterGame() {
     bridge.current.pos = { x: 0, z: 0 };
     bridge.current.moveMag = 0;
     bridge.current.stick = { x: 0, y: 0 };
+    // فاز F10 — ریست کامل موتور حرکت در شروع دور
+    bridge.current.vel = { x: 0, z: 0 };
+    bridge.current.vy = 0;
+    bridge.current.jumpY = 0;
+    bridge.current.wantJump = false;
+    bridge.current.crouchAmt = 0;
+    bridge.current.sprint = false;
+    bridge.current.speedKick = 0;
+    bridge.current.layout = LAYOUTS[mapIdRef.current];
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
     // فاز F4/F9 — خشاب سلاح انتخابی در شروع دور + پاک‌سازی ریلود معلق
@@ -2918,6 +3270,17 @@ export function FpsShooterGame() {
     setMapId(id);
     savePref(MAP_KEY, id);
   }, []);
+
+  // ── فاز F10 — سینک چیدمان نقشه با bridge + بازگشت امن به اسپان در تعویض حین بازی
+  // (تا بازیکن داخل دیوارِ چیدمان تازه گیر نکند) ──
+  useEffect(() => {
+    const b = bridge.current;
+    b.layout = LAYOUTS[mapId];
+    b.pos.x = 0;
+    b.pos.z = 0.6;
+    b.vel.x = 0;
+    b.vel.z = 0;
+  }, [mapId]);
 
   // ── فاز F9 — انتخاب سلاح (ماندگار؛ کلید افزودنی) ──
   const setWeaponPref = useCallback((id: WeaponId) => {
@@ -3029,10 +3392,11 @@ export function FpsShooterGame() {
               <p>
                 سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
                 شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
-                (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان قدم می‌زنی —
-                جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی. سه سلاح داری — کلت، دژکوب سنگین و پمپ زون‌کن —
-                با R ریلود می‌کنی و با نگه‌داشتن Shift اسکوپ می‌گیری، سه نقشهٔ مأموریت داری
-                (جنگل، کویر، شب)، حساسیت و زاویهٔ دید را در «گزینه‌ها» تنظیم می‌کنی و روی گوشی جوی‌استیک و دکمهٔ شلیک داری —
+                (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان می‌دوی —
+                حرکت نرم با شتاب واقعی، Shift دویدن، Space پرش و C خم‌شدن؛ دیوارها، درها و جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی.
+                سه سلاح داری — کلت، دژکوب سنگین و پمپ زون‌کن — با R ریلود می‌کنی و با کلیک راست اسکوپ می‌گیری،
+                چهار نقشهٔ مأموریت با چیدمان متفاوت داری (جنگل، کویر، شب و دروازهٔ دو در به سبک دی‌داست۲)،
+                حساسیت و زاویهٔ دید را در «گزینه‌ها» تنظیم می‌کنی و روی گوشی جوی‌استیک، شلیک، پرش و اسکوپ داری —
                 دنبال گزینهٔ درست بگرد و بعد شلیک کن!
               </p>
             </div>
@@ -3117,17 +3481,17 @@ export function FpsShooterGame() {
                 ))}
               </div>
               <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
-                حین بازی با نگه‌داشتن Shift (دسکتاپ) یا دکمهٔ ذره‌بین (گوشی) اسکوپ می‌گیری — نشانه‌گیری دقیق‌تر، دید باریک‌تر.
+                حین بازی با نگه‌داشتن کلیک راست (دسکتاپ) یا دکمهٔ ذره‌بین (گوشی) اسکوپ می‌گیری — نشانه‌گیری دقیق‌تر، دید باریک‌تر.
               </p>
             </div>
 
-            {/* فاز F6 — نقشهٔ مأموریت: سه پالت کامل میدان */}
+            {/* فاز F6/F10 — نقشهٔ مأموریت: چهار میدان با چیدمان واقعی متفاوت */}
             <div>
               <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
                 <MapPinned size={14} className="text-emerald-500" />
                 نقشهٔ مأموریت
               </p>
-              <div className="grid gap-2 sm:grid-cols-3">
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                 {(Object.values(MAPS) as MapConfig[]).map((m) => (
                   <button
                     key={m.id}
@@ -3150,8 +3514,10 @@ export function FpsShooterGame() {
                         <Trees size={13} className="text-emerald-500" />
                       ) : m.id === "desert" ? (
                         <Sun size={13} className="text-amber-500" />
-                      ) : (
+                      ) : m.id === "night" ? (
                         <MoonStar size={13} className="text-teal-300" />
+                      ) : (
+                        <DoorOpen size={13} className="text-yellow-600" />
                       )}
                       {m.name}
                     </span>
@@ -3160,7 +3526,9 @@ export function FpsShooterGame() {
                 ))}
               </div>
               <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
-                انتخابت برای دفعات بعد ذخیره می‌شود — در «سکوت شب» هدف‌ها درخشان‌ترند تا در تاریکی خوانا بمانند.
+                هر نقشه چیدمان خودش را دارد: دیوار، در، طاق و جعبه‌ها با برخورد واقعی — در «دروازهٔ دو در» (الهام از دی‌داست۲)
+                درِ دوتایی میانه، گذرگاه بلند و تونل B داری. انتخابت ذخیره می‌شود؛ در «سکوت شب» کریستال‌ها درخشان‌ترند تا
+                خوانایی حفظ شود.
               </p>
             </div>
 
@@ -3506,6 +3874,10 @@ export function FpsShooterGame() {
               isFs ? "h-screen w-screen max-h-none rounded-none" : "h-[60vh] max-h-[580px] min-h-[400px] rounded-2xl",
             )}
             // فاز F6 — بدنهٔ قاب هم‌رنگ نقشه (قبل از بوت WebGL هم درست دیده می‌شود)
+            // فاز F10 — منوی راست‌کلیک مرورگر حین بازی (تپ ساده) باز نمی‌شود — کلیک راست = اسکوپ
+            onContextMenu={(e) => {
+              if (!tapMode) e.preventDefault();
+            }}
             style={{ backgroundColor: activeMap.bg }}
           >
             <Canvas
@@ -3513,7 +3885,7 @@ export function FpsShooterGame() {
               // cancelAnimationFrame و بازگشت به "always" معادل resumeLoop الگوی flappy است.
               frameloop={paused ? "never" : "always"}
               // فاز G2-e — کیفیت سبک: dpr پایین‌تر؛ عادی: رفتار فعلی (با ملاحظهٔ دستگاه ضعیف)
-              dpr={qualityLow ? [0.7, 1] : weak ? [1, 1] : [1, 1.75]}
+              dpr={qualityLow ? [0.7, 1] : weak ? [1, 1] : [1, 1.5]}
               camera={{ fov: FOV_DEF, near: 0.1, far: 60, position: [0, 1.7, 7] }}
               gl={{ antialias: qualityLow ? false : !weak, powerPreference: "high-performance" }}
               // سایه‌ها در هر دو کیفیت off — سبک همیشه و عادی همان رفتار فعلی صحنه (سقف draw-call)
@@ -3635,6 +4007,21 @@ export function FpsShooterGame() {
                 )}
               >
                 <Telescope size={20} />
+              </button>
+            )}
+
+            {/* فاز F10 — دکمهٔ پرش موبایل (کنار دکمهٔ اسکوپ) */}
+            {!tapMode && isCoarse && (
+              <button
+                type="button"
+                data-fps-hud
+                aria-label="پرش"
+                onPointerDown={() => {
+                  bridge.current.wantJump = true;
+                }}
+                className="pointer-events-auto absolute bottom-28 right-[4.75rem] z-20 flex h-12 w-12 touch-none select-none items-center justify-center rounded-full border-2 border-white/30 bg-black/40 text-white backdrop-blur transition active:scale-95"
+              >
+                <ArrowBigUp size={22} />
               </button>
             )}
 
