@@ -74,6 +74,15 @@
  *   فضای جهان)، ابلیسک‌های طرفین، سنگ‌ریزه و بوتهٔ پراکنده، ابرهای low-poly چرخان،
  *   آسمان پرستاره و خورشید/ماه با هاله — بودجهٔ عناصر در سه ترتیب کیفیت؛ همهٔ عناصر
  *   دکور هستند و خارج از registry رِی‌کست شلیک.
+ *
+ * فاز F8 — هدف‌های هوشمند (AI سبک — نسخهٔ ۲.۱ سند docs/fps-roadmap.md):
+ * - فرار (Dodging): هدف‌های غلط وقتی نزدیک مرکز نشانه می‌شوند به کناره‌ها می‌گریزند —
+ *   سرعت فرار با شمارهٔ موج بالا می‌رود؛ در «تپ ساده» و حین فریز برخورد غیرفعال است.
+ * - موج‌بندی: هر ۵ پاسخ یک موج سخت‌تر (تا موج ۶) — چرخش/نوسان/راند اهداف و عمق چیدمان
+ *   بیشتر + بج «موج n» در HUD و پیام aria-live + detail.wave در Attempt.
+ * - هدف طلایی: هر ۱۱–۱۶ ثانیه (اولین: ۹ ثانیه) پاپ‌آپ ۳ثانیه‌ای طلایی — شکارش +۲۰ امتیاز
+ *   بونوس خارج از چرخهٔ سؤال (بدون قلب/بدون جلو رفتن) با صدای جذاب و انفجار؛ زنجیرهٔ
+ *   مستقل مقاوم به توقف (جبران gap) تا با زنجیرهٔ «فریز برخورد» تداخل نکند.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -158,6 +167,28 @@ const HIT_FREEZE_MS = 750;
 const SHOOT_COOLDOWN = 550;
 const Q_TIME_SHOOT = 12;
 const Q_TIME_TAP = 15;
+
+// ── فاز F8 — هدف‌های هوشمند: موج / فرار / طلایی ──
+/** اندازهٔ هر موج — هر WAVE_SIZE پاسخ، موج سخت‌تری شروع می‌شود */
+const WAVE_SIZE = 5;
+/** سقف موج — بعد از آن سرعت‌ها ثابت می‌مانند */
+const WAVE_MAX = 6;
+/** فرار: هدف غلط وقتی می‌گریزد که نزدیک مرکز دید باشد (شعاع NDC) */
+const DODGE_TRIGGER = 0.5;
+/** سرعت پایهٔ فرار (متر بر ثانیه) و افزودهٔ هر موج */
+const DODGE_BASE = 1.05;
+const DODGE_WAVE_STEP = 0.32;
+/** بیشینهٔ جابه‌جایی فرار از لِین (متر) */
+const DODGE_MAX = 2.5;
+/** بونوس شکار هدف طلایی */
+const GOLDEN_BONUS = 20;
+/** پنجرهٔ فرصت شکار هدف طلایی (میلی‌ثانیه) */
+const GOLDEN_WINDOW_MS = 3000;
+/** اولین ظهور هدف طلایی بعد از شروع مأموریت */
+const GOLDEN_FIRST_MS = 9000;
+/** بازهٔ زمانی ظهورهای بعدی هدف طلایی (میلی‌ثانیه) */
+const GOLDEN_EVERY_MIN = 11000;
+const GOLDEN_EVERY_MAX = 16000;
 
 // ── فاز F3 — حرکت اول‌شخص + تمام‌صفحه ──
 /** سرعت گام بازیکن (متر بر ثانیه) */
@@ -442,6 +473,10 @@ interface SceneBridge {
   laneK: number;
   flashes: FlashEntry[];
   onHit: (id: string | null) => void;
+  /** فاز F8 — فرار هدف‌های غلط فعال؟ (خاموش در «تپ ساده») */
+  dodge: boolean;
+  /** فاز F8 — شمارهٔ موج جاری (سرعت فرار و حرکت اهداف) */
+  wave: number;
 }
 
 interface BurstApi {
@@ -470,6 +505,11 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     icon: <TargetIcon size={24} />,
     title: "خشاب و مهمات",
     text: "خشاب ۸تایی داری — شمارندهٔ فشنگ کنار رتیکل است. خالی شدن = ریلود خودکار با صدای تعویض؛ می‌توانی با R (دسکتاپ) زودتر ریلود کنی. شلیک حین ریلود یا فریز برخورد مهمات هدر نمی‌دهد، ولی هر شلیکِ خطا یک فشنگ کم است — درست نشانه بگیر!",
+  },
+  {
+    icon: <Zap size={24} />,
+    title: "هدف‌های هوشمند",
+    text: "هدف‌های غلط وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر نزدیک شو! هر ۵ پاسخ یک «موج» سخت‌تر با هدف‌های سریع‌تر شروع می‌شود. هر از گاهی هم «هدف طلایی» ظاهر می‌شود: ۳ ثانیه فرصت داری شکارش کنی تا ۲۰ امتیاز بونوس بگیری (شکارش قلب کم نمی‌کند).",
   },
   {
     icon: <MonitorSmartphone size={24} />,
@@ -570,19 +610,23 @@ function makeLabelTexture(text: string): THREE.CanvasTexture {
 /** چیدمان هدف‌ها روی ۴ لِین با ارتفاع/عمق/حرکت متفاوت */
 function layoutTargets(
   opts: Array<{ text: string; correct: boolean }>,
+  wave = 1,
 ): TargetSpec[] {
   const lanes = shuffle([0, 1, 2, 3]);
   const colors = [0x10b981, 0xf59e0b, 0x14b8a6, 0x34d399];
+  // فاز F8 — موج‌بندی: حرکت سریع‌تر و چیدمان عمیق‌تر در موج‌های بالاتر
+  const sp = 1 + (wave - 1) * 0.16;
+  const depthExtra = Math.min(wave - 1, 4) * 0.55;
   return opts.map((o, i) => ({
     id: `t${i}`,
     text: o.text,
     correct: o.correct,
     lane: LANE_X[lanes[i]],
     baseY: 1.35 + (i % 2) * 0.85 + Math.random() * 0.35,
-    baseZ: -(5.5 + Math.floor(i / 2) * 3.4) - Math.random() * 2.6,
-    spin: 0.5 + Math.random() * 0.7,
-    bobSpeed: 0.8 + Math.random() * 0.7,
-    driftAmp: 0.5 + Math.random() * 0.8,
+    baseZ: -(5.5 + Math.floor(i / 2) * 3.4) - Math.random() * 2.6 - depthExtra,
+    spin: (0.5 + Math.random() * 0.7) * sp,
+    bobSpeed: (0.8 + Math.random() * 0.7) * sp,
+    driftAmp: (0.5 + Math.random() * 0.8) * (1 + (wave - 1) * 0.1),
     colorHex: colors[i % colors.length],
   }));
 }
@@ -594,6 +638,7 @@ function buildWordQuestion(
   distrPool: VocabEntry[],
   lesson: number,
   maxOthers: number,
+  wave = 1,
 ): Question {
   const others = pickUnique(
     distrPool.filter((w) => w.word !== target.word),
@@ -611,7 +656,7 @@ function buildWordQuestion(
     promptMain: target.meaning,
     promptSub: target.pos ?? "واژهٔ درس",
     ltr: false,
-    targets: layoutTargets(opts),
+    targets: layoutTargets(opts, wave),
     speakText: target.word,
     srsKey: target.word,
     lesson,
@@ -619,7 +664,7 @@ function buildWordQuestion(
 }
 
 /** فاز G2-e — maxOthers: در کیفیت سبک گزینهٔ درست + ۲ حواس‌پرتی (چیدمان لِین‌ها شافل است) */
-function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, maxOthers: number): Question {
+function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, maxOthers: number, wave = 1): Question {
   const optsAll = s.options.map((text, i) => ({ text, correct: i === s.answer }));
   const opts = [optsAll[s.answer], ...optsAll.filter((o) => !o.correct).slice(0, maxOthers)];
   return {
@@ -629,7 +674,7 @@ function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, 
     promptMain: qLabel(s.text),
     promptSub: s.scope,
     ltr: true,
-    targets: layoutTargets(opts),
+    targets: layoutTargets(opts, wave),
     speakText: s.text.replace(/_+/, s.options[s.answer]),
     srsKey: s.options[s.answer],
     lesson,
@@ -1157,6 +1202,11 @@ function Target({
   const meshRef = useRef<THREE.Mesh>(null);
   const tex = useMemo(() => makeLabelTexture(spec.text), [spec.text]);
   const t0 = useMemo(() => Math.random() * 6, []);
+  // فاز F8 — وضعیت فرار هدف غلط از نشانه (آفست جانبی + جهت + سرعت لحظه‌ای)
+  const dodgeX = useRef(0);
+  const dodgeDir = useRef(1);
+  const dodgeVel = useRef(0);
+  const projV = useMemo(() => new THREE.Vector3(), []);
   useEffect(() => () => tex.dispose(), [tex]);
 
   // ثبت/حذف مش برای raycast شلیک
@@ -1172,14 +1222,33 @@ function Target({
     };
   }, [registry, spec.id]);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const g = groupRef.current;
     const m = meshRef.current;
     if (!g || !m) return;
     const t = state.clock.elapsedTime;
     const b = bridge.current;
+    const dt = Math.min(delta, 0.05);
+    // فاز F8 — فرار هدف غلط: وقتی نزدیک مرکز نشانه است به کناره‌ها می‌گریزد
+    // (خاموش در «تپ ساده» و حین فریز برخورد؛ سرعت با شمارهٔ موج بالا می‌رود)
+    if (!spec.correct && b.dodge && b.flashes.length === 0) {
+      projV.copy(g.position).project(state.camera);
+      const centered = projV.z < 1 && Math.abs(projV.x) < DODGE_TRIGGER && projV.y > -0.35;
+      if (centered) {
+        if (dodgeVel.current <= 0.01) {
+          // جهت گریز: به بیرون صفحه — اگر تقریباً وسط است، سمت فضای خالی‌تر لِین
+          dodgeDir.current = projV.x > 0.04 ? 1 : projV.x < -0.04 ? -1 : spec.lane >= 0 ? 1 : -1;
+        }
+        const targetVel = DODGE_BASE + (b.wave - 1) * DODGE_WAVE_STEP;
+        dodgeVel.current = Math.min(targetVel, dodgeVel.current + dt * 4.2);
+      } else {
+        // دور شدن نگاه = آرام‌شدن گریز (فرصت نزدیک‌شدن از زاویهٔ دیگر)
+        dodgeVel.current = Math.max(0, dodgeVel.current - dt * 2.1);
+      }
+      dodgeX.current = clamp(dodgeX.current + dodgeDir.current * dodgeVel.current * dt, -DODGE_MAX, DODGE_MAX);
+    }
     g.position.set(
-      spec.lane * b.laneK + Math.sin(t * 0.5 + t0) * spec.driftAmp * b.laneK,
+      spec.lane * b.laneK + Math.sin(t * 0.5 + t0) * spec.driftAmp * b.laneK + dodgeX.current * b.laneK,
       spec.baseY + Math.sin(t * spec.bobSpeed + t0) * 0.4,
       spec.baseZ,
     );
@@ -1212,6 +1281,129 @@ function Target({
         />
       </mesh>
       <sprite position={[0, 1.55, 0]} scale={[2.9, 0.73, 1]}>
+        <spriteMaterial map={tex} transparent depthWrite={false} />
+      </sprite>
+    </group>
+  );
+}
+
+/** بافت برچسب طلایی — قرص کهربایی با متن بونوس (فاز F8) */
+function makeGoldLabelTexture(text: string): THREE.CanvasTexture {
+  const W = 512;
+  const Hc = 150;
+  const cv = document.createElement("canvas");
+  cv.width = W;
+  cv.height = Hc;
+  const c = cv.getContext("2d");
+  if (c) {
+    let fs = 66;
+    c.font = `900 ${fs}px system-ui, sans-serif`;
+    while (c.measureText(text).width > W - 110 && fs > 26) {
+      fs -= 3;
+      c.font = `900 ${fs}px system-ui, sans-serif`;
+    }
+    const tw = Math.min(c.measureText(text).width, W - 110);
+    const pw = Math.min(tw + 64, W - 24);
+    const ph = 96;
+    const px = (W - pw) / 2;
+    const py = (Hc - ph) / 2;
+    c.fillStyle = "#fbbf24";
+    rrPath(c, px, py, pw, ph, 32);
+    c.fill();
+    c.lineWidth = 6;
+    c.strokeStyle = "rgba(120,53,15,0.55)";
+    rrPath(c, px + 3, py + 3, pw - 6, ph - 6, 28);
+    c.stroke();
+    c.fillStyle = "#78350f";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(text, W / 2, Hc / 2 + 4, W - 100);
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 2;
+  return tex;
+}
+
+interface GoldenSpec {
+  lane: number;
+  y: number;
+  z: number;
+}
+
+/** فاز F8 — هدف طلایی: پاپ‌آپ ۳ثانیه‌ای بونوس — شکارش +۲۰ امتیاز خارج از چرخهٔ سؤال */
+function GoldenTarget({
+  spec,
+  untilRef,
+  registry,
+  bridge,
+}: {
+  spec: GoldenSpec;
+  untilRef: React.RefObject<number>;
+  registry: React.RefObject<THREE.Mesh[]>;
+  bridge: React.RefObject<SceneBridge>;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
+  const tex = useMemo(() => makeGoldLabelTexture(`+${faNum(GOLDEN_BONUS)}`), []);
+  useEffect(() => () => tex.dispose(), [tex]);
+
+  // ثبت مش برای رِی‌کست شلیک — id ویژهٔ «golden»
+  useEffect(() => {
+    const m = meshRef.current;
+    const list = registry.current;
+    if (!m || !list) return;
+    m.userData.id = "golden";
+    list.push(m);
+    return () => {
+      const i = list.indexOf(m);
+      if (i >= 0) list.splice(i, 1);
+    };
+  }, [registry]);
+
+  useFrame((state, delta) => {
+    const g = groupRef.current;
+    const m = meshRef.current;
+    if (!g || !m) return;
+    const dt = Math.min(delta, 0.05);
+    const b = bridge.current;
+    const now = performance.now();
+    if (untilRef.current <= 0) {
+      g.visible = false;
+      return;
+    }
+    g.visible = true;
+    const t = state.clock.elapsedTime;
+    // ورود/خروج نرم بر اساس پنجرهٔ باقی‌مانده — جبران توقف داخل untilRef است
+    const p = 1 - clamp((untilRef.current - now) / GOLDEN_WINDOW_MS, 0, 1);
+    const scale = p < 0.12 ? p / 0.12 : p > 0.86 ? Math.max(0.05, (1 - p) / 0.14) : 1;
+    g.scale.setScalar(Math.max(0.001, scale));
+    g.position.set(spec.lane * b.laneK, spec.y + Math.sin(t * 2.7) * 0.28, spec.z);
+    m.rotation.y += dt * 3.4;
+    m.rotation.x = Math.sin(t * 1.8) * 0.2;
+    const mat = m.material as THREE.MeshStandardMaterial;
+    mat.emissiveIntensity = 0.85 + Math.sin(now / 130) * 0.3;
+  });
+
+  return (
+    <group ref={groupRef} position={[spec.lane, spec.y, spec.z]}>
+      <mesh ref={meshRef}>
+        <octahedronGeometry args={[TARGET_R * 1.1, 0]} />
+        <meshStandardMaterial
+          color="#fbbf24"
+          flatShading
+          roughness={0.25}
+          metalness={0.45}
+          emissive="#f59e0b"
+          emissiveIntensity={0.9}
+        />
+      </mesh>
+      {/* هالهٔ طلایی */}
+      <mesh scale={1.5}>
+        <octahedronGeometry args={[TARGET_R * 1.1, 0]} />
+        <meshBasicMaterial color="#fcd34d" transparent opacity={0.18} toneMapped={false} depthWrite={false} />
+      </mesh>
+      <sprite position={[0, 1.5, 0]} scale={[2.1, 0.62, 1]}>
         <spriteMaterial map={tex} transparent depthWrite={false} />
       </sprite>
     </group>
@@ -1469,6 +1661,11 @@ export function FpsShooterGame() {
   const [reloading, setReloading] = useState(false);
   /** فاز G2-e — پیام باکس aria-live شِل (برخورد/خطا/توقف) برای فناوری‌های کمکی */
   const [liveMsg, setLiveMsg] = useState("");
+  // ── فاز F8 — موج‌بندی + هدف طلایی ──
+  const [wave, setWave] = useState(1);
+  const [goldenActive, setGoldenActive] = useState(false);
+  const [goldenLeft, setGoldenLeft] = useState(0);
+  const [goldenSpec, setGoldenSpec] = useState<GoldenSpec | null>(null);
 
   // ── فاز G2-e — موتور کمبو مشترک کیت (G1-09) ──
   // حالت bonus = دقیقاً قانون فعلی شوتر: gained = ۱۰ + min(کمبو−۱, ۶) × ۲ (امتیاز یکسان می‌ماند)
@@ -1539,6 +1736,8 @@ export function FpsShooterGame() {
     laneK: 1,
     flashes: [],
     onHit: () => {},
+    dodge: false,
+    wave: 1,
   });
   const meshRegistry = useRef<THREE.Mesh[]>([]);
   const burstApi = useRef<BurstApi | null>(null);
@@ -1565,6 +1764,9 @@ export function FpsShooterGame() {
   const tapRef = useRef(tapMode);
   const qualityRef = useRef<Quality>(quality);
   const qRef = useRef<Question | null>(null);
+  // ── فاز F8 — مراجع موج (بدون ری‌رندر در مسیرهای داخل حلقهٔ بازی) ──
+  const waveRef = useRef(1);
+  const maxWaveRef = useRef(1);
   // ── فاز F5/F6 — مراجع گزینه‌ها/نقشه برای مسیرهای بدون ری‌رندر (ورودی نگاه + Attempt) ──
   const sensRef = useRef(sens);
   const invertRef = useRef(invertY);
@@ -1647,6 +1849,74 @@ export function FpsShooterGame() {
     [scheduleChain],
   );
 
+  // ── فاز F8 — زنجیرهٔ مستقل هدف طلایی (مقاوم به توقف — الگوی زنجیرهٔ اصلی؛ اسلات جدا تا
+  // با «فریز برخورد → سؤال بعد» تداخل نکند) ──
+  const goldenTimerRef = useRef<number | null>(null);
+  const goldenPendingRef = useRef<{ due: number; fn: () => void } | null>(null);
+  /** پنجرهٔ باز هدف طلایی — صفر = غیرفعال/مصرف‌شده */
+  const goldenUntilRef = useRef(0);
+
+  const scheduleGoldenChain = useCallback(() => {
+    if (goldenTimerRef.current !== null) {
+      window.clearTimeout(goldenTimerRef.current);
+      goldenTimerRef.current = null;
+    }
+    const pend = goldenPendingRef.current;
+    if (!pend || pausedRef.current || overRef.current) return;
+    goldenTimerRef.current = window.setTimeout(() => {
+      goldenTimerRef.current = null;
+      const cur = goldenPendingRef.current;
+      goldenPendingRef.current = null;
+      cur?.fn();
+    }, Math.max(0, pend.due - performance.now()));
+  }, []);
+
+  const goldenLater = useCallback(
+    (fn: () => void, ms: number) => {
+      goldenPendingRef.current = { due: performance.now() + ms, fn };
+      if (pausedRef.current) return;
+      scheduleGoldenChain();
+    },
+    [scheduleGoldenChain],
+  );
+
+  // فاز F8 — latest-ref برای فرار از وابستگی حلقوی spawn ↔ despawn
+  const spawnGoldenRef = useRef<() => void>(() => {});
+  const despawnGoldenRef = useRef<() => void>(() => {});
+
+  // فاز F8 — ظهور هدف طلایی: ۳ ثانیه فرصت شکار +۲۰ امتیاز بونوس (خارج از چرخهٔ سؤال)
+  const spawnGolden = useCallback(() => {
+    if (overRef.current || pausedRef.current) return;
+    const lane = LANE_X[Math.floor(Math.random() * LANE_X.length)];
+    setGoldenSpec({ lane, y: 1.25 + Math.random() * 0.95, z: -(5.5 + Math.random() * 3.6) });
+    goldenUntilRef.current = performance.now() + GOLDEN_WINDOW_MS;
+    setGoldenActive(true);
+    setGoldenLeft(3);
+    playSound("golden");
+    setLiveMsg(`هدف طلایی ظاهر شد! تا ۳ ثانیه شکارش کن — +${faNum(GOLDEN_BONUS)} امتیاز 🌟`);
+    goldenLater(() => despawnGoldenRef.current(), GOLDEN_WINDOW_MS);
+  }, [goldenLater]);
+
+  // فاز F8 — پایان فرصت هدف طلایی (شکار نشد) + زمان‌بندی ظهور بعدی
+  const despawnGolden = useCallback(() => {
+    if (goldenUntilRef.current > 0 && performance.now() >= goldenUntilRef.current - 60) {
+      goldenUntilRef.current = 0;
+      setGoldenActive(false);
+      setGoldenSpec(null);
+    }
+    if (!overRef.current) {
+      goldenLater(
+        () => spawnGoldenRef.current(),
+        GOLDEN_EVERY_MIN + Math.floor(Math.random() * (GOLDEN_EVERY_MAX - GOLDEN_EVERY_MIN)),
+      );
+    }
+  }, [goldenLater]);
+
+  useEffect(() => {
+    spawnGoldenRef.current = spawnGolden;
+    despawnGoldenRef.current = despawnGolden;
+  });
+
   // فاز G2-e — هوک توقف کیت: onChange → آینهٔ pausedRef (گارد ورودی‌ها) + فریز/احیای حلقهٔ
   // R3F با frameloop + جبران دو-نیمهٔ مبدأ تایمر سؤال + جمع زمان توقف برای duration Attempt.
   // auto-pause در تب مخفی از خود هوک می‌آید — در بازگشت اورلی «متوقف شد» دیده می‌شود.
@@ -1666,11 +1936,15 @@ export function FpsShooterGame() {
         if (phase === "playing" && !overRef.current) {
           deadlineRef.current += gap;
           if (chainPendingRef.current) chainPendingRef.current.due += gap;
+          // فاز F8 — جبران هدف طلایی: پنجره و زمان‌بندی بعدی هم جابه‌جا شود
+          if (goldenUntilRef.current > 0) goldenUntilRef.current += gap;
+          if (goldenPendingRef.current) goldenPendingRef.current.due += gap;
         }
       }
     }
     // فریز/احیای زنجیرهٔ «فریز برخورد → سؤال بعد/پایان»
     scheduleChain();
+    scheduleGoldenChain();
     if (phase === "playing" && !overRef.current) setLiveMsg(p ? "بازی متوقف شد ⏸" : "ادامهٔ بازی ▶");
   });
 
@@ -1757,10 +2031,22 @@ export function FpsShooterGame() {
     const item = deckRef.current[deckIdxRef.current++] as VocabEntry | QuizQuestionSeed;
     // فاز G2-e — کیفیت سبک: ۳ هدف هم‌زمان به‌جای ۴
     const maxOthers = qualityRef.current === "low" ? DISTRACTORS_LOW : DISTRACTORS_HIGH;
+    // فاز F8 — موج‌بندی: هر WAVE_SIZE پاسخ یک موج سخت‌تر (حرکت سریع‌تر + چیدمان عمیق‌تر)
+    const w = Math.min(WAVE_MAX, Math.floor(totalRef.current / WAVE_SIZE) + 1);
+    if (w !== waveRef.current) {
+      waveRef.current = w;
+      maxWaveRef.current = Math.max(maxWaveRef.current, w);
+      setWave(w);
+      bridge.current.wave = w;
+      playSound("wave");
+      setLiveMsg(`موج ${faNum(w)} شروع شد — هدف‌ها سریع‌تر شدند! ⚡`);
+    }
+    // فاز F8 — فرار هدف‌های غلط فقط در حالت شلیک (تپ ساده = دسترس‌پذیری بدون فرار)
+    bridge.current.dodge = !tapRef.current;
     const next =
       modeRef.current === "word-hunt"
-        ? buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers)
-        : buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson, maxOthers);
+        ? buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w)
+        : buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson, maxOthers, w);
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
     lockedRef.current = false;
@@ -1779,6 +2065,15 @@ export function FpsShooterGame() {
     if (overRef.current) return;
     overRef.current = true;
     clearTimers();
+    // فاز F8 — هدف طلایی خاموش + زنجیرهٔ آن برچیده شود
+    goldenUntilRef.current = 0;
+    goldenPendingRef.current = null;
+    if (goldenTimerRef.current !== null) {
+      window.clearTimeout(goldenTimerRef.current);
+      goldenTimerRef.current = null;
+    }
+    setGoldenActive(false);
+    setGoldenSpec(null);
     stopSpeaking();
     const total = totalRef.current;
     const final = scoreRef.current;
@@ -1809,6 +2104,7 @@ export function FpsShooterGame() {
           map: mapIdRef.current,
           sens: Math.round(sensRef.current * 100) / 100,
           invert: invertRef.current,
+          wave: maxWaveRef.current,
         },
       });
     }
@@ -1868,9 +2164,32 @@ export function FpsShooterGame() {
   // ── پاسخ به شلیک/تپ — فاز G2-e: بازخورد سه‌کاناله فقط در لحظهٔ رویداد برخورد ──
   const handleHit = useCallback(
     (id: string | null) => {
-      const cur = qRef.current;
-      if (overRef.current || lockedRef.current || !cur || id === null) return;
+      if (overRef.current || id === null) return;
       if (pausedRef.current || exitAskRef.current) return;
+      // فاز F8 — شکار هدف طلایی: بونوس خارج از چرخهٔ سؤال (نه پاسخ، نه قلب، نه جلو رفتن)
+      if (id === "golden") {
+        if (goldenUntilRef.current <= 0) return;
+        goldenUntilRef.current = 0;
+        setGoldenActive(false);
+        setGoldenSpec(null);
+        goldenPendingRef.current = null;
+        if (goldenTimerRef.current !== null) {
+          window.clearTimeout(goldenTimerRef.current);
+          goldenTimerRef.current = null;
+        }
+        scoreRef.current += GOLDEN_BONUS;
+        setScore(scoreRef.current);
+        playSound("golden");
+        buzz("success");
+        setLiveMsg(`هدف طلایی شکار شد! +${faNum(GOLDEN_BONUS)} امتیاز 🌟`);
+        goldenLater(
+          () => spawnGoldenRef.current(),
+          GOLDEN_EVERY_MIN + Math.floor(Math.random() * (GOLDEN_EVERY_MAX - GOLDEN_EVERY_MIN)),
+        );
+        return;
+      }
+      const cur = qRef.current;
+      if (lockedRef.current || !cur) return;
       const target = cur.targets.find((t) => t.id === id);
       if (!target) return;
       // فاز F4 — صدای «تاک» برخورد گلوله به بدنهٔ هدف (قبل از زنگ درست/غلط)
@@ -1916,7 +2235,7 @@ export function FpsShooterGame() {
         }
       }
     },
-    [advance, later, registerCorrect, registerMiss, comboCountRef],
+    [advance, later, registerCorrect, registerMiss, comboCountRef, goldenLater],
   );
   useEffect(() => {
     bridge.current.onHit = handleHit;
@@ -1958,6 +2277,10 @@ export function FpsShooterGame() {
     const iv = window.setInterval(() => {
       if (overRef.current) return;
       if (pausedRef.current) return; // فریز حین توقف — جبران در onChange ادامه
+      // فاز F8 — شمارش معکوس فرصت هدف طلایی (روی رویداد گسسته — نه هر فریم)
+      if (goldenUntilRef.current > 0) {
+        setGoldenLeft(Math.max(0, Math.ceil((goldenUntilRef.current - performance.now()) / 1000)));
+      }
       if (lockedRef.current) {
         deadlineRef.current += 200; // توقف زمان در فاصلهٔ بین سؤال‌ها
         return;
@@ -2200,6 +2523,22 @@ export function FpsShooterGame() {
     ammoRef.current = MAG_SIZE;
     setAmmo(MAG_SIZE);
     setReloading(false);
+    // فاز F8 — موج از نو + پاک‌سازی و برنامه‌ریزی هدف طلایی
+    waveRef.current = 1;
+    maxWaveRef.current = 1;
+    setWave(1);
+    bridge.current.wave = 1;
+    bridge.current.dodge = !tapMode;
+    goldenUntilRef.current = 0;
+    goldenPendingRef.current = null;
+    if (goldenTimerRef.current !== null) {
+      window.clearTimeout(goldenTimerRef.current);
+      goldenTimerRef.current = null;
+    }
+    setGoldenActive(false);
+    setGoldenSpec(null);
+    setGoldenLeft(0);
+    goldenLater(() => spawnGoldenRef.current(), GOLDEN_FIRST_MS);
     setScore(0);
     setHearts(HEARTS);
     setQ(null);
@@ -2217,7 +2556,15 @@ export function FpsShooterGame() {
     setPhase("playing");
     // سؤال اول پس از سوار شدن صحنه
     later(() => advanceRef.current(), 60);
-  }, [mode, lesson, tapMode, quality, vocabAll, quizSeed, resetCombo, resume, setExitAskSafe, clearTimers, later]);
+  }, [mode, lesson, tapMode, quality, vocabAll, quizSeed, resetCombo, resume, setExitAskSafe, clearTimers, later, goldenLater]);
+
+  // فاز F8 — پاک‌سازی تایمر زنجیرهٔ هدف طلایی در unmount (بعد از همهٔ محل‌های جهش)
+  useEffect(
+    () => () => {
+      if (goldenTimerRef.current !== null) window.clearTimeout(goldenTimerRef.current);
+    },
+    [],
+  );
 
   // ── فاز G2-e — انتخاب کیفیت گرافیک (ماندگار؛ کلید افزودنی) ──
   const setQualityPref = useCallback((q: Quality) => {
@@ -2625,6 +2972,16 @@ export function FpsShooterGame() {
               </div>
             )}
 
+            {/* فاز F8 — هدف‌های هوشمند: فرار، موج، طلایی */}
+            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+              <Zap size={15} className="mt-0.5 shrink-0 text-amber-500" />
+              <p>
+                میدان هوشمند شد: <b>هدف‌های غلط</b> وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر
+                نزدیک شو! هر <b>۵ پاسخ</b> یک موج سخت‌تر با هدف‌های سریع‌تر شروع می‌شود (تا موج ۶) و هر از گاهی
+                <b>هدف طلایی</b> ۳ثانیه‌ای ظاهر می‌شود: شکارش ۲۰ امتیاز بونوس دارد و قلب نمی‌سوزاند.
+              </p>
+            </div>
+
             {bestVal !== null && (
               <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
                 <Trophy size={12} />
@@ -2725,6 +3082,14 @@ export function FpsShooterGame() {
               </Badge>
             )}
             {/* فاز F4 — شمارندهٔ خشاب در هدر شِل (بیرون قاب — در تمام‌صفحه چیپ داخل قاب دیده می‌شود) */}
+            {/* فاز F8 — شمارهٔ موج جاری */}
+            <Badge
+              variant="outline"
+              className="gap-1 border-teal-500/40 px-2 py-1 text-[11px] font-black text-teal-600 dark:text-teal-400"
+            >
+              <Zap size={11} />
+              موج {faNum(wave)}
+            </Badge>
             {!tapMode && (
               <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px]">
                 {reloading ? (
@@ -2799,6 +3164,10 @@ export function FpsShooterGame() {
               {q?.targets.map((t) => (
                 <Target key={`q${q.seq}-${t.id}`} spec={t} registry={meshRegistry} bridge={bridge} />
               ))}
+              {/* فاز F8 — هدف طلایی بونوس */}
+              {goldenActive && goldenSpec && (
+                <GoldenTarget spec={goldenSpec} untilRef={goldenUntilRef} registry={meshRegistry} bridge={bridge} />
+              )}
               <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
               <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
               {/* فاز F3 — تفنگ سه‌بعدی ویومدل چسبیده به دوربین */}
@@ -2829,6 +3198,9 @@ export function FpsShooterGame() {
                 </span>
                 <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
                 <span>⏱ {faNum(Math.ceil(timeLeft))}</span>
+                <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
+                <span className="text-teal-300">موج {faNum(wave)}</span>
+                {goldenActive && <span className="text-amber-300">★ {faNum(goldenLeft)}</span>}
               </div>
             )}
 
@@ -2927,6 +3299,13 @@ export function FpsShooterGame() {
                       style={{ width: `${timePct}%` }}
                     />
                   </div>
+                  {/* فاز F8 — شمارندهٔ فرصت هدف طلایی */}
+                  {goldenActive && (
+                    <div className="mt-2 flex items-center justify-center gap-1.5 rounded-full border border-amber-400/50 bg-amber-500/15 px-3 py-1 text-[11px] font-black text-amber-600 dark:text-amber-400">
+                      <Sparkles size={12} className="text-amber-500" />
+                      هدف طلایی! +{faNum(GOLDEN_BONUS)} — {faNum(goldenLeft)} ثانیه
+                    </div>
+                  )}
                 </div>
               </div>
             )}

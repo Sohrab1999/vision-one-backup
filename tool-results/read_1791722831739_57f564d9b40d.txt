@@ -1,0 +1,776 @@
+     1→     1→/**
+     2→     2→ * دوئل آنلاین ۱ به ۱ — مینی‌سرویس Realtime (Task G4-02 فاز G4 نقشه راه بازی‌ها).
+     3→     3→ *
+     4→     4→ * قراردادها:
+     5→     5→ * - پورت ۳۰۰۳ هاردکد؛ path: '/' دست‌نخورده (Caddy با XTransformPort فوروارد می‌کند)
+     6→     6→ * - مدل اتاق در حافظه (in-memory): کد ۴رقمی یکتا، حداکثر ۲ بازیکن، بستهٔ سؤال از میزبان
+     7→     7→ * - پاسخ سؤال‌ها هرگز به کلاینت فرستاده نمی‌شود تا زمان reveal/پایان (بدون لو رفتن کلید)
+     8→     8→ * - تایمر ۱۵ ثانیه‌ای هر سؤال سمت سرور اعمال می‌شود؛ امتیاز: ۱۰ پایه + پاداش سرعت تا +۵
+     9→     9→ * - قطعی حین بازی: ۶۰ ثانیه مهلت rejoin با playerId — امتیازها حفظ می‌شود
+    10→    10→ * - همهٔ پیام‌های کاربر-مواجه فارسی است.
+    11→    11→ */
+    12→    12→
+    13→    13→import { createServer } from "http";
+    14→    14→import { Server, type Socket } from "socket.io";
+    15→    15→
+    16→    16→// ─── ثابت‌ها ───
+    17→    17→
+    18→    18→const PORT = 3003; // هاردکد طبق نقشه راه — Caddy با XTransformPort=3003 فوروارد می‌کند
+    19→    19→const QUESTION_MS = 15_000; // مدت هر سؤال
+    20→    20→const REVEAL_MS = 2_000; // مکث نمایش پاسخ درست بین سؤال‌ها
+    21→    21→const GRACE_MS = 60_000; // مهلت rejoin بعد از قطعی
+    22→    22→const MAX_PLAYERS = 2;
+    23→    23→const BASE_SCORE = 10; // امتیاز پایه پاسخ درست
+    24→    24→const MAX_BONUS = 5; // حداکثر پاداش سرعت
+    25→    25→const MAX_PACK = 30;
+    26→    26→const MAX_ROOMS = 300;
+    27→    27→const CODE_TTL_LOBBY_MS = 30 * 60_000; // اتاق بی‌فعال لابی
+    28→    28→const CODE_TTL_ENDED_MS = 15 * 60_000; // اتاق تمام‌شده
+    29→    29→const CLEANUP_INTERVAL_MS = 15_000;
+    30→    30→
+    31→    31→// ── فاز G5-03 — ربات داخلی تطبیقی (قاعده‌محور، بدون AI و بدون socket واقعی) ──
+    32→    32→/** پایهٔ مهارت ربات (همان ۶۵٪ رفتار پیش‌فرض) */
+    33→    33→const BOT_SKILL_BASE = 0.65;
+    34→    34→const BOT_SKILL_MIN = 0.35;
+    35→    35→const BOT_SKILL_MAX = 0.9;
+    36→    36→/** بازهٔ «فکر کردن» ربات (ms) — همیشه < مهلت ۱۵ث */
+    37→    37→const BOT_THINK_MIN_MS = 2_000;
+    38→    38→const BOT_THINK_MAX_MS = 8_000;
+    39→    39→/** نام نمایشی ربات در لابی/تخته/finished */
+    40→    40→const BOT_NAME = "ربات هوشمند";
+    41→    41→
+    42→    42→// ─── تایپ‌ها ───
+    43→    43→
+    44→    44→interface DuelQuestion {
+    45→    45→  id: string;
+    46→    46→  text: string;
+    47→    47→  options: string[];
+    48→    48→  answer: number;
+    49→    49→}
+    50→    50→
+    51→    51→interface Player {
+    52→    52→  id: string;
+    53→    53→  name: string;
+    54→    54→  score: number;
+    55→    55→  correct: number;
+    56→    56→  lastDelta: number;
+    57→    57→  lastCorrect: boolean;
+    58→    58→  connected: boolean;
+    59→    59→  socketId: string | null;
+    60→    60→  disconnectedAt: number | null;
+    61→    61→  /** فاز G5-03 — ربات داخلی (بدون socket؛ پاسخ‌ها سمت سرور ساخته می‌شود) */
+    62→    62→  isBot?: boolean;
+    63→    63→  /** فاز G5-03 — احتمال پاسخ درست ربات (فقط وقتی isBot) */
+    64→    64→  botSkill?: number;
+    65→    65→}
+    66→    66→
+    67→    67→interface PlayerPublic {
+    68→    68→  id: string;
+    69→    69→  name: string;
+    70→    70→  score: number;
+    71→    71→  correct: number;
+    72→    72→  lastDelta: number;
+    73→    73→  lastCorrect: boolean;
+    74→    74→  connected: boolean;
+    75→    75→  /** فاز G5-03 — افزودنی؛ فقط برای ربات داخلی true است */
+    76→    76→  isBot?: boolean;
+    77→    77→}
+    78→    78→
+    79→    79→type ScoresMap = Record<string, { name: string; score: number; lastDelta: number; lastCorrect: boolean }>;
+    80→    80→
+    81→    81→interface Room {
+    82→    82→  code: string;
+    83→    83→  hostId: string;
+    84→    84→  players: Map<string, Player>;
+    85→    85→  pack: DuelQuestion[];
+    86→    86→  state: "lobby" | "playing" | "ended";
+    87→    87→  currentIndex: number;
+    88→    88→  /** سؤال باز است یا در مکث نمایش پاسخ */
+    89→    89→  phase: "question" | "reveal";
+    90→    90→  /** پاسخ‌های سؤال جاری — key: playerId */
+    91→    91→  answers: Map<string, { choice: number; correct: boolean; delta: number }>;
+    92→    92→  current: { index: number; total: number; text: string; options: string[]; endsAt: number; serverNow: number } | null;
+    93→    93→  revealAnswer: number | null;
+    94→    94→  questionTimer: ReturnType<typeof setTimeout> | null;
+    95→    95→  revealTimer: ReturnType<typeof setTimeout> | null;
+    96→    96→  graceTimer: ReturnType<typeof setTimeout> | null;
+    97→    97→  /** فاز G5-03 — تایمر «فکر کردن» ربات داخلی */
+    98→    98→  botTimer: ReturnType<typeof setTimeout> | null;
+    99→    99→  startedAt: number | null;
+   100→   100→  createdAt: number;
+   101→   101→  lastActivity: number;
+   102→   102→}
+   103→   103→
+   104→   104→const rooms = new Map<string, Room>();
+   105→   105→/** socketId → نشست فعلی داخل اتاق */
+   106→   106→const socketToRoom = new Map<string, { code: string; playerId: string }>();
+   107→   107→
+   108→   108→// ─── کمکی‌ها ───
+   109→   109→
+   110→   110→function now(): number {
+   111→   111→  return Date.now();
+   112→   112→}
+   113→   113→
+   114→   114→function touch(room: Room): void {
+   115→   115→  room.lastActivity = now();
+   116→   116→}
+   117→   117→
+   118→   118→function newPlayerId(): string {
+   119→   119→  return `p${Math.random().toString(36).slice(2, 10)}${Date.now().toString(36).slice(-4)}`;
+   120→   120→}
+   121→   121→
+   122→   122→function generateCode(): string {
+   123→   123→  for (let i = 0; i < 500; i++) {
+   124→   124→    const code = String(Math.floor(1000 + Math.random() * 9000));
+   125→   125→    if (!rooms.has(code)) return code;
+   126→   126→  }
+   127→   127→  return String(Date.now() % 10000).padStart(4, "0");
+   128→   128→}
+   129→   129→
+   130→   130→function sanitizeName(raw: unknown): string {
+   131→   131→  const s = typeof raw === "string" ? raw.trim().replace(/\s+/g, " ").slice(0, 24) : "";
+   132→   132→  return s.length > 0 ? s : "مهمان";
+   133→   133→}
+   134→   134→
+   135→   135→/** پالایش بستهٔ سؤال میزبان — خروجی تمیز و سالم؛ null = نامعتبر */
+   136→   136→function sanitizePack(raw: unknown): DuelQuestion[] | null {
+   137→   137→  if (!Array.isArray(raw)) return null;
+   138→   138→  const out: DuelQuestion[] = [];
+   139→   139→  for (const item of raw.slice(0, MAX_PACK)) {
+   140→   140→    if (!item || typeof item !== "object") continue;
+   141→   141→    const q = item as Record<string, unknown>;
+   142→   142→    const text = typeof q.text === "string" ? q.text.trim().slice(0, 400) : "";
+   143→   143→    const options = Array.isArray(q.options)
+   144→   144→      ? q.options.filter((o): o is string => typeof o === "string" && o.trim().length > 0).map((o) => o.slice(0, 120))
+   145→   145→      : [];
+   146→   146→    const answer = typeof q.answer === "number" && Number.isInteger(q.answer) ? q.answer : -1;
+   147→   147→    if (!text || options.length < 2 || answer < 0 || answer >= options.length) continue;
+   148→   148→    out.push({
+   149→   149→      id: typeof q.id === "string" ? q.id.slice(0, 40) : `q${out.length + 1}`,
+   150→   150→      text,
+   151→   151→      options,
+   152→   152→      answer,
+   153→   153→    });
+   154→   154→  }
+   155→   155→  return out.length >= 1 ? out : null;
+   156→   156→}
+   157→   157→
+   158→   158→function playersPublic(room: Room): PlayerPublic[] {
+   159→   159→  return [...room.players.values()].map((p) => ({
+   160→   160→    id: p.id,
+   161→   161→    name: p.name,
+   162→   162→    score: p.score,
+   163→   163→    correct: p.correct,
+   164→   164→    lastDelta: p.lastDelta,
+   165→   165→    lastCorrect: p.lastCorrect,
+   166→   166→    connected: p.connected,
+   167→   167→    ...(p.isBot ? { isBot: true } : {}),
+   168→   168→  }));
+   169→   169→}
+   170→   170→
+   171→   171→/** فاز G5-03 — آیا همهٔ بازیکنانِ باقی‌ماندهٔ اتاق ربات داخلی‌اند؟ (میزبان رفته) */
+   172→   172→function allBots(room: Room): boolean {
+   173→   173→  return [...room.players.values()].every((p) => p.isBot === true);
+   174→   174→}
+   175→   175→
+   176→   176→function scoresOf(room: Room): ScoresMap {
+   177→   177→  const out: ScoresMap = {};
+   178→   178→  for (const p of room.players.values()) {
+   179→   179→    out[p.id] = { name: p.name, score: p.score, lastDelta: p.lastDelta, lastCorrect: p.lastCorrect };
+   180→   180→  }
+   181→   181→  return out;
+   182→   182→}
+   183→   183→
+   184→   184→function emitToSocket(room: Room, playerId: string, event: string, payload: unknown): void {
+   185→   185→  const p = room.players.get(playerId);
+   186→   186→  // فاز G5-03 — ربات داخلی socket واقعی ندارد؛ ساکت رد شو (بدون لاگ نویز)
+   187→   187→  if (!p || p.isBot) return;
+   188→   188→  if (!p.socketId) {
+   189→   189→    console.log(`[duel][DBG] emitToSocket ${event} → ${playerId} SKIP (no socketId)`);
+   190→   190→    return;
+   191→   191→  }
+   192→   192→  const s = io.sockets.sockets.get(p.socketId);
+   193→   193→  if (!s) {
+   194→   194→    console.log(`[duel][DBG] emitToSocket ${event} → ${playerId} SKIP (socket ${p.socketId} not in io map)`);
+   195→   195→    return;
+   196→   196→  }
+   197→   197→  console.log(`[duel][DBG] emitToSocket ${event} → ${playerId} via ${p.socketId} OK`);
+   198→   198→  s.emit(event, payload);
+   199→   199→}
+   200→   200→
+   201→   201→function emitToAll(room: Room, event: string, payload: unknown): void {
+   202→   202→  for (const p of room.players.values()) {
+   203→   203→    emitToSocket(room, p.id, event, payload);
+   204→   204→  }
+   205→   205→}
+   206→   206→
+   207→   207→/** وضعیت اتاق را به تک‌تک سوکت‌ها به‌صورت شخصی می‌فرستد (هر کدام `you` خودشان را می‌گیرند) */
+   208→   208→function broadcastRoom(room: Room): void {
+   209→   209→  for (const p of room.players.values()) {
+   210→   210→    emitToSocket(room, p.id, "joined", {
+   211→   211→      code: room.code,
+   212→   212→      players: playersPublic(room),
+   213→   213→      hostId: room.hostId,
+   214→   214→      state: room.state,
+   215→   215→      you: p.id,
+   216→   216→    });
+   217→   217→  }
+   218→   218→}
+   219→   219→
+   220→   220→function clearTimers(room: Room): void {
+   221→   221→  if (room.questionTimer) clearTimeout(room.questionTimer);
+   222→   222→  if (room.revealTimer) clearTimeout(room.revealTimer);
+   223→   223→  if (room.botTimer) clearTimeout(room.botTimer);
+   224→   224→  room.questionTimer = null;
+   225→   225→  room.revealTimer = null;
+   226→   226→  room.botTimer = null;
+   227→   227→}
+   228→   228→
+   229→   229→function deleteRoom(code: string): void {
+   230→   230→  const room = rooms.get(code);
+   231→   231→  if (!room) return;
+   232→   232→  clearTimers(room);
+   233→   233→  if (room.graceTimer) clearTimeout(room.graceTimer);
+   234→   234→  rooms.delete(code);
+   235→   235→  for (const [sid, ctx] of socketToRoom) {
+   236→   236→    if (ctx.code === code) socketToRoom.delete(sid);
+   237→   237→  }
+   238→   238→  console.log(`[duel] room ${code} deleted`);
+   239→   239→}
+   240→   240→
+   241→   241→function emitError(socket: Socket, message: string): void {
+   242→   242→  socket.emit("error", { message, fatal: true });
+   243→   243→}
+   244→   244→
+   245→   245→// ─── جریان سؤال ───
+   246→   246→
+   247→   247→function startQuestion(room: Room): void {
+   248→   248→  if (room.currentIndex >= room.pack.length) {
+   249→   249→    finishGame(room);
+   250→   250→    return;
+   251→   251→  }
+   252→   252→  clearTimers(room);
+   253→   253→  room.state = "playing";
+   254→   254→  room.phase = "question";
+   255→   255→  room.revealAnswer = null;
+   256→   256→  room.answers = new Map();
+   257→   257→  const q = room.pack[room.currentIndex];
+   258→   258→  const t = now();
+   259→   259→  room.current = { index: room.currentIndex, total: room.pack.length, text: q.text, options: q.options, endsAt: t + QUESTION_MS, serverNow: t };
+   260→   260→  touch(room);
+   261→   261→  emitToAll(room, "question", {
+   262→   262→    index: room.currentIndex,
+   263→   263→    total: room.pack.length,
+   264→   264→    text: q.text,
+   265→   265→    options: q.options,
+   266→   266→    endsAt: room.current.endsAt,
+   267→   267→    serverNow: t,
+   268→   268→  });
+   269→   269→  // ۱۵۰ms گاری تأخیر شبکه — قضاوت نهایی با زمان انقضا
+   270→   270→  room.questionTimer = setTimeout(() => closeQuestion(room), QUESTION_MS + 150);
+   271→   271→  // فاز G5-03 — ربات داخلی هم مثل حریف واقعی «فکر می‌کند» و جواب می‌دهد
+   272→   272→  scheduleBotAnswer(room);
+   273→   273→}
+   274→   274→
+   275→   275→/**
+   276→   276→ * فاز G5-03 — زمان‌بندی پاسخ ربات داخلی: زمان فکر تصادفی ۲..۸ ثانیه
+   277→   277→ * (همیشه کمتر از مهلت ۱۵ث) سپس همان مسیر registerAnswer پاسخ انسانی.
+   278→   278→ */
+   279→   279→function scheduleBotAnswer(room: Room): void {
+   280→   280→  if (room.botTimer) {
+   281→   281→    clearTimeout(room.botTimer);
+   282→   282→    room.botTimer = null;
+   283→   283→  }
+   284→   284→  if (room.state !== "playing" || room.phase !== "question") return;
+   285→   285→  const bot = [...room.players.values()].find((p) => p.isBot);
+   286→   286→  if (!bot || bot.botSkill === undefined) return;
+   287→   287→  const think = BOT_THINK_MIN_MS + Math.floor(Math.random() * (BOT_THINK_MAX_MS - BOT_THINK_MIN_MS + 1));
+   288→   288→  room.botTimer = setTimeout(() => {
+   289→   289→    room.botTimer = null;
+   290→   290→    botAnswer(room, bot);
+   291→   291→  }, think);
+   292→   292→}
+   293→   293→
+   294→   294→/** پاسخ ربات داخلی به سؤال جاری — با احتمال skill درست، وگرنه یک گزینهٔ غلط تصادفی */
+   295→   295→function botAnswer(room: Room, bot: Player): void {
+   296→   296→  if (room.state !== "playing" || room.phase !== "question" || !room.current) return;
+   297→   297→  if (room.answers.has(bot.id)) return;
+   298→   298→  const q = room.pack[room.currentIndex];
+   299→   299→  const skill = bot.botSkill ?? BOT_SKILL_BASE;
+   300→   300→  const correct = Math.random() < skill;
+   301→   301→  const wrongs = q.options.map((_, i) => i).filter((i) => i !== q.answer);
+   302→   302→  const choice = correct ? q.answer : (wrongs[Math.floor(Math.random() * wrongs.length)] ?? q.answer);
+   303→   303→  registerAnswer(room, bot, choice);
+   304→   304→}
+   305→   305→
+   306→   306→/**
+   307→   307→ * فاز G5-03 — ثبت پاسخ یک بازیکن (انسان یا ربات) — منطق امتیازدهی مشترک؛
+   308→   308→ * بدنه از هندلر `answer` استخراج شد تا ربات دقیقاً همان مسیر را طی کند
+   309→   309→ * (score → بستن زودهنگام اگر همه پاسخ دادند → reveal).
+   310→   310→ */
+   311→   311→function registerAnswer(room: Room, p: Player, choice: number): void {
+   312→   312→  if (room.phase !== "question" || !room.current) return;
+   313→   313→  const q = room.pack[room.currentIndex];
+   314→   314→  const remaining = Math.max(0, room.current.endsAt - now());
+   315→   315→  const bonus = Math.round((MAX_BONUS * remaining) / QUESTION_MS);
+   316→   316→  const correct = choice === q.answer;
+   317→   317→  const delta = correct ? BASE_SCORE + bonus : 0;
+   318→   318→  p.score += delta;
+   319→   319→  if (correct) p.correct += 1;
+   320→   320→  p.lastDelta = delta;
+   321→   321→  p.lastCorrect = correct;
+   322→   322→  room.answers.set(p.id, { choice, correct, delta });
+   323→   323→  touch(room);
+   324→   324→  emitToAll(room, "score", { questionIndex: room.currentIndex, scores: scoresOf(room) });
+   325→   325→
+   326→   326→  // همهٔ بازیکنان آنلاین پاسخ دادند؟ بستن زودهنگام سؤال
+   327→   327→  const connected = [...room.players.values()].filter((pl) => pl.connected);
+   328→   328→  if (connected.length > 0 && room.answers.size > 0 && room.answers.size >= connected.length) {
+   329→   329→    closeQuestion(room);
+   330→   330→  }
+   331→   331→}
+   332→   332→
+   333→   333→function closeQuestion(room: Room): void {
+   334→   334→  if (room.phase !== "question") return;
+   335→   335→  if (room.questionTimer) clearTimeout(room.questionTimer);
+   336→   336→  room.questionTimer = null;
+   337→   337→  room.phase = "reveal";
+   338→   338→  const q = room.pack[room.currentIndex];
+   339→   339→  room.revealAnswer = q.answer;
+   340→   340→  touch(room);
+   341→   341→  // طبق قرارداد: بعد از هر پاسخ یا انقضا رویداد score می‌رود
+   342→   342→  emitToAll(room, "score", { questionIndex: room.currentIndex, scores: scoresOf(room) });
+   343→   343→  emitToAll(room, "reveal", { index: room.currentIndex, answer: q.answer, scores: scoresOf(room) });
+   344→   344→  room.revealTimer = setTimeout(() => {
+   345→   345→    room.currentIndex += 1;
+   346→   346→    startQuestion(room);
+   347→   347→  }, REVEAL_MS);
+   348→   348→}
+   349→   349→
+   350→   350→function finishGame(room: Room): void {
+   351→   351→  clearTimers(room);
+   352→   352→  room.state = "ended";
+   353→   353→  room.phase = "reveal";
+   354→   354→  room.current = null;
+   355→   355→  room.revealAnswer = null;
+   356→   356→  touch(room);
+   357→   357→  const duration = room.startedAt ? Math.max(1, Math.round((now() - room.startedAt) / 1000)) : 0;
+   358→   358→  const finalScores = [...room.players.values()]
+   359→   359→    .map((p) => ({ id: p.id, name: p.name, score: p.score, correct: p.correct }))
+   360→   360→    .sort((a, b) => b.score - a.score || b.correct - a.correct);
+   361→   361→  emitToAll(room, "finished", { finalScores, packSummary: room.pack, duration });
+   362→   362→  console.log(`[duel] room ${room.code} finished (${duration}s)`);
+   363→   363→}
+   364→   364→
+   365→   365→// ─── مهلت قطعی (grace) ───
+   366→   366→
+   367→   367→function armGrace(room: Room): void {
+   368→   368→  if (room.graceTimer) return;
+   369→   369→  const earliest = Math.min(
+   370→   370→    ...[...room.players.values()].filter((p) => !p.connected && p.disconnectedAt).map((p) => p.disconnectedAt!),
+   371→   371→  );
+   372→   372→  if (!Number.isFinite(earliest)) return;
+   373→   373→  const wait = Math.max(1_000, earliest + GRACE_MS - now());
+   374→   374→  room.graceTimer = setTimeout(() => {
+   375→   375→    room.graceTimer = null;
+   376→   376→    const t = now();
+   377→   377→    let removed = false;
+   378→   378→    for (const p of [...room.players.values()]) {
+   379→   379→      if (!p.connected && p.disconnectedAt && t - p.disconnectedAt >= GRACE_MS - 250) {
+   380→   380→        room.players.delete(p.id);
+   381→   381→        removed = true;
+   382→   382→      }
+   383→   383→    }
+   384→   384→    if (room.players.size === 0 || allBots(room)) {
+   385→   385→      deleteRoom(room.code);
+   386→   386→      return;
+   387→   387→    }
+   388→   388→    if (removed) broadcastRoom(room);
+   389→   389→    // اگر هنوز بازیکن قطعی دارد، تایمر بعدی
+   390→   390→    if ([...room.players.values()].some((p) => !p.connected)) armGrace(room);
+   391→   391→  }, wait);
+   392→   392→}
+   393→   393→
+   394→   394→function clearGraceIfAllConnected(room: Room): void {
+   395→   395→  if (room.graceTimer && [...room.players.values()].every((p) => p.connected)) {
+   396→   396→    clearTimeout(room.graceTimer);
+   397→   397→    room.graceTimer = null;
+   398→   398→  }
+   399→   399→}
+   400→   400→
+   401→   401→// ─── سرور ───
+   402→   402→
+   403→   403→const httpServer = createServer();
+   404→   404→const io = new Server(httpServer, {
+   405→   405→  // DO NOT change the path — Caddy forwards via XTransformPort
+   406→   406→  path: "/",
+   407→   407→  cors: { origin: "*", methods: ["GET", "POST"] },
+   408→   408→  pingTimeout: 60000,
+   409→   409→  pingInterval: 25000,
+   410→   410→});
+   411→   411→
+   412→   412→io.on("connection", (socket: Socket) => {
+   413→   413→  console.log(`[duel] connected: ${socket.id}`);
+   414→   414→
+   415→   415→  // ── ساخت اتاق (میزبان؛ بستهٔ سؤال را خودش می‌فرستد) ──
+   416→   416→  socket.on("create", (raw: unknown) => {
+   417→   417→    const data = (raw ?? {}) as { name?: unknown; pack?: unknown };
+   418→   418→    if (rooms.size >= MAX_ROOMS) {
+   419→   419→      emitError(socket, "سرور شلوغ است — چند لحظه بعد تلاش کن");
+   420→   420→      return;
+   421→   421→    }
+   422→   422→    const pack = sanitizePack(data.pack);
+   423→   423→    if (!pack) {
+   424→   424→      emitError(socket, "بستهٔ سؤال نامعتبر است");
+   425→   425→      return;
+   426→   426→    }
+   427→   427→    const playerId = newPlayerId();
+   428→   428→    const room: Room = {
+   429→   429→      code: generateCode(),
+   430→   430→      hostId: playerId,
+   431→   431→      players: new Map(),
+   432→   432→      pack,
+   433→   433→      state: "lobby",
+   434→   434→      currentIndex: 0,
+   435→   435→      phase: "question",
+   436→   436→      answers: new Map(),
+   437→   437→      current: null,
+   438→   438→      revealAnswer: null,
+   439→   439→      questionTimer: null,
+   440→   440→      revealTimer: null,
+   441→   441→      graceTimer: null,
+   442→   442→      botTimer: null,
+   443→   443→      startedAt: null,
+   444→   444→      createdAt: now(),
+   445→   445→      lastActivity: now(),
+   446→   446→    };
+   447→   447→    room.players.set(playerId, {
+   448→   448→      id: playerId,
+   449→   449→      name: sanitizeName(data.name),
+   450→   450→      score: 0,
+   451→   451→      correct: 0,
+   452→   452→      lastDelta: 0,
+   453→   453→      lastCorrect: true,
+   454→   454→      connected: true,
+   455→   455→      socketId: socket.id,
+   456→   456→      disconnectedAt: null,
+   457→   457→    });
+   458→   458→    rooms.set(room.code, room);
+   459→   459→    socketToRoom.set(socket.id, { code: room.code, playerId });
+   460→   460→    socket.emit("created", { code: room.code, playerId, total: pack.length });
+   461→   461→    broadcastRoom(room);
+   462→   462→    console.log(`[duel] room ${room.code} created by ${playerId} (${pack.length} questions)`);
+   463→   463→  });
+   464→   464→
+   465→   465→  // ── فاز G5-03 — تمرین با ربات تطبیقی (میزبان + ربات داخلی بدون socket واقعی) ──
+   466→   466→  // ورودی: { name?, pack?, winRate? } — winRate ∈ [0,1] نرخ برد میزبان (پیش‌فرض ۰٫۵).
+   467→   467→  // مهارت ربات: s = clamp(0.35, 0.9, 0.65 + (winRate − 0.5) × 0.6) — کشش برد/باخت به ~۵۰٪.
+   468→   468→  // جریان بعدی همان اتاق کلاسیک است: start → question → answer/reveal → finished؛
+   469→   469→  // ربات همهٔ رخدادهای حریف واقعی را از سمت سرور برای socketId میزبان emit می‌کند.
+   470→   470→  socket.on("play_bot", (raw: unknown) => {
+   471→   471→    const data = (raw ?? {}) as { name?: unknown; pack?: unknown; winRate?: unknown };
+   472→   472→    if (rooms.size >= MAX_ROOMS) {
+   473→   473→      emitError(socket, "سرور شلوغ است — چند لحظه بعد تلاش کن");
+   474→   474→      return;
+   475→   475→    }
+   476→   476→    const pack = sanitizePack(data.pack);
+   477→   477→    if (!pack) {
+   478→   478→      emitError(socket, "بستهٔ سؤال نامعتبر است");
+   479→   479→      return;
+   480→   480→    }
+   481→   481→    const winRate =
+   482→   482→      typeof data.winRate === "number" && Number.isFinite(data.winRate)
+   483→   483→        ? Math.min(1, Math.max(0, data.winRate))
+   484→   484→        : 0.5;
+   485→   485→    const skill = Math.min(BOT_SKILL_MAX, Math.max(BOT_SKILL_MIN, BOT_SKILL_BASE + (winRate - 0.5) * 0.6));
+   486→   486→    const playerId = newPlayerId();
+   487→   487→    const botId = newPlayerId();
+   488→   488→    const room: Room = {
+   489→   489→      code: generateCode(),
+   490→   490→      hostId: playerId,
+   491→   491→      players: new Map(),
+   492→   492→      pack,
+   493→   493→      state: "lobby",
+   494→   494→      currentIndex: 0,
+   495→   495→      phase: "question",
+   496→   496→      answers: new Map(),
+   497→   497→      current: null,
+   498→   498→      revealAnswer: null,
+   499→   499→      questionTimer: null,
+   500→   500→      revealTimer: null,
+   501→   501→      graceTimer: null,
+   502→   502→      botTimer: null,
+   503→   503→      startedAt: null,
+   504→   504→      createdAt: now(),
+   505→   505→      lastActivity: now(),
+   506→   506→    };
+   507→   507→    room.players.set(playerId, {
+   508→   508→      id: playerId,
+   509→   509→      name: sanitizeName(data.name),
+   510→   510→      score: 0,
+   511→   511→      correct: 0,
+   512→   512→      lastDelta: 0,
+   513→   513→      lastCorrect: true,
+   514→   514→      connected: true,
+   515→   515→      socketId: socket.id,
+   516→   516→      disconnectedAt: null,
+   517→   517→    });
+   518→   518→    // بازیکن دوم = ربات داخلی — socket ندارد؛ امتیاز/پاسخ‌هایش با همان منطق registerAnswer ساخته می‌شود
+   519→   519→    room.players.set(botId, {
+   520→   520→      id: botId,
+   521→   521→      name: BOT_NAME,
+   522→   522→      score: 0,
+   523→   523→      correct: 0,
+   524→   524→      lastDelta: 0,
+   525→   525→      lastCorrect: true,
+   526→   526→      connected: true,
+   527→   527→      socketId: null,
+   528→   528→      disconnectedAt: null,
+   529→   529→      isBot: true,
+   530→   530→      botSkill: skill,
+   531→   531→    });
+   532→   532→    rooms.set(room.code, room);
+   533→   533→    socketToRoom.set(socket.id, { code: room.code, playerId });
+   534→   534→    socket.emit("created", { code: room.code, playerId, total: pack.length });
+   535→   535→    broadcastRoom(room); // ربات socket ندارد — فقط میزبان joined می‌گیرد
+   536→   536→    // لاگ فنی کوتاه (بدون PII) برای دیدن رفتار تطبیقی
+   537→   537→    console.log(
+   538→   538→      `[duel] bot room ${room.code} — skill=${skill.toFixed(2)} winRate=${winRate.toFixed(2)} (${pack.length}q)`,
+   539→   539→    );
+   540→   540→  });
+   541→   541→
+   542→   542→  // ── پیوستن با کد ──
+   543→   543→  socket.on("join", (raw: unknown) => {
+   544→   544→    const data = (raw ?? {}) as { code?: unknown; name?: unknown };
+   545→   545→    const code = typeof data.code === "string" ? data.code.replace(/\D/g, "").slice(0, 4) : "";
+   546→   546→    const room = rooms.get(code);
+   547→   547→    if (!room) {
+   548→   548→      emitError(socket, "کد اتاق پیدا نشد");
+   549→   549→      return;
+   550→   550→    }
+   551→   551→    if (room.players.size >= MAX_PLAYERS) {
+   552→   552→      emitError(socket, "اتاق پر است");
+   553→   553→      return;
+   554→   554→    }
+   555→   555→    if (room.state === "playing") {
+   556→   556→      emitError(socket, "بازی همین حالا در جریان است — منتظر دور بعد بمان");
+   557→   557→      return;
+   558→   558→    }
+   559→   559→    const playerId = newPlayerId();
+   560→   560→    room.players.set(playerId, {
+   561→   561→      id: playerId,
+   562→   562→      name: sanitizeName(data.name),
+   563→   563→      score: 0,
+   564→   564→      correct: 0,
+   565→   565→      lastDelta: 0,
+   566→   566→      lastCorrect: true,
+   567→   567→      connected: true,
+   568→   568→      socketId: socket.id,
+   569→   569→      disconnectedAt: null,
+   570→   570→    });
+   571→   571→    socketToRoom.set(socket.id, { code: room.code, playerId });
+   572→   572→    touch(room);
+   573→   573→    clearGraceIfAllConnected(room);
+   574→   574→    broadcastRoom(room);
+   575→   575→    console.log(`[duel] ${playerId} joined room ${room.code}`);
+   576→   576→  });
+   577→   577→
+   578→   578→  // ── اتصال دوباره بعد از قطعی (همان playerId) ──
+   579→   579→  socket.on("rejoin", (raw: unknown) => {
+   580→   580→    const data = (raw ?? {}) as { code?: unknown; playerId?: unknown };
+   581→   581→    const code = typeof data.code === "string" ? data.code.replace(/\D/g, "").slice(0, 4) : "";
+   582→   582→    const playerId = typeof data.playerId === "string" ? data.playerId : "";
+   583→   583→    const room = rooms.get(code);
+   584→   584→    if (!room) {
+   585→   585→      emitError(socket, "اتاق دیگر وجود ندارد — دور تمام شده است");
+   586→   586→      return;
+   587→   587→    }
+   588→   588→    const p = room.players.get(playerId);
+   589→   589→    if (!p) {
+   590→   590→      emitError(socket, "جایگاه شما در اتاق پیدا نشد");
+   591→   591→      return;
+   592→   592→    }
+   593→   593→    p.connected = true;
+   594→   594→    p.socketId = socket.id;
+   595→   595→    p.disconnectedAt = null;
+   596→   596→    socketToRoom.set(socket.id, { code: room.code, playerId });
+   597→   597→    touch(room);
+   598→   598→    clearGraceIfAllConnected(room);
+   599→   599→    // همگام‌سازی کامل وضعیت برای خودِ وصل‌شونده
+   600→   600→    socket.emit("joined", {
+   601→   601→      code: room.code,
+   602→   602→      players: playersPublic(room),
+   603→   603→      hostId: room.hostId,
+   604→   604→      state: room.state,
+   605→   605→      you: playerId,
+   606→   606→    });
+   607→   607→    if (room.state === "playing") {
+   608→   608→      if (room.phase === "question" && room.current) {
+   609→   609→        socket.emit("question", room.current);
+   610→   610→      } else if (room.phase === "reveal" && room.revealAnswer !== null) {
+   611→   611→        socket.emit("reveal", { index: room.currentIndex, answer: room.revealAnswer, scores: scoresOf(room) });
+   612→   612→      }
+   613→   613→    } else if (room.state === "ended") {
+   614→   614→      const duration = room.startedAt ? Math.max(1, Math.round((now() - room.startedAt) / 1000)) : 0;
+   615→   615→      const finalScores = [...room.players.values()]
+   616→   616→        .map((pl) => ({ id: pl.id, name: pl.name, score: pl.score, correct: pl.correct }))
+   617→   617→        .sort((a, b) => b.score - a.score || b.correct - a.correct);
+   618→   618→      socket.emit("finished", { finalScores, packSummary: room.pack, duration });
+   619→   619→    }
+   620→   620→    for (const other of room.players.values()) {
+   621→   621→      if (other.id !== playerId) {
+   622→   622→        emitToSocket(room, other.id, "opponent-back", {
+   623→   623→          name: p.name,
+   624→   624→          message: `${p.name} دوباره وصل شد — ادامه می‌دهیم!`,
+   625→   625→        });
+   626→   626→      }
+   627→   627→    }
+   628→   628→    console.log(`[duel] ${playerId} rejoined room ${room.code}`);
+   629→   629→  });
+   630→   630→
+   631→   631→  // ── شروع دوئل (فقط میزبان) ──
+   632→   632→  socket.on("start", () => {
+   633→   633→    const ctx = socketToRoom.get(socket.id);
+   634→   634→    if (!ctx) return;
+   635→   635→    const room = rooms.get(ctx.code);
+   636→   636→    if (!room) return;
+   637→   637→    if (room.hostId !== ctx.playerId) {
+   638→   638→      emitError(socket, "فقط میزبان می‌تواند دوئل را شروع کند");
+   639→   639→      return;
+   640→   640→    }
+   641→   641→    if (room.state !== "lobby") {
+   642→   642→      emitError(socket, "بازی قبلاً شروع شده است");
+   643→   643→      return;
+   644→   644→    }
+   645→   645→    if (room.players.size < 2 || [...room.players.values()].some((p) => !p.connected)) {
+   646→   646→      emitError(socket, "حریف هنوز آنلاین نیست — منتظر بمان");
+   647→   647→      return;
+   648→   648→    }
+   649→   649→    room.startedAt = now();
+   650→   650→    touch(room);
+   651→   651→    startQuestion(room);
+   652→   652→    console.log(`[duel] room ${room.code} started`);
+   653→   653→  });
+   654→   654→
+   655→   655→  // ── پاسخ به سؤال ──
+   656→   656→  socket.on("answer", (raw: unknown) => {
+   657→   657→    const data = (raw ?? {}) as { index?: unknown; choice?: unknown };
+   658→   658→    const ctx = socketToRoom.get(socket.id);
+   659→   659→    if (!ctx) return;
+   660→   660→    const room = rooms.get(ctx.code);
+   661→   661→    if (!room || room.state !== "playing" || room.phase !== "question" || !room.current) return;
+   662→   662→    if (typeof data.index !== "number" || data.index !== room.currentIndex) return;
+   663→   663→    const q = room.pack[room.currentIndex];
+   664→   664→    const choice = typeof data.choice === "number" && Number.isInteger(data.choice) ? data.choice : -1;
+   665→   665→    if (choice < 0 || choice >= q.options.length) return;
+   666→   666→    const p = room.players.get(ctx.playerId);
+   667→   667→    if (!p || !p.connected) return;
+   668→   668→    if (room.answers.has(p.id)) return; // هر بازیکن فقط یک بار در هر سؤال
+   669→   669→
+   670→   670→    // فاز G5-03 — بدنهٔ امتیازدهی به registerAnswer منتقل شد (مشترک با ربات داخلی)
+   671→   671→    registerAnswer(room, p, choice);
+   672→   672→  });
+   673→   673→
+   674→   674→  // ── شروع دوباره با همان بستهٔ سؤال (فقط میزبان) ──
+   675→   675→  socket.on("rematch", () => {
+   676→   676→    const ctx = socketToRoom.get(socket.id);
+   677→   677→    if (!ctx) return;
+   678→   678→    const room = rooms.get(ctx.code);
+   679→   679→    if (!room || room.hostId !== ctx.playerId) return;
+   680→   680→    if (room.state !== "ended") return;
+   681→   681→    for (const p of room.players.values()) {
+   682→   682→      p.score = 0;
+   683→   683→      p.correct = 0;
+   684→   684→      p.lastDelta = 0;
+   685→   685→      p.lastCorrect = true;
+   686→   686→    }
+   687→   687→    room.currentIndex = 0;
+   688→   688→    room.startedAt = now();
+   689→   689→    touch(room);
+   690→   690→    emitToAll(room, "rematch", { message: "دور دوباره با همان سؤال‌ها شروع شد!" });
+   691→   691→    broadcastRoom(room);
+   692→   692→    startQuestion(room);
+   693→   693→    console.log(`[duel] room ${room.code} rematch`);
+   694→   694→  });
+   695→   695→
+   696→   696→  // ── قطع اتصال ──
+   697→   697→  socket.on("disconnect", () => {
+   698→   698→    console.log(`[duel] disconnected: ${socket.id}`);
+   699→   699→    const ctx = socketToRoom.get(socket.id);
+   700→   700→    if (!ctx) return;
+   701→   701→    socketToRoom.delete(socket.id);
+   702→   702→    const room = rooms.get(ctx.code);
+   703→   703→    if (!room) return;
+   704→   704→    const p = room.players.get(ctx.playerId);
+   705→   705→    if (!p || p.socketId !== socket.id) return;
+   706→   706→
+   707→   707→    p.connected = false;
+   708→   708→    p.socketId = null;
+   709→   709→    p.disconnectedAt = now();
+   710→   710→    touch(room);
+   711→   711→
+   712→   712→    if (room.state === "lobby") {
+   713→   713→      // در لابی چیزی برای حفظ کردن نیست — جایگاه آزاد می‌شود (اتاق فقط‌ربات هم بسته می‌شود)
+   714→   714→      room.players.delete(p.id);
+   715→   715→      if (room.players.size === 0 || allBots(room)) {
+   716→   716→        deleteRoom(room.code);
+   717→   717→        return;
+   718→   718→      }
+   719→   719→      if (room.hostId === p.id) {
+   720→   720→        room.hostId = [...room.players.keys()][0];
+   721→   721→        emitToAll(room, "error", { message: "میزبان رفت — میزبانی به بازیکن دیگر رسید", fatal: false });
+   722→   722→      }
+   723→   723→      broadcastRoom(room);
+   724→   724→      return;
+   725→   725→    }
+   726→   726→
+   727→   727→    // حین بازی یا بعد از پایان: ۶۰ ثانیه مهلت rejoin — امتیازها حفظ می‌شود
+   728→   728→    for (const other of room.players.values()) {
+   729→   729→      if (other.connected) {
+   730→   730→        emitToSocket(room, other.id, "opponent-left", {
+   731→   731→          name: p.name,
+   732→   732→          message: `حریف ${p.name} قطع شد — امتیاز شما حفظ شد`,
+   733→   733→        });
+   734→   734→      }
+   735→   735→    }
+   736→   736→    armGrace(room);
+   737→   737→  });
+   738→   738→
+   739→   739→  socket.on("error", (err: unknown) => {
+   740→   740→    console.error(`[duel] socket error (${socket.id}):`, err);
+   741→   741→  });
+   742→   742→});
+   743→   743→
+   744→   744→// ─── پاک‌سازی دوره‌ای اتاق‌های بی‌صاحب/کهنه ───
+   745→   745→
+   746→   746→setInterval(() => {
+   747→   747→  const t = now();
+   748→   748→  for (const room of [...rooms.values()]) {
+   749→   749→    if (room.players.size === 0 || allBots(room)) {
+   750→   750→      if (t - room.createdAt > GRACE_MS) deleteRoom(room.code);
+   751→   751→      continue;
+   752→   752→    }
+   753→   753→    const allDisconnected = [...room.players.values()].every((p) => !p.connected);
+   754→   754→    if (allDisconnected && t - Math.max(...[...room.players.values()].map((p) => p.disconnectedAt ?? t)) > GRACE_MS + 5_000) {
+   755→   755→      deleteRoom(room.code);
+   756→   756→      continue;
+   757→   757→    }
+   758→   758→    const ttl = room.state === "ended" ? CODE_TTL_ENDED_MS : CODE_TTL_LOBBY_MS;
+   759→   759→    if (room.state !== "playing" && t - room.lastActivity > ttl) {
+   760→   760→      emitToAll(room, "room-closed", { message: "اتاق به‌دلیل بی‌فعالیتی بسته شد" });
+   761→   761→      deleteRoom(room.code);
+   762→   762→    }
+   763→   763→  }
+   764→   764→}, CLEANUP_INTERVAL_MS);
+   765→   765→
+   766→   766→httpServer.listen(PORT, () => {
+   767→   767→  console.log(`[duel] دوئل آنلاین آماده است — پورت ${PORT}`);
+   768→   768→});
+   769→   769→
+   770→   770→process.on("SIGTERM", () => {
+   771→   771→  httpServer.close(() => process.exit(0));
+   772→   772→});
+   773→   773→process.on("SIGINT", () => {
+   774→   774→  httpServer.close(() => process.exit(0));
+   775→   775→});
+   776→   776→

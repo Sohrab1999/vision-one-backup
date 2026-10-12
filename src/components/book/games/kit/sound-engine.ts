@@ -21,6 +21,8 @@ export type GameSound =
   | "shoot" // شلیک (شوتر)
   | "hit" // برخورد گلوله به هدف (شوتر)
   | "reload" // تعویض خشاب (شوتر)
+  | "golden" // ظاهرشدن/شکار هدف طلایی (شوتر — فاز F8)
+  | "wave" // شروع موج سخت‌تر (شوتر — فاز F8)
   | "win"; // برد نهایی (فینال/ماجراجویی)
 
 const MUTE_KEY = "visionone:sound-muted";
@@ -142,6 +144,17 @@ const RECIPES: Record<GameSound, ToneSpec[]> = {
     { at: 0, freq: 540, to: 330, dur: 0.06, type: "square", gain: 0.07 },
     { at: 0.16, freq: 660, to: 430, dur: 0.09, type: "square", gain: 0.09 },
     { at: 0.34, freq: 740, to: 520, dur: 0.05, type: "square", gain: 0.06 },
+  ],
+  // فاز F8 شوتر — درخشش جذاب هدف طلایی (آرپژ بالاروندهٔ براق)
+  golden: [
+    { at: 0, freq: 880, dur: 0.08, type: "sine", gain: 0.13 },
+    { at: 0.08, freq: 1174.66, dur: 0.08, type: "sine", gain: 0.13 },
+    { at: 0.16, freq: 1567.98, dur: 0.22, type: "triangle", gain: 0.15 },
+  ],
+  // فاز F8 شوتر — شیپور شروع موج سخت‌تر (دو نت قدرتی بالارونده)
+  wave: [
+    { at: 0, freq: 261.63, dur: 0.12, type: "square", gain: 0.07 },
+    { at: 0.13, freq: 392, dur: 0.26, type: "square", gain: 0.09 },
   ],
   win: [
     { at: 0, freq: 523.25, dur: 0.12, type: "triangle", gain: 0.15 },
