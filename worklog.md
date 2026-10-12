@@ -3008,3 +3008,27 @@ Stage Summary:
 - 🎖 شوتر حالا هویت تاکتیکی دارد: دشمن = پهپاد متخاصم با حس‌گر قرمز، انفجار = آتش/دود، بونوس = HVT قرمز با حلقهٔ هشدار، پایان دور = رتبهٔ نظامی S..D — بدون هیچ تغییر در مکانیک آموزشی/امضاهای Attempt
 - نکتهٔ تکرارشدنی: MultiEdit ترتیبی است و در اولین old_str ناهمسان می‌ایستد ولی ویرایش‌های قبلی همان بسته اعمال می‌شوند — بعد از هر خطا، وضعیت فایل را با rg بررسی کن
 - گام بعدی طبق سند: F10 عمق یادگیری (حالت شنیداری / جملهٔ زنجیره‌ای / گزارش AI) یا T2 حالت‌های تاکتیکی
+---
+Task ID: AUDIT-1
+Agent: main orchestrator (Z.ai Code) — senior software architect audit
+Task: درخواست کاربر — «اجرای پرامپت Audit جامع کل کدبیس + ثبت نقشه راه Refactoring رتبه‌بندی‌شده در انتها»
+
+Work Log:
+- خواندن worklog (وضعیت: FPS فازهای F1..F9 + FM + T1 کامل، ۱۶ ارور ریشه‌ای حل شده)
+- شمارش خطوط کل src/ و mini-services: ~۱۸۰k خط (بدون node_modules)
+- شناسایی فایل‌های بزرگ: fps-shooter-game.tsx = ۴۳۰۴ خط (خدای پروژه)، adventure-map ۱۷۸۶، quiz-game ۱۶۸۱، crossword ۱۶۷۵، snakes-ladders ۱۶۳۷، speed-quiz ۱۴۹۵، flappy ۱۴۵۲، wordle ۱۳۴۰
+- تحلیل FPS god component: کامپوننت اصلی FpsShooterGame از خط ۲۲۷۰ تا ۴۳۰۴ (~۲۰۳۵ خط) با ۳۳ useState + ۸۲ useRef + ۳۱ useEffect + ۵۱ memo/callback + ۱۵ کامپوننت داخلی + MAPS/LAYOUTS/WEAPONS/فیزیک همه در یک فایل
+- **کشف کد مردهٔ عظیم**: ۱۷ فایل دادهٔ ریشهٔ src/data/*.ts (به‌جز types.ts و whats-new.ts) = **۹۰۷۹ خط، صفر import مطلق** — کپی‌های قدیمی پیش از refactor چندجزوه‌ای؛ همهٔ importها type-only از @/data/types هستند و دادهٔ واقعی از registry → vision-one/grade-* می‌آید
+- کشف تکرارهای DRY: faNum در ۹ فایل، pick در ~۸ بازی (shared.ts دارای pickUnique هست ولی استفاده نمی‌شود)، scopeOf در ۲ بازی، saveAttempt محلی در ۷ بازی به‌جای shared
+- کشف تزریق تمام نماها در page.tsx: ~۲۲ view استاتیک import شده (فقط بازی‌ها dynamic هستند) → باندل اولیهٔ سنگین
+- شواهد عملکردی dev.log: LCP گزارش‌شدهٔ perf-vitals = ۱۹–۲۵ ثانیه (تورم کامپایل dev + باندل اولیه) و CLS = ۰٫۳۷–۰٫۳۹ (بالای آستانهٔ ۰٫۲۵)
+- ریسک build: next.config.ts دارای typescript.ignoreBuildErrors: true + tsconfig noImplicitAny: false + eslint با no-unused-vars/exhaustive-deps خاموش
+- prefetch همزمان ۱۵ چانک بازی در requestIdleCallback (games-hub) — رقابت با رندر اول موبایل
+- امنیت سالم: PIN با scrypt + rate-limit + regex اعتبارسنجی + Permissions-Policy بسته + نبود secret هاردکد؛ CSP تعمداً مینیمال (مستند شده برای preview)
+- بهداشت ریپو: ~۱۰۰ اسکرین‌شات qa-*.png در ریشه، tool-results/ داخل پروژه، dev.log.g4-backup، docs/*.bak، node_modules سرویس دوئل در ریپو
+
+Stage Summary (گزارش Audit کامل + نقشه راه رتبه‌بندی‌شده):
+- 🔴 High: (۱) کد مردهٔ ۹۰۷۹ خطی دادهٔ ریشه — حذف کامل، صفر ریسک (۲) god component شوتر ۴۳۰۴ خط — تفکیک به ماژول maps/layouts/weapons/physics/scene/hud/prefs (۳) LCP/CLS خارج بودجه — داینامیک‌کردن نماها + رزروشدن ارتفاع اسکلت
+- 🟠 Medium: تکرار faNum/pick/saveAttempt/scopeOf → یکجا در shared.ts؛ ignoreBuildErrors=false به‌تدریج؛ prefetch هوشمند به‌جای ۱۵ چانک
+- 🟡 Low: پاک‌سازی artifacts (png/bak/log)، مستندسازی الگوی bridge، بازگرداندن قواعد eslint به‌تدریج
+- نقشه راه اجرایی رتبه‌بندی‌شدهٔ ۱..۱۰ در سند docs/refactor-roadmap.md ثبت شد (۱۰ گام با فایل/شدت/الگوی معماری/سود)
