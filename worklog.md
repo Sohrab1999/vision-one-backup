@@ -3128,3 +3128,26 @@ Stage Summary:
 - 🔶 F10 دو-سوم بسته شد: حالت شنیداری کامل + تحویل گزارش به دستیار (سازوکار tutor-seed عمومی برای همهٔ بازی‌ها)
 - گام بعدی مشخص: **F10-ب «جملهٔ زنجیره‌ای»** — موتور توالی (Question.sequence + شکار ترتیبی در handleHit) + انتخاب جمله از مکالمه‌های واقعی جزوه (بدون دادهٔ ساختگی) — به‌عنوان فاز مستقل با QA
 - نکته برای ایجنت‌های بعدی: ویرایش دستی تمپلیت‌های فارسی/RTL حساس است — بعد از هر ویرایش بلافاصله `bunx tsc --noEmit` بگیرید (خطای backtick ممکن است دور از محل ویرایش ظاهر شود)
+---
+Task ID: AUDIT-2
+Agent: main orchestrator (Z.ai Code) — senior software architect audit (دوم)
+Task: درخواست کاربر — «اجرای پرامپت Audit جامع + ثبت نقشه راه رتبه‌بندی‌شده» (بار دوم — پس از بسته‌شدن Audit اول)
+
+Work Log:
+- خط مبنا: ۸۸,۹۳۰ خط src؛ تأیید سلامت میراث Audit اول: tsc=۰، lint=۰ خطا، CLS=۰ در لود تمیز، صفر secret/eval، ۱ مورد any صریح، باندل اولیه فقط بوت‌پث، prefetch بودجه‌دار، ۱۹/۳۷ روت API rate-limit
+- سرشماری بزرگ‌فایل‌ها: fps/index.tsx = ۲,۴۳۸ (بازتورم پس از F10!)، dictionary.ts ۲,۶۲۳ (داده — سالم)، adventure-map ۱,۷۸۶، quiz-game ۱,۶۸۰، crossword ۱,۶۷۵، snakes-ladders ۱,۶۳۷، speed-quiz ۱,۴۹۵، flappy ۱,۴۵۲، wordle ۱,۳۴۰
+- پایش وابستگی‌ها: ۷۰ dep → **۱۳ پکیج صفر-consumption** کشف شد (@dnd-kit×۳، react-query، react-table، zod، mdxeditor، date-fns، next-intl، syntax-highlighter، reactuses، react-markdown، hookform/resolvers) — با الگوی آزاد دوباره چک شد (sharp=نیاز runtime تصویر، uuid=مصرف class route، next-themes/vaul/embla/input-otp/day-picker/react-hook-form=مصرف کیت ui → نگه‌داشتن)
+- امنیت: dangerouslySetInnerHTML فقط در ۴ فایل، همگی CSS ثابت (بدون دادهٔ پویا) — بدون XSS؛ asr/api بدون secret
+- آرتیفکت: src/app/api/route.ts = «Hello, world!» قالبی — حذف‌شدنی
+- DRY پسماند: faNum محلی ×۶ خارج از بازی‌ها (compare-view، progress-card، heatmap، survey-gate، srs-stats، print-flashcards) + pick محلی ×۳ (targets/duel/adventure) با وجود shared.pickUnique
+- پذیرش کیت بازی‌ها: ۱۴ بازی ۷–۱۴ رفرنس کیت دارند؛ فقط quiz-game صفر است + خارج از پوشهٔ games/ (نقض ساختار)
+- کیفیت: ۲۱ warning no-unused-vars در ۱۱ فایل مانده؛ noImplicitAny:false؛ reactStrictMode:false (برای perf R3F — مستند در gام ۵ قبلی)
+- پرفورمنس: vitals تمیز (LCP ۲٫۴–۴٫۲s / CLS 0 / INP ۴۸–۵۶ms)؛ یک اسپایک CLS=۰٫۳۰۴ فقط در ریلود HMR دِو — آیتم پایش پروداکشن
+- سند **docs/refactor-roadmap-2.md** نوشته شد: ۹ یافتهٔ A1..A9 + نقشهٔ رتبه‌بندی‌شدهٔ ۱..۱۰ + سه اسپرینت (A بهداشت / B ساختار+فاز F10-ب / C بک‌لاگ تفکیک بازی‌ها) + معیار پذیرش
+- در انتهای docs/refactor-roadmap.md (Audit اول، بسته‌شده ۹/۹) نشانگر جانشین اضافه شد
+
+Stage Summary:
+- 📋 Audit دوم ثبت شد — کدبیس پس از refactor اول در وضعیت 🟢 عمومی است (پرف/امنیت/تایپ)؛ بدهی اصلی حالا ساختاری-تکاملی است:
+  ① ۱۳ وابستگی مرده ② god componentهای دستهٔ دوم (۷ بازی) + quiz-game بیرون ساختار ③ روند بازتورم fps/index (۲,۴۳۸) که قبل از فاز F10-ب باید لاغر شود ④ تکمیل گیت (۲۱ warning → error، noImplicitAny)
+- نقشهٔ جدید ۱..۱۰: اسپرینت A (۱+۲+۳ بهداشت ریسک‌صفر) → B (۴+۵ ساختار، ۶ = فاز محصولی F10-ب) → C (۷+۸+۹ تفکیک بازی‌ها) → ۱۰ شرطی (state کلاس)
+- نکتهٔ عملیاتی: پکیج‌های «نگه‌داشتی» در A1 دقیق لیست شده — ایجنت بعدی نباید sharp/uuid/ui-served ها را حذف کند
