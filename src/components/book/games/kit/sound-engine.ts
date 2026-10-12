@@ -19,6 +19,8 @@ export type GameSound =
   | "finish" // پایان دور
   | "tick" // تیک‌تاک تایمر
   | "shoot" // شلیک (شوتر)
+  | "hit" // برخورد گلوله به هدف (شوتر)
+  | "reload" // تعویض خشاب (شوتر)
   | "win"; // برد نهایی (فینال/ماجراجویی)
 
 const MUTE_KEY = "visionone:sound-muted";
@@ -130,6 +132,17 @@ const RECIPES: Record<GameSound, ToneSpec[]> = {
   ],
   tick: [{ at: 0, freq: 1000, dur: 0.02, type: "sine", gain: 0.05 }],
   shoot: [{ at: 0, freq: 420, to: 80, dur: 0.1, type: "sawtooth", gain: 0.1 }],
+  // فاز F4 شوتر — برخورد توپر «تاک» به بدنهٔ هدف
+  hit: [
+    { at: 0, freq: 190, to: 62, dur: 0.09, type: "triangle", gain: 0.15 },
+    { at: 0.012, freq: 880, to: 210, dur: 0.05, type: "sawtooth", gain: 0.045 },
+  ],
+  // فاز F4 شوتر — کلانک-کلانک مکانیکی تعویض خشاب
+  reload: [
+    { at: 0, freq: 540, to: 330, dur: 0.06, type: "square", gain: 0.07 },
+    { at: 0.16, freq: 660, to: 430, dur: 0.09, type: "square", gain: 0.09 },
+    { at: 0.34, freq: 740, to: 520, dur: 0.05, type: "square", gain: 0.06 },
+  ],
   win: [
     { at: 0, freq: 523.25, dur: 0.12, type: "triangle", gain: 0.15 },
     { at: 0.12, freq: 659.25, dur: 0.12, type: "triangle", gain: 0.15 },

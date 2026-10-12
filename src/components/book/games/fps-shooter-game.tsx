@@ -50,6 +50,16 @@
  *   محدودهٔ امن میدان؛ جهت نسبت به yaw نگاه.
  * - چیدمان «جستوجو کن، پیدا کن، شلیک کن»: لِین‌ها عریض‌تر (±۶٫۸) و عمق پخش‌تر — پیدا
  *   کردن گزینهٔ درست چرخاندن و جابه‌جایی می‌خواهد.
+ *
+ * فاز F4 — کنترل حرفه‌ای موبایل + مکانیک خشاب:
+ * - خشاب ۸تایی با شمارندهٔ مهمات روی HUD؛ هر شلیک یک فشنگ کم می‌کند، خالی شدن = ریلود
+ *   خودکار (و R روی دسکتاپ / دکمهٔ ریلود روی موبایل) با صدای کلانک تعویض و چرخش آیکون.
+ * - شلیک حین ریلود یا فریز برخورد مسدود است (مهمات هدر نمی‌رود) — گیت داخل request.
+ * - جوی‌استیک لمسی چپ + دکمهٔ شلیک راست برای موبایل (فقط pointer:coarse و خارج از تپ
+ *   ساده): بردار آنالوگ به stepPlayer تزریق می‌شود (deadzone + سرعت متناسب کمان) و دکمهٔ
+ *   شلیک از رتیکل مرکز می‌زند؛ هر دو data-fps-hud تا شلیک صحنه حساب نشوند.
+ * - افکت پوکهٔ برنجی: در هر شلیک از پورت خروج تفنگ به فضای جهانی پرتاب می‌شود — گرانش،
+ *   اسپین و محو نرم؛ علاوه بر آن صدای «تاک» برخورد گلوله به هدف (صدا فقط لحظهٔ رویداد).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -64,6 +74,7 @@ import {
   MousePointerClick,
   Pause,
   Play,
+  RotateCcw,
   Sparkles,
   Star,
   Swords,
@@ -135,6 +146,10 @@ const MOVE_X_LIM = 5.2;
 /** محدودهٔ حرکت عمقی — آفست نسبت به پایهٔ دوربین */
 const MOVE_Z_MIN = -3.4;
 const MOVE_Z_MAX = 2.0;
+/** فاز F4 — ظرفیت خشاب (تعداد فشنگ هر خشاب) */
+const MAG_SIZE = 8;
+/** فاز F4 — مدت ریلود (میلی‌ثانیه) */
+const RELOAD_MS = 1100;
 /** نگاشت e.code → جهت (مستقل از layout فارسی/انگلیسی) */
 const KEY_MOVE: Record<string, "w" | "a" | "s" | "d"> = {
   KeyW: "w",
@@ -226,8 +241,10 @@ interface SceneBridge {
   pos: { x: number; z: number };
   /** فاز F3 — کلیدهای حرکت فشرده‌شده */
   keys: Set<string>;
-  /** فاز F3 — در حال گام برداشتن؟ (برای باب سلاح) */
+  /** فاز F3 — در حال گام برداشتن؟ (برای باب سلاح) — فاز F4: بزرگی آنالوگ ۰..۱ */
   moveMag: number;
+  /** فاز F4 — بردار آنالوگ جوی‌استیک لمسی (x = راست، y = جلو؛ −۱..۱) */
+  stick: { x: number; y: number };
   shoot: { x: number; y: number; seq: number };
   lastShotAt: number;
   laneK: number;
@@ -255,7 +272,12 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   {
     icon: <MousePointerClick size={24} />,
     title: "نشانه‌گیری و شلیک",
-    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — موبایل: کشیدن = نگاه و تپ روی هدف = شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
+    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
+  },
+  {
+    icon: <TargetIcon size={24} />,
+    title: "خشاب و مهمات",
+    text: "خشاب ۸تایی داری — شمارندهٔ فشنگ کنار رتیکل است. خالی شدن = ریلود خودکار با صدای تعویض؛ می‌توانی با R (دسکتاپ) زودتر ریلود کنی. شلیک حین ریلود یا فریز برخورد مهمات هدر نمی‌دهد، ولی هر شلیکِ خطا یک فشنگ کم است — درست نشانه بگیر!",
   },
   {
     icon: <MonitorSmartphone size={24} />,
@@ -424,7 +446,7 @@ function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, 
 
 // ─── اجزای صحنهٔ سه‌بعدی ───
 
-/** فاز F3 — انتگرال حرکت بازیکن از کلیدهای فشرده‌شده (جهش bridge فقط داخل توابع ماژول) */
+/** فاز F3 — انتگرال حرکت بازیکن از کلیدها + جوی‌استیک آنالوگ (جهش bridge فقط داخل توابع ماژول) */
 function stepPlayer(b: SceneBridge, dt: number): boolean {
   let mx = 0;
   let mz = 0;
@@ -432,8 +454,17 @@ function stepPlayer(b: SceneBridge, dt: number): boolean {
   if (b.keys.has("s")) mz -= 1;
   if (b.keys.has("d")) mx += 1;
   if (b.keys.has("a")) mx -= 1;
-  const moving = mx !== 0 || mz !== 0;
+  // فاز F4 — ورودی آنالوگ جوی‌استیک لمسی (سرعت متناسب با کمان کشیدن)
+  mx += b.stick.x;
+  mz += b.stick.y;
+  let mag = Math.hypot(mx, mz);
+  const moving = mag > 0.12; // deadzone — لرزش انگشت حرکت کاذب نمی‌سازد
   if (moving) {
+    if (mag > 1) {
+      mx /= mag;
+      mz /= mag;
+      mag = 1;
+    }
     const yaw = b.aim.yaw;
     const sin = Math.sin(yaw);
     const cos = Math.cos(yaw);
@@ -441,11 +472,11 @@ function stepPlayer(b: SceneBridge, dt: number): boolean {
     const vx = -sin * mz + cos * mx;
     const vz = -cos * mz - sin * mx;
     const len = Math.hypot(vx, vz) || 1;
-    const sp = MOVE_SPEED * dt;
+    const sp = MOVE_SPEED * mag * dt;
     b.pos.x = clamp(b.pos.x + (vx / len) * sp, -MOVE_X_LIM, MOVE_X_LIM);
     b.pos.z = clamp(b.pos.z + (vz / len) * sp, MOVE_Z_MIN, MOVE_Z_MAX);
   }
-  b.moveMag = moving ? 1 : 0;
+  b.moveMag = moving ? mag : 0;
   return moving;
 }
 
@@ -483,13 +514,16 @@ function Rig({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   return null;
 }
 
-/** فاز F3 — تفنگ سه‌بعدی ویومدل: همگام با دوربین؛ sway تنفسی + باب گام + recoil شلیک + جرقهٔ دهانه */
+/** فاز F3 — تفنگ سه‌بعدی ویومدل + فاز F4 — پوکهٔ برنجی: همگام با دوربین؛ sway، باب آنالوگ، recoil، جرقه و پوکه */
 function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   const gRef = useRef<THREE.Group>(null);
   const flashRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.PointLight>(null);
   const recoil = useRef(0);
   const lastSeq = useRef(0);
+  // فاز F4 — پوکهٔ پرتابی (فضای جهانی، خارج از گروه تفنگ)
+  const casingRef = useRef<THREE.Mesh>(null);
+  const casing = useRef({ active: false, t0: 0, vel: new THREE.Vector3(), spinX: 0, spinZ: 0 });
   useFrame((state, delta) => {
     const g = gRef.current;
     if (!g) return;
@@ -497,12 +531,31 @@ function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
     if (b.shoot.seq !== lastSeq.current) {
       lastSeq.current = b.shoot.seq;
       recoil.current = 1;
+      // فاز F4 — پرتاب پوکه از پورت خروج (راست-بالا نسبت به دوربین) با اسپین تصادفی
+      const c = casingRef.current;
+      if (c) {
+        const cam = state.camera;
+        c.position.copy(cam.position);
+        c.quaternion.copy(cam.quaternion);
+        c.translateX(0.4);
+        c.translateY(0.02);
+        c.translateZ(-0.5);
+        const right = new THREE.Vector3(1, 0, 0).applyQuaternion(cam.quaternion);
+        casing.current.vel.copy(right).multiplyScalar(1.5 + Math.random() * 0.7);
+        casing.current.vel.y = 1.7 + Math.random() * 0.9;
+        casing.current.spinX = 9 + Math.random() * 14;
+        casing.current.spinZ = 6 + Math.random() * 10;
+        casing.current.active = true;
+        casing.current.t0 = performance.now();
+        c.visible = true;
+        c.scale.setScalar(1);
+      }
     }
     recoil.current = Math.max(0, recoil.current - Math.min(delta, 0.05) * 5.2);
     const r = easeOutCubic(recoil.current);
     const t = state.clock.elapsedTime;
     const sway = Math.sin(t * 1.7) * 0.006 + Math.sin(t * 0.9) * 0.004;
-    const bob = b.moveMag > 0 ? Math.sin(t * 9) * 0.014 : 0;
+    const bob = b.moveMag > 0 ? Math.sin(t * 9) * 0.014 * b.moveMag : 0;
     // سوار بر دوربین بدون parenting (سازگار با هر scene-graph): کپی ترنسفورم + آفست فضای دوربین
     const cam = state.camera;
     g.position.copy(cam.position);
@@ -522,45 +575,68 @@ function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
       (f.material as THREE.MeshBasicMaterial).opacity = fs;
     }
     if (l) l.intensity = fs * 7;
+    // فاز F4 — پرواز پوکه: گرانش + اسپین + محو در ۰٫۹ ثانیه
+    const cs = casingRef.current;
+    if (cs && casing.current.active) {
+      const dt = Math.min(delta, 0.05);
+      const p = (performance.now() - casing.current.t0) / 900;
+      if (p >= 1) {
+        casing.current.active = false;
+        cs.visible = false;
+      } else {
+        casing.current.vel.y -= 6.5 * dt;
+        cs.position.addScaledVector(casing.current.vel, dt);
+        cs.rotation.x += casing.current.spinX * dt;
+        cs.rotation.z += casing.current.spinZ * dt;
+        cs.scale.setScalar(p < 0.65 ? 1 : Math.max(0.001, 1 - (p - 0.65) / 0.35));
+      }
+    }
   });
   return (
-    <group ref={gRef}>
-      {/* بدنه اصلی */}
-      <mesh position={[0, 0, 0.05]}>
-        <boxGeometry args={[0.09, 0.15, 0.5]} />
-        <meshStandardMaterial color="#1f2937" roughness={0.45} metalness={0.55} />
+    <>
+      <group ref={gRef}>
+        {/* بدنه اصلی */}
+        <mesh position={[0, 0, 0.05]}>
+          <boxGeometry args={[0.09, 0.15, 0.5]} />
+          <meshStandardMaterial color="#1f2937" roughness={0.45} metalness={0.55} />
+        </mesh>
+        {/* لوله */}
+        <mesh position={[0, 0.035, -0.34]} rotation-x={Math.PI / 2}>
+          <cylinderGeometry args={[0.028, 0.032, 0.42, 12]} />
+          <meshStandardMaterial color="#111827" roughness={0.35} metalness={0.7} />
+        </mesh>
+        {/* دستهٔ کمک‌رنگ */}
+        <mesh position={[0, -0.13, 0.16]} rotation-x={-0.32}>
+          <boxGeometry args={[0.075, 0.2, 0.09]} />
+          <meshStandardMaterial color="#065f46" roughness={0.7} metalness={0.15} />
+        </mesh>
+        {/* خشاب */}
+        <mesh position={[0, -0.12, -0.02]} rotation-x={0.22}>
+          <boxGeometry args={[0.06, 0.16, 0.08]} />
+          <meshStandardMaterial color="#374151" roughness={0.5} metalness={0.5} />
+        </mesh>
+        {/* ریل بالا + مگسک کهربایی */}
+        <mesh position={[0, 0.085, 0.02]}>
+          <boxGeometry args={[0.05, 0.03, 0.3]} />
+          <meshStandardMaterial color="#0b1220" roughness={0.4} metalness={0.6} />
+        </mesh>
+        <mesh position={[0, 0.105, -0.18]}>
+          <boxGeometry args={[0.02, 0.045, 0.03]} />
+          <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={0.55} roughness={0.4} />
+        </mesh>
+        {/* جرقهٔ دهانه + نور لحظه‌ای شلیک */}
+        <mesh ref={flashRef} position={[0, 0.035, -0.58]} rotation-x={Math.PI / 2} visible={false}>
+          <coneGeometry args={[0.055, 0.16, 8]} />
+          <meshBasicMaterial color="#fde68a" transparent opacity={0} toneMapped={false} depthWrite={false} />
+        </mesh>
+        <pointLight ref={lightRef} position={[0, 0.06, -0.6]} color="#fbbf24" intensity={0} distance={4} decay={2} />
+      </group>
+      {/* فاز F4 — پوکهٔ برنجی در فضای جهانی */}
+      <mesh ref={casingRef} visible={false}>
+        <cylinderGeometry args={[0.014, 0.014, 0.05, 8]} />
+        <meshStandardMaterial color="#fbbf24" metalness={0.85} roughness={0.25} emissive="#92400e" emissiveIntensity={0.25} />
       </mesh>
-      {/* لوله */}
-      <mesh position={[0, 0.035, -0.34]} rotation-x={Math.PI / 2}>
-        <cylinderGeometry args={[0.028, 0.032, 0.42, 12]} />
-        <meshStandardMaterial color="#111827" roughness={0.35} metalness={0.7} />
-      </mesh>
-      {/* دستهٔ کمک‌رنگ */}
-      <mesh position={[0, -0.13, 0.16]} rotation-x={-0.32}>
-        <boxGeometry args={[0.075, 0.2, 0.09]} />
-        <meshStandardMaterial color="#065f46" roughness={0.7} metalness={0.15} />
-      </mesh>
-      {/* خشاب */}
-      <mesh position={[0, -0.12, -0.02]} rotation-x={0.22}>
-        <boxGeometry args={[0.06, 0.16, 0.08]} />
-        <meshStandardMaterial color="#374151" roughness={0.5} metalness={0.5} />
-      </mesh>
-      {/* ریل بالا + مگسک کهربایی */}
-      <mesh position={[0, 0.085, 0.02]}>
-        <boxGeometry args={[0.05, 0.03, 0.3]} />
-        <meshStandardMaterial color="#0b1220" roughness={0.4} metalness={0.6} />
-      </mesh>
-      <mesh position={[0, 0.105, -0.18]}>
-        <boxGeometry args={[0.02, 0.045, 0.03]} />
-        <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={0.55} roughness={0.4} />
-      </mesh>
-      {/* جرقهٔ دهانه + نور لحظه‌ای شلیک */}
-      <mesh ref={flashRef} position={[0, 0.035, -0.58]} rotation-x={Math.PI / 2} visible={false}>
-        <coneGeometry args={[0.055, 0.16, 8]} />
-        <meshBasicMaterial color="#fde68a" transparent opacity={0} toneMapped={false} depthWrite={false} />
-      </mesh>
-      <pointLight ref={lightRef} position={[0, 0.06, -0.6]} color="#fbbf24" intensity={0} distance={4} decay={2} />
-    </group>
+    </>
   );
 }
 
@@ -857,6 +933,103 @@ function World({
   return null;
 }
 
+// ─── فاز F4 — جوی‌استیک لمسی حرکت (فقط pointer:coarse) ───
+
+/** شعاع کمان جوی‌استیک (px) */
+const STICK_R = 52;
+
+/** فاز F4 — نوشتن بردار جوی‌استیک + جابه‌جایی دسته — تابع ماژول‌سطح (قاعدهٔ immutability کیت) */
+function setStick(b: SceneBridge, x: number, y: number, knob: HTMLElement | null): void {
+  b.stick.x = x;
+  b.stick.y = y;
+  if (knob) {
+    knob.style.transform = `translate(calc(-50% + ${(x * STICK_R).toFixed(1)}px), calc(-50% + ${(-y * STICK_R).toFixed(1)}px))`;
+  }
+}
+
+/**
+ * جوی‌استیک مجازی حرکت: بردار آنالوگ مستقیم داخل bridge.current.stick می‌نویسد
+ * (صفر ری‌رندر در هر فریم — حرکت با pointer capture). بالا = جلو.
+ */
+function TouchJoystick({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
+  const baseRef = useRef<HTMLDivElement>(null);
+  const knobRef = useRef<HTMLDivElement>(null);
+  const pidRef = useRef<number | null>(null);
+
+  const setVec = (x: number, y: number) => {
+    setStick(bridge.current, x, y, knobRef.current);
+  };
+
+  /** اعمال موقعیت انگشت به بردار آنالوگ (clamp به شعاع) */
+  const update = (e: React.PointerEvent) => {
+    const base = baseRef.current;
+    if (!base) return;
+    const r = base.getBoundingClientRect();
+    let dx = e.clientX - (r.left + r.width / 2);
+    let dy = e.clientY - (r.top + r.height / 2);
+    const len = Math.hypot(dx, dy);
+    if (len > STICK_R) {
+      dx = (dx / len) * STICK_R;
+      dy = (dy / len) * STICK_R;
+    }
+    setVec(dx / STICK_R, -dy / STICK_R);
+  };
+
+  // پاک‌سازی در unmount — بازیکن گیر حرکت کاذب نماند (cleanup پایدار با bridge)
+  useEffect(() => {
+    const b = bridge;
+    return () => setStick(b.current, 0, 0, null);
+  }, [bridge]);
+
+  return (
+    <div
+      data-fps-hud
+      ref={baseRef}
+      role="group"
+      aria-label="جوی‌استیک حرکت — بکش تا قدم برداری"
+      className="pointer-events-auto absolute bottom-5 left-4 z-20 h-32 w-32 touch-none select-none rounded-full border-2 border-white/25 bg-black/35 backdrop-blur"
+      onPointerDown={(e) => {
+        if (pidRef.current !== null) return;
+        pidRef.current = e.pointerId;
+        // گارد: برخی مرورگرها/پوینترهای غیرفعال capture را رد می‌کنند — ردیابی با move ادامه دارد
+        try {
+          e.currentTarget.setPointerCapture(e.pointerId);
+        } catch {
+          /* noop */
+        }
+        update(e);
+      }}
+      onPointerMove={(e) => {
+        if (e.pointerId !== pidRef.current) return;
+        update(e);
+      }}
+      onPointerUp={(e) => {
+        if (e.pointerId !== pidRef.current) return;
+        pidRef.current = null;
+        setVec(0, 0);
+      }}
+      onPointerCancel={() => {
+        pidRef.current = null;
+        setVec(0, 0);
+      }}
+    >
+      {/* نشانگرهای جهت */}
+      <span aria-hidden className="absolute inset-x-0 top-1.5 text-center text-[9px] font-black text-white/40">
+        ▲
+      </span>
+      <span aria-hidden className="absolute inset-x-0 bottom-1.5 text-center text-[9px] font-black text-white/40">
+        ▼
+      </span>
+      {/* دستهٔ متحرک */}
+      <span
+        aria-hidden
+        ref={knobRef}
+        className="absolute left-1/2 top-1/2 block h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/40 bg-white/25 shadow-lg transition-transform duration-75 ease-out"
+      />
+    </div>
+  );
+}
+
 // ─── بازی اصلی ───
 
 export function FpsShooterGame() {
@@ -882,6 +1055,9 @@ export function FpsShooterGame() {
   const [score, setScore] = useState(0);
   const [hearts, setHearts] = useState(HEARTS);
   const [timeLeft, setTimeLeft] = useState(Q_TIME_SHOOT);
+  // ── فاز F4 — خشاب و ریلود ──
+  const [ammo, setAmmo] = useState(MAG_SIZE);
+  const [reloading, setReloading] = useState(false);
   /** فاز G2-e — پیام باکس aria-live شِل (برخورد/خطا/توقف) برای فناوری‌های کمکی */
   const [liveMsg, setLiveMsg] = useState("");
 
@@ -948,6 +1124,7 @@ export function FpsShooterGame() {
     pos: { x: 0, z: 0 },
     keys: new Set<string>(),
     moveMag: 0,
+    stick: { x: 0, y: 0 },
     shoot: { x: 0, y: 0, seq: 0 },
     lastShotAt: 0,
     laneK: 1,
@@ -979,6 +1156,44 @@ export function FpsShooterGame() {
   const tapRef = useRef(tapMode);
   const qualityRef = useRef<Quality>(quality);
   const qRef = useRef<Question | null>(null);
+  // ── فاز F4 — مراجع خشاب/ریلود (چرخهٔ شلیک داخل effect فقط با ref — بدون dep churn) ──
+  const ammoRef = useRef(MAG_SIZE);
+  const reloadUntilRef = useRef(0);
+  const reloadTimerRef = useRef<number | null>(null);
+  const autoReloadTimerRef = useRef<number | null>(null);
+  /** شلیک از رتیکل مرکز — دکمهٔ شلیک موبایل از این استفاده می‌کند (داخل effect مقدار می‌گیرد) */
+  const shootAtRef = useRef<(x: number, y: number) => void>(() => {});
+  /** ریلود دستی (R / دکمه) — latest-ref الگوی کیت */
+  const reloadNowRef = useRef<() => void>(() => {});
+
+  // ── فاز F4 — ریلود: صدای کلانک + پر شدن خشاب بعد از RELOAD_MS ──
+  const triggerReload = useCallback(() => {
+    if (overRef.current || ammoRef.current >= MAG_SIZE) return;
+    if (reloadUntilRef.current > performance.now()) return; // در حال ریلود
+    reloadUntilRef.current = performance.now() + RELOAD_MS;
+    setReloading(true);
+    playSound("reload");
+    buzz("light");
+    if (reloadTimerRef.current !== null) window.clearTimeout(reloadTimerRef.current);
+    reloadTimerRef.current = window.setTimeout(() => {
+      reloadTimerRef.current = null;
+      reloadUntilRef.current = 0;
+      ammoRef.current = MAG_SIZE;
+      setAmmo(MAG_SIZE);
+      setReloading(false);
+    }, RELOAD_MS);
+  }, []);
+  useEffect(() => {
+    reloadNowRef.current = triggerReload;
+  }, [triggerReload]);
+  // پاک‌سازی تایمرهای خشاب در unmount
+  useEffect(
+    () => () => {
+      if (reloadTimerRef.current !== null) window.clearTimeout(reloadTimerRef.current);
+      if (autoReloadTimerRef.current !== null) window.clearTimeout(autoReloadTimerRef.current);
+    },
+    [],
+  );
 
   // ── فاز G2-e — زنجیرهٔ «فریز برخورد → سؤال بعد/پایان» مقاوم به توقف (الگوی دوئل G2-d) ──
   // به‌جای setTimeout خام: زمان سررسید با «ساعت جبران‌شده» نگه داشته می‌شود؛ حین توقف
@@ -1238,6 +1453,8 @@ export function FpsShooterGame() {
       if (pausedRef.current || exitAskRef.current) return;
       const target = cur.targets.find((t) => t.id === id);
       if (!target) return;
+      // فاز F4 — صدای «تاک» برخورد گلوله به بدنهٔ هدف (قبل از زنگ درست/غلط)
+      playSound("hit");
       const now = performance.now();
       if (target.correct) {
         // برخورد درست — امتیاز از موتور کمبو کیت (فرمول مو‌به‌مو: ۱۰ + min(کمبو−۱,۶)×۲)
@@ -1359,9 +1576,27 @@ export function FpsShooterGame() {
     const request = (x: number, y: number) => {
       // گارد «نه هر فریم»: شلیک فقط رویداد کاربر + cooldown؛ حین توقف/دیالوگ هم شلیک نیست
       if (pausedRef.current || exitAskRef.current || overRef.current) return;
+      // فاز F4 — حین فریز برخورد شلیک حساب نمی‌شود (مهمات هدر نمی‌رود)
+      if (lockedRef.current) return;
       const b = bridge.current;
       const now = performance.now();
+      if (reloadUntilRef.current > now) return; // فاز F4 — حین ریلود شلیک نیست
       if (now - b.lastShotAt < SHOOT_COOLDOWN) return;
+      if (ammoRef.current <= 0) {
+        // فاز F4 — خشاب خالی: اولین تپ = ریلود (و ریلود خودکار هم قبلاً مسلح شده است)
+        reloadNowRef.current();
+        return;
+      }
+      ammoRef.current -= 1;
+      setAmmo(ammoRef.current);
+      if (ammoRef.current === 0) {
+        // فاز F4 — آخرین فشنگ: ریلود خودکار پس از مکث کوتاه
+        if (autoReloadTimerRef.current !== null) window.clearTimeout(autoReloadTimerRef.current);
+        autoReloadTimerRef.current = window.setTimeout(() => {
+          autoReloadTimerRef.current = null;
+          reloadNowRef.current();
+        }, 450);
+      }
       b.lastShotAt = now;
       b.shoot = { x, y, seq: b.shoot.seq + 1 };
       // فاز G2-e — صدای شلیک (رویداد شلیک، با cooldown — اسپم ندارد)
@@ -1444,12 +1679,15 @@ export function FpsShooterGame() {
 
     const onLockChange = () => setLocked(document.pointerLockElement === el);
 
+    // فاز F4 — دکمهٔ شلیک موبایل از رتیکل مرکز می‌زند
+    shootAtRef.current = request;
     window.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("keydown", onKey);
     document.addEventListener("pointerlockchange", onLockChange);
     return () => {
+      shootAtRef.current = () => {};
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
@@ -1459,13 +1697,17 @@ export function FpsShooterGame() {
     };
   }, [phase]);
 
-  // ── فاز F3 — حرکت WASD/جهت‌نما (e.code = مستقل از چیدمان کیبورد فارسی/انگلیسی) ──
+  // ── فاز F3/F4 — حرکت WASD/جهت‌نما (e.code = مستقل از چیدمان کیبورد فارسی/انگلیسی) + R = ریلود ──
   useEffect(() => {
     if (phase !== "playing") return;
     const keys = bridge.current.keys;
     const down = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+      if (e.code === "KeyR") {
+        if (!pausedRef.current && !exitAskRef.current) reloadNowRef.current();
+        return;
+      }
       const k = KEY_MOVE[e.code];
       if (!k) return;
       keys.add(k);
@@ -1520,8 +1762,18 @@ export function FpsShooterGame() {
     bridge.current.aim = { yaw: 0, pitch: 0 };
     bridge.current.pos = { x: 0, z: 0 };
     bridge.current.moveMag = 0;
+    bridge.current.stick = { x: 0, y: 0 };
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
+    // فاز F4 — خشاب تازه در شروع دور + پاک‌سازی ریلود معلق
+    if (reloadTimerRef.current !== null) window.clearTimeout(reloadTimerRef.current);
+    if (autoReloadTimerRef.current !== null) window.clearTimeout(autoReloadTimerRef.current);
+    reloadTimerRef.current = null;
+    autoReloadTimerRef.current = null;
+    reloadUntilRef.current = 0;
+    ammoRef.current = MAG_SIZE;
+    setAmmo(MAG_SIZE);
+    setReloading(false);
     setScore(0);
     setHearts(HEARTS);
     setQ(null);
@@ -1655,8 +1907,8 @@ export function FpsShooterGame() {
               <p>
                 سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
                 شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
-                (شلیک به خالی) جریمه ندارد! از حالا صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان قدم
-                می‌زنی — دنبال گزینهٔ درست بگرد و بعد شلیک کن!
+                (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان قدم می‌زنی —
+                خشاب ۸تایی داری (R = ریلود) و روی گوشی جوی‌استیک حرکت و دکمهٔ شلیک داری — دنبال گزینهٔ درست بگرد و بعد شلیک کن!
               </p>
             </div>
 
@@ -1908,6 +2160,22 @@ export function FpsShooterGame() {
                 کمبو ×۱
               </Badge>
             )}
+            {/* فاز F4 — شمارندهٔ خشاب در هدر شِل (بیرون قاب — در تمام‌صفحه چیپ داخل قاب دیده می‌شود) */}
+            {!tapMode && (
+              <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px]">
+                {reloading ? (
+                  <>
+                    <RotateCcw size={12} className="animate-spin motion-reduce:animate-none" />
+                    ریلود…
+                  </>
+                ) : (
+                  <>
+                    <Crosshair size={12} className={ammo <= 2 ? "text-red-500" : "text-amber-500"} />
+                    {faNum(ammo)}/{faNum(MAG_SIZE)}
+                  </>
+                )}
+              </Badge>
+            )}
             <span
               role="img"
               aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`}
@@ -2018,6 +2286,54 @@ export function FpsShooterGame() {
               </div>
             )}
 
+            {/* فاز F4 — کنترل‌های لمسی موبایل: جوی‌استیک چپ + دکمهٔ شلیک راست (خارج از تپ ساده) */}
+            {!tapMode && isCoarse && (
+              <>
+                <TouchJoystick bridge={bridge} />
+                <button
+                  type="button"
+                  data-fps-hud
+                  aria-label={reloading ? "در حال ریلود خشاب" : `شلیک از رتیکل — ${faNum(ammo)} فشنگ مانده`}
+                  onPointerDown={() => shootAtRef.current(0, 0)}
+                  className={cn(
+                    "pointer-events-auto absolute bottom-5 right-4 z-20 flex h-20 w-20 touch-none select-none flex-col items-center justify-center gap-0.5 rounded-full border-2 backdrop-blur transition active:scale-95",
+                    reloading
+                      ? "border-amber-300/60 bg-black/55 text-amber-200"
+                      : "border-white/30 bg-black/40 text-white",
+                  )}
+                >
+                  {reloading ? (
+                    <RotateCcw size={24} className="animate-spin motion-reduce:animate-none" />
+                  ) : (
+                    <Crosshair size={26} />
+                  )}
+                  <span className="text-[10px] font-black" aria-hidden>
+                    {reloading ? "ریلود…" : `${faNum(ammo)} / ${faNum(MAG_SIZE)}`}
+                  </span>
+                </button>
+              </>
+            )}
+
+            {/* فاز F4 — شمارندهٔ مهمات دسکتاپ (گوشهٔ پایین) */}
+            {!tapMode && !isCoarse && (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1.5 text-[11px] font-black text-white backdrop-blur"
+              >
+                {reloading ? (
+                  <>
+                    <RotateCcw size={12} className="animate-spin motion-reduce:animate-none" />
+                    ریلود…
+                  </>
+                ) : (
+                  <>
+                    <Crosshair size={12} className={ammo <= 2 ? "text-red-300" : "text-amber-300"} />
+                    {faNum(ammo)} / {faNum(MAG_SIZE)}
+                  </>
+                )}
+              </div>
+            )}
+
             {/* سؤال — HUD بالای میدان */}
             {q && (
               <div className={cn("pointer-events-none absolute inset-x-3 z-10", isFs ? "top-16" : "top-3")}>
@@ -2071,9 +2387,9 @@ export function FpsShooterGame() {
                     ? "تپ روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
                     : "کلیک روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
                   : isCoarse
-                    ? "بکش تا نگاه کنی · تپ روی هدف = شلیک"
+                    ? "جوی‌استیک چپ = حرکت · کشیدن صحنه = نگاه · دکمهٔ راست یا تپ روی هدف = شلیک"
                     : locked
-                      ? "حرکت موس = نشانه‌گیری · WASD = حرکت · کلیک = شلیک"
+                      ? "حرکت موس = نشانه‌گیری · WASD = حرکت · کلیک = شلیک · R = ریلود"
                       : "کلیک در صحنه = نشانه‌گیری + تمام‌صفحه"}
               </span>
             </div>
