@@ -2,9 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  /* config options here */
+  // ── دروازهٔ کیفیت (Audit گام ۵): خطاهای TypeScript دیگر در build نادیده گرفته نمی‌شوند.
+  // tsconfig اکنون فقط src را شامل می‌شود؛ اسکریپت‌های ابزار (scripts/skills/examples/tool-results)
+  // از چک حذف شده‌اند و خطاهای کهن‌الگوی آن‌ها دیگر مانع بسته شدن دروازه نیست.
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   reactStrictMode: false,
   // ── هدرهای امنیتی (فاز ۱۱ + اصلاح پیش‌نمایش) ──

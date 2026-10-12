@@ -1,29 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { AppHeader, type ViewId } from "@/components/book/app-header";
 import { AppFooter } from "@/components/book/app-footer";
 import { BookshelfView } from "@/components/book/bookshelf-view";
-import { HomeView } from "@/components/book/home-view";
-import { ContentsView } from "@/components/book/contents-view";
-import { ChapterView } from "@/components/book/chapter-view";
-import { VocabularyView } from "@/components/book/vocabulary-view";
-import { GrammarView } from "@/components/book/grammar-view";
-import { QuizView } from "@/components/book/quiz-view";
-import { GamesHub } from "@/components/book/games/games-hub";
-import { TextsView } from "@/components/book/texts-view";
-import { DictionaryView } from "@/components/book/dictionary-view";
-import { VerbsView } from "@/components/book/verbs-view";
-import { FlashcardView } from "@/components/book/flashcard-view";
-import { ReviewView } from "@/components/book/review-view";
-import { TutorView } from "@/components/book/tutor-view";
-import { StatsView } from "@/components/book/stats-view";
-import { CompareView } from "@/components/book/compare-view";
-import { RewardsView } from "@/components/book/rewards-view";
-import { SpeakingView } from "@/components/book/speaking-view";
-import { ClassView } from "@/components/book/class-view";
-import { NotebookView } from "@/components/book/notebook-view";
 import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
@@ -32,12 +14,48 @@ import { DeepLinkGate } from "@/components/book/deep-link-gate";
 import { WhatsNewDialog } from "@/components/book/whats-new";
 import { PwaInstallGuide } from "@/components/book/pwa-install-guide";
 
+// ── Audit گام ۲ — تفکیک نماها به chunk مستقل (view-level code splitting) ──
+// پیش از این refactor هر ۲۲ نما استاتیک import می‌شد و همه در باندل اولیه بودند
+// (LCP گزارش‌شده تا ۲۵ ثانیه). اکنون فقط مسیر بوت (هدر/فوتر/قفسه/پروایدرها) eager است
+// و هر نما هنگام ناوبری به آن بارگذاری می‌شود — الگوی همان dynamic import بازی‌ها.
+const ViewChunkLoading = () => (
+  <section
+    className="flex min-h-[55vh] flex-col items-center justify-center gap-4 rounded-3xl border bg-card/60 p-12 text-center"
+    role="status"
+    aria-live="polite"
+    aria-label="در حال بارگذاری بخش"
+  >
+    <span className="h-8 w-8 animate-spin rounded-full border-[3px] border-muted border-t-primary" aria-hidden />
+    <p className="text-sm font-medium text-muted-foreground">در حال باز کردن بخش…</p>
+  </section>
+);
+
+const HomeView = dynamic(() => import("@/components/book/home-view").then((m) => m.HomeView), { ssr: false, loading: ViewChunkLoading });
+const ContentsView = dynamic(() => import("@/components/book/contents-view").then((m) => m.ContentsView), { ssr: false, loading: ViewChunkLoading });
+const ChapterView = dynamic(() => import("@/components/book/chapter-view").then((m) => m.ChapterView), { ssr: false, loading: ViewChunkLoading });
+const VocabularyView = dynamic(() => import("@/components/book/vocabulary-view").then((m) => m.VocabularyView), { ssr: false, loading: ViewChunkLoading });
+const GrammarView = dynamic(() => import("@/components/book/grammar-view").then((m) => m.GrammarView), { ssr: false, loading: ViewChunkLoading });
+const QuizView = dynamic(() => import("@/components/book/quiz-view").then((m) => m.QuizView), { ssr: false, loading: ViewChunkLoading });
+const GamesHub = dynamic(() => import("@/components/book/games/games-hub").then((m) => m.GamesHub), { ssr: false, loading: ViewChunkLoading });
+const TextsView = dynamic(() => import("@/components/book/texts-view").then((m) => m.TextsView), { ssr: false, loading: ViewChunkLoading });
+const DictionaryView = dynamic(() => import("@/components/book/dictionary-view").then((m) => m.DictionaryView), { ssr: false, loading: ViewChunkLoading });
+const VerbsView = dynamic(() => import("@/components/book/verbs-view").then((m) => m.VerbsView), { ssr: false, loading: ViewChunkLoading });
+const FlashcardView = dynamic(() => import("@/components/book/flashcard-view").then((m) => m.FlashcardView), { ssr: false, loading: ViewChunkLoading });
+const ReviewView = dynamic(() => import("@/components/book/review-view").then((m) => m.ReviewView), { ssr: false, loading: ViewChunkLoading });
+const TutorView = dynamic(() => import("@/components/book/tutor-view").then((m) => m.TutorView), { ssr: false, loading: ViewChunkLoading });
+const StatsView = dynamic(() => import("@/components/book/stats-view").then((m) => m.StatsView), { ssr: false, loading: ViewChunkLoading });
+const CompareView = dynamic(() => import("@/components/book/compare-view").then((m) => m.CompareView), { ssr: false, loading: ViewChunkLoading });
+const RewardsView = dynamic(() => import("@/components/book/rewards-view").then((m) => m.RewardsView), { ssr: false, loading: ViewChunkLoading });
+const SpeakingView = dynamic(() => import("@/components/book/speaking-view").then((m) => m.SpeakingView), { ssr: false, loading: ViewChunkLoading });
+const ClassView = dynamic(() => import("@/components/book/class-view").then((m) => m.ClassView), { ssr: false, loading: ViewChunkLoading });
+const NotebookView = dynamic(() => import("@/components/book/notebook-view").then((m) => m.NotebookView), { ssr: false, loading: ViewChunkLoading });
+
 /** اسکلت بارگذاری تنبل جزوه — تا رسیدن chunk dynamic import کتاب فعال */
 function BookDataLoading() {
   const { meta } = useBook();
   return (
     <section
-      className="flex flex-col items-center justify-center gap-4 rounded-3xl border bg-card/60 p-12 text-center"
+      className="flex min-h-[55vh] flex-col items-center justify-center gap-4 rounded-3xl border bg-card/60 p-12 text-center"
       role="status"
       aria-live="polite"
       aria-label="در حال بارگذاری جزوه"

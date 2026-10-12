@@ -308,42 +308,63 @@ export function GamesHub() {
   }, []);
   const handleDuelExit = useCallback(() => setDuelOpen(false), []);
 
-  // فاز G0-03 — پیش‌بارگذاری چانک بازی‌ها در زمان بیکاری مرورگر، فقط وقتی آزمایشگاه باز است
+  // فاز G0-03 + Audit گام ۶ — پیش‌بارگذاری بودجه‌دار: پیش از این هر ۱۵ چانک بازی
+  // هم‌زمان در یک تیک idle fetch می‌شدند (three.js شوتر ~۶۰۰KB + ۱۴ چانک دیگر) و روی
+  // موبایل با رندر اول هاب رقابت می‌کرد. اکنون صف ترتیبی است: هر تیک idle فقط ۲ چانک
+  // و بین بسته‌ها حداقل ۹۰۰ms فاصله — بازی‌های سبک و پرمصرف در صف جلوتر هستند.
   useEffect(() => {
     if (active) return;
     const idle = window as Window & {
       requestIdleCallback?: (cb: () => void) => number;
       cancelIdleCallback?: (id: number) => void;
     };
-    const preload = () => {
-      void import("./memory-game");
-      void import("./scramble-game");
-      void import("./cloze-game");
-      void import("./wordsearch-game");
-      void import("./speed-quiz-game");
-      void import("./flappy-quiz-game");
-      void import("./snakes-ladders-game");
-      void import("./crossword-game");
-      void import("./wordle-game");
-      void import("./hangman-game");
-      void import("./sentence-builder-game");
-      void import("./duel-game");
-      void import("./listening-hunt-game");
-      void import("./adventure-map-game");
-      void import("./fps-shooter-game");
-    };
-    let id: number | ReturnType<typeof setTimeout>;
-    if (typeof idle.requestIdleCallback === "function") {
-      id = idle.requestIdleCallback(preload);
-    } else {
-      id = setTimeout(preload, 1200);
-    }
-    return () => {
-      if (typeof idle.cancelIdleCallback === "function" && typeof id === "number") {
-        idle.cancelIdleCallback(id);
+    const QUEUE: Array<() => void> = [
+      () => void import("./memory-game"),
+      () => void import("./wordle-game"),
+      () => void import("./hangman-game"),
+      () => void import("./speed-quiz-game"),
+      () => void import("./crossword-game"),
+      () => void import("./scramble-game"),
+      () => void import("./cloze-game"),
+      () => void import("./wordsearch-game"),
+      () => void import("./flappy-quiz-game"),
+      () => void import("./snakes-ladders-game"),
+      () => void import("./sentence-builder-game"),
+      () => void import("./listening-hunt-game"),
+      () => void import("./adventure-map-game"),
+      () => void import("./duel-game"),
+      () => void import("./fps-shooter-game"),
+    ];
+    const BATCH = 2;
+    const GAP_MS = 900;
+    let cursor = 0;
+    let cancelled = false;
+    let idleId: number | null = null;
+    let gapId: ReturnType<typeof setTimeout> | null = null;
+    const scheduleNext = () => {
+      if (cancelled || cursor >= QUEUE.length) return;
+      if (typeof idle.requestIdleCallback === "function") {
+        idleId = idle.requestIdleCallback(step);
       } else {
-        clearTimeout(id);
+        gapId = setTimeout(step, 1200);
       }
+    };
+    const step = () => {
+      idleId = null;
+      if (cancelled) return;
+      const end = Math.min(cursor + BATCH, QUEUE.length);
+      for (; cursor < end; cursor += 1) QUEUE[cursor]();
+      if (cursor < QUEUE.length) {
+        gapId = setTimeout(scheduleNext, GAP_MS);
+      }
+    };
+    scheduleNext();
+    return () => {
+      cancelled = true;
+      if (idleId !== null && typeof idle.cancelIdleCallback === "function") {
+        idle.cancelIdleCallback(idleId);
+      }
+      if (gapId !== null) clearTimeout(gapId);
     };
   }, [active]);
 
