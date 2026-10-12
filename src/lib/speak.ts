@@ -174,6 +174,8 @@ async function speakCloud(
 ): Promise<void> {
   const { voice, speed, onStart, onEnd } = opts;
   const key = audioKey(voice, speed, text);
+  // خارج از try — در catch برای تشخیص «قطع عمدی» لازم است
+  let audio: HTMLAudioElement | null = null;
 
   try {
     let blob: Blob | null = null;
@@ -204,7 +206,7 @@ async function speakCloud(
 
     const url = URL.createObjectURL(blob);
     cache.set(key, url);
-    const audio = new Audio(url);
+    audio = new Audio(url);
     currentAudio = audio;
     audio.onended = () => {
       if (currentAudio === audio) currentAudio = null;
@@ -213,6 +215,12 @@ async function speakCloud(
     audio.onerror = () => onEnd();
     await audio.play();
   } catch (e) {
+    // فاز F10 — قطع عمدی پخش قبلی (stopSpeaking در سؤال بعدی/«پخش دوباره» شنیداری)
+    // عادی است و نباید خطای کنسول بدهد؛ فقط خطای واقعی شبکه/پخش گزارش می‌شود.
+    if (audio !== null && currentAudio !== audio) {
+      onEnd();
+      return;
+    }
     console.error("speak error:", e);
     onEnd();
   }

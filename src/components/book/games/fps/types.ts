@@ -4,7 +4,8 @@ import type * as THREE from "three";
 import type { MapLayout } from "./layouts";
 
 export type Phase = "setup" | "playing" | "done";
-export type Mode = "word-hunt" | "grammar-gate";
+/** فاز F10-a — حالت سوم «شنیداری»: سؤال با پخش صوتی مطرح می‌شود، نه متن */
+export type Mode = "word-hunt" | "grammar-gate" | "listening-hunt";
 
 /** پیکربندی یک هدف متحرک */
 export interface TargetSpec {

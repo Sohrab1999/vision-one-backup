@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useBook, useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
+import { consumeTutorSeed } from "@/lib/tutor-seed";
 import { TeacherPanel } from "./ai/teacher-panel";
 import { StoryPanel } from "./ai/story-panel";
 import { PersonaPanel } from "./ai/persona-panel";
@@ -90,6 +91,18 @@ function FreeChat() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // فاز F10-c — گزارش پایان دور بازی‌ها: seed از sessionStorage مصرف و در ورودی گذاشته می‌شود
+  // (ارسال خودکار نه — کاربر مرور و ارسال می‌کند تا سقف روزانهٔ دستیار بی‌دلیل مصرف نشود)
+  useEffect(() => {
+    const seed = consumeTutorSeed();
+    if (seed) {
+      setInput(seed);
+      inputRef.current?.focus();
+      toast.info("گزارش بازی آماده شد — «ارسال» را بزن تا دستیار تمرین بسازد");
+    }
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -228,6 +241,7 @@ function FreeChat() {
         {/* ورودی */}
         <div className="flex items-end gap-2 border-t pt-3">
           <Textarea
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {

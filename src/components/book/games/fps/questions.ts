@@ -63,6 +63,41 @@ export function buildWordQuestion(
   };
 }
 
+/** فاز F10-a — حالت شنیداری: مثل شکار واژه، ولی سؤال «صدا» است و متن واژه مخفی می‌ماند.
+ * promptMain عمداً فقط نماد بلندگوست — تشخیص درست فقط با شنیدن (قانون آموزشی)؛
+ * پخش خودکار و «پخش دوباره» در index.tsx روی همین mode کلید می‌خورند.
+ */
+export function buildListeningQuestion(
+  seq: number,
+  target: VocabEntry,
+  distrPool: VocabEntry[],
+  lesson: number,
+  maxOthers: number,
+  wave = 1,
+): Question {
+  const others = pickUnique(
+    distrPool.filter((w) => w.word !== target.word),
+    maxOthers,
+    (w) => w.word,
+  );
+  const opts = shuffle([
+    { text: target.word, correct: true },
+    ...others.map((w) => ({ text: w.word, correct: false })),
+  ]);
+  return {
+    seq,
+    mode: "listening-hunt",
+    promptFa: "شنیداری — گوش کن و شکار کن",
+    promptMain: "🔊؟",
+    promptSub: "واژه را شنیدی؟ پهپادِ همان واژه را پیدا کن",
+    ltr: false,
+    targets: layoutTargets(opts, wave),
+    speakText: target.word,
+    srsKey: target.word,
+    lesson,
+  };
+}
+
 /** فاز G2-e — maxOthers: در کیفیت سبک گزینهٔ درست + ۲ حواس‌پرتی (چیدمان لِین‌ها شافل است) */
 export function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, maxOthers: number, wave = 1): Question {
   const optsAll = s.options.map((text, i) => ({ text, correct: i === s.answer }));

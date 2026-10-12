@@ -3104,3 +3104,27 @@ Stage Summary:
 - معماری فونت: شخص ثالث صفر + preload + swap + فالبک متریک واقعی — CLS سهم فونت = ۰، سازگاری کامل با canvas
 - نکتهٔ عملیاتی برای ایجنت‌های بعدی: **بعد از ویرایش globals.css اگر CSS کهنه سرو شد → rm -rf .next و restart** (کش Turbopack)
 - گام بعدی پیشنهادی: بازگشت به نقشهٔ محصولی شوتر docs/fps-roadmap.md نسخهٔ ۲.۴ (F10 عمق یادگیری / T2 حالت‌های تاکتیکی) روی ساختار ماژولار جدید games/fps/
+---
+Task ID: F10-1
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «ادامه بده» — فاز F10 «عمق یادگیری» نقشهٔ محصولی شوتر (docs/fps-roadmap.md نسخهٔ ۲.۴) — الف + ج
+
+Work Log:
+- وضعیت‌سنجی: نقشهٔ refactor بسته (REFACTOR-3)؛ طبق سند، فاز بعدی F10 عمق یادگیری — سه زیرفاز: شنیداری/جملهٔ زنجیره‌ای/گزارش AI
+- **الف — حالت شنیداری (listening-hunt)**: Mode union += "listening-hunt"؛ buildListeningQuestion در questions.ts (promptMain = «🔊؟» — متن واژه عمداً مخفی؛ تشخیص فقط با شنیدن)
+  - پخش خودکار ۴۲۰ms پس از هر سؤال شنیداری (effect با گارد paused/exitAsk + پاک‌سازی تایمر)
+  - دکمهٔ «پخش دوباره» روی HUD (pointer-events-auto داخل کارت pointer-events-none) + کلید V در دسکتاپ (handler keydown کنار KeyR)
+  - scopeOf/modeName در helpers برای سه حالت + bestListen (useSyncExternalStore سوم) + level تله‌متری «listen-tap:…»
+  - setup: کارت سوم (Headphones، گرید sm:grid-cols-3) + pool مشترک واژگان (poolOk/poolCount سه‌وضعیتی) + چیپ‌های درس (باگ جابه‌جایی بدنهٔ ternary وسط کار کشف و اصلاح شد) + متن معرفی و آموزش گام ۱ بروز
+- **ج — گزارش به دستیار AI**: src/lib/tutor-seed.ts جدید (sessionStorage، consume یک‌باره)؛ FreeChat در tutor-view mount → seed را در ورودی می‌گذارد + فوکوس + توست (ارسال خودکار نه — سقف روزانهٔ AI حفظ می‌شود)؛ دکمهٔ «گزارش خطاها به دستیار هوشمند» در phase==="done" زیر ResultScreen (فقط با خطا > ۰) → seedTutorPrompt(رتبهٔ نظامی + دقت + فهرست خطاها با معنی) + requestView("tutor")
+- **پولیش صدا**: قطع عمدی پخش (سؤال بعدی/دابل پخش دوباره) دیگر AbortError در کنسول نمی‌دهد — speak.ts اکنون جایگزین‌شدن currentAudio را تشخیص می‌دهد (audio بیرون try تعریف شد)
+- **اشکال میانه که ریشه‌ای رفع شد**: ویرایش دستی من باعث شد backtick پایانی تمپلیت گزارش به quote تبدیل شود → ۱۲۴ خطای TS از خط ۹31 (جایی که تمپلیت بسته می‌شد) — با اسکنر وضعیت backtick (پاریتی) و esbuild خطای واقعی در خط ۸۸۵ پیدا و اصلاح شد
+- اعتبارسنجی: tsc = ۰ ✓ lint = ۰ خطا/۲۱ warning ✓
+- QA مرورگری: setup سه کارت حالت ✓ شروع دور شنیداری → POST /api/tts 200 (پخش خودکار) ✓ پخش دوباره از کش حافظه (بدون POST دوم) ✓ سه پاسخ غلط → ResultScreen «گزارش مأموریت» + دکمهٔ گزارش ✓ کلیک → نمای دستیار + متن seed در ورودی چت (رتبهٔ D، دقت ۴۰٪، ۳ مورد) ✓ dev.log: game_session_end level:"listen-tap:high" + POST /api/attempts 200 ✓ دابل‌پخش دوبارهٔ تست → صفر خطای کنسول ✓
+- اسکرین‌شات‌ها: qa-shots/f10-setup-modes.png، f10-listening-hud.png، f10-result.png، f10-tutor-seed.png، f10-listening-scene.png
+- docs/fps-roadmap.md: وضعیت F10 🔶 ثبت شد (الف ✓ ج ✓، ب ⏳)
+
+Stage Summary:
+- 🔶 F10 دو-سوم بسته شد: حالت شنیداری کامل + تحویل گزارش به دستیار (سازوکار tutor-seed عمومی برای همهٔ بازی‌ها)
+- گام بعدی مشخص: **F10-ب «جملهٔ زنجیره‌ای»** — موتور توالی (Question.sequence + شکار ترتیبی در handleHit) + انتخاب جمله از مکالمه‌های واقعی جزوه (بدون دادهٔ ساختگی) — به‌عنوان فاز مستقل با QA
+- نکته برای ایجنت‌های بعدی: ویرایش دستی تمپلیت‌های فارسی/RTL حساس است — بعد از هر ویرایش بلافاصله `bunx tsc --noEmit` بگیرید (خطای backtick ممکن است دور از محل ویرایش ظاهر شود)

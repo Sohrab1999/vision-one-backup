@@ -16,11 +16,13 @@ export function lessonLabel(l: number): string {
 }
 
 export function scopeOf(mode: Mode, tap: boolean): string {
-  return `${mode === "word-hunt" ? "word" : "grammar"}${tap ? "-tap" : ""}`;
+  // فاز F10-a — سه اسکوپ مستقل: word / grammar / listen (+tap)
+  const base = mode === "grammar-gate" ? "grammar" : mode === "listening-hunt" ? "listen" : "word";
+  return `${base}${tap ? "-tap" : ""}`;
 }
 
 export function modeName(mode: Mode): string {
-  return mode === "word-hunt" ? "شکار واژه" : "سد گرامری";
+  return mode === "word-hunt" ? "شکار واژه" : mode === "listening-hunt" ? "شنیداری" : "سد گرامری";
 }
 
 /** فاز T1 — رتبهٔ نظامی پایان مأموریت (دقت + امتیاز) */

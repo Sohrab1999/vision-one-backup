@@ -105,6 +105,15 @@
  *   تیز می‌شود، سلاح به مرکز دید می‌آید، لرزش آرام و حساسیت نگاه کم می‌شود (حس اسنایپر).
  * - مدل سه‌بعدی جدا برای هر سلاح در ویومدل + انیمیشن تعویض (نیم‌چرخش هنگام سوار شدن)
  *   و انیمیشن ریلود (پایین‌رفتن + چرخش بر اساس زمان باقی‌مانده).
+ *
+ * فاز F10 — عمق یادگیری (الف + ج این دور؛ ب «جملهٔ زنجیره‌ای» دور بعد):
+ * - حالت سوم «شنیداری» (listening-hunt): سؤال متن ندارد — واژهٔ انگلیسی با TTS پخش
+ *   می‌شود (پخش خودکار ۴۲۰ms پس از نمایش سؤال + دکمهٔ «پخش دوباره» روی HUD + کلید V
+ *   در دسکتاپ حین قفل نشانگر) و بازیکن باید پهپادِ همان واژه را بین اهداف شکار کند؛
+ *   تشخیص فقط با شنیدن (قانون آموزشی). اسکوپ رکورد مستقل «listen» + level تله‌متری.
+ * - «گزارش خطاها به دستیار هوشمند» در صفحهٔ نتیجه: متن گزارش (رتبه/دقت/فهرست خطاها)
+ *   با tutor-seed به sessionStorage می‌رود و FreeChat آن را در ورودی چت می‌گذارد —
+ *   کاربر مرور و ارسال می‌کند تا دستیار مینی‌تمرین بسازد (سقف روزانهٔ AI هدر نمی‌رود).
  */
 
 import {
@@ -120,9 +129,11 @@ import * as THREE from "three";
 import {
   ArrowBigUp,
   Bomb,
+  Bot,
   Crosshair,
   DoorOpen,
   Flame,
+  Headphones,
   Heart,
   Medal,
   MapPinned,
@@ -143,6 +154,7 @@ import {
   Timer,
   Trees,
   Trophy,
+  Volume2,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -159,6 +171,8 @@ import { touchStreak } from "@/lib/streak-store";
 import { recordStudySession } from "@/lib/goal-store";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { useVoiceSpeed } from "@/lib/voice-store";
+import { seedTutorPrompt } from "@/lib/tutor-seed";
+import { requestView } from "@/lib/nav-store";
 import {
   bumpPlays,
   faNum,
@@ -257,7 +271,7 @@ import {
   modeName,
   scopeOf,
 } from "./helpers";
-import { buildGrammarQuestion, buildWordQuestion } from "./questions";
+import { buildGrammarQuestion, buildListeningQuestion, buildWordQuestion } from "./questions";
 import { FovTune, Rig } from "./scene/camera";
 import { ViewModel } from "./scene/viewmodel";
 import { Arena, World } from "./scene/world";
@@ -275,7 +289,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   {
     icon: <Crosshair size={24} />,
     title: "پهپادهای متخاصم را حذف کن",
-    text: "سؤال روی HUD بالای میدان می‌ماند و هر پهپاد متخاصم یک گزینهٔ انگلیسی روی پلاک دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست پهپاد را با انفجار آتش‌و‌دودی منفجر می‌کند و امتیاز با کمبو دارد.",
+    text: "سؤال روی HUD بالای میدان می‌ماند و هر پهپاد متخاصم یک گزینهٔ انگلیسی روی پلاک دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست پهپاد را با انفجار آتش‌و‌دودی منفجر می‌کند و امتیاز با کمبو دارد. در حالت «شنیداری» سؤال خوانده نمی‌شود بلکه واژه پخش می‌شود — گوش کن و پهپادِ همان واژه را شکار کن؛ دکمهٔ «پخش دوباره» زیر سؤال است و در دسکتاپ کلید V هم دوباره پخش می‌کند.",
   },
   {
     icon: <MousePointerClick size={24} />,
@@ -386,8 +400,8 @@ export function FpsShooterGame() {
     () => [...new Set(quizSeed.map((s) => s.lesson))].sort((a, b) => a - b),
     [quizSeed],
   );
-  const poolOk = mode === "word-hunt" ? wordPool.length >= MIN_POOL_WORD : quizPool.length >= MIN_POOL_QUIZ;
-  const poolCount = mode === "word-hunt" ? wordPool.length : quizPool.length;
+  const poolOk = mode === "grammar-gate" ? quizPool.length >= MIN_POOL_QUIZ : wordPool.length >= MIN_POOL_WORD;
+  const poolCount = mode === "grammar-gate" ? quizPool.length : wordPool.length;
 
   // تشخیص دستگاه ضعیف — کاهش ذرات/antialias/dpr در کیفیت عادی
   const weak = useMemo(() => {
@@ -744,9 +758,11 @@ export function FpsShooterGame() {
     // فاز F8 — فرار هدف‌های غلط فقط در حالت شلیک (تپ ساده = دسترس‌پذیری بدون فرار)
     bridge.current.dodge = !tapRef.current;
     const next =
-      modeRef.current === "word-hunt"
-        ? buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w)
-        : buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson, maxOthers, w);
+      modeRef.current === "grammar-gate"
+        ? buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson, maxOthers, w)
+        : modeRef.current === "listening-hunt"
+          ? buildListeningQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w)
+          : buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w);
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
     lockedRef.current = false;
@@ -757,6 +773,18 @@ export function FpsShooterGame() {
   useEffect(() => {
     advanceRef.current = advanceImpl;
   });
+
+  // ── فاز F10-a — حالت شنیداری: سؤال با پخش خودکار واژه مطرح می‌شود ──
+  // (پس از کلیک «شروع مأموریت» فعال‌سازی کاربر در دست است — speechSynthesis/Audio مجاز است؛
+  //  اگر بازیکن فوراً توقف کرده باشد پخش نمی‌کنیم تا صدا روی اورلی توقف پخش نشود)
+  useEffect(() => {
+    if (!q || q.mode !== "listening-hunt" || phase !== "playing") return;
+    const t = window.setTimeout(() => {
+      if (pausedRef.current || exitAskRef.current) return;
+      void speak(q.speakText, { speed: voiceSpeedRef.current });
+    }, 420);
+    return () => window.clearTimeout(t);
+  }, [q, phase]);
 
   const advance = useCallback(() => advanceRef.current(), []);
 
@@ -842,6 +870,23 @@ export function FpsShooterGame() {
   useEffect(() => {
     finishRef.current = finish;
   });
+
+  // ── فاز F10-c — گزارش خطاهای مأموریت به دستیار هوشمند ──
+  // متن آماده در sessionStorage نوشته می‌شود و FreeChat هنگام سوار شدن مصرفش می‌کند؛
+  // ارسال خودکار نه — کاربر مرور و ارسال می‌کند (سقف روزانهٔ دستیار بی‌دلیل مصرف نشود).
+  const sendMissionReport = useCallback(() => {
+    if (wrongList.length === 0) return;
+    const shots = correctCount + wrongCount;
+    const acc = shots > 0 ? Math.round((correctCount / shots) * 100) : 0;
+    const rank = missionRank(acc, finalScore);
+    const lines = wrongList.map((w, i) => `${faNum(i + 1)}) ${w.label}${w.sub ? ` — معنی: ${w.sub}` : ""}`);
+    seedTutorPrompt(
+      `سلام! تازه یک دور «شوتر آموزشی» ویژن‌وان تمام کردم — رتبهٔ ${rank.grade} (${rank.title}) با دقت ${faNum(acc)}٪.\n` +
+        `این ${faNum(wrongList.length)} مورد را جا انداختم؛ لطفاً از همین‌ها یک مینی‌تمرین کوتاه (حدود ۳ دقیقه) بساز:\n${lines.join("\n")}`,
+    );
+    playSound("click");
+    requestView("tutor");
+  }, [wrongList, correctCount, wrongCount, finalScore]);
 
   // ── فاز G2-e — نگهبان خروج: انصراف حین صحنه ──
   // با هر پیشرفت، GameExitGuard (صحنه حین دیالوگ فریز شود)؛ پیش از اولین شلیک، خروج مستقیم.
@@ -1202,6 +1247,14 @@ export function FpsShooterGame() {
         if (!pausedRef.current && !exitAskRef.current) reloadNowRef.current();
         return;
       }
+      // فاز F10-a — V = پخش دوبارهٔ واژهٔ حالت شنیداری (دسکتاپ حتی حین قفل نشانگر)
+      if (e.code === "KeyV") {
+        const cur = qRef.current;
+        if (!pausedRef.current && !exitAskRef.current && cur?.mode === "listening-hunt") {
+          void speak(cur.speakText, { speed: voiceSpeedRef.current });
+        }
+        return;
+      }
       // فاز F10 — پرش با اسپیس (خارج از تپ ساده) — جلوگیری از اسکرول صفحه
       if (e.code === "Space") {
         if (tapRef.current) return;
@@ -1247,10 +1300,10 @@ export function FpsShooterGame() {
   // ── شروع دور ──
   const start = useCallback(() => {
     const pool: Array<VocabEntry | QuizQuestionSeed> =
-      mode === "word-hunt"
-        ? (lesson === ALL_LESSONS ? vocabAll : vocabAll.filter((w) => w.lesson === lesson))
-        : (lesson === ALL_LESSONS ? quizSeed : quizSeed.filter((s) => s.lesson === lesson));
-    if (pool.length < (mode === "word-hunt" ? MIN_POOL_WORD : MIN_POOL_QUIZ)) return;
+      mode === "grammar-gate"
+        ? (lesson === ALL_LESSONS ? quizSeed : quizSeed.filter((s) => s.lesson === lesson))
+        : (lesson === ALL_LESSONS ? vocabAll : vocabAll.filter((w) => w.lesson === lesson));
+    if (pool.length < (mode === "grammar-gate" ? MIN_POOL_QUIZ : MIN_POOL_WORD)) return;
     // فاز G2-e — بازخورد کلیک شروع دور (الگوی کیت) + فاز F3 — درخواست تمام‌صفحه با ژست کاربر
     playSound("click");
     buzz("light");
@@ -1327,10 +1380,10 @@ export function FpsShooterGame() {
     setLiveMsg("مأموریت شروع شد — به گزینهٔ درست شلیک کن!");
     setExitAskSafe(false);
     resume();
-    // فاز G2-e — جلسهٔ تازهٔ تله‌متری: level = حالت (+تپ) : کیفیت — مثل «word-tap:low»
+    // فاز G2-e — جلسهٔ تازهٔ تله‌متری: level = حالت (+تپ) : کیفیت — مثل «word-tap:low» — فاز F10-a: listen
     sessionRef.current = createGameSession({
       game: GAME_KEY,
-      level: `${mode === "word-hunt" ? "word" : "grammar"}${tapMode ? "-tap" : ""}:${quality}`,
+      level: `${mode === "grammar-gate" ? "grammar" : mode === "listening-hunt" ? "listen" : "word"}${tapMode ? "-tap" : ""}:${quality}`,
     });
     sessionRef.current.start();
     setPhase("playing");
@@ -1474,10 +1527,19 @@ export function FpsShooterGame() {
     },
     () => "",
   );
+  // فاز F10-a — رکورد اسکوپ مستقل حالت شنیداری
+  const bestListen = useSyncExternalStore(
+    subscribeGameData,
+    () => {
+      const s = activeBookId ? loadBest<BestRecord>(activeBookId, GAME_KEY, scopeOf("listening-hunt", tapMode)) : null;
+      return s ? JSON.stringify(s) : "";
+    },
+    () => "",
+  );
   const bestVal = useMemo(() => {
-    const raw = mode === "word-hunt" ? bestWord : bestGrammar;
+    const raw = mode === "grammar-gate" ? bestGrammar : mode === "listening-hunt" ? bestListen : bestWord;
     return raw ? (JSON.parse(raw) as BestRecord).score : null;
-  }, [mode, bestWord, bestGrammar]);
+  }, [mode, bestWord, bestGrammar, bestListen]);
 
   const chipCls = (active: boolean) =>
     cn(
@@ -1507,6 +1569,7 @@ export function FpsShooterGame() {
               <Sparkles size={15} className="mt-0.5 shrink-0 text-emerald-500" />
               <p>
                 سؤال بالای صفحه می‌آید و روی هر پهپاد متخاصم یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
+                در حالت «شنیداری» سؤال متن ندارد بلکه <b>واژه پخش می‌شود</b> — گوش کن و پهپادِ همان واژه را شکار کن (با دکمهٔ «پخش دوباره» می‌توانی دوباره بشنوی).
                 شلیک درست = انفجار آتش‌و‌دودی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
                 (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان می‌دوی —
                 حرکت نرم با شتاب واقعی، Shift دویدن، Space پرش و C خم‌شدن؛ دیوارها، درها و جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی.
@@ -1519,7 +1582,7 @@ export function FpsShooterGame() {
 
             <div>
               <p className="mb-2 text-[13px] font-bold">حالت بازی</p>
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid gap-2 sm:grid-cols-3">
                 {(
                   [
                     {
@@ -1533,6 +1596,12 @@ export function FpsShooterGame() {
                       title: "سد گرامری",
                       desc: "جملهٔ ناقص سؤال‌ها؛ گزینهٔ درست را نشانه بگیر و شلیک کن.",
                       icon: Swords,
+                    },
+                    {
+                      key: "listening-hunt" as const,
+                      title: "شنیداری",
+                      desc: "سؤال پخش می‌شود، نه متن! واژهٔ شنیده‌شده را بین پهپادها پیدا و شکار کن.",
+                      icon: Headphones,
                     },
                   ] satisfies Array<{ key: Mode; title: string; desc: string; icon: typeof Star }>
                 ).map((m) => (
@@ -1660,24 +1729,10 @@ export function FpsShooterGame() {
                   }}
                   className={chipCls(lesson === ALL_LESSONS)}
                 >
-                  کل کتاب ({faNum(poolCount)} {mode === "word-hunt" ? "واژه" : "سؤال"})
+                  کل کتاب ({faNum(poolCount)} {mode === "grammar-gate" ? "سؤال" : "واژه"})
                 </button>
-                {mode === "word-hunt"
-                  ? wordLessons.map((l) => (
-                      <button
-                        key={l.lesson}
-                        type="button"
-                        aria-pressed={lesson === l.lesson}
-                        onClick={() => {
-                          chipFeedback();
-                          setLesson(l.lesson);
-                        }}
-                        className={chipCls(lesson === l.lesson)}
-                      >
-                        {l.label} ({faNum(vocabAll.filter((w) => w.lesson === l.lesson).length)})
-                      </button>
-                    ))
-                  : quizLessons.map((l) => (
+                {mode === "grammar-gate"
+                  ? quizLessons.map((l) => (
                       <button
                         key={l}
                         type="button"
@@ -1689,6 +1744,20 @@ export function FpsShooterGame() {
                         className={chipCls(lesson === l)}
                       >
                         {lessonLabel(l)} ({faNum(quizSeed.filter((s) => s.lesson === l).length)})
+                      </button>
+                    ))
+                  : wordLessons.map((l) => (
+                      <button
+                        key={l.lesson}
+                        type="button"
+                        aria-pressed={lesson === l.lesson}
+                        onClick={() => {
+                          chipFeedback();
+                          setLesson(l.lesson);
+                        }}
+                        className={chipCls(lesson === l.lesson)}
+                      >
+                        {l.label} ({faNum(vocabAll.filter((w) => w.lesson === l.lesson).length)})
                       </button>
                     ))}
               </div>
@@ -1860,38 +1929,57 @@ export function FpsShooterGame() {
     // فاز T1 — رتبهٔ نظامی پایان مأموریت
     const rank = missionRank(acc, finalScore);
     return (
-      <ResultScreen
-        title="گزارش مأموریت"
-        stars={stars}
-        isRecord={isRecord}
-        errorCount={wrongList.length}
-        reviewItems={wrongList.map((w) => ({ front: w.label, back: w.sub ?? "" }))}
-        stats={[
-          {
-            label: "رتبهٔ مأموریت",
-            value: `${rank.grade} — ${rank.title}`,
-            icon: <Medal size={16} className="text-amber-500" />,
-          },
-          {
-            label: "امتیاز",
-            value: faNum(finalScore),
-            icon: <Star size={16} className="text-amber-500" />,
-          },
-          {
-            label: "دقت",
-            value: `${faNum(acc)}٪`,
-            icon: <TargetIcon size={16} className="text-emerald-500" />,
-          },
-          {
-            label: "زمان",
-            value: fmtTime(elapsed),
-            icon: <Timer size={16} className="text-teal-500" />,
-          },
-        ]}
-        onReplay={start}
-        onExit={() => setPhase("setup")}
-        exitLabel="تنظیمات"
-      />
+      <div className="space-y-3">
+        <ResultScreen
+          title="گزارش مأموریت"
+          stars={stars}
+          isRecord={isRecord}
+          errorCount={wrongList.length}
+          reviewItems={wrongList.map((w) => ({ front: w.label, back: w.sub ?? "" }))}
+          stats={[
+            {
+              label: "رتبهٔ مأموریت",
+              value: `${rank.grade} — ${rank.title}`,
+              icon: <Medal size={16} className="text-amber-500" />,
+            },
+            {
+              label: "امتیاز",
+              value: faNum(finalScore),
+              icon: <Star size={16} className="text-amber-500" />,
+            },
+            {
+              label: "دقت",
+              value: `${faNum(acc)}٪`,
+              icon: <TargetIcon size={16} className="text-emerald-500" />,
+            },
+            {
+              label: "زمان",
+              value: fmtTime(elapsed),
+              icon: <Timer size={16} className="text-teal-500" />,
+            },
+          ]}
+          onReplay={start}
+          onExit={() => setPhase("setup")}
+          exitLabel="تنظیمات"
+        />
+        {/* فاز F10-c — تحویل خطاهای دور به دستیار هوشمند برای ساخت مینی‌تمرین */}
+        {wrongList.length > 0 && (
+          <Card className="mx-auto max-w-xl p-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={sendMissionReport}
+              className="min-h-11 w-full rounded-2xl border-primary/30"
+            >
+              <Bot size={16} className="text-primary" aria-hidden />
+              گزارش خطاها به دستیار هوشمند
+            </Button>
+            <p className="mt-2 text-center text-[10.5px] leading-5 text-muted-foreground">
+              دستیار با همین {faNum(wrongList.length)} موردِ جاافتاده یک مینی‌تمرین کوتاه برایت می‌سازد — در چت دستیار مرور و ارسال کن.
+            </p>
+          </Card>
+        )}
+      </div>
     );
   }
 
@@ -2193,6 +2281,18 @@ export function FpsShooterGame() {
                     {q.promptMain}
                   </p>
                   {q.promptSub && <p className="mt-0.5 text-[10px] text-muted-foreground">{q.promptSub}</p>}
+                  {/* فاز F10-a — پخش دوبارهٔ واژه در حالت شنیداری (کارت pointer-events-none است؛ دکمه auto) */}
+                  {q.mode === "listening-hunt" && (
+                    <button
+                      type="button"
+                      onClick={() => void speak(q.speakText, { speed: voiceSpeedRef.current })}
+                      className="pointer-events-auto mx-auto mt-2 flex min-h-9 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3.5 py-1.5 text-[11px] font-bold text-primary transition-all hover:bg-primary/15 active:scale-95"
+                      aria-label="پخش دوبارهٔ واژه"
+                    >
+                      <Volume2 size={13} aria-hidden />
+                      پخش دوباره
+                    </button>
+                  )}
                   {/* نوار زمان */}
                   <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
                     <div
