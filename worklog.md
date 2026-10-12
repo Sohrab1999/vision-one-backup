@@ -3078,3 +3078,29 @@ Stage Summary:
 - بزرگ‌ترین فایل fps اکنون index.tsx با ~۲۳۴۰ خط (از ۴۳۰۴) و همهٔ ماژول‌های دیگر <۳۴۰ خط — code-review و ادامهٔ فازهای محصولی (F10 عمق یادگیری / T2 تاکتیکی) حالا روی فایل‌های کوچک ممکن است
 - الگوی bridge مستند شد (ADR-001) — دیگر هر ایجنت/توسعه‌دهنده‌ای به خطای immutability برنمی‌خورد
 - گام بعدی پیشنهادی: تکمیل گام ۷ (دیالوگ‌های سایزثابت + font-display swap) یا بازگشت به نقشهٔ محصولی شوتر (F10 عمق یادگیری / T2 حالت‌های تاکتیکی) طبق docs/fps-roadmap.md نسخهٔ ۲.۴
+---
+Task ID: REFACTOR-3
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «طبق نقشه راه برو جلو» — تکمیل گام ۷ (آخرین گام عملیاتی نقشهٔ refactor)
+
+Work Log:
+- وضعیت‌سنجی: اسپرینت ۱/۲/۳ روی دیسک تأیید شد (src/data ریشه فقط types/whats-new + پوشه‌ها؛ games/fps/ موجود) — تنها گام نیمه‌تمام: گام ۷ (فونت/دیالوگ برای CLS)
+- هدر بررسی شد: کاملاً استاتیک (صفر state) — منبع CLS نیست؛ WhatsNewDialog سایزثابت (max-w-lg + max-h-96) — امن
+- **فونت خودمیزبان شد**: `@import` رندربلاک‌کنندهٔ Google Fonts از globals.css حذف → فایل متغیر `Vazirmatn[wght].woff2` (۱۱۱KB، magic wOF2 تأیید شد) از jsdelivr (npm vazirmatn@33.0.3) دانلود → `public/fonts/`
+- `@font-face` با `font-display: swap` + وزن 100 900 + `<link rel=preload>` در layout head
+- **فالبک متریک**: متیریک واقعی فایل با fontTools استخراج شد (upem 2048، ascent 2100، descent −1100، lineGap 0) → face «Vazirmatn Fallback» با ascent-override 102.539% / descent-override 53.711% / line-gap-override 0% و src محلی Tahoma/Segoe/Arial/Roboto/DejaVu؛ در هر دو stack `--font-sans` و body بعد از «Vazirmatn» درج شد
+- قید سازگاری کشف و حفظ شد: canvas کارت‌های اشتراک (result-share.ts، progress-card-generator.tsx) به `document.fonts.load("… Vazirmatn")` وابسته‌اند → next/font/local (نام خانوادهٔ هش‌شده) استفاده نشد؛ نام «Vazirmatn» دست‌نخورده ماند — صفر تغییر کد اپ
+- رفع خطای lint: directive بی‌مصرف eslint-disable-next-line next/no-page-custom-font (rule وجود نداشت) حذف شد
+- **باگ محیطی**: بعد از ویرایش globals.css، سرور CSS کهنه سرو می‌کرد (chunk بدون @font-face؛ دو نمونهٔ bun run dev همزمان هم بود) — touch کافی نبود؛ restart + rm -rf .next (کش Turbopack) مشکل را ریشه‌ای حل کرد
+- اعتبارسنجی: tsc=۰ ✓ lint=۰ خطا/۲۱ warning (مطابق baseline) ✓ فونت ۲۰۰/۱۱۱۱۵۲/font-woff2 ✓
+- QA مرورگری: `document.fonts.check('16px Vazirmatn')`=true ✓ computed family شامل «Vazirmatn Fallback» ✓ **صفر درخواست به googleapis/gstatic** ✓ preload same-origin فعال ✓
+- QA golden path: قفسه → ورود ویژن وان → نمای خانه (۱۶ دکمهٔ ناوبری) → هاب بازی‌ها (۱۵ کارت) → setup شوتر (کارت نقشه/مأموریت) — صفر خطای کنسول و صفحه
+- vitals در dev.log: cls=0 در هر دو لود (بودجه ✓)، INP=48ms، LCP لود سرد 18s (هزینهٔ compile dev بعد از پاک‌سازی کامل cache) → لود دوم 2420ms
+- اسکرین‌شات‌ها: qa-shots/r4-step7-whatsnew.png، r4-step7-hub.png، r4-step7-fps.png
+- docs/refactor-roadmap.md بروزرسانی شد: گام ۷ ✅ کامل (جدول + وضعیت اجرا) — نقشهٔ refactor اکنون ۹/۹ گام عملیاتی بسته است؛ گام ۹ تعمداً معلق (فقط با چندنفره‌شدن کلاس مجازی)
+
+Stage Summary:
+- 🏁 **نقشه راه Refactoring رسماً بسته شد** — هر ۹ گام عملیاتی از ۱۰ انجام شد (گام ۹ اختیاری/معلق)
+- معماری فونت: شخص ثالث صفر + preload + swap + فالبک متریک واقعی — CLS سهم فونت = ۰، سازگاری کامل با canvas
+- نکتهٔ عملیاتی برای ایجنت‌های بعدی: **بعد از ویرایش globals.css اگر CSS کهنه سرو شد → rm -rf .next و restart** (کش Turbopack)
+- گام بعدی پیشنهادی: بازگشت به نقشهٔ محصولی شوتر docs/fps-roadmap.md نسخهٔ ۲.۴ (F10 عمق یادگیری / T2 حالت‌های تاکتیکی) روی ساختار ماژولار جدید games/fps/

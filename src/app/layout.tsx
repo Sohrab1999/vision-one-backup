@@ -98,6 +98,16 @@ export default function RootLayout({
     <html lang="fa" dir="rtl" suppressHydrationWarning className="dark">
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        {/*
+         * گام ۷ (CLS): فونت same-origin خیلی زود preload می‌شود تا پنجرهٔ
+         * fallback↔Vazirmatn (font-display: swap) به حداقل برسد — بدون درخواست شخص ثالث.
+         */}
+        <link
+          rel="preload"
+          href="/fonts/Vazirmatn-var.woff2"
+          as="font"
+          type="font/woff2"
+        />
       </head>
       <body className="antialiased bg-background text-foreground min-h-screen flex flex-col">
         {children}

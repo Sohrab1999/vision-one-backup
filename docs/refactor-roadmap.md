@@ -125,7 +125,7 @@
 
 ## نقشه راه Refactoring — رتبه‌بندی اجرایی (۱ تا ۱۰)
 
-> **وضعیت اجرا (به‌روزرسانی ۱۲ اکتبر ۲۰۲۶ — اسپرینت ۱، ۲ و ۳ بسته شد):**
+> **وضعیت اجرا (به‌روزرسانی ۱۲ اکتبر ۲۰۲۶ — اسپرینت ۱، ۲ و ۳ بسته شد؛ گام ۷ نیز تکمیل شد):**
 > - ✅ **گام ۱ انجام شد** — ۱۸ فایل مردهٔ ریشه حذف شد (۹۰۷۹ خط؛ `vocab-junior` هم ترانزیتیو مرده بود). `src/data` اکنون فقط `types.ts` + `whats-new.ts` + پوشه‌های کتاب.
 > - ✅ **گام ۵ انجام شد** — `ignoreBuildErrors:false` در next.config + tsconfig اکنون فقط `src/**` را چک می‌کند. + **ادامه در اسپرینت ۳**: `@typescript-eslint/no-unused-vars` به «warn» ارتقا یافت و ۱۹ unused import از ۱۱ فایل پاک شد (۴۰→۲۱ warning؛ باقی‌مانده semantic است)؛ tool-results/qa-archive/mini-services/scripts به ignores eslint اضافه شدند. `tsc --noEmit` = ۰ خطا.
 > - ✅ **گام ۸ انجام شد** — ۳۶ اسکرین‌شات ریشه + `dev.log.g4-backup` به `qa-archive/2026-10/` منتقل شد؛ `fps-revolution-roadmap.v1.bak` حذف شد.
@@ -134,7 +134,7 @@
 > - ✅ **گام ۳ انجام شد (اسپرینت ۳)** — god component ۴۳۰۴خطی به پوشه `games/fps/` تفکیک شد: `index.tsx` (۲۳۳۸خط — فقط کامپوننت اصلی) + `constants/maps/layouts/weapons/prefs/types/helpers/textures/questions/physics` + `scene/{camera,viewmodel,sky,world,targets,input}` (۱۶ فایل، همه <۳۴۰خط). QA مرورگری کامل: setup چهار نقشه ✓ شروع مأموریت + صحنه ✓ چرخهٔ تا ResultScreen با کارت رتبهٔ D ✓ `game_session_end + POST /api/attempts 200` ✓ صفر خطای کنسول.
 > - ✅ **گام ۴ انجام شد (اسپرینت ۳ — با یافتهٔ بازبینی)** — بازبینی نشان داد ادعای audit (faNum×۹/pick×۸/saveAttempt×۷ تعریف محلی) از قبل همگرا شده بود: **صفر تعریف محلی** باقی مانده بود؛ فقط `fmtTime` تکراری (fps/helpers در برابر shared) حذف شد → import از shared. `scopeOf` سرعت‌کوییز هم‌نام ولی معنای متفاوت (درس:دسته:زمان) — تعمداً دست‌نخورده. hook رکوردها ساخته نشد تا کد مردهٔ جدید ایجاد نشود (YAGNI) — در صورت نیاز واقعی در فاز بازی جدید ساخته می‌شود.
 > - ✅ **گام ۱۰ انجام شد (اسپرینت ۳)** — `docs/adr/ADR-001-fps-bridge-pattern.md` (الگوی جهش bridge در توابع ماژول‌سطح) + `games/fps/README.md` (نقشهٔ ماژول + قراردادهای ثابت + چک‌لیست توسعه) نوشته شد.
-> - 🟡 **گام ۷ نیمه‌انجام شد** — اسکلت‌ها ارتفاع رزروشده گرفتند؛ دیالوگ‌ها/فونت برای به‌روزرسانی بعدی.
+> - 🟡 **گام ۷ نیمه‌انجام بود → ✅ تکمیل شد (۱۲ اکتبر ۲۰۲۶)** — علاوه بر اسکلت‌های رزروشده، **فونت Vazirmatn خودمیزبان شد**: `@import` رندربلاک‌کنندهٔ Google Fonts حذف؛ فایل متغیر woff2 (۱۱۱KB) در `public/fonts/` با `@font-face` + `font-display: swap` + `<link rel=preload>`؛ فالبک متریک‌تنظیم‌شده («Vazirmatn Fallback» با ascent-override 102.539% / descent-override 53.711% استخراج‌شده از متیریک واقعی فایل با fontTools) برای خنثی‌کردن پرش خطوط در پنجرهٔ swap؛ نام خانواده عمداً «Vazirmatn» ماند تا canvas کارت‌های اشتراک (result-share/progress-card) نشکند. QA: صفر درخواست شخص ثالث فونت، cls=0 در هر دو لود، INP=48ms، golden path (قفسه→خانه→هاب ۱۵ کارت→setup شوتر) صفر خطای کنسول. نکتهٔ عملیاتی: Turbopack cache بعد از تغییر globals.css کهنه ماند — پاک‌سازی کامل `.next` لازم بود.
 > - ⏳ گام ۹ (state کلاس → DB/duel-service) اختیاری — فقط وقتی کلاس مجازی چندنفره جدی شد.
 
 | # | اقدام | فایل/محدوده | شدت | تلاش | الگوی معماری | سود اصلی |
@@ -145,7 +145,7 @@
 | **۴** | **یکجا کردن faNum / pick / saveAttempt / scopeOf** در shared.ts + hook رکوردها | ۱۷ بازی | 🟠 | ~۳س | DRY + Custom Hook | −~۷۰۰ خط، باگ‌فیکس یک‌جا |
 | **۵** | **بستن دروازهٔ کیفیت**: `ignoreBuildErrors:false` → فعال‌سازی تدریجی `no-unused-vars` → `noImplicitAny:true` | configها | 🟠 | ~۱س | Fail Fast | جلوگیری از بازگشت «۱۶ ارور» |
 | **۶** | **prefetch بودجه‌دار بازی‌ها** (صف ۲–۳تایی / مبتنی بر سابقهٔ کاربر) | `games-hub.tsx` | 🟠 | ~۱س | Budgeted prefetch | INP موبایل، دادهٔ کمتر |
-| **۷** | **ثبات چیدمان (CLS)**: min-h نماها، دیالوگ‌های سایزثابت، fallback فونت | نماها | 🟠 | ~۲س | Reserve space | CLS → <۰٫۱ |
+| **۷** | ~~**ثبات چیدمان (CLS)**~~ ✅ تکمیل شد: min-h نماها + فونت خودمیزبان با فالبک متریک | نماها | 🟠→🟢 | ~۲س | Reserve space | CLS → <۰٫۱ (اندازه‌گیری: ۰) |
 | **۸** | **پاک‌سازی artifacts**: انتقال/حذف png و tool-results و bak؛ gitignore سرویس‌ها | ریشهٔ ریپو | 🟡 | ~۳۰د | Repo hygiene | clone/جست‌وجوی سریع |
 | **۹** | **انتقال state زندهٔ کلاس به DB یا duel-service** | `api/class/_lib` | 🟡 | ~۳س | Statelessness | مقاوم به ری‌استارت |
 | **۱۰** | **مستندسازی الگوی bridge + ADR-001** (+ README بازی‌ها) | docs/ + fps/ | 🟡 | ~۱س | ADR / Knowledge sharing | توسعهٔ FPS سریع‌تر |
