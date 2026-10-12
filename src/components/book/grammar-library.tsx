@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { GraduationCap, Lightbulb, Table2, Quote, Type } from "lucide-react";
+import { GraduationCap, Lightbulb, Table2, Type } from "lucide-react";
 import {
   Accordion,
   AccordionContent,

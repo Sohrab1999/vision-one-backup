@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Search, CheckCircle2, LayoutGrid, Rows3, Star, GraduationCap } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

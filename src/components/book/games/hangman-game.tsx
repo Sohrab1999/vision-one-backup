@@ -77,7 +77,6 @@ import {
 import { createGameSession, type GameSessionTracker } from "./kit/telemetry";
 // فاز G3 — دشواری ۳سطحی + انتخاب هوشمند واژه (کیت GameKit v2 — فقط مصرف)
 import {
-  LEVEL_KNOBS,
   levelScore,
   loadLevelPref,
   saveLevelPref,

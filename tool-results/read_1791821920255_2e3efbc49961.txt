@@ -1,0 +1,722 @@
+   361→  bg: string;
+   362→  ground: string;
+   363→  ringMain: string;
+   364→  ringOther: string;
+   365→  mountain: string;
+   366→  decoColors: [number, number, number, number];
+   367→  /** شدت emissive اجسام تزئینی — نقشهٔ شب درخشان است تا خوانایی حفظ شود */
+   368→  decoGlow: number;
+   369→  hemiSky: string;
+   370→  hemiGround: string;
+   371→  sunColor: string;
+   372→  sunIntensity: number;
+   373→  ambIntensity: number;
+   374→  fogNear: number;
+   375→  fogFar: number;
+   376→  /** خورشید/ماه: موقعیت + شعاع + رنگ */
+   377→  orb: { pos: [number, number, number]; r: number; color: string } | null;
+   378→  stars: boolean;
+   379→  clouds: number;
+   380→  cloudColor: string;
+   381→  /** فاز F10 — پالت سازه‌های چیدمان: دیوار، درِ چوبی، رنگ تأکیدی و جعبه */
+   382→  wallColor: string;
+   383→  doorColor: string;
+   384→  accentColor: string;
+   385→  crateColor: string;
+   386→  /** نمونه‌رنگ گرادیانی کارت نقشه در setup */
+   387→  swatch: string;
+   388→}
+   389→
+   390→const MAPS: Record<MapId, MapConfig> = {
+   391→  forest: {
+   392→    id: "forest",
+   393→    name: "جنگل زمردی",
+   394→    desc: "میدان کلاسیک سبز با تنهٔ درختان، دیوارهای چوبی و کوه‌های دوردست.",
+   395→    bg: "#062e24",
+   396→    ground: "#0a4335",
+   397→    ringMain: "#f59e0b",
+   398→    ringOther: "#10b981",
+   399→    mountain: "#065f46",
+   400→    decoColors: [0x0d9488, 0x059669, 0xd97706, 0x10b981],
+   401→    decoGlow: 0.14,
+   402→    hemiSky: "#a7f3d0",
+   403→    hemiGround: "#064e3b",
+   404→    sunColor: "#ffffff",
+   405→    sunIntensity: 1.1,
+   406→    ambIntensity: 0.8,
+   407→    fogNear: 10,
+   408→    fogFar: 36,
+   409→    orb: null,
+   410→    stars: false,
+   411→    clouds: 3,
+   412→    cloudColor: "#e7fff4",
+   413→    wallColor: "#3d2c17",
+   414→    doorColor: "#6b4423",
+   415→    accentColor: "#34d399",
+   416→    crateColor: "#92400e",
+   417→    swatch: "bg-gradient-to-b from-emerald-300 via-emerald-600 to-emerald-950",
+   418→  },
+   419→  desert: {
+   420→    id: "desert",
+   421→    name: "کویر کهربا",
+   422→    desc: "غروب شنی با دیوارهای ماسه‌سنگی، طاق سنگی و خورشید بزرگ.",
+   423→    bg: "#431407",
+   424→    ground: "#92400e",
+   425→    ringMain: "#fbbf24",
+   426→    ringOther: "#f59e0b",
+   427→    mountain: "#7c2d12",
+   428→    decoColors: [0xd97706, 0xb45309, 0x78350f, 0xf59e0b],
+   429→    decoGlow: 0.12,
+   430→    hemiSky: "#fed7aa",
+   431→    hemiGround: "#7c2d12",
+   432→    sunColor: "#ffd9a0",
+   433→    sunIntensity: 1.25,
+   434→    ambIntensity: 0.85,
+   435→    fogNear: 9,
+   436→    fogFar: 34,
+   437→    orb: { pos: [7, 3.4, -30], r: 3.2, color: "#fbbf24" },
+   438→    stars: false,
+   439→    clouds: 2,
+   440→    cloudColor: "#ffd9a8",
+   441→    wallColor: "#c08a4e",
+   442→    doorColor: "#7a4a21",
+   443→    accentColor: "#fbbf24",
+   444→    crateColor: "#a16207",
+   445→    swatch: "bg-gradient-to-b from-amber-300 via-orange-600 to-orange-950",
+   446→  },
+   447→  night: {
+   448→    id: "night",
+   449→    name: "سکوت شب",
+   450→    desc: "آسمان پرستاره با ستون‌های کریستال درخشان — تمرکز دوچندان.",
+   451→    bg: "#020617",
+   452→    ground: "#0f172a",
+   453→    ringMain: "#22d3ee",
+   454→    ringOther: "#155e75",
+   455→    mountain: "#1e293b",
+   456→    decoColors: [0x22d3ee, 0x2dd4bf, 0x38bdf8, 0x818cf8],
+   457→    decoGlow: 0.95,
+   458→    hemiSky: "#334155",
+   459→    hemiGround: "#020617",
+   460→    sunColor: "#93c5fd",
+   461→    sunIntensity: 0.55,
+   462→    ambIntensity: 0.52,
+   463→    fogNear: 8,
+   464→    fogFar: 32,
+   465→    orb: { pos: [-8, 6.6, -26], r: 1.9, color: "#e2e8f0" },
+   466→    stars: true,
+   467→    clouds: 0,
+   468→    cloudColor: "#e2e8f0",
+   469→    wallColor: "#253550",
+   470→    doorColor: "#0f766e",
+   471→    accentColor: "#22d3ee",
+   472→    crateColor: "#334155",
+   473→    swatch: "bg-gradient-to-b from-slate-400 via-slate-700 to-slate-950",
+   474→  },
+   475→  dust: {
+   476→    id: "dust",
+   477→    name: "دروازهٔ دو در",
+   478→    desc: "الهام از دی‌داست۲: درِ دوتایی میانه، گذرگاه بلند، تونل B و درهای چوبی — نبرد کلاسیک کویری.",
+   479→    bg: "#d8c294",
+   480→    ground: "#c2a36b",
+   481→    ringMain: "#f59e0b",
+   482→    ringOther: "#a16207",
+   483→    mountain: "#a98a55",
+   484→    decoColors: [0xb45309, 0x92400e, 0xd97706, 0x78350f],
+   485→    decoGlow: 0.1,
+   486→    hemiSky: "#fdf3d9",
+   487→    hemiGround: "#8a6d42",
+   488→    sunColor: "#fff1cf",
+   489→    sunIntensity: 1.35,
+   490→    ambIntensity: 0.95,
+   491→    fogNear: 13,
+   492→    fogFar: 46,
+   493→    orb: { pos: [-6, 7, -34], r: 2.6, color: "#fff3d6" },
+   494→    stars: false,
+   495→    clouds: 2,
+   496→    cloudColor: "#fff7e6",
+   497→    wallColor: "#c9a76b",
+   498→    doorColor: "#7a4a21",
+   499→    accentColor: "#eab308",
+   500→    crateColor: "#8a6f3c",
+   501→    swatch: "bg-gradient-to-b from-amber-200 via-amber-400 to-yellow-800",
+   502→  },
+   503→};
+   504→
+   505→// ── فاز F10 — سیستم چیدمان نقشه: هر نقشه سازه‌ها و محدودهٔ حرکت واقعی خودش را دارد ──
+   506→
+   507→/** انواع سازهٔ چیدمان — هرکدام متریال/شکل رندر خودش را دارد */
+   508→type StructureKind = "wall" | "crate" | "door" | "doorOpen" | "post" | "arch" | "tree" | "crystal" | "sandbag";
+   509→
+   510→interface LayoutBox {
+   511→  k: StructureKind;
+   512→  x: number;
+   513→  z: number;
+   514→  /** عرض (x) و عمق (z) و ارتفاع (y) سازه — متر */
+   515→  w: number;
+   516→  d: number;
+   517→  h: number;
+   518→  /** چرخش نمایشی حول y (فقط رندر — برخورد AABB بدون چرخش) */
+   519→  rot?: number;
+   520→  /** آفست عمودی (لینتل طاق) */
+   521→  y?: number;
+   522→  /** پیش‌فرض true — false = دکور آزاد (بدون برخورد) */
+   523→  solid?: boolean;
+   524→}
+   525→
+   526→interface MapLayout {
+   527→  /** محدودهٔ حرکت بازیکن در فضای جهان */
+   528→  minX: number;
+   529→  maxX: number;
+   530→  minZ: number;
+   531→  maxZ: number;
+   532→  boxes: LayoutBox[];
+   533→}
+   534→
+   535→/**
+   536→ * چیدمان چهار نقشه — مختصات جهان (بازیکن حدود z≈7 شروع می‌کند، هدف‌ها z≤−5.5).
+   537→ * گذر میانی (|x|<3) همیشه باز می‌ماند تا هدف‌های وسط از هر نقطه‌ای دیده شوند؛
+   538→ * دیوارهای کناری «درز دید» دارند تا از زاویه‌ها بتوانی سرک بکشی.
+   539→ */
+   540→const LAYOUTS: Record<MapId, MapLayout> = {
+   541→  // جنگل: جعبه‌های کلاسیک + تنهٔ درختان + دیوارهای چوبی کوتاه
+   542→  forest: {
+   543→    minX: -11.4,
+   544→    maxX: 11.4,
+   545→    minZ: -10,
+   546→    maxZ: 10.2,
+   547→    boxes: [
+   548→      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+   549→      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+   550→      { k: "crate", x: -1.7, z: 6.9, w: 1.5, d: 1.35, h: 1.3 },
+   551→      { k: "crate", x: 4.7, z: 4.3, w: 1.2, d: 1.15, h: 1.05 },
+   552→      { k: "crate", x: -4.9, z: 6.3, w: 1.4, d: 1.3, h: 1.2 },
+   553→      { k: "crate", x: 1.9, z: 8.0, w: 1.15, d: 1.1, h: 1.0 },
+   554→      { k: "crate", x: 0, z: -8.8, w: 1.6, d: 1.6, h: 1.45 },
+   555→      { k: "crate", x: 3.2, z: -6.2, w: 1.2, d: 1.2, h: 1.1 },
+   556→      { k: "tree", x: -8.6, z: -2.5, w: 0.55, d: 0.55, h: 2.7 },
+   557→      { k: "tree", x: 8.8, z: -3.2, w: 0.6, d: 0.6, h: 3.1 },
+   558→      { k: "tree", x: -9.6, z: -7.5, w: 0.6, d: 0.6, h: 2.9 },
+   559→      { k: "tree", x: 9.4, z: -8.2, w: 0.55, d: 0.55, h: 2.6 },
+   560→      { k: "wall", x: -8.2, z: 1.2, w: 3.2, d: 0.7, h: 1.15 },
+   561→      { k: "wall", x: 8.2, z: 0.4, w: 3.2, d: 0.7, h: 1.15 },
+   562→      { k: "sandbag", x: -5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+   563→      { k: "sandbag", x: 5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+   564→    ],
+   565→  },
+   566→  // کویر کهربا: دیوارهای ماسه‌سنگی شکسته + طاق سنگی بزرگ + صخره‌های جامد
+   567→  desert: {
+   568→    minX: -11.6,
+   569→    maxX: 11.6,
+   570→    minZ: -10,
+   571→    maxZ: 10.2,
+   572→    boxes: [
+   573→      { k: "wall", x: -6.8, z: -3.4, w: 4.6, d: 0.8, h: 2.0 },
+   574→      { k: "wall", x: 6.9, z: -4.6, w: 5.2, d: 0.8, h: 2.3 },
+   575→      { k: "wall", x: -7.6, z: 2.2, w: 2.6, d: 0.7, h: 1.1 },
+   576→      { k: "wall", x: 7.8, z: 1.6, w: 2.6, d: 0.7, h: 1.1 },
+   577→      { k: "wall", x: -5.7, z: -8.6, w: 3.4, d: 0.8, h: 1.6 },
+   578→      { k: "wall", x: 5.9, z: -9.0, w: 3.0, d: 0.8, h: 1.6 },
+   579→      { k: "post", x: -2.4, z: -8.8, w: 0.7, d: 0.7, h: 3.2 },
+   580→      { k: "post", x: 2.4, z: -8.8, w: 0.7, d: 0.7, h: 3.2 },
+   581→      { k: "arch", x: 0, z: -8.8, w: 5.5, d: 0.9, h: 0.7, y: 2.85, solid: false },
+   582→      // فاز T1 — دروازهٔ ورود اسپان (طاق دوقلو رو به میدان)
+   583→      { k: "post", x: -4.6, z: 7.6, w: 0.5, d: 0.5, h: 2.6 },
+   584→      { k: "post", x: 4.6, z: 7.6, w: 0.5, d: 0.5, h: 2.6 },
+   585→      { k: "arch", x: 0, z: 7.6, w: 9.7, d: 0.5, h: 0.45, y: 2.35, solid: false },
+   586→      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+   587→      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+   588→      { k: "crate", x: 4.7, z: 4.3, w: 1.2, d: 1.15, h: 1.05 },
+   589→      { k: "crate", x: -4.9, z: 6.3, w: 1.4, d: 1.3, h: 1.2 },
+   590→      { k: "crate", x: 0, z: -6.6, w: 1.5, d: 1.5, h: 1.35 },
+   591→      { k: "crate", x: 8.8, z: -7.6, w: 1.4, d: 1.4, h: 1.3 },
+   592→      { k: "sandbag", x: 0, z: 5.4, w: 1.9, d: 0.7, h: 0.8 },
+   593→    ],
+   594→  },
+   595→  // سکوت شب: جنگل کریستال درخشان + دیوارهای ابسیدین کوتاه
+   596→  night: {
+   597→    minX: -11.4,
+   598→    maxX: 11.4,
+   599→    minZ: -10,
+   600→    maxZ: 10.2,
+   601→    boxes: [
+   602→      { k: "crystal", x: -5.2, z: -2.2, w: 0.9, d: 0.9, h: 3.0 },
+   603→      { k: "crystal", x: 5.2, z: -2.2, w: 0.9, d: 0.9, h: 3.2 },
+   604→      { k: "crystal", x: -8.2, z: -7.0, w: 1.0, d: 1.0, h: 3.6 },
+   605→      { k: "crystal", x: 8.2, z: -7.0, w: 1.0, d: 1.0, h: 3.4 },
+   606→      { k: "crystal", x: -3.1, z: 2.8, w: 0.8, d: 0.8, h: 2.4 },
+   607→      { k: "crystal", x: 3.1, z: 2.8, w: 0.8, d: 0.8, h: 2.5 },
+   608→      { k: "crystal", x: -9.6, z: 3.4, w: 0.8, d: 0.8, h: 2.2 },
+   609→      { k: "crystal", x: 9.6, z: 3.4, w: 0.8, d: 0.8, h: 2.3 },
+   610→      { k: "wall", x: -6.5, z: -9.2, w: 3.2, d: 0.8, h: 1.2 },
+   611→      { k: "wall", x: 6.5, z: -9.2, w: 3.2, d: 0.8, h: 1.2 },
+   612→      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+   613→      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+   614→      { k: "crate", x: 0, z: -8.4, w: 1.5, d: 1.5, h: 1.4 },
+   615→      { k: "crate", x: 6.4, z: 1.4, w: 1.2, d: 1.2, h: 1.05 },
+   616→      { k: "sandbag", x: -5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+   617→      { k: "sandbag", x: 5.4, z: 4.8, w: 2.2, d: 0.7, h: 0.85 },
+   618→    ],
+   619→  },
+   620→  // دروازهٔ دو در (Dust2-inspired): درِ دوتایی میانه + گذرگاه بلند با طاق + تونل B با درهای چوبی
+   621→  dust: {
+   622→    minX: -11.6,
+   623→    maxX: 11.6,
+   624→    minZ: -10,
+   625→    maxZ: 10.2,
+   626→    boxes: [
+   627→      // درِ دوتایی میانه — یک لنگه بسته، یک لنگه باز (نماد مپ)
+   628→      { k: "door", x: -1.5, z: -0.6, w: 1.5, d: 0.26, h: 2.75 },
+   629→      { k: "doorOpen", x: 1.42, z: -0.85, w: 1.4, d: 0.2, h: 2.7, rot: 1.05, solid: false },
+   630→      { k: "post", x: 1.62, z: -0.28, w: 0.34, d: 0.34, h: 2.75 },
+   631→      { k: "arch", x: 0, z: -0.6, w: 4.7, d: 0.32, h: 0.55, y: 2.5, solid: false },
+   632→      // گذرگاه بلند (Long) — دیوار با درز دید + طاق گذرگاه
+   633→      { k: "wall", x: 5.6, z: -7.4, w: 0.6, d: 2.6, h: 2.9 },
+   634→      { k: "wall", x: 5.6, z: -1.2, w: 0.6, d: 3.2, h: 2.9 },
+   635→      { k: "post", x: 5.6, z: -2.95, w: 0.4, d: 0.4, h: 2.9 },
+   636→      { k: "post", x: 5.6, z: -5.95, w: 0.4, d: 0.4, h: 2.9 },
+   637→      { k: "arch", x: 5.6, z: -4.45, w: 0.5, d: 3.4, h: 0.5, y: 2.55, solid: false },
+   638→      // تونل B — قرینهٔ چپ
+   639→      { k: "wall", x: -5.6, z: -7.4, w: 0.6, d: 2.6, h: 2.9 },
+   640→      { k: "wall", x: -5.6, z: -1.2, w: 0.6, d: 3.2, h: 2.9 },
+   641→      { k: "post", x: -5.6, z: -2.95, w: 0.4, d: 0.4, h: 2.9 },
+   642→      { k: "post", x: -5.6, z: -5.95, w: 0.4, d: 0.4, h: 2.9 },
+   643→      { k: "arch", x: -5.6, z: -4.45, w: 0.5, d: 3.4, h: 0.5, y: 2.55, solid: false },
+   644→      // درهای دوتایی B در ته تونل
+   645→      { k: "door", x: -9.6, z: -7.0, w: 1.4, d: 0.24, h: 2.6 },
+   646→      { k: "doorOpen", x: -8.3, z: -7.25, w: 1.3, d: 0.2, h: 2.55, rot: -0.9, solid: false },
+   647→      { k: "post", x: -8.35, z: -6.72, w: 0.3, d: 0.32, h: 2.6 },
+   648→      { k: "arch", x: -8.95, z: -7.0, w: 3.3, d: 0.28, h: 0.5, y: 2.4, solid: false },
+   649→      // سایت A — سکوی جعبه‌ها
+   650→      { k: "crate", x: 8.8, z: -7.4, w: 1.5, d: 1.5, h: 1.4 },
+   651→      { k: "crate", x: 10.3, z: -8.8, w: 1.2, d: 1.2, h: 1.0 },
+   652→      { k: "crate", x: 9.9, z: -5.9, w: 1.1, d: 1.1, h: 0.95 },
+   653→      // جعبه‌های میانه و نزدیک
+   654→      { k: "crate", x: 0, z: -9.6, w: 1.6, d: 1.6, h: 1.5 },
+   655→      { k: "crate", x: 3.1, z: -6.3, w: 1.25, d: 1.2, h: 1.15 },
+   656→      { k: "crate", x: -3.2, z: -6.5, w: 1.3, d: 1.25, h: 1.2 },
+   657→      { k: "crate", x: 3.2, z: -3.2, w: 1.1, d: 1.1, h: 1.0 },
+   658→      { k: "crate", x: -3.4, z: 4.6, w: 1.35, d: 1.25, h: 1.15 },
+   659→      { k: "crate", x: 3.1, z: 5.6, w: 1.1, d: 1.05, h: 0.95 },
+   660→      { k: "crate", x: 6.6, z: 1.8, w: 1.2, d: 1.2, h: 1.05 },
+   661→      { k: "crate", x: -7.4, z: 2.6, w: 1.3, d: 1.25, h: 1.15 },
+   662→      // کیسه‌های شنی نزدیک اسپان
+   663→      { k: "sandbag", x: -5.4, z: 4.6, w: 2.2, d: 0.7, h: 0.85 },
+   664→      { k: "sandbag", x: 5.4, z: 4.6, w: 2.2, d: 0.7, h: 0.85 },
+   665→      { k: "sandbag", x: 0, z: 5.4, w: 1.9, d: 0.7, h: 0.8 },
+   666→      // فاز T1 — برج دیدبانی اسپان (پایه‌های دوقلو + سکوی دکوری بالا)
+   667→      { k: "post", x: -10.5, z: 8.4, w: 0.42, d: 0.42, h: 3.3 },
+   668→      { k: "post", x: -9.1, z: 8.4, w: 0.42, d: 0.42, h: 3.3 },
+   669→      { k: "wall", x: -9.8, z: 8.4, w: 1.9, d: 0.72, h: 0.45, y: 3.3, solid: false },
+   670→      { k: "wall", x: -9.8, z: 7.6, w: 0.45, d: 1.4, h: 0.4, y: 3.3, solid: false },
+   671→      // فاز T1 — پوشش میانی: جعبهٔ دوطبقه (طبقهٔ دوم دکوری — پرش روی طبقهٔ اول آزاد)
+   672→      { k: "crate", x: 0, z: 1.9, w: 1.5, d: 1.3, h: 1.3 },
+   673→      { k: "crate", x: 0, z: 1.9, w: 1.15, d: 1.0, h: 0.9, y: 1.3, solid: false },
+   674→      // فاز T1 — کیسهٔ شنی سایت A و تونل B
+   675→      { k: "sandbag", x: 7.3, z: -3.7, w: 2.0, d: 0.7, h: 0.85 },
+   676→      { k: "sandbag", x: -7.7, z: -8.9, w: 1.8, d: 0.7, h: 0.8 },
+   677→    ],
+   678→  },
+   679→};
+   680→
+   681→// ── فاز F5 — گزینه‌های نگاه (کلیدهای افزودنی ماندگار) ──
+   682→
+   683→const MAP_KEY = "visionone:game-pref:fps-map";
+   684→const SENS_KEY = "visionone:game-pref:fps-sens";
+   685→const FOV_KEY = "visionone:game-pref:fps-fov";
+   686→const INVERT_KEY = "visionone:game-pref:fps-invert";
+   687→/** محدودهٔ حساسیت نگاه (ضریب — ۱ = پیش‌فرض) */
+   688→const SENS_MIN = 0.4;
+   689→const SENS_MAX = 2.2;
+   690→const SENS_DEF = 1;
+   691→/** محدودهٔ زاویهٔ دید */
+   692→const FOV_MIN = 62;
+   693→const FOV_MAX = 96;
+   694→const FOV_DEF = 72;
+   695→
+   696→// ── فاز F9 — اسکوپ لحظه‌ای (نگه‌داشتن Shift / دکمهٔ ذره‌بین) ──
+   697→/** ضریب تیزبینی: FOV اسکوپ = FOV پایه × این ضریب (کلمپ به محدودهٔ زیر) */
+   698→const SCOPE_FOV_RATIO = 0.52;
+   699→const SCOPE_FOV_MIN = 30;
+   700→const SCOPE_FOV_MAX = 56;
+   701→/** کاهش حساسیت نگاه حین اسکوپ — دقت اسنایپری */
+   702→const SCOPE_SENS_RATIO = 0.62;
+   703→
+   704→// ── فاز F7 — بودجهٔ عناصر محیطی در سه ترتیب [کیفیت سبک، دستگاه ضعیف، کامل] — فاز F10: سازه‌ها همیشه کامل رندر می‌شوند ──
+   705→
+   706→const ENV_ROCKS = [4, 6, 9];
+   707→const ENV_TUFTS = [4, 7, 10];
+   708→
+   709→function loadMapPref(): MapId {
+   710→  if (typeof window === "undefined") return "forest";
+   711→  try {
+   712→    const v = window.localStorage.getItem(MAP_KEY);
+   713→    return v && v in MAPS ? (v as MapId) : "forest";
+   714→  } catch {
+   715→    return "forest";
+   716→  }
+   717→}
+   718→
+   719→/** فاز F9 — خواندن سلاح ذخیره‌شده (null صریح — الگوی loadPrefNum) */
+   720→function loadWeaponPref(): WeaponId {
+   721→  if (typeof window === "undefined") return "pistol";
+   722→  try {
+   723→    const v = window.localStorage.getItem(WEAPON_KEY);
+   724→    return v && v in WEAPONS ? (v as WeaponId) : "pistol";
+   725→  } catch {
+   726→    return "pistol";
+   727→  }
+   728→}
+   729→
+   730→function loadPrefNum(key: string, def: number, min: number, max: number): number {
+   731→  if (typeof window === "undefined") return def;
+   732→  try {
+   733→    const raw = window.localStorage.getItem(key);
+   734→    if (raw === null) return def; // Number(null)=0 است — نباید به min کلمپ شود!
+   735→    const v = Number(raw);
+   736→    return Number.isFinite(v) ? clamp(v, min, max) : def;
+   737→  } catch {
+   738→    return def;
+   739→  }
+   740→}
+   741→
+   742→function loadPrefBool(key: string, def: boolean): boolean {
+   743→  if (typeof window === "undefined") return def;
+   744→  try {
+   745→    const v = window.localStorage.getItem(key);
+   746→    if (v === "1") return true;
+   747→    if (v === "0") return false;
+   748→    return def;
+   749→  } catch {
+   750→    return def;
+   751→  }
+   752→}
+   753→
+   754→function savePref(key: string, value: string): void {
+   755→  try {
+   756→    window.localStorage.setItem(key, value);
+   757→  } catch {
+   758→    /* noop */
+   759→  }
+   760→}
+   761→
+   762→function loadQuality(): Quality {
+   763→  if (typeof window === "undefined") return "high";
+   764→  try {
+   765→    return window.localStorage.getItem(QUALITY_KEY) === "low" ? "low" : "high";
+   766→  } catch {
+   767→    return "high";
+   768→  }
+   769→}
+   770→
+   771→type Phase = "setup" | "playing" | "done";
+   772→type Mode = "word-hunt" | "grammar-gate";
+   773→
+   774→/** پیکربندی یک هدف متحرک */
+   775→interface TargetSpec {
+   776→  id: string;
+   777→  /** برچسب انگلیسی روی بیلبورد */
+   778→  text: string;
+   779→  correct: boolean;
+   780→  lane: number;
+   781→  baseY: number;
+   782→  baseZ: number;
+   783→  spin: number;
+   784→  bobSpeed: number;
+   785→  driftAmp: number;
+   786→  colorHex: number;
+   787→}
+   788→
+   789→interface Question {
+   790→  seq: number;
+   791→  mode: Mode;
+   792→  /** دستور کوتاه فارسی */
+   793→  promptFa: string;
+   794→  /** محتوای اصلی سؤال — فارسی (معنی) یا انگلیسی (جمله) */
+   795→  promptMain: string;
+   796→  promptSub?: string;
+   797→  /** متن سؤال LTR است؟ */
+   798→  ltr: boolean;
+   799→  targets: TargetSpec[];
+   800→  speakText: string;
+   801→  /** کلید SRS (واژهٔ انگلیسی درست) */
+   802→  srsKey: string;
+   803→  lesson: number;
+   804→}
+   805→
+   806→interface WrongItem {
+   807→  label: string;
+   808→  sub?: string;
+   809→}
+   810→
+   811→interface FlashEntry {
+   812→  id: string;
+   813→  kind: "ok" | "bad";
+   814→  until: number;
+   815→}
+   816→
+   817→interface SceneBridge {
+   818→  aim: { yaw: number; pitch: number };
+   819→  /** فاز F3 — آفست موقعیت بازیکن نسبت به پایه (متر) */
+   820→  pos: { x: number; z: number };
+   821→  /** فاز F3 — کلیدهای حرکت فشرده‌شده (w/a/s/d + فاز F10: c خم‌شدن) */
+   822→  keys: Set<string>;
+   823→  /** فاز F3 — در حال گام برداشتن؟ (برای باب سلاح) — فاز F4: بزرگی آنالوگ ۰..۱ */
+   824→  moveMag: number;
+   825→  /** فاز F4 — بردار آنالوگ جوی‌استیک لمسی (x = راست، y = جلو؛ −۱..۱) */
+   826→  stick: { x: number; y: number };
+   827→  /** فاز F10 — سرعت هموارشدهٔ افقی (متر بر ثانیه) — ضدلرزش حرکت */
+   828→  vel: { x: number; z: number };
+   829→  /** فاز F10 — پرش: سرعت عمودی + ارتفاع لحظه‌ای از زمین */
+   830→  vy: number;
+   831→  jumpY: number;
+   832→  /** فاز F10 — درخواست پرش صف‌شده (اسپیس/دکمهٔ موبایل) */
+   833→  wantJump: boolean;
+   834→  /** فاز F10 — خم‌شدن هموارشدهٔ ۰..۱ */
+   835→  crouchAmt: number;
+   836→  /** فاز F10 — دویدن فعال (نگه‌داشتن Shift) */
+   837→  sprint: boolean;
+   838→  /** فاز F10 — کیک FOV هموارشدهٔ دویدن (نوشتهٔ Rig، خواندهٔ FovTune) */
+   839→  speedKick: number;
+   840→  /** فاز F10 — چیدمان نقشهٔ جاری (برخورد + محدودهٔ حرکت) */
+   841→  layout: MapLayout;
+   842→  /** فاز F9 — پیلود شلیک: پخش پمپ + مقیاس انفجار سلاح */
+   843→  shoot: { x: number; y: number; seq: number; spread: number; burst: number };
+   844→  lastShotAt: number;
+   845→  laneK: number;
+   846→  flashes: FlashEntry[];
+   847→  /** فاز F9 — میزان زوم اسکوپ ۰..۱ (نوشتهٔ FovTune، خواندهٔ ViewModel) */
+   848→  scopeAmt: number;
+   849→  /** فاز F9 — سررسید ریلود جاری (۰ = بی‌ریلود) — انیمیشن ویومدل */
+   850→  reloadUntil: number;
+   851→  onHit: (id: string | null) => void;
+   852→  /** فاز F9 — گزارش والی پمپ: همهٔ برخوردها یکجا؛ تصمیم در handleVolley */
+   853→  onVolley?: (ids: Array<string | null>) => void;
+   854→  /** فاز F8 — فرار هدف‌های غلط فعال؟ (خاموش در «تپ ساده») */
+   855→  dodge: boolean;
+   856→  /** فاز F8 — شمارهٔ موج جاری (سرعت فرار و حرکت اهداف) */
+   857→  wave: number;
+   858→}
+   859→
+   860→interface BurstApi {
+   861→  fire: (origin: THREE.Vector3, scale?: number) => void;
+   862→}
+   863→
+   864→/** شکل رکورد شخصی — بهتر = امتیاز بیشتر */
+   865→interface BestRecord {
+   866→  score: number;
+   867→}
+   868→
+   869→// ─── فاز G2-e — آموزش ۳-گامی استاندارد (الگوی پایلوت memory / flappy) ───
+   870→
+   871→const TUTORIAL_STEPS: TutorialStep[] = [
+   872→  {
+   873→    icon: <Crosshair size={24} />,
+   874→    title: "پهپادهای متخاصم را حذف کن",
+   875→    text: "سؤال روی HUD بالای میدان می‌ماند و هر پهپاد متخاصم یک گزینهٔ انگلیسی روی پلاک دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست پهپاد را با انفجار آتش‌و‌دودی منفجر می‌کند و امتیاز با کمبو دارد.",
+   876→  },
+   877→  {
+   878→    icon: <MousePointerClick size={24} />,
+   879→    title: "نشانه‌گیری و شلیک",
+   880→    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. نگه‌داشتن کلیک راست اسکوپ می‌گیرد: دید باریک‌تر، نشانه‌گیری دقیق‌تر. حرکت حرفه‌ای: Shift دویدن، Space پرش و C خم‌شدن. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک + دکمهٔ پرش. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
+   881→  },
+   882→  {
+   883→    icon: <TargetIcon size={24} />,
+   884→    title: "خشاب، مهمات و سلاح",
+   885→    text: "خشاب بسته به سلاح ۴ تا ۸ فشنگ دارد — شمارندهٔ فشنگ کنار رتیکل است. خالی شدن = ریلود خودکار با صدای تعویض؛ می‌توانی با R (دسکتاپ) زودتر ریلود کنی. سه سلاح در setup داری: کلت تک‌تیر (خشاب ۸)، دژکوب سنگین (خشاب ۵، لگد و انفجار بزرگ) و پمپ زون‌کن (خشاب ۴؛ هر ماشه سه پرتو می‌کاود). شلیک حین ریلود یا فریز برخورد مهمات هدر نمی‌دهد، ولی هر شلیکِ خطا یک فشنگ کم است — درست نشانه بگیر!",
+   886→  },
+   887→  {
+   888→    icon: <Zap size={24} />,
+   889→    title: "هدف‌های هوشمند و HVT",
+   890→    text: "پهپادهای غلط وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر نزدیک شو! هر ۵ پاسخ یک «موج» سخت‌تر با دشمنان سریع‌تر شروع می‌شود. هر از گاهی هم «هدف ویژهٔ HVT» با حلقهٔ هشدار قرمز ظاهر می‌شود: ۳ ثانیه فرصت داری حذفش کنی تا ۲۰ امتیاز بونوس بگیری (حذفش قلب کم نمی‌کند).",
+   891→  },
+   892→  {
+   893→    icon: <MonitorSmartphone size={24} />,
+   894→    title: "نقشه‌ها و گزینه‌ها",
+   895→    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. چهار نقشهٔ مأموریت با چیدمان واقعی متفاوت داری: جنگل زمردی (درخت و جعبه)، کویر کهربا (دیوار ماسه‌سنگی و طاق)، سکوت شب (جنگل کریستال) و دروازهٔ دو در — الهام از دی‌داست۲ با درِ دوتایی میانه، گذرگاه بلند، تونل B و برج دیدبانی. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند. پایان هر مأموریت رتبهٔ نظامی می‌گیری (S تا D).",
+   896→  },
+   897→];
+   898→
+   899→// ─── کمکی‌های خالص ───
+   900→
+   901→function clamp(v: number, a: number, b: number): number {
+   902→  return Math.max(a, Math.min(b, v));
+   903→}
+   904→
+   905→function qLabel(text: string): string {
+   906→  return text.replace(/_+/g, "......");
+   907→}
+   908→
+   909→function lessonLabel(l: number): string {
+   910→  return l === 0 ? "جمع‌بندی" : `درس ${faNum(l)}`;
+   911→}
+   912→
+   913→function scopeOf(mode: Mode, tap: boolean): string {
+   914→  return `${mode === "word-hunt" ? "word" : "grammar"}${tap ? "-tap" : ""}`;
+   915→}
+   916→
+   917→function modeName(mode: Mode): string {
+   918→  return mode === "word-hunt" ? "شکار واژه" : "سد گرامری";
+   919→}
+   920→
+   921→/** نمایش زمان نتیجه به شکل م:ث‌ث (الگوی سایر بازی‌های کیت) */
+   922→function fmtTime(s: number): string {
+   923→  return `${faNum(Math.floor(s / 60))}:${faNum(s % 60).padStart(2, "۰")}`;
+   924→}
+   925→
+   926→/** فاز T1 — رتبهٔ نظامی پایان مأموریت (دقت + امتیاز) */
+   927→function missionRank(acc: number, score: number): { grade: string; title: string } {
+   928→  if (acc >= 95 && score >= 220) return { grade: "S", title: "تک‌تیرانداز افسانه‌ای" };
+   929→  if (acc >= 90) return { grade: "A", title: "تک‌تیرانداز" };
+   930→  if (acc >= 75) return { grade: "B", title: "سرباز زبده" };
+   931→  if (acc >= 55) return { grade: "C", title: "مأمور میدانی" };
+   932→  return { grade: "D", title: "تازه‌کار" };
+   933→}
+   934→
+   935→function easeOutCubic(t: number): number {
+   936→  return 1 - Math.pow(1 - t, 3);
+   937→}
+   938→
+   939→/** فاز F3 — خروج امن از تمام‌صفحه (کمکی ماژول‌سطح — قبل از دیالوگ‌های portal-body هم لازم است) */
+   940→function dropFullscreen(): void {
+   941→  try {
+   942→    if (document.fullscreenElement) void document.exitFullscreen();
+   943→  } catch {
+   944→    /* noop */
+   945→  }
+   946→}
+   947→
+   948→/** مسیر مستطیل گرد (سازگار با همهٔ مرورگرها) */
+   949→function rrPath(c: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
+   950→  c.beginPath();
+   951→  c.moveTo(x + r, y);
+   952→  c.arcTo(x + w, y, x + w, y + h, r);
+   953→  c.arcTo(x + w, y + h, x, y + h, r);
+   954→  c.arcTo(x, y + h, x, y, r);
+   955→  c.arcTo(x, y, x + w, y, r);
+   956→  c.closePath();
+   957→}
+   958→
+   959→/** بافت بیلبورد گزینه — قرص تاکتیکی سفید با متن تیره و حاشیهٔ قرمز نظامی (فاز T1) */
+   960→function makeLabelTexture(text: string): THREE.CanvasTexture {
+   961→  const W = 640;
+   962→  const Hc = 160;
+   963→  const cv = document.createElement("canvas");
+   964→  cv.width = W;
+   965→  cv.height = Hc;
+   966→  const c = cv.getContext("2d");
+   967→  if (c) {
+   968→    let fs = 64;
+   969→    c.font = `800 ${fs}px system-ui, sans-serif`;
+   970→    while (c.measureText(text).width > W - 96 && fs > 24) {
+   971→      fs -= 3;
+   972→      c.font = `800 ${fs}px system-ui, sans-serif`;
+   973→    }
+   974→    const tw = Math.min(c.measureText(text).width, W - 96);
+   975→    const pw = Math.min(tw + 56, W - 24);
+   976→    const ph = 102;
+   977→    const px = (W - pw) / 2;
+   978→    const py = (Hc - ph) / 2;
+   979→    c.fillStyle = "rgba(248,250,252,0.96)";
+   980→    rrPath(c, px, py, pw, ph, 26);
+   981→    c.fill();
+   982→    c.lineWidth = 6;
+   983→    c.strokeStyle = "rgba(220,38,38,0.6)";
+   984→    rrPath(c, px + 3, py + 3, pw - 6, ph - 6, 22);
+   985→    c.stroke();
+   986→    c.fillStyle = "#1f2937";
+   987→    c.textAlign = "center";
+   988→    c.textBaseline = "middle";
+   989→    c.fillText(text, W / 2, Hc / 2 + 4, W - 90);
+   990→  }
+   991→  const tex = new THREE.CanvasTexture(cv);
+   992→  tex.colorSpace = THREE.SRGBColorSpace;
+   993→  tex.anisotropy = 2;
+   994→  return tex;
+   995→}
+   996→
+   997→/** چیدمان هدف‌ها روی ۴ لِین با ارتفاع/عمق/حرکت متفاوت */
+   998→function layoutTargets(
+   999→  opts: Array<{ text: string; correct: boolean }>,
+  1000→  wave = 1,
+  1001→): TargetSpec[] {
+  1002→  const lanes = shuffle([0, 1, 2, 3]);
+  1003→  // فاز T1 — همهٔ هدف‌ها «پهپاد متخاصم» با بدنهٔ فولادی تیره‌اند؛ تشخیص گزینهٔ درست فقط با خواندن واژه
+  1004→  const colors = [0x3d4654, 0x38424e, 0x424c5a, 0x39424e];
+  1005→  // فاز F8 — موج‌بندی: حرکت سریع‌تر و چیدمان عمیق‌تر در موج‌های بالاتر
+  1006→  const sp = 1 + (wave - 1) * 0.16;
+  1007→  const depthExtra = Math.min(wave - 1, 4) * 0.55;
+  1008→  return opts.map((o, i) => ({
+  1009→    id: `t${i}`,
+  1010→    text: o.text,
+  1011→    correct: o.correct,
+  1012→    lane: LANE_X[lanes[i]],
+  1013→    baseY: 1.35 + (i % 2) * 0.85 + Math.random() * 0.35,
+  1014→    baseZ: -(5.5 + Math.floor(i / 2) * 3.4) - Math.random() * 2.6 - depthExtra,
+  1015→    spin: (0.5 + Math.random() * 0.7) * sp,
+  1016→    bobSpeed: (0.8 + Math.random() * 0.7) * sp,
+  1017→    driftAmp: (0.5 + Math.random() * 0.8) * (1 + (wave - 1) * 0.1),
+  1018→    colorHex: colors[i % colors.length],
+  1019→  }));
+  1020→}
+  1021→
+  1022→/** فاز G2-e — maxOthers: تعداد حواس‌پرتی (کیفیت سبک = ۳ هدف هم‌زمان) */
+  1023→function buildWordQuestion(
+  1024→  seq: number,
+  1025→  target: VocabEntry,
+  1026→  distrPool: VocabEntry[],
+  1027→  lesson: number,
+  1028→  maxOthers: number,
+  1029→  wave = 1,
+  1030→): Question {
+  1031→  const others = pickUnique(
+  1032→    distrPool.filter((w) => w.word !== target.word),
+  1033→    maxOthers,
+  1034→    (w) => w.word,
+  1035→  );
+  1036→  const opts = shuffle([
+  1037→    { text: target.word, correct: true },
+  1038→    ...others.map((w) => ({ text: w.word, correct: false })),
+  1039→  ]);
+  1040→  return {
+  1041→    seq,
+  1042→    mode: "word-hunt",
+  1043→    promptFa: "معنی را خواندی؟ واژهٔ درست را شکار کن!",
+  1044→    promptMain: target.meaning,
+  1045→    promptSub: target.pos ?? "واژهٔ درس",
+  1046→    ltr: false,
+  1047→    targets: layoutTargets(opts, wave),
+  1048→    speakText: target.word,
+  1049→    srsKey: target.word,
+  1050→    lesson,
+  1051→  };
+  1052→}
+  1053→
+  1054→/** فاز G2-e — maxOthers: در کیفیت سبک گزینهٔ درست + ۲ حواس‌پرتی (چیدمان لِین‌ها شافل است) */
+  1055→function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, maxOthers: number, wave = 1): Question {
+  1056→  const optsAll = s.options.map((text, i) => ({ text, correct: i === s.answer }));
+  1057→  const opts = [optsAll[s.answer], ...optsAll.filter((o) => !o.correct).slice(0, maxOthers)];
+  1058→  return {
+  1059→    seq,
+  1060→    mode: "grammar-gate",
+  1061→    promptFa: "سد گرامری! گزینهٔ درست را شکار کن",
+  1062→    promptMain: qLabel(s.text),
+  1063→    promptSub: s.scope,
+  1064→    ltr: true,
+  1065→    targets: layoutTargets(opts, wave),
+  1066→    speakText: s.text.replace(/_+/, s.options[s.answer]),
+  1067→    srsKey: s.options[s.answer],
+  1068→    lesson,
+  1069→  };
+  1070→}
+  1071→
+  1072→// ─── اجزای صحنهٔ سه‌بعدی ───
+  1073→
+  1074→// ── فاز F7/F10 — برخورد بازیکن با سازه‌های چیدمان نقشه ──
+  1075→
+  1076→/** شعاع برخورد بازیکن (متر) */
+  1077→const PLAYER_R = 0.34;
+  1078→
+  1079→/**
+  1080→ * فاز F10 — برخورد دایرهٔ بازیکن با AABB سازه‌ها (دو گذر برای گوشه‌ها) — جهش درجا روی pos.
+
+[showing lines 361-1080 of 4305; use offset=1081 with limit to continue reading]

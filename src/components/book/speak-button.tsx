@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Volume2, Square, Loader2, Snail } from "lucide-react";
+import { Volume2, Loader2, Snail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { speak, stopSpeaking } from "@/lib/speak";
 import { useVoiceSpeed } from "@/lib/voice-store";

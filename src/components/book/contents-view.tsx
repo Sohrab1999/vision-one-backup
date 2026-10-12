@@ -10,12 +10,10 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useBookData } from "@/lib/book-context";
 import { useLearnedWords } from "@/lib/learned-store";
 import { cn } from "@/lib/utils";
-import type { ViewId } from "./app-header";
 
 const COLOR_MAP: Record<string, { bg: string; text: string; border: string }> = {
   amber: { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400", border: "hover:border-amber-500/40" },

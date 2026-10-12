@@ -3053,3 +3053,28 @@ Stage Summary:
 - 🏁 اسپرینت ۲ کامل: باندل اولیه از ۲۲ نما به فقط بوت‌پث کاهش یافت (۳۰–۵۰٪ انتظار) — LCP/CLS ریشه‌ای بهبود می‌شود؛ prefetch هاب دیگر ۱۵ چانک را یکجا نفرست می‌کند
 - QA سه‌لایهٔ چانک داینامیک (Home/Hub/FPS setup) صفر خطا — الگوی dynamic loading امن است
 - گام بعدی: اسپرینت ۳ — تفکیک god component شوتر به ۱۰ ماژول (گام ۳) + یکجا کردن کمکی‌های DRY (گام ۴) + ADR-001 (گام ۱۰)
+---
+Task ID: REFACTOR-2
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «شروع کن» + «ادامه بده» — اجرای اسپرینت ۳ نقشه راه docs/refactor-roadmap.md (گام‌های ۳/۴/۵-ادامه/۱۰)
+
+Work Log:
+- گام ۳ (تفکیک god component شوتر): fps-shooter-game.tsx (۴۳۰۴ خط) → پوشه games/fps/ با ۱۶ فایل:
+  index.tsx (۲۳۳۸ خط — فقط کامپوننت اصلی + TUTORIAL_STEPS) + constants/weapons/maps/layouts/prefs/types/helpers/textures/questions/physics + scene/{camera,viewmodel,sky,world,targets,input}
+- روش: استخراج مکانیکی با sed روی بازه‌های خطی دقیق (نقشه‌برداری با grep تعریف‌های سطح‌بالا) + حلقهٔ تکرار tsc تا صفر خطا
+- رفع ۳ نوبت خطای import (SENS_*/GoldenSpec/QUALITY_KEY در index؛ react-hooks در scene ها؛ useThree/useMemo جابه‌جایی fiber↔react در world/sky) + repair دابل‌براکت importها
+- پاک‌سازی importهای بلااستفادهٔ index با تحلیل eslint warn (۲۷ نام حذف: DODGE_*/ENV_*/physics توابع/scene کامپوننت‌هایی که حالا داخلی‌اند)
+- انتقال نهایی: mv fps-shooter-game.tsx → fps/index.tsx + اصلاح مسیرهای نسبی (./shared→../shared، ./kit→../kit، ./fps/*→./*) + games-hub دو ارجاع dynamic → import("./fps")
+- گام ۴ (DRY — با یافتهٔ بازبینی): ادعای audit outdated بود — faNum/pick/saveAttempt صفر تعریف محلی دارند (از قبل همگرا)؛ فقط fmtTime تکراری fps/helpers حذف شد (import از shared)؛ scopeOf سرعت‌کوییز هم‌نام ولی معنای متفاوت (درس:دسته:زمان) — تعمداً حفظ شد؛ hook رکوردها ساخته نشد (YAGNI — جلوگیری از کد مردهٔ جدید)
+- گام ۵-ادامه (دروازهٔ کیفیت): no-unused-vars: off→warn در eslint + پاک‌سازی ۱۹ unused import از ۱۱ فایل (contents-view/quiz-game/tutorial-overlay/speak-button/vocab-card-grid/grammar-library/hangman/…) → ۴۰→۲۱ warning (باقی‌مانده semantic: متغیر assigned-but-unused — نیاز به تصمیم انسانی)
+- eslint ignores += tool-results/qa-archive/mini-services/scripts (artifactها از lint خارج شدند)
+- گام ۱۰: docs/adr/ADR-001-fps-bridge-pattern.md (الگوی جهش bridge فقط در توابع ماژول‌سطح — جدول ۵ تابع، مثال مجاز/غیرمجاز، مرز bridge=پیوسته/state=گسسته) + games/fps/README.md (جدول ۱۷ ماژول + قراردادهای ثابت Attempt/localStorage/registry + چک‌لیست توسعه)
+- اعتبارسنجی: bunx tsc --noEmit = ۰ ✓ bun run lint = ۰ خطا / ۲۱ warning ✓ dev server HTTP 200 ✓
+- QA مرورگری (agent-browser، session r3): shelf → ویژن وان → هاب → شوتر: آموزش ۵گامی ظاهر شد ✓ skip → setup با ۴ کارت نقشه (شامل دروازهٔ دو در) + ۳ کارت سلاح + چیپ کیفیت ✓ شروع مأموریت → تمام‌صفحه + صحنهٔ جنگل کامل (پهپادها/ویومدل/HUD/کارت سؤال/لِین‌ها/کوه‌ها) — اسکرین‌شات qa-shots/r3-fps-scene.png ✓ چرخهٔ طبیعی: ۳ تایم‌اوت سؤال → ۳ قلب کم → ResultScreen «گزارش مأموریت» با کارت رتبهٔ D—تازه‌کار + مرور ۳ خطا — اسکرین‌شات r3-fps-result.png ✓ dev.log: game_session_end reason:finish + POST /api/attempts 200 (28ms) ✓ خطای کنسول صفر، خطای صفحه صفر ✓
+
+Stage Summary:
+- 🏁 اسپرینت ۳ کامل شد و نقشه راه refactor عملاً بسته شد (۹ از ۱۰ گام ✅ + گام ۷ نیمه + گام ۹ اختیاری)
+- fps-shooter-game.tsx دیگر وجود ندارد — مسیر رسمی بازی: src/components/book/games/fps/index.tsx (چانک dynamic همان قبلی؛ رفتار عیناً حفظ شده)
+- بزرگ‌ترین فایل fps اکنون index.tsx با ~۲۳۴۰ خط (از ۴۳۰۴) و همهٔ ماژول‌های دیگر <۳۴۰ خط — code-review و ادامهٔ فازهای محصولی (F10 عمق یادگیری / T2 تاکتیکی) حالا روی فایل‌های کوچک ممکن است
+- الگوی bridge مستند شد (ADR-001) — دیگر هر ایجنت/توسعه‌دهنده‌ای به خطای immutability برنمی‌خورد
+- گام بعدی پیشنهادی: تکمیل گام ۷ (دیالوگ‌های سایزثابت + font-display swap) یا بازگشت به نقشهٔ محصولی شوتر (F10 عمق یادگیری / T2 حالت‌های تاکتیکی) طبق docs/fps-roadmap.md نسخهٔ ۲.۴

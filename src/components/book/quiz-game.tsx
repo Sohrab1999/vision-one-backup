@@ -39,16 +39,15 @@ import { touchStreak } from "@/lib/streak-store";
 import { awardQuizActivity } from "@/lib/gamification";
 import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
 import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
-import { useQuestionStars, toggleQuestionStar } from "@/lib/question-star-store";
+import { useQuestionStars } from "@/lib/question-star-store";
 import { recordStudySession } from "@/lib/goal-store";
 import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
 import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store";
 import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
 import { usePulses } from "@/lib/use-daily-pulse";
-import { useBook, useBookData } from "@/lib/book-context";
+import { useBook } from "@/lib/book-context";
 import { seedReviewFromQuiz } from "@/lib/srs-store";
 import { enqueueOffline } from "@/lib/offline-queue";
-import type { ViewId } from "./app-header";
 
 interface Question {
   id: string;

@@ -14,7 +14,7 @@
  *   resume کنند (کیت state توقف بازی را نمی‌شناسد) — الگوی پایلوت memory
  */
 
-import { useCallback, useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useCallback, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {

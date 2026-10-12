@@ -83,7 +83,7 @@ const ListeningHuntGame = dynamic(() => import("./listening-hunt-game").then((m)
 const AdventureMapGame = dynamic(() => import("./adventure-map-game").then((m) => m.AdventureMapGame), { ssr: false, loading: GameChunkLoading });
 
 // بازی فاز ۵ — موتور سه‌بعدی (three + R3F) در چانک جدا و lazy
-const FpsShooterGame = dynamic(() => import("./fps-shooter-game").then((m) => m.FpsShooterGame), {
+const FpsShooterGame = dynamic(() => import("./fps").then((m) => m.FpsShooterGame), {
   ssr: false,
   loading: GameChunkLoading,
 });
@@ -333,7 +333,7 @@ export function GamesHub() {
       () => void import("./listening-hunt-game"),
       () => void import("./adventure-map-game"),
       () => void import("./duel-game"),
-      () => void import("./fps-shooter-game"),
+      () => void import("./fps"),
     ];
     const BATCH = 2;
     const GAP_MS = 900;
