@@ -49,7 +49,6 @@ import {
 import { useUserName, setName } from "@/lib/name-store";
 import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
-import { useQuestionStars } from "@/lib/question-star-store";
 import { useCombinedRounds } from "@/lib/round-counters";
 import { useStreak } from "@/lib/streak-store";
 import { useXp, levelInfo } from "@/lib/xp-store";
@@ -80,7 +79,6 @@ export function ProfileButton() {
   const fileRef = useRef<HTMLInputElement>(null);
   const { count: learnedCount } = useLearnedWords();
   const { count: starredWordCount } = useStarredWords();
-  const { count: starredQCount } = useQuestionStars();
   const combinedRounds = useCombinedRounds();
   const streak = useStreak();
   const xp = useXp();

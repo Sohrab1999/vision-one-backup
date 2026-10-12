@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { faNum } from "@/components/book/games/shared";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -38,8 +39,6 @@ const TEXT_MAX = 200;
 let gateEvaluated = false;
 
 const SCORE_FACES = ["😞", "😐", "🙂", "😄", "🤩"] as const;
-
-const faNum = (n: number) => n.toLocaleString("fa-IR");
 
 export function SurveyGate() {
   const rounds = useCombinedRounds();

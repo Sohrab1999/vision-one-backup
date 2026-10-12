@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Printer, Scissors } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { faNum } from "@/components/book/games/shared";
 import {
   Dialog,
   DialogContent,
@@ -29,8 +30,6 @@ import type { VocabEntry } from "@/data/types";
 const CARDS_PER_PAGE = 8; // ۲ ستون × ۴ ردیف
 const MAX_CARDS = 64; // ۸ برگ روی × ۲ پشت
 const ROWS = CARDS_PER_PAGE / 2;
-
-const faNum = (n: number) => n.toLocaleString("fa-IR");
 
 /** برچسب درس — همان منطق بَج فلاش‌کارت درون‌برنامه‌ای */
 function lessonChip(e: VocabEntry): string {

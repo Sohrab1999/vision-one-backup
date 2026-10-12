@@ -43,7 +43,7 @@ import { useQuestionStars } from "@/lib/question-star-store";
 import { recordStudySession } from "@/lib/goal-store";
 import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
 import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store";
-import { useCombinedRounds, recordCombinedRound } from "@/lib/round-counters";
+import { recordCombinedRound } from "@/lib/round-counters";
 import { usePulses } from "@/lib/use-daily-pulse";
 import { useBook } from "@/lib/book-context";
 import { seedReviewFromQuiz } from "@/lib/srs-store";
@@ -208,7 +208,6 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
   const { ids: starredQIds, count: starredQCount, has: hasQStar, toggle: toggleQStar } = useQuestionStars();
   const daily = useDailyInfo();
   const weekly = useWeeklyInfo();
-  const combinedRounds = useCombinedRounds();
   /** مرور ترکیبی: اشتباهات + ستاره‌دارها (بدون تکرار، حداکثر ۸۰ سؤال) */
   const combinedIds = useMemo(
     () => Array.from(new Set([...mistakeIds, ...starredQIds])).slice(0, 80),

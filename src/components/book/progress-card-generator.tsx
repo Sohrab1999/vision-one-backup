@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { Download, Share2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { faNum } from "@/components/book/games/shared";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { readStreak } from "@/lib/streak-store";
@@ -26,8 +27,6 @@ import type { BookId } from "@/data/books/types";
 const ALL_BOOKS: BookId[] = ["vision-one", "grade-7", "grade-8", "grade-9", "grade-11", "grade-12"];
 const W = 1080;
 const H = 1350;
-
-const faNum = (n: number) => n.toLocaleString("fa-IR");
 
 interface CardStats {
   totalLearned: number;

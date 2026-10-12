@@ -89,7 +89,7 @@ async function handleNavigation(request) {
       cache.put(request, fresh.clone()).catch(() => {});
     }
     return fresh;
-  } catch (err) {
+  } catch {
     const cached =
       (await cache.match(request, { ignoreSearch: true })) ||
       (await cache.match("/"));
@@ -122,7 +122,7 @@ async function handleStatic(request) {
       cache.put(request, fresh.clone()).catch(() => {});
     }
     return fresh;
-  } catch (err) {
+  } catch {
     return new Response("", { status: 504, statusText: "Offline" });
   }
 }
@@ -136,7 +136,7 @@ async function handleBuildAsset(request) {
       cache.put(request, fresh.clone()).catch(() => {});
     }
     return fresh;
-  } catch (err) {
+  } catch {
     const cached = await cache.match(request, { ignoreSearch: true });
     if (cached) return cached;
     return new Response("", { status: 504, statusText: "Offline" });
@@ -152,7 +152,7 @@ async function pruneQuestionsCache(cache) {
     if (keys.length <= QUESTIONS_CACHE_LIMIT) return;
     const extra = keys.slice(0, keys.length - QUESTIONS_CACHE_LIMIT);
     await Promise.all(extra.map((key) => cache.delete(key)));
-  } catch (err) {
+  } catch {
     /* noop */
   }
 }
@@ -167,7 +167,7 @@ async function handleQuestions(request) {
       pruneQuestionsCache(cache);
     }
     return fresh;
-  } catch (err) {
+  } catch {
     const cached = await cache.match(request);
     if (cached) {
       const headers = new Headers(cached.headers);
@@ -206,7 +206,7 @@ function collectScriptUrlsFromClients() {
               // گارد تایم‌اوت — اگر صفحه‌ای جواب نداد، با بقیه ادامه بده
               setTimeout(() => finish(null), 1500);
               client.postMessage({ type: "COLLECT_SCRIPTS" }, [channel.port2]);
-            } catch (err) {
+            } catch {
               finish(null);
             }
           });
@@ -228,7 +228,7 @@ async function cacheBookChunks() {
           parsed.pathname.startsWith("/_next/static/chunks/") &&
           parsed.pathname.endsWith(".js")
         );
-      } catch (err) {
+      } catch {
         return false;
       }
     });
@@ -241,12 +241,12 @@ async function cacheBookChunks() {
           const hit = await cache.match(url);
           if (hit) return;
           await cache.add(url);
-        } catch (err) {
+        } catch {
           console.warn("[SW] chunk precache skip:", url);
         }
       })
     );
-  } catch (err) {
+  } catch {
     /* noop */
   }
 }

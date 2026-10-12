@@ -4,6 +4,7 @@ import { useMemo, useSyncExternalStore } from "react";
 import { CalendarDays, CalendarCheck, BookOpen, Target } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { faNum } from "@/components/book/games/shared";
 import { useGoalData } from "@/lib/goal-store";
 
 /**
@@ -44,9 +45,6 @@ const LEVEL_CLASS: Record<0 | 1 | 2 | 3 | 4, string> = {
   4: "bg-primary shadow-sm shadow-primary/40",
 };
 
-function faNum(v: number | string): string {
-  return String(v).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
-}
 
 function dayLabel(epochDay: number): string {
   const date = new Date(epochDay * 86400000);

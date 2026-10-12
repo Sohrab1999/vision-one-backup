@@ -105,15 +105,6 @@ export interface WeeklyInfo {
   bestEver: number;
 }
 
-const EMPTY_INFO: WeeklyInfo = {
-  weekKey: "",
-  weekIndex: 0,
-  doneThisWeek: false,
-  bestThisWeek: null,
-  totalDone: 0,
-  bestEver: 0,
-};
-
 export function useWeeklyInfo(): WeeklyInfo {
   const store = useSyncExternalStore(
     subscribe,

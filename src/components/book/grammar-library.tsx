@@ -138,17 +138,15 @@ export function GrammarLibrary({ lessonFilter }: { lessonFilter?: number }) {
 
   return (
     <Accordion type="single" collapsible value={value} onValueChange={setValue} className="space-y-3">
-      <GrammarAccordionItems lessonFilter={lessonFilter} value={value} />
+      <GrammarAccordionItems lessonFilter={lessonFilter} />
     </Accordion>
   );
 }
 
 function GrammarAccordionItems({
   lessonFilter,
-  value,
 }: {
   lessonFilter?: number;
-  value: string;
 }) {
   const data = useBookData();
   const lessons = useMemo(

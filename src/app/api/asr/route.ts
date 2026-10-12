@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as { audioBase64?: string; mime?: string };
     const audioBase64 = body.audioBase64?.trim();
-    const mime = body.mime?.trim() || "audio/webm";
 
     if (!audioBase64) {
       return NextResponse.json({ error: "صدایی ارسال نشد" }, { status: 400 });

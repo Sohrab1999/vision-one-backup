@@ -39,8 +39,7 @@ import {
 } from "recharts";
 import { useSRSData, type SrsItem } from "@/lib/srs-store";
 import { DAY_MS, boxFromState, isLeech } from "@/lib/srs-engine";
-
-const faNum = (v: number): string => v.toLocaleString("fa-IR");
+import { faNum } from "@/components/book/games/shared";
 
 // الگوی تولتیپ — کپی از compare-view (توکن‌های تیره/روشن)
 const TOOLTIP_STYLE = {

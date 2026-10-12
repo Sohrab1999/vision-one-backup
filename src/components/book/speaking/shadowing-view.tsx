@@ -643,7 +643,6 @@ export function ShadowingPractice() {
       <div className="space-y-3">
         {paras.map((p, i) => {
           const active = i === idx;
-          const score = scores[i];
           return (
             <div
               key={`${r.id}-${i}`}

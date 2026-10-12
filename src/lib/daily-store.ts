@@ -87,8 +87,6 @@ export interface DailyInfo {
   bestEver: number;
 }
 
-const EMPTY_INFO: DailyInfo = { today: "", doneToday: false, bestToday: null, totalDone: 0, bestEver: 0 };
-
 export function useDailyInfo(): DailyInfo {
   const store = useSyncExternalStore(
     subscribe,

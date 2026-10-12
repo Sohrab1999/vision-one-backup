@@ -172,7 +172,7 @@ async function speakCloud(
   text: string,
   opts: { voice: string; speed: number; onStart: () => void; onEnd: () => void },
 ): Promise<void> {
-  const { voice, speed, onStart, onEnd } = opts;
+  const { voice, speed, onEnd } = opts;
   const key = audioKey(voice, speed, text);
   // خارج از try — در catch برای تشخیص «قطع عمدی» لازم است
   let audio: HTMLAudioElement | null = null;

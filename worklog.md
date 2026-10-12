@@ -3151,3 +3151,36 @@ Stage Summary:
   ① ۱۳ وابستگی مرده ② god componentهای دستهٔ دوم (۷ بازی) + quiz-game بیرون ساختار ③ روند بازتورم fps/index (۲,۴۳۸) که قبل از فاز F10-ب باید لاغر شود ④ تکمیل گیت (۲۱ warning → error، noImplicitAny)
 - نقشهٔ جدید ۱..۱۰: اسپرینت A (۱+۲+۳ بهداشت ریسک‌صفر) → B (۴+۵ ساختار، ۶ = فاز محصولی F10-ب) → C (۷+۸+۹ تفکیک بازی‌ها) → ۱۰ شرطی (state کلاس)
 - نکتهٔ عملیاتی: پکیج‌های «نگه‌داشتی» در A1 دقیق لیست شده — ایجنت بعدی نباید sharp/uuid/ui-served ها را حذف کند
+---
+Task ID: SPRINT-A
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «شروع کن» — اجرای اسپرینت A نقشهٔ docs/refactor-roadmap-2.md (گام‌های ۱+۲+۳: بهداشت ریسک‌صفر)
+
+Work Log:
+- گام ۱ (وابستگی‌های مرده): مصرف‌صفرِ هر ۱۳ پکیج سند با rg دوباره تأیید شد → `bun remove` ۱۴ پکیج: @dnd-kit/core/sortable/utilities، @tanstack/react-query، @tanstack/react-table، zod، @mdxeditor/editor، date-fns، next-intl، react-syntax-highlighter، @reactuses/core، react-markdown، @hookform/resolvers **+ react-hook-form** (توسعهٔ سند: تنها مصرف‌کننده‌اش ui/form.tsx بلااستفاده بود)
+- حذف دو آرتیفکت: `src/app/api/route.ts` (Hello world قالبی — A5) و `src/components/ui/form.tsx` (تنها مصرف‌کنندهٔ resolvers — صفر importer با rg تأیید شد)؛ sharp/uuid/vaul/embla/input-otp/react-day-picker/next-themes طبق سند نگه‌داشته شدند
+- گام ۲-الف: پاک‌سازی ۲۱ warning در ۱۳ فایل:
+  · public/sw.js — ۹ catch(err) بی‌مصرف → catch {؛ **تلهٔ میانه**: catch دهم (precache خط ۴۳) err را واقعاً در console.warn مصرف می‌کرد و eslint فلگش نکرده بود — sed عمومی آن را هم شکست، از git diff کشف و binding بازگردانده شد
+  · eslint.config.mjs — __dirname/__filename + importهای dirname/fileURLToPath بلااستفاده حذف
+  · asr/route — const mime بلااستفاده حذف (قرارداد API در JSDoc حفظ شد)
+  · speak.ts — onStart از destructure speakCloud حذف (در امضای opts و speak() می‌ماند؛ onStart واقعی در سطح speak فراخوانی می‌شود) — **ویرایش اول خراب شد (حذف ناخواستهٔ بدنهٔ trimAudioCache + امضای speakCloud)، بلافاصله بازسازی و با tsc تأیید شد**
+  · use-toast — const actionTypes (فقط type مصرف) → type ActionType آبجکتی (ActionType["ADD_TOAST"] سازگار ماند) — اعلان تکراری که خودم ساختم بلافاصله حذف شد
+  · daily-store/weekly-store — EMPTY_INFO بلااستفاده ×۲ حذف
+  · grammar-library — prop value بلااستفادهٔ GrammarAccordionItems از امضا و call-site حذف
+  · profile-button — starredQCount + useQuestionStars import حذف (ویرایش اول import تکراری/غلط ساخت — اصلاح شد)
+  · quiz-game — combinedRounds + useCombinedRounds از import (recordCombinedRound ماند)
+  · shadowing-view — const score بلااستفاده در map حذف
+  · smart-pick _weakRatio و say-it _onChange عمداً ماندند (سازگاری امضا/subscribe stub) — با IgnorePattern مجاز شدند
+- گام ۲-ب (بستن گیت): `no-unused-vars: ["error", {argsIgnorePattern:"^_", varsIgnorePattern:"^_", caughtErrorsIgnorePattern:"^_"}]` + tsconfig `noImplicitAny:true` (آزمایش اولیه با tsconfig موقت: صفر خطا — کدبیس از قبل implicit-any تمیز بود)
+- گام ۳ (SSOT): faNum محلی ×۶ (activity-heatmap، survey-gate، compare-view، progress-card-generator، print-flashcards، srs-stats-section) حذف → import از games/shared (الگوی رایج ۱۷ فایل موجود). تفاوت رفتار جزئی: heatmap از digit-replace به toLocaleString رفت (جداکنندهٔ هزارگان در اعداد بزرگ — بهبود نمایش). **ادعای A6 دربارهٔ pick×۳ outdated بود**: adventure-map از قبل pickUnique مصرف می‌کند؛ pick در duel-game (handler) و targets.tsx (متغیر رنگ) هم‌نام محلی‌اند نه کمکی تکراری — بدون تغییر.
+- زیرساخت: node_modules عوض شد → dev server kill + `rm -rf .next` + راه‌اندازی مجدد؛ **مشکل جدید محیط**: `nohup ... &` و حتی `setsid` با پایان session tool کشته می‌شد (دو بار سرور مرد) → الگوی `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)` در subshell پایدار شد — برای ایجنت‌های بعدی همین الگو
+- اعتبارسنجی: `bunx tsc --noEmit` = ۰ ✓ `bun run lint` = **۰ خطا / ۰ warning** (اولین بار ۰/۰ — قبلاً ۲۱ warning) ✓ `node --check public/sw.js` ✓ GET / 200 ✓
+- QA مرورگری (agent-browser): قفسه → ورود ویژن وان → هاب (۱۵ کارت) → آزمون: شروع چالش، سؤال ۱/۱۰ با تایمر، پاسخ + «سؤال بعدی» ✓ setup شوتر (۳ حالت/۳ سلاح/۴ نقشه/کیفیت) → شروع مأموریت → canvas فعال، صحنهٔ کامل (ویومدل/پهپادها/موج ۲/HVT) صفر خطای کنسول ✓ گرامر (آکاردئون‌ها) ✓ مقایسه (شش پایه) ✓ آمار (کارت پیشرفت/heatmap/SRS) ✓ گفتار: بگو ببینم + سایه‌خوانی با شروع یک متن (خط ۱ «گوش بده»/«خط بعد») ✓ دیالوگ پروفایل (فرم حساب/CSV/پشتیبان) ✓ — page errors صفر، console errors صفر، dev.log بدون error
+- اسکرین‌شات‌ها: qa-shots/a2-{home,quiz,quiz-run,fps-setup,fps-setup2,fps-scene,grammar,compare,stats,speaking,shadowing,shadowing-run,profile}.png
+- docs/refactor-roadmap-2.md: گام‌های ۱/۲/۳ ✅ + رکورد اسپرینت A بسته شد
+
+Stage Summary:
+- 🏁 **اسپرینت A کامل شد** — ریپو ۱۴ وابستگی سبک‌تر شد، سطح API تمیز شد و **دروازهٔ کیفیت کاملاً بسته شد: tsc=۰، lint=۰/۰، noImplicitAny:true، unused-vars=error** — از این پس unused var و implicit any «warning» نیستند، build را می‌شکنند
+- بازبینی یافته‌های Audit دوم: A1 ✓ A5 ✓ A4 ✓ A6 (نیمه — faNum؛ pick outdated) — A2/A3 (اسپرینت B) و A7..A9 باقی
+- گام بعدی پیشنهادی: **اسپرینت B** — گام ۴ (نجات quiz-game به games/quiz/ + پذیرش کیت) → گام ۵ (رژیم لاغری fps/index: setup-panel/use-fps-prefs/hud-question) → گام ۶ (فاز محصولی F10-ب جملهٔ زنجیره‌ای)
+- نکتهٔ عملیاتی: شروع dev server پایدار = `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)`؛ ویرایش‌های چندبخشی را همیشه بلافاصله با tsc تأیید کنید (دو اشتباه ویرایشی این دور هر دو بلافاصله کشف/اصلاح شد)

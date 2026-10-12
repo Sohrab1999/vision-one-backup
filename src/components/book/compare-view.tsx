@@ -30,6 +30,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { faNum } from "@/components/book/games/shared";
 
 /**
  * نمای «مقایسه پایه‌ها» — آمار مقایسه‌ای شش جزوه کتابخانه کنار هم (فاز ۷).
@@ -96,8 +97,6 @@ const TOOLTIP_STYLE = {
   fontSize: 12,
   fontFamily: "inherit",
 } as const;
-
-const faNum = (v: number): string => v.toLocaleString("fa-IR");
 
 function localDateKey(d: Date): string {
   const m = String(d.getMonth() + 1).padStart(2, "0");
