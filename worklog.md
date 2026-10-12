@@ -2940,3 +2940,25 @@ Stage Summary:
 - 🏁 فاز F8 کامل شد: میدان شوتر حالا «هوشمند» است — هدف‌های غلط فرار می‌کنند، هر ۵ پاسخ موج سخت‌تری با هدف‌های سریع‌تر می‌آید (تا ۶) و هدف طلایی ۳ثانیه‌ای +۲۰ بونوس می‌دهد
 - نکتهٔ QA تکرارشدنی: وضعیت سؤال/طلایی از fiber عنصر aria-live شِل خوانده می‌شود (سونر aria-live خودش را دارد) — کلید پاسخ = اندیس درست در targets مرتب‌شده با lane + ۱
 - گام بعدی طبق سند: F9 — تنوع سلاح (کلت/سنگین/پمپ + اسکوپ Shift + انیمیشن تعویض)
+---
+Task ID: F9
+Agent: main orchestrator (Z.ai Code)
+Task: فاز F9 نقشه راه FPS (docs/fps-roadmap.md نسخهٔ ۲.۲) — تنوع سلاح (کلت/سنگین/پمپ) + اسکوپ لحظه‌ای Shift + انیمیشن تعویض/ریلود — ادامهٔ دستور «ادامه بده»
+
+Work Log:
+- قدم صفر: worklog (F3 تا F8 کامل بود) + docs/fps-roadmap.md — گام بعدی طبق سند = F9
+- ① سه سلاح: جدول WEAPONS با mag/reloadMs/cooldownMs/recoil/kick/spread/burst/flash — «کلت تک‌تیر» (خشاب ۸، کول‌داون ۵۵۰ms)، «دژکوب سنگین» (خشاب ۵، لگد ×۱٫۴۵ + لگد دوربین ۰٫۰۱۴rad + انفجار ×۱٫۶ + جرقه ×۱٫۵)، «پمپ زون‌کن» (خشاب ۴، ریلود ۲۳۰۰ms، پخش ۰٫۱۶ NDC) — انتخاب ماندگار visionone:game-pref:fps-weapon + سکشن «سلاح مأموریت» با کارت‌های آیکون‌دار + detail.weapon در Attempt + MAG_SIZE/RELOAD_MS حذف و همهٔ مسیرها (triggerReload/request/start/HUD) per-سلاح شدند
+- ② پمپ والی: World سه پرتو موازی (NDC ±spread) می‌کاود؛ bridge.onVolley همهٔ برخوردها را گزارش می‌کند و handleVolley بهترین را انتخاب می‌کند (درست > طلایی > غلط؛ جریمه فقط یک‌بار) — جایزهٔ دوگانه: درست+طلایی در یک والی هر دو حساب می‌شوند؛ burst در نقطهٔ برخورد مرکزی‌ترین پرتو با مقیاس سلاح
+- ③ اسکوپ: Shift (ShiftLeft/Right در effect حرکت، e.code) یا دکمهٔ ذره‌بین موبایل (pointer hold) → applyScope ماژول‌سطح با لِرپ نرم (dt×۱۱) FOV را به ۵۲٪ (کلمپ ۳۰–۵۶) می‌برد + bridge.scopeAmt → سلاح به مرکز دید می‌آید (translateX ×(1−sc×۰٫۹۲))، لرزش/sway آرام، رتیکل h-12 با خطوط متقاطع + وینیت inset 130px + حساسیت نگاه ×۰٫۶۲ در هر دو مسیر موس/لمس — خروج خودکار با keyup/blur/pause
+- ④ ویومدل سه‌گانه: کلت (مدل قبلی)، سنگین (بدنهٔ حجیم + لولهٔ کلفت + ترمز دهانه + خشاب حلقه‌ای + نوار نارنجی)، پمپ (دو لولهٔ موازی + قنداق و دستهٔ پمپ چوبی + مهرهٔ درخشان) — flashRef/lightRef داخل هر بلوک با موقعیت/رنگ خودش + انیمیشن تعویض (swapT نیم‌چرخش هنگام مونت) + انیمیشن ریلود (sin(rem/reloadMs×π) → پایین‌رفتن+چرخش)
+- ⑤ کیت صدا (افزودنی): GameSound += shootHeavy (بم ۲۴۰→۴۶ + ساب) و shootPump (دوتایی ۳۸۰/۳۲۰) — صدای شلیک per-سلاح در request
+- رفع ۳ خطای tsc: weaponRef.current آرگومان WEAPONS (نه خودش cfg) — الگو: WEAPONS[weaponRef.current]
+- رفع leftover MAG_SIZE در useState اولیه → WEAPONS[weaponId].mag
+- QA مرورگری کامل (agent-browser، پچ matchMedia coarse در eval — بدون تغییر کد تولیدی): سکشن «سلاح مأموریت» با ۳ کارت ✓ انتخاب پمپ → aria-pressed + localStorage=pump ✓ ماندگاری بعد از reload کامل ✓ شروع مأموریت → canvas + خشاب ۴/۴ + موج ۱ + جوی‌استیک/شلیک/اسکوپ ✓ شلیک‌های متوالی با احترام کول‌داون ۹۵۰ms → ۴→۳→…→۰ → ریلود خودکار ✓ دور طبیعی تا ResultScreen (تایم‌اوت‌ها/برخورد غلط والی) → Attempt در DB با detail.weapon=pump ✓ Shift: keydown → aria-pressed=true + وینیت + رتیکل h-12 → keyup → همه برعکس ✓ اسکوپ موبایل hold → وینیت حین نگه‌داشتن ✓ موبایل ۳۹۰px: docW=390 بدون سرریز + هر ۳ کنترل لمسی ✓ خطای کنسول صفر (فقط هشدارهای کهن‌الگوی THREE.Clock/DialogContent کیت) ✓ dev.log: game_session_end reason:finish + POST /api/attempts 200 ✓ lint 0 / tsc(src) 0 ✓
+- اسکرین‌شات‌ها: qa-shots/f9-mobile390-pump-playing.png، qa-shots/f9-mobile390-playing.png
+- سند docs/fps-roadmap.md → وضعیت F9 تکمیل (نسخهٔ ۲.۲)
+
+Stage Summary:
+- 🏁 فاز F9 کامل شد: شوتر حالا سه سلاح با شخصیت متفاوت دارد (کلت دقیق/سنگین لگد‌دار/پمپ سه‌پرتویی)، با Shift اسکوپ می‌گیرد و هر سلاح مدل سه‌بعدی و صدای خودش را دارد
+- نکتهٔ فنی تکرارشدنی: بنر boxShadow درلاین Chrome بازچینی می‌شود («rgba(…) 0px 0px 130px inset») — سلکتور substring در QA باید به box-shadow عمومی باشد
+- گام بعدی طبق سند: F10 — عمق یادگیری (حالت شنیداری / جملهٔ زنجیره‌ای / گزارش AI دستیار)

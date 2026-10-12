@@ -83,12 +83,23 @@
  * - هدف طلایی: هر ۱۱–۱۶ ثانیه (اولین: ۹ ثانیه) پاپ‌آپ ۳ثانیه‌ای طلایی — شکارش +۲۰ امتیاز
  *   بونوس خارج از چرخهٔ سؤال (بدون قلب/بدون جلو رفتن) با صدای جذاب و انفجار؛ زنجیرهٔ
  *   مستقل مقاوم به توقف (جبران gap) تا با زنجیرهٔ «فریز برخورد» تداخل نکند.
+ *
+ * فاز F9 — تنوع سلاح + اسکوپ (نسخهٔ ۲.۲ سند docs/fps-roadmap.md):
+ * - سه سلاح انتخابی در setup با ماندگاری (visionone:game-pref:fps-weapon):
+ *   «کلت تک‌تیر» (خشاب ۸، شلیک تند، ریلود کوتاه)، «دژکوب سنگین» (خشاب ۵، لگد +۴۵٪
+ *   و انفجار بزرگ‌تر با صدای بم) و «پمپ زون‌کن» (خشاب ۴؛ هر ماشه سه پرتو می‌کاود —
+ *   بهترین برخورد حساب می‌شود و جریمه فقط یک‌بار؛ طلایی+درست در یک والی = جایزهٔ دوگانه).
+ * - اسکوپ لحظه‌ای: نگه‌داشتن Shift (دسکتاپ) یا دکمهٔ ذره‌بین (گوشی) — FOV با لِرپ نرم
+ *   تیز می‌شود، سلاح به مرکز دید می‌آید، لرزش آرام و حساسیت نگاه کم می‌شود (حس اسنایپر).
+ * - مدل سه‌بعدی جدا برای هر سلاح در ویومدل + انیمیشن تعویض (نیم‌چرخش هنگام سوار شدن)
+ *   و انیمیشن ریلود (پایین‌رفتن + چرخش بر اساس زمان باقی‌مانده).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {
+  Bomb,
   Crosshair,
   Flame,
   Heart,
@@ -99,6 +110,7 @@ import {
   MousePointerClick,
   Pause,
   Play,
+  Radar,
   RotateCcw,
   SlidersHorizontal,
   Sparkles,
@@ -106,6 +118,7 @@ import {
   Sun,
   Swords,
   Target as TargetIcon,
+  Telescope,
   Timer,
   Trees,
   Trophy,
@@ -190,6 +203,86 @@ const GOLDEN_FIRST_MS = 9000;
 const GOLDEN_EVERY_MIN = 11000;
 const GOLDEN_EVERY_MAX = 16000;
 
+// ── فاز F9 — تنوع سلاح: سه سلاح با خشاب/ریلود/لگد/انفجار متفاوت ──
+
+type WeaponId = "pistol" | "heavy" | "pump";
+
+interface WeaponConfig {
+  id: WeaponId;
+  name: string;
+  desc: string;
+  /** ظرفیت خشاب */
+  mag: number;
+  /** مدت ریلود (میلی‌ثانیه) */
+  reloadMs: number;
+  /** حداقل فاصلهٔ دو شلیک (میلی‌ثانیه) */
+  cooldownMs: number;
+  /** ضریب لگد ویومدل */
+  recoil: number;
+  /** لگد دوربین (رادیان — نوک تفنگ بالا می‌رود) */
+  kick: number;
+  /** پهنای پخش شلیک در NDC — پمپ: سه پرتو؛ بقیه: تک‌پرتو */
+  spread: number;
+  /** مقیاس انفجار برخورد */
+  burst: number;
+  /** مقیاس جرقهٔ دهانه */
+  flash: number;
+  icon: typeof Crosshair;
+  /** خط مشخصات چیپ کارت سلاح در setup */
+  stats: string;
+}
+
+const WEAPONS: Record<WeaponId, WeaponConfig> = {
+  pistol: {
+    id: "pistol",
+    name: "کلت تک‌تیر",
+    desc: "سلاح همیشگی میدان — سبک، سریع و دقیق.",
+    mag: 8,
+    reloadMs: 1100,
+    cooldownMs: SHOOT_COOLDOWN,
+    recoil: 1,
+    kick: 0.004,
+    spread: 0,
+    burst: 1,
+    flash: 1,
+    icon: Crosshair,
+    stats: "خشاب ۸ · شلیک تند · ریلود کوتاه",
+  },
+  heavy: {
+    id: "heavy",
+    name: "دژکوب سنگین",
+    desc: "هر فشنگ طلاست — لگد سنگین و انفجار بزرگ‌تر.",
+    mag: 5,
+    reloadMs: 1650,
+    cooldownMs: 720,
+    recoil: 1.45,
+    kick: 0.014,
+    spread: 0,
+    burst: 1.6,
+    flash: 1.5,
+    icon: Bomb,
+    stats: "خشاب ۵ · لگد +۴۵٪ · انفجار بزرگ",
+  },
+  pump: {
+    id: "pump",
+    name: "پمپ زون‌کن",
+    desc: "با هر ماشه سه پرتو می‌کاود — بهترین برخورد حساب می‌شود.",
+    mag: 4,
+    reloadMs: 2300,
+    cooldownMs: 950,
+    recoil: 1.25,
+    kick: 0.011,
+    spread: 0.16,
+    burst: 1.25,
+    flash: 1.3,
+    icon: Radar,
+    stats: "خشاب ۴ · پخش سه‌پرتویی · ریلود بلند",
+  },
+};
+
+/** کلید افزودنی ماندگاری سلاح انتخابی — پیش‌فرض کلت */
+const WEAPON_KEY = "visionone:game-pref:fps-weapon";
+
 // ── فاز F3 — حرکت اول‌شخص + تمام‌صفحه ──
 /** سرعت گام بازیکن (متر بر ثانیه) */
 const MOVE_SPEED = 2.3;
@@ -198,10 +291,6 @@ const MOVE_X_LIM = 5.2;
 /** محدودهٔ حرکت عمقی — آفست نسبت به پایهٔ دوربین */
 const MOVE_Z_MIN = -3.4;
 const MOVE_Z_MAX = 2.0;
-/** فاز F4 — ظرفیت خشاب (تعداد فشنگ هر خشاب) */
-const MAG_SIZE = 8;
-/** فاز F4 — مدت ریلود (میلی‌ثانیه) */
-const RELOAD_MS = 1100;
 /** نگاشت e.code → جهت (مستقل از layout فارسی/انگلیسی) */
 const KEY_MOVE: Record<string, "w" | "a" | "s" | "d"> = {
   KeyW: "w",
@@ -355,6 +444,14 @@ const FOV_MIN = 62;
 const FOV_MAX = 96;
 const FOV_DEF = 72;
 
+// ── فاز F9 — اسکوپ لحظه‌ای (نگه‌داشتن Shift / دکمهٔ ذره‌بین) ──
+/** ضریب تیزبینی: FOV اسکوپ = FOV پایه × این ضریب (کلمپ به محدودهٔ زیر) */
+const SCOPE_FOV_RATIO = 0.52;
+const SCOPE_FOV_MIN = 30;
+const SCOPE_FOV_MAX = 56;
+/** کاهش حساسیت نگاه حین اسکوپ — دقت اسنایپری */
+const SCOPE_SENS_RATIO = 0.62;
+
 // ── فاز F7 — بودجهٔ عناصر محیطی در سه ترتیب [کیفیت سبک، دستگاه ضعیف، کامل] ──
 
 const ENV_CRATES = [3, 4, 6];
@@ -368,6 +465,17 @@ function loadMapPref(): MapId {
     return v && v in MAPS ? (v as MapId) : "forest";
   } catch {
     return "forest";
+  }
+}
+
+/** فاز F9 — خواندن سلاح ذخیره‌شده (null صریح — الگوی loadPrefNum) */
+function loadWeaponPref(): WeaponId {
+  if (typeof window === "undefined") return "pistol";
+  try {
+    const v = window.localStorage.getItem(WEAPON_KEY);
+    return v && v in WEAPONS ? (v as WeaponId) : "pistol";
+  } catch {
+    return "pistol";
   }
 }
 
@@ -468,11 +576,18 @@ interface SceneBridge {
   moveMag: number;
   /** فاز F4 — بردار آنالوگ جوی‌استیک لمسی (x = راست، y = جلو؛ −۱..۱) */
   stick: { x: number; y: number };
-  shoot: { x: number; y: number; seq: number };
+  /** فاز F9 — پیلود شلیک: پخش پمپ + مقیاس انفجار سلاح */
+  shoot: { x: number; y: number; seq: number; spread: number; burst: number };
   lastShotAt: number;
   laneK: number;
   flashes: FlashEntry[];
+  /** فاز F9 — میزان زوم اسکوپ ۰..۱ (نوشتهٔ FovTune، خواندهٔ ViewModel) */
+  scopeAmt: number;
+  /** فاز F9 — سررسید ریلود جاری (۰ = بی‌ریلود) — انیمیشن ویومدل */
+  reloadUntil: number;
   onHit: (id: string | null) => void;
+  /** فاز F9 — گزارش والی پمپ: همهٔ برخوردها یکجا؛ تصمیم در handleVolley */
+  onVolley?: (ids: Array<string | null>) => void;
   /** فاز F8 — فرار هدف‌های غلط فعال؟ (خاموش در «تپ ساده») */
   dodge: boolean;
   /** فاز F8 — شمارهٔ موج جاری (سرعت فرار و حرکت اهداف) */
@@ -480,7 +595,7 @@ interface SceneBridge {
 }
 
 interface BurstApi {
-  fire: (origin: THREE.Vector3) => void;
+  fire: (origin: THREE.Vector3, scale?: number) => void;
 }
 
 /** شکل رکورد شخصی — بهتر = امتیاز بیشتر */
@@ -499,12 +614,12 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   {
     icon: <MousePointerClick size={24} />,
     title: "نشانه‌گیری و شلیک",
-    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
+    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. نگه‌داشتن Shift اسکوپ می‌گیرد: دید باریک‌تر، نشانه‌گیری دقیق‌تر. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
   },
   {
     icon: <TargetIcon size={24} />,
-    title: "خشاب و مهمات",
-    text: "خشاب ۸تایی داری — شمارندهٔ فشنگ کنار رتیکل است. خالی شدن = ریلود خودکار با صدای تعویض؛ می‌توانی با R (دسکتاپ) زودتر ریلود کنی. شلیک حین ریلود یا فریز برخورد مهمات هدر نمی‌دهد، ولی هر شلیکِ خطا یک فشنگ کم است — درست نشانه بگیر!",
+    title: "خشاب، مهمات و سلاح",
+    text: "خشاب بسته به سلاح ۴ تا ۸ فشنگ دارد — شمارندهٔ فشنگ کنار رتیکل است. خالی شدن = ریلود خودکار با صدای تعویض؛ می‌توانی با R (دسکتاپ) زودتر ریلود کنی. سه سلاح در setup داری: کلت تک‌تیر (خشاب ۸)، دژکوب سنگین (خشاب ۵، لگد و انفجار بزرگ) و پمپ زون‌کن (خشاب ۴؛ هر ماشه سه پرتو می‌کاود). شلیک حین ریلود یا فریز برخورد مهمات هدر نمی‌دهد، ولی هر شلیکِ خطا یک فشنگ کم است — درست نشانه بگیر!",
   },
   {
     icon: <Zap size={24} />,
@@ -777,12 +892,26 @@ function applyFov(cam: THREE.Camera, fov: number): void {
   }
 }
 
-/** فاز F5 — زاویهٔ دید زنده: تغییر اسلایدر FOV بلافاصله روی دوربین اعمال می‌شود */
-function FovTune({ fov }: { fov: number }) {
+/** فاز F5 — زاویهٔ دید زنده + فاز F9 — اسکوپ لحظه‌ای: لِرپ نرم FOV (تابع ماژول‌سطح — جهش فقط از اینجا) */
+function applyScope(cam: THREE.Camera, b: SceneBridge, fov: number, scoped: boolean, dt: number, amt: { v: number }): void {
+  const target = scoped ? 1 : 0;
+  amt.v += (target - amt.v) * Math.min(1, dt * 11);
+  const a = amt.v < 0.001 ? 0 : amt.v;
+  b.scopeAmt = a;
+  const zoomed = clamp(fov * SCOPE_FOV_RATIO, SCOPE_FOV_MIN, SCOPE_FOV_MAX);
+  applyFov(cam, fov + (zoomed - fov) * a);
+}
+
+/** فاز F5 — زاویهٔ دید زنده: تغییر اسلایدر FOV بلافاصله + فاز F9 — لِرپ اسکوپ و گزارش scopeAmt */
+function FovTune({ fov, bridge, scoped }: { fov: number; bridge: React.RefObject<SceneBridge>; scoped: boolean }) {
   const { camera } = useThree();
+  const amt = useRef({ v: 0 });
   useEffect(() => {
     applyFov(camera, fov);
   }, [camera, fov]);
+  useFrame((_state, delta) => {
+    applyScope(camera, bridge.current, fov, scoped, Math.min(delta, 0.05), amt.current);
+  });
   return null;
 }
 
@@ -803,13 +932,15 @@ function Rig({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   return null;
 }
 
-/** فاز F3 — تفنگ سه‌بعدی ویومدل + فاز F4 — پوکهٔ برنجی: همگام با دوربین؛ sway، باب آنالوگ، recoil، جرقه و پوکه */
-function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
+/** فاز F3 — تفنگ ویومدل + فاز F4 — پوکه + فاز F9 — سه سلاح با مدل جدا، اسکوپ و انیمیشن تعویض/ریلود */
+function ViewModel({ bridge, weapon }: { bridge: React.RefObject<SceneBridge>; weapon: WeaponConfig }) {
   const gRef = useRef<THREE.Group>(null);
   const flashRef = useRef<THREE.Mesh>(null);
   const lightRef = useRef<THREE.PointLight>(null);
   const recoil = useRef(0);
   const lastSeq = useRef(0);
+  // فاز F9 — انیمیشن تعویض سلاح هنگام سوار شدن ویومدل (نیم‌چرخش نمایشی + پایین‌رفتن)
+  const swapT = useRef(1);
   // فاز F4 — پوکهٔ پرتابی (فضای جهانی، خارج از گروه تفنگ)
   const casingRef = useRef<THREE.Mesh>(null);
   const casing = useRef({ active: false, t0: 0, vel: new THREE.Vector3(), spinX: 0, spinZ: 0 });
@@ -841,29 +972,36 @@ function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
       }
     }
     recoil.current = Math.max(0, recoil.current - Math.min(delta, 0.05) * 5.2);
-    const r = easeOutCubic(recoil.current);
+    const r = easeOutCubic(recoil.current) * weapon.recoil;
     const t = state.clock.elapsedTime;
-    const sway = Math.sin(t * 1.7) * 0.006 + Math.sin(t * 0.9) * 0.004;
-    const bob = b.moveMag > 0 ? Math.sin(t * 9) * 0.014 * b.moveMag : 0;
+    // فاز F9 — اسکوپ: سلاح به مرکز دید می‌آید و لرزش آرام می‌شود (scopeAmt از FovTune)
+    const sc = b.scopeAmt;
+    const sway = (Math.sin(t * 1.7) * 0.006 + Math.sin(t * 0.9) * 0.004) * (1 - sc * 0.85);
+    const bob = b.moveMag > 0 ? Math.sin(t * 9) * 0.014 * b.moveMag * (1 - sc * 0.8) : 0;
+    // فاز F9 — انیمیشن تعویض (شروع دور) و ریلود: پایین‌رفتن + چرخش بر اساس زمان باقی‌مانده
+    swapT.current = Math.max(0, swapT.current - Math.min(delta, 0.05) * 1.7);
+    const sw = easeOutCubic(swapT.current);
+    const rem = b.reloadUntil - performance.now();
+    const rl = rem > 0 ? Math.sin(clamp(rem / weapon.reloadMs, 0, 1) * Math.PI) : 0;
     // سوار بر دوربین بدون parenting (سازگار با هر scene-graph): کپی ترنسفورم + آفست فضای دوربین
     const cam = state.camera;
     g.position.copy(cam.position);
     g.quaternion.copy(cam.quaternion);
-    g.translateX(0.34 - r * 0.02);
-    g.translateY(-0.3 + sway * 0.6 + bob - r * 0.05);
-    g.translateZ(-0.62 + r * 0.16);
-    g.rotateX(0.05 + r * 0.34);
-    g.rotateY(-0.07 - r * 0.05);
-    g.rotateZ(r * 0.06);
+    g.translateX((0.34 - r * 0.02) * (1 - sc * 0.92));
+    g.translateY(-0.3 + sway * 0.6 + bob - r * 0.05 - sw * 0.16 - rl * 0.13);
+    g.translateZ(-0.62 + r * 0.16 + sw * 0.24 - sc * 0.08);
+    g.rotateX(0.05 + r * 0.34 + rl * 0.4);
+    g.rotateY(-0.07 - r * 0.05 - sw * 0.85);
+    g.rotateZ(r * 0.06 + rl * 0.5);
     const f = flashRef.current;
     const l = lightRef.current;
     const fs = recoil.current > 0.55 ? (recoil.current - 0.55) / 0.45 : 0;
     if (f) {
       f.visible = fs > 0.02;
-      f.scale.setScalar(0.001 + fs * 0.55);
+      f.scale.setScalar(0.001 + fs * 0.55 * weapon.flash);
       (f.material as THREE.MeshBasicMaterial).opacity = fs;
     }
-    if (l) l.intensity = fs * 7;
+    if (l) l.intensity = fs * 7 * weapon.flash;
     // فاز F4 — پرواز پوکه: گرانش + اسپین + محو در ۰٫۹ ثانیه
     const cs = casingRef.current;
     if (cs && casing.current.active) {
@@ -884,41 +1022,129 @@ function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   return (
     <>
       <group ref={gRef}>
-        {/* بدنه اصلی */}
-        <mesh position={[0, 0, 0.05]}>
-          <boxGeometry args={[0.09, 0.15, 0.5]} />
-          <meshStandardMaterial color="#1f2937" roughness={0.45} metalness={0.55} />
-        </mesh>
-        {/* لوله */}
-        <mesh position={[0, 0.035, -0.34]} rotation-x={Math.PI / 2}>
-          <cylinderGeometry args={[0.028, 0.032, 0.42, 12]} />
-          <meshStandardMaterial color="#111827" roughness={0.35} metalness={0.7} />
-        </mesh>
-        {/* دستهٔ کمک‌رنگ */}
-        <mesh position={[0, -0.13, 0.16]} rotation-x={-0.32}>
-          <boxGeometry args={[0.075, 0.2, 0.09]} />
-          <meshStandardMaterial color="#065f46" roughness={0.7} metalness={0.15} />
-        </mesh>
-        {/* خشاب */}
-        <mesh position={[0, -0.12, -0.02]} rotation-x={0.22}>
-          <boxGeometry args={[0.06, 0.16, 0.08]} />
-          <meshStandardMaterial color="#374151" roughness={0.5} metalness={0.5} />
-        </mesh>
-        {/* ریل بالا + مگسک کهربایی */}
-        <mesh position={[0, 0.085, 0.02]}>
-          <boxGeometry args={[0.05, 0.03, 0.3]} />
-          <meshStandardMaterial color="#0b1220" roughness={0.4} metalness={0.6} />
-        </mesh>
-        <mesh position={[0, 0.105, -0.18]}>
-          <boxGeometry args={[0.02, 0.045, 0.03]} />
-          <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={0.55} roughness={0.4} />
-        </mesh>
-        {/* جرقهٔ دهانه + نور لحظه‌ای شلیک */}
-        <mesh ref={flashRef} position={[0, 0.035, -0.58]} rotation-x={Math.PI / 2} visible={false}>
-          <coneGeometry args={[0.055, 0.16, 8]} />
-          <meshBasicMaterial color="#fde68a" transparent opacity={0} toneMapped={false} depthWrite={false} />
-        </mesh>
-        <pointLight ref={lightRef} position={[0, 0.06, -0.6]} color="#fbbf24" intensity={0} distance={4} decay={2} />
+        {weapon.id === "pistol" && (
+          <>
+            {/* بدنه اصلی */}
+            <mesh position={[0, 0, 0.05]}>
+              <boxGeometry args={[0.09, 0.15, 0.5]} />
+              <meshStandardMaterial color="#1f2937" roughness={0.45} metalness={0.55} />
+            </mesh>
+            {/* لوله */}
+            <mesh position={[0, 0.035, -0.34]} rotation-x={Math.PI / 2}>
+              <cylinderGeometry args={[0.028, 0.032, 0.42, 12]} />
+              <meshStandardMaterial color="#111827" roughness={0.35} metalness={0.7} />
+            </mesh>
+            {/* دستهٔ کمک‌رنگ */}
+            <mesh position={[0, -0.13, 0.16]} rotation-x={-0.32}>
+              <boxGeometry args={[0.075, 0.2, 0.09]} />
+              <meshStandardMaterial color="#065f46" roughness={0.7} metalness={0.15} />
+            </mesh>
+            {/* خشاب */}
+            <mesh position={[0, -0.12, -0.02]} rotation-x={0.22}>
+              <boxGeometry args={[0.06, 0.16, 0.08]} />
+              <meshStandardMaterial color="#374151" roughness={0.5} metalness={0.5} />
+            </mesh>
+            {/* ریل بالا + مگسک کهربایی */}
+            <mesh position={[0, 0.085, 0.02]}>
+              <boxGeometry args={[0.05, 0.03, 0.3]} />
+              <meshStandardMaterial color="#0b1220" roughness={0.4} metalness={0.6} />
+            </mesh>
+            <mesh position={[0, 0.105, -0.18]}>
+              <boxGeometry args={[0.02, 0.045, 0.03]} />
+              <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={0.55} roughness={0.4} />
+            </mesh>
+            {/* جرقهٔ دهانه + نور لحظه‌ای شلیک */}
+            <mesh ref={flashRef} position={[0, 0.035, -0.58]} rotation-x={Math.PI / 2} visible={false}>
+              <coneGeometry args={[0.055, 0.16, 8]} />
+              <meshBasicMaterial color="#fde68a" transparent opacity={0} toneMapped={false} depthWrite={false} />
+            </mesh>
+            <pointLight ref={lightRef} position={[0, 0.06, -0.6]} color="#fbbf24" intensity={0} distance={4} decay={2} />
+          </>
+        )}
+        {weapon.id === "heavy" && (
+          <>
+            {/* بدنهٔ حجیم تیره */}
+            <mesh position={[0, 0, 0.06]}>
+              <boxGeometry args={[0.13, 0.19, 0.6]} />
+              <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.6} />
+            </mesh>
+            {/* لولهٔ کلفت */}
+            <mesh position={[0, 0.045, -0.4]} rotation-x={Math.PI / 2}>
+              <cylinderGeometry args={[0.045, 0.05, 0.5, 12]} />
+              <meshStandardMaterial color="#111827" roughness={0.3} metalness={0.75} />
+            </mesh>
+            {/* ترمز دهانه */}
+            <mesh position={[0, 0.045, -0.68]}>
+              <boxGeometry args={[0.13, 0.13, 0.09]} />
+              <meshStandardMaterial color="#1f2937" roughness={0.35} metalness={0.7} />
+            </mesh>
+            {/* خشاب حلقه‌ای */}
+            <mesh position={[0, -0.16, -0.02]} rotation-x={0.2}>
+              <cylinderGeometry args={[0.075, 0.075, 0.08, 14]} />
+              <meshStandardMaterial color="#374151" roughness={0.5} metalness={0.5} />
+            </mesh>
+            {/* دستهٔ چوب‌بلوط تیره */}
+            <mesh position={[0, -0.15, 0.22]} rotation-x={-0.34}>
+              <boxGeometry args={[0.085, 0.22, 0.1]} />
+              <meshStandardMaterial color="#7c2d12" roughness={0.7} metalness={0.15} />
+            </mesh>
+            {/* نوار نارنجی شناسایی */}
+            <mesh position={[0, 0.092, 0.06]}>
+              <boxGeometry args={[0.135, 0.025, 0.42]} />
+              <meshStandardMaterial color="#f97316" emissive="#f97316" emissiveIntensity={0.4} roughness={0.4} />
+            </mesh>
+            {/* مگسک */}
+            <mesh position={[0, 0.118, -0.22]}>
+              <boxGeometry args={[0.02, 0.05, 0.03]} />
+              <meshStandardMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={0.6} roughness={0.4} />
+            </mesh>
+            {/* جرقهٔ بزرگ‌تر دهانه + گرم‌تر */}
+            <mesh ref={flashRef} position={[0, 0.045, -0.78]} rotation-x={Math.PI / 2} visible={false}>
+              <coneGeometry args={[0.085, 0.24, 8]} />
+              <meshBasicMaterial color="#fed7aa" transparent opacity={0} toneMapped={false} depthWrite={false} />
+            </mesh>
+            <pointLight ref={lightRef} position={[0, 0.07, -0.8]} color="#fb923c" intensity={0} distance={5.5} decay={2} />
+          </>
+        )}
+        {weapon.id === "pump" && (
+          <>
+            {/* قنداق چوبی */}
+            <mesh position={[0, -0.02, 0.3]} rotation-x={0.1}>
+              <boxGeometry args={[0.08, 0.14, 0.26]} />
+              <meshStandardMaterial color="#78350f" roughness={0.85} metalness={0.05} />
+            </mesh>
+            {/* بدنهٔ فلزی */}
+            <mesh position={[0, 0.02, 0.04]}>
+              <boxGeometry args={[0.1, 0.14, 0.42]} />
+              <meshStandardMaterial color="#292524" roughness={0.5} metalness={0.4} />
+            </mesh>
+            {/* دو لولهٔ کنار هم */}
+            <mesh position={[-0.033, 0.05, -0.36]} rotation-x={Math.PI / 2}>
+              <cylinderGeometry args={[0.027, 0.027, 0.52, 10]} />
+              <meshStandardMaterial color="#1c1917" roughness={0.35} metalness={0.7} />
+            </mesh>
+            <mesh position={[0.033, 0.05, -0.36]} rotation-x={Math.PI / 2}>
+              <cylinderGeometry args={[0.027, 0.027, 0.52, 10]} />
+              <meshStandardMaterial color="#1c1917" roughness={0.35} metalness={0.7} />
+            </mesh>
+            {/* دستهٔ پمپ چوبی */}
+            <mesh position={[0, -0.02, -0.3]}>
+              <boxGeometry args={[0.115, 0.08, 0.15]} />
+              <meshStandardMaterial color="#92400e" roughness={0.9} metalness={0.05} />
+            </mesh>
+            {/* مهرهٔ درخشان نوک لوله */}
+            <mesh position={[0, 0.095, -0.6]}>
+              <sphereGeometry args={[0.016, 8, 8]} />
+              <meshStandardMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={0.7} roughness={0.3} />
+            </mesh>
+            {/* جرقهٔ پهن دهانه */}
+            <mesh ref={flashRef} position={[0, 0.05, -0.72]} rotation-x={Math.PI / 2} visible={false}>
+              <coneGeometry args={[0.1, 0.2, 8]} />
+              <meshBasicMaterial color="#fde68a" transparent opacity={0} toneMapped={false} depthWrite={false} />
+            </mesh>
+            <pointLight ref={lightRef} position={[0, 0.06, -0.74]} color="#fdba74" intensity={0} distance={5} decay={2} />
+          </>
+        )}
       </group>
       {/* فاز F4 — پوکهٔ برنجی در فضای جهانی */}
       <mesh ref={casingRef} visible={false}>
@@ -1426,7 +1652,7 @@ function Burst({ apiRef, count }: { apiRef: React.RefObject<BurstApi | null>; co
     }
     return { dirs, speeds };
   }, [count]);
-  const st = useRef({ active: false, t0: 0, origin: new THREE.Vector3() });
+  const st = useRef({ active: false, t0: 0, origin: new THREE.Vector3(), scale: 1 });
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   useEffect(() => {
@@ -1448,10 +1674,12 @@ function Burst({ apiRef, count }: { apiRef: React.RefObject<BurstApi | null>; co
 
   useEffect(() => {
     apiRef.current = {
-      fire: (origin) => {
+      fire: (origin, scale) => {
         st.current.active = true;
         st.current.t0 = performance.now();
         st.current.origin.copy(origin);
+        // فاز F9 — مقیاس انفجار per-سلاح (سنگین بزرگ‌تر)
+        st.current.scale = scale ?? 1;
       },
     };
     return () => {
@@ -1471,14 +1699,15 @@ function Burst({ apiRef, count }: { apiRef: React.RefObject<BurstApi | null>; co
       return;
     }
     const e = easeOutCubic(t);
+    const sc = st.current.scale;
     for (let i = 0; i < count; i++) {
-      const d = e * parts.speeds[i] * 2.1;
+      const d = e * parts.speeds[i] * 2.1 * sc;
       dummy.position.set(
         st.current.origin.x + parts.dirs[i * 3] * d,
         st.current.origin.y + parts.dirs[i * 3 + 1] * d - t * t * 1.5,
         st.current.origin.z + parts.dirs[i * 3 + 2] * d,
       );
-      const s = (1 - t) * 0.3;
+      const s = (1 - t) * 0.3 * sc;
       dummy.scale.setScalar(Math.max(0.001, s));
       dummy.rotation.set(t * 5 + i, t * 4, i * 0.7);
       dummy.updateMatrix();
@@ -1495,7 +1724,7 @@ function Burst({ apiRef, count }: { apiRef: React.RefObject<BurstApi | null>; co
   );
 }
 
-/** پردازش درخواست شلیک: raycast از دوربین به نقطه — انفجار + گزارش برخورد */
+/** پردازش درخواست شلیک: رِی‌کست (پمپ = سه پرتو موازی) — انفجار + گزارش برخورد */
 function World({
   bridge,
   registry,
@@ -1514,15 +1743,30 @@ function World({
     const req = b.shoot;
     if (req.seq === lastSeq.current) return;
     lastSeq.current = req.seq;
-    v2.set(req.x, req.y);
-    ray.setFromCamera(v2, camera);
-    const hits = ray.intersectObjects(registry.current ?? [], false);
-    const first = hits.find((h) => h.object.visible);
-    if (first) {
-      burstApi.current?.fire(first.point);
-      b.onHit((first.object.userData.id as string | undefined) ?? null);
+    // فاز F9 — پمپ زون‌کن: سه پرتو موازی (چپ/مرکز/راست)؛ بقیه تک‌پرتو
+    const offs = req.spread > 0 ? [-req.spread, 0, req.spread] : [0];
+    const ids: Array<string | null> = [];
+    let centerOrigin: THREE.Vector3 | null = null;
+    let anyOrigin: THREE.Vector3 | null = null;
+    for (const off of offs) {
+      v2.set(req.x + off, req.y);
+      ray.setFromCamera(v2, camera);
+      const first = ray.intersectObjects(registry.current ?? [], false).find((h) => h.object.visible);
+      if (first) {
+        ids.push((first.object.userData.id as string | undefined) ?? null);
+        anyOrigin ??= first.point;
+        if (off === 0) centerOrigin = first.point;
+      } else {
+        ids.push(null);
+      }
+    }
+    const pt = centerOrigin ?? anyOrigin;
+    if (pt) burstApi.current?.fire(pt, req.burst);
+    if (req.spread > 0 && b.onVolley) {
+      // والی پمپ: همهٔ برخوردها یکجا — بهترین نتیجه در handleVolley تصمیم می‌شود
+      b.onVolley(ids);
     } else {
-      b.onHit(null);
+      b.onHit(ids.find((x): x is string => x !== null) ?? null);
     }
   });
   return null;
@@ -1647,6 +1891,16 @@ export function FpsShooterGame() {
   const [invertY, setInvertY] = useState(() => loadPrefBool(INVERT_KEY, false));
   // ── فاز F6 — نقشهٔ مأموریت (ماندگار) ──
   const [mapId, setMapId] = useState<MapId>(() => loadMapPref());
+  // ── فاز F9 — سلاح انتخابی (ماندگار) + اسکوپ لحظه‌ای ──
+  const [weaponId, setWeaponId] = useState<WeaponId>(() => loadWeaponPref());
+  const [scoped, setScoped] = useState(false);
+  /** آینهٔ اسکوپ برای مسیرهای بدون ری‌رندر (حساسیت نگاه در ورودی) */
+  const scopedRef = useRef(false);
+  const setScopeSafe = useCallback((v: boolean) => {
+    if (scopedRef.current === v) return;
+    scopedRef.current = v;
+    setScoped(v);
+  }, []);
   // ── فاز F3 — تمام‌صفحه هنگام شروع مأموریت (Fullscreen API با فال‌بک webkit) ──
   const [isFs, setIsFs] = useState(false);
   const wantFsRef = useRef(false);
@@ -1657,7 +1911,7 @@ export function FpsShooterGame() {
   const [hearts, setHearts] = useState(HEARTS);
   const [timeLeft, setTimeLeft] = useState(Q_TIME_SHOOT);
   // ── فاز F4 — خشاب و ریلود ──
-  const [ammo, setAmmo] = useState(MAG_SIZE);
+  const [ammo, setAmmo] = useState(() => WEAPONS[weaponId].mag);
   const [reloading, setReloading] = useState(false);
   /** فاز G2-e — پیام باکس aria-live شِل (برخورد/خطا/توقف) برای فناوری‌های کمکی */
   const [liveMsg, setLiveMsg] = useState("");
@@ -1731,10 +1985,12 @@ export function FpsShooterGame() {
     keys: new Set<string>(),
     moveMag: 0,
     stick: { x: 0, y: 0 },
-    shoot: { x: 0, y: 0, seq: 0 },
+    shoot: { x: 0, y: 0, seq: 0, spread: 0, burst: 1 },
     lastShotAt: 0,
     laneK: 1,
     flashes: [],
+    scopeAmt: 0,
+    reloadUntil: 0,
     onHit: () => {},
     dodge: false,
     wave: 1,
@@ -1771,8 +2027,10 @@ export function FpsShooterGame() {
   const sensRef = useRef(sens);
   const invertRef = useRef(invertY);
   const mapIdRef = useRef<MapId>(mapId);
+  // ── فاز F9 — سلاح جاری (latest-ref برای حلقهٔ شلیک) ──
+  const weaponRef = useRef<WeaponId>(weaponId);
   // ── فاز F4 — مراجع خشاب/ریلود (چرخهٔ شلیک داخل effect فقط با ref — بدون dep churn) ──
-  const ammoRef = useRef(MAG_SIZE);
+  const ammoRef = useRef(WEAPONS[loadWeaponPref()].mag);
   const reloadUntilRef = useRef(0);
   const reloadTimerRef = useRef<number | null>(null);
   const autoReloadTimerRef = useRef<number | null>(null);
@@ -1781,11 +2039,13 @@ export function FpsShooterGame() {
   /** ریلود دستی (R / دکمه) — latest-ref الگوی کیت */
   const reloadNowRef = useRef<() => void>(() => {});
 
-  // ── فاز F4 — ریلود: صدای کلانک + پر شدن خشاب بعد از RELOAD_MS ──
+  // ── فاز F4/F9 — ریلود: صدای کلانک + پر شدن خشاب بعد از ریلود سلاح جاری ──
   const triggerReload = useCallback(() => {
-    if (overRef.current || ammoRef.current >= MAG_SIZE) return;
+    const cfg = WEAPONS[weaponRef.current];
+    if (overRef.current || ammoRef.current >= cfg.mag) return;
     if (reloadUntilRef.current > performance.now()) return; // در حال ریلود
-    reloadUntilRef.current = performance.now() + RELOAD_MS;
+    reloadUntilRef.current = performance.now() + cfg.reloadMs;
+    bridge.current.reloadUntil = reloadUntilRef.current; // فاز F9 — انیمیشن ویومدل
     setReloading(true);
     playSound("reload");
     buzz("light");
@@ -1793,10 +2053,11 @@ export function FpsShooterGame() {
     reloadTimerRef.current = window.setTimeout(() => {
       reloadTimerRef.current = null;
       reloadUntilRef.current = 0;
-      ammoRef.current = MAG_SIZE;
-      setAmmo(MAG_SIZE);
+      bridge.current.reloadUntil = 0;
+      ammoRef.current = WEAPONS[weaponRef.current].mag;
+      setAmmo(WEAPONS[weaponRef.current].mag);
       setReloading(false);
-    }, RELOAD_MS);
+    }, cfg.reloadMs);
   }, []);
   useEffect(() => {
     reloadNowRef.current = triggerReload;
@@ -2005,6 +2266,7 @@ export function FpsShooterGame() {
     sensRef.current = sens;
     invertRef.current = invertY;
     mapIdRef.current = mapId;
+    weaponRef.current = weaponId;
   });
 
   // فاز G2-e — دورِ باز در unmount «رهاشده» ثبت می‌شود (اگر قبلاً گزارش شده باشد no-op)
@@ -2105,6 +2367,8 @@ export function FpsShooterGame() {
           sens: Math.round(sensRef.current * 100) / 100,
           invert: invertRef.current,
           wave: maxWaveRef.current,
+          // فاز F9 — افزودنی: سلاح مأموریت
+          weapon: weaponRef.current,
         },
       });
     }
@@ -2241,6 +2505,33 @@ export function FpsShooterGame() {
     bridge.current.onHit = handleHit;
   });
 
+  // ── فاز F9 — والی پمپ: سه برخورد یکجا → بهترین نتیجه (درست > طلایی > غلط؛ جریمه فقط یک‌بار) ──
+  const handleHitRef = useRef(handleHit);
+  useEffect(() => {
+    handleHitRef.current = handleHit;
+  });
+  const handleVolley = useCallback((ids: Array<string | null>) => {
+    const hits = [...new Set(ids.filter((x): x is string => x !== null))];
+    if (hits.length === 0) return; // والی خالی = خطا رفتن — بی‌جریمه (الگوی شلیک به خالی)
+    const cur = qRef.current;
+    const correctId = cur && !lockedRef.current ? cur.targets.find((t) => t.correct)?.id : undefined;
+    const hasCorrect = correctId !== undefined && hits.includes(correctId);
+    // جایزهٔ دوگانهٔ پمپ: طلایی + درست در یک والی — هر دو حساب می‌شوند
+    if (hasCorrect && hits.includes("golden")) handleHitRef.current("golden");
+    if (hasCorrect) {
+      handleHitRef.current(correctId as string);
+      return;
+    }
+    if (hits.includes("golden")) {
+      handleHitRef.current("golden");
+      return;
+    }
+    handleHitRef.current(hits[0]);
+  }, []);
+  useEffect(() => {
+    bridge.current.onVolley = handleVolley;
+  });
+
   // ── پایان زمان سؤال — فاز G2-e: بازخورد سه‌کانالهٔ خطا ──
   const handleTimeout = useCallback(() => {
     const cur = qRef.current;
@@ -2322,9 +2613,11 @@ export function FpsShooterGame() {
       // فاز F4 — حین فریز برخورد شلیک حساب نمی‌شود (مهمات هدر نمی‌رود)
       if (lockedRef.current) return;
       const b = bridge.current;
+      // فاز F9 — مشخصات سلاح جاری: خشاب/کول‌داون/پخش/لگد
+      const cfg = WEAPONS[weaponRef.current];
       const now = performance.now();
       if (reloadUntilRef.current > now) return; // فاز F4 — حین ریلود شلیک نیست
-      if (now - b.lastShotAt < SHOOT_COOLDOWN) return;
+      if (now - b.lastShotAt < cfg.cooldownMs) return;
       if (ammoRef.current <= 0) {
         // فاز F4 — خشاب خالی: اولین تپ = ریلود (و ریلود خودکار هم قبلاً مسلح شده است)
         reloadNowRef.current();
@@ -2341,9 +2634,12 @@ export function FpsShooterGame() {
         }, 450);
       }
       b.lastShotAt = now;
-      b.shoot = { x, y, seq: b.shoot.seq + 1 };
-      // فاز G2-e — صدای شلیک (رویداد شلیک، با cooldown — اسپم ندارد)
-      playSound("shoot");
+      // فاز F9 — پیلود والی: پمپ سه پرتو می‌کاود و انفجار مقیاس سلاح می‌گیرد
+      b.shoot = { x, y, seq: b.shoot.seq + 1, spread: cfg.spread, burst: cfg.burst };
+      // فاز F9 — لگد دوربین per-سلاح (کلت تقریباً صفر، سنگین محسوس)
+      if (cfg.kick > 0) b.aim.pitch = clamp(b.aim.pitch + cfg.kick, -0.6, 0.48);
+      // فاز G2-e/F9 — صدای شلیک per-سلاح (رویداد شلیک، با cooldown — اسپم ندارد)
+      playSound(cfg.id === "heavy" ? "shootHeavy" : cfg.id === "pump" ? "shootPump" : "shoot");
     };
 
     let gest: { x0: number; y0: number; t0: number; moved: boolean; lx: number; ly: number; active: boolean } | null =
@@ -2377,8 +2673,8 @@ export function FpsShooterGame() {
     const onPointerMove = (e: PointerEvent) => {
       if (document.pointerLockElement === el) {
         const b = bridge.current;
-        // فاز F5 — حساسیت نگاه + وارون‌سازی عمودی (از تنظیمات گزینه‌ها)
-        const sn = sensRef.current;
+        // فاز F5 — حساسیت نگاه + وارون‌سازی عمودی (از تنظیمات گزینه‌ها) — فاز F9: حین اسکوپ کمتر
+        const sn = sensRef.current * (scopedRef.current ? SCOPE_SENS_RATIO : 1);
         const iv = invertRef.current ? -1 : 1;
         b.aim.yaw -= e.movementX * 0.0026 * sn;
         b.aim.pitch = clamp(b.aim.pitch - e.movementY * 0.0024 * sn * iv, -0.6, 0.48);
@@ -2392,8 +2688,8 @@ export function FpsShooterGame() {
       if (Math.hypot(e.clientX - gest.x0, e.clientY - gest.y0) > 12) gest.moved = true;
       if (gest.moved) {
         const b = bridge.current;
-        // فاز F5 — حساسیت نگاه لمسی + وارون‌سازی عمودی
-        const sn = sensRef.current;
+        // فاز F5 — حساسیت نگاه لمسی + وارون‌سازی عمودی — فاز F9: حین اسکوپ کمتر
+        const sn = sensRef.current * (scopedRef.current ? SCOPE_SENS_RATIO : 1);
         const iv = invertRef.current ? -1 : 1;
         b.aim.yaw -= dx * 0.005 * sn;
         b.aim.pitch = clamp(b.aim.pitch - dy * 0.0045 * sn * iv, -0.6, 0.48);
@@ -2446,7 +2742,7 @@ export function FpsShooterGame() {
     };
   }, [phase]);
 
-  // ── فاز F3/F4 — حرکت WASD/جهت‌نما (e.code = مستقل از چیدمان کیبورد فارسی/انگلیسی) + R = ریلود ──
+  // ── فاز F3/F4 — حرکت WASD/جهت‌نما (e.code = مستقل از چیدمان کیبورد فارسی/انگلیسی) + R = ریلود + فاز F9 — Shift = اسکوپ ──
   useEffect(() => {
     if (phase !== "playing") return;
     const keys = bridge.current.keys;
@@ -2457,15 +2753,27 @@ export function FpsShooterGame() {
         if (!pausedRef.current && !exitAskRef.current) reloadNowRef.current();
         return;
       }
+      // فاز F9 — اسکوپ لحظه‌ای: نگه‌داشتن Shift (خارج از تپ ساده — تپ ساده نشانه‌گیری ندارد)
+      if (!tapRef.current && (e.code === "ShiftLeft" || e.code === "ShiftRight")) {
+        setScopeSafe(true);
+        return;
+      }
       const k = KEY_MOVE[e.code];
       if (!k) return;
       keys.add(k);
     };
     const up = (e: KeyboardEvent) => {
+      if (e.code === "ShiftLeft" || e.code === "ShiftRight") {
+        setScopeSafe(false);
+        return;
+      }
       const k = KEY_MOVE[e.code];
       if (k) keys.delete(k);
     };
-    const clear = () => keys.clear();
+    const clear = () => {
+      keys.clear();
+      setScopeSafe(false);
+    };
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
     window.addEventListener("blur", clear);
@@ -2475,7 +2783,7 @@ export function FpsShooterGame() {
       window.removeEventListener("blur", clear);
       keys.clear();
     };
-  }, [phase]);
+  }, [phase, setScopeSafe]);
 
   // ── شروع دور ──
   const start = useCallback(() => {
@@ -2514,15 +2822,19 @@ export function FpsShooterGame() {
     bridge.current.stick = { x: 0, y: 0 };
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
-    // فاز F4 — خشاب تازه در شروع دور + پاک‌سازی ریلود معلق
+    // فاز F4/F9 — خشاب سلاح انتخابی در شروع دور + پاک‌سازی ریلود معلق
     if (reloadTimerRef.current !== null) window.clearTimeout(reloadTimerRef.current);
     if (autoReloadTimerRef.current !== null) window.clearTimeout(autoReloadTimerRef.current);
     reloadTimerRef.current = null;
     autoReloadTimerRef.current = null;
     reloadUntilRef.current = 0;
-    ammoRef.current = MAG_SIZE;
-    setAmmo(MAG_SIZE);
+    bridge.current.reloadUntil = 0;
+    ammoRef.current = WEAPONS[weaponId].mag;
+    setAmmo(WEAPONS[weaponId].mag);
     setReloading(false);
+    // فاز F9 — اسکوپ بسته و پیلود والی خنثی در شروع دور
+    setScopeSafe(false);
+    bridge.current.shoot = { x: 0, y: 0, seq: bridge.current.shoot.seq, spread: 0, burst: 1 };
     // فاز F8 — موج از نو + پاک‌سازی و برنامه‌ریزی هدف طلایی
     waveRef.current = 1;
     maxWaveRef.current = 1;
@@ -2556,7 +2868,7 @@ export function FpsShooterGame() {
     setPhase("playing");
     // سؤال اول پس از سوار شدن صحنه
     later(() => advanceRef.current(), 60);
-  }, [mode, lesson, tapMode, quality, vocabAll, quizSeed, resetCombo, resume, setExitAskSafe, clearTimers, later, goldenLater]);
+  }, [mode, lesson, tapMode, quality, vocabAll, quizSeed, resetCombo, resume, setExitAskSafe, clearTimers, later, goldenLater, weaponId, setScopeSafe]);
 
   // فاز F8 — پاک‌سازی تایمر زنجیرهٔ هدف طلایی در unmount (بعد از همهٔ محل‌های جهش)
   useEffect(
@@ -2605,6 +2917,14 @@ export function FpsShooterGame() {
     buzz("light");
     setMapId(id);
     savePref(MAP_KEY, id);
+  }, []);
+
+  // ── فاز F9 — انتخاب سلاح (ماندگار؛ کلید افزودنی) ──
+  const setWeaponPref = useCallback((id: WeaponId) => {
+    playSound("click");
+    buzz("light");
+    setWeaponId(id);
+    savePref(WEAPON_KEY, id);
   }, []);
 
   // کلیک چیپ‌های setup — بازخورد کیت (الگوی جای خالی)
@@ -2710,7 +3030,8 @@ export function FpsShooterGame() {
                 سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
                 شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
                 (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان قدم می‌زنی —
-                جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی. خشاب ۸تایی داری (R = ریلود)، سه نقشهٔ مأموریت داری
+                جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی. سه سلاح داری — کلت، دژکوب سنگین و پمپ زون‌کن —
+                با R ریلود می‌کنی و با نگه‌داشتن Shift اسکوپ می‌گیری، سه نقشهٔ مأموریت داری
                 (جنگل، کویر، شب)، حساسیت و زاویهٔ دید را در «گزینه‌ها» تنظیم می‌کنی و روی گوشی جوی‌استیک و دکمهٔ شلیک داری —
                 دنبال گزینهٔ درست بگرد و بعد شلیک کن!
               </p>
@@ -2759,6 +3080,45 @@ export function FpsShooterGame() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* فاز F9 — سلاح مأموریت: سه سلاح با خشاب/ریلود/لگد متفاوت */}
+            <div>
+              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+                <Bomb size={14} className="text-emerald-500" />
+                سلاح مأموریت
+              </p>
+              <div className="grid gap-2 sm:grid-cols-3">
+                {(Object.values(WEAPONS) as WeaponConfig[]).map((w) => (
+                  <button
+                    key={w.id}
+                    type="button"
+                    aria-pressed={weaponId === w.id}
+                    onClick={() => setWeaponPref(w.id)}
+                    className={cn(
+                      "min-h-11 rounded-2xl border p-2.5 text-right transition-all",
+                      weaponId === w.id
+                        ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
+                        : "hover:border-primary/30 hover:bg-muted/50",
+                    )}
+                  >
+                    <span className="flex items-center gap-1.5 text-[12px] font-black">
+                      <w.icon size={13} className={weaponId === w.id ? "text-primary" : "text-muted-foreground"} />
+                      {w.name}
+                    </span>
+                    <span className="mt-1 block text-[10px] leading-4 text-muted-foreground">{w.desc}</span>
+                    <Badge
+                      variant="outline"
+                      className="mt-1.5 border-emerald-500/30 px-1.5 py-0 text-[9px] font-bold text-emerald-600 dark:text-emerald-400"
+                    >
+                      {w.stats}
+                    </Badge>
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+                حین بازی با نگه‌داشتن Shift (دسکتاپ) یا دکمهٔ ذره‌بین (گوشی) اسکوپ می‌گیری — نشانه‌گیری دقیق‌تر، دید باریک‌تر.
+              </p>
             </div>
 
             {/* فاز F6 — نقشهٔ مأموریت: سه پالت کامل میدان */}
@@ -3050,6 +3410,8 @@ export function FpsShooterGame() {
   // فاز F6 — پالت نقشهٔ فعال + فاز F7 — ترتیب بودجهٔ عناصر محیطی
   const activeMap = MAPS[mapId];
   const envTier: 0 | 1 | 2 = qualityLow ? 0 : weak ? 1 : 2;
+  // فاز F9 — سلاح جاری (خشاب در HUD)
+  const weapon = WEAPONS[weaponId];
   return (
     <>
       <GameShell
@@ -3100,7 +3462,7 @@ export function FpsShooterGame() {
                 ) : (
                   <>
                     <Crosshair size={12} className={ammo <= 2 ? "text-red-500" : "text-amber-500"} />
-                    {faNum(ammo)}/{faNum(MAG_SIZE)}
+                    {faNum(ammo)}/{faNum(weapon.mag)}
                   </>
                 )}
               </Badge>
@@ -3158,7 +3520,7 @@ export function FpsShooterGame() {
               shadows={false}
             >
               {/* فاز F5 — زاویهٔ دید زنده از گزینه‌ها */}
-              <FovTune fov={fov} />
+              <FovTune fov={fov} bridge={bridge} scoped={scoped} />
               <Rig bridge={bridge} />
               <Arena map={activeMap} deco={qualityLow ? DECO_LOW : weak ? 8 : 14} tier={envTier} />
               {q?.targets.map((t) => (
@@ -3170,8 +3532,8 @@ export function FpsShooterGame() {
               )}
               <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
               <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
-              {/* فاز F3 — تفنگ سه‌بعدی ویومدل چسبیده به دوربین */}
-              <ViewModel bridge={bridge} />
+              {/* فاز F3 — تفنگ سه‌بعدی ویومدل چسبیده به دوربین — فاز F9: مدل per-سلاح */}
+              <ViewModel bridge={bridge} weapon={weapon} />
             </Canvas>
 
             {/* فاز F3 — نوار وضعیت فشرده حین تمام‌صفحه (هدر شِل بیرون قاب است) */}
@@ -3248,10 +3610,32 @@ export function FpsShooterGame() {
                     <Crosshair size={26} />
                   )}
                   <span className="text-[10px] font-black" aria-hidden>
-                    {reloading ? "ریلود…" : `${faNum(ammo)} / ${faNum(MAG_SIZE)}`}
+                    {reloading ? "ریلود…" : `${faNum(ammo)} / ${faNum(weapon.mag)}`}
                   </span>
                 </button>
               </>
+            )}
+
+            {/* فاز F9 — دکمهٔ اسکوپ موبایل (نگه‌داشتن = زوم) */}
+            {!tapMode && isCoarse && (
+              <button
+                type="button"
+                data-fps-hud
+                aria-pressed={scoped}
+                aria-label="اسکوپ — نگه دار تا زوم شود"
+                onPointerDown={() => setScopeSafe(true)}
+                onPointerUp={() => setScopeSafe(false)}
+                onPointerCancel={() => setScopeSafe(false)}
+                onPointerLeave={() => setScopeSafe(false)}
+                className={cn(
+                  "pointer-events-auto absolute bottom-28 right-4 z-20 flex h-12 w-12 touch-none select-none items-center justify-center rounded-full border-2 backdrop-blur transition active:scale-95",
+                  scoped
+                    ? "border-emerald-300/70 bg-emerald-500/30 text-white"
+                    : "border-white/30 bg-black/40 text-white",
+                )}
+              >
+                <Telescope size={20} />
+              </button>
             )}
 
             {/* فاز F4 — شمارندهٔ مهمات دسکتاپ (گوشهٔ پایین) */}
@@ -3268,10 +3652,19 @@ export function FpsShooterGame() {
                 ) : (
                   <>
                     <Crosshair size={12} className={ammo <= 2 ? "text-red-300" : "text-amber-300"} />
-                    {faNum(ammo)} / {faNum(MAG_SIZE)}
+                    {faNum(ammo)} / {faNum(weapon.mag)}
                   </>
                 )}
               </div>
+            )}
+
+            {/* فاز F9 — وینیت اسکوپ حین زوم */}
+            {scoped && (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 z-[5]"
+                style={{ boxShadow: "inset 0 0 130px 46px rgba(0,0,0,0.6)" }}
+              />
             )}
 
             {/* سؤال — HUD بالای میدان */}
@@ -3310,7 +3703,7 @@ export function FpsShooterGame() {
               </div>
             )}
 
-            {/* رتیکل — فقط در حالت شلیک دسکتاپ/لمس‌ندار */}
+            {/* رتیکل — فقط در حالت شلیک دسکتاپ/لمس‌ندار — فاز F9: بزرگ‌تر با خطوط متقاطع حین اسکوپ */}
             {!tapMode && (
               <div
                 aria-hidden
@@ -3319,9 +3712,20 @@ export function FpsShooterGame() {
                   locked ? "opacity-100" : isCoarse ? "opacity-0" : "opacity-60",
                 )}
               >
-                <span className="relative block h-7 w-7">
+                <span className={cn("relative block transition-all duration-150", scoped ? "h-12 w-12" : "h-7 w-7")}>
                   <span className="absolute inset-0 rounded-full border-2 border-white/80 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                  <span className="absolute start-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400" />
+                  {scoped && (
+                    <>
+                      <span className="absolute start-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/60" />
+                      <span className="absolute top-1/2 start-0 h-px w-full -translate-y-1/2 bg-white/60" />
+                    </>
+                  )}
+                  <span
+                    className={cn(
+                      "absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400",
+                      scoped ? "h-1 w-1" : "h-1.5 w-1.5",
+                    )}
+                  />
                 </span>
               </div>
             )}
@@ -3334,9 +3738,9 @@ export function FpsShooterGame() {
                     ? "تپ روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
                     : "کلیک روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
                   : isCoarse
-                    ? "جوی‌استیک چپ = حرکت · کشیدن صحنه = نگاه · دکمهٔ راست یا تپ روی هدف = شلیک"
+                    ? "جوی‌استیک = حرکت · کشیدن = نگاه · دکمهٔ شلیک = شلیک · ذره‌بین = اسکوپ"
                     : locked
-                      ? "حرکت موس = نشانه‌گیری · WASD = حرکت · کلیک = شلیک · R = ریلود"
+                      ? "موس = نشانه‌گیری · WASD = حرکت · کلیک = شلیک · Shift = اسکوپ · R = ریلود"
                       : "کلیک در صحنه = نشانه‌گیری + تمام‌صفحه"}
               </span>
             </div>

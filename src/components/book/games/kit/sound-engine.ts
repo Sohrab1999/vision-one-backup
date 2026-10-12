@@ -19,6 +19,8 @@ export type GameSound =
   | "finish" // پایان دور
   | "tick" // تیک‌تاک تایمر
   | "shoot" // شلیک (شوتر)
+  | "shootHeavy" // شلیک دژکوب سنگین — بم و پر (شوتر — فاز F9)
+  | "shootPump" // شلیک پمپ زون‌کن — دوتایی پهن (شوتر — فاز F9)
   | "hit" // برخورد گلوله به هدف (شوتر)
   | "reload" // تعویض خشاب (شوتر)
   | "golden" // ظاهرشدن/شکار هدف طلایی (شوتر — فاز F8)
@@ -134,6 +136,16 @@ const RECIPES: Record<GameSound, ToneSpec[]> = {
   ],
   tick: [{ at: 0, freq: 1000, dur: 0.02, type: "sine", gain: 0.05 }],
   shoot: [{ at: 0, freq: 420, to: 80, dur: 0.1, type: "sawtooth", gain: 0.1 }],
+  // فاز F9 شوتر — شلیک دژکوب سنگین: بم و پُر با ضربهٔ ساب
+  shootHeavy: [
+    { at: 0, freq: 240, to: 46, dur: 0.16, type: "sawtooth", gain: 0.13 },
+    { at: 0.01, freq: 90, to: 40, dur: 0.14, type: "square", gain: 0.08 },
+  ],
+  // فاز F9 شوتر — شلیک پمپ زون‌کن: دو ضربهٔ پشت‌سرهم پهن
+  shootPump: [
+    { at: 0, freq: 380, to: 70, dur: 0.09, type: "sawtooth", gain: 0.1 },
+    { at: 0.07, freq: 320, to: 60, dur: 0.11, type: "sawtooth", gain: 0.09 },
+  ],
   // فاز F4 شوتر — برخورد توپر «تاک» به بدنهٔ هدف
   hit: [
     { at: 0, freq: 190, to: 62, dur: 0.09, type: "triangle", gain: 0.15 },

@@ -1,0 +1,575 @@
+    30→  2850→              </div>
+    31→  2851→            </div>
+    32→  2852→
+    33→  2853→            <div>
+    34→  2854→              <p className="mb-2 text-[13px] font-bold">سبک کنترل</p>
+    35→  2855→              <button
+    36→  2856→                type="button"
+    37→  2857→                aria-pressed={tapMode}
+    38→  2858→                onClick={() => {
+    39→  2859→                  chipFeedback();
+    40→  2860→                  setTapMode((v) => !v);
+    41→  2861→                }}
+    42→  2862→                className={chipCls(tapMode)}
+    43→  2863→              >
+    44→  2864→                <span className="inline-flex items-center gap-1.5">
+    45→  2865→                  <MousePointerClick size={14} />
+    46→  2866→                  تپ ساده (بدون شلیک) {tapMode ? "— فعال" : ""}
+    47→  2867→                </span>
+    48→  2868→              </button>
+    49→  2869→              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+    50→  2870→                {tapMode ? (
+    51→  2871→                  <>تپ روی هدف کافی است؛ روی دسکتاپ هم کلیک روی هدف می‌زند و کلیدهای ۱ تا ۴ هدف را انتخاب می‌کنند.</>
+    52→  2872→                ) : (
+    53→  2873→                  <>دسکتاپ: کلیک قفلِ نشانگر، حرکت موس نشانه‌گیری، کلیک بعدی شلیک — موبایل: کشیدن نگاه، تپ روی هدف شلیک.</>
+    54→  2874→                )}
+    55→  2875→              </p>
+    56→  2876→            </div>
+    57→  2877→
+    58→  2878→            {/* فاز G2-e — تنظیم کیفیت گرافیک */}
+    59→  2879→            <div>
+    60→  2880→              <p className="mb-2 text-[13px] font-bold">کیفیت گرافیک</p>
+    61→  2881→              <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب کیفیت گرافیک">
+    62→  2882→                <button
+    63→  2883→                  type="button"
+    64→  2884→                  aria-pressed={quality === "high"}
+    65→  2885→                  onClick={() => setQualityPref("high")}
+    66→  2886→                  className={chipCls(quality === "high")}
+    67→  2887→                >
+    68→  2888→                  کیفیت عادی
+    69→  2889→                </button>
+    70→  2890→                <button
+    71→  2891→                  type="button"
+    72→  2892→                  aria-pressed={quality === "low"}
+    73→  2893→                  onClick={() => setQualityPref("low")}
+    74→  2894→                  className={chipCls(quality === "low")}
+    75→  2895→                >
+    76→  2896→                  کیفیت سبک (گوشی)
+    77→  2897→                </button>
+    78→  2898→              </div>
+    79→  2899→              <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+    80→  2900→                {quality === "low"
+    81→  2901→                  ? "کیفیت سبک: رزولوشن کمتر، بدون antialias، ذرات و اجسام تزئینی کمتر و ۳ هدف هم‌زمان به‌جای ۴ — روی گوشی‌های ضعیف روان‌تر است."
+    82→  2902→                  : "کیفیت عادی: کامل‌ترین نمای صحنه (رفتار همیشگی بازی). انتخابت برای دفعات بعد ذخیره می‌شود."}
+    83→  2903→              </p>
+    84→  2904→            </div>
+    85→  2905→
+    86→  2906→            {/* فاز F5 — گزینه‌های نگاه: حساسیت، FOV و وارون‌سازی عمودی */}
+    87→  2907→            <div>
+    88→  2908→              <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+    89→  2909→                <SlidersHorizontal size={14} className="text-emerald-500" />
+    90→  2910→                گزینه‌ها
+    91→  2911→              </p>
+    92→  2912→              <div className="space-y-4 rounded-2xl border p-4">
+    93→  2913→                <div>
+    94→  2914→                  <div className="mb-1.5 flex items-center justify-between">
+    95→  2915→                    <span id="fps-sens-label" className="text-[12px] font-bold">
+    96→  2916→                      حساسیت نگاه
+    97→  2917→                    </span>
+    98→  2918→                    <Badge variant="secondary" className="text-[11px]">
+    99→  2919→                      {faNum(Math.round(sens * 100))}٪
+   100→  2920→                    </Badge>
+   101→  2921→                  </div>
+   102→  2922→                  <Slider
+   103→  2923→                    aria-labelledby="fps-sens-label"
+   104→  2924→                    min={SENS_MIN * 100}
+   105→  2925→                    max={SENS_MAX * 100}
+   106→  2926→                    step={5}
+   107→  2927→                    value={[Math.round(sens * 100)]}
+   108→  2928→                    onValueChange={(v) => setSensPref((v[0] ?? SENS_DEF * 100) / 100)}
+   109→  2929→                  />
+   110→  2930→                  <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+   111→  2931→                    سرعت چرخش با موس و کشیدن لمسی — پیش‌فرض ۱۰۰٪.
+   112→  2932→                  </p>
+   113→  2933→                </div>
+   114→  2934→                <div>
+   115→  2935→                  <div className="mb-1.5 flex items-center justify-between">
+   116→  2936→                    <span id="fps-fov-label" className="text-[12px] font-bold">
+   117→  2937→                      زاویهٔ دید (FOV)
+   118→  2938→                    </span>
+   119→  2939→                    <Badge variant="secondary" className="text-[11px]">
+   120→  2940→                      {faNum(fov)}°
+   121→  2941→                    </Badge>
+   122→  2942→                  </div>
+   123→  2943→                  <Slider
+   124→  2944→                    aria-labelledby="fps-fov-label"
+   125→  2945→                    min={FOV_MIN}
+   126→  2946→                    max={FOV_MAX}
+   127→  2947→                    step={2}
+   128→  2948→                    value={[fov]}
+   129→  2949→                    onValueChange={(v) => setFovPref(v[0] ?? FOV_DEF)}
+   130→  2950→                  />
+   131→  2951→                  <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+   132→  2952→                    عدد بالاتر = دید بازتر در میدان — حین بازی هم زنده اعمال می‌شود.
+   133→  2953→                  </p>
+   134→  2954→                </div>
+   135→  2955→                <div className="flex items-center justify-between gap-3">
+   136→  2956→                  <div>
+   137→  2957→                    <p className="text-[12px] font-bold">وارون‌سازی عمودی</p>
+   138→  2958→                    <p className="text-[10px] leading-4 text-muted-foreground">
+   139→  2959→                      عادت بازیکنان کنسول — بالا کشیدن، نگاه به پایین.
+   140→  2960→                    </p>
+   141→  2961→                  </div>
+   142→  2962→                  <Switch checked={invertY} onCheckedChange={setInvertPref} aria-label="وارون‌سازی عمودی نگاه" />
+   143→  2963→                </div>
+   144→  2964→              </div>
+   145→  2965→            </div>
+   146→  2966→
+   147→  2967→            {!poolOk && (
+   148→  2968→              <div className="rounded-xl border border-destructive/30 bg-destructive/8 p-3 text-[11px] leading-5 text-destructive">
+   149→  2969→                {mode === "word-hunt"
+   150→  2970→                  ? `برای این انتخاب دست‌کم ${faNum(MIN_POOL_WORD)} واژه لازم است — درس دیگری یا «کل کتاب» را انتخاب کن.`
+   151→  2971→                  : `برای این انتخاب دست‌کم ${faNum(MIN_POOL_QUIZ)} سؤال لازم است — محدودهٔ دیگری را انتخاب کن.`}
+   152→  2972→              </div>
+   153→  2973→            )}
+   154→  2974→
+   155→  2975→            {/* فاز F8 — هدف‌های هوشمند: فرار، موج، طلایی */}
+   156→  2976→            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   157→  2977→              <Zap size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   158→  2978→              <p>
+   159→  2979→                میدان هوشمند شد: <b>هدف‌های غلط</b> وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر
+   160→  2980→                نزدیک شو! هر <b>۵ پاسخ</b> یک موج سخت‌تر با هدف‌های سریع‌تر شروع می‌شود (تا موج ۶) و هر از گاهی
+   161→  2981→                <b>هدف طلایی</b> ۳ثانیه‌ای ظاهر می‌شود: شکارش ۲۰ امتیاز بونوس دارد و قلب نمی‌سوزاند.
+   162→  2982→              </p>
+   163→  2983→            </div>
+   164→  2984→
+   165→  2985→            {bestVal !== null && (
+   166→  2986→              <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   167→  2987→                <Trophy size={12} />
+   168→  2988→                بهترین امتیاز ({modeName(mode)}{tapMode ? " · تپ ساده" : ""}): {faNum(bestVal)}
+   169→  2989→              </Badge>
+   170→  2990→            )}
+   171→  2991→
+   172→  2992→            <Button size="lg" className="h-12 w-full gap-2 text-base" disabled={!poolOk} onClick={start}>
+   173→  2993→              <Play size={18} />
+   174→  2994→              شروع مأموریت
+   175→  2995→            </Button>
+   176→  2996→          </CardContent>
+   177→  2997→        </Card>
+   178→  2998→        {/* فاز G2-e — آموزش یک‌بارنمایش در اولین ورود */}
+   179→  2999→        <TutorialOverlay
+   180→  3000→          game={GAME_KEY}
+   181→  3001→          steps={TUTORIAL_STEPS}
+   182→  3002→          open={tutorialOpen}
+   183→  3003→          onOpenChange={handleTutorialOpenChange}
+   184→  3004→        />
+   185→  3005→      </>
+   186→  3006→    );
+   187→  3007→  }
+   188→  3008→
+   189→  3009→  // ── Done — فاز G2-e: صفحهٔ نتیجهٔ استاندارد کیت ──
+   190→  3010→  if (phase === "done") {
+   191→  3011→    // ستاره‌بندی per-game این بازی (طبق تسک): دقت ≥۹۰ → ۳ / ≥۷۰ → ۲ / بقیه ۱
+   192→  3012→    const shots = correctCount + wrongCount;
+   193→  3013→    const acc = shots > 0 ? Math.round((correctCount / shots) * 100) : 0;
+   194→  3014→    const stars = acc >= 90 ? 3 : acc >= 70 ? 2 : 1;
+   195→  3015→    return (
+   196→  3016→      <ResultScreen
+   197→  3017→        title="مأموریت تمام شد!"
+   198→  3018→        stars={stars}
+   199→  3019→        isRecord={isRecord}
+   200→  3020→        errorCount={wrongList.length}
+   201→  3021→        reviewItems={wrongList.map((w) => ({ front: w.label, back: w.sub ?? "" }))}
+   202→  3022→        stats={[
+   203→  3023→          {
+   204→  3024→            label: "امتیاز",
+   205→  3025→            value: faNum(finalScore),
+   206→  3026→            icon: <Star size={16} className="text-amber-500" />,
+   207→  3027→          },
+   208→  3028→          {
+   209→  3029→            label: "دقت",
+   210→  3030→            value: `${faNum(acc)}٪`,
+   211→  3031→            icon: <TargetIcon size={16} className="text-emerald-500" />,
+   212→  3032→          },
+   213→  3033→          {
+   214→  3034→            label: "زمان",
+   215→  3035→            value: fmtTime(elapsed),
+   216→  3036→            icon: <Timer size={16} className="text-teal-500" />,
+   217→  3037→          },
+   218→  3038→        ]}
+   219→  3039→        onReplay={start}
+   220→  3040→        onExit={() => setPhase("setup")}
+   221→  3041→        exitLabel="تنظیمات"
+   222→  3042→      />
+   223→  3043→    );
+   224→  3044→  }
+   225→  3045→
+   226→  3046→  // ── Playing — فاز G2-e: شِل استاندارد کیت + فریز حلقهٔ R3F حین توقف ──
+   227→  3047→  const qTime = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
+   228→  3048→  const timePct = Math.max(0, Math.min(100, (timeLeft / qTime) * 100));
+   229→  3049→  const qualityLow = quality === "low";
+   230→  3050→  // فاز F6 — پالت نقشهٔ فعال + فاز F7 — ترتیب بودجهٔ عناصر محیطی
+   231→  3051→  const activeMap = MAPS[mapId];
+   232→  3052→  const envTier: 0 | 1 | 2 = qualityLow ? 0 : weak ? 1 : 2;
+   233→  3053→  return (
+   234→  3054→    <>
+   235→  3055→      <GameShell
+   236→  3056→        title="شوتر آموزشی"
+   237→  3057→        icon={<Crosshair size={18} />}
+   238→  3058→        stats={
+   239→  3059→          <>
+   240→  3060→            <Badge key={score} variant="secondary" className="match-pop gap-1.5 px-2.5 py-1 text-[13px] font-black">
+   241→  3061→              <Star size={13} className="text-amber-500" />
+   242→  3062→              {faNum(score)}
+   243→  3063→            </Badge>
+   244→  3064→            {combo >= 2 ? (
+   245→  3065→              <Badge
+   246→  3066→                key={combo}
+   247→  3067→                variant="outline"
+   248→  3068→                className={cn(
+   249→  3069→                  "gap-1.5 border-amber-500/50 bg-amber-500/10 px-2.5 py-1 text-[13px] font-black text-amber-600 dark:text-amber-400",
+   250→  3070→                  // فاز G2-e — افکت بصری واحد بج کمبو (کیت) + pulse ساده با گارد reduced-motion
+   251→  3071→                  COMBO_FIRE_CLASS,
+   252→  3072→                  "animate-pulse motion-reduce:animate-none",
+   253→  3073→                )}
+   254→  3074→              >
+   255→  3075→                <Flame size={13} />
+   256→  3076→                ×{faNum(combo)}
+   257→  3077→              </Badge>
+   258→  3078→            ) : (
+   259→  3079→              <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px] text-muted-foreground">
+   260→  3080→                <Zap size={12} />
+   261→  3081→                کمبو ×۱
+   262→  3082→              </Badge>
+   263→  3083→            )}
+   264→  3084→            {/* فاز F4 — شمارندهٔ خشاب در هدر شِل (بیرون قاب — در تمام‌صفحه چیپ داخل قاب دیده می‌شود) */}
+   265→  3085→            {/* فاز F8 — شمارهٔ موج جاری */}
+   266→  3086→            <Badge
+   267→  3087→              variant="outline"
+   268→  3088→              className="gap-1 border-teal-500/40 px-2 py-1 text-[11px] font-black text-teal-600 dark:text-teal-400"
+   269→  3089→            >
+   270→  3090→              <Zap size={11} />
+   271→  3091→              موج {faNum(wave)}
+   272→  3092→            </Badge>
+   273→  3093→            {!tapMode && (
+   274→  3094→              <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px]">
+   275→  3095→                {reloading ? (
+   276→  3096→                  <>
+   277→  3097→                    <RotateCcw size={12} className="animate-spin motion-reduce:animate-none" />
+   278→  3098→                    ریلود…
+   279→  3099→                  </>
+   280→  3100→                ) : (
+   281→  3101→                  <>
+   282→  3102→                    <Crosshair size={12} className={ammo <= 2 ? "text-red-500" : "text-amber-500"} />
+   283→  3103→                    {faNum(ammo)}/{faNum(MAG_SIZE)}
+   284→  3104→                  </>
+   285→  3105→                )}
+   286→  3106→              </Badge>
+   287→  3107→            )}
+   288→  3108→            <span
+   289→  3109→              role="img"
+   290→  3110→              aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`}
+   291→  3111→              className="flex items-center gap-1"
+   292→  3112→            >
+   293→  3113→              {Array.from({ length: HEARTS }, (_, i) => (
+   294→  3114→                <Heart
+   295→  3115→                  key={i}
+   296→  3116→                  size={15}
+   297→  3117→                  fill={i < hearts ? "currentColor" : "none"}
+   298→  3118→                  className={i < hearts ? "text-destructive" : "text-muted-foreground/35"}
+   299→  3119→                />
+   300→  3120→              ))}
+   301→  3121→            </span>
+   302→  3122→            <span className="text-[11px] font-bold text-muted-foreground">
+   303→  3123→              ⏱ {faNum(Math.ceil(timeLeft))} ثانیه
+   304→  3124→            </span>
+   305→  3125→          </>
+   306→  3126→        }
+   307→  3127→        liveMsg={liveMsg}
+   308→  3128→        paused={paused}
+   309→  3129→        onPauseToggle={togglePause}
+   310→  3130→        muted={muted}
+   311→  3131→        onMuteToggle={() => setMuted(toggleSoundMuted())}
+   312→  3132→        onHelp={handleHelp}
+   313→  3133→        onExit={handleExitClick}
+   314→  3134→        exitLabel="پایان دور"
+   315→  3135→      >
+   316→  3136→        <div className="relative">
+   317→  3137→          <div
+   318→  3138→            ref={wrapRef}
+   319→  3139→            role="group"
+   320→  3140→            aria-label={`میدان سه‌بعدی شوتر آموزشی — نقشهٔ ${activeMap.name}`}
+   321→  3141→            className={cn(
+   322→  3142→              "relative touch-none overflow-hidden border shadow-lg",
+   323→  3143→              // فاز F3 — تمام‌صفحه: بدون گوشهٔ گرد و ارتفاع کامل صفحه
+   324→  3144→              isFs ? "h-screen w-screen max-h-none rounded-none" : "h-[60vh] max-h-[580px] min-h-[400px] rounded-2xl",
+   325→  3145→            )}
+   326→  3146→            // فاز F6 — بدنهٔ قاب هم‌رنگ نقشه (قبل از بوت WebGL هم درست دیده می‌شود)
+   327→  3147→            style={{ backgroundColor: activeMap.bg }}
+   328→  3148→          >
+   329→  3149→            <Canvas
+   330→  3150→              // فاز G2-e — فریز واقعی حلقهٔ R3F حین توقف: frameloop "never" معادل
+   331→  3151→              // cancelAnimationFrame و بازگشت به "always" معادل resumeLoop الگوی flappy است.
+   332→  3152→              frameloop={paused ? "never" : "always"}
+   333→  3153→              // فاز G2-e — کیفیت سبک: dpr پایین‌تر؛ عادی: رفتار فعلی (با ملاحظهٔ دستگاه ضعیف)
+   334→  3154→              dpr={qualityLow ? [0.7, 1] : weak ? [1, 1] : [1, 1.75]}
+   335→  3155→              camera={{ fov: FOV_DEF, near: 0.1, far: 60, position: [0, 1.7, 7] }}
+   336→  3156→              gl={{ antialias: qualityLow ? false : !weak, powerPreference: "high-performance" }}
+   337→  3157→              // سایه‌ها در هر دو کیفیت off — سبک همیشه و عادی همان رفتار فعلی صحنه (سقف draw-call)
+   338→  3158→              shadows={false}
+   339→  3159→            >
+   340→  3160→              {/* فاز F5 — زاویهٔ دید زنده از گزینه‌ها */}
+   341→  3161→              <FovTune fov={fov} />
+   342→  3162→              <Rig bridge={bridge} />
+   343→  3163→              <Arena map={activeMap} deco={qualityLow ? DECO_LOW : weak ? 8 : 14} tier={envTier} />
+   344→  3164→              {q?.targets.map((t) => (
+   345→  3165→                <Target key={`q${q.seq}-${t.id}`} spec={t} registry={meshRegistry} bridge={bridge} />
+   346→  3166→              ))}
+   347→  3167→              {/* فاز F8 — هدف طلایی بونوس */}
+   348→  3168→              {goldenActive && goldenSpec && (
+   349→  3169→                <GoldenTarget spec={goldenSpec} untilRef={goldenUntilRef} registry={meshRegistry} bridge={bridge} />
+   350→  3170→              )}
+   351→  3171→              <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
+   352→  3172→              <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
+   353→  3173→              {/* فاز F3 — تفنگ سه‌بعدی ویومدل چسبیده به دوربین */}
+   354→  3174→              <ViewModel bridge={bridge} />
+   355→  3175→            </Canvas>
+   356→  3176→
+   357→  3177→            {/* فاز F3 — نوار وضعیت فشرده حین تمام‌صفحه (هدر شِل بیرون قاب است) */}
+   358→  3178→            {isFs && (
+   359→  3179→              <div className="pointer-events-none absolute start-3 top-3 z-20 flex items-center gap-2 rounded-full bg-black/45 px-3 py-1.5 text-[12px] font-bold text-white backdrop-blur">
+   360→  3180→                <Star size={13} className="text-amber-400" />
+   361→  3181→                {faNum(score)}
+   362→  3182→                {combo >= 2 && (
+   363→  3183→                  <span className="flex items-center gap-1 text-amber-300">
+   364→  3184→                    <Flame size={12} />
+   365→  3185→                    ×{faNum(combo)}
+   366→  3186→                  </span>
+   367→  3187→                )}
+   368→  3188→                <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
+   369→  3189→                <span role="img" aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`} className="flex items-center gap-0.5">
+   370→  3190→                  {Array.from({ length: HEARTS }, (_, i) => (
+   371→  3191→                    <Heart
+   372→  3192→                      key={i}
+   373→  3193→                      size={12}
+   374→  3194→                      fill={i < hearts ? "currentColor" : "none"}
+   375→  3195→                      className={i < hearts ? "text-red-400" : "text-white/35"}
+   376→  3196→                    />
+   377→  3197→                  ))}
+   378→  3198→                </span>
+   379→  3199→                <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
+   380→  3200→                <span>⏱ {faNum(Math.ceil(timeLeft))}</span>
+   381→  3201→                <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
+   382→  3202→                <span className="text-teal-300">موج {faNum(wave)}</span>
+   383→  3203→                {goldenActive && <span className="text-amber-300">★ {faNum(goldenLeft)}</span>}
+   384→  3204→              </div>
+   385→  3205→            )}
+   386→  3206→
+   387→  3207→            {/* فاز F3 — کنترل‌های شناور حین تمام‌صفحه (هدر شِل در دسترس نیست) */}
+   388→  3208→            {isFs && (
+   389→  3209→              <div data-fps-hud className="absolute end-3 top-3 z-20 flex gap-2">
+   390→  3210→                <button
+   391→  3211→                  type="button"
+   392→  3212→                  onClick={togglePause}
+   393→  3213→                  aria-label={paused ? "ادامهٔ بازی" : "توقف بازی"}
+   394→  3214→                  className="flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/65"
+   395→  3215→                >
+   396→  3216→                  {paused ? <Play size={16} /> : <Pause size={16} />}
+   397→  3217→                </button>
+   398→  3218→                <button
+   399→  3219→                  type="button"
+   400→  3220→                  onClick={exitFullscreen}
+   401→  3221→                  aria-label="خروج از تمام‌صفحه"
+   402→  3222→                  className="flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/65"
+   403→  3223→                >
+   404→  3224→                  <Minimize2 size={15} />
+   405→  3225→                </button>
+   406→  3226→              </div>
+   407→  3227→            )}
+   408→  3228→
+   409→  3229→            {/* فاز F4 — کنترل‌های لمسی موبایل: جوی‌استیک چپ + دکمهٔ شلیک راست (خارج از تپ ساده) */}
+   410→  3230→            {!tapMode && isCoarse && (
+   411→  3231→              <>
+   412→  3232→                <TouchJoystick bridge={bridge} />
+   413→  3233→                <button
+   414→  3234→                  type="button"
+   415→  3235→                  data-fps-hud
+   416→  3236→                  aria-label={reloading ? "در حال ریلود خشاب" : `شلیک از رتیکل — ${faNum(ammo)} فشنگ مانده`}
+   417→  3237→                  onPointerDown={() => shootAtRef.current(0, 0)}
+   418→  3238→                  className={cn(
+   419→  3239→                    "pointer-events-auto absolute bottom-5 right-4 z-20 flex h-20 w-20 touch-none select-none flex-col items-center justify-center gap-0.5 rounded-full border-2 backdrop-blur transition active:scale-95",
+   420→  3240→                    reloading
+   421→  3241→                      ? "border-amber-300/60 bg-black/55 text-amber-200"
+   422→  3242→                      : "border-white/30 bg-black/40 text-white",
+   423→  3243→                  )}
+   424→  3244→                >
+   425→  3245→                  {reloading ? (
+   426→  3246→                    <RotateCcw size={24} className="animate-spin motion-reduce:animate-none" />
+   427→  3247→                  ) : (
+   428→  3248→                    <Crosshair size={26} />
+   429→  3249→                  )}
+   430→  3250→                  <span className="text-[10px] font-black" aria-hidden>
+   431→  3251→                    {reloading ? "ریلود…" : `${faNum(ammo)} / ${faNum(MAG_SIZE)}`}
+   432→  3252→                  </span>
+   433→  3253→                </button>
+   434→  3254→              </>
+   435→  3255→            )}
+   436→  3256→
+   437→  3257→            {/* فاز F4 — شمارندهٔ مهمات دسکتاپ (گوشهٔ پایین) */}
+   438→  3258→            {!tapMode && !isCoarse && (
+   439→  3259→              <div
+   440→  3260→                aria-hidden
+   441→  3261→                className="pointer-events-none absolute bottom-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1.5 text-[11px] font-black text-white backdrop-blur"
+   442→  3262→              >
+   443→  3263→                {reloading ? (
+   444→  3264→                  <>
+   445→  3265→                    <RotateCcw size={12} className="animate-spin motion-reduce:animate-none" />
+   446→  3266→                    ریلود…
+   447→  3267→                  </>
+   448→  3268→                ) : (
+   449→  3269→                  <>
+   450→  3270→                    <Crosshair size={12} className={ammo <= 2 ? "text-red-300" : "text-amber-300"} />
+   451→  3271→                    {faNum(ammo)} / {faNum(MAG_SIZE)}
+   452→  3272→                  </>
+   453→  3273→                )}
+   454→  3274→              </div>
+   455→  3275→            )}
+   456→  3276→
+   457→  3277→            {/* سؤال — HUD بالای میدان */}
+   458→  3278→            {q && (
+   459→  3279→              <div className={cn("pointer-events-none absolute inset-x-3 z-10", isFs ? "top-16" : "top-3")}>
+   460→  3280→                <div className="mx-auto max-w-lg rounded-2xl border bg-background/85 p-3 text-center shadow-lg backdrop-blur">
+   461→  3281→                  <p className="text-[10px] font-bold text-muted-foreground">{q.promptFa}</p>
+   462→  3282→                  <p
+   463→  3283→                    dir={q.ltr ? "ltr" : "rtl"}
+   464→  3284→                    className={cn(
+   465→  3285→                      "mt-1 font-black leading-6",
+   466→  3286→                      q.ltr ? "font-en text-[15px]" : "text-[17px]",
+   467→  3287→                    )}
+   468→  3288→                  >
+   469→  3289→                    {q.promptMain}
+   470→  3290→                  </p>
+   471→  3291→                  {q.promptSub && <p className="mt-0.5 text-[10px] text-muted-foreground">{q.promptSub}</p>}
+   472→  3292→                  {/* نوار زمان */}
+   473→  3293→                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
+   474→  3294→                    <div
+   475→  3295→                      className={cn(
+   476→  3296→                        "h-full rounded-full transition-[width] duration-200",
+   477→  3297→                        timePct > 50 ? "bg-emerald-500" : timePct > 25 ? "bg-amber-500" : "bg-red-500",
+   478→  3298→                      )}
+   479→  3299→                      style={{ width: `${timePct}%` }}
+   480→  3300→                    />
+   481→  3301→                  </div>
+   482→  3302→                  {/* فاز F8 — شمارندهٔ فرصت هدف طلایی */}
+   483→  3303→                  {goldenActive && (
+   484→  3304→                    <div className="mt-2 flex items-center justify-center gap-1.5 rounded-full border border-amber-400/50 bg-amber-500/15 px-3 py-1 text-[11px] font-black text-amber-600 dark:text-amber-400">
+   485→  3305→                      <Sparkles size={12} className="text-amber-500" />
+   486→  3306→                      هدف طلایی! +{faNum(GOLDEN_BONUS)} — {faNum(goldenLeft)} ثانیه
+   487→  3307→                    </div>
+   488→  3308→                  )}
+   489→  3309→                </div>
+   490→  3310→              </div>
+   491→  3311→            )}
+   492→  3312→
+   493→  3313→            {/* رتیکل — فقط در حالت شلیک دسکتاپ/لمس‌ندار */}
+   494→  3314→            {!tapMode && (
+   495→  3315→              <div
+   496→  3316→                aria-hidden
+   497→  3317→                className={cn(
+   498→  3318→                  "pointer-events-none absolute start-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transition-opacity",
+   499→  3319→                  locked ? "opacity-100" : isCoarse ? "opacity-0" : "opacity-60",
+   500→  3320→                )}
+   501→  3321→              >
+   502→  3322→                <span className="relative block h-7 w-7">
+   503→  3323→                  <span className="absolute inset-0 rounded-full border-2 border-white/80 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+   504→  3324→                  <span className="absolute start-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400" />
+   505→  3325→                </span>
+   506→  3326→              </div>
+   507→  3327→            )}
+   508→  3328→
+   509→  3329→            {/* راهنمای کنترل */}
+   510→  3330→            <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 text-center">
+   511→  3331→              <span className="rounded-full bg-black/45 px-3 py-1 text-[10px] text-white/90 backdrop-blur">
+   512→  3332→                {tapMode
+   513→  3333→                  ? isCoarse
+   514→  3334→                    ? "تپ روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
+   515→  3335→                    : "کلیک روی هدف = انتخاب پاسخ · کلیدهای ۱ تا ۴ هم کار می‌کنند"
+   516→  3336→                  : isCoarse
+   517→  3337→                    ? "جوی‌استیک چپ = حرکت · کشیدن صحنه = نگاه · دکمهٔ راست یا تپ روی هدف = شلیک"
+   518→  3338→                    : locked
+   519→  3339→                      ? "حرکت موس = نشانه‌گیری · WASD = حرکت · کلیک = شلیک · R = ریلود"
+   520→  3340→                      : "کلیک در صحنه = نشانه‌گیری + تمام‌صفحه"}
+   521→  3341→              </span>
+   522→  3342→            </div>
+   523→  3343→
+   524→  3344→            {/* فاز G2-e/F3 — اورلی توقف داخل قاب (در تمام‌صفحه هم دیده می‌شود؛ صحنهٔ فریز پشت آن) */}
+   525→  3345→            {paused && (
+   526→  3346→              <>
+   527→  3347→                <div aria-hidden className="absolute inset-0 z-20 bg-background/70 backdrop-blur-sm" />
+   528→  3348→                <div data-fps-hud className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3 overflow-y-auto p-4">
+   529→  3349→                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+   530→  3350→                    <Pause size={26} />
+   531→  3351→                  </span>
+   532→  3352→                  <p className="text-sm font-black">بازی متوقف شد</p>
+   533→  3353→                  <Button onClick={resume} className="h-11 gap-2">
+   534→  3354→                    <Play size={16} />
+   535→  3355→                    ادامهٔ بازی
+   536→  3356→                  </Button>
+   537→  3357→                  {/* فاز F5 — تنظیمات سریع حین توقف: بدون خروج از دور */}
+   538→  3358→                  <div className="w-full max-w-xs rounded-2xl border bg-background/90 p-3.5 shadow-lg backdrop-blur">
+   539→  3359→                    <p className="mb-2.5 flex items-center gap-1.5 text-[12px] font-black">
+   540→  3360→                      <SlidersHorizontal size={13} className="text-emerald-500" />
+   541→  3361→                      تنظیمات سریع نگاه
+   542→  3362→                    </p>
+   543→  3363→                    <div className="space-y-3">
+   544→  3364→                      <div>
+   545→  3365→                        <div className="mb-1 flex items-center justify-between text-[11px]">
+   546→  3366→                          <span className="font-bold">حساسیت نگاه</span>
+   547→  3367→                          <span className="text-muted-foreground">{faNum(Math.round(sens * 100))}٪</span>
+   548→  3368→                        </div>
+   549→  3369→                        <Slider
+   550→  3370→                          min={SENS_MIN * 100}
+   551→  3371→                          max={SENS_MAX * 100}
+   552→  3372→                          step={5}
+   553→  3373→                          value={[Math.round(sens * 100)]}
+   554→  3374→                          onValueChange={(v) => setSensPref((v[0] ?? SENS_DEF * 100) / 100)}
+   555→  3375→                          aria-label="حساسیت نگاه"
+   556→  3376→                        />
+   557→  3377→                      </div>
+   558→  3378→                      <div className="flex items-center justify-between gap-3">
+   559→  3379→                        <span className="text-[11px] font-bold">وارون‌سازی عمودی</span>
+   560→  3380→                        <Switch checked={invertY} onCheckedChange={setInvertPref} aria-label="وارون‌سازی عمودی نگاه" />
+   561→  3381→                      </div>
+   562→  3382→                    </div>
+   563→  3383→                  </div>
+   564→  3384→                </div>
+   565→  3385→              </>
+   566→  3386→            )}
+   567→  3387→          </div>
+   568→  3388→        </div>
+   569→  3389→
+   570→  3390→        <p className="text-center text-[11px] leading-5 text-muted-foreground">
+   571→  3391→          شلیک درست +{faNum(SHOOT_BASE)} امتیاز و هر حلقهٔ کمبو +{faNum(COMBO_STEP)}تا سقف ×{faNum(COMBO_CAP + 1)} —
+   572→  3392→          پاسخ‌های غلط به صف «مرور هوشمند» هم می‌روند.
+   573→  3393→        </p>
+   574→  3394→      </GameShell>
+   575→  3395→      {/* فاز G2-e — راهنمای دکمهٔ شِل (حین صحنه با توقف باز می‌شود) */}
+   576→  3396→      <TutorialOverlay
+   577→  3397→        game={GAME_KEY}
+   578→  3398→        steps={TUTORIAL_STEPS}
+   579→  3399→        open={tutorialOpen}
+   580→  3400→        onOpenChange={handleTutorialOpenChange}
+   581→  3401→      />
+   582→  3402→      {/* فاز G2-e — نگهبان خروج استاندارد کیت (حین دور با پیشرفت) */}
+   583→  3403→      <GameExitGuard
+   584→  3404→        open={exitAsk}
+   585→  3405→        onOpenChange={(o) => {
+   586→  3406→          setExitAskSafe(o);
+   587→  3407→          // انصراف از خروج (Esc/کلیک بیرون/«نه») → صحنه از همان‌جا ادامه یابد
+   588→  3408→          if (!o) resume();
+   589→  3409→        }}
+   590→  3410→        onConfirm={() => {
+   591→  3411→          // فاز G2-e — رهاکردن دور نیمه‌کاره + تله‌متری
+   592→  3412→          sessionRef.current?.abandon("exit");
+   593→  3413→          stopSpeaking();
+   594→  3414→          overRef.current = true;
+   595→  3415→          clearTimers();
+   596→  3416→          setExitAskSafe(false);
+   597→  3417→          resume();
+   598→  3418→          setPhase("setup");
+   599→  3419→        }}
+   600→  3420→      />
+   601→  3421→    </>
+   602→  3422→  );
+   603→  3423→}
+   604→  3424→
