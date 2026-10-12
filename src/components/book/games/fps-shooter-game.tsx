@@ -38,6 +38,18 @@
  *   abandon("exit")) + ResultScreen استاندارد (ستارهٔ per-game: دقت ≥۹۰→۳ / ≥۷۰→۲ / بقیه ۱)
  *   + آموزش ۳گامی (هدف / نشانه‌گیری-شلیک / کیفیت گرافیک) با useAutoTutorial و راهنمای
  *   حین صحنه با توقف (pausedForHelpRef) + تله‌متری جلسه (level = حالت+کیفیت مثل word-tap:low).
+ *
+ * فاز F3 — تحول FPS (نقشه راه شوتر ۲۰۲۶):
+ * - تمام‌صفحهٔ خودکار: کلیک «شروع مأموریت» (و «دوباره») صحنه را Fullscreen می‌کند (Esc =
+ *   خروج؛ سینک با fullscreenchange) و نوار امتیاز/کمبو/قلب/زمان فشرده داخل قاب می‌آید
+ *   چون هدر شِل بیرون قاب تمام‌صفحه است + دکمه‌های شناور توقف/خروج تمام‌صفحه (data-fps-hud
+ *   تا شلیک حساب نشوند).
+ * - تفنگ سه‌بعدی ویومدل: گروه low-poly چسبیده به دوربین (فرزند camera) با sway تنفسی،
+ *   باب گام‌برداشتن، لگدِ recoil از رویداد شلیک (seq بریج) و جرقهٔ دهانه + نور نقطه‌ای.
+ * - حرکت اول‌شخص WASD/جهت‌نما (e.code — مستقل از layout فارسی) با سرعت ثابت، باب سر و
+ *   محدودهٔ امن میدان؛ جهت نسبت به yaw نگاه.
+ * - چیدمان «جستوجو کن، پیدا کن، شلیک کن»: لِین‌ها عریض‌تر (±۶٫۸) و عمق پخش‌تر — پیدا
+ *   کردن گزینهٔ درست چرخاندن و جابه‌جایی می‌خواهد.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -47,6 +59,7 @@ import {
   Crosshair,
   Flame,
   Heart,
+  Minimize2,
   MonitorSmartphone,
   MousePointerClick,
   Pause,
@@ -101,8 +114,8 @@ import { useCombo, COMBO_FIRE_CLASS } from "./kit/combo-engine";
 const GAME_KEY = "fps-shooter";
 const ALL_LESSONS = -1;
 const HEARTS = 3;
-/** خط عمودی لِین‌ها (عرض صحنه) — در پرتره با laneK جمع می‌شود */
-const LANE_X = [-5.4, -1.85, 1.85, 5.4];
+/** خط عمودی لِین‌ها (عرض صحنه) — فاز F3: عریض‌تر برای حس «جستوجو» — در پرتره با laneK جمع می‌شود */
+const LANE_X = [-6.8, -2.25, 2.25, 6.8];
 const TARGET_R = 0.85;
 const SHOOT_BASE = 10;
 const COMBO_STEP = 2;
@@ -113,6 +126,26 @@ const HIT_FREEZE_MS = 750;
 const SHOOT_COOLDOWN = 550;
 const Q_TIME_SHOOT = 12;
 const Q_TIME_TAP = 15;
+
+// ── فاز F3 — حرکت اول‌شخص + تمام‌صفحه ──
+/** سرعت گام بازیکن (متر بر ثانیه) */
+const MOVE_SPEED = 2.3;
+/** محدودهٔ امن حرکت جانبی (چپ/راست) */
+const MOVE_X_LIM = 5.2;
+/** محدودهٔ حرکت عمقی — آفست نسبت به پایهٔ دوربین */
+const MOVE_Z_MIN = -3.4;
+const MOVE_Z_MAX = 2.0;
+/** نگاشت e.code → جهت (مستقل از layout فارسی/انگلیسی) */
+const KEY_MOVE: Record<string, "w" | "a" | "s" | "d"> = {
+  KeyW: "w",
+  ArrowUp: "w",
+  KeyS: "s",
+  ArrowDown: "s",
+  KeyA: "a",
+  ArrowLeft: "a",
+  KeyD: "d",
+  ArrowRight: "d",
+};
 const MIN_POOL_WORD = 4;
 const MIN_POOL_QUIZ = 3;
 const BURST_FULL = 36;
@@ -189,6 +222,12 @@ interface FlashEntry {
 
 interface SceneBridge {
   aim: { yaw: number; pitch: number };
+  /** فاز F3 — آفست موقعیت بازیکن نسبت به پایه (متر) */
+  pos: { x: number; z: number };
+  /** فاز F3 — کلیدهای حرکت فشرده‌شده */
+  keys: Set<string>;
+  /** فاز F3 — در حال گام برداشتن؟ (برای باب سلاح) */
+  moveMag: number;
   shoot: { x: number; y: number; seq: number };
   lastShotAt: number;
   laneK: number;
@@ -216,7 +255,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   {
     icon: <MousePointerClick size={24} />,
     title: "نشانه‌گیری و شلیک",
-    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری و کلیک بعدی شلیک — موبایل: کشیدن = نگاه و تپ روی هدف = شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند.",
+    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — موبایل: کشیدن = نگاه و تپ روی هدف = شلیک. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
   },
   {
     icon: <MonitorSmartphone size={24} />,
@@ -254,6 +293,15 @@ function fmtTime(s: number): string {
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
+}
+
+/** فاز F3 — خروج امن از تمام‌صفحه (کمکی ماژول‌سطح — قبل از دیالوگ‌های portal-body هم لازم است) */
+function dropFullscreen(): void {
+  try {
+    if (document.fullscreenElement) void document.exitFullscreen();
+  } catch {
+    /* noop */
+  }
 }
 
 /** مسیر مستطیل گرد (سازگار با همهٔ مرورگرها) */
@@ -317,7 +365,7 @@ function layoutTargets(
     correct: o.correct,
     lane: LANE_X[lanes[i]],
     baseY: 1.35 + (i % 2) * 0.85 + Math.random() * 0.35,
-    baseZ: -(7.5 + Math.floor(i / 2) * 3.1) - Math.random() * 1.4,
+    baseZ: -(5.5 + Math.floor(i / 2) * 3.4) - Math.random() * 2.6,
     spin: 0.5 + Math.random() * 0.7,
     bobSpeed: 0.8 + Math.random() * 0.7,
     driftAmp: 0.5 + Math.random() * 0.8,
@@ -376,10 +424,38 @@ function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: number, 
 
 // ─── اجزای صحنهٔ سه‌بعدی ───
 
-/** به‌روزرسانی دوربین اول‌شخص — تابع ماژول‌سطح (جهش THREE فقط از اینجا) */
-function applyRig(cam: THREE.Camera, b: SceneBridge, aspect: number): void {
+/** فاز F3 — انتگرال حرکت بازیکن از کلیدهای فشرده‌شده (جهش bridge فقط داخل توابع ماژول) */
+function stepPlayer(b: SceneBridge, dt: number): boolean {
+  let mx = 0;
+  let mz = 0;
+  if (b.keys.has("w")) mz += 1;
+  if (b.keys.has("s")) mz -= 1;
+  if (b.keys.has("d")) mx += 1;
+  if (b.keys.has("a")) mx -= 1;
+  const moving = mx !== 0 || mz !== 0;
+  if (moving) {
+    const yaw = b.aim.yaw;
+    const sin = Math.sin(yaw);
+    const cos = Math.cos(yaw);
+    // جلو = −z محلی؛ راست = +x محلی — بدون pitch (گام زمینی)
+    const vx = -sin * mz + cos * mx;
+    const vz = -cos * mz - sin * mx;
+    const len = Math.hypot(vx, vz) || 1;
+    const sp = MOVE_SPEED * dt;
+    b.pos.x = clamp(b.pos.x + (vx / len) * sp, -MOVE_X_LIM, MOVE_X_LIM);
+    b.pos.z = clamp(b.pos.z + (vz / len) * sp, MOVE_Z_MIN, MOVE_Z_MAX);
+  }
+  b.moveMag = moving ? 1 : 0;
+  return moving;
+}
+
+/** به‌روزرسانی ترنسفورم دوربین اول‌شخص — تابع ماژول‌سطح (جهش THREE فقط از اینجا) */
+function applyRig(cam: THREE.Camera, b: SceneBridge, aspect: number, bobY: number): void {
   b.laneK = Math.max(0.55, Math.min(1, aspect / 1.5));
-  cam.position.z = 7 + (1 - b.laneK) * 4.2;
+  const baseZ = 7 + (1 - b.laneK) * 4.2;
+  cam.position.x = b.pos.x;
+  cam.position.z = baseZ + b.pos.z;
+  cam.position.y = 1.7 + bobY;
   cam.rotation.y = b.aim.yaw;
   cam.rotation.x = b.aim.pitch;
 }
@@ -390,16 +466,102 @@ function initRig(cam: THREE.Camera): void {
   cam.rotation.order = "YXZ";
 }
 
-/** دوربین اول‌شخص — چرخش از bridge + تطبیق عرض صحنه در پرتره */
+/** دوربین اول‌شخص — چرخش + حرکت WASD (فاز F3) + باب سر + تطبیق عرض صحنه در پرتره */
 function Rig({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
   const { camera, size } = useThree();
+  const bobT = useRef(0);
   useEffect(() => {
     initRig(camera);
   }, [camera]);
-  useFrame(() => {
-    applyRig(camera, bridge.current, size.width / Math.max(1, size.height));
+  useFrame((_state, delta) => {
+    const dt = Math.min(delta, 0.05); // سقف delta — پرش برگشت به تب
+    const moving = stepPlayer(bridge.current, dt);
+    bobT.current += dt * (moving ? 8.5 : 2.2);
+    const bobY = Math.sin(bobT.current) * (moving ? 0.042 : 0.012);
+    applyRig(camera, bridge.current, size.width / Math.max(1, size.height), bobY);
   });
   return null;
+}
+
+/** فاز F3 — تفنگ سه‌بعدی ویومدل: همگام با دوربین؛ sway تنفسی + باب گام + recoil شلیک + جرقهٔ دهانه */
+function ViewModel({ bridge }: { bridge: React.RefObject<SceneBridge> }) {
+  const gRef = useRef<THREE.Group>(null);
+  const flashRef = useRef<THREE.Mesh>(null);
+  const lightRef = useRef<THREE.PointLight>(null);
+  const recoil = useRef(0);
+  const lastSeq = useRef(0);
+  useFrame((state, delta) => {
+    const g = gRef.current;
+    if (!g) return;
+    const b = bridge.current;
+    if (b.shoot.seq !== lastSeq.current) {
+      lastSeq.current = b.shoot.seq;
+      recoil.current = 1;
+    }
+    recoil.current = Math.max(0, recoil.current - Math.min(delta, 0.05) * 5.2);
+    const r = easeOutCubic(recoil.current);
+    const t = state.clock.elapsedTime;
+    const sway = Math.sin(t * 1.7) * 0.006 + Math.sin(t * 0.9) * 0.004;
+    const bob = b.moveMag > 0 ? Math.sin(t * 9) * 0.014 : 0;
+    // سوار بر دوربین بدون parenting (سازگار با هر scene-graph): کپی ترنسفورم + آفست فضای دوربین
+    const cam = state.camera;
+    g.position.copy(cam.position);
+    g.quaternion.copy(cam.quaternion);
+    g.translateX(0.34 - r * 0.02);
+    g.translateY(-0.3 + sway * 0.6 + bob - r * 0.05);
+    g.translateZ(-0.62 + r * 0.16);
+    g.rotateX(0.05 + r * 0.34);
+    g.rotateY(-0.07 - r * 0.05);
+    g.rotateZ(r * 0.06);
+    const f = flashRef.current;
+    const l = lightRef.current;
+    const fs = recoil.current > 0.55 ? (recoil.current - 0.55) / 0.45 : 0;
+    if (f) {
+      f.visible = fs > 0.02;
+      f.scale.setScalar(0.001 + fs * 0.55);
+      (f.material as THREE.MeshBasicMaterial).opacity = fs;
+    }
+    if (l) l.intensity = fs * 7;
+  });
+  return (
+    <group ref={gRef}>
+      {/* بدنه اصلی */}
+      <mesh position={[0, 0, 0.05]}>
+        <boxGeometry args={[0.09, 0.15, 0.5]} />
+        <meshStandardMaterial color="#1f2937" roughness={0.45} metalness={0.55} />
+      </mesh>
+      {/* لوله */}
+      <mesh position={[0, 0.035, -0.34]} rotation-x={Math.PI / 2}>
+        <cylinderGeometry args={[0.028, 0.032, 0.42, 12]} />
+        <meshStandardMaterial color="#111827" roughness={0.35} metalness={0.7} />
+      </mesh>
+      {/* دستهٔ کمک‌رنگ */}
+      <mesh position={[0, -0.13, 0.16]} rotation-x={-0.32}>
+        <boxGeometry args={[0.075, 0.2, 0.09]} />
+        <meshStandardMaterial color="#065f46" roughness={0.7} metalness={0.15} />
+      </mesh>
+      {/* خشاب */}
+      <mesh position={[0, -0.12, -0.02]} rotation-x={0.22}>
+        <boxGeometry args={[0.06, 0.16, 0.08]} />
+        <meshStandardMaterial color="#374151" roughness={0.5} metalness={0.5} />
+      </mesh>
+      {/* ریل بالا + مگسک کهربایی */}
+      <mesh position={[0, 0.085, 0.02]}>
+        <boxGeometry args={[0.05, 0.03, 0.3]} />
+        <meshStandardMaterial color="#0b1220" roughness={0.4} metalness={0.6} />
+      </mesh>
+      <mesh position={[0, 0.105, -0.18]}>
+        <boxGeometry args={[0.02, 0.045, 0.03]} />
+        <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={0.55} roughness={0.4} />
+      </mesh>
+      {/* جرقهٔ دهانه + نور لحظه‌ای شلیک */}
+      <mesh ref={flashRef} position={[0, 0.035, -0.58]} rotation-x={Math.PI / 2} visible={false}>
+        <coneGeometry args={[0.055, 0.16, 8]} />
+        <meshBasicMaterial color="#fde68a" transparent opacity={0} toneMapped={false} depthWrite={false} />
+      </mesh>
+      <pointLight ref={lightRef} position={[0, 0.06, -0.6]} color="#fbbf24" intensity={0} distance={4} decay={2} />
+    </group>
+  );
 }
 
 /** میدان low-poly: زمین، کوه‌های دوردست و اجسام شناور تزئینی — فاز G2-e: تعداد deco پارامتر شد */
@@ -711,6 +873,9 @@ export function FpsShooterGame() {
   const [locked, setLocked] = useState(false);
   // فاز G2-e — کیفیت گرافیک (ماندگار؛ پیش‌فرض عادی)
   const [quality, setQuality] = useState<Quality>(() => loadQuality());
+  // ── فاز F3 — تمام‌صفحه هنگام شروع مأموریت (Fullscreen API با فال‌بک webkit) ──
+  const [isFs, setIsFs] = useState(false);
+  const wantFsRef = useRef(false);
 
   // ── HUD حین بازی ──
   const [q, setQ] = useState<Question | null>(null);
@@ -780,6 +945,9 @@ export function FpsShooterGame() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const bridge = useRef<SceneBridge>({
     aim: { yaw: 0, pitch: 0 },
+    pos: { x: 0, z: 0 },
+    keys: new Set<string>(),
+    moveMag: 0,
     shoot: { x: 0, y: 0, seq: 0 },
     lastShotAt: 0,
     laneK: 1,
@@ -902,6 +1070,7 @@ export function FpsShooterGame() {
   } = useAutoTutorial(GAME_KEY, phase === "setup");
   const pausedForHelpRef = useRef(false);
   const handleHelp = useCallback(() => {
+    dropFullscreen(); // فاز F3 — دیالوگ portal-body در تمام‌صفحه دیده نمی‌شود؛ اول خارج شو
     if (phase === "playing") {
       pausedForHelpRef.current = true;
       pauseGame();
@@ -1045,6 +1214,7 @@ export function FpsShooterGame() {
   // با هر پیشرفت، GameExitGuard (صحنه حین دیالوگ فریز شود)؛ پیش از اولین شلیک، خروج مستقیم.
   const handleExitClick = useCallback(() => {
     if (document.pointerLockElement) document.exitPointerLock();
+    dropFullscreen(); // فاز F3 — دیالوگ خروج باید بیرون تمام‌صفحه دیده شود
     if (totalRef.current > 0 || scoreRef.current > 0) {
       pauseGame();
       setExitAskSafe(true);
@@ -1169,6 +1339,18 @@ export function FpsShooterGame() {
     const el = wrapRef.current;
     if (!el) return;
     const coarse = window.matchMedia("(pointer: coarse)").matches;
+    // فاز F3 — فال‌بک webkit برای سافاری‌های قدیمی‌تر
+    type FsEl = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
+    /** تمام‌صفحه در همان ژست کاربر (الگوی استاندارد بازی‌های FPS وب) */
+    const fsInGesture = () => {
+      if (document.fullscreenElement) return;
+      try {
+        const p = el.requestFullscreen?.() ?? (el as FsEl).webkitRequestFullscreen?.();
+        if (p && typeof (p as Promise<void>).catch === "function") (p as Promise<void>).catch(() => {});
+      } catch {
+        /* iOS iPhone عنصری fullscreen ندارد — بی‌صدا رد می‌شود */
+      }
+    };
 
     const ndcOf = (cx: number, cy: number): [number, number] => {
       const r = el.getBoundingClientRect();
@@ -1192,8 +1374,12 @@ export function FpsShooterGame() {
     const onPointerDown = (e: PointerEvent) => {
       const t = e.target as Node | null;
       if (pausedRef.current || exitAskRef.current || overRef.current || !t || !el.contains(t)) return;
+      // فاز F3 — دکمه‌های HUD داخل صحنه (توقف/خروج تمام‌صفحه/ادامه) شلیک حساب نمی‌شوند
+      if (t instanceof HTMLElement && t.closest("[data-fps-hud]")) return;
       if (!coarse && !tapRef.current) {
         if (document.pointerLockElement !== el) {
+          // فاز F3 — اولین کلیک صحنه: تمام‌صفحه + قفل نشانگر با هم (در همان ژست)
+          fsInGesture();
           try {
             const r = el.requestPointerLock() as unknown as Promise<void> | undefined;
             if (r && typeof r.catch === "function") r.catch(() => {});
@@ -1205,6 +1391,8 @@ export function FpsShooterGame() {
         request(0, 0);
         return;
       }
+      // فاز F3 — لمسی: نخستین تماس صحنه تمام‌صفحه می‌کند (اندروید/کروم)
+      fsInGesture();
       gest = { x0: e.clientX, y0: e.clientY, t0: performance.now(), moved: false, lx: e.clientX, ly: e.clientY, active: true };
     };
 
@@ -1271,6 +1459,33 @@ export function FpsShooterGame() {
     };
   }, [phase]);
 
+  // ── فاز F3 — حرکت WASD/جهت‌نما (e.code = مستقل از چیدمان کیبورد فارسی/انگلیسی) ──
+  useEffect(() => {
+    if (phase !== "playing") return;
+    const keys = bridge.current.keys;
+    const down = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+      const k = KEY_MOVE[e.code];
+      if (!k) return;
+      keys.add(k);
+    };
+    const up = (e: KeyboardEvent) => {
+      const k = KEY_MOVE[e.code];
+      if (k) keys.delete(k);
+    };
+    const clear = () => keys.clear();
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up);
+    window.addEventListener("blur", clear);
+    return () => {
+      window.removeEventListener("keydown", down);
+      window.removeEventListener("keyup", up);
+      window.removeEventListener("blur", clear);
+      keys.clear();
+    };
+  }, [phase]);
+
   // ── شروع دور ──
   const start = useCallback(() => {
     const pool: Array<VocabEntry | QuizQuestionSeed> =
@@ -1278,9 +1493,10 @@ export function FpsShooterGame() {
         ? (lesson === ALL_LESSONS ? vocabAll : vocabAll.filter((w) => w.lesson === lesson))
         : (lesson === ALL_LESSONS ? quizSeed : quizSeed.filter((s) => s.lesson === lesson));
     if (pool.length < (mode === "word-hunt" ? MIN_POOL_WORD : MIN_POOL_QUIZ)) return;
-    // فاز G2-e — بازخورد کلیک شروع دور (الگوی کیت)
+    // فاز G2-e — بازخورد کلیک شروع دور (الگوی کیت) + فاز F3 — درخواست تمام‌صفحه با ژست کاربر
     playSound("click");
     buzz("light");
+    wantFsRef.current = true;
     modeRef.current = mode;
     qTimeRef.current = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
     poolRef.current = pool;
@@ -1302,6 +1518,8 @@ export function FpsShooterGame() {
     pauseStartRef.current = 0;
     clearTimers();
     bridge.current.aim = { yaw: 0, pitch: 0 };
+    bridge.current.pos = { x: 0, z: 0 };
+    bridge.current.moveMag = 0;
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
     setScore(0);
@@ -1340,6 +1558,51 @@ export function FpsShooterGame() {
     playSound("click");
     buzz("light");
   }, []);
+
+  // ── فاز F3 — خروج دستی از تمام‌صفحه (دکمهٔ شناور داخل قاب) ──
+  const exitFullscreen = useCallback(() => {
+    dropFullscreen();
+  }, []);
+
+  // فاز F3 — درخواست تمام‌صفحه بلافاصله بعد از مونت صحنه (ژست کلیک شروع هنوز فعال است)
+  useEffect(() => {
+    if (phase !== "playing" || !wantFsRef.current) return;
+    wantFsRef.current = false;
+    const el = wrapRef.current;
+    if (!el || document.fullscreenElement) return;
+    try {
+      type FsEl = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
+      const p = el.requestFullscreen?.() ?? (el as FsEl).webkitRequestFullscreen?.();
+      if (p && typeof (p as Promise<void>).catch === "function") (p as Promise<void>).catch(() => {});
+    } catch {
+      /* iOS iPhone عنصری fullscreen ندارد — بی‌صدا رد می‌شود */
+    }
+  }, [phase]);
+
+  // فاز F3 — سینک وضعیت تمام‌صفحه (Esc کاربر) + پاک‌سازی امن هنگام unmount
+  useEffect(() => {
+    const onChange = () => setIsFs(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onChange);
+      try {
+        if (document.fullscreenElement) void document.exitFullscreen();
+      } catch {
+        /* noop */
+      }
+    };
+  }, []);
+
+  // فاز F3 — پایان دور/بازگشت به تنظیمات = خروج از تمام‌صفحه
+  useEffect(() => {
+    if (phase !== "playing" && document.fullscreenElement) {
+      try {
+        void document.exitFullscreen();
+      } catch {
+        /* noop */
+      }
+    }
+  }, [phase]);
 
   // ── رکوردهای شخصی هر دو اسکوپ ──
   const bestWord = useSyncExternalStore(
@@ -1392,7 +1655,8 @@ export function FpsShooterGame() {
               <p>
                 سؤال بالای صفحه می‌آید و روی هر هدف متحرک یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
                 شلیک درست = انفجار رنگین‌کمانی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
-                (شلیک به خالی) جریمه ندارد!
+                (شلیک به خالی) جریمه ندارد! از حالا صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان قدم
+                می‌زنی — دنبال گزینهٔ درست بگرد و بعد شلیک کن!
               </p>
             </div>
 
@@ -1678,11 +1942,10 @@ export function FpsShooterGame() {
             role="group"
             aria-label="میدان سه‌بعدی شوتر آموزشی"
             className={cn(
-              "relative h-[60vh] max-h-[580px] min-h-[400px] touch-none overflow-hidden rounded-2xl border bg-[#062e24] shadow-lg",
-              // فاز G2-e — حین توقف صحنه تار و غیرقابل‌کلیک (الگوی flappy)
-              paused && "pointer-events-none blur-sm",
+              "relative touch-none overflow-hidden border bg-[#062e24] shadow-lg",
+              // فاز F3 — تمام‌صفحه: بدون گوشهٔ گرد و ارتفاع کامل صفحه
+              isFs ? "h-screen w-screen max-h-none rounded-none" : "h-[60vh] max-h-[580px] min-h-[400px] rounded-2xl",
             )}
-            aria-hidden={paused}
           >
             <Canvas
               // فاز G2-e — فریز واقعی حلقهٔ R3F حین توقف: frameloop "never" معادل
@@ -1702,11 +1965,62 @@ export function FpsShooterGame() {
               ))}
               <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
               <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
+              {/* فاز F3 — تفنگ سه‌بعدی ویومدل چسبیده به دوربین */}
+              <ViewModel bridge={bridge} />
             </Canvas>
+
+            {/* فاز F3 — نوار وضعیت فشرده حین تمام‌صفحه (هدر شِل بیرون قاب است) */}
+            {isFs && (
+              <div className="pointer-events-none absolute start-3 top-3 z-20 flex items-center gap-2 rounded-full bg-black/45 px-3 py-1.5 text-[12px] font-bold text-white backdrop-blur">
+                <Star size={13} className="text-amber-400" />
+                {faNum(score)}
+                {combo >= 2 && (
+                  <span className="flex items-center gap-1 text-amber-300">
+                    <Flame size={12} />
+                    ×{faNum(combo)}
+                  </span>
+                )}
+                <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
+                <span role="img" aria-label={`قلب‌ها: ${faNum(hearts)} از ${faNum(HEARTS)}`} className="flex items-center gap-0.5">
+                  {Array.from({ length: HEARTS }, (_, i) => (
+                    <Heart
+                      key={i}
+                      size={12}
+                      fill={i < hearts ? "currentColor" : "none"}
+                      className={i < hearts ? "text-red-400" : "text-white/35"}
+                    />
+                  ))}
+                </span>
+                <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
+                <span>⏱ {faNum(Math.ceil(timeLeft))}</span>
+              </div>
+            )}
+
+            {/* فاز F3 — کنترل‌های شناور حین تمام‌صفحه (هدر شِل در دسترس نیست) */}
+            {isFs && (
+              <div data-fps-hud className="absolute end-3 top-3 z-20 flex gap-2">
+                <button
+                  type="button"
+                  onClick={togglePause}
+                  aria-label={paused ? "ادامهٔ بازی" : "توقف بازی"}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/65"
+                >
+                  {paused ? <Play size={16} /> : <Pause size={16} />}
+                </button>
+                <button
+                  type="button"
+                  onClick={exitFullscreen}
+                  aria-label="خروج از تمام‌صفحه"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/65"
+                >
+                  <Minimize2 size={15} />
+                </button>
+              </div>
+            )}
 
             {/* سؤال — HUD بالای میدان */}
             {q && (
-              <div className="pointer-events-none absolute inset-x-3 top-3 z-10">
+              <div className={cn("pointer-events-none absolute inset-x-3 z-10", isFs ? "top-16" : "top-3")}>
                 <div className="mx-auto max-w-lg rounded-2xl border bg-background/85 p-3 text-center shadow-lg backdrop-blur">
                   <p className="text-[10px] font-bold text-muted-foreground">{q.promptFa}</p>
                   <p
@@ -1759,25 +2073,28 @@ export function FpsShooterGame() {
                   : isCoarse
                     ? "بکش تا نگاه کنی · تپ روی هدف = شلیک"
                     : locked
-                      ? "حرکت موس = نشانه‌گیری · کلیک = شلیک"
-                      : "برای شروع نشانه‌گیری کلیک کن (Pointer Lock)"}
+                      ? "حرکت موس = نشانه‌گیری · WASD = حرکت · کلیک = شلیک"
+                      : "کلیک در صحنه = نشانه‌گیری + تمام‌صفحه"}
               </span>
             </div>
-          </div>
 
-          {/* فاز G2-e — اورلی توقف (الگوی پایلوت memory/flappy): صحنهٔ تار پشت آن فریز است */}
-          {paused && (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-background/80 backdrop-blur-sm">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
-                <Pause size={26} />
-              </span>
-              <p className="text-sm font-black">بازی متوقف شد</p>
-              <Button onClick={resume} className="h-11 gap-2">
-                <Play size={16} />
-                ادامهٔ بازی
-              </Button>
-            </div>
-          )}
+            {/* فاز G2-e/F3 — اورلی توقف داخل قاب (در تمام‌صفحه هم دیده می‌شود؛ صحنهٔ فریز پشت آن) */}
+            {paused && (
+              <>
+                <div aria-hidden className="absolute inset-0 z-20 bg-background/70 backdrop-blur-sm" />
+                <div data-fps-hud className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+                    <Pause size={26} />
+                  </span>
+                  <p className="text-sm font-black">بازی متوقف شد</p>
+                  <Button onClick={resume} className="h-11 gap-2">
+                    <Play size={16} />
+                    ادامهٔ بازی
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         <p className="text-center text-[11px] leading-5 text-muted-foreground">

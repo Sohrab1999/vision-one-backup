@@ -2851,3 +2851,21 @@ Stage Summary:
 - راستی‌آزمایی مرورگری: SVG = ۸ مسیر مار + ۸ سر + ۱۶ ریل + ۵۷ پلهٔ عرضی ✓ (دسکتاپ و موبایل) · مکعب تاس: ۶ وجه، transform=rotateX(-90)+rotateY(2160) یعنی وجه ۵ با ۶ دور tumble هم‌علامت بج هدر ✓ · INP با ۳۶ رویداد واقعی CDP (کلید): max ۴۰ms، صفر بالای ۲۰۰ms ✓ · موبایل ۳۹۰: بدون سرریز، تخته ۳۴۸px ✓ · خطای کنسول صفر ✓ · lint 0 / tsc(src) 0 ✓
 - تأیید ساختاری (نه رؤیت زنده — تصادفی‌بودن): کی‌فریم‌های pulse/confetti در استایل DOM تأیید شد + گارد reduced-motion
 - گام بعدی طبق سند: فاز SL2 — عمق گیم‌پلی (SL2-01 قوانین opt-in فرود دقیق/گرفتار · SL2-02 پلهٔ طلایی کمبو)
+---
+Task ID: F3
+Agent: main orchestrator (Z.ai Code)
+Task: رفع ۱۶ ارور ChunkLoadError بازی شوتر + فاز F3 نقشه راه FPS (تمام‌صفحه هنگام شروع، تفنگ سه‌بعدی ویومدل، حرکت WASD بازیکن، چیدمان جست‌وجوکن)
+
+Work Log:
+- عیب‌یابی ارور کاربر (اسکرین‌شات: 16 issues، ChunkLoadError روی src_components_book_games_bdc875b4._.js از memory-game.tsx): ری‌استارت تمیز سرور + rm -rf .next موقتاً حل کرد اما ریشه کشف شد در ادامه
+- کشف ریشهٔ اصلی: public/sw.js نسخهٔ ۲ چانک‌های /_next/static/ را cache-first کش می‌کرد — چانک‌های dev توربوپک نام بی‌هش دارند → پس از هر ری‌استارت/ادیت، مرورگر نسخهٔ کهنه سرو می‌کرد (ChunkLoadError + باندل کهنهٔ مزمن در QAها)
+- **اصلاح sw.js (نسخهٔ ۳)**: isNextBuildAsset → handleBuildAsset (network-first با فال‌بک کش برای /_next/static/) · استاتیک‌های تغییرناپذیر (آیکون/فونت/_next/image/مانیفست) همان cache-first SWR · CACHE_NAME → visionone-v3 (پاک‌سازی خودکار کش کهنه در activate)
+- فاز F3 در fps-shooter-game.tsx: ①تمام‌صفحهٔ خودکار هنگام شروع/دوباره (تلاش در effect + تضمین ژست: fsInGesture همزمان با Pointer Lock در اولین کلیک صحنه؛ فال‌بک webkit؛ خروج خودکار در پایان/خروج/دیالوگ help·exit با dropFullscreen) ②ViewModel تفنگ سه‌بعدی low-poly (همگام‌سازی translate/quaternion با دوربین بدون parenting، sway تنفسی، باب گام، recoil از seq بریج، جرقهٔ دهانه + pointLight) ③حرکت اول‌شخص WASD/جهت‌نما با e.code (مستقل از layout فارسی) — stepPlayer/applyRig به‌صورت توابع ماژول‌سطح (قاعدهٔ react-hooks/immutability v6 جهش props/hook-returns در useFrame را رد می‌کند) ④لِین‌های عریض‌تر ±۶٫۸ و عمق پخش ۵٫۵–۱۲ برای حس «بگرد، پیدا کن، شلیک کن» ⑤HUD تمام‌صفحه: نوار امتیاز/کمبو/قلب/زمان فشرده + دکمه‌های شناور توقف/خروج-FS (data-fps-hud تا شلیک حساب نشوند) + اورلی توقف منتقل‌شده داخل قاب
+- QA مرورگری کامل (agent-browser): fullscreen ON هنگام شروع/دوباره ✓ خروج خودکار در ResultScreen ✓ تفنگ در قاب پایین-راست ✓ حرکت W با diff پیکسلی ۳٫۳M ✓ Pointer Lock فعال ✓ سیکل کامل بازی تا Attempt در DB (game_session_end reason:finish در dev.log) ✓ خطای کنسول صفر ✓ lint 0 ✓
+- مدیریت عملیاتی: dev server دوبار بی‌صدا مُرد (احتمال OOM با WebGL) — با pkill + setsid nohup bun run dev احیا شد؛ پورت 3003 بک‌اند سالم ماند
+- نکتهٔ مهم QA: دستور find با متن فارسی در agent-browser کار نمی‌کند — همیشه snapshot + ref استفاده شود
+
+Stage Summary:
+- 🏁 مشکل کاربر (۱۶ ارور) ریشه‌ای حل شد: sw v3 network-first برای چانک‌ها — کاربر فقط یک refresh دیگر لازم دارد
+- 🏁 فاز F3 کامل شد: FPS حالا تمام‌صفحه می‌شود، تفنگ سه‌بعدی با لگد دارد، WASD حرکت می‌کند و اهداف عریض‌تر «جست‌وجو» واقعی می‌خواهند
+- گام بعدی پیشنهادی: موبایل — جوی‌استیک لمسی حرکت + دکمهٔ شلیک جدا؛ افکت ذرات خشاب/پوکه؛ صدای برخورد هدف

@@ -1,9 +1,12 @@
 /*
- * کتابخانه ویژن — Service Worker (vanilla، بدون Workbox) — نسخهٔ ۲
+ * کتابخانه ویژن — Service Worker (vanilla، بدون Workbox) — نسخهٔ ۳
  *
  * راهبردها:
  *  - ناوبری (HTML): network-first → کش → صفحه آفلاین
- *  - استاتیک‌ها (/_next/static/، آیکون‌ها، فونت‌ها): cache-first با به‌روزرسانی پس‌زمینه (SWR)
+ *  - chunkهای /_next/static/ (JS/CSS): network-first → کش (فاز F3 — در dev نام چانک‌ها
+ *    بی‌هش است و کش-first باعث نسخهٔ کهنه و ChunkLoadError می‌شد؛ v2 همین مشکل را داشت)
+ *  - استاتیک‌های تغییرناپذیر (آیکون‌ها، فونت‌ها، /_next/image، مانیفست): cache-first با
+ *    به‌روزرسانی پس‌زمینه (SWR)
  *  - GET /api/questions: network-first + کش ملایم (سقف ۳۰ کلید) — آفلاین هم واژه/گرامر جواب می‌دهد
  *    (پاسخ از کش با هدر «x-from-cache: 1» علامت می‌خورد)
  *  - سایر GETهای /api/: فقط شبکه (بدون کش)
@@ -11,7 +14,7 @@
  *  - پیام CACHE_BOOK از صفحه: پیش‌بارگذاری هوشمند chunkهای JS دیده‌شده —
  *    کش واژگان/گرامر هر جزوه برای مطالعهٔ کامل آفلاین
  */
-const CACHE_NAME = "visionone-v2";
+const CACHE_NAME = "visionone-v3";
 // کش سؤال‌ها بین نسخه‌های SW حفظ می‌شود (در activate پاک نمی‌شود)
 const QUESTIONS_CACHE = "visionone-api-questions";
 const QUESTIONS_CACHE_LIMIT = 30;
@@ -61,9 +64,13 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-/** آیا این درخواست یک استاتیک قابل‌کش است؟ */
-function isStaticAsset(url) {
-  if (url.pathname.startsWith("/_next/static/")) return true;
+/** آیا این درخواست chunk/CSS نکست است؟ — در dev نام‌ها بی‌هش‌اند و هرگز نباید cache-first باشند */
+function isNextBuildAsset(url) {
+  return url.pathname.startsWith("/_next/static/");
+}
+
+/** آیا این درخواست یک استاتیک تغییرناپذیر است؟ (نام هش‌دار/آیکون/فونت/مانیفست) */
+function isImmutableAsset(url) {
   if (url.pathname.startsWith("/icons/")) return true;
   if (url.pathname === "/manifest.webmanifest") return true;
   if (url.pathname.startsWith("/_next/image")) return true;
@@ -96,7 +103,7 @@ async function handleNavigation(request) {
   }
 }
 
-/** cache-first (به سبک stale-while-revalidate) برای استاتیک‌ها */
+/** cache-first (به سبک stale-while-revalidate) برای استاتیک‌های تغییرناپذیر */
 async function handleStatic(request) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request);
@@ -116,6 +123,22 @@ async function handleStatic(request) {
     }
     return fresh;
   } catch (err) {
+    return new Response("", { status: 504, statusText: "Offline" });
+  }
+}
+
+/** network-first برای chunkهای نکست — همیشه نسخهٔ تازه؛ آفلاین از کش */
+async function handleBuildAsset(request) {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    const fresh = await fetch(request);
+    if (fresh && fresh.ok) {
+      cache.put(request, fresh.clone()).catch(() => {});
+    }
+    return fresh;
+  } catch (err) {
+    const cached = await cache.match(request, { ignoreSearch: true });
+    if (cached) return cached;
     return new Response("", { status: 504, statusText: "Offline" });
   }
 }
@@ -265,8 +288,15 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // استاتیک‌ها: cache-first + به‌روزرسانی پس‌زمینه
-  if (isStaticAsset(url)) {
+  // chunkهای /_next/static: network-first — فاز F3: در dev نام‌ها بی‌هش‌اند و کش-first
+  // نسخهٔ کهنه می‌داد (منشأ ChunkLoadErrorهای ۱۶تایی پس از هر ری‌استارت سرور)
+  if (isNextBuildAsset(url)) {
+    event.respondWith(handleBuildAsset(request));
+    return;
+  }
+
+  // استاتیک‌های تغییرناپذیر: cache-first + به‌روزرسانی پس‌زمینه
+  if (isImmutableAsset(url)) {
     event.respondWith(handleStatic(request));
   }
 });
