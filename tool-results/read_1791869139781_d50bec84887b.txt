@@ -1,0 +1,602 @@
+     1→     1→"use client";
+     2→     2→
+     3→     3→/**
+     4→     4→ * بازی «شوتر آموزشی اول‌شخص» (Educational FPS) — فاز ۵ نقشه راه جامع ۲۰۲۶ + فاز G2-e نقشه راه بازی‌ها.
+     5→     5→ *
+     6→     6→ * میدان low-poly رنگی با three.js/@react-three/fiber (چانک جدا و lazy — صفر تأثیر روی بقیهٔ اپ):
+     7→     7→ * - «شکار واژه»: معنی فارسی روی HUD، هدف‌های متحرک واژهٔ انگلیسی دارند.
+     8→     8→ * - «سد گرامری»: جملهٔ ناقص روی HUD، هدف‌ها همان ۴ گزینهٔ تستاند.
+     9→     9→ * - شلیک به هدف درست = انفجار آتش‌و‌دودی + امتیاز و کمبو + تلفظ؛ شلیک به هدف غلط یا پایان
+    10→    10→ *   زمان = یک ❤ کم و واژه به صف «مرور هوشمند» برمی‌گردد. شلیک به خالی (خطا رفت) جریمه ندارد
+    11→    11→ *   ولی بین شلیک‌ها فاصلهٔ کوتاه هست تا اسپم بی‌فایده نباشد.
+    12→    12→ * - کنترل دسکتاپ: کلیک اول Pointer Lock، حرکت موس نشانه‌گیری و کلیک بعدی شلیک از رتیکل.
+    13→    13→ * - کنترل لمسی: کشیدن = نگاه، تپ روی هدف = شلیک همان هدف.
+    14→    14→ * - حالت دسترس‌پذیری «تپ ساده»: بدون قفل نشانگر و شلیک دقیق — تپ روی هدف کافی است؛
+    15→    15→ *   روی کیبورد هم کلیدهای ۱ تا ۴ از چپ به راست هدف انتخاب می‌کنند.
+    16→    16→ * - امتیاز با مدل Attempt (category = fps-shooter) ثبت و رکورد شخصی per-scope ذخیره می‌شود.
+    17→    17→ *
+    18→    18→ * فاز G2-e — کیت GameKit v2 (الگوی پایلوت memory / flappy G2-c-2):
+    19→    19→ * - صدا/لرزش فقط در لحظهٔ رویداد، نه هر فریم: شلیک = «shoot» (داخل cooldown-gate تابع
+    20→    20→ *   request — گارد «نه هر فریم»)، برخورد درست به واژهٔ هدف = «correct» + لرزش success،
+    21→    21→ *   برخورد غلط / پایان زمان = «wrong» + لرزش error (هردو از handleHit/handleTimeout که
+    22→    22→ *   R3F از useFrame صدا می‌زند — فقط لحظهٔ resolve برخورد)، پایان دور = «finish» (دور
+    23→    23→ *   بی‌خطا = «win» — الگوی دارباز)، رکورد = «record». AudioContext با اولین ژست (چیپ‌های
+    24→    24→ *   setup) آپ‌لاک می‌شود؛ شکست صدا هرگز بازی را نمی‌شکند (try/catch داخل کیت).
+    25→    25→ * - تنظیم کیفیت گرافیک: دو چیپ «کیفیت عادی» / «کیفیت سبک (گوشی)» در setup — سبک:
+    26→    26→ *   dpr پایین‌تر [0.7,1]، antialias خاموش، سایه‌ها صریحاً off، اجسام تزئینی/ذرات انفجار
+    27→    27→ *   کمتر و ۳ هدف هم‌زمان به‌جای ۴؛ عادی: رفتار فعلی. انتخاب در Attempt detail افزودنی
+    28→    28→ *   (detail.quality) و localStorage کلید افزودنی «visionone:game-pref:fps-quality»
+    29→    29→ *   (پیش‌فرض عادی) می‌ماند — امضای saveAttempt/saveBest/bumpPlays و کلیدهای رکورد
+    30→    30→ *   (scopeOf) دست‌نخورده.
+    31→    31→ * - کمبو به موتور مشترک کیت منتقل شد (G1-09): useCombo({mode:"bonus", base:10,
+    32→    32→ *   bonusCap:6, bonusStep:2}) — فرمول امتیاز مو‌به‌مو همان قبل: ۱۰ + min(کمبو−۱,۶)×۲.
+    33→    33→ * - GameShell (هدر یکنواخت: امتیاز/کمبو/قلب/زمان در stats + liveMsg + کنترل‌های h-11 که
+    34→    34→ *   حین صحنهٔ سه‌بعدی هم کار می‌کنند) + Pause با فریز واقعی حلقهٔ R3F (frameloop
+    35→    35→ *   "never"/"always" — معادل cancel/resume الگوی flappy + آینهٔ pausedRef برای ورودی‌ها)
+    36→    36→ *   + جبران دقیق مبدأ تایمر سؤال و زنجیرهٔ «فریز برخورد → سؤال بعد» با جمع زمان توقف از
+    37→    37→ *   duration Attempt (pausedAccum — الگوی flappy/duel) + نگهبان خروج حین دور (تأیید →
+    38→    38→ *   abandon("exit")) + ResultScreen استاندارد (ستارهٔ per-game: دقت ≥۹۰→۳ / ≥۷۰→۲ / بقیه ۱)
+    39→    39→ *   + آموزش ۳گامی (هدف / نشانه‌گیری-شلیک / کیفیت گرافیک) با useAutoTutorial و راهنمای
+    40→    40→ *   حین صحنه با توقف (pausedForHelpRef) + تله‌متری جلسه (level = حالت+کیفیت مثل word-tap:low).
+    41→    41→ *
+    42→    42→ * فاز F3 — تحول FPS (نقشه راه شوتر ۲۰۲۶):
+    43→    43→ * - تمام‌صفحهٔ خودکار: کلیک «شروع مأموریت» (و «دوباره») صحنه را Fullscreen می‌کند (Esc =
+    44→    44→ *   خروج؛ سینک با fullscreenchange) و نوار امتیاز/کمبو/قلب/زمان فشرده داخل قاب می‌آید
+    45→    45→ *   چون هدر شِل بیرون قاب تمام‌صفحه است + دکمه‌های شناور توقف/خروج تمام‌صفحه (data-fps-hud
+    46→    46→ *   تا شلیک حساب نشوند).
+    47→    47→ * - تفنگ سه‌بعدی ویومدل: گروه low-poly چسبیده به دوربین (فرزند camera) با sway تنفسی،
+    48→    48→ *   باب گام‌برداشتن، لگدِ recoil از رویداد شلیک (seq بریج) و جرقهٔ دهانه + نور نقطه‌ای.
+    49→    49→ * - حرکت اول‌شخص WASD/جهت‌نما (e.code — مستقل از layout فارسی) با سرعت ثابت، باب سر و
+    50→    50→ *   محدودهٔ امن میدان؛ جهت نسبت به yaw نگاه.
+    51→    51→ * - چیدمان «جستوجو کن، پیدا کن، شلیک کن»: لِین‌ها عریض‌تر (±۶٫۸) و عمق پخش‌تر — پیدا
+    52→    52→ *   کردن گزینهٔ درست چرخاندن و جابه‌جایی می‌خواهد.
+    53→    53→ *
+    54→    54→ * فاز F4 — کنترل حرفه‌ای موبایل + مکانیک خشاب:
+    55→    55→ * - خشاب ۸تایی با شمارندهٔ مهمات روی HUD؛ هر شلیک یک فشنگ کم می‌کند، خالی شدن = ریلود
+    56→    56→ *   خودکار (و R روی دسکتاپ / دکمهٔ ریلود روی موبایل) با صدای کلانک تعویض و چرخش آیکون.
+    57→    57→ * - شلیک حین ریلود یا فریز برخورد مسدود است (مهمات هدر نمی‌رود) — گیت داخل request.
+    58→    58→ * - جوی‌استیک لمسی چپ + دکمهٔ شلیک راست برای موبایل (فقط pointer:coarse و خارج از تپ
+    59→    59→ *   ساده): بردار آنالوگ به stepPlayer تزریق می‌شود (deadzone + سرعت متناسب کمان) و دکمهٔ
+    60→    60→ *   شلیک از رتیکل مرکز می‌زند؛ هر دو data-fps-hud تا شلیک صحنه حساب نشوند.
+    61→    61→ * - افکت پوکهٔ برنجی: در هر شلیک از پورت خروج تفنگ به فضای جهانی پرتاب می‌شود — گرانش،
+    62→    62→ *   اسپین و محو نرم؛ علاوه بر آن صدای «تاک» برخورد گلوله به هدف (صدا فقط لحظهٔ رویداد).
+    63→    63→ *
+    64→    64→ * فاز F5/F6/F7 — سه‌گانهٔ «گزینه‌ها، نقشه، محیط» (نسخهٔ ۲.۰ نقشه راه docs/fps-roadmap.md):
+    65→    65→ * - گزینه‌ها (F5): حساسیت نگاه (۴۰–۲۲۰٪) روی موس و کشیدن لمسی، زاویهٔ دید FOV
+    66→    66→ *   (۶۲–۹۶ درجه — زنده با updateProjectionMatrix) و وارون‌سازی عمودی (Invert Y) —
+    67→    67→ *   همه ماندگار (کلیدهای افزودنی visionone:game-pref:fps-sens/fov/invert) + پنل
+    68→    68→ *   «گزینه‌ها» در setup + تنظیمات سریع داخل اورلی توقف بدون خروج از دور.
+    69→    69→ * - نقشه‌ها (F6): سه پالت کامل میدان با انتخاب ماندگار (visionone:game-pref:fps-map):
+    70→    70→ *   «جنگل زمردی» (کلاسیک سبز)، «کویر کهربا» (غروب شنی با خورشید بزرگ) و «سکوت شب»
+    71→    71→ *   (آسمان پرستاره + ماه + کریستال‌های درخشان) — هر نقشه رنگ پس‌زمینه/مه، زمین،
+    72→    72→ *   حلقه‌ها، کوه‌ها، اجسام تزئینی، نور و بدنهٔ قاب خودش را دارد + detail.map در Attempt.
+    73→    73→ * - محیط (F7): جعبه‌های پوشش با برخورد واقعی بازیکن (resolveCover — دایره‌ای ساده در
+    74→    74→ *   فضای جهان)، ابلیسک‌های طرفین، سنگ‌ریزه و بوتهٔ پراکنده، ابرهای low-poly چرخان،
+    75→    75→ *   آسمان پرستاره و خورشید/ماه با هاله — بودجهٔ عناصر در سه ترتیب کیفیت؛ همهٔ عناصر
+    76→    76→ *   دکور هستند و خارج از registry رِی‌کست شلیک.
+    77→    77→ *
+    78→    78→ * فاز F8 — هدف‌های هوشمند (AI سبک — نسخهٔ ۲.۱ سند docs/fps-roadmap.md):
+    79→    79→ * - فرار (Dodging): هدف‌های غلط وقتی نزدیک مرکز نشانه می‌شوند به کناره‌ها می‌گریزند —
+    80→    80→ *   سرعت فرار با شمارهٔ موج بالا می‌رود؛ در «تپ ساده» و حین فریز برخورد غیرفعال است.
+    81→    81→ * - موج‌بندی: هر ۵ پاسخ یک موج سخت‌تر (تا موج ۶) — چرخش/نوسان/راند اهداف و عمق چیدمان
+    82→    82→ *   بیشتر + بج «موج n» در HUD و پیام aria-live + detail.wave در Attempt.
+    83→    83→ * - هدف طلایی: هر ۱۱–۱۶ ثانیه (اولین: ۹ ثانیه) پاپ‌آپ ۳ثانیه‌ای طلایی — شکارش +۲۰ امتیاز
+    84→    84→ *   بونوس خارج از چرخهٔ سؤال (بدون قلب/بدون جلو رفتن) با صدای جذاب و انفجار؛ زنجیرهٔ
+    85→    85→ *   مستقل مقاوم به توقف (جبران gap) تا با زنجیرهٔ «فریز برخورد» تداخل نکند.
+    86→    86→ *
+    87→    87→ * فاز T1 — بازطراحی نظامی «ضدکرینج» (نسخهٔ ۲.۴ سند docs/fps-roadmap.md):
+    88→    88→ * - هدف‌ها از اوکتاهدرون‌های رنگی به «پهپادهای متخاصم» تبدیل شدند: بدنهٔ فولادی تیره،
+    89→    89→ *   کپسول‌های روتور دوطرف، بالهٔ رادار و حس‌گر قرمز رو به بازیکن — تشخیص گزینهٔ درست
+    90→    90→ *   فقط با خواندن واژه است (همان قانون آموزشی)، ولی حالا حس «دشمن واقعی» دارد.
+    91→    91→ * - انفجار رنگین‌کمانی → انفجار تاکتیکی آتش/دود: جرقهٔ سفیدِ داغ → نارنجی/قرمز → دودِ خاکستری سرد.
+    92→    92→ * - هدف طلایی → «هدف ویژهٔ HVT» (High-Value Target): پهپاد فرمانده با حلقهٔ هشدار قرمز
+    93→    93→ *   چرخان و حس‌گر پالس‌دار — همان +۲۰ بونوس، با چاشنی نظامی.
+    94→    94→ * - رتبهٔ نظامی پایان مأموریت (S تا D) در صفحهٔ نتیجه + زبان مأموریت‌محور در همهٔ پیام‌ها
+    95→    95→ *   (ایموجی‌های 🌟/⚡ حذف شد — حس حرفه‌ای شوتر).
+    96→    96→ * - نقشهٔ «دروازهٔ دو در» غنی‌تر شد: برج دیدبانی اسپان، طبقهٔ دوم جعبهٔ میانی،
+    97→    97→ *   کیسهٔ شنی A سایت و تونل B.
+    98→    98→ *
+    99→    99→ * فاز F9 — تنوع سلاح + اسکوپ (نسخهٔ ۲.۲ سند docs/fps-roadmap.md):
+   100→   100→ * - سه سلاح انتخابی در setup با ماندگاری (visionone:game-pref:fps-weapon):
+   101→   101→ *   «کلت تک‌تیر» (خشاب ۸، شلیک تند، ریلود کوتاه)، «دژکوب سنگین» (خشاب ۵، لگد +۴۵٪
+   102→   102→ *   و انفجار بزرگ‌تر با صدای بم) و «پمپ زون‌کن» (خشاب ۴؛ هر ماشه سه پرتو می‌کاود —
+   103→   103→ *   بهترین برخورد حساب می‌شود و جریمه فقط یک‌بار؛ طلایی+درست در یک والی = جایزهٔ دوگانه).
+   104→   104→ * - اسکوپ لحظه‌ای: نگه‌داشتن Shift (دسکتاپ) یا دکمهٔ ذره‌بین (گوشی) — FOV با لِرپ نرم
+   105→   105→ *   تیز می‌شود، سلاح به مرکز دید می‌آید، لرزش آرام و حساسیت نگاه کم می‌شود (حس اسنایپر).
+   106→   106→ * - مدل سه‌بعدی جدا برای هر سلاح در ویومدل + انیمیشن تعویض (نیم‌چرخش هنگام سوار شدن)
+   107→   107→ *   و انیمیشن ریلود (پایین‌رفتن + چرخش بر اساس زمان باقی‌مانده).
+   108→   108→ *
+   109→   109→ * فاز F10 — عمق یادگیری (الف + ج این دور؛ ب «جملهٔ زنجیره‌ای» دور بعد):
+   110→   110→ * - حالت سوم «شنیداری» (listening-hunt): سؤال متن ندارد — واژهٔ انگلیسی با TTS پخش
+   111→   111→ *   می‌شود (پخش خودکار ۴۲۰ms پس از نمایش سؤال + دکمهٔ «پخش دوباره» روی HUD + کلید V
+   112→   112→ *   در دسکتاپ حین قفل نشانگر) و بازیکن باید پهپادِ همان واژه را بین اهداف شکار کند؛
+   113→   113→ *   تشخیص فقط با شنیدن (قانون آموزشی). اسکوپ رکورد مستقل «listen» + level تله‌متری.
+   114→   114→ * - «گزارش خطاها به دستیار هوشمند» در صفحهٔ نتیجه: متن گزارش (رتبه/دقت/فهرست خطاها)
+   115→   115→ *   با tutor-seed به sessionStorage می‌رود و FreeChat آن را در ورودی چت می‌گذارد —
+   116→   116→ *   کاربر مرور و ارسال می‌کند تا دستیار مینی‌تمرین بسازد (سقف روزانهٔ AI هدر نمی‌رود).
+   117→   117→ */
+   118→   118→
+   119→   119→import {
+   120→   120→  useCallback,
+   121→   121→  useEffect,
+   122→   122→  useMemo,
+   123→   123→  useRef,
+   124→   124→  useState,
+   125→   125→  useSyncExternalStore,
+   126→   126→} from "react";
+   127→   127→import { Canvas } from "@react-three/fiber";
+   128→   128→import * as THREE from "three";
+   129→   129→import {
+   130→   130→  ArrowBigUp,
+   131→   131→  Bomb,
+   132→   132→  Bot,
+   133→   133→  Crosshair,
+   134→   134→  DoorOpen,
+   135→   135→  Flame,
+   136→   136→  Headphones,
+   137→   137→  Heart,
+   138→   138→  Medal,
+   139→   139→  MapPinned,
+   140→   140→  Minimize2,
+   141→   141→  MonitorSmartphone,
+   142→   142→  MoonStar,
+   143→   143→  MousePointerClick,
+   144→   144→  Pause,
+   145→   145→  Play,
+   146→   146→  RotateCcw,
+   147→   147→  SlidersHorizontal,
+   148→   148→  Sparkles,
+   149→   149→  Star,
+   150→   150→  Sun,
+   151→   151→  Swords,
+   152→   152→  Target as TargetIcon,
+   153→   153→  Telescope,
+   154→   154→  Timer,
+   155→   155→  Trees,
+   156→   156→  Trophy,
+   157→   157→  Volume2,
+   158→   158→  Zap,
+   159→   159→} from "lucide-react";
+   160→   160→import { Button } from "@/components/ui/button";
+   161→   161→import { Card, CardContent } from "@/components/ui/card";
+   162→   162→import { Badge } from "@/components/ui/badge";
+   163→   163→import { Slider } from "@/components/ui/slider";
+   164→   164→import { Switch } from "@/components/ui/switch";
+   165→   165→import { cn } from "@/lib/utils";
+   166→   166→import { toast } from "sonner";
+   167→   167→import type { QuizQuestionSeed, VocabEntry } from "@/data/types";
+   168→   168→import { useBook, useBookData } from "@/lib/book-context";
+   169→   169→import { seedReviewFromQuiz } from "@/lib/srs-store";
+   170→   170→import { touchStreak } from "@/lib/streak-store";
+   171→   171→import { recordStudySession } from "@/lib/goal-store";
+   172→   172→import { speak, stopSpeaking } from "@/lib/speak";
+   173→   173→import { useVoiceSpeed } from "@/lib/voice-store";
+   174→   174→import { seedTutorPrompt } from "@/lib/tutor-seed";
+   175→   175→import { requestView } from "@/lib/nav-store";
+   176→   176→import {
+   177→   177→  bumpPlays,
+   178→   178→  faNum,
+   179→   179→  fmtTime,
+   180→   180→  loadBest,
+   181→   181→  saveAttempt,
+   182→   182→  saveBest,
+   183→   183→  shuffle,
+   184→   184→  subscribeGameData,
+   185→   185→} from "../shared";
+   186→   186→// فاز G2-e — کیت GameKit v2 (قرارداد API سند)
+   187→   187→import { playSound, toggleSoundMuted, isSoundMuted } from "../kit/sound-engine";
+   188→   188→import { buzz } from "../kit/haptics";
+   189→   189→import { useGamePause } from "../kit/use-pause";
+   190→   190→import { GameExitGuard } from "../kit/exit-guard";
+   191→   191→import { GameShell } from "../kit/game-shell";
+   192→   192→import { ResultScreen } from "../kit/result-screen";
+   193→   193→import {
+   194→   194→  TutorialOverlay, useAutoTutorial, type TutorialStep } from "../kit/tutorial-overlay";
+   195→   195→import { createGameSession, type GameSessionTracker } from "../kit/telemetry";
+   196→   196→import { useCombo, COMBO_FIRE_CLASS } from "../kit/combo-engine";
+   197→   197→
+   198→   198→// ─── refactor گام ۳ — ماژول‌های تفکیک‌شده (جابه‌جایی مکانیکی بدون تغییر رفتار) ───
+   199→   199→
+   200→   200→import {
+   201→   201→  ALL_LESSONS,
+   202→   202→  BURST_FULL,
+   203→   203→  BURST_LOW,
+   204→   204→  BURST_WEAK,
+   205→   205→  COMBO_CAP,
+   206→   206→  COMBO_STEP,
+   207→   207→  DECO_LOW,
+   208→   208→  DISTRACTORS_HIGH,
+   209→   209→  DISTRACTORS_LOW,
+   210→   210→  FOV_DEF,
+   211→   211→  FOV_MAX,
+   212→   212→  FOV_MIN,
+   213→   213→  GAME_KEY,
+   214→   214→  GOLDEN_BONUS,
+   215→   215→  GOLDEN_EVERY_MAX,
+   216→   216→  GOLDEN_EVERY_MIN,
+   217→   217→  GOLDEN_FIRST_MS,
+   218→   218→  GOLDEN_WINDOW_MS,
+   219→   219→  HEARTS,
+   220→   220→  HIT_FREEZE_MS,
+   221→   221→  KEY_MOVE,
+   222→   222→  LANE_X,
+   223→   223→  MIN_POOL_QUIZ,
+   224→   224→  MIN_POOL_WORD,
+   225→   225→  Q_TIME_SHOOT,
+   226→   226→  Q_TIME_TAP,
+   227→   227→  QUALITY_KEY,
+   228→   228→  SCOPE_SENS_RATIO,
+   229→   229→  SHOOT_BASE,
+   230→   230→  SENS_DEF,
+   231→   231→  SENS_MAX,
+   232→   232→  SENS_MIN,
+   233→   233→  WAVE_MAX,
+   234→   234→  WAVE_SIZE,
+   235→   235→  type Quality,
+   236→   236→} from "./constants";
+   237→   237→import {
+   238→   238→  WEAPONS,
+   239→   239→  WEAPON_KEY,
+   240→   240→  type WeaponConfig,
+   241→   241→  type WeaponId,
+   242→   242→} from "./weapons";
+   243→   243→import { MAPS, type MapConfig, type MapId } from "./maps";
+   244→   244→import { LAYOUTS } from "./layouts";
+   245→   245→import {
+   246→   246→  FOV_KEY,
+   247→   247→  INVERT_KEY,
+   248→   248→  MAP_KEY,
+   249→   249→  SENS_KEY,
+   250→   250→  loadMapPref,
+   251→   251→  loadPrefBool,
+   252→   252→  loadPrefNum,
+   253→   253→  loadQuality,
+   254→   254→  loadWeaponPref,
+   255→   255→  savePref,
+   256→   256→} from "./prefs";
+   257→   257→import {
+   258→   258→  BestRecord,
+   259→   259→  BurstApi,
+   260→   260→  Phase,
+   261→   261→  Question,
+   262→   262→  SceneBridge,
+   263→   263→  WrongItem,
+   264→   264→  type Mode,
+   265→   265→} from "./types";
+   266→   266→import {
+   267→   267→  clamp,
+   268→   268→  dropFullscreen,
+   269→   269→  lessonLabel,
+   270→   270→  missionRank,
+   271→   271→  modeName,
+   272→   272→  scopeOf,
+   273→   273→} from "./helpers";
+   274→   274→import { buildGrammarQuestion, buildListeningQuestion, buildWordQuestion } from "./questions";
+   275→   275→import { FovTune, Rig } from "./scene/camera";
+   276→   276→import { ViewModel } from "./scene/viewmodel";
+   277→   277→import { Arena, World } from "./scene/world";
+   278→   278→import {
+   279→   279→  Burst,
+   280→   280→  GoldenTarget,
+   281→   281→  Target,
+   282→   282→  type GoldenSpec,
+   283→   283→} from "./scene/targets";
+   284→   284→import { TouchJoystick } from "./scene/input";
+   285→   285→
+   286→   286→// ─── فاز G2-e — آموزش ۳-گامی استاندارد (الگوی پایلوت memory / flappy) ───
+   287→   287→
+   288→   288→const TUTORIAL_STEPS: TutorialStep[] = [
+   289→   289→  {
+   290→   290→    icon: <Crosshair size={24} />,
+   291→   291→    title: "پهپادهای متخاصم را حذف کن",
+   292→   292→    text: "سؤال روی HUD بالای میدان می‌ماند و هر پهپاد متخاصم یک گزینهٔ انگلیسی روی پلاک دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست پهپاد را با انفجار آتش‌و‌دودی منفجر می‌کند و امتیاز با کمبو دارد. در حالت «شنیداری» سؤال خوانده نمی‌شود بلکه واژه پخش می‌شود — گوش کن و پهپادِ همان واژه را شکار کن؛ دکمهٔ «پخش دوباره» زیر سؤال است و در دسکتاپ کلید V هم دوباره پخش می‌کند.",
+   293→   293→  },
+   294→   294→  {
+   295→   295→    icon: <MousePointerClick size={24} />,
+   296→   296→    title: "نشانه‌گیری و شلیک",
+   297→   297→    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. نگه‌داشتن کلیک راست اسکوپ می‌گیرد: دید باریک‌تر، نشانه‌گیری دقیق‌تر. حرکت حرفه‌ای: Shift دویدن، Space پرش و C خم‌شدن. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک + دکمهٔ پرش. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
+   298→   298→  },
+   299→   299→  {
+   300→   300→    icon: <TargetIcon size={24} />,
+   301→   301→    title: "خشاب، مهمات و سلاح",
+   302→   302→    text: "خشاب بسته به سلاح ۴ تا ۸ فشنگ دارد — شمارندهٔ فشنگ کنار رتیکل است. خالی شدن = ریلود خودکار با صدای تعویض؛ می‌توانی با R (دسکتاپ) زودتر ریلود کنی. سه سلاح در setup داری: کلت تک‌تیر (خشاب ۸)، دژکوب سنگین (خشاب ۵، لگد و انفجار بزرگ) و پمپ زون‌کن (خشاب ۴؛ هر ماشه سه پرتو می‌کاود). شلیک حین ریلود یا فریز برخورد مهمات هدر نمی‌دهد، ولی هر شلیکِ خطا یک فشنگ کم است — درست نشانه بگیر!",
+   303→   303→  },
+   304→   304→  {
+   305→   305→    icon: <Zap size={24} />,
+   306→   306→    title: "هدف‌های هوشمند و HVT",
+   307→   307→    text: "پهپادهای غلط وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر نزدیک شو! هر ۵ پاسخ یک «موج» سخت‌تر با دشمنان سریع‌تر شروع می‌شود. هر از گاهی هم «هدف ویژهٔ HVT» با حلقهٔ هشدار قرمز ظاهر می‌شود: ۳ ثانیه فرصت داری حذفش کنی تا ۲۰ امتیاز بونوس بگیری (حذفش قلب کم نمی‌کند).",
+   308→   308→  },
+   309→   309→  {
+   310→   310→    icon: <MonitorSmartphone size={24} />,
+   311→   311→    title: "نقشه‌ها و گزینه‌ها",
+   312→   312→    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. چهار نقشهٔ مأموریت با چیدمان واقعی متفاوت داری: جنگل زمردی (درخت و جعبه)، کویر کهربا (دیوار ماسه‌سنگی و طاق)، سکوت شب (جنگل کریستال) و دروازهٔ دو در — الهام از دی‌داست۲ با درِ دوتایی میانه، گذرگاه بلند، تونل B و برج دیدبانی. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند. پایان هر مأموریت رتبهٔ نظامی می‌گیری (S تا D).",
+   313→   313→  },
+   314→   314→];
+   315→   315→
+   316→   316→// ─── بازی اصلی ───
+   317→   317→
+   318→   318→export function FpsShooterGame() {
+   319→   319→  const data = useBookData();
+   320→   320→  const { bookId } = useBook();
+   321→   321→  // بازی فقط داخل کتاب فعال رندر می‌شود (useBookData بالا گارد است) — bookId عملاً هرگز null نیست
+   322→   322→  const activeBookId: string = bookId ?? "";
+   323→   323→  const { speed } = useVoiceSpeed();
+   324→   324→
+   325→   325→  const [phase, setPhase] = useState<Phase>("setup");
+   326→   326→  const [mode, setMode] = useState<Mode>("word-hunt");
+   327→   327→  const [lesson, setLesson] = useState<number>(ALL_LESSONS);
+   328→   328→  const [tapMode, setTapMode] = useState(false);
+   329→   329→  const [locked, setLocked] = useState(false);
+   330→   330→  // فاز G2-e — کیفیت گرافیک (ماندگار؛ پیش‌فرض عادی)
+   331→   331→  const [quality, setQuality] = useState<Quality>(() => loadQuality());
+   332→   332→  // ── فاز F5 — گزینه‌های نگاه (ماندگار) ──
+   333→   333→  const [sens, setSens] = useState(() => loadPrefNum(SENS_KEY, SENS_DEF, SENS_MIN, SENS_MAX));
+   334→   334→  const [fov, setFov] = useState(() => loadPrefNum(FOV_KEY, FOV_DEF, FOV_MIN, FOV_MAX));
+   335→   335→  const [invertY, setInvertY] = useState(() => loadPrefBool(INVERT_KEY, false));
+   336→   336→  // ── فاز F6 — نقشهٔ مأموریت (ماندگار) ──
+   337→   337→  const [mapId, setMapId] = useState<MapId>(() => loadMapPref());
+   338→   338→  // ── فاز F9 — سلاح انتخابی (ماندگار) + اسکوپ لحظه‌ای ──
+   339→   339→  const [weaponId, setWeaponId] = useState<WeaponId>(() => loadWeaponPref());
+   340→   340→  const [scoped, setScoped] = useState(false);
+   341→   341→  /** آینهٔ اسکوپ برای مسیرهای بدون ری‌رندر (حساسیت نگاه در ورودی) */
+   342→   342→  const scopedRef = useRef(false);
+   343→   343→  const setScopeSafe = useCallback((v: boolean) => {
+   344→   344→    if (scopedRef.current === v) return;
+   345→   345→    scopedRef.current = v;
+   346→   346→    setScoped(v);
+   347→   347→  }, []);
+   348→   348→  // ── فاز F3 — تمام‌صفحه هنگام شروع مأموریت (Fullscreen API با فال‌بک webkit) ──
+   349→   349→  const [isFs, setIsFs] = useState(false);
+   350→   350→  const wantFsRef = useRef(false);
+   351→   351→
+   352→   352→  // ── HUD حین بازی ──
+   353→   353→  const [q, setQ] = useState<Question | null>(null);
+   354→   354→  const [score, setScore] = useState(0);
+   355→   355→  const [hearts, setHearts] = useState(HEARTS);
+   356→   356→  const [timeLeft, setTimeLeft] = useState(Q_TIME_SHOOT);
+   357→   357→  // ── فاز F4 — خشاب و ریلود ──
+   358→   358→  const [ammo, setAmmo] = useState(() => WEAPONS[weaponId].mag);
+   359→   359→  const [reloading, setReloading] = useState(false);
+   360→   360→  /** فاز G2-e — پیام باکس aria-live شِل (برخورد/خطا/توقف) برای فناوری‌های کمکی */
+   361→   361→  const [liveMsg, setLiveMsg] = useState("");
+   362→   362→  // ── فاز F8 — موج‌بندی + هدف طلایی ──
+   363→   363→  const [wave, setWave] = useState(1);
+   364→   364→  const [goldenActive, setGoldenActive] = useState(false);
+   365→   365→  const [goldenLeft, setGoldenLeft] = useState(0);
+   366→   366→  const [goldenSpec, setGoldenSpec] = useState<GoldenSpec | null>(null);
+   367→   367→
+   368→   368→  // ── فاز G2-e — موتور کمبو مشترک کیت (G1-09) ──
+   369→   369→  // حالت bonus = دقیقاً قانون فعلی شوتر: gained = ۱۰ + min(کمبو−۱, ۶) × ۲ (امتیاز یکسان می‌ماند)
+   370→   370→  const {
+   371→   371→    combo,
+   372→   372→    comboRef: comboCountRef,
+   373→   373→    maxComboRef,
+   374→   374→    registerCorrect,
+   375→   375→    registerMiss,
+   376→   376→    reset: resetCombo,
+   377→   377→  } = useCombo({ mode: "bonus", base: SHOOT_BASE, bonusCap: COMBO_CAP, bonusStep: COMBO_STEP });
+   378→   378→
+   379→   379→  // ── stateهای فاز done ──
+   380→   380→  const [isRecord, setIsRecord] = useState(false);
+   381→   381→  const [finalScore, setFinalScore] = useState(0);
+   382→   382→  const [correctCount, setCorrectCount] = useState(0);
+   383→   383→  const [wrongCount, setWrongCount] = useState(0);
+   384→   384→  const [wrongList, setWrongList] = useState<WrongItem[]>([]);
+   385→   385→  const [elapsed, setElapsed] = useState(0);
+   386→   386→
+   387→   387→  // ── استخر داده ──
+   388→   388→  const vocabAll = data.vocab.all;
+   389→   389→  const quizSeed = data.quiz.seed;
+   390→   390→  const wordPool = useMemo(
+   391→   391→    () => (lesson === ALL_LESSONS ? vocabAll : vocabAll.filter((w) => w.lesson === lesson)),
+   392→   392→    [vocabAll, lesson],
+   393→   393→  );
+   394→   394→  const quizPool = useMemo(
+   395→   395→    () => (lesson === ALL_LESSONS ? quizSeed : quizSeed.filter((s) => s.lesson === lesson)),
+   396→   396→    [quizSeed, lesson],
+   397→   397→  );
+   398→   398→  const wordLessons = data.vocab.lessons;
+   399→   399→  const quizLessons = useMemo(
+   400→   400→    () => [...new Set(quizSeed.map((s) => s.lesson))].sort((a, b) => a - b),
+   401→   401→    [quizSeed],
+   402→   402→  );
+   403→   403→  const poolOk = mode === "grammar-gate" ? quizPool.length >= MIN_POOL_QUIZ : wordPool.length >= MIN_POOL_WORD;
+   404→   404→  const poolCount = mode === "grammar-gate" ? quizPool.length : wordPool.length;
+   405→   405→
+   406→   406→  // تشخیص دستگاه ضعیف — کاهش ذرات/antialias/dpr در کیفیت عادی
+   407→   407→  const weak = useMemo(() => {
+   408→   408→    if (typeof navigator === "undefined") return false;
+   409→   409→    const nav = navigator as Navigator & { deviceMemory?: number };
+   410→   410→    return (nav.hardwareConcurrency ?? 8) <= 4 || (nav.deviceMemory ?? 8) <= 4;
+   411→   411→  }, []);
+   412→   412→  const isCoarse = useMemo(() => {
+   413→   413→    if (typeof window === "undefined") return false;
+   414→   414→    return window.matchMedia("(pointer: coarse)").matches;
+   415→   415→  }, []);
+   416→   416→
+   417→   417→  // ── فاز G2-e — توقف/ادامهٔ استاندارد کیت + آینه‌ها و جمع زمان توقف (الگوی flappy) ──
+   418→   418→  const pausedRef = useRef(false);
+   419→   419→  /** مبدأ توقف جاری برای جبران دقیق مبدأ تایمر سؤال */
+   420→   420→  const pauseStartRef = useRef(0);
+   421→   421→  /** جمع زمان‌های توقف — مدت Attempt نباید توقف‌ها را حساب کند */
+   422→   422→  const pausedAccumRef = useRef(0);
+   423→   423→
+   424→   424→  // ── دنیای بازی — مالک: رویدادها و refs ──
+   425→   425→  const wrapRef = useRef<HTMLDivElement | null>(null);
+   426→   426→  const bridge = useRef<SceneBridge>({
+   427→   427→    aim: { yaw: 0, pitch: 0 },
+   428→   428→    pos: { x: 0, z: 0 },
+   429→   429→    keys: new Set<string>(),
+   430→   430→    moveMag: 0,
+   431→   431→    stick: { x: 0, y: 0 },
+   432→   432→    vel: { x: 0, z: 0 },
+   433→   433→    vy: 0,
+   434→   434→    jumpY: 0,
+   435→   435→    wantJump: false,
+   436→   436→    crouchAmt: 0,
+   437→   437→    sprint: false,
+   438→   438→    speedKick: 0,
+   439→   439→    layout: LAYOUTS.forest,
+   440→   440→    shoot: { x: 0, y: 0, seq: 0, spread: 0, burst: 1 },
+   441→   441→    lastShotAt: 0,
+   442→   442→    laneK: 1,
+   443→   443→    flashes: [],
+   444→   444→    scopeAmt: 0,
+   445→   445→    reloadUntil: 0,
+   446→   446→    onHit: () => {},
+   447→   447→    dodge: false,
+   448→   448→    wave: 1,
+   449→   449→  });
+   450→   450→  const meshRegistry = useRef<THREE.Mesh[]>([]);
+   451→   451→  const burstApi = useRef<BurstApi | null>(null);
+   452→   452→  const deckRef = useRef<Array<VocabEntry | QuizQuestionSeed>>([]);
+   453→   453→  const deckIdxRef = useRef(0);
+   454→   454→  const poolRef = useRef<Array<VocabEntry | QuizQuestionSeed>>([]);
+   455→   455→  const distrRef = useRef<VocabEntry[]>([]);
+   456→   456→  const modeRef = useRef<Mode>(mode);
+   457→   457→  const qTimeRef = useRef(Q_TIME_SHOOT);
+   458→   458→  const deadlineRef = useRef(0);
+   459→   459→  const lockedRef = useRef(false);
+   460→   460→  const overRef = useRef(false);
+   461→   461→  const startedAtRef = useRef(0);
+   462→   462→  const seqRef = useRef(0);
+   463→   463→  const scoreRef = useRef(0);
+   464→   464→  const heartsRef = useRef(HEARTS);
+   465→   465→  const totalRef = useRef(0);
+   466→   466→  const correctRef = useRef(0);
+   467→   467→  const wrongRef = useRef<WrongItem[]>([]);
+   468→   468→  const finishRef = useRef<() => void>(() => {});
+   469→   469→  const timeoutRef = useRef<() => void>(() => {});
+   470→   470→  const advanceRef = useRef<() => void>(() => {});
+   471→   471→  const voiceSpeedRef = useRef(speed);
+   472→   472→  const tapRef = useRef(tapMode);
+   473→   473→  const qualityRef = useRef<Quality>(quality);
+   474→   474→  const qRef = useRef<Question | null>(null);
+   475→   475→  // ── فاز F8 — مراجع موج (بدون ری‌رندر در مسیرهای داخل حلقهٔ بازی) ──
+   476→   476→  const waveRef = useRef(1);
+   477→   477→  const maxWaveRef = useRef(1);
+   478→   478→  // ── فاز F5/F6 — مراجع گزینه‌ها/نقشه برای مسیرهای بدون ری‌رندر (ورودی نگاه + Attempt) ──
+   479→   479→  const sensRef = useRef(sens);
+   480→   480→  const invertRef = useRef(invertY);
+   481→   481→  const mapIdRef = useRef<MapId>(mapId);
+   482→   482→  // ── فاز F9 — سلاح جاری (latest-ref برای حلقهٔ شلیک) ──
+   483→   483→  const weaponRef = useRef<WeaponId>(weaponId);
+   484→   484→  // ── فاز F4 — مراجع خشاب/ریلود (چرخهٔ شلیک داخل effect فقط با ref — بدون dep churn) ──
+   485→   485→  const ammoRef = useRef(WEAPONS[loadWeaponPref()].mag);
+   486→   486→  const reloadUntilRef = useRef(0);
+   487→   487→  const reloadTimerRef = useRef<number | null>(null);
+   488→   488→  const autoReloadTimerRef = useRef<number | null>(null);
+   489→   489→  /** شلیک از رتیکل مرکز — دکمهٔ شلیک موبایل از این استفاده می‌کند (داخل effect مقدار می‌گیرد) */
+   490→   490→  const shootAtRef = useRef<(x: number, y: number) => void>(() => {});
+   491→   491→  /** ریلود دستی (R / دکمه) — latest-ref الگوی کیت */
+   492→   492→  const reloadNowRef = useRef<() => void>(() => {});
+   493→   493→
+   494→   494→  // ── فاز F4/F9 — ریلود: صدای کلانک + پر شدن خشاب بعد از ریلود سلاح جاری ──
+   495→   495→  const triggerReload = useCallback(() => {
+   496→   496→    const cfg = WEAPONS[weaponRef.current];
+   497→   497→    if (overRef.current || ammoRef.current >= cfg.mag) return;
+   498→   498→    if (reloadUntilRef.current > performance.now()) return; // در حال ریلود
+   499→   499→    reloadUntilRef.current = performance.now() + cfg.reloadMs;
+   500→   500→    bridge.current.reloadUntil = reloadUntilRef.current; // فاز F9 — انیمیشن ویومدل
+   501→   501→    setReloading(true);
+   502→   502→    playSound("reload");
+   503→   503→    buzz("light");
+   504→   504→    if (reloadTimerRef.current !== null) window.clearTimeout(reloadTimerRef.current);
+   505→   505→    reloadTimerRef.current = window.setTimeout(() => {
+   506→   506→      reloadTimerRef.current = null;
+   507→   507→      reloadUntilRef.current = 0;
+   508→   508→      bridge.current.reloadUntil = 0;
+   509→   509→      ammoRef.current = WEAPONS[weaponRef.current].mag;
+   510→   510→      setAmmo(WEAPONS[weaponRef.current].mag);
+   511→   511→      setReloading(false);
+   512→   512→    }, cfg.reloadMs);
+   513→   513→  }, []);
+   514→   514→  useEffect(() => {
+   515→   515→    reloadNowRef.current = triggerReload;
+   516→   516→  }, [triggerReload]);
+   517→   517→  // پاک‌سازی تایمرهای خشاب در unmount
+   518→   518→  useEffect(
+   519→   519→    () => () => {
+   520→   520→      if (reloadTimerRef.current !== null) window.clearTimeout(reloadTimerRef.current);
+   521→   521→      if (autoReloadTimerRef.current !== null) window.clearTimeout(autoReloadTimerRef.current);
+   522→   522→    },
+   523→   523→    [],
+   524→   524→  );
+   525→   525→
+   526→   526→  // ── فاز G2-e — زنجیرهٔ «فریز برخورد → سؤال بعد/پایان» مقاوم به توقف (الگوی دوئل G2-d) ──
+   527→   527→  // به‌جای setTimeout خام: زمان سررسید با «ساعت جبران‌شده» نگه داشته می‌شود؛ حین توقف
+   528→   528→  // تایمر کامل برچیده می‌شود و بعد از ادامه با همان زمان باقی‌مانده دوباره مسلح می‌شود.
+   529→   529→  const chainTimerRef = useRef<number | null>(null);
+   530→   530→  const chainPendingRef = useRef<{ due: number; fn: () => void } | null>(null);
+   531→   531→
+   532→   532→  const clearTimers = useCallback(() => {
+   533→   533→    if (chainTimerRef.current !== null) {
+   534→   534→      window.clearTimeout(chainTimerRef.current);
+   535→   535→      chainTimerRef.current = null;
+   536→   536→    }
+   537→   537→    chainPendingRef.current = null;
+   538→   538→  }, []);
+   539→   539→
+   540→   540→  const scheduleChain = useCallback(() => {
+   541→   541→    if (chainTimerRef.current !== null) {
+   542→   542→      window.clearTimeout(chainTimerRef.current);
+   543→   543→      chainTimerRef.current = null;
+   544→   544→    }
+   545→   545→    const pend = chainPendingRef.current;
+   546→   546→    if (!pend || pausedRef.current || overRef.current) return;
+   547→   547→    chainTimerRef.current = window.setTimeout(() => {
+   548→   548→      chainTimerRef.current = null;
+   549→   549→      const cur = chainPendingRef.current;
+   550→   550→      chainPendingRef.current = null;
+   551→   551→      cur?.fn();
+   552→   552→    }, Math.max(0, pend.due - performance.now()));
+   553→   553→  }, []);
+   554→   554→
+   555→   555→  /** زمان‌بندی داخل زنجیرهٔ مقاوم به توقف — جایگزین setTimeout خام الگوی قبلی */
+   556→   556→  const later = useCallback(
+   557→   557→    (fn: () => void, ms: number) => {
+   558→   558→      chainPendingRef.current = { due: performance.now() + ms, fn };
+   559→   559→      if (pausedRef.current) return; // حین توقف فقط ثبت می‌شود — ادامه با resume (scheduleChain)
+   560→   560→      scheduleChain();
+   561→   561→    },
+   562→   562→    [scheduleChain],
+   563→   563→  );
+   564→   564→
+   565→   565→  // ── فاز F8 — زنجیرهٔ مستقل هدف طلایی (مقاوم به توقف — الگوی زنجیرهٔ اصلی؛ اسلات جدا تا
+   566→   566→  // با «فریز برخورد → سؤال بعد» تداخل نکند) ──
+   567→   567→  const goldenTimerRef = useRef<number | null>(null);
+   568→   568→  const goldenPendingRef = useRef<{ due: number; fn: () => void } | null>(null);
+   569→   569→  /** پنجرهٔ باز هدف طلایی — صفر = غیرفعال/مصرف‌شده */
+   570→   570→  const goldenUntilRef = useRef(0);
+   571→   571→
+   572→   572→  const scheduleGoldenChain = useCallback(() => {
+   573→   573→    if (goldenTimerRef.current !== null) {
+   574→   574→      window.clearTimeout(goldenTimerRef.current);
+   575→   575→      goldenTimerRef.current = null;
+   576→   576→    }
+   577→   577→    const pend = goldenPendingRef.current;
+   578→   578→    if (!pend || pausedRef.current || overRef.current) return;
+   579→   579→    goldenTimerRef.current = window.setTimeout(() => {
+   580→   580→      goldenTimerRef.current = null;
+   581→   581→      const cur = goldenPendingRef.current;
+   582→   582→      goldenPendingRef.current = null;
+   583→   583→      cur?.fn();
+   584→   584→    }, Math.max(0, pend.due - performance.now()));
+   585→   585→  }, []);
+   586→   586→
+   587→   587→  const goldenLater = useCallback(
+   588→   588→    (fn: () => void, ms: number) => {
+   589→   589→      goldenPendingRef.current = { due: performance.now() + ms, fn };
+   590→   590→      if (pausedRef.current) return;
+   591→   591→      scheduleGoldenChain();
+   592→   592→    },
+   593→   593→    [scheduleGoldenChain],
+   594→   594→  );
+   595→   595→
+   596→   596→  // فاز F8 — latest-ref برای فرار از وابستگی حلقوی spawn ↔ despawn
+   597→   597→  const spawnGoldenRef = useRef<() => void>(() => {});
+   598→   598→  const despawnGoldenRef = useRef<() => void>(() => {});
+   599→   599→
+   600→   600→  // فاز F8 — ظهور هدف طلایی: ۳ ثانیه فرصت شکار +۲۰ امتیاز بونوس (خارج از چرخهٔ سؤال)
+   601→
+   602→[showing lines 1-600 of 2439; use offset=601 with limit to continue reading]

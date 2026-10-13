@@ -3184,3 +3184,53 @@ Stage Summary:
 - بازبینی یافته‌های Audit دوم: A1 ✓ A5 ✓ A4 ✓ A6 (نیمه — faNum؛ pick outdated) — A2/A3 (اسپرینت B) و A7..A9 باقی
 - گام بعدی پیشنهادی: **اسپرینت B** — گام ۴ (نجات quiz-game به games/quiz/ + پذیرش کیت) → گام ۵ (رژیم لاغری fps/index: setup-panel/use-fps-prefs/hud-question) → گام ۶ (فاز محصولی F10-ب جملهٔ زنجیره‌ای)
 - نکتهٔ عملیاتی: شروع dev server پایدار = `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)`؛ ویرایش‌های چندبخشی را همیشه بلافاصله با tsc تأیید کنید (دو اشتباه ویرایشی این دور هر دو بلافاصله کشف/اصلاح شد)
+---
+Task ID: 4
+Agent: full-stack-developer (subagent)
+Task: گام ۴ نقشهٔ refactor-2 — نجات quiz-game: جابه‌جایی به games/quiz/ + تفکیک ماژولار + پذیرش کیت بازی‌ها
+
+Work Log:
+- مکانیک تفکیک (پلی‌بوک games/fps/README.md): اسکریپت اسلایس خطی دقیق (نه ویرایش دستی JSX) + ۹ anchor یکتا برای درج کیت؛ سپس **صحه‌گذاری بایت‌به‌بایت** با اسکریپت verify (بازسازی فایل اصلی از HEAD و مقایسهٔ ۹ بازه: setup 702..1103، result 1109..1333، playing 1341..1568، bonus 1572..1675، constants 75..113، helpers 115..157، بدنهٔ موتور 165..698 پس از حذف معکوس درج‌های کیت) → همه عیناً OK
+- quiz-game.tsx (۱,۶۷۹ خط) → src/components/book/games/quiz/ با ۸ فایل (+README):
+  index.tsx ۶۹۴ (موتور QuizGame — امضای عمومی دست‌نخورده) · setup-panel.tsx ۵۰۴ · question-card.tsx ۳۳۸ · result-view.tsx ۲۹۱ · bonus-card.tsx ۱۴۳ · helpers.tsx ۵۲ · constants.ts ۴۶ · types.ts ۳۳ (مجموع ۲,۱۰۱ خط با هدرها/props)
+- الگوی Container/Presentational با **props هم‌نام** (setCategory/startDaily/… به‌عنوان prop) تا JSX منتقل‌شده صفر تغییر شناسه داشته باشد؛ types مشترک: DailyInfo/WeeklyInfo (type import) و PulseInfo ساختاری (Pulse) چون ReturnType-of-hook در eslint unused-vars خطا می‌داد — یک اصلاح بعد از lint اول
+- Re-point importers: quiz-view.tsx و chapter-view.tsx → `import { QuizGame } from "./games/quiz"`؛ فایل قدیمی src/components/book/quiz-game.tsx حذف (صفر importer باقی با rg تأیید شد)
+- پذیرش کیت (فقط index.tsx — ۱۶ رفرنس):
+  · kit/sound-engine → playSound("correct"/"wrong"/"finish") در chooseOption/handleTimeout/finish — فقط نام‌های موجود GameSound
+  · kit/haptics → buzz("success"/"error") هم‌تراز همان نقاط (الگوی reference: memory/scramble)
+  · kit/telemetry (G1-10) → createGameSession({game: GAME_KEY="quiz", level: lesson|"all"}) در هر ۴ مسیر شروع دور (normal/practice/daily/weekly) + end("finish") در finish + نگهبان unmount → abandon("unmount")؛ آزمون قبلاً هیچ تله‌متری جلسه نداشت (فقط تایمر Attempt)
+  · GameShell عمداً پذیرفته نشد — هدر playing آزمون سفارشی است (نوار پیشرفت/تایمر/بدون دکمهٔ انصراف میان‌دور) و شِل دکمهٔ خروج + سرصفحه اضافه می‌کرد = تغییر بصری/رفتاری (نقض شرط «فقط بدون تغییر»)
+- قراردادهای مقدس دست‌نخورده: recordCombinedRound/awardQuizActivity/seedReviewFromQuiz/daily-store/weekly-store/کلیدهای localStorage/attemptBody/صف آفلاین enqueueOffline — همه verbatim
+- گیت‌ها: `bunx tsc --noEmit` = ۰ (بعد از هر مرحله) ✓ `bun run lint` = **۰ خطا / ۰ warning** ✓
+- QA مرورگری (agent-browser): قفسه → ورود ویژن وان → آزمون: setup کامل (کارت روزانه/هفتگی + ۵ ردیف تنظیم) → شروع (۵ سؤال) → سؤال ۱ با نوار پیشرفت/تایمر/گزینه‌ها → پاسخ + بازخورد + «سؤال بعدی» تا سؤال ۵ → دیدن نتیجه: دایرهٔ ۴۰٪ (۲/۵)، توست «نتیجه آزمون ذخیره شد 🎉»، +۲۲ XP، «۳ سؤال در دفتر اشتباهات»، مرور پاسخ‌های نادرست با ستاره → خروج میان‌دور دور بعد (ناوبری به واژگان) بدون خطا → نمای فصل درس ۱ (تمرین): پنل آزمون با چیپ «درس 1» فعال (مسیر lessonFilter ✓)
+- dev.log: `game_session_start {game:"quiz",level:"all"}` → `game_session_end {duration:"42",reason:"finish"}` → `game_session_abandon {duration:"2",reason:"unmount"}` + POST /api/attempts 200 ✓ — کنسول مرورگر: صفر error/ warn (فقط HMR/Fast Refresh)؛ صفر page error؛ dev.log بدون error
+- اسکرین‌شات‌ها: qa-shots/t4-quiz-setup.png، t4-quiz-run.png، t4-quiz-result-exit.png، t4-chapter-quiz.png
+- docs/refactor-roadmap-2.md: گام ۴ ✅ + games/quiz/README.md (نقشهٔ ماژول + قراردادها + چک‌لیست توسعه)
+
+Stage Summary:
+- 🏁 بزرگ‌ترین استثنای ساختاری Audit دوم حذف شد: آزمون تعاملی هم‌اکنون داخل پوشهٔ games/ با پلی‌بوک fps و **۱۶ رفرنس کیت** است — ردیف «صفر پذیرش کیت» بسته شد
+- توزیع جدید: هیچ ماژولی بالای ۶۹۴ خط نیست (موتور) و ۷ ماژول دیگر همه <۵۱۰؛ فایل قدیمی quiz-game.tsx دیگر وجود ندارد
+- درس/تکنیک برای تفکیک‌های بعدی (گام ۷/۸/۹): اسلایس خطی + props هم‌نام + صحه‌گذاری بایت‌به‌بایت از git HEAD، هم ریسک رگرسیون JSX را صفر می‌کند و هم اعتبارسنجی «verbatim» را قابل اثبات می‌کند؛ ضمناً `ReturnType<typeof hook>` فقط برای تایپ در فایل client زیر no-unused-vars خطا می‌دهد — به‌جایش type export استور یا شکل ساختاری
+- گام بعدی طبق اسپرینت B: گام ۵ (رژیم لاغری fps/index: setup-panel/use-fps-prefs/hud-question) → گام ۶ (F10-ب جملهٔ زنجیره‌ای)
+
+---
+Task ID: 5
+Agent: full-stack-developer (subagent)
+Task: گام ۵ نقشهٔ refactor-2 — رژیم fps/index: استخراج setup-panel + use-fps-prefs + hud-question (قبل از F10-ب)
+
+Work Log:
+- ادامهٔ دورِ نیمه‌کارهٔ قبلی همین تسک: سه ماژول + README + یک اسکرین‌شات از دور قبل (۰۵:۳۶–۰۵:۵۵) با اسکریپت‌های phase1/2/3 + verify + سه بک‌آپ `tool-results/t5/index.before-phase{1,2,3}.tsx` باقی مانده بود؛ این دور = حسابرسی کامل + صحه‌گذاری مجدد verbatim + گیت‌ها + QA ده‌مرحله‌ای کامل + مستندسازی
+- صحه‌گذاری verbatim با `tool-results/t5/verify.ts` (الگوی گام ۴): setup JSX ۳۵۳ خط (modulo dedent) ✓ · TUTORIAL_STEPS ۲۸ خط (تنها تغییر: `export const`) ✓ · chipCls ۷ خط ✓ · کارت سؤال HUD ۴۴ خط ✓ · حالت‌های prefs ۱۱ خط ✓ · setterهای ماندگار — مغایرت گزارش‌شدهٔ verify.ts یک false-alarm بود (بازهٔ slice اسکریپت یک خط کامنت را جا انداخته بود)؛ با بازهٔ اصلاح‌شده تطبیق کامل، جز **یک تفکیک کامنت**: کامنت «فاز F9 — سلاح انتخابی (ماندگار) + اسکوپ لحظه‌ای» در اصل مشترکِ دو state بود — در هوک به «(ماندگار)» بریده شد و index خودش کامنت «اسکوپ لحظه‌ای» گرفت (فقط کامنت — صفر تغییر رفتار/رشتهٔ UI)
+- توزیع نهایی: `index.tsx` ۲,۴۳۸→**۱,۹۵۹** (ارکستراسیون) · `setup-panel.tsx` **۵۲۹** (JSX setup + TUTORIAL_STEPS ۵گامی؛ props هم‌نام: setMode/setWeaponPref/setMapPref/start/… — JSX منتقل‌شده صفر تغییر شناسه) · `use-fps-prefs.ts` **۱۲۲** (هوک: mode/quality/sens/fov/invertY/mapId/weaponId + ۶ setter ماندگار؛ localStorage فقط از طریق prefs.ts) · `hud-question.tsx` **۷۷** (کارت سؤال + پخش دوبارهٔ شنیداری + نوار زمان + شمارندهٔ HVT؛ voiceSpeedRef به‌صورت `{current:number}` ساختاری)
+- صادقانه در index ماند: effect سینک چیدمان نقشه (جهش bridge + گره با مأموریت — طبق ADR-001 جهش bridge جایش اینجاست)، موتور مأموریت (موج/HVT/زنجیره‌های مقاوم به توقف/Attempt/پایان)، هر ۸ effect ورودی/ماندگاری، Canvas و ترکیب صحنه، سیم‌کشی HUD، صفحهٔ نتیجه + **۱۱۷ خط هدر مستندات فازها (F3…F10)** — نتیجه: ۱,۹۵۹ بالاتر از آرمان ~۱,۴۰۰ سند است؛ دلیل: برآورد سند ~۷۰۰ خط جابه‌جایی بود درحالی‌که بدنهٔ verbatim قابل‌جابه‌جاییِ همان سه بخش ~۵۴۸ خط بود (+۷۲ خط سیم‌کشی props). هیچ استخراج فراتر از سه بخش تجویزشده انجام نشد (نقض مأموریت می‌شد)
+- قراردادهای مقدس دست‌نخورده: امضای Attempt (`category:"fps-shooter"` + `detail.{mode,quality,map,weapon,wave,…}` — بلاک saveAttempt عیناً در index) · کلیدهای `visionone:game-pref:fps-*` فقط از prefs.ts (فایل دست نخورد) · `scopeOf` در helpers.ts دست نخورد · physics/scene/weapons/maps/layouts/questions/types/constants همه لمس‌نشده
+- رویداد محیطی: dev server مرده بود (پروسهٔ `bun run dev` زنده ولی پورت ۳۰۰۰ بدون listener) → الگوی پایدار SPRINT-A: kill + `rm -rf .next` + `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)` → GET / = ۲۰۰ در اولین تلاش
+- گیت‌ها: `bunx tsc --noEmit` = **۰** ✓ `bun run lint` = **۰ خطا / ۰ warning** ✓ (پس از هر بازخوانی هم دوباره صفر)
+- QA ده‌مرحله‌ای (agent-browser): قفسه → ورود ویژن وان → هاب → شوتر: setup کامل (۳ حالت/۳ سلاح/۴ نقشه/کیفیت/اسلایدرها) ✓ تغییر سلاح→pump و نقشه→dust + فعال‌سازی «تپ ساده» → localStorage هر دو بلافاصله نوشته شد (ماندگاری use-fps-prefs ✓) → شروع مأموریت: canvas فعال، صحنه رندر، کارت سؤال روی HUD، چیپ موج ✓ پاسخ با کیبورد «۱..۴» در تپ ساده: بازخورد برخورد در aria-live («گزینهٔ غلط — پاسخ درست «thank» بود — یک ❤ کم شد») ✓ پایان طبیعی دور (تایم‌اوت‌ها) → ResultScreen با رتبهٔ نظامی → «تنظیمات» = خروج تمیز ✓ دور دوم هم برای اثبات تکرار شد
+- dev.log: دو جلسهٔ کامل `game_session_start/end` ({game:"fps-shooter",level:"word-tap:high"} — قالب level دست‌نخورده) با reason:finish + **۲× `POST /api/attempts` = ۲۰۰** + **صفر خط error** در کل لاگ ✓ کنسول مرورگر: صفر page error؛ تنها یک `[error]` محیطی next-auth CLIENT_FETCH_ERROR در سرد بودن compile اولیه (پیش از ورود به بازی؛ آرتیفکت restart دِو) + دو هشدار کهن‌الگوی شناخته‌شده (THREE.Clock / DialogContent) — هیچ خطایی از کد FPS
+- اسکرین‌شات‌ها: qa-shots/t5-fps-setup.png، t5-fps-run.png، t5-fps-exit.png
+- docs/refactor-roadmap-2.md: گام ۵ با همان سبک خط‌خوردهٔ گام‌های ۱–۴ ✅ شد · fps/README.md: نقشهٔ ماژول با ۳ ردیف جدید + خط index به‌روز (از دور قبل) — اعداد با wc تطبیق داده شد (۱۹۵۹/۵۲۹/۱۲۲/۷۷ ≈ همان ~۱,۹۶۰/~۵۳۰/~۱۲۲/~۷۷ جدول) و آیتم ۳ چک‌لیست از قبل درست به setup-panel.tsx اشاره می‌کند؛ بخش قراردادهای طلایی دست‌نخورده
+Stage Summary:
+- 🏁 گام ۵ اسپرینت B بسته شد: بزرگ‌ترین کامپوننت src دیگر god component نیست — setup/کارت سؤال HUD/ترجیحات هرکدام ماژول مستقل <۵۳۰ خط‌اند و index فقط ارکستراسیون است؛ زمین F10-ب آماده
+- درس‌ها: ① بازی واقعاً در زمان حقیقی بین فراخوانی‌های ابزار ادامه می‌یابد — ادعاهای QA باید در یک eval واحد batch شوند (در دور اول دکمهٔ ۱ بین دو فراخوانی از دست رفت و نتیجه ۰٪ شد؛ دور دوم اثبات شد) ② خروجی متنی Bash دنبالهٔ `[m` را (آرتیفکت strip ANSI) می‌بلعد — متن مشکوک را با od/rg -c بسنجید؛ دو «خرابی» ظاهری همین بود ③ false-alarm بازهٔ اسکریپت صحه‌گذاری: کامنت‌های خط مرزی را در بازه‌ها دقیق شمارید ④ کلید `${..}` داخل heredoc فارسی-safe است ولی برای رشته‌های حاوی backtick بهتر است فایل نوشته شود نه heredoc
+- گام بعدی طبق اسپرینت B: گام ۶ (فاز محصولی F10-ب «جملهٔ زنجیره‌ای» روی index لاغرشده) — مالکیت با ایجنت دیگر

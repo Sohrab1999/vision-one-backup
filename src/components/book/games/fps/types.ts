@@ -5,7 +5,20 @@ import type { MapLayout } from "./layouts";
 
 export type Phase = "setup" | "playing" | "done";
 /** فاز F10-a — حالت سوم «شنیداری»: سؤال با پخش صوتی مطرح می‌شود، نه متن */
-export type Mode = "word-hunt" | "grammar-gate" | "listening-hunt";
+/** فاز F10-ب — حالت چهارم «جملهٔ زنجیره‌ای»: شکار ۳ واژه به ترتیب برای کامل کردن جملهٔ واقعی مکالمه */
+export type Mode = "word-hunt" | "grammar-gate" | "listening-hunt" | "sentence-chain";
+
+/** فاز F10-ب — توالی جملهٔ زنجیره (از خط مکالمهٔ واقعی جزوه — بدون دادهٔ ساختگی) */
+export interface QuestionSequence {
+  /** سه واژهٔ هدف به ترتیبِ جمله */
+  words: string[];
+  /** جملهٔ کامل اصلی (انگلیسی) — برای تقویت شنیداری پس از کامل شدن زنجیره */
+  en: string;
+  /** ترجمهٔ فارسی خط مکالمه */
+  fa: string;
+  /** منبع نمایشی — مثل «مکالمه درس دوم — صفحه ۴۷» */
+  source: string;
+}
 
 /** پیکربندی یک هدف متحرک */
 export interface TargetSpec {
@@ -34,9 +47,11 @@ export interface Question {
   ltr: boolean;
   targets: TargetSpec[];
   speakText: string;
-  /** کلید SRS (واژهٔ انگلیسی درست) */
+  /** کلید SRS (واژهٔ انگلیسی درست) — در حالت زنجیره عمداً خالی است (گارد مسیر SRS در index) */
   srsKey: string;
   lesson: number;
+  /** فاز F10-ب — فقط در حالت sentence-chain: توالی سه واژهٔ زنجیره */
+  sequence?: QuestionSequence;
 }
 
 export interface WrongItem {

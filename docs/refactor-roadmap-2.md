@@ -100,8 +100,8 @@
 | **۱** | ~~**حذف ۱۳ وابستگی مرده**~~ ✅ **انجام شد (۱۴۰۵-۰۸-۲۳ — ۱۴ پکیج)** | `package.json` | 🟡 | ~۱۵د | Lean manifest | نصب/CI سریع‌تر، حذف ابهام معماری |
 | **۲** | ~~**حذف آرتیفکت Hello-world + پاک‌سازی ۲۱ unused-vars**~~ ✅ **انجام شد — lint ۰/۰ + `noImplicitAny:true`** | `api/route.ts` + ۱۱ فایل + tsconfig | 🟠 | ~۲س | Fail Fast (تکمیل گیت) | رگرسیون آینده ناممکن |
 | **۳** | ~~**همگرایی faNum/pick خارج از بازی‌ها**~~ ✅ **انجام شد — faNum×۶ به shared؛ ادعای pick×۳ outdated بود** | ۹ فایل | 🟡 | ~۱س | SSOT | فیکس یک‌جا |
-| **۴** | **نجات quiz-game**: جابه‌جایی به `games/quiz/` + پذیرش کیت + تفکیک | `quiz-game.tsx` ۱,۶۸۰ | 🟠 | ~۳س | SoC + Kit adoption | بزرگ‌ترین استثنای ساختاری حذف می‌شود |
-| **۵** | **رژیم fps/index**: استخراج setup-panel + use-fps-prefs + hud-question (قبل از F10-ب) | `fps/index.tsx` ۲,۴۳۸ | 🟠 | ~۲٫۵س | Container/Presentational | ماندن زیر ~۱,۴۰۰ خط |
+| **۴** | ~~**نجات quiz-game**: جابه‌جایی به `games/quiz/` + پذیرش کیت + تفکیک~~ ✅ **انجام شد (۱۴۰۵-۰۸-۲۳ — ۸ ماژول؛ موتور ۶۹۴ خط + ۷ ماژول <۵۱۰؛ ۱۶ رفرنس کیت)** | `quiz-game.tsx` ۱,۶۸۰ | 🟠 | ~۳س | SoC + Kit adoption | بزرگ‌ترین استثنای ساختاری حذف می‌شود |
+| **۵** | ~~**رژیم fps/index**: استخراج setup-panel + use-fps-prefs + hud-question (قبل از F10-ب)~~ ✅ **انجام شد (۱۴۰۵-۰۸-۲۳ — index ۲,۴۳۸→۱,۹۵۹ خط + ۳ ماژول جدید: setup-panel ۵۲۹ / use-fps-prefs ۱۲۲ / hud-question ۷۷؛ جابه‌جایی بایت‌به‌بایت با اسکریپت صحه‌گذاری و QA ده‌مرحله‌ای)** | `fps/index.tsx` ۲,۴۳۸ | 🟠 | ~۲٫۵س | Container/Presentational | ماندن زیر ~۱,۴۰۰ خط |
 | **۶** | **F10-ب موتور «جملهٔ زنجیره‌ای»** — روی index لاغرشده، با جمله‌های واقعی مکالمه‌های جزوه | fps + questions | 🟠 | ~۴س | توالی در Question + handleHit ترتیبی | زیرفاز بسته‌نشدهٔ محصولی |
 | **۷** | **تفکیک adventure-map** (بزرگ‌ترین باقی‌مانده) | ۱,۷۸۶ خط | 🟠 | ~۲٫۵س | پلی‌بوک fps/ | بک‌لاگ god component −۱ |
 | **۸** | **تفکیک crossword + snakes-ladders** | ۱,۶۷۵+۱,۶۳۷ | 🟠 | ~۳س | پلی‌بوک fps/ | بک‌لاگ −۲ |

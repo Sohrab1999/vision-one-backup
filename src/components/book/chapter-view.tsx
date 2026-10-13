@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBookData } from "@/lib/book-context";
 import { VocabCardGrid } from "./vocab-card-grid";
 import { GrammarLibrary } from "./grammar-library";
-import { QuizGame } from "./quiz-game";
+import { QuizGame } from "./games/quiz";
 import { ReadingCard, ConversationsList } from "./texts-view";
 import { cn } from "@/lib/utils";
 import type { ViewId } from "./app-header";

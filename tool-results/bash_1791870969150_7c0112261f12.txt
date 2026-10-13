@@ -1,0 +1,260 @@
+- رفع ۳ خطای tsc: weaponRef.current آرگومان WEAPONS (نه خودش cfg) — الگو: WEAPONS[weaponRef.current]
+- رفع leftover MAG_SIZE در useState اولیه → WEAPONS[weaponId].mag
+- QA مرورگری کامل (agent-browser، پچ matchMedia coarse در eval — بدون تغییر کد تولیدی): سکشن «سلاح مأموریت» با ۳ کارت ✓ انتخاب پمپ → aria-pressed + localStorage=pump ✓ ماندگاری بعد از reload کامل ✓ شروع مأموریت → canvas + خشاب ۴/۴ + موج ۱ + جوی‌استیک/شلیک/اسکوپ ✓ شلیک‌های متوالی با احترام کول‌داون ۹۵۰ms → ۴→۳→…→۰ → ریلود خودکار ✓ دور طبیعی تا ResultScreen (تایم‌اوت‌ها/برخورد غلط والی) → Attempt در DB با detail.weapon=pump ✓ Shift: keydown → aria-pressed=true + وینیت + رتیکل h-12 → keyup → همه برعکس ✓ اسکوپ موبایل hold → وینیت حین نگه‌داشتن ✓ موبایل ۳۹۰px: docW=390 بدون سرریز + هر ۳ کنترل لمسی ✓ خطای کنسول صفر (فقط هشدارهای کهن‌الگوی THREE.Clock/DialogContent کیت) ✓ dev.log: game_session_end reason:finish + POST /api/attempts 200 ✓ lint 0 / tsc(src) 0 ✓
+- اسکرین‌شات‌ها: qa-shots/f9-mobile390-pump-playing.png، qa-shots/f9-mobile390-playing.png
+- سند docs/fps-roadmap.md → وضعیت F9 تکمیل (نسخهٔ ۲.۲)
+
+Stage Summary:
+- 🏁 فاز F9 کامل شد: شوتر حالا سه سلاح با شخصیت متفاوت دارد (کلت دقیق/سنگین لگد‌دار/پمپ سه‌پرتویی)، با Shift اسکوپ می‌گیرد و هر سلاح مدل سه‌بعدی و صدای خودش را دارد
+- نکتهٔ فنی تکرارشدنی: بنر boxShadow درلاین Chrome بازچینی می‌شود («rgba(…) 0px 0px 130px inset») — سلکتور substring در QA باید به box-shadow عمومی باشد
+- گام بعدی طبق سند: F10 — عمق یادگیری (حالت شنیداری / جملهٔ زنجیره‌ای / گزارش AI دستیار)
+
+---
+Task ID: FM
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر — «نوع حرکت شوتر خوب نیست و لگ داره» + «مپ‌های متفاوت و یکی هم الهام‌گرفته از مپ دو در کانتراسترایک (دی‌داست۲) می‌خوام» — فاز FM سند fps-roadmap (نسخهٔ ۲.۳)
+
+Work Log:
+- قدم صفر: خواندن worklog (وضعیت F3…F9 کامل) + سند docs/fps-roadmap.md + مطالعهٔ کامل fps-shooter-game.tsx (۱+۳٫۸هزار خط: stepPlayer/applyRig/FieldProps/MAPS/ورودی‌ها)
+- ① موتور حرکت نرم: rewrite stepPlayer — شتاب/ترمز نمایی مستقل از فریم‌ریت `1−exp(−dt·k)` (ACCEL=۱۳ / STOP_ACCEL=۱۷)، سرعت پایه ۲٫۳→۴٫۳ m/s، دویدن Shift ×۱٫۵، خم‌شدن C ×۰٫۵۵ (ارتفاع چشم −۰٫۶۲ در applyRig)، پرش Space (JUMP_V=۴٫۷/GRAVITY=۱۲٫۵) با wantJump صف‌شده، باب سر از سرعت واقعی (فرکانس ۵٫۴+spd×۱٫۵۵ و دامنه ۰٫۰۱۱+spd×۰٫۰۰۶۲)، کیک FOV دویدن +۴٫۵° (نوشتهٔ stepPlayer، اعمال در applyScope/FovTune با base=fov+speedKick)، ساب‌استپ ×۲ در dt>۲۸ms
+- ② برخورد جدید resolveWorld: دایرهٔ بازیکن (PLAYER_R=۰٫۳۴) در برابر AABB سازه‌ها با دو گذر؛ مانع کوتاه (h≤۱٫۱) حین اوج پرش عبوری؛ جایگزین resolveCover دایره‌ای قدیمی — COVER_CRATES/MOVE_X_LIM/MOVE_Z_MIN/MOVE_Z_MAX/ENV_CRATES حذف
+- ③ سیستم چیدمان LAYOUTS: StructureKind (wall/crate/door/doorOpen/post/arch/tree/crystal/sandbag) + MapLayout با bounds هر نقشه؛ bridge.layout سینک در effect mapId (تعویض حین بازی = ریست امن به اسپان pos.z=۰٫۶)
+- ④ نقشهٔ چهارم «دروازهٔ دو در» (id dust، الهام de_dust2): در دوتایی میانه (لنگه بسته + لنگه باز rot=۱٫۰۵ + طاق)، گذرگاه بلند دوطرفه (دیوار segmented با درز دید در z∈(−۶٫۱،−۲٫۸) + طاق)، تونل B با درهای دوتایی چوبی، سایت A جعبه‌ای، ۳ کیسهٔ شنی اسپان؛ پالت شنی روشن (#d8c294 آسمان، #c9a76b دیوار Adobe، خورشید #fff3d6، مه ۱۳–۴۶) + swatch کارت amber
+- ⑤ چیدمان متمایز سه نقشهٔ دیگر: جنگل (+۴ تنه درخت جامد + ۲ دیوار چوبی)، کویر (+۶ دیوار ماسه‌سنگی + طاق ستون‌دار)، شب (+۸ کریستال emissive scale نابرابر + دیوار ابسیدین) — قاعده: گذر میانی |x|<۳ همیشه باز (خوانایی آموزشی)
+- ⑥ رندر FieldProps: سازه‌ها از LAYOUTS با پالت per-map (wallColor/doorColor/accentColor/crateColor به MapConfig اضافه شد) + نوار تأکیدی طلایی روی درها + درخت (تنه استوانه‌ای + مخروط) + کریستال اکتاهدر emissive؛ سنگ/بوته طبق tier حفظ شد
+- ⑦ ورودی: Space=پرش (+preventDefault اسکرول)، Shift=دویدن، KeyC→«c» در KEY_MOVE، اسکوپ → کلیک راست hold (button===2 در pointerdown/up) + onContextMenu prevent روی wrap؛ blur همه را پاک می‌کند؛ متن‌های آموزش/تولتیپ/آموزش ۵گامی بروز (اسکوپ=کلیک راست، دویدن/پرش/خم‌شدن، چهار نقشه)
+- ⑧ موبایل: دکمهٔ پرش ۴۸px (ArrowBigUp) کنار دکمهٔ اسکوپ در bottom-28؛ dpr عادی [۱,۱٫۷۵]→[۱,۱٫۵] (ضدلگ نمایشگر متراکم)
+- رفع ۱ خطای lint: react-hooks/immutability جهش speedKick داخل useFrame Rig را رد کرد → به stepPlayer (تابع ماژول‌سطح — الگوی ثابت فایل) منتقل شد
+- رفع ۱ خرابی dev server: پورت ۳۰۰۰ مرده بود (فقط ۳۰۰۳ بالا) → bun run dev ری‌استارت؛ Ready + HTTP 200
+- QA مرورگری (agent-browser، session ف10qa): ۴ کارت نقشه در setup ✓ انتخاب «دروازهٔ دو در» → aria-pressed + localStorage=dust ✓ شروع مأموریت → صحنهٔ شنی با در دوتایی میانه/طاق‌ها/جعبه‌ها/ویومدل ✓ (اسکرین‌شات f10-dust-start.png) حرکت W با dispatch مستقیم → نزدیک‌شدن واضح به درها (f10-dust-walking.png) ✓ پرش Space + دویدن Shift+W → عبور از گپ میانهٔ درها به میدان داخلی با خورشید و کوه‌های شنی (f10-sprint.png) ✓ چرخهٔ کامل تا ResultScreen (پایان با تایم‌اوت قلب‌ها در QA آهسته) + خروج امن از منوی توقف ✓ موبایل ۳۹۰ با پچ matchMedia coarse: جوی‌استیک + شلیک + اسکوپ + دکمهٔ پرش هر ۴ حاضر، docW=۳۹۰ بدون سرریز (f10-mobile-playing.png) ✓ خطای کنسول صفر (فقط هشدارهای کهن‌الگوی THREE.Clock/DialogContent) ✓ dev.log بدون error ✓ lint 0 / tsc(src) 0 ✓
+- سند docs/fps-roadmap.md → فاز FM درج شد (نسخهٔ ۲.۳) + آیتم آیندهٔ F6 بروز
+
+Stage Summary:
+- 🏁 فاز FM کامل شد: حرکت شوتر حالا نرم و FPS-وارد است (شتاب واقعی + دویدن + پرش + خم‌شدن + کیک FOV) و ۴ نقشه هرکدام چیدمان واقعی خودشان را دارند — نقشهٔ «دروازهٔ دو در» با درِ دوتایی میانه، گذرگاه بلند و تونل B به سبک دی‌داست۲
+- نکتهٔ تکرارشدنی: در این کیت هر جهش bridge باید داخل تابع ماژول‌سطح باشد (useFrame کامپوننتی با react-hooks/immutability رد می‌شود)؛ QA لمسی = پچ matchMedia coarse بعد از load و قبل از مونت بازی
+- گام بعدی طبق سند: F10 — عمق یادگیری (حالت شنیداری / جملهٔ زنجیره‌ای / گزارش AI دستیار)
+---
+Task ID: T1
+Agent: Z.ai Code (main)
+Task: درخواست کاربر — «یه نقشه راه بنویس، یه نقشه و هدف‌های بهتر بساز — اینا خیلی کرینجه واسه شوتر» → فاز T1 بازطراحی نظامی (ضدکرینج): پهپادهای متخاصم + انفجار آتش/دود + HVT قرمز + رتبهٔ نظامی + غنی‌سازی نقشهٔ Dust2 + سند نسخهٔ ۲.۴
+
+Work Log:
+- ① Target: اکتاهدرون رنگی → پهپاد متخاصم (بدنهٔ gunmetal metalness ۰٫۵۸، کپسول روتور دوطرف capsuleGeometry + دیسک روتور، بالهٔ رادار، حس‌گر قرمز emissive رو به بازیکن)؛ layoutTargets colors → [0x3d4654,0x38424e,0x424c5a,0x39424e]؛ پالس idle قرمز کم‌نور (فلاش ok/bad سبز/قرمز حفظ شد)
+- ② makeLabelTexture: قرص سفید تاکتیکی با حاشیهٔ قرمز نظامی و متن #1f2937 (خوانایی روی هر ۴ نقشه حفظ شد)
+- ③ Burst: پالت رنگین‌کمان → آتش/دود وزن‌دار (۲۸٪ سفیدِ داغ / ۳۴٪ نارنجی‌قرمز / ۳۸٪ دود خاکستری) — همان InstancedMesh، صفر هزینهٔ اضافه
+- ④ GoldenTarget → هدف ویژهٔ HVT: بدنهٔ تیرهٔ #3a3f47، هستهٔ قرمز پالس‌دار، حلقهٔ هشدار قرمز چرخان torusGeometry (spin در useFrame)، حس‌گر قرمز، پلاک تیرهٔ حاشیه‌قرمز؛ مکانیک +۲۰ و زنجیرهٔ مستقل دست‌نخورده
+- ⑤ missionRank(acc,score): S تک‌تیرانداز افسانه‌ای / A تک‌تیرانداز / B سرباز زبده / C مأمور میدانی / D تازه‌کار — اولین کارت صفحهٔ نتیجه با آیکون Medal + عنوان «گزارش مأموریت»
+- ⑥ متن‌ها: ایموجی 🌟/⚡ حذف، آموزش‌ها/aria-live/چیپ فرصت HVT (کهربایی→قرمز تاکتیکی + Crosshair) و intro setup بازنویسی مأموریت‌محور
+- ⑦ LAYOUTS.dust: برج دیدبانی اسپان (۲ پایهٔ post + ۲ سکوی دکوری solid:false)، جعبهٔ دوطبقهٔ میانی (0,1.9 — طبقهٔ دوم دکوری)، کیسهٔ شنی سایت A (7.3,-3.7) و تونل B (-7.7,-8.9)؛ LAYOUTS.desert: دروازهٔ ورود اسپان (طاق دوقلو)؛ گذر میانی |x|<۳ همچنان باز
+- ⑧ سند docs/fps-roadmap.md → نسخهٔ ۲.۴ + فاز T1 کامل درج شد
+- ⑨ QA مرورگری (agent-browser): setup + آموزش ۵گامی با متن جدید ✓ انتخاب dust → شروع مأموریت → صحنهٔ شنی با در دوتایی/طاق/ویومدل + پهپادهای تیرهٔ حس‌گرقرمز ✓ موج ۲ فعال ✓ چیپ HVT قرمز «هدف ویژهٔ HVT! +۲۰ — ۲ ثانیه» ✓ شلیک با کلید ۱..۴ در تپ ساده → فلاش/انفجار ✓ پایان دور → صفحهٔ نتیجه «گزارش مأموریت» با کارت رتبهٔ D—تازه‌کار ✓ موبایل ۳۹۰ بدون سرریز ✓
+- ⑩ حاشیه: dev server یک‌بار مرده (CSS خام در QA) → bun run dev ری‌استارت و تأیید 200؛ خطاهای کنسول فقط next-auth session fetch (محیط QA بی‌لاگین + ری‌استارت سرور) — صفر خطای بازی؛ lint 0 / tsc(src) 0
+
+Stage Summary:
+- 🎖 شوتر حالا هویت تاکتیکی دارد: دشمن = پهپاد متخاصم با حس‌گر قرمز، انفجار = آتش/دود، بونوس = HVT قرمز با حلقهٔ هشدار، پایان دور = رتبهٔ نظامی S..D — بدون هیچ تغییر در مکانیک آموزشی/امضاهای Attempt
+- نکتهٔ تکرارشدنی: MultiEdit ترتیبی است و در اولین old_str ناهمسان می‌ایستد ولی ویرایش‌های قبلی همان بسته اعمال می‌شوند — بعد از هر خطا، وضعیت فایل را با rg بررسی کن
+- گام بعدی طبق سند: F10 عمق یادگیری (حالت شنیداری / جملهٔ زنجیره‌ای / گزارش AI) یا T2 حالت‌های تاکتیکی
+---
+Task ID: AUDIT-1
+Agent: main orchestrator (Z.ai Code) — senior software architect audit
+Task: درخواست کاربر — «اجرای پرامپت Audit جامع کل کدبیس + ثبت نقشه راه Refactoring رتبه‌بندی‌شده در انتها»
+
+Work Log:
+- خواندن worklog (وضعیت: FPS فازهای F1..F9 + FM + T1 کامل، ۱۶ ارور ریشه‌ای حل شده)
+- شمارش خطوط کل src/ و mini-services: ~۱۸۰k خط (بدون node_modules)
+- شناسایی فایل‌های بزرگ: fps-shooter-game.tsx = ۴۳۰۴ خط (خدای پروژه)، adventure-map ۱۷۸۶، quiz-game ۱۶۸۱، crossword ۱۶۷۵، snakes-ladders ۱۶۳۷، speed-quiz ۱۴۹۵، flappy ۱۴۵۲، wordle ۱۳۴۰
+- تحلیل FPS god component: کامپوننت اصلی FpsShooterGame از خط ۲۲۷۰ تا ۴۳۰۴ (~۲۰۳۵ خط) با ۳۳ useState + ۸۲ useRef + ۳۱ useEffect + ۵۱ memo/callback + ۱۵ کامپوننت داخلی + MAPS/LAYOUTS/WEAPONS/فیزیک همه در یک فایل
+- **کشف کد مردهٔ عظیم**: ۱۷ فایل دادهٔ ریشهٔ src/data/*.ts (به‌جز types.ts و whats-new.ts) = **۹۰۷۹ خط، صفر import مطلق** — کپی‌های قدیمی پیش از refactor چندجزوه‌ای؛ همهٔ importها type-only از @/data/types هستند و دادهٔ واقعی از registry → vision-one/grade-* می‌آید
+- کشف تکرارهای DRY: faNum در ۹ فایل، pick در ~۸ بازی (shared.ts دارای pickUnique هست ولی استفاده نمی‌شود)، scopeOf در ۲ بازی، saveAttempt محلی در ۷ بازی به‌جای shared
+- کشف تزریق تمام نماها در page.tsx: ~۲۲ view استاتیک import شده (فقط بازی‌ها dynamic هستند) → باندل اولیهٔ سنگین
+- شواهد عملکردی dev.log: LCP گزارش‌شدهٔ perf-vitals = ۱۹–۲۵ ثانیه (تورم کامپایل dev + باندل اولیه) و CLS = ۰٫۳۷–۰٫۳۹ (بالای آستانهٔ ۰٫۲۵)
+- ریسک build: next.config.ts دارای typescript.ignoreBuildErrors: true + tsconfig noImplicitAny: false + eslint با no-unused-vars/exhaustive-deps خاموش
+- prefetch همزمان ۱۵ چانک بازی در requestIdleCallback (games-hub) — رقابت با رندر اول موبایل
+- امنیت سالم: PIN با scrypt + rate-limit + regex اعتبارسنجی + Permissions-Policy بسته + نبود secret هاردکد؛ CSP تعمداً مینیمال (مستند شده برای preview)
+- بهداشت ریپو: ~۱۰۰ اسکرین‌شات qa-*.png در ریشه، tool-results/ داخل پروژه، dev.log.g4-backup، docs/*.bak، node_modules سرویس دوئل در ریپو
+
+Stage Summary (گزارش Audit کامل + نقشه راه رتبه‌بندی‌شده):
+- 🔴 High: (۱) کد مردهٔ ۹۰۷۹ خطی دادهٔ ریشه — حذف کامل، صفر ریسک (۲) god component شوتر ۴۳۰۴ خط — تفکیک به ماژول maps/layouts/weapons/physics/scene/hud/prefs (۳) LCP/CLS خارج بودجه — داینامیک‌کردن نماها + رزروشدن ارتفاع اسکلت
+- 🟠 Medium: تکرار faNum/pick/saveAttempt/scopeOf → یکجا در shared.ts؛ ignoreBuildErrors=false به‌تدریج؛ prefetch هوشمند به‌جای ۱۵ چانک
+- 🟡 Low: پاک‌سازی artifacts (png/bak/log)، مستندسازی الگوی bridge، بازگرداندن قواعد eslint به‌تدریج
+- نقشه راه اجرایی رتبه‌بندی‌شدهٔ ۱..۱۰ در سند docs/refactor-roadmap.md ثبت شد (۱۰ گام با فایل/شدت/الگوی معماری/سود)
+---
+Task ID: REFACTOR-1
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «شروع کن» — اجرای اسپرینت ۱ و ۲ نقشه راه docs/refactor-roadmap.md
+
+Work Log:
+- گام ۱ (حذف کد مرده): چک نهایی صفر-import برای هر ۱۷ فایل + vocab-junior (ترانزیتیو) → ۱۸ فایل ریشهٔ src/data حذف شد (۹۰۷۹ خط)؛ src/data اکنون فقط types.ts + whats-new.ts + پوشه‌های کتاب (books/vision-one/grade-*)
+- کشف ریشهٔ ignoreBuildErrors: tsconfig قدیمی **/*.ts را چک می‌کرد و خطاهای کهن‌الگوی scripts/skills/examples/tool-results را ماسک می‌کرد → exclude این پوشه‌ها + «**/*.ts» به «src/**/*.ts» محدود شد
+- گام ۵ (دروازهٔ کیفیت): next.config.ts → ignoreBuildErrors:false (tsc روی src = ۰ خطا، پس امن است) — هر رگرسیون تایپ حالا build را می‌شکند
+- گام ۸ (بهداشت ریپو): ۳۶ png ریشه + dev.log.g4-backup → qa-archive/2026-10/؛ docs/fps-revolution-roadmap.v1.bak حذف؛ ریشهٔ پروژه تمیز شد
+- گام ۲ (داینامیک نماها): ۱۹ نمای page.tsx → next/dynamic با ssr:false و اسکلت ViewChunkLoading (min-h-[55vh] — ضد CLS)؛ فقط بوت‌پث eager ماند (AppHeader/AppFooter/BookshelfView/پروایدرها/گیت‌ها/کانفتی)؛ BookDataLoading هم min-h گرفت
+- گام ۶ (prefetch بودجه‌دار): صف ترتیبی games-hub — هر تیک idle فقط ۲ چانک + فاصلهٔ ۹۰۰ms؛ ترتیب سبک→سنگین (شوتر three.js آخر صف)؛ cleanup کامل تایمرها
+- اعتبارسنجی: bunx tsc --noEmit = ۰ خطا ✓ bun run lint = ۰ خطا ✓ dev server HTTP 200 ✓
+- QA مرورگری (agent-browser): Home (چانک داینامیک) رندر کامل ✓ هاب بازی‌ها (چانک داینامیک + صف prefetch فعال) ۱۵ کارت کامل ✓ setup شوتر (چانک داینامیک داخل هاب) با سکشن نقشه/سلاح/کیفیت ✓ صفر خطای کنسول (فقط Fast Refresh log) ✓ dev.log بدون error ✓ اسکرین‌شات‌ها: qa-shots/audit-home.png، audit-hub.png، audit-fps-setup.png
+- سند docs/refactor-roadmap.md بروزرسانی شد: گام‌های ۱/۵/۸/۲/۶ ✅، گام ۷ نیمه، اسپرینت ۳ (گام‌های ۳/۴/۹/۱۰) مانده
+
+Stage Summary:
+- 🏁 اسپرینت ۱ کامل: −۹۰۷۹ خط کد مرده، دروازهٔ TypeScript بسته شد (ignoreBuildErrors:false — دیگر «۱۶ ارور پنهان» ممکن نیست)، ریپو پاک
+- 🏁 اسپرینت ۲ کامل: باندل اولیه از ۲۲ نما به فقط بوت‌پث کاهش یافت (۳۰–۵۰٪ انتظار) — LCP/CLS ریشه‌ای بهبود می‌شود؛ prefetch هاب دیگر ۱۵ چانک را یکجا نفرست می‌کند
+- QA سه‌لایهٔ چانک داینامیک (Home/Hub/FPS setup) صفر خطا — الگوی dynamic loading امن است
+- گام بعدی: اسپرینت ۳ — تفکیک god component شوتر به ۱۰ ماژول (گام ۳) + یکجا کردن کمکی‌های DRY (گام ۴) + ADR-001 (گام ۱۰)
+---
+Task ID: REFACTOR-2
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «شروع کن» + «ادامه بده» — اجرای اسپرینت ۳ نقشه راه docs/refactor-roadmap.md (گام‌های ۳/۴/۵-ادامه/۱۰)
+
+Work Log:
+- گام ۳ (تفکیک god component شوتر): fps-shooter-game.tsx (۴۳۰۴ خط) → پوشه games/fps/ با ۱۶ فایل:
+  index.tsx (۲۳۳۸ خط — فقط کامپوننت اصلی + TUTORIAL_STEPS) + constants/weapons/maps/layouts/prefs/types/helpers/textures/questions/physics + scene/{camera,viewmodel,sky,world,targets,input}
+- روش: استخراج مکانیکی با sed روی بازه‌های خطی دقیق (نقشه‌برداری با grep تعریف‌های سطح‌بالا) + حلقهٔ تکرار tsc تا صفر خطا
+- رفع ۳ نوبت خطای import (SENS_*/GoldenSpec/QUALITY_KEY در index؛ react-hooks در scene ها؛ useThree/useMemo جابه‌جایی fiber↔react در world/sky) + repair دابل‌براکت importها
+- پاک‌سازی importهای بلااستفادهٔ index با تحلیل eslint warn (۲۷ نام حذف: DODGE_*/ENV_*/physics توابع/scene کامپوننت‌هایی که حالا داخلی‌اند)
+- انتقال نهایی: mv fps-shooter-game.tsx → fps/index.tsx + اصلاح مسیرهای نسبی (./shared→../shared، ./kit→../kit، ./fps/*→./*) + games-hub دو ارجاع dynamic → import("./fps")
+- گام ۴ (DRY — با یافتهٔ بازبینی): ادعای audit outdated بود — faNum/pick/saveAttempt صفر تعریف محلی دارند (از قبل همگرا)؛ فقط fmtTime تکراری fps/helpers حذف شد (import از shared)؛ scopeOf سرعت‌کوییز هم‌نام ولی معنای متفاوت (درس:دسته:زمان) — تعمداً حفظ شد؛ hook رکوردها ساخته نشد (YAGNI — جلوگیری از کد مردهٔ جدید)
+- گام ۵-ادامه (دروازهٔ کیفیت): no-unused-vars: off→warn در eslint + پاک‌سازی ۱۹ unused import از ۱۱ فایل (contents-view/quiz-game/tutorial-overlay/speak-button/vocab-card-grid/grammar-library/hangman/…) → ۴۰→۲۱ warning (باقی‌مانده semantic: متغیر assigned-but-unused — نیاز به تصمیم انسانی)
+- eslint ignores += tool-results/qa-archive/mini-services/scripts (artifactها از lint خارج شدند)
+- گام ۱۰: docs/adr/ADR-001-fps-bridge-pattern.md (الگوی جهش bridge فقط در توابع ماژول‌سطح — جدول ۵ تابع، مثال مجاز/غیرمجاز، مرز bridge=پیوسته/state=گسسته) + games/fps/README.md (جدول ۱۷ ماژول + قراردادهای ثابت Attempt/localStorage/registry + چک‌لیست توسعه)
+- اعتبارسنجی: bunx tsc --noEmit = ۰ ✓ bun run lint = ۰ خطا / ۲۱ warning ✓ dev server HTTP 200 ✓
+- QA مرورگری (agent-browser، session r3): shelf → ویژن وان → هاب → شوتر: آموزش ۵گامی ظاهر شد ✓ skip → setup با ۴ کارت نقشه (شامل دروازهٔ دو در) + ۳ کارت سلاح + چیپ کیفیت ✓ شروع مأموریت → تمام‌صفحه + صحنهٔ جنگل کامل (پهپادها/ویومدل/HUD/کارت سؤال/لِین‌ها/کوه‌ها) — اسکرین‌شات qa-shots/r3-fps-scene.png ✓ چرخهٔ طبیعی: ۳ تایم‌اوت سؤال → ۳ قلب کم → ResultScreen «گزارش مأموریت» با کارت رتبهٔ D—تازه‌کار + مرور ۳ خطا — اسکرین‌شات r3-fps-result.png ✓ dev.log: game_session_end reason:finish + POST /api/attempts 200 (28ms) ✓ خطای کنسول صفر، خطای صفحه صفر ✓
+
+Stage Summary:
+- 🏁 اسپرینت ۳ کامل شد و نقشه راه refactor عملاً بسته شد (۹ از ۱۰ گام ✅ + گام ۷ نیمه + گام ۹ اختیاری)
+- fps-shooter-game.tsx دیگر وجود ندارد — مسیر رسمی بازی: src/components/book/games/fps/index.tsx (چانک dynamic همان قبلی؛ رفتار عیناً حفظ شده)
+- بزرگ‌ترین فایل fps اکنون index.tsx با ~۲۳۴۰ خط (از ۴۳۰۴) و همهٔ ماژول‌های دیگر <۳۴۰ خط — code-review و ادامهٔ فازهای محصولی (F10 عمق یادگیری / T2 تاکتیکی) حالا روی فایل‌های کوچک ممکن است
+- الگوی bridge مستند شد (ADR-001) — دیگر هر ایجنت/توسعه‌دهنده‌ای به خطای immutability برنمی‌خورد
+- گام بعدی پیشنهادی: تکمیل گام ۷ (دیالوگ‌های سایزثابت + font-display swap) یا بازگشت به نقشهٔ محصولی شوتر (F10 عمق یادگیری / T2 حالت‌های تاکتیکی) طبق docs/fps-roadmap.md نسخهٔ ۲.۴
+---
+Task ID: REFACTOR-3
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «طبق نقشه راه برو جلو» — تکمیل گام ۷ (آخرین گام عملیاتی نقشهٔ refactor)
+
+Work Log:
+- وضعیت‌سنجی: اسپرینت ۱/۲/۳ روی دیسک تأیید شد (src/data ریشه فقط types/whats-new + پوشه‌ها؛ games/fps/ موجود) — تنها گام نیمه‌تمام: گام ۷ (فونت/دیالوگ برای CLS)
+- هدر بررسی شد: کاملاً استاتیک (صفر state) — منبع CLS نیست؛ WhatsNewDialog سایزثابت (max-w-lg + max-h-96) — امن
+- **فونت خودمیزبان شد**: `@import` رندربلاک‌کنندهٔ Google Fonts از globals.css حذف → فایل متغیر `Vazirmatn[wght].woff2` (۱۱۱KB، magic wOF2 تأیید شد) از jsdelivr (npm vazirmatn@33.0.3) دانلود → `public/fonts/`
+- `@font-face` با `font-display: swap` + وزن 100 900 + `<link rel=preload>` در layout head
+- **فالبک متریک**: متیریک واقعی فایل با fontTools استخراج شد (upem 2048، ascent 2100، descent −1100، lineGap 0) → face «Vazirmatn Fallback» با ascent-override 102.539% / descent-override 53.711% / line-gap-override 0% و src محلی Tahoma/Segoe/Arial/Roboto/DejaVu؛ در هر دو stack `--font-sans` و body بعد از «Vazirmatn» درج شد
+- قید سازگاری کشف و حفظ شد: canvas کارت‌های اشتراک (result-share.ts، progress-card-generator.tsx) به `document.fonts.load("… Vazirmatn")` وابسته‌اند → next/font/local (نام خانوادهٔ هش‌شده) استفاده نشد؛ نام «Vazirmatn» دست‌نخورده ماند — صفر تغییر کد اپ
+- رفع خطای lint: directive بی‌مصرف eslint-disable-next-line next/no-page-custom-font (rule وجود نداشت) حذف شد
+- **باگ محیطی**: بعد از ویرایش globals.css، سرور CSS کهنه سرو می‌کرد (chunk بدون @font-face؛ دو نمونهٔ bun run dev همزمان هم بود) — touch کافی نبود؛ restart + rm -rf .next (کش Turbopack) مشکل را ریشه‌ای حل کرد
+- اعتبارسنجی: tsc=۰ ✓ lint=۰ خطا/۲۱ warning (مطابق baseline) ✓ فونت ۲۰۰/۱۱۱۱۵۲/font-woff2 ✓
+- QA مرورگری: `document.fonts.check('16px Vazirmatn')`=true ✓ computed family شامل «Vazirmatn Fallback» ✓ **صفر درخواست به googleapis/gstatic** ✓ preload same-origin فعال ✓
+- QA golden path: قفسه → ورود ویژن وان → نمای خانه (۱۶ دکمهٔ ناوبری) → هاب بازی‌ها (۱۵ کارت) → setup شوتر (کارت نقشه/مأموریت) — صفر خطای کنسول و صفحه
+- vitals در dev.log: cls=0 در هر دو لود (بودجه ✓)، INP=48ms، LCP لود سرد 18s (هزینهٔ compile dev بعد از پاک‌سازی کامل cache) → لود دوم 2420ms
+- اسکرین‌شات‌ها: qa-shots/r4-step7-whatsnew.png، r4-step7-hub.png، r4-step7-fps.png
+- docs/refactor-roadmap.md بروزرسانی شد: گام ۷ ✅ کامل (جدول + وضعیت اجرا) — نقشهٔ refactor اکنون ۹/۹ گام عملیاتی بسته است؛ گام ۹ تعمداً معلق (فقط با چندنفره‌شدن کلاس مجازی)
+
+Stage Summary:
+- 🏁 **نقشه راه Refactoring رسماً بسته شد** — هر ۹ گام عملیاتی از ۱۰ انجام شد (گام ۹ اختیاری/معلق)
+- معماری فونت: شخص ثالث صفر + preload + swap + فالبک متریک واقعی — CLS سهم فونت = ۰، سازگاری کامل با canvas
+- نکتهٔ عملیاتی برای ایجنت‌های بعدی: **بعد از ویرایش globals.css اگر CSS کهنه سرو شد → rm -rf .next و restart** (کش Turbopack)
+- گام بعدی پیشنهادی: بازگشت به نقشهٔ محصولی شوتر docs/fps-roadmap.md نسخهٔ ۲.۴ (F10 عمق یادگیری / T2 حالت‌های تاکتیکی) روی ساختار ماژولار جدید games/fps/
+---
+Task ID: F10-1
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «ادامه بده» — فاز F10 «عمق یادگیری» نقشهٔ محصولی شوتر (docs/fps-roadmap.md نسخهٔ ۲.۴) — الف + ج
+
+Work Log:
+- وضعیت‌سنجی: نقشهٔ refactor بسته (REFACTOR-3)؛ طبق سند، فاز بعدی F10 عمق یادگیری — سه زیرفاز: شنیداری/جملهٔ زنجیره‌ای/گزارش AI
+- **الف — حالت شنیداری (listening-hunt)**: Mode union += "listening-hunt"؛ buildListeningQuestion در questions.ts (promptMain = «🔊؟» — متن واژه عمداً مخفی؛ تشخیص فقط با شنیدن)
+  - پخش خودکار ۴۲۰ms پس از هر سؤال شنیداری (effect با گارد paused/exitAsk + پاک‌سازی تایمر)
+  - دکمهٔ «پخش دوباره» روی HUD (pointer-events-auto داخل کارت pointer-events-none) + کلید V در دسکتاپ (handler keydown کنار KeyR)
+  - scopeOf/modeName در helpers برای سه حالت + bestListen (useSyncExternalStore سوم) + level تله‌متری «listen-tap:…»
+  - setup: کارت سوم (Headphones، گرید sm:grid-cols-3) + pool مشترک واژگان (poolOk/poolCount سه‌وضعیتی) + چیپ‌های درس (باگ جابه‌جایی بدنهٔ ternary وسط کار کشف و اصلاح شد) + متن معرفی و آموزش گام ۱ بروز
+- **ج — گزارش به دستیار AI**: src/lib/tutor-seed.ts جدید (sessionStorage، consume یک‌باره)؛ FreeChat در tutor-view mount → seed را در ورودی می‌گذارد + فوکوس + توست (ارسال خودکار نه — سقف روزانهٔ AI حفظ می‌شود)؛ دکمهٔ «گزارش خطاها به دستیار هوشمند» در phase==="done" زیر ResultScreen (فقط با خطا > ۰) → seedTutorPrompt(رتبهٔ نظامی + دقت + فهرست خطاها با معنی) + requestView("tutor")
+- **پولیش صدا**: قطع عمدی پخش (سؤال بعدی/دابل پخش دوباره) دیگر AbortError در کنسول نمی‌دهد — speak.ts اکنون جایگزین‌شدن currentAudio را تشخیص می‌دهد (audio بیرون try تعریف شد)
+- **اشکال میانه که ریشه‌ای رفع شد**: ویرایش دستی من باعث شد backtick پایانی تمپلیت گزارش به quote تبدیل شود → ۱۲۴ خطای TS از خط ۹31 (جایی که تمپلیت بسته می‌شد) — با اسکنر وضعیت backtick (پاریتی) و esbuild خطای واقعی در خط ۸۸۵ پیدا و اصلاح شد
+- اعتبارسنجی: tsc = ۰ ✓ lint = ۰ خطا/۲۱ warning ✓
+- QA مرورگری: setup سه کارت حالت ✓ شروع دور شنیداری → POST /api/tts 200 (پخش خودکار) ✓ پخش دوباره از کش حافظه (بدون POST دوم) ✓ سه پاسخ غلط → ResultScreen «گزارش مأموریت» + دکمهٔ گزارش ✓ کلیک → نمای دستیار + متن seed در ورودی چت (رتبهٔ D، دقت ۴۰٪، ۳ مورد) ✓ dev.log: game_session_end level:"listen-tap:high" + POST /api/attempts 200 ✓ دابل‌پخش دوبارهٔ تست → صفر خطای کنسول ✓
+- اسکرین‌شات‌ها: qa-shots/f10-setup-modes.png، f10-listening-hud.png، f10-result.png، f10-tutor-seed.png، f10-listening-scene.png
+- docs/fps-roadmap.md: وضعیت F10 🔶 ثبت شد (الف ✓ ج ✓، ب ⏳)
+
+Stage Summary:
+- 🔶 F10 دو-سوم بسته شد: حالت شنیداری کامل + تحویل گزارش به دستیار (سازوکار tutor-seed عمومی برای همهٔ بازی‌ها)
+- گام بعدی مشخص: **F10-ب «جملهٔ زنجیره‌ای»** — موتور توالی (Question.sequence + شکار ترتیبی در handleHit) + انتخاب جمله از مکالمه‌های واقعی جزوه (بدون دادهٔ ساختگی) — به‌عنوان فاز مستقل با QA
+- نکته برای ایجنت‌های بعدی: ویرایش دستی تمپلیت‌های فارسی/RTL حساس است — بعد از هر ویرایش بلافاصله `bunx tsc --noEmit` بگیرید (خطای backtick ممکن است دور از محل ویرایش ظاهر شود)
+---
+Task ID: AUDIT-2
+Agent: main orchestrator (Z.ai Code) — senior software architect audit (دوم)
+Task: درخواست کاربر — «اجرای پرامپت Audit جامع + ثبت نقشه راه رتبه‌بندی‌شده» (بار دوم — پس از بسته‌شدن Audit اول)
+
+Work Log:
+- خط مبنا: ۸۸,۹۳۰ خط src؛ تأیید سلامت میراث Audit اول: tsc=۰، lint=۰ خطا، CLS=۰ در لود تمیز، صفر secret/eval، ۱ مورد any صریح، باندل اولیه فقط بوت‌پث، prefetch بودجه‌دار، ۱۹/۳۷ روت API rate-limit
+- سرشماری بزرگ‌فایل‌ها: fps/index.tsx = ۲,۴۳۸ (بازتورم پس از F10!)، dictionary.ts ۲,۶۲۳ (داده — سالم)، adventure-map ۱,۷۸۶، quiz-game ۱,۶۸۰، crossword ۱,۶۷۵، snakes-ladders ۱,۶۳۷، speed-quiz ۱,۴۹۵، flappy ۱,۴۵۲، wordle ۱,۳۴۰
+- پایش وابستگی‌ها: ۷۰ dep → **۱۳ پکیج صفر-consumption** کشف شد (@dnd-kit×۳، react-query، react-table، zod، mdxeditor، date-fns، next-intl، syntax-highlighter، reactuses، react-markdown، hookform/resolvers) — با الگوی آزاد دوباره چک شد (sharp=نیاز runtime تصویر، uuid=مصرف class route، next-themes/vaul/embla/input-otp/day-picker/react-hook-form=مصرف کیت ui → نگه‌داشتن)
+- امنیت: dangerouslySetInnerHTML فقط در ۴ فایل، همگی CSS ثابت (بدون دادهٔ پویا) — بدون XSS؛ asr/api بدون secret
+- آرتیفکت: src/app/api/route.ts = «Hello, world!» قالبی — حذف‌شدنی
+- DRY پسماند: faNum محلی ×۶ خارج از بازی‌ها (compare-view، progress-card، heatmap، survey-gate، srs-stats، print-flashcards) + pick محلی ×۳ (targets/duel/adventure) با وجود shared.pickUnique
+- پذیرش کیت بازی‌ها: ۱۴ بازی ۷–۱۴ رفرنس کیت دارند؛ فقط quiz-game صفر است + خارج از پوشهٔ games/ (نقض ساختار)
+- کیفیت: ۲۱ warning no-unused-vars در ۱۱ فایل مانده؛ noImplicitAny:false؛ reactStrictMode:false (برای perf R3F — مستند در gام ۵ قبلی)
+- پرفورمنس: vitals تمیز (LCP ۲٫۴–۴٫۲s / CLS 0 / INP ۴۸–۵۶ms)؛ یک اسپایک CLS=۰٫۳۰۴ فقط در ریلود HMR دِو — آیتم پایش پروداکشن
+- سند **docs/refactor-roadmap-2.md** نوشته شد: ۹ یافتهٔ A1..A9 + نقشهٔ رتبه‌بندی‌شدهٔ ۱..۱۰ + سه اسپرینت (A بهداشت / B ساختار+فاز F10-ب / C بک‌لاگ تفکیک بازی‌ها) + معیار پذیرش
+- در انتهای docs/refactor-roadmap.md (Audit اول، بسته‌شده ۹/۹) نشانگر جانشین اضافه شد
+
+Stage Summary:
+- 📋 Audit دوم ثبت شد — کدبیس پس از refactor اول در وضعیت 🟢 عمومی است (پرف/امنیت/تایپ)؛ بدهی اصلی حالا ساختاری-تکاملی است:
+  ① ۱۳ وابستگی مرده ② god componentهای دستهٔ دوم (۷ بازی) + quiz-game بیرون ساختار ③ روند بازتورم fps/index (۲,۴۳۸) که قبل از فاز F10-ب باید لاغر شود ④ تکمیل گیت (۲۱ warning → error، noImplicitAny)
+- نقشهٔ جدید ۱..۱۰: اسپرینت A (۱+۲+۳ بهداشت ریسک‌صفر) → B (۴+۵ ساختار، ۶ = فاز محصولی F10-ب) → C (۷+۸+۹ تفکیک بازی‌ها) → ۱۰ شرطی (state کلاس)
+- نکتهٔ عملیاتی: پکیج‌های «نگه‌داشتی» در A1 دقیق لیست شده — ایجنت بعدی نباید sharp/uuid/ui-served ها را حذف کند
+---
+Task ID: SPRINT-A
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «شروع کن» — اجرای اسپرینت A نقشهٔ docs/refactor-roadmap-2.md (گام‌های ۱+۲+۳: بهداشت ریسک‌صفر)
+
+Work Log:
+- گام ۱ (وابستگی‌های مرده): مصرف‌صفرِ هر ۱۳ پکیج سند با rg دوباره تأیید شد → `bun remove` ۱۴ پکیج: @dnd-kit/core/sortable/utilities، @tanstack/react-query، @tanstack/react-table، zod، @mdxeditor/editor، date-fns، next-intl، react-syntax-highlighter، @reactuses/core، react-markdown، @hookform/resolvers **+ react-hook-form** (توسعهٔ سند: تنها مصرف‌کننده‌اش ui/form.tsx بلااستفاده بود)
+- حذف دو آرتیفکت: `src/app/api/route.ts` (Hello world قالبی — A5) و `src/components/ui/form.tsx` (تنها مصرف‌کنندهٔ resolvers — صفر importer با rg تأیید شد)؛ sharp/uuid/vaul/embla/input-otp/react-day-picker/next-themes طبق سند نگه‌داشته شدند
+- گام ۲-الف: پاک‌سازی ۲۱ warning در ۱۳ فایل:
+  · public/sw.js — ۹ catch(err) بی‌مصرف → catch {؛ **تلهٔ میانه**: catch دهم (precache خط ۴۳) err را واقعاً در console.warn مصرف می‌کرد و eslint فلگش نکرده بود — sed عمومی آن را هم شکست، از git diff کشف و binding بازگردانده شد
+  · eslint.config.mjs — __dirname/__filename + importهای dirname/fileURLToPath بلااستفاده حذف
+  · asr/route — const mime بلااستفاده حذف (قرارداد API در JSDoc حفظ شد)
+  · speak.ts — onStart از destructure speakCloud حذف (در امضای opts و speak() می‌ماند؛ onStart واقعی در سطح speak فراخوانی می‌شود) — **ویرایش اول خراب شد (حذف ناخواستهٔ بدنهٔ trimAudioCache + امضای speakCloud)، بلافاصله بازسازی و با tsc تأیید شد**
+  · use-toast — const actionTypes (فقط type مصرف) → type ActionType آبجکتی (ActionType["ADD_TOAST"] سازگار ماند) — اعلان تکراری که خودم ساختم بلافاصله حذف شد
+  · daily-store/weekly-store — EMPTY_INFO بلااستفاده ×۲ حذف
+  · grammar-library — prop value بلااستفادهٔ GrammarAccordionItems از امضا و call-site حذف
+  · profile-button — starredQCount + useQuestionStars import حذف (ویرایش اول import تکراری/غلط ساخت — اصلاح شد)
+  · quiz-game — combinedRounds + useCombinedRounds از import (recordCombinedRound ماند)
+  · shadowing-view — const score بلااستفاده در map حذف
+  · smart-pick _weakRatio و say-it _onChange عمداً ماندند (سازگاری امضا/subscribe stub) — با IgnorePattern مجاز شدند
+- گام ۲-ب (بستن گیت): `no-unused-vars: ["error", {argsIgnorePattern:"^_", varsIgnorePattern:"^_", caughtErrorsIgnorePattern:"^_"}]` + tsconfig `noImplicitAny:true` (آزمایش اولیه با tsconfig موقت: صفر خطا — کدبیس از قبل implicit-any تمیز بود)
+- گام ۳ (SSOT): faNum محلی ×۶ (activity-heatmap، survey-gate، compare-view، progress-card-generator، print-flashcards، srs-stats-section) حذف → import از games/shared (الگوی رایج ۱۷ فایل موجود). تفاوت رفتار جزئی: heatmap از digit-replace به toLocaleString رفت (جداکنندهٔ هزارگان در اعداد بزرگ — بهبود نمایش). **ادعای A6 دربارهٔ pick×۳ outdated بود**: adventure-map از قبل pickUnique مصرف می‌کند؛ pick در duel-game (handler) و targets.tsx (متغیر رنگ) هم‌نام محلی‌اند نه کمکی تکراری — بدون تغییر.
+- زیرساخت: node_modules عوض شد → dev server kill + `rm -rf .next` + راه‌اندازی مجدد؛ **مشکل جدید محیط**: `nohup ... &` و حتی `setsid` با پایان session tool کشته می‌شد (دو بار سرور مرد) → الگوی `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)` در subshell پایدار شد — برای ایجنت‌های بعدی همین الگو
+- اعتبارسنجی: `bunx tsc --noEmit` = ۰ ✓ `bun run lint` = **۰ خطا / ۰ warning** (اولین بار ۰/۰ — قبلاً ۲۱ warning) ✓ `node --check public/sw.js` ✓ GET / 200 ✓
+- QA مرورگری (agent-browser): قفسه → ورود ویژن وان → هاب (۱۵ کارت) → آزمون: شروع چالش، سؤال ۱/۱۰ با تایمر، پاسخ + «سؤال بعدی» ✓ setup شوتر (۳ حالت/۳ سلاح/۴ نقشه/کیفیت) → شروع مأموریت → canvas فعال، صحنهٔ کامل (ویومدل/پهپادها/موج ۲/HVT) صفر خطای کنسول ✓ گرامر (آکاردئون‌ها) ✓ مقایسه (شش پایه) ✓ آمار (کارت پیشرفت/heatmap/SRS) ✓ گفتار: بگو ببینم + سایه‌خوانی با شروع یک متن (خط ۱ «گوش بده»/«خط بعد») ✓ دیالوگ پروفایل (فرم حساب/CSV/پشتیبان) ✓ — page errors صفر، console errors صفر، dev.log بدون error
+- اسکرین‌شات‌ها: qa-shots/a2-{home,quiz,quiz-run,fps-setup,fps-setup2,fps-scene,grammar,compare,stats,speaking,shadowing,shadowing-run,profile}.png
+- docs/refactor-roadmap-2.md: گام‌های ۱/۲/۳ ✅ + رکورد اسپرینت A بسته شد
+
+Stage Summary:
+- 🏁 **اسپرینت A کامل شد** — ریپو ۱۴ وابستگی سبک‌تر شد، سطح API تمیز شد و **دروازهٔ کیفیت کاملاً بسته شد: tsc=۰، lint=۰/۰، noImplicitAny:true، unused-vars=error** — از این پس unused var و implicit any «warning» نیستند، build را می‌شکنند
+- بازبینی یافته‌های Audit دوم: A1 ✓ A5 ✓ A4 ✓ A6 (نیمه — faNum؛ pick outdated) — A2/A3 (اسپرینت B) و A7..A9 باقی
+- گام بعدی پیشنهادی: **اسپرینت B** — گام ۴ (نجات quiz-game به games/quiz/ + پذیرش کیت) → گام ۵ (رژیم لاغری fps/index: setup-panel/use-fps-prefs/hud-question) → گام ۶ (فاز محصولی F10-ب جملهٔ زنجیره‌ای)
+- نکتهٔ عملیاتی: شروع dev server پایدار = `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)`؛ ویرایش‌های چندبخشی را همیشه بلافاصله با tsc تأیید کنید (دو اشتباه ویرایشی این دور هر دو بلافاصله کشف/اصلاح شد)
+---
+Task ID: 4
+Agent: full-stack-developer (subagent)
+Task: گام ۴ نقشهٔ refactor-2 — نجات quiz-game: جابه‌جایی به games/quiz/ + تفکیک ماژولار + پذیرش کیت بازی‌ها
+
+Work Log:
+- مکانیک تفکیک (پلی‌بوک games/fps/README.md): اسکریپت اسلایس خطی دقیق (نه ویرایش دستی JSX) + ۹ anchor یکتا برای درج کیت؛ سپس **صحه‌گذاری بایت‌به‌بایت** با اسکریپت verify (بازسازی فایل اصلی از HEAD و مقایسهٔ ۹ بازه: setup 702..1103، result 1109..1333، playing 1341..1568، bonus 1572..1675، constants 75..113، helpers 115..157، بدنهٔ موتور 165..698 پس از حذف معکوس درج‌های کیت) → همه عیناً OK
+- quiz-game.tsx (۱,۶۷۹ خط) → src/components/book/games/quiz/ با ۸ فایل (+README):
+  index.tsx ۶۹۴ (موتور QuizGame — امضای عمومی دست‌نخورده) · setup-panel.tsx ۵۰۴ · question-card.tsx ۳۳۸ · result-view.tsx ۲۹۱ · bonus-card.tsx ۱۴۳ · helpers.tsx ۵۲ · constants.ts ۴۶ · types.ts ۳۳ (مجموع ۲,۱۰۱ خط با هدرها/props)
+- الگوی Container/Presentational با **props هم‌نام** (setCategory/startDaily/… به‌عنوان prop) تا JSX منتقل‌شده صفر تغییر شناسه داشته باشد؛ types مشترک: DailyInfo/WeeklyInfo (type import) و PulseInfo ساختاری (Pulse) چون ReturnType-of-hook در eslint unused-vars خطا می‌داد — یک اصلاح بعد از lint اول
+- Re-point importers: quiz-view.tsx و chapter-view.tsx → `import { QuizGame } from "./games/quiz"`؛ فایل قدیمی src/components/book/quiz-game.tsx حذف (صفر importer باقی با rg تأیید شد)
+- پذیرش کیت (فقط index.tsx — ۱۶ رفرنس):
+  · kit/sound-engine → playSound("correct"/"wrong"/"finish") در chooseOption/handleTimeout/finish — فقط نام‌های موجود GameSound
+  · kit/haptics → buzz("success"/"error") هم‌تراز همان نقاط (الگوی reference: memory/scramble)
+  · kit/telemetry (G1-10) → createGameSession({game: GAME_KEY="quiz", level: lesson|"all"}) در هر ۴ مسیر شروع دور (normal/practice/daily/weekly) + end("finish") در finish + نگهبان unmount → abandon("unmount")؛ آزمون قبلاً هیچ تله‌متری جلسه نداشت (فقط تایمر Attempt)
+  · GameShell عمداً پذیرفته نشد — هدر playing آزمون سفارشی است (نوار پیشرفت/تایمر/بدون دکمهٔ انصراف میان‌دور) و شِل دکمهٔ خروج + سرصفحه اضافه می‌کرد = تغییر بصری/رفتاری (نقض شرط «فقط بدون تغییر»)
+- قراردادهای مقدس دست‌نخورده: recordCombinedRound/awardQuizActivity/seedReviewFromQuiz/daily-store/weekly-store/کلیدهای localStorage/attemptBody/صف آفلاین enqueueOffline — همه verbatim
+- گیت‌ها: `bunx tsc --noEmit` = ۰ (بعد از هر مرحله) ✓ `bun run lint` = **۰ خطا / ۰ warning** ✓
+- QA مرورگری (agent-browser): قفسه → ورود ویژن وان → آزمون: setup کامل (کارت روزانه/هفتگی + ۵ ردیف تنظیم) → شروع (۵ سؤال) → سؤال ۱ با نوار پیشرفت/تایمر/گزینه‌ها → پاسخ + بازخورد + «سؤال بعدی» تا سؤال ۵ → دیدن نتیجه: دایرهٔ ۴۰٪ (۲/۵)، توست «نتیجه آزمون ذخیره شد 🎉»، +۲۲ XP، «۳ سؤال در دفتر اشتباهات»، مرور پاسخ‌های نادرست با ستاره → خروج میان‌دور دور بعد (ناوبری به واژگان) بدون خطا → نمای فصل درس ۱ (تمرین): پنل آزمون با چیپ «درس 1» فعال (مسیر lessonFilter ✓)
+- dev.log: `game_session_start {game:"quiz",level:"all"}` → `game_session_end {duration:"42",reason:"finish"}` → `game_session_abandon {duration:"2",reason:"unmount"}` + POST /api/attempts 200 ✓ — کنسول مرورگر: صفر error/ warn (فقط HMR/Fast Refresh)؛ صفر page error؛ dev.log بدون error
+- اسکرین‌شات‌ها: qa-shots/t4-quiz-setup.png، t4-quiz-run.png، t4-quiz-result-exit.png، t4-chapter-quiz.png
+- docs/refactor-roadmap-2.md: گام ۴ ✅ + games/quiz/README.md (نقشهٔ ماژول + قراردادها + چک‌لیست توسعه)
+
+Stage Summary:
+- 🏁 بزرگ‌ترین استثنای ساختاری Audit دوم حذف شد: آزمون تعاملی هم‌اکنون داخل پوشهٔ games/ با پلی‌بوک fps و **۱۶ رفرنس کیت** است — ردیف «صفر پذیرش کیت» بسته شد
+- توزیع جدید: هیچ ماژولی بالای ۶۹۴ خط نیست (موتور) و ۷ ماژول دیگر همه <۵۱۰؛ فایل قدیمی quiz-game.tsx دیگر وجود ندارد
+- درس/تکنیک برای تفکیک‌های بعدی (گام ۷/۸/۹): اسلایس خطی + props هم‌نام + صحه‌گذاری بایت‌به‌بایت از git HEAD، هم ریسک رگرسیون JSX را صفر می‌کند و هم اعتبارسنجی «verbatim» را قابل اثبات می‌کند؛ ضمناً `ReturnType<typeof hook>` فقط برای تایپ در فایل client زیر no-unused-vars خطا می‌دهد — به‌جایش type export استور یا شکل ساختاری
+- گام بعدی طبق اسپرینت B: گام ۵ (رژیم لاغری fps/index: setup-panel/use-fps-prefs/hud-question) → گام ۶ (F10-ب جملهٔ زنجیره‌ای)

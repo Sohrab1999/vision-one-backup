@@ -4,11 +4,14 @@
 > خلاصه: جهش `SceneBridge` فقط در توابع ماژول‌سطح (`physics.ts` و `scene/input.tsx`)؛
 > کامپوننت‌های R3F فقط می‌خوانند.
 
-## نقشهٔ ماژول‌ها (بعد از refactor گام ۳ — سند refactor-roadmap)
+## نقشهٔ ماژول‌ها (بعد از refactor گام ۳ سند refactor-roadmap + گام ۵ سند refactor-roadmap-2)
 
 | فایل | خط | نقش |
 |---|---|---|
-| `index.tsx` | ~۲۳۴۰ | `FpsShooterGame`: setup/نقشه‌ها/سلاح‌ها/گزینه‌ها + Canvas + HUD + نتیجه — تنها فایل دارای state React |
+| `index.tsx` | ~۱,۹۶۰ | `FpsShooterGame`: ارکستراسیون — موتور مأموریت (موج/HVT/Attempt/پایان) + Canvas و ترکیب صحنه + سیم‌کشی HUD + نتیجه؛ تنها فایل دارای state موتور |
+| `setup-panel.tsx` | ~۵۳۰ | پنل setup (presentational): حالت/سلاح/نقشه/درس/کیفیت/گزینه‌های نگاه + آموزش ۵گامی (`TUTORIAL_STEPS`) — props هم‌نام از index |
+| `use-fps-prefs.ts` | ~۱۲۲ | هوک ترجیحات ماندگار: mode/quality/sens/fov/invert/map/weapon + setterهای ماندگار (فقط از طریق `prefs.ts`) |
+| `hud-question.tsx` | ~۷۷ | کارت سؤال روی HUD (presentational): متن سؤال + پخش دوبارهٔ شنیداری + نوار زمان + شمارندهٔ HVT |
 | `constants.ts` | ~۱۱۱ | ثابت‌های تنظیمی: لِین‌ها، کمبو، موج/فرار/طلایی، حرکت (ACCEL/JUMP/…)، اسکوپ، کیفیت |
 | `maps.ts` | ~۱۵۷ | `MapId`/`MapConfig`/`MAPS` — پالت کامل ۴ نقشه (جنگل/کویر/شب/دروازهٔ دو در) |
 | `layouts.ts` | ~۱۷۹ | `StructureKind` + `LAYOUTS` — چیدمان سازه‌های هر نقشه (دیوار/در/طاق/…) |
@@ -39,6 +42,6 @@
 
 1. وضعیت پیوستهٔ صحنه → فیلد جدید در `SceneBridge` + نویسندهٔ ماژول‌سطح (ADR-001).
 2. ثابت جدید → `constants.ts` (نه عدد جادویی در `index.tsx`).
-3. سؤال/آموزش جدید → `questions.ts` / `TUTORIAL_STEPS` در `index.tsx`.
+3. سؤال/آموزش جدید → `questions.ts` / `TUTORIAL_STEPS` در `setup-panel.tsx`.
 4. پس از هر تغییر: `bunx tsc --noEmit` + `bun run lint` + QA مرورگری فلو استاندارد
    (setup → شروع → شلیک با کلید ۱..۴ در تپ ساده → خشاب/ریلود → موج ۲ → HVT → نتیجه → دور جدید).

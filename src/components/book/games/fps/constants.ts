@@ -74,6 +74,8 @@ export const KEY_MOVE: Record<string, "w" | "a" | "s" | "d" | "c"> = {
 };
 export const MIN_POOL_WORD = 4;
 export const MIN_POOL_QUIZ = 3;
+/** فاز F10-ب — حداقل جمله‌های قابل‌بازی مکالمه‌های جزوه برای حالت «جملهٔ زنجیره» */
+export const MIN_POOL_CHAIN = 3;
 export const BURST_FULL = 36;
 export const BURST_WEAK = 16;
 

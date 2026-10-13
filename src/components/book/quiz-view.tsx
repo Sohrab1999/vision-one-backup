@@ -3,7 +3,7 @@
 import { ClipboardList } from "lucide-react";
 import { useBookData } from "@/lib/book-context";
 import { ErrorAnalysisPanel } from "./ai/error-analysis-panel";
-import { QuizGame } from "./quiz-game";
+import { QuizGame } from "./games/quiz";
 
 export function QuizView() {
   const data = useBookData();
