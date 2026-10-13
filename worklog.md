@@ -3256,3 +3256,25 @@ Stage Summary:
 - توزیع نهایی fps/: index ۲,۰۶۹ (ارکستراسیون) + chain.ts ۵۸ (تصمیم خالص) + questions ۲۳۷ + setup-panel ۵۶۲ + hud-question ۱۱۷ + use-fps-prefs ۱۲۲ + types ۱۱۸ + helpers ۶۱
 - گیت‌های نهایی: tsc=۰ · lint=۰/۰ · صفر خطای کنسول در QA · Attempt/کلیدهای prefs/scopeOf سازگار و افزودنی
 - گام بعدی طبق سند: اسپرینت C — گام ۷ (تفکیک adventure-map ۱,۷۸۶ خطی با پلی‌بوک fps/) سپس ۸ و ۹؛ گام ۱۰ شرطی (فقط با چندنفرهٔ جدی)
+
+---
+Task ID: 7
+Agent: full-stack-developer (subagent — کد+QA خودش را کامل کرد ولی در فاز مستندات به‌خاطر deadline قطع شد) + بازبینی/اتمام/تأیید نهایی توسط main orchestrator (Z.ai Code)
+Task: گام ۷ اسپرینت C — تفکیک adventure-map-game.tsx (۱,۷۸۶ خط) به games/adventure-map/ با پلی‌بوک fps
+
+Work Log:
+- کد (subagent زنده — فراخوانی Task دو بار false-negative داد اما ایجنت کار می‌کرد؛ درس ثبت‌شدهٔ قبل باز هم صادق بود): ۷ ماژول ساخته شد — types.ts ۸۶ (Phase/StageType/ثابت‌ها/STAGE_META/WORD_RE/۶ اینترفیس) · helpers.ts ۹۳ (۶ تابع خالص: baseWord/starsOf/blankChallenge/readProgress/writeProgress/orderOf) · setup-panel.tsx ۲۴۲ (TUTORIAL_STEPS + نمای setup) · stage-map.tsx ۲۱۰ (نقشهٔ ۸ گره) · challenge-view.tsx ۴۶۲ (ResultScreen + ۴ مینی‌چالش + توقف/نگهبان/آموزش) · done-view.tsx ۱۶۸ (مراسم پایان) · index.tsx ۸۴۸ (موتور: state/effect/۱۱ callback + ۳ گارد دفاعی + گارد نهایی + orchestration) = ۲,۱۰۵ خط جمع
+- games-hub.tsx به ./adventure-map re-point شد و adventure-map-game.tsx حذف شد (الگوی Task 4) · props هم‌نام شناسه‌ها (beginAdventure/setPhase/startStage/muted/setMuted/paused/togglePause/resume/handleHelp/…) → JSX منتقل‌شده صفر تغییر شناسه · نوع data = BookData از @/data/books/types (درس Task 5: بدون ReturnType<typeof hook>)
+- صحه‌گذاری بایت‌به‌بایت (tool-results/t7/verify.ts، الگوی t5): ۱۴/۱۴ ✓ — types (۶۹ خط عیناً) · helpers (۷۴) · TUTORIAL_STEPS (۱۸) · بدنهٔ SetupPanel (۱۶۱، modulo dedent) · StageMap (۱۶۰) · ChallengeView (۳۷۴) · DoneView (۱۱۹) · موتور index (۶۰۰ خط عیناً بدون dedent) · ۳ گارد + هدر مستندات عیناً · re-point هاب ✓ · حذف فایل قدیمی ✓
+- گیت‌ها (بازبینی مستقل orchestrator): bunx tsc --noEmit = ۰ ✓ bun run lint = ۰ خطا/۰ warning ✓ (هر دو پس از split کامل، دوبار اجرا شد)
+- QA مرورگری subagent (qa-shots/t7-adventure-{setup,map,challenge,result}.png): فلو setup→map→چالش→نتیجه گرفته شد
+- QA مرورگری مستقل orchestrator (درس «یک eval واحد» رعایت شد): ورود کتاب → هاب → setup سالم (هدر/توضیح/چیپ‌ها) → «از اول» → نقشه با ۸ گره و «مرحلهٔ ۱ باز است» → شروع مرحلهٔ ۱ (حروف جابه‌جا، حروف n,c,k,e,i,t,h) → چیدن «kitchen» هفت‌کلیک در یک دسته → ResultScreen «بی‌نقص! بدون حتی یک خطا» با ۳/۳ ستاره ✓ aria-live «مرحلهٔ ۱ تمام شد — ۳ ستاره از ۳» ✓ دکمهٔ اصلی → مرحلهٔ ۲ (آزمون واژه) لود شد ✓ پاسخ درست «be going to → قصد داشتن» → سؤال ۲ لود شد ✓ نگهبان خروج با متن عیناً «مرحله را رها کنم؟ 🗺️» باز شد و Esc = ادامهٔ مرحله (دقیقاً رفتار سند G0-06) ✓ اسکرین‌شات‌ها: qa-shots/t7-o-{setup,map,result,stage2,quiz-answer,exit-guard}.png
+- خطای محیطی (رگرسیون نیست): یک POST /api/tts = ۵۰۰ ابری (شبکهٔ بالادستی، error id ثبت‌شده) هنگام پخش تلفظ پاسخ درست — کال‌سایت speak در answerQuiz verbatim است و اپ graceful هندل کرد؛ + هشدار قدیمی chart-width از بخش آمار (بی‌ربط به این بازی)
+- اتمام کار نیمه‌کارهٔ subagent توسط orchestrator: adventure-map/README.md (نقشهٔ ۷ ماژول + قراردادهای ثابت: امضای Attempt با detail.stars، کلید visionone:adventure:* فقط از helpers، تله‌متری level:"stage:N"، نقشهٔ صدا/لرزش، usedWords) + docs/refactor-roadmap-2.md (گام ۷ ✅ با سبک خط‌خوردهٔ گام‌های ۴-۶ + به‌روزرسانی خط اسپرینت C: نوبت بعدی گام ۸) + همین رکورد
+- سلامت زیرساخت: cron webDevReview «Disabled due to exec limits exceeded» شده بود → حذف و بازسازی شد (job 455910) با کانتکست به‌روز (اسپرینت A+B بسته، گام ۷ انجام، نوبت گام ۸) — مانیتور شود
+
+Stage Summary:
+- 🏁 گام ۷ اسپرینت C بسته شد: بزرگ‌ترین god component باقی‌مانده (adventure-map ۱,۷۸۶) به ۷ ماژول <۸۵۰ تبدیل شد — هیچ ماژولی بالای ۸۴۸ نیست و ۵ ماژول از ۷ زیر ۴۷۰ خط‌اند؛ بک‌لاگ god component فقط ۳ ردیف دارد (گام ۸: crossword+snakes-ladders، گام ۹: speed-quiz+flappy+wordle)
+- پلی‌بوک fps اکنون سه بار تکرار و اثبات شده (quiz/fps/adventure) — الگوی ثابت: اسلایس خطی + props هم‌نام + اسکریپت صحه‌گذاری از git HEAD + tsc بعد از هر ویرایش + QA در eval واحد
+- گیت‌های نهایی: tsc=۰ · lint=۰/۰ · صفر خطای کنسول مرتبط با بازی · Attempt/tله‌متری/کلیدهای localStorage دست‌نخورده (اثبات با verify ۱۴/۱۴)
+- گام بعدی طبق سند: گام ۸ — تفکیک crossword-game.tsx (۱,۶۷۵) و snakes-ladders-game.tsx (۱,۶۳۷) با همان پلی‌بوک؛ سپس گام ۹؛ گام ۱۰ شرطی

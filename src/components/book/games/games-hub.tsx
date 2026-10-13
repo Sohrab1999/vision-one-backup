@@ -80,7 +80,7 @@ const HangmanGame = dynamic(() => import("./hangman-game").then((m) => m.Hangman
 const SentenceBuilderGame = dynamic(() => import("./sentence-builder-game").then((m) => m.SentenceBuilderGame), { ssr: false, loading: GameChunkLoading });
 const DuelGame = dynamic(() => import("./duel-game").then((m) => m.DuelGame), { ssr: false, loading: GameChunkLoading });
 const ListeningHuntGame = dynamic(() => import("./listening-hunt-game").then((m) => m.ListeningHuntGame), { ssr: false, loading: GameChunkLoading });
-const AdventureMapGame = dynamic(() => import("./adventure-map-game").then((m) => m.AdventureMapGame), { ssr: false, loading: GameChunkLoading });
+const AdventureMapGame = dynamic(() => import("./adventure-map").then((m) => m.AdventureMapGame), { ssr: false, loading: GameChunkLoading });
 
 // بازی فاز ۵ — موتور سه‌بعدی (three + R3F) در چانک جدا و lazy
 const FpsShooterGame = dynamic(() => import("./fps").then((m) => m.FpsShooterGame), {
@@ -331,7 +331,7 @@ export function GamesHub() {
       () => void import("./snakes-ladders-game"),
       () => void import("./sentence-builder-game"),
       () => void import("./listening-hunt-game"),
-      () => void import("./adventure-map-game"),
+      () => void import("./adventure-map"),
       () => void import("./duel-game"),
       () => void import("./fps"),
     ];
