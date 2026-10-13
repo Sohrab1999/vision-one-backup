@@ -15,6 +15,7 @@ import { useCallback, useState } from "react";
 import { buzz } from "../kit/haptics";
 import { playSound } from "../kit/sound-engine";
 import {
+  DIFFICULTY_KEY,
   FOV_DEF,
   FOV_MAX,
   FOV_MIN,
@@ -22,6 +23,7 @@ import {
   SENS_DEF,
   SENS_MAX,
   SENS_MIN,
+  type Difficulty,
   type Quality,
 } from "./constants";
 import { clamp } from "./helpers";
@@ -30,6 +32,7 @@ import {
   INVERT_KEY,
   MAP_KEY,
   SENS_KEY,
+  loadDifficulty,
   loadMapPref,
   loadPrefBool,
   loadPrefNum,
@@ -53,6 +56,8 @@ export function useFpsPrefs() {
   const [mapId, setMapId] = useState<MapId>(() => loadMapPref());
   // ── فاز F9 — سلاح انتخابی (ماندگار) ──
   const [weaponId, setWeaponId] = useState<WeaponId>(() => loadWeaponPref());
+  // ── فاز U1-00 — درجهٔ دشواری مأموریت (ماندگار؛ پیش‌فرض عادی) ──
+  const [difficulty, setDifficulty] = useState<Difficulty>(() => loadDifficulty());
 
   // ── فاز G2-e — انتخاب کیفیت گرافیک (ماندگار؛ کلید افزودنی) ──
   const setQualityPref = useCallback((q: Quality) => {
@@ -103,6 +108,14 @@ export function useFpsPrefs() {
     savePref(WEAPON_KEY, id);
   }, []);
 
+  // ── فاز U1-00 — انتخاب درجهٔ دشواری (ماندگار؛ کلید افزودنی) ──
+  const setDifficultyPref = useCallback((d: Difficulty) => {
+    playSound("click");
+    buzz("light");
+    setDifficulty(d);
+    savePref(DIFFICULTY_KEY, d);
+  }, []);
+
   return {
     mode,
     setMode,
@@ -118,5 +131,7 @@ export function useFpsPrefs() {
     setMapPref,
     weaponId,
     setWeaponPref,
+    difficulty,
+    setDifficultyPref,
   };
 }

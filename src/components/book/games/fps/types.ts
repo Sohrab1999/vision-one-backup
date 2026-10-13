@@ -106,6 +106,8 @@ export interface SceneBridge {
   dodge: boolean;
   /** فاز F8 — شمارهٔ موج جاری (سرعت فرار و حرکت اهداف) */
   wave: number;
+  /** فاز U1 — فاز FSM پهپاد تعقیب‌گر (نوشتهٔ scene/drone در useFrame، خواندهٔ index هر ۲۰۰ms) — idle = پهپاد خاموش */
+  enemyPhase: "idle" | "patrol" | "stalk" | "flee";
 }
 
 export interface BurstApi {

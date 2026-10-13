@@ -73,8 +73,8 @@ const ClozeGame = dynamic(() => import("./cloze-game").then((m) => m.ClozeGame),
 const WordSearchGame = dynamic(() => import("./wordsearch-game").then((m) => m.WordSearchGame), { ssr: false, loading: GameChunkLoading });
 const SpeedQuizGame = dynamic(() => import("./speed-quiz-game").then((m) => m.SpeedQuizGame), { ssr: false, loading: GameChunkLoading });
 const FlappyQuizGame = dynamic(() => import("./flappy-quiz-game").then((m) => m.FlappyQuizGame), { ssr: false, loading: GameChunkLoading });
-const SnakesLaddersGame = dynamic(() => import("./snakes-ladders-game").then((m) => m.SnakesLaddersGame), { ssr: false, loading: GameChunkLoading });
-const CrosswordGame = dynamic(() => import("./crossword-game").then((m) => m.CrosswordGame), { ssr: false, loading: GameChunkLoading });
+const SnakesLaddersGame = dynamic(() => import("./snakes-ladders").then((m) => m.SnakesLaddersGame), { ssr: false, loading: GameChunkLoading });
+const CrosswordGame = dynamic(() => import("./crossword").then((m) => m.CrosswordGame), { ssr: false, loading: GameChunkLoading });
 const WordleGame = dynamic(() => import("./wordle-game").then((m) => m.WordleGame), { ssr: false, loading: GameChunkLoading });
 const HangmanGame = dynamic(() => import("./hangman-game").then((m) => m.HangmanGame), { ssr: false, loading: GameChunkLoading });
 const SentenceBuilderGame = dynamic(() => import("./sentence-builder-game").then((m) => m.SentenceBuilderGame), { ssr: false, loading: GameChunkLoading });
@@ -323,12 +323,12 @@ export function GamesHub() {
       () => void import("./wordle-game"),
       () => void import("./hangman-game"),
       () => void import("./speed-quiz-game"),
-      () => void import("./crossword-game"),
+      () => void import("./crossword"),
       () => void import("./scramble-game"),
       () => void import("./cloze-game"),
       () => void import("./wordsearch-game"),
       () => void import("./flappy-quiz-game"),
-      () => void import("./snakes-ladders-game"),
+      () => void import("./snakes-ladders"),
       () => void import("./sentence-builder-game"),
       () => void import("./listening-hunt-game"),
       () => void import("./adventure-map"),

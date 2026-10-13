@@ -22,6 +22,7 @@ import {
   MoonStar,
   MousePointerClick,
   Play,
+  Radar,
   SlidersHorizontal,
   Sparkles,
   Star,
@@ -53,6 +54,7 @@ import {
   SENS_DEF,
   SENS_MAX,
   SENS_MIN,
+  type Difficulty,
   type Quality,
 } from "./constants";
 import { lessonLabel, modeName } from "./helpers";
@@ -112,6 +114,9 @@ export interface SetupPanelProps {
   setInvertPref: (v: boolean) => void;
   weaponId: WeaponId;
   setWeaponPref: (id: WeaponId) => void;
+  /** فاز U1-00 — درجهٔ دشواری مأموریت (رفتار پهپاد تعقیب‌گر) */
+  difficulty: Difficulty;
+  setDifficultyPref: (d: Difficulty) => void;
   mapId: MapId;
   setMapPref: (id: MapId) => void;
   chipFeedback: () => void;
@@ -146,6 +151,8 @@ export function SetupPanel({
   setInvertPref,
   weaponId,
   setWeaponPref,
+  difficulty,
+  setDifficultyPref,
   mapId,
   setMapPref,
   chipFeedback,
@@ -424,6 +431,47 @@ export function SetupPanel({
               ) : (
                 <>دسکتاپ: کلیک قفلِ نشانگر، حرکت موس نشانه‌گیری، کلیک بعدی شلیک — موبایل: کشیدن نگاه، تپ روی هدف شلیک.</>
               )}
+            </p>
+          </div>
+
+          {/* فاز U1-00 — درجهٔ دشواری مأموریت: رفتار پهپاد تعقیب‌گر (سند fps-upgrade §U1) */}
+          <div>
+            <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+              <Radar size={14} className="text-amber-500" />
+              درجهٔ دشواری
+            </p>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درجهٔ دشواری">
+              <button
+                type="button"
+                aria-pressed={difficulty === "easy"}
+                onClick={() => setDifficultyPref("easy")}
+                className={chipCls(difficulty === "easy")}
+              >
+                آسان — بدون دشمن
+              </button>
+              <button
+                type="button"
+                aria-pressed={difficulty === "normal"}
+                onClick={() => setDifficultyPref("normal")}
+                className={chipCls(difficulty === "normal")}
+              >
+                عادی
+              </button>
+              <button
+                type="button"
+                aria-pressed={difficulty === "hard"}
+                onClick={() => setDifficultyPref("hard")}
+                className={chipCls(difficulty === "hard")}
+              >
+                سخت
+              </button>
+            </div>
+            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+              {difficulty === "easy"
+                ? "میدان بدون پهپاد تعقیب‌گر — تمرکز کامل روی واژه‌ها و گزینه‌ها."
+                : difficulty === "hard"
+                  ? "پهپاد تعقیب‌گر چابک: زودتر متوجه سکونت می‌شود و تندتر تعقیب می‌کند — با شلیک به بدنه‌اش او را می‌گریزانی."
+                  : "پهپاد تعقیب‌گر در میدان گشت می‌زند؛ اگر ساکن بمانی نزدیک می‌شود — حرکت کن یا با شلیک او را عقب بران."}
             </p>
           </div>
 

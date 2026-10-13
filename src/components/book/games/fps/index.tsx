@@ -142,6 +142,7 @@ import {
   Minimize2,
   Pause,
   Play,
+  Radar,
   RotateCcw,
   SlidersHorizontal,
   Star,
@@ -222,6 +223,7 @@ import {
   SENS_MIN,
   WAVE_MAX,
   WAVE_SIZE,
+  type Difficulty,
   type Quality,
 } from "./constants";
 import {
@@ -264,6 +266,7 @@ import {
   Target,
   type GoldenSpec,
 } from "./scene/targets";
+import { HunterDrone, type EnemyApi } from "./scene/drone";
 import { TouchJoystick } from "./scene/input";
 import { useFpsPrefs } from "./use-fps-prefs";
 import { SetupPanel, TUTORIAL_STEPS } from "./setup-panel";
@@ -313,6 +316,8 @@ export function FpsShooterGame() {
     setMapPref,
     weaponId,
     setWeaponPref,
+    difficulty,
+    setDifficultyPref,
   } = useFpsPrefs();
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [tapMode, setTapMode] = useState(false);
@@ -348,6 +353,8 @@ export function FpsShooterGame() {
   const [goldenActive, setGoldenActive] = useState(false);
   const [goldenLeft, setGoldenLeft] = useState(0);
   const [goldenSpec, setGoldenSpec] = useState<GoldenSpec | null>(null);
+  // ── فاز U1 — پهپاد تعقیب‌گر: بج هشدار حین تعقیب ──
+  const [enemyStalking, setEnemyStalking] = useState(false);
 
   // ── فاز G2-e — موتور کمبو مشترک کیت (G1-09) ──
   // حالت bonus = دقیقاً قانون فعلی شوتر: gained = ۱۰ + min(کمبو−۱, ۶) × ۲ (امتیاز یکسان می‌ماند)
@@ -439,9 +446,13 @@ export function FpsShooterGame() {
     onHit: () => {},
     dodge: false,
     wave: 1,
+    enemyPhase: "idle",
   });
   const meshRegistry = useRef<THREE.Mesh[]>([]);
   const burstApi = useRef<BurstApi | null>(null);
+  // فاز U1 — api پهپاد تعقیب‌گر (الگوی BurstApi) + آخرین فاز اعلام‌شدهٔ FSM
+  const enemyApiRef = useRef<EnemyApi | null>(null);
+  const enemyPhaseRef = useRef<"idle" | "patrol" | "stalk" | "flee">("idle");
   // فاز F10-ب — استخر/کارتابل زنجیره: نوع ChainSeed هم اضافه می‌شود
   const deckRef = useRef<Array<VocabEntry | QuizQuestionSeed | ChainSeed>>([]);
   const deckIdxRef = useRef(0);
@@ -467,6 +478,7 @@ export function FpsShooterGame() {
   const voiceSpeedRef = useRef(speed);
   const tapRef = useRef(tapMode);
   const qualityRef = useRef<Quality>(quality);
+  const difficultyRef = useRef<Difficulty>(difficulty);
   const qRef = useRef<Question | null>(null);
   // ── فاز F8 — مراجع موج (بدون ری‌رندر در مسیرهای داخل حلقهٔ بازی) ──
   const waveRef = useRef(1);
@@ -710,6 +722,7 @@ export function FpsShooterGame() {
     voiceSpeedRef.current = speed;
     tapRef.current = tapMode;
     qualityRef.current = quality;
+    difficultyRef.current = difficulty;
     qRef.current = q;
     sensRef.current = sens;
     invertRef.current = invertY;
@@ -836,6 +849,8 @@ export function FpsShooterGame() {
           wave: maxWaveRef.current,
           // فاز F9 — افزودنی: سلاح مأموریت
           weapon: weaponRef.current,
+          // فاز U1-00 — افزودنی: درجهٔ دشواری مأموریت (امضای Attempt دست‌نخورده)
+          difficulty: difficultyRef.current,
         },
       });
     }
@@ -914,6 +929,14 @@ export function FpsShooterGame() {
     (id: string | null) => {
       if (overRef.current || id === null) return;
       if (pausedRef.current || exitAskRef.current) return;
+      // فاز U1 — شکار بدنهٔ پهپاد تعقیب‌گر: گریز دشمن (خارج از چرخهٔ سؤال — بدون امتیاز/جریمه؛ قانون ④ سند §U1)
+      if (id === "drone") {
+        playSound("hit");
+        buzz("light");
+        enemyApiRef.current?.hit();
+        setLiveMsg("پهپاد شناسایی متخاصم عقب کشید!");
+        return;
+      }
       // فاز F8 — شکار هدف طلایی: بونوس خارج از چرخهٔ سؤال (نه پاسخ، نه قلب، نه جلو رفتن)
       if (id === "golden") {
         if (goldenUntilRef.current <= 0) return;
@@ -1046,7 +1069,11 @@ export function FpsShooterGame() {
     handleHitRef.current = handleHit;
   });
   const handleVolley = useCallback((ids: Array<string | null>) => {
-    const hits = [...new Set(ids.filter((x): x is string => x !== null))];
+    const raw = [...new Set(ids.filter((x): x is string => x !== null))];
+    // فاز U1 — برخورد پهپاد در والی پمپ: اول گریز دشمن، سپس تصمیم بقیهٔ برخوردها بدون او
+    const droneHit = raw.includes("drone");
+    const hits = droneHit ? raw.filter((x) => x !== "drone") : raw;
+    if (droneHit) handleHitRef.current("drone");
     if (hits.length === 0) return; // والی خالی = خطا رفتن — بی‌جریمه (الگوی شلیک به خالی)
     const cur = qRef.current;
     // فاز F10-ب — زنجیره: والی فقط در بر دارندهٔ واژهٔ انتظاری حساب می‌شود (یک‌بار؛ تصمیم در chain.ts)
@@ -1118,6 +1145,13 @@ export function FpsShooterGame() {
     const iv = window.setInterval(() => {
       if (overRef.current) return;
       if (pausedRef.current) return; // فریز حین توقف — جبران در onChange ادامه
+      // فاز U1 — اعلام گذارهای FSM پهپاد (روی رویداد گسسته — نه هر فریم)
+      const ep = bridge.current.enemyPhase;
+      if (ep !== enemyPhaseRef.current) {
+        enemyPhaseRef.current = ep;
+        setEnemyStalking(ep === "stalk");
+        if (ep === "stalk") setLiveMsg("پهپاد شناسایی متخاصم نزدیک می‌شود — یا حرکت کن یا شکارش کن!");
+      }
       // فاز F8 — شمارش معکوس فرصت هدف طلایی (روی رویداد گسسته — نه هر فریم)
       if (goldenUntilRef.current > 0) {
         setGoldenLeft(Math.max(0, Math.ceil((goldenUntilRef.current - performance.now()) / 1000)));
@@ -1437,6 +1471,10 @@ export function FpsShooterGame() {
     setWave(1);
     bridge.current.wave = 1;
     bridge.current.dodge = !tapMode;
+    // فاز U1 — پهپاد تعقیب‌گر از نو (فرآیند FSM در مونت مجدد صحنه تازه می‌شود)
+    bridge.current.enemyPhase = "idle";
+    enemyPhaseRef.current = "idle";
+    setEnemyStalking(false);
     goldenUntilRef.current = 0;
     goldenPendingRef.current = null;
     if (goldenTimerRef.current !== null) {
@@ -1570,6 +1608,8 @@ export function FpsShooterGame() {
         setInvertPref={setInvertPref}
         weaponId={weaponId}
         setWeaponPref={setWeaponPref}
+        difficulty={difficulty}
+        setDifficultyPref={setDifficultyPref}
         mapId={mapId}
         setMapPref={setMapPref}
         chipFeedback={chipFeedback}
@@ -1700,6 +1740,16 @@ export function FpsShooterGame() {
               <Zap size={11} />
               موج {faNum(wave)}
             </Badge>
+            {/* فاز U1 — هشدار تعقیب پهپاد شناسایی */}
+            {enemyStalking && (
+              <Badge
+                variant="outline"
+                className="gap-1 border-amber-500/60 bg-amber-500/10 px-2 py-1 text-[11px] font-black text-amber-600 motion-reduce:animate-none dark:text-amber-400 animate-pulse"
+              >
+                <Radar size={11} />
+                تعقیب!
+              </Badge>
+            )}
             {!tapMode && (
               <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px]">
                 {reloading ? (
@@ -1782,6 +1832,15 @@ export function FpsShooterGame() {
               {goldenActive && goldenSpec && (
                 <GoldenTarget spec={goldenSpec} untilRef={goldenUntilRef} registry={meshRegistry} bridge={bridge} />
               )}
+              {/* فاز U1 — پهپاد تعقیب‌گر متخاصم (خاموش در دشواری «آسان») */}
+              <HunterDrone
+                difficulty={difficulty}
+                tap={tapMode}
+                bridge={bridge}
+                registry={meshRegistry}
+                burstApi={burstApi}
+                apiRef={enemyApiRef}
+              />
               <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
               <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
               {/* فاز F3 — تفنگ سه‌بعدی ویومدل چسبیده به دوربین — فاز F9: مدل per-سلاح */}
@@ -1814,6 +1873,7 @@ export function FpsShooterGame() {
                 <span>⏱ {faNum(Math.ceil(timeLeft))}</span>
                 <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
                 <span className="text-teal-300">موج {faNum(wave)}</span>
+                {enemyStalking && <span className="text-amber-300">◆ تعقیب</span>}
                 {goldenActive && <span className="text-amber-300">★ {faNum(goldenLeft)}</span>}
               </div>
             )}

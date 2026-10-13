@@ -82,6 +82,15 @@ export const BURST_WEAK = 16;
 // ── فاز G2-e — تنظیم کیفیت گرافیک (افزودنی؛ کلید جدید، بدون دست‌زدن به کلیدهای موجود) ──
 
 export type Quality = "high" | "low";
+
+// ── فاز U1-00 — کیت درجهٔ دشواری (افزودنی؛ نقشهٔ docs/fps-upgrade-roadmap.md §U1) ──
+// توجه: مقادیر کیفیت گرافیک فعلی high/low است و ربطی به دشواری ندارد — دو بُعد مستقل.
+
+export type Difficulty = "easy" | "normal" | "hard";
+/** کلید افزودنی ماندگاری درجهٔ دشواری — پیش‌فرض «عادی» */
+export const DIFFICULTY_KEY = "visionone:game-pref:fps-difficulty";
+/** دشواری‌های معتبر — برای اعتبارسنجی خواندن از localStorage */
+export const DIFFICULTIES: Difficulty[] = ["easy", "normal", "hard"];
 /** کلید افزودنی ماندگاری انتخاب کیفیت — پیش‌فرض «عادی» */
 export const QUALITY_KEY = "visionone:game-pref:fps-quality";
 /** کیفیت عادی: ۴ هدف (۳ حواس‌پرتی) — رفتار فعلی */

@@ -2,7 +2,7 @@
 
 import { MAPS, type MapId } from "./maps";
 import { WEAPONS, WEAPON_KEY, type WeaponId } from "./weapons";
-import { QUALITY_KEY, type Quality } from "./constants";
+import { DIFFICULTIES, DIFFICULTY_KEY, QUALITY_KEY, type Difficulty, type Quality } from "./constants";
 import { clamp } from "./helpers";
 
 export const MAP_KEY = "visionone:game-pref:fps-map";
@@ -69,5 +69,16 @@ export function loadQuality(): Quality {
     return window.localStorage.getItem(QUALITY_KEY) === "low" ? "low" : "high";
   } catch {
     return "high";
+  }
+}
+
+/** فاز U1-00 — خواندن درجهٔ دشواری ذخیره‌شده (پیش‌فرض «عادی») */
+export function loadDifficulty(): Difficulty {
+  if (typeof window === "undefined") return "normal";
+  try {
+    const v = window.localStorage.getItem(DIFFICULTY_KEY);
+    return v && (DIFFICULTIES as string[]).includes(v) ? (v as Difficulty) : "normal";
+  } catch {
+    return "normal";
   }
 }
