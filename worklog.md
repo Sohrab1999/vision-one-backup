@@ -3301,3 +3301,24 @@ Stage Summary:
 - گیت‌های نهایی هر دو بازی: tsc=۰ · lint=۰/۰ · صفر خطای کنسول · Attempt/تله‌متری/کلیدهای localStorage (از جمله کلید افزودنی draft) دست‌نخورده — اثبات با verify t8a + t8b ۳۰/۳۰
 - درس فنی QA ثبت‌شده: تایپ سریع مصنوعی (کلیک‌های سنکرون یا keyboard type ابزار) با کلوژر کهنه/مسیر رویداد ابزار ناسازگار است — ground-truth از fiber + dispatchEvent با فاصله، و تفسیر وضعیت با خواندن props (مثل positions/cur) نه فقط aria
 - گام بعدی طبق سند: گام ۹ — تفکیک speed-quiz + flappy + wordle (~۴,۳۰۰ خط، آخرین ردیف بک‌لاگ)؛ پس از آن فقط گام ۱۰ شرطی می‌ماند
+
+---
+Task ID: 16
+Agent: main orchestrator (Z.ai Code) — ادامهٔ فاز U1 از نشست قبل (کد از قبل زنده بود؛ این نشست: حسابرسی کامل + گیت‌ها + QA مرورگری مستقل + بستن اسناد)
+Task: فاز U1 «دشمن زنده — پهپاد تعقیب‌گر» طبق docs/fps-upgrade-roadmap.md §U1 — پیاده‌سازی، صحه‌گذاری و بستن فاز
+
+Work Log:
+- ردیابی وضعیت نشست قبل: سند نقشه راه (نسخه ۱.۱) موجود، enemy.ts/drone.tsx/کیت دشواری از قبل پیاده‌شده و اسکرین‌شات‌های t16-* گرفته شده بود ولی رکورد worklog ننوشته شده بود (قطعی نشست) — این نشست تمام زنجیره را از نو اثبات کرد
+- حسابرسی کد سه زیرفاز: U1-00 (constants: Difficulty/DIFFICULTY_KEY/DIFFICULTIES · prefs: loadDifficulty با پیش‌فرض عادی و اعتبارسنجی لیست سفید · use-fps-prefs: state+setDifficultyPref با صدا/لرزش · setup-panel: چیپ‌های aria-pressed · index: difficultyRef + detail.difficulty:853 افزودنی) — U1-01 (enemy.ts ۱۷۹ خط: FSM سه‌حالته patrol/stalk/flee، enemySpeedMult با قانون آسان=۰ و تپ=۰٫۵×، ENEMY_STALK_DELAY ۲٫۶/۱٫۷، جهش in-place، کران layout، صفر وابستگی React/THREE) — U1-02 (scene/drone.tsx ۱۸۳ خط: بدنهٔ octahedron تیره بدون برچسب ADR-005، چراغ کهربایی پالس ۴۶۰/۱۹۰/۷۰ms بر فاز، registry id:"drone"، EnemyApi.hit=انفجار+enemyFlee، تولد از پشت بازیکن، ADR-001 رعایت: writeEnemyPhase تابع ماژول‌سطح)
+- سیم‌کشی index: enemyStalking state از گذار bridge.enemyPhase روی interval رویدادگسستهٔ ۲۰۰ms (نه هر فریم) + setLiveMsg «پهپاد شناسایی متخاصم نزدیک می‌شود — یا حرکت کن یا شکارش کن!» + بج «◆ تعقیب» در HUD (دسکتاپ و تمام‌صفحه) + ریست idle در خروج
+- گیت‌ها (اجرای مستقل این نشست): bunx tsc --noEmit = ۰ ✓ · bun run lint = ۰ خطا/۰ warning ✓
+- QA مرورگری مستقل agent-browser (فلو کامل): ورود ویژن وان → هاب → شوتر → رد آموزش → پنل setup: سه چیپ دشواری حاضر ✓ → «آسان — بدون دشمن»: کلید visionone:game-pref:fps-difficulty=easy ذخیره، مأموریت شروع، ۳٫۵ ثانیه انتظار: صفر بج تعقیب و صفر اعلام پهپاد (دشمن خاموش — قانون ①) ✓ → توقف/ادامه کار می‌کند ✓ → نگهبان خروج «برگردم به آزمایشگاه؟ 🎮» ✓ → «عادی»: شروع، سکون ۴٫۵ ثانیه در یک جریان واحد → بج «تعقیب» ظاهر شد (گذار patrol→stalk اثبات رفتاری) ✓ (پیام aria-live گذار بعداً با پیام تایم‌اوت سؤال جایگزین شد — مکانیسم liveMsg سالم و رویدادگسسته است) → پایان طبیعی دور → صفحهٔ نتیجه با رتبهٔ نظامی (D — تازه‌کار) ✓ → «تنظیمات»: چیپ «عادی» aria-pressed=true منطبق با localStorage normal (ماندگاری دوطرفه) ✓
+- کنسول مرورگر: صفر خطای مرتبط با بازی (فقط آرتیفکت‌های کهن‌الگوی شناخته‌شده خارج بازی) · dev.log: صفر error-level در دنبالهٔ فعلی (EADDRINUSE قدیمیِ restart قبلی — سرور فعلی ۲۰۰ سالم)
+- اسکرین‌شات‌های تازه: qa-shots/t16-verify-easy.png، t16-verify-stalk.png + شش اسکرین‌شات نشست قبل (t16-setup-difficulty، t16-drone-stalk/stalk2/hover/flee/turned)
+- اسناد بسته شد: docs/fps-upgrade-roadmap.md → نسخه ۱.۲ (U1 ✅، U2 ⬅️ فاز جاری، تیک هر ۶ معیار پذیرش §U1، تاریخچه ۱.۲) · fps/README.md → نقشهٔ ماژول +۲ ردیف (enemy.ts، scene/drone.tsx) + به‌روزرسانی خط‌های constants/prefs/use-fps-prefs/setup/index + قرارداد Attempt با detail.difficulty + کلید localStorage + ردیف قرارداد «دشمن زنده (U1)»
+Stage Summary:
+- 🏁 فاز U1 «دشمن زنده — پهپاد تعقیب‌گر» بسته شد — مسیر بحرانی سند اکنون U0✅→U1✅ است و نوبت U2 «حملهٔ قفس واژه» (پرتاب قفس واژه از پهپاد + دفاع با شلیک به پهپاد + تایمر هشدار قرمز HUD) است
+- توزیع کد فاز: enemy.ts ۱۷۹ (FSM خالص) + scene/drone.tsx ۱۸۳ (رندر) + کیت دشواری پخش در constants/prefs/use-fps-prefs/setup-panel/index — امضای Attempt فقط افزودنی (detail.difficulty) و کلید prefs جدید
+- قوانین سخت §U1 هر شش‌گانه اثبات یا بازبینی شد: ① آسان=خاموش (QA رفتاری) ② تپ=نصف سرعت (enemySpeedMult — تپ روی پهپاد هم گریز بدون جریمه در مسیر handleHit "drone") ③ تعقیب مشروط به سکون (شرط ENEMY_CALM_SPD/ENEMY_MOVE_SPD در FSM) ④ گریز با برخورد گلوله (EnemyApi.hit→enemyFlee؛ صفر امتیاز/جریمه) ⑤ فریز واقعی (frameloop never/always + هیچ تایمر جانبی در enemy/drone) ⑥ بدون برچسب متنی (بدنه تیره + چراغ کهربایی)
+- درس نشست: grep حساس به حرف بزرگ است — loadDifficulty در prefs.ts از دور اول بود ولی grep "difficulty" آن را نشان نداد؛ قبل از ادعای نقض قرارداد، grep -i بزنید
+- گام بعدی طبق سند: فاز U2 — زیرفازهای خودش را از §U2 سند بخوانید (سند هنوز §U2 تفصیلی ندارد؛ قبل از کد باید نگارش شود) — محدودیت «حداکثر یک فاز در هر نشست» رعایت شود
