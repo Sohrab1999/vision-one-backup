@@ -1,17 +1,19 @@
 "use client";
 
 /**
- * enemy — موتور تصمیم «پهپاد تعقیب‌گر» (فاز U1 — نقشهٔ docs/fps-upgrade-roadmap.md §U1).
+ * enemy — موتور تصمیم «پهپاد تعقیب‌گر» (فاز U1→U3 — نقشهٔ docs/fps-upgrade-roadmap.md).
  *
- * ماژول خالص: صفر وابستگی به React/THREE — فقط ریاضیات و FSM سه‌حالته
- * «گشت (patrol) → تعقیب (stalk) → گریز (flee)». مانند chain.ts، اینجا فقط
- * «تصمیم و انتگرال حرکت» گرفته می‌شود؛ رندر و اثرهای جانبی در scene/drone.tsx
- * و index.tsx می‌ماند (پلی‌بوک games/fps/README.md — تک‌مسئولیتی).
+ * ماژول خالص: صفر وابستگی به React/THREE — فقط ریاضیات و FSM چهارحالته
+ * «گشت (patrol) → تعقیب (stalk) → شارژ (charge، فاز U2) → گریز (flee)». مانند
+ * chain.ts، اینجا فقط «تصمیم و انتگرال حرکت» گرفته می‌شود؛ رندر و اثرهای جانبی
+ * در scene/drone.tsx و index.tsx می‌ماند (پلی‌بوک games/fps/README.md).
  *
- * قوانین سخت سند §U1:
- * ① آسان = دشمن خاموش (enemyConfig) · ② تپ ساده × عادی/سخت = نصف سرعت
- * ③ تعقیب فقط هنگام سکون بازیکن؛ حرکت = بازگشت به مدار گشت
- * ④ گریز با برخورد گلوله (فریز واقعی حین توقف بر عهدهٔ frameloop کیت است — ADR-004)
+ * قوانین سخت سند:
+ * §U1: ① آسان = دشمن خاموش (enemyConfig) · ② تپ ساده × عادی/سخت = نصف سرعت
+ *      ③ تعقیب فقط هنگام سکون بازیکن؛ حرکت = بازگشت به مدار گشت
+ * §U2: ④ شارژ متعهد (حرکت بازیکن لغو نمی‌کند) · cooldown پرتاب در فریم‌های FSM
+ * §U3: ④bis شروع تعقیب فقط با دید (los)؛ قطع دید حین تعقیب = گرِیس lostS → عقب‌نشینی
+ *      (فریز واقعی حین توقف بر عهدهٔ frameloop کیت است — ADR-004)
  */
 
 import { clamp } from "./helpers";
@@ -62,6 +64,15 @@ export const ENEMY_THROW_CD: Record<Exclude<Difficulty, "easy">, number> = {
   normal: 9,
   hard: 6,
 };
+/** فاز U3 — گرِیس گم‌کردن رد: قطع خط دید حین تعقیب این‌قدر شناور می‌ماند پیش از عقب‌نشینی (ثانیه) */
+export const ENEMY_LOST_S: Record<Exclude<Difficulty, "easy">, number> = {
+  normal: 0.9,
+  hard: 0.6,
+};
+/** فاز U3 — گرِیس گم‌کردن رد بر حسب دشواری */
+export function enemyLostS(difficulty: Difficulty): number {
+  return difficulty === "hard" ? ENEMY_LOST_S.hard : ENEMY_LOST_S.normal;
+}
 
 /** ضریب سرعت FSM بر حسب دشواری × سبک کنترل — قانون سخت ① و ② سند */
 export function enemySpeedMult(difficulty: Difficulty, tap: boolean): number {
@@ -91,6 +102,10 @@ export interface EnemyState {
   throwCd: number;
   /** فاز U2 — پرچم یک‌بارمصرف «قفس پرتاب شد» — مصرف‌کننده: scene/drone در همان فریم */
   justThrew: boolean;
+  /** فاز U3 — زمان انباشته‌شدهٔ «بدون دید» حین تعقیب (ثانیه — گرِیس پیش از عقب‌نشینی) */
+  lostT: number;
+  /** فاز U3 — پرچم یک‌بارمصرف «رد گم شد» (شکست تعقیب با پنهانی — مصرف‌کننده: scene/drone در همان فریم) */
+  justLost: boolean;
   /** زاویهٔ رو به بازیکن (رادیان — برای رندر) */
   face: number;
 }
@@ -106,6 +121,10 @@ export interface EnemyInput {
   chargeS: number;
   /** فاز U2 — cooldown پس از هر پرتاب (ثانیه) */
   throwCd: number;
+  /** فاز U3 — گرِیس گم‌کردن رد (ثانیه) */
+  lostS: number;
+  /** فاز U3 — بازیکن از پهپاد دیده می‌شود؟ (تست خالص los.ts — فراخوانی‌کننده: scene/drone هر فریم) */
+  los: boolean;
   dt: number;
   bounds: { minX: number; maxX: number; minZ: number; maxZ: number };
 }
@@ -124,6 +143,8 @@ export function createEnemyState(px: number, pz: number): EnemyState {
     fleeT: 0,
     throwCd: 0,
     justThrew: false,
+    lostT: 0,
+    justLost: false,
     face: 0,
   };
 }
@@ -173,18 +194,29 @@ export function stepEnemy(st: EnemyState, inp: EnemyInput): void {
     }
   } else if (st.phase === "stalk") {
     if (inp.playerSpeed > ENEMY_MOVE_SPD) {
-      // بازیکن راه افتاد — تعقیب شکست خورد؛ به مدار برمی‌گردد
+      // بازیکن راه افتاد — تعقیب شکست خورد؛ به مدار برمی‌گردد (تداوم ③ U1 — حرکت قوی‌تر از پنهانی)
+      st.lostT = 0;
       enemyReturnToOrbit(st, inp.px, inp.pz);
+    } else if (!inp.los) {
+      // فاز U3 — بازیکن در پناهگاه: شناور می‌ماند تا گرِیس تمام شود؛ گذر زودهنگام دید = ادامهٔ تعقیب
+      st.lostT += dt;
+      if (st.lostT >= inp.lostS) {
+        st.lostT = 0;
+        st.justLost = true; // مصرف‌کننده: scene/drone در همان فریم — اعلام «رد گم شد»
+        enemyReturnToOrbit(st, inp.px, inp.pz); // enemyReturnToOrbit صفر می‌کند calmT را — پنهانی کامل، رد پاک
+      }
     } else if (dist > ENEMY_STOP_DIST) {
       const spd = Math.min(ENEMY_STALK_SPD * m, (dist - ENEMY_STOP_DIST) / dt || 0);
       st.x -= (dx / dist) * spd * dt;
       st.z -= (dz / dist) * spd * dt;
+      st.lostT = 0; // دید برقرار — گرِیس پاک
     } else if (inp.chargeS > 0 && st.throwCd <= 0) {
       // فاز U2 — به فاصلهٔ توقف رسید و آمادهٔ پرتاب است: شارژ تله‌گراف شروع می‌شود
       st.phase = "charge";
       st.t = 0;
+    } else {
+      st.lostT = 0; // نزدیکِ توقف با دید — شناور می‌ماند (فقط bob رندر)؛ شارژ متعهد می‌ماند حتی بی‌دید (قانون ۵ §U3)
     }
-    // نزدیکِ توقف: شناور می‌ماند (فقط bob رندر) — تهدید حاضر ولی بدون برخورد بدنی
   } else if (st.phase === "charge") {
     // فاز U2 — شارژ متعهد: شناور می‌ماند (حتی اگر بازیکن راه افتاد — قانون ۴ §U2)
     if (st.t >= inp.chargeS) {
@@ -198,10 +230,13 @@ export function stepEnemy(st: EnemyState, inp: EnemyInput): void {
     st.x = inp.px + Math.cos(st.orbitAngle) * ENEMY_ORBIT_R;
     st.z = inp.pz + Math.sin(st.orbitAngle) * ENEMY_ORBIT_R;
     if (inp.playerSpeed < ENEMY_CALM_SPD) {
-      st.calmT += dt;
-      if (st.calmT >= inp.stalkDelay && m > 0) {
-        st.phase = "stalk";
-        st.t = 0;
+      // فاز U3 — سکون فقط با دید انباشته می‌شود؛ بدون دید freeze (نه صفر — تحمل فلیکر درز دید)
+      if (inp.los) {
+        st.calmT += dt;
+        if (st.calmT >= inp.stalkDelay && m > 0) {
+          st.phase = "stalk";
+          st.t = 0;
+        }
       }
     } else {
       st.calmT = 0;

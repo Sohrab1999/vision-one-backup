@@ -114,6 +114,10 @@ export interface SceneBridge {
   cageHit: boolean;
   /** فاز U2 — پرچم یک‌بارمصرف «قفس خطا رفت» (همان الگوی cageHit — بدون جریمه) */
   cageWhiff: boolean;
+  /** فاز U3 — بازیکن در پناهگاه است و پهپاد او را نمی‌بیند (نوشتهٔ scene/drone هر فریم، خواندهٔ index با debounce ۴۰۰ms) */
+  enemyHidden: boolean;
+  /** فاز U3 — پرچم یک‌بارمصرف «پهپاد رد تو را گم کرد» (نوشتهٔ scene/drone، مصرف+پاک‌سازی index در interval) */
+  enemyLost: boolean;
 }
 
 export interface BurstApi {

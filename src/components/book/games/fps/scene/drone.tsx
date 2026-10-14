@@ -20,12 +20,15 @@ import {
   createEnemyState,
   enemyChargeS,
   enemyFlee,
+  enemyLostS,
   enemySpeedMult,
   enemyStalkDelay,
   enemyThrowCd,
   stepEnemy,
   type EnemyState,
 } from "../enemy";
+import { hasLineOfSight } from "../los";
+import { CROUCH_EYE } from "../constants";
 import type { CageApi } from "./cage";
 import type { Difficulty } from "../constants";
 
@@ -38,6 +41,14 @@ export interface EnemyApi {
 /** جهش فیلد FSM پهپاد در bridge — تابع ماژول‌سطح (الگوی setStick در input.tsx — ADR-001) */
 function writeEnemyPhase(b: SceneBridge, phase: SceneBridge["enemyPhase"]): void {
   b.enemyPhase = phase;
+}
+
+/** فاز U3 — وضعیت پنهانی/پرچم گم‌کردن رد — همان الگوی تابع ماژول‌سطح (ADR-001) */
+function writeEnemyHidden(b: SceneBridge, hidden: boolean): void {
+  b.enemyHidden = hidden;
+}
+function flagEnemyLost(b: SceneBridge): void {
+  b.enemyLost = true; // یک‌بارمصرف — مصرف+پاک‌سازی index در interval
 }
 
 export function HunterDrone({
@@ -100,6 +111,8 @@ export function HunterDrone({
   // فاز U2 — شارژ/cooldown پرتاب؛ برای دفاع عمقی در «آسان» هم صفر می‌ماند (قانون ① §U2)
   const chargeS = enabled ? enemyChargeS(difficulty) : 0;
   const throwCd = enabled ? enemyThrowCd(difficulty) : 0;
+  // فاز U3 — گرِیس گم‌کردن رد بر حسب دشواری
+  const lostS = enemyLostS(difficulty);
 
   useFrame((state, delta) => {
     const g = groupRef.current;
@@ -118,17 +131,29 @@ export function HunterDrone({
     const dt = Math.min(delta, 0.05);
     const layout = b.layout;
     const prevPhase = st.current.phase;
+    // فاز U3 — خط دید چشم پهپاد ↔ چشم بازیکن (خم‌شدن/پرش لحظه‌ای لحاظ می‌شود) — قبل از گام FSM
+    const pwz = 7 + (1 - b.laneK) * 4.2 + b.pos.z;
+    const pey = 1.7 - b.crouchAmt * CROUCH_EYE + b.jumpY;
+    const sees = hasLineOfSight(st.current.x, st.current.y, st.current.z, b.pos.x, pey, pwz, layout.boxes);
     stepEnemy(st.current, {
       px: b.pos.x,
-      pz: 7 + (1 - b.laneK) * 4.2 + b.pos.z,
+      pz: pwz,
       playerSpeed: Math.hypot(b.vel.x, b.vel.z),
       speedMult,
       stalkDelay,
       chargeS,
       throwCd,
+      lostS,
+      los: sees,
       dt,
       bounds: { minX: layout.minX - 1.2, maxX: layout.maxX + 1.2, minZ: layout.minZ - 1.2, maxZ: layout.maxZ + 1.2 },
     });
+    // فاز U3 — پرچم گم‌کردن رد (شکست تعقیب با پنهانی) + وضعیت لحظه‌ای پنهانی روی bridge
+    if (st.current.justLost) {
+      st.current.justLost = false;
+      flagEnemyLost(b);
+    }
+    writeEnemyHidden(b, !sees);
     // فاز U2 — پایان شارژ: پرتاب قفس واژه از موقعیت فعلی پهپاد به سینه/سر بازیکن (قانون ۳ §U2)
     if (st.current.justThrew) {
       st.current.justThrew = false;
@@ -164,7 +189,9 @@ export function HunterDrone({
             : st.current.phase === "flee"
               ? 70
               : 460;
-      mat.emissiveIntensity = 1.35 + Math.sin(performance.now() / hz) * 0.75;
+      // فاز U3 — حین جست‌وجو (گرِیس بی‌دید در تعقیب) چراغ هم تندتر می‌زند — تله‌گراف جست‌وجو
+      const searching = st.current.phase === "stalk" && !sees;
+      mat.emissiveIntensity = 1.35 + Math.sin(performance.now() / (searching ? 120 : hz)) * 0.75;
     }
     // پنهان‌سازی وقتی پشت دوربین نیست؟ — نه؛ مه نقشه عمق را می‌پوشاند و رادار میدان زنده است
     void camera;

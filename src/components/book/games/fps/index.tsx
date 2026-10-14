@@ -136,6 +136,7 @@ import {
   ArrowBigUp,
   Bot,
   Crosshair,
+  EyeOff,
   Flame,
   Heart,
   Medal,
@@ -359,6 +360,9 @@ export function FpsShooterGame() {
   const [enemyStalking, setEnemyStalking] = useState(false);
   // ── فاز U2 — قفس واژه: ثانیه تا برخورد (۰ = قفسی در پرواز نیست — چیپ خاموش) ──
   const [cageEta, setCageEta] = useState(0);
+  // ── فاز U3 — پناهگاه: چیپ «پوشیده» (فقط نمایش — قانون ۶ §U3) + شمارندهٔ debounce دو پولی ──
+  const [hiddenChip, setHiddenChip] = useState(false);
+  const hiddenStreakRef = useRef(0);
 
   // ── فاز G2-e — موتور کمبو مشترک کیت (G1-09) ──
   // حالت bonus = دقیقاً قانون فعلی شوتر: gained = ۱۰ + min(کمبو−۱, ۶) × ۲ (امتیاز یکسان می‌ماند)
@@ -455,6 +459,9 @@ export function FpsShooterGame() {
     cageEta: 0,
     cageHit: false,
     cageWhiff: false,
+    // فاز U3 — پناهگاه و خط دید: در شروع دیده‌شدن (بی‌پناه) و بدون پرچم
+    enemyHidden: false,
+    enemyLost: false,
   });
   const meshRegistry = useRef<THREE.Mesh[]>([]);
   const burstApi = useRef<BurstApi | null>(null);
@@ -1205,6 +1212,18 @@ export function FpsShooterGame() {
         setCageEta(0);
         setLiveMsg("قفس واژه خطا رفت — جابه‌جا شدی!");
       }
+      // ── فاز U3 — پناهگاه و خط دید: پرچم گم‌کردن رد + چیپ «پوشیده» با debounce (همه رویدادگسسته) ──
+      if (bridge.current.enemyLost) {
+        bridge.current.enemyLost = false;
+        setLiveMsg("پهپاد رد تو را گم کرد — در پناهگاه بمان یا حرکت کن!");
+      }
+      if (bridge.current.enemyHidden) {
+        hiddenStreakRef.current += 1;
+        if (hiddenStreakRef.current >= 2) setHiddenChip(true); // دو پول متوالی = پنهانی واقعی (ضدلرزش درز دید)
+      } else {
+        hiddenStreakRef.current = 0;
+        setHiddenChip(false); // خاموشی فوری — دید برگشت
+      }
       const eta = Math.round((bridge.current.cageEta || 0) * 10) / 10;
       setCageEta((prev) => (prev === eta ? prev : eta)); // setState فقط روی تغییر — بدون رندر زائد
       // فاز F8 — شمارش معکوس فرصت هدف طلایی (روی رویداد گسسته — نه هر فریم)
@@ -1538,6 +1557,11 @@ export function FpsShooterGame() {
     bridge.current.cageEta = 0;
     bridge.current.cageHit = false;
     bridge.current.cageWhiff = false;
+    // فاز U3 — پناهگاه از نو: چیپ «پوشیده» + شمارندهٔ debounce + پرچم‌های bridge
+    setHiddenChip(false);
+    hiddenStreakRef.current = 0;
+    bridge.current.enemyHidden = false;
+    bridge.current.enemyLost = false;
     goldenUntilRef.current = 0;
     goldenPendingRef.current = null;
     if (goldenTimerRef.current !== null) {
@@ -1813,6 +1837,16 @@ export function FpsShooterGame() {
                 تعقیب!
               </Badge>
             )}
+            {/* فاز U3 — نشانگر پناهگاه: پهپاد تو را نمی‌بیند (فقط نمایش — هیچ دکمه‌ای ندارد — قانون ۶ §U3) */}
+            {hiddenChip && (
+              <Badge
+                variant="outline"
+                className="gap-1 border-emerald-500/50 bg-emerald-500/10 px-2 py-1 text-[11px] font-black text-emerald-700 dark:text-emerald-300"
+              >
+                <EyeOff size={11} />
+                پوشیده
+              </Badge>
+            )}
             {/* فاز U2 — هشدار قفس واژه: شمارش معکوس تا برخورد (تپ ساده = دکمهٔ منهدم لمسی — قانون ۲ §U2) */}
             {cageEta > 0 &&
               (tapMode ? (
@@ -1967,6 +2001,7 @@ export function FpsShooterGame() {
                 <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
                 <span className="text-teal-300">موج {faNum(wave)}</span>
                 {enemyStalking && <span className="text-amber-300">◆ تعقیب</span>}
+                {hiddenChip && <span className="text-emerald-300">◆ پوشیده</span>}
                 {cageEta > 0 && <span className="text-red-300">◆ قفس {faNum(Math.round(cageEta * 10) / 10)}</span>}
                 {goldenActive && <span className="text-amber-300">★ {faNum(goldenLeft)}</span>}
               </div>

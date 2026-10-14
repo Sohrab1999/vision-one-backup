@@ -8,11 +8,12 @@
 
 | فایل | خط | نقش |
 |---|---|---|
-| `index.tsx` | ~۲,۱۳۰ | `FpsShooterGame`: ارکستراسیون — موتور مأموریت (موج/HVT/Attempt/پایان) + Canvas و ترکیب صحنه + سیم‌کشی HUD + نتیجه؛ تنها فایل دارای state موتور |
-| `setup-panel.tsx` | ~۵۷۰ | پنل setup (presentational): حالت/سلاح/نقشه/درس/دشواری/کیفیت/گزینه‌های نگاه + آموزش (`TUTORIAL_STEPS`) — props هم‌نام از index |
+| `index.tsx` | ~۲,۲۶۰ | `FpsShooterGame`: ارکستراسیون — موتور مأموریت (موج/HVT/Attempt/پایان) + Canvas و ترکیب صحنه + سیم‌کشی HUD + نتیجه؛ تنها فایل دارای state موتور |
+| `setup-panel.tsx` | ~۶۲۰ | پنل setup (presentational): حالت/سلاح/نقشه/درس/دشواری/کیفیت/گزینه‌های نگاه + آموزش (`TUTORIAL_STEPS` — ۸ گام شامل پناهگاه U3) — props هم‌نام از index |
 | `chain.ts` | ~۵۸ | موتور تصمیم خالص «جملهٔ زنجیره‌ای» (F10-ب): `chainResolve`/`chainVolleyPick`/`chainExpectedTargetId` — بدون اثر جانبی؛ اثرها در index |
 | `cage.ts` | ~۱۱۵ | هستهٔ خالص «قفس واژه» (U2-00): `createCageState`/`stepCage` (رویداد none/hit/whiff)/`cageEta` — پرواز خطی قابل پیش‌بینی به نقطهٔ پرتاب؛ صفر وابستگی React/THREE |
-| `enemy.ts` | ~۲۲۰ | موتور FSM خالص «پهپاد تعقیب‌گر» (U1-01/U2): `patrol → stalk → charge → flee` + `throwCd` — `stepEnemy`/`createEnemyState`/`enemyFlee`/`enemyReturnToOrbit`/`enemySpeedMult`/`enemyChargeS`/`enemyThrowCd` — صفر وابستگی به React/THREE؛ جهش in-place |
+| `enemy.ts` | ~۲۵۶ | موتور FSM خالص «پهپاد تعقیب‌گر» (U1/U2/U3): `patrol → stalk → charge → flee` + `throwCd` + LOS-aware (`lostT`/`justLost`/`ENEMY_LOST_S`) — `stepEnemy`/`createEnemyState`/`enemyFlee`/`enemyReturnToOrbit`/`enemySpeedMult`/`enemyChargeS`/`enemyThrowCd`/`enemyLostS` — صفر وابستگی به React/THREE؛ جهش in-place |
+| `los.ts` | ~۹۸ | هستهٔ خالص «خط دید» (U3-00): `hasLineOfSight` — تست slab پاره‌خط↔AABB روی جعبه‌های چیدمان (ردِ دکور `solid:false` و جعبهٔ حاوی مبدأ) — نه THREE.Raycaster؛ تخصیص صفر، فراخوانی هر فریم از scene/drone |
 | `use-fps-prefs.ts` | ~۱۳۸ | هوک ترجیحات ماندگار: mode/quality/sens/fov/invert/map/weapon/difficulty + setterهای ماندگار (فقط از طریق `prefs.ts`) |
 | `hud-question.tsx` | ~۱۱۷ | کارت سؤال روی HUD (presentational): متن سؤال + جملهٔ زنجیره با جای‌خالی‌های پُرشونده + پخش دوبارهٔ شنیداری + نوار زمان + شمارندهٔ HVT |
 | `constants.ts` | ~۱۲۲ | ثابت‌های تنظیمی: لِین‌ها، کمبو، موج/فرار/طلایی، حرکت (ACCEL/JUMP/…)، اسکوپ، کیفیت، `Difficulty` + `DIFFICULTY_KEY` (U1-00) |
@@ -20,7 +21,7 @@
 | `layouts.ts` | ~۱۷۹ | `StructureKind` + `LAYOUTS` — چیدمان سازه‌های هر نقشه (دیوار/در/طاق/…) |
 | `weapons.ts` | ~۸۴ | `WEAPONS` — کلت/سنگین/پمپ با خشاب/لگد/پخش/انفجار |
 | `prefs.ts` | ~۸۹ | لودر/سیور گزینه‌ها با گارد null (`visionone:game-pref:fps-*`) شامل `loadDifficulty` (پیش‌فرض عادی) |
-| `types.ts` | ~۱۱۸ | `SceneBridge` (قرارداد وضعیت صحنه — شامل `enemyPhase`)، `Question`، `QuestionSequence`، `TargetSpec`، … |
+| `types.ts` | ~۱۳۰ | `SceneBridge` (قرارداد وضعیت صحنه — شامل `enemyPhase`، `cageEta/cageHit/cageWhiff`، `enemyHidden/enemyLost`)، `Question`، `QuestionSequence`، `TargetSpec`، … |
 | `helpers.ts` | ~۶۱ | `clamp`، `missionRank`، `scopeOf`، `modeFa`، `dropFullscreen`، … |
 | `textures.ts` | ~۸۹ | بافت بیلبورد اهداف و برچسب HVT (Canvas 2D) |
 | `questions.ts` | ~۲۳۷ | سازندهٔ سؤال واژه/گرامر + «جملهٔ زنجیره» از خط‌های واقعی مکالمه‌ها (`chainSeedsOfConversations`) + چیدمان هدف‌ها (تا ۷ هدف) روی لِین‌ها |
@@ -30,7 +31,7 @@
 | `scene/sky.tsx` | ~۹۴ | `StarField`/`SkyOrb`/`CloudDrift` — آسمان هر نقشه |
 | `scene/world.tsx` | ~۲۶۵ | `Arena`+`FieldProps`+`DecoShape` (رندر سازه‌ها) + `World` (ری‌کست شلیک/والی پمپ) |
 | `scene/targets.tsx` | ~۳۳۵ | `Target` (پهپاد واژه‌دار + فرار)، `GoldenTarget` (HVT)، `Burst` (انفجار آتش/دود) |
-| `scene/drone.tsx` | ~۲۲۰ | `HunterDrone` (U1-02/U2): رندر پهپاد متخاصم بدون برچسب (ADR-005) — FSM از enemy.ts در useFrame (شامل شارژ پرتاب U2)، registry id ویژهٔ «drone»، `EnemyApi.hit` = انفجار + گریز، پرتاب قفس از cageApi در پایان شارژ، فریز رایگان با frameloop (ADR-004) |
+| `scene/drone.tsx` | ~۲۴۲ | `HunterDrone` (U1-02/U2/U3): رندر پهپاد متخاصم بدون برچسب (ADR-005) — FSM از enemy.ts در useFrame (شارژ پرتاب U2 + محاسبهٔ LOS هر فریم با چشم بازیکن حساس به خم‌شدن U3)، registry id ویژهٔ «drone»، `EnemyApi.hit` = انفجار + گریز، پرتاب قفس از cageApi در پایان شارژ، نوشتن `enemyHidden/enemyLost` با تابع ماژول‌سطح (ADR-001)، فریز رایگان با frameloop (ADR-004) |
 | `scene/cage.tsx` | ~۲۰۰ | `Cage` (U2-01): رندر قفس سیمی کهربایی بدون برچسب — پرتاب صف‌شده از api، registry id ویژهٔ «cage»، `CageApi.{launch,destroy}`، پرچم‌های یک‌بارمصرف cageHit/cageWhiff روی bridge، `writeCageEta` تابع ماژول‌سطح (ADR-001) |
 | `scene/input.tsx` | ~۱۰۱ | `TouchJoystick` لمسی + `setStick` (تابع ماژول‌سطح قاعدهٔ bridge) |
 
@@ -44,10 +45,12 @@
 - **زنجیره (F10-ب)**: سؤال فقط از خط‌های واقعی مکالمه‌های جزوه (`ConversationLine.en`)؛ `srsKey` عمداً خالی و مسیر SRS در index گارد می‌شود؛ شکار بی‌ترتیب = مسیر خطا (قلب −۱).
 - **registry هدف‌ها**: هر mesh شلیک‌پذیر با `userData.id` وارد `registry.current` می‌شود؛ عناصر دکوری
   هرگز وارد registry نمی‌شوند (قانون «شلیک فقط به هدف»).
-- **دشمن زنده (U1/U2)**: FSM پهپاد تعقیب‌گر فقط در `enemy.ts` (تصمیم: patrol/stalk/charge/flee + throwCd) و `scene/drone.tsx` (رندر/useFrame) —
+- **دشمن زنده (U1/U2/U3)**: FSM پهپاد تعقیب‌گر فقط در `enemy.ts` (تصمیم: patrol/stalk/charge/flee + throwCd + LOS/lostT) و `scene/drone.tsx` (رندر/useFrame + تست دید با `los.ts`) —
   آسان = `null` رندر (بدون هزینهٔ فریم) و `chargeS=0` (دفاع عمقی)؛ شکار پهپاد/قفس هیچ امتیاز/جریمه‌ای ندارد (اقتصاد امتیاز دست‌نخورده)؛
-  اعلام گذارها/رویدادهای قفس روی رویداد گسستهٔ interval سؤال (نه هر فریم) با `setLiveMsg`؛ قفس پرتابهٔ خطی به نقطهٔ پرتاب است (جابه‌جایی = whiff بی‌جریمه) —
+  اعلام گذارها/رویدادهای قفس/گم‌کردن رد روی رویداد گسستهٔ interval سؤال (نه هر فریم) با `setLiveMsg`؛ قفس پرتابهٔ خطی به نقطهٔ پرتاب است (جابه‌جایی = whiff بی‌جریمه) —
   برخورد قفس فقط ❤ کم می‌کند و سؤال جاری دست‌نخورده می‌ماند (مسیر مستقل از خطای سؤال).
+- **خط دید (U3)**: تعقیب فقط با دید شروع می‌شود (سکون بی‌دید freeze می‌شود نه صفر)؛ قطع دید حین تعقیب → گرِیس `ENEMY_LOST_S` (۰٫۹/۰٫۶) → بازگشت به مدار + پرچم `enemyLost`؛
+  شارژ متعهد از LOS بی‌اثر است؛ چیپ «پوشیده» فقط نمایش است (بدون دکمه) با debounce دو پولی ۴۰۰ms؛ U3 هیچ کلید جدیدی به Attempt اضافه نکرد (تله‌متری رفتاری = U8).
 
 ## افزودن قابلیت جدید — چک‌لیست
 
