@@ -118,6 +118,61 @@ export function buildGrammarQuestion(seq: number, s: QuizQuestionSeed, lesson: n
   };
 }
 
+// ─── فاز U4 — چالش «هجی» رئیس واژه (سند §U4 قانون ۲ — مرحلهٔ دوم) ───
+
+/** گزینش واژهٔ قابل هجی (۳ تا ۵ حرف لاتین) از استخر — null = فالبک به سؤال عادی مأموریت.
+ * سقف ۵ حرف عمدی است: حروف + حداکثر ۲ حرف حواس‌پرتی ≤ ۷ هدف — همان قرارداد کلیدهای ۱..۷ تپ ساده (README). */
+export function pickSpellTarget(pool: VocabEntry[]): VocabEntry | null {
+  const ok = pool.filter((w) => /^[A-Za-z]{3,5}$/.test(w.word));
+  if (ok.length === 0) return null;
+  return pickUnique(ok, 1, (w) => w.word)[0] ?? null;
+}
+
+/** چالش هجی: حروف واژهٔ درست باید به ترتیب شکار شوند — با بازاستفادهٔ کامل موتور زنجیره
+ * (mode:"sentence-chain" + sequence.words = حروف): HUD جای‌خالی‌ها، chainResolve،
+ * والی پمپ و تایم‌اوت بدون هیچ شاخهٔ جدیدی کار می‌کنند. حواس‌پرتی‌ها = حروف واقعی
+ * واژه‌های دیگر استخر (غیرِ حروف واژهٔ هدف — مقایسهٔ بی‌حساس به بزرگی حرف).
+ * HUD: promptMain جای‌خالی‌های حرفی، promptSub = معنی (سرنخ انتخاب واژه)،
+ * speakText = واژه (تلفظ تقویتی پس از کامل شدن هجی)، sequence.en = خود واژه (مرور خطا خوانا).
+ */
+export function buildSpellQuestion(
+  seq: number,
+  target: VocabEntry,
+  decoyPool: VocabEntry[],
+  lesson: number,
+  maxOthers: number,
+  wave = 1,
+): Question {
+  const word = target.word;
+  const letters = word.split("");
+  const own = new Set(letters.map((c) => c.toLowerCase()));
+  const bank = new Set<string>();
+  for (const w of decoyPool) {
+    if (w.word === word) continue;
+    for (const ch of w.word) {
+      if (/^[A-Za-z]$/.test(ch) && !own.has(ch.toLowerCase())) bank.add(ch);
+    }
+  }
+  const decoys = pickUnique([...bank], maxOthers, (c) => c.toLowerCase());
+  const opts = shuffle([
+    ...letters.map((c) => ({ text: c, correct: true })),
+    ...decoys.map((c) => ({ text: c, correct: false })),
+  ]);
+  return {
+    seq,
+    mode: "sentence-chain",
+    promptFa: "رئیس واژه — حروف واژه را به ترتیب شکار کن",
+    promptMain: letters.map(() => "___").join(" "),
+    promptSub: target.meaning,
+    ltr: true,
+    targets: layoutTargets(opts, wave),
+    speakText: word,
+    srsKey: word,
+    lesson,
+    sequence: { words: letters, en: word, fa: target.meaning, source: "هجی واژه — رئیس واژه" },
+  };
+}
+
 // ─── فاز F10-ب — «جملهٔ زنجیره‌ای»: سؤال از خط‌های مکالمهٔ واقعی جزوه (ConversationLine) ───
 
 /** بذر یک جملهٔ قابل‌بازی زنجیره — مستقیم از دادهٔ جزوه، بدون ساخت دادهٔ الکی */

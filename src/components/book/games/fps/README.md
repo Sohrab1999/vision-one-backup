@@ -8,9 +8,10 @@
 
 | فایل | خط | نقش |
 |---|---|---|
-| `index.tsx` | ~۲,۲۶۰ | `FpsShooterGame`: ارکستراسیون — موتور مأموریت (موج/HVT/Attempt/پایان) + Canvas و ترکیب صحنه + سیم‌کشی HUD + نتیجه؛ تنها فایل دارای state موتور |
-| `setup-panel.tsx` | ~۶۲۰ | پنل setup (presentational): حالت/سلاح/نقشه/درس/دشواری/کیفیت/گزینه‌های نگاه + آموزش (`TUTORIAL_STEPS` — ۸ گام شامل پناهگاه U3) — props هم‌نام از index |
+| `index.tsx` | ~۲,۴۵۵ | `FpsShooterGame`: ارکستراسیون — موتور مأموریت (موج/HVT/Attempt/پایان + تریگر و مراحل رئیس U4) + Canvas و ترکیب صحنه + سیم‌کشی HUD + نتیجه؛ تنها فایل دارای state موتور |
+| `setup-panel.tsx` | ~۶۲۷ | پنل setup (presentational): حالت/سلاح/نقشه/درس/دشواری/کیفیت/گزینه‌های نگاه + آموزش (`TUTORIAL_STEPS` — ۹ گام شامل پناهگاه U3 و رئیس U4) — props هم‌نام از index |
 | `chain.ts` | ~۵۸ | موتور تصمیم خالص «جملهٔ زنجیره‌ای» (F10-ب): `chainResolve`/`chainVolleyPick`/`chainExpectedTargetId` — بدون اثر جانبی؛ اثرها در index |
+| `boss.ts` | ~۱۵۱ | هستهٔ خالص «رئیس واژه» (U4-00): `createBossState`/`stepBoss` (سرگردانی خطی رفت‌وبرگشتی + چرخهٔ شارژ تله‌گراف→پرتاب قفس + cd در فریم‌های FSM) + `bossInterrupt` (لغو شارژ با شلیک) + ثابت‌ها (`BOSS_WAVE=4`/`BOSS_STAGES=3`/`BOSS_TIME_MULT=1.5` + cd/شارژ بر حسب دشواری + `bossSpeedMult` — آسان=۰، تپ=نصف) — صفر وابستگی React/THREE؛ جهش in-place |
 | `cage.ts` | ~۱۱۵ | هستهٔ خالص «قفس واژه» (U2-00): `createCageState`/`stepCage` (رویداد none/hit/whiff)/`cageEta` — پرواز خطی قابل پیش‌بینی به نقطهٔ پرتاب؛ صفر وابستگی React/THREE |
 | `enemy.ts` | ~۲۵۶ | موتور FSM خالص «پهپاد تعقیب‌گر» (U1/U2/U3): `patrol → stalk → charge → flee` + `throwCd` + LOS-aware (`lostT`/`justLost`/`ENEMY_LOST_S`) — `stepEnemy`/`createEnemyState`/`enemyFlee`/`enemyReturnToOrbit`/`enemySpeedMult`/`enemyChargeS`/`enemyThrowCd`/`enemyLostS` — صفر وابستگی به React/THREE؛ جهش in-place |
 | `los.ts` | ~۹۸ | هستهٔ خالص «خط دید» (U3-00): `hasLineOfSight` — تست slab پاره‌خط↔AABB روی جعبه‌های چیدمان (ردِ دکور `solid:false` و جعبهٔ حاوی مبدأ) — نه THREE.Raycaster؛ تخصیص صفر، فراخوانی هر فریم از scene/drone |
@@ -21,10 +22,10 @@
 | `layouts.ts` | ~۱۷۹ | `StructureKind` + `LAYOUTS` — چیدمان سازه‌های هر نقشه (دیوار/در/طاق/…) |
 | `weapons.ts` | ~۸۴ | `WEAPONS` — کلت/سنگین/پمپ با خشاب/لگد/پخش/انفجار |
 | `prefs.ts` | ~۸۹ | لودر/سیور گزینه‌ها با گارد null (`visionone:game-pref:fps-*`) شامل `loadDifficulty` (پیش‌فرض عادی) |
-| `types.ts` | ~۱۳۰ | `SceneBridge` (قرارداد وضعیت صحنه — شامل `enemyPhase`، `cageEta/cageHit/cageWhiff`، `enemyHidden/enemyLost`)، `Question`، `QuestionSequence`، `TargetSpec`، … |
+| `types.ts` | ~۱۳۱ | `SceneBridge` (قرارداد وضعیت صحنه — شامل `enemyPhase`، `cageEta/cageHit/cageWhiff`، `enemyHidden/enemyLost`، `bossPhase` U4)، `Question`، `QuestionSequence`، `TargetSpec`، … |
 | `helpers.ts` | ~۶۱ | `clamp`، `missionRank`، `scopeOf`، `modeFa`، `dropFullscreen`، … |
 | `textures.ts` | ~۸۹ | بافت بیلبورد اهداف و برچسب HVT (Canvas 2D) |
-| `questions.ts` | ~۲۳۷ | سازندهٔ سؤال واژه/گرامر + «جملهٔ زنجیره» از خط‌های واقعی مکالمه‌ها (`chainSeedsOfConversations`) + چیدمان هدف‌ها (تا ۷ هدف) روی لِین‌ها |
+| `questions.ts` | ~۲۹۲ | سازندهٔ سؤال واژه/گرامر + «جملهٔ زنجیره» از خط‌های واقعی مکالمه‌ها (`chainSeedsOfConversations`) + چالش هجی رئیس (`buildSpellQuestion`/`pickSpellTarget` — سقف ۵ حرف برای حفظ کلیدهای ۱..۷ تپ) + چیدمان هدف‌ها (تا ۹ هدف) روی لِین‌ها |
 | `physics.ts` | ~۱۵۲ | `stepPlayer`/`resolveWorld`/`applyRig`/`applyScope`/`initRig` — موتور حرکت نرم FPS |
 | `scene/camera.tsx` | ~۴۵ | `Rig` (گام فیزیک در فریم) + `FovTune` (اسکوپ/کیک دویدن) |
 | `scene/viewmodel.tsx` | ~۲۳۱ | مدل سه‌بعدی سه سلاح + ریلود/تعویض/لگد/جرقهٔ دهانه |
@@ -33,12 +34,13 @@
 | `scene/targets.tsx` | ~۳۳۵ | `Target` (پهپاد واژه‌دار + فرار)، `GoldenTarget` (HVT)، `Burst` (انفجار آتش/دود) |
 | `scene/drone.tsx` | ~۲۴۲ | `HunterDrone` (U1-02/U2/U3): رندر پهپاد متخاصم بدون برچسب (ADR-005) — FSM از enemy.ts در useFrame (شارژ پرتاب U2 + محاسبهٔ LOS هر فریم با چشم بازیکن حساس به خم‌شدن U3)، registry id ویژهٔ «drone»، `EnemyApi.hit` = انفجار + گریز، پرتاب قفس از cageApi در پایان شارژ، نوشتن `enemyHidden/enemyLost` با تابع ماژول‌سطح (ADR-001)، فریز رایگان با frameloop (ADR-004) |
 | `scene/cage.tsx` | ~۲۰۰ | `Cage` (U2-01): رندر قفس سیمی کهربایی بدون برچسب — پرتاب صف‌شده از api، registry id ویژهٔ «cage»، `CageApi.{launch,destroy}`، پرچم‌های یک‌بارمصرف cageHit/cageWhiff روی bridge، `writeCageEta` تابع ماژول‌سطح (ADR-001) |
+| `scene/boss.tsx` | ~۲۷۹ | `WordBoss` (U4-01): رندر پهپاد فرماندهٔ بزرگ با سه حلقهٔ سپر توری (شکستن با پاسخ درست — گله بی‌اثر: قانون ① §U4) بدون برچسب (ADR-005) — حرکت/شارژ از boss.ts در useFrame + `BossApi.interrupt` (شلیک حین شارژ = لغو پرتاب) + پرتاب قفس از همان cageApi (تپ = نصف سرعت) + انفجار حلقه روی تغییر stage (پراپ) + فروپاشی نهایی روی `bridge.bossPhase="down"` — `stepShieldRing` تابع ماژول‌سطح (ADR-001) |
 | `scene/input.tsx` | ~۱۰۱ | `TouchJoystick` لمسی + `setStick` (تابع ماژول‌سطح قاعدهٔ bridge) |
 
 ## قراردادهای ثابت (دست نزنید بدون QA کامل)
 
-- **امضای Attempt**: `category: GAME_KEY ("fps-shooter")` + `detail.{mode,quality,map,weapon,wave,difficulty,cageThrown,cageDowned,cageHits}` —
-  داشبورد/رکوردها به این کلیدها وابسته‌اند (کلیدهای قدیمی دست‌نخورده؛ `difficulty` از U1-00 و `cage*` از U2 افزودنی‌اند).
+- **امضای Attempt**: `category: GAME_KEY ("fps-shooter")` + `detail.{mode,quality,map,weapon,wave,difficulty,cageThrown,cageDowned,cageHits,bossStage,bossDefeated}` —
+  داشبورد/رکوردها به این کلیدها وابسته‌اند (کلیدهای قدیمی دست‌نخورده؛ `difficulty` از U1، `cage*` از U2 و `boss*` از U4 افزودنی‌اند).
 - **کلیدهای localStorage**: `visionone:game-pref:fps-{weapon,map,quality,sens,fov,invert,difficulty}` — فقط از طریق `prefs.ts`.
 - **`scopeOf(mode, tap)`**: قالب `"word|grammar|listen|chain[-tap]"` — کلید رکورد شخصی per-scope.
 - **تپ ساده**: کلیدهای `۱..۷` به هدف‌های مرتب‌شده بر اساس X (چپ→راست) — `۵..۷` فقط برای هدف‌های اضافهٔ زنجیره (F10-ب).
@@ -51,6 +53,10 @@
   برخورد قفس فقط ❤ کم می‌کند و سؤال جاری دست‌نخورده می‌ماند (مسیر مستقل از خطای سؤال).
 - **خط دید (U3)**: تعقیب فقط با دید شروع می‌شود (سکون بی‌دید freeze می‌شود نه صفر)؛ قطع دید حین تعقیب → گرِیس `ENEMY_LOST_S` (۰٫۹/۰٫۶) → بازگشت به مدار + پرچم `enemyLost`؛
   شارژ متعهد از LOS بی‌اثر است؛ چیپ «پوشیده» فقط نمایش است (بدون دکمه) با debounce دو پولی ۴۰۰ms؛ U3 هیچ کلید جدیدی به Attempt اضافه نکرد (تله‌متری رفتاری = U8).
+- **رئیس واژه (U4)**: تریگر در `advance` هنگام ورود به موج ≥۴ (`w >= BOSS_WAVE && bossStageRef === 0`) — سؤال عادی نمی‌آید؛ سه مرحله (سؤال مأموریت → هجی ۳..۵ حرف با موتور زنجیره → شنیداری) فقط با پاسخ درست جلو می‌روند (خطا = همان مرحله با واژهٔ تازه)؛
+  گله به بدنهٔ رئیس بی‌اثر است (فقط جرقه/اعلام — شلیک حین شارژ = لغو پرتاب)؛ پهپاد تعقیب‌گر حین نبرد از صحنه حذف می‌شود (`bossStage === 0` گارد رندر)؛
+  زمان چالش ۱٫۵× (نوار زمان با `effQTime` مقیاس می‌شود)؛ پایان نبرد = پیروزی (فروپاشی + تأخیر ۱٫۵ث با `later`) یا مرگ عادی؛ مسیریابی «سؤال بعد» همهٔ پنج مسیر پاسخ از `nextStepRef` (routeNext) می‌گذرد —
+  آسان = رئیس منفعل (بدون سرگردانی/قفس)؛ تپ = نصف سرعت‌ها؛ صفر شاخهٔ جدید برخورد (رئیس با id:"boss" در همان registry/handleVolley).
 
 ## افزودن قابلیت جدید — چک‌لیست
 

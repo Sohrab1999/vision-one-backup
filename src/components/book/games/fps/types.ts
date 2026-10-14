@@ -118,6 +118,8 @@ export interface SceneBridge {
   enemyHidden: boolean;
   /** فاز U3 — پرچم یک‌بارمصرف «پهپاد رد تو را گم کرد» (نوشتهٔ scene/drone، مصرف+پاک‌سازی index در interval) */
   enemyLost: boolean;
+  /** فاز U4 — فاز رئیس واژه (نوشتهٔ index روی رویداد گسسته؛ خواندهٔ scene/boss هر فریم — fight حین نبرد، down = فروپاشی نهایی) */
+  bossPhase: "idle" | "fight" | "down";
 }
 
 export interface BurstApi {

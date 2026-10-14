@@ -136,6 +136,7 @@ import {
   ArrowBigUp,
   Bot,
   Crosshair,
+  Crown,
   EyeOff,
   Flame,
   Heart,
@@ -254,11 +255,18 @@ import {
   buildChainQuestion,
   buildGrammarQuestion,
   buildListeningQuestion,
+  buildSpellQuestion,
   buildWordQuestion,
   chainSeedsOfConversations,
   chainWordBankOfConversations,
+  pickSpellTarget,
   type ChainSeed,
 } from "./questions";
+import {
+  BOSS_STAGES,
+  BOSS_TIME_MULT,
+  BOSS_WAVE,
+} from "./boss";
 import { FovTune, Rig } from "./scene/camera";
 import { ViewModel } from "./scene/viewmodel";
 import { Arena, World } from "./scene/world";
@@ -270,6 +278,7 @@ import {
 } from "./scene/targets";
 import { HunterDrone, type EnemyApi } from "./scene/drone";
 import { Cage, type CageApi } from "./scene/cage";
+import { WordBoss, type BossApi } from "./scene/boss";
 import { TouchJoystick } from "./scene/input";
 import { useFpsPrefs } from "./use-fps-prefs";
 import { SetupPanel, TUTORIAL_STEPS } from "./setup-panel";
@@ -363,6 +372,11 @@ export function FpsShooterGame() {
   // ── فاز U3 — پناهگاه: چیپ «پوشیده» (فقط نمایش — قانون ۶ §U3) + شمارندهٔ debounce دو پولی ──
   const [hiddenChip, setHiddenChip] = useState(false);
   const hiddenStreakRef = useRef(0);
+  // ── فاز U4 — رئیس واژه: نبرد پایان مأموریت (موج ≥۴) — ۰ = نبرد نیست؛ ۱..۳ = مرحلهٔ جاری ──
+  const [bossStage, setBossStage] = useState(0);
+  const bossStageRef = useRef(0);
+  const bossDefeatedRef = useRef(false);
+  const maxBossStageRef = useRef(0);
 
   // ── فاز G2-e — موتور کمبو مشترک کیت (G1-09) ──
   // حالت bonus = دقیقاً قانون فعلی شوتر: gained = ۱۰ + min(کمبو−۱, ۶) × ۲ (امتیاز یکسان می‌ماند)
@@ -462,6 +476,8 @@ export function FpsShooterGame() {
     // فاز U3 — پناهگاه و خط دید: در شروع دیده‌شدن (بی‌پناه) و بدون پرچم
     enemyHidden: false,
     enemyLost: false,
+    // فاز U4 — رئیس واژه: بیرون نبرد در شروع
+    bossPhase: "idle",
   });
   const meshRegistry = useRef<THREE.Mesh[]>([]);
   const burstApi = useRef<BurstApi | null>(null);
@@ -473,6 +489,10 @@ export function FpsShooterGame() {
   const cageThrownRef = useRef(0);
   const cageDownedRef = useRef(0);
   const cageHitsRef = useRef(0);
+  // فاز U4 — api رئیس واژه (الگوی EnemyApi) + مسیریاب «سؤال بعد» (latest-ref)
+  const bossApiRef = useRef<BossApi | null>(null);
+  const nextStepRef = useRef<(success: boolean) => void>(() => {});
+  const startBossRef = useRef<() => void>(() => {});
   // فاز F10-ب — استخر/کارتابل زنجیره: نوع ChainSeed هم اضافه می‌شود
   const deckRef = useRef<Array<VocabEntry | QuizQuestionSeed | ChainSeed>>([]);
   const deckIdxRef = useRef(0);
@@ -759,6 +779,31 @@ export function FpsShooterGame() {
     [],
   );
 
+  // ── کشیدن آیتم بعدی از دستهٔ سؤال (reshuffle در اتمام — مشترک advance و مراحل رئیس — فاز U4) ──
+  const deckPop = useCallback((): VocabEntry | QuizQuestionSeed | ChainSeed => {
+    if (deckIdxRef.current >= deckRef.current.length) {
+      deckRef.current = shuffle(poolRef.current);
+      deckIdxRef.current = 0;
+    }
+    return deckRef.current[deckIdxRef.current++];
+  }, []);
+
+  // ── ساخت سؤال عادی مأموریت از آیتم استخر (مشترک advance و فالبک مراحل رئیس — فاز U4) ──
+  const buildModeQuestion = useCallback(
+    (item: VocabEntry | QuizQuestionSeed | ChainSeed, w: number): Question => {
+      // فاز G2-e — کیفیت سبک: ۳ هدف هم‌زمان به‌جای ۴
+      const maxOthers = qualityRef.current === "low" ? DISTRACTORS_LOW : DISTRACTORS_HIGH;
+      return modeRef.current === "grammar-gate"
+        ? buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson, maxOthers, w)
+        : modeRef.current === "sentence-chain"
+          ? buildChainQuestion(++seqRef.current, item as ChainSeed, chainBankRef.current, lesson, maxOthers, w)
+          : modeRef.current === "listening-hunt"
+            ? buildListeningQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w)
+            : buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w);
+    },
+    [lesson],
+  );
+
   // ── سؤال بعدی (reshuffle در اتمام استخر) ──
   const advanceImpl = useCallback(() => {
     if (overRef.current) return;
@@ -767,13 +812,6 @@ export function FpsShooterGame() {
       finishRef.current();
       return;
     }
-    if (deckIdxRef.current >= deckRef.current.length) {
-      deckRef.current = shuffle(pool);
-      deckIdxRef.current = 0;
-    }
-    const item = deckRef.current[deckIdxRef.current++] as VocabEntry | QuizQuestionSeed | ChainSeed;
-    // فاز G2-e — کیفیت سبک: ۳ هدف هم‌زمان به‌جای ۴
-    const maxOthers = qualityRef.current === "low" ? DISTRACTORS_LOW : DISTRACTORS_HIGH;
     // فاز F8 — موج‌بندی: هر WAVE_SIZE پاسخ یک موج سخت‌تر (حرکت سریع‌تر + چیدمان عمیق‌تر)
     const w = Math.min(WAVE_MAX, Math.floor(totalRef.current / WAVE_SIZE) + 1);
     if (w !== waveRef.current) {
@@ -786,14 +824,12 @@ export function FpsShooterGame() {
     }
     // فاز F8 — فرار هدف‌های غلط فقط در حالت شلیک (تپ ساده = دسترس‌پذیری بدون فرار)
     bridge.current.dodge = !tapRef.current;
-    const next =
-      modeRef.current === "grammar-gate"
-        ? buildGrammarQuestion(++seqRef.current, item as QuizQuestionSeed, lesson, maxOthers, w)
-        : modeRef.current === "sentence-chain"
-          ? buildChainQuestion(++seqRef.current, item as ChainSeed, chainBankRef.current, lesson, maxOthers, w)
-          : modeRef.current === "listening-hunt"
-            ? buildListeningQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w)
-            : buildWordQuestion(++seqRef.current, item as VocabEntry, distrRef.current, lesson, maxOthers, w);
+    // ── فاز U4 — تریگر رئیس واژه: ورود به موج ≥۴ = نبرد پایان مأموریت (سؤال عادی نمی‌آید — قانون ۶ §U4) ──
+    if (w >= BOSS_WAVE && bossStageRef.current === 0) {
+      startBossRef.current();
+      return;
+    }
+    const item = deckPop();
     bridge.current.flashes = [];
     bridge.current.lastShotAt = 0;
     lockedRef.current = false;
@@ -801,9 +837,9 @@ export function FpsShooterGame() {
     chainProgressRef.current = 0;
     setChainProgress(0);
     deadlineRef.current = performance.now() + qTimeRef.current * 1000;
-    setQ(next);
+    setQ(buildModeQuestion(item, w));
     setTimeLeft(qTimeRef.current);
-  }, [lesson]);
+  }, [lesson, buildModeQuestion, deckPop]);
   useEffect(() => {
     advanceRef.current = advanceImpl;
   });
@@ -820,7 +856,104 @@ export function FpsShooterGame() {
     return () => window.clearTimeout(t);
   }, [q, phase]);
 
-  const advance = useCallback(() => advanceRef.current(), []);
+  // ── فاز U4 — رئیس واژه: نبرد پایان مأموریت در موج ≥۴ (سند §U4) ──
+
+  /** ساخت سؤال مرحلهٔ رئیس: ۱ = سؤال عادی مأموریت · ۲ = هجی (فالبک: مأموریت) · ۳ = شنیداری (فالبک: مأموریت)
+   *  — زمان چالش ۱٫۵× (هجی چند شلیک پیاپی می‌خواهد — قانون ۲ §U4). */
+  const bossBuildStage = useCallback(
+    (stage: number) => {
+      const w = waveRef.current;
+      const maxOthers = qualityRef.current === "low" ? DISTRACTORS_LOW : DISTRACTORS_HIGH;
+      let next: Question;
+      if (stage === 2) {
+        const target = pickSpellTarget(wordPool);
+        next = target
+          ? buildSpellQuestion(++seqRef.current, target, distrRef.current, lesson, maxOthers, w)
+          : buildModeQuestion(deckPop(), w);
+      } else if (stage === 3 && wordPool.length > 0) {
+        const target = wordPool[Math.floor(Math.random() * wordPool.length)];
+        next = buildListeningQuestion(++seqRef.current, target, distrRef.current, lesson, maxOthers, w);
+      } else {
+        next = buildModeQuestion(deckPop(), w);
+      }
+      bridge.current.flashes = [];
+      bridge.current.lastShotAt = 0;
+      lockedRef.current = false;
+      // چالش هجی از موتور زنجیره استفاده می‌کند — از حرف اول شروع می‌شود
+      chainProgressRef.current = 0;
+      setChainProgress(0);
+      const tq = Math.round(qTimeRef.current * BOSS_TIME_MULT);
+      deadlineRef.current = performance.now() + tq * 1000;
+      setQ(next);
+      setTimeLeft(tq);
+    },
+    [lesson, wordPool, buildModeQuestion, deckPop],
+  );
+
+  /** ورود رئیس: پهپاد تعقیب‌گر تعطیل (قانون ۷ §U4) + مرحلهٔ ۱ شروع می‌شود */
+  const startBoss = useCallback(() => {
+    bossStageRef.current = 1;
+    maxBossStageRef.current = 1;
+    setBossStage(1);
+    bridge.current.bossPhase = "fight";
+    setEnemyStalking(false);
+    bridge.current.enemyPhase = "idle";
+    bridge.current.enemyHidden = false;
+    bridge.current.enemyLost = false;
+    setHiddenChip(false);
+    hiddenStreakRef.current = 0;
+    playSound("golden");
+    buzz("light");
+    setLiveMsg(`رئیس واژه وارد میدان شد — سه سپر دارد و گلوله اثر ندارد؛ فقط پاسخ درست سپرش را می‌شکند!`);
+    bossBuildStage(1);
+  }, [bossBuildStage]);
+  useEffect(() => {
+    startBossRef.current = startBoss;
+  });
+
+  /** گذر مرحلهٔ رئیس: درست = شکستن سپر/فروپاشی؛ خطا = همان مرحله با چالش تازه (قانون ۲ §U4) */
+  const bossNextStage = useCallback(
+    (success: boolean) => {
+      if (overRef.current) return;
+      const stage = bossStageRef.current;
+      if (!success) {
+        setLiveMsg("سپر رئیس مقاومت کرد — چالش تازه با واژهٔ دیگری!");
+        bossBuildStage(stage);
+        return;
+      }
+      if (stage < BOSS_STAGES) {
+        bossStageRef.current = stage + 1;
+        maxBossStageRef.current = Math.max(maxBossStageRef.current, stage + 1);
+        setBossStage(stage + 1);
+        playSound("golden");
+        buzz("success");
+        setLiveMsg(`سپر ${faNum(stage)} از ${faNum(BOSS_STAGES)} منهدم شد — مرحلهٔ ${faNum(stage + 1)} شروع شد!`);
+        bossBuildStage(stage + 1);
+      } else {
+        // قانون ۶ §U4 — فروپاشی رئیس: انفجار نهایی صحنه + پیروزی + نتیجه (زنجیرهٔ مقاوم به توقف)
+        bossDefeatedRef.current = true;
+        bridge.current.bossPhase = "down";
+        playSound("golden");
+        buzz("record");
+        setLiveMsg("رئیس واژه منهدم شد — مأموریت با پیروزی کامل پایان یافت!");
+        later(() => finishRef.current(), 1500);
+      }
+    },
+    [bossBuildStage, later],
+  );
+
+  /** مسیریابی «سؤال بعد» — حین نبرد رئیس به گذر مرحله می‌رود؛ بیرون نبرد به advance عادی */
+  const routeNext = useCallback(
+    (success: boolean) => {
+      if (overRef.current) return;
+      if (bossStageRef.current > 0) bossNextStage(success);
+      else advanceRef.current();
+    },
+    [bossNextStage],
+  );
+  useEffect(() => {
+    nextStepRef.current = routeNext;
+  });
 
   // ── پایان دور — الگوی طلایی فاز ۳/۴ ──
   const finish = useCallback(() => {
@@ -875,6 +1008,9 @@ export function FpsShooterGame() {
           cageThrown: cageThrownRef.current,
           cageDowned: cageDownedRef.current,
           cageHits: cageHitsRef.current,
+          // فاز U4 — افزودنی: تله‌متری رئیس واژه (بیشینهٔ مرحله + پیروزی)
+          bossStage: maxBossStageRef.current,
+          bossDefeated: bossDefeatedRef.current,
         },
       });
     }
@@ -952,7 +1088,8 @@ export function FpsShooterGame() {
   // فاز U2 — رویداد پرتاب قفس از scene/cage (stable — فقط ref/state setter)
   const handleCageLaunch = useCallback(() => {
     cageThrownRef.current += 1;
-    setLiveMsg("پهپاد قفس واژه پرتاب کرد — منهدمش کن یا جابه‌جا شو!");
+    // فاز U4 — متن خنثی: پرتاب‌کننده پهپاد تعقیب‌گر یا رئیس واژه هر دو ممکن است
+    setLiveMsg("قفس واژه پرتاب شد — منهدمش کن یا جابه‌جا شو!");
     buzz("light");
   }, []);
   const handleHit = useCallback(
@@ -976,6 +1113,18 @@ export function FpsShooterGame() {
           buzz("light");
           setLiveMsg("قفس واژه را منهدم کردی — تهدید خنثی شد!");
         }
+        return;
+      }
+      // فاز U4 — شلیک به بدنهٔ رئیس: هیچ آسیبی ندارد (قانون ① §U4)؛ حین شارژ = لغو پرتاب (قانون ④)
+      if (id === "boss") {
+        const interrupted = bossApiRef.current?.interrupt() ?? false;
+        playSound("hit");
+        buzz("light");
+        setLiveMsg(
+          interrupted
+            ? "شارژ رئیس را به‌هم زدی — پرتاب قفس لغو شد!"
+            : "سپر رئیس گلوله را دفع کرد — فقط پاسخ درست واژه سپرش را می‌شکند!",
+        );
         return;
       }
       // فاز F8 — شکار هدف طلایی: بونوس خارج از چرخهٔ سؤال (نه پاسخ، نه قلب، نه جلو رفتن)
@@ -1028,7 +1177,7 @@ export function FpsShooterGame() {
             lockedRef.current = true;
             void speak(cur.speakText, { speed: voiceSpeedRef.current });
             setLiveMsg(`جمله کامل شد! +${faNum(gained)} — کمبو ×${faNum(comboCountRef.current)} 🔥`);
-            later(() => advance(), HIT_FREEZE_MS);
+            later(() => nextStepRef.current(true), HIT_FREEZE_MS);
           } else {
             // واژهٔ میانی — بدون فریز؛ زنجیره ادامه دارد (پیام مثبت کوتاه aria-live)
             setLiveMsg(hit.msg);
@@ -1052,7 +1201,7 @@ export function FpsShooterGame() {
           if (heartsRef.current <= 0) {
             later(() => finishRef.current(), HIT_FREEZE_MS);
           } else {
-            later(() => advance(), HIT_FREEZE_MS);
+            later(() => nextStepRef.current(false), HIT_FREEZE_MS);
           }
         }
         return;
@@ -1071,7 +1220,7 @@ export function FpsShooterGame() {
         playSound("correct");
         buzz("success");
         setLiveMsg(`+${faNum(gained)} امتیاز — کمبو ×${faNum(comboCountRef.current)} 🔥`);
-        later(() => advance(), HIT_FREEZE_MS);
+        later(() => nextStepRef.current(true), HIT_FREEZE_MS);
       } else {
         // برخورد غلط — کمبو صفر (کیت)، یک ❤ کم، صف مرور
         registerMiss();
@@ -1094,11 +1243,11 @@ export function FpsShooterGame() {
         if (heartsRef.current <= 0) {
           later(() => finishRef.current(), HIT_FREEZE_MS);
         } else {
-          later(() => advance(), HIT_FREEZE_MS);
+          later(() => nextStepRef.current(false), HIT_FREEZE_MS);
         }
       }
     },
-    [advance, later, registerCorrect, registerMiss, comboCountRef, goldenLater],
+    [later, registerCorrect, registerMiss, comboCountRef, goldenLater],
   );
   useEffect(() => {
     bridge.current.onHit = handleHit;
@@ -1111,12 +1260,14 @@ export function FpsShooterGame() {
   });
   const handleVolley = useCallback((ids: Array<string | null>) => {
     const raw = [...new Set(ids.filter((x): x is string => x !== null))];
-    // فاز U1/U2 — برخورد پهپاد/قفس در والی پمپ: خارج از چرخهٔ سؤال تصمیم بقیهٔ برخوردها
+    // فاز U1/U2/U4 — برخورد پهپاد/قفس/رئیس در والی پمپ: خارج از چرخهٔ سؤال تصمیم بقیهٔ برخوردها
     const droneHit = raw.includes("drone");
     const cageShot = raw.includes("cage");
-    const hits = raw.filter((x) => x !== "drone" && x !== "cage");
+    const bossShot = raw.includes("boss");
+    const hits = raw.filter((x) => x !== "drone" && x !== "cage" && x !== "boss");
     if (droneHit) handleHitRef.current("drone");
     if (cageShot) handleHitRef.current("cage");
+    if (bossShot) handleHitRef.current("boss");
     if (hits.length === 0) return; // والی خالی = خطا رفتن — بی‌جریمه (الگوی شلیک به خالی)
     const cur = qRef.current;
     // فاز F10-ب — زنجیره: والی فقط در بر دارندهٔ واژهٔ انتظاری حساب می‌شود (یک‌بار؛ تصمیم در chain.ts)
@@ -1174,7 +1325,7 @@ export function FpsShooterGame() {
     if (heartsRef.current <= 0) {
       later(() => finishRef.current(), HIT_FREEZE_MS);
     } else {
-      later(() => advance(), HIT_FREEZE_MS);
+      later(() => nextStepRef.current(false), HIT_FREEZE_MS);
     }
   }, [later, registerMiss]);
   useEffect(() => {
@@ -1562,6 +1713,12 @@ export function FpsShooterGame() {
     hiddenStreakRef.current = 0;
     bridge.current.enemyHidden = false;
     bridge.current.enemyLost = false;
+    // فاز U4 — رئیس واژه از نو: بیرون نبرد + صفر تله‌متری
+    bossStageRef.current = 0;
+    maxBossStageRef.current = 0;
+    bossDefeatedRef.current = false;
+    setBossStage(0);
+    bridge.current.bossPhase = "idle";
     goldenUntilRef.current = 0;
     goldenPendingRef.current = null;
     if (goldenTimerRef.current !== null) {
@@ -1780,7 +1937,9 @@ export function FpsShooterGame() {
 
   // ── Playing — فاز G2-e: شِل استاندارد کیت + فریز حلقهٔ R3F حین توقف ──
   const qTime = tapMode ? Q_TIME_TAP : Q_TIME_SHOOT;
-  const timePct = Math.max(0, Math.min(100, (timeLeft / qTime) * 100));
+  // فاز U4 — چالش رئیس ۱٫۵× زمان دارد — نوار زمان با همین زمان مؤثر مقیاس می‌شود
+  const effQTime = bossStage > 0 ? Math.round(qTime * BOSS_TIME_MULT) : qTime;
+  const timePct = Math.max(0, Math.min(100, (timeLeft / effQTime) * 100));
   const qualityLow = quality === "low";
   // فاز F6 — پالت نقشهٔ فعال + فاز F7 — ترتیب بودجهٔ عناصر محیطی
   const activeMap = MAPS[mapId];
@@ -1845,6 +2004,28 @@ export function FpsShooterGame() {
               >
                 <EyeOff size={11} />
                 پوشیده
+              </Badge>
+            )}
+            {/* فاز U4 — رئیس واژه: بج نبرد پایان مأموریت + پیپ‌های سپر باقی‌مانده (۳→۲→۱) */}
+            {bossStage > 0 && (
+              <Badge
+                variant="outline"
+                className="animate-pulse gap-1.5 border-red-500/60 bg-red-500/10 px-2.5 py-1 text-[11px] font-black text-red-600 motion-reduce:animate-none dark:text-red-400"
+              >
+                <Crown size={11} />
+                رئیس واژه — مرحلهٔ {faNum(bossStage)}/{faNum(BOSS_STAGES)}
+                <span
+                  role="img"
+                  aria-label={`سپرهای باقی‌مانده: ${faNum(BOSS_STAGES - bossStage + 1)} از ${faNum(BOSS_STAGES)}`}
+                  className="flex items-center gap-0.5"
+                >
+                  {Array.from({ length: BOSS_STAGES }, (_, i) => (
+                    <span
+                      key={i}
+                      className={cn("h-1.5 w-1.5 rounded-full", i + 1 >= bossStage ? "bg-amber-400" : "bg-muted-foreground/30")}
+                    />
+                  ))}
+                </span>
               </Badge>
             )}
             {/* فاز U2 — هشدار قفس واژه: شمارش معکوس تا برخورد (تپ ساده = دکمهٔ منهدم لمسی — قانون ۲ §U2) */}
@@ -1950,17 +2131,19 @@ export function FpsShooterGame() {
               {goldenActive && goldenSpec && (
                 <GoldenTarget spec={goldenSpec} untilRef={goldenUntilRef} registry={meshRegistry} bridge={bridge} />
               )}
-              {/* فاز U1 — پهپاد تعقیب‌گر متخاصم (خاموش در دشواری «آسان») */}
-              <HunterDrone
-                difficulty={difficulty}
-                tap={tapMode}
-                bridge={bridge}
-                registry={meshRegistry}
-                burstApi={burstApi}
-                apiRef={enemyApiRef}
-                cageApi={cageApiRef}
-              />
-              {/* فاز U2 — قفس واژهٔ پرتابی (پرتاب از پهپاد؛ پرچم‌ها روی bridge) */}
+              {/* فاز U1 — پهپاد تعقیب‌گر متخاصم (خاموش در دشواری «آسان» و حین نبرد رئیس — قانون ۷ §U4) */}
+              {bossStage === 0 && (
+                <HunterDrone
+                  difficulty={difficulty}
+                  tap={tapMode}
+                  bridge={bridge}
+                  registry={meshRegistry}
+                  burstApi={burstApi}
+                  apiRef={enemyApiRef}
+                  cageApi={cageApiRef}
+                />
+              )}
+              {/* فاز U2 — قفس واژهٔ پرتابی (پرتاب از پهپاد یا رئیس؛ پرچم‌ها روی bridge) */}
               <Cage
                 bridge={bridge}
                 registry={meshRegistry}
@@ -1968,6 +2151,19 @@ export function FpsShooterGame() {
                 apiRef={cageApiRef}
                 onLaunch={handleCageLaunch}
               />
+              {/* فاز U4 — رئیس واژه: نبرد پایان مأموریت (سه سپر — فقط پاسخ درست می‌شکند) */}
+              {bossStage > 0 && (
+                <WordBoss
+                  bridge={bridge}
+                  registry={meshRegistry}
+                  burstApi={burstApi}
+                  apiRef={bossApiRef}
+                  stage={bossStage}
+                  difficulty={difficulty}
+                  tap={tapMode}
+                  cageApi={cageApiRef}
+                />
+              )}
               <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
               <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
               {/* فاز F3 — تفنگ سه‌بعدی ویومدل چسبیده به دوربین — فاز F9: مدل per-سلاح */}
@@ -2000,6 +2196,7 @@ export function FpsShooterGame() {
                 <span>⏱ {faNum(Math.ceil(timeLeft))}</span>
                 <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
                 <span className="text-teal-300">موج {faNum(wave)}</span>
+                {bossStage > 0 && <span className="text-red-300">◆ رئیس {faNum(bossStage)}/{faNum(BOSS_STAGES)}</span>}
                 {enemyStalking && <span className="text-amber-300">◆ تعقیب</span>}
                 {hiddenChip && <span className="text-emerald-300">◆ پوشیده</span>}
                 {cageEta > 0 && <span className="text-red-300">◆ قفس {faNum(Math.round(cageEta * 10) / 10)}</span>}

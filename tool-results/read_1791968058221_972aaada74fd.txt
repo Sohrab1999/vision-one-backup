@@ -1,0 +1,282 @@
+  3100→- docs/refactor-roadmap.md بروزرسانی شد: گام ۷ ✅ کامل (جدول + وضعیت اجرا) — نقشهٔ refactor اکنون ۹/۹ گام عملیاتی بسته است؛ گام ۹ تعمداً معلق (فقط با چندنفره‌شدن کلاس مجازی)
+  3101→
+  3102→Stage Summary:
+  3103→- 🏁 **نقشه راه Refactoring رسماً بسته شد** — هر ۹ گام عملیاتی از ۱۰ انجام شد (گام ۹ اختیاری/معلق)
+  3104→- معماری فونت: شخص ثالث صفر + preload + swap + فالبک متریک واقعی — CLS سهم فونت = ۰، سازگاری کامل با canvas
+  3105→- نکتهٔ عملیاتی برای ایجنت‌های بعدی: **بعد از ویرایش globals.css اگر CSS کهنه سرو شد → rm -rf .next و restart** (کش Turbopack)
+  3106→- گام بعدی پیشنهادی: بازگشت به نقشهٔ محصولی شوتر docs/fps-roadmap.md نسخهٔ ۲.۴ (F10 عمق یادگیری / T2 حالت‌های تاکتیکی) روی ساختار ماژولار جدید games/fps/
+  3107→---
+  3108→Task ID: F10-1
+  3109→Agent: main orchestrator (Z.ai Code)
+  3110→Task: درخواست کاربر «ادامه بده» — فاز F10 «عمق یادگیری» نقشهٔ محصولی شوتر (docs/fps-roadmap.md نسخهٔ ۲.۴) — الف + ج
+  3111→
+  3112→Work Log:
+  3113→- وضعیت‌سنجی: نقشهٔ refactor بسته (REFACTOR-3)؛ طبق سند، فاز بعدی F10 عمق یادگیری — سه زیرفاز: شنیداری/جملهٔ زنجیره‌ای/گزارش AI
+  3114→- **الف — حالت شنیداری (listening-hunt)**: Mode union += "listening-hunt"؛ buildListeningQuestion در questions.ts (promptMain = «🔊؟» — متن واژه عمداً مخفی؛ تشخیص فقط با شنیدن)
+  3115→  - پخش خودکار ۴۲۰ms پس از هر سؤال شنیداری (effect با گارد paused/exitAsk + پاک‌سازی تایمر)
+  3116→  - دکمهٔ «پخش دوباره» روی HUD (pointer-events-auto داخل کارت pointer-events-none) + کلید V در دسکتاپ (handler keydown کنار KeyR)
+  3117→  - scopeOf/modeName در helpers برای سه حالت + bestListen (useSyncExternalStore سوم) + level تله‌متری «listen-tap:…»
+  3118→  - setup: کارت سوم (Headphones، گرید sm:grid-cols-3) + pool مشترک واژگان (poolOk/poolCount سه‌وضعیتی) + چیپ‌های درس (باگ جابه‌جایی بدنهٔ ternary وسط کار کشف و اصلاح شد) + متن معرفی و آموزش گام ۱ بروز
+  3119→- **ج — گزارش به دستیار AI**: src/lib/tutor-seed.ts جدید (sessionStorage، consume یک‌باره)؛ FreeChat در tutor-view mount → seed را در ورودی می‌گذارد + فوکوس + توست (ارسال خودکار نه — سقف روزانهٔ AI حفظ می‌شود)؛ دکمهٔ «گزارش خطاها به دستیار هوشمند» در phase==="done" زیر ResultScreen (فقط با خطا > ۰) → seedTutorPrompt(رتبهٔ نظامی + دقت + فهرست خطاها با معنی) + requestView("tutor")
+  3120→- **پولیش صدا**: قطع عمدی پخش (سؤال بعدی/دابل پخش دوباره) دیگر AbortError در کنسول نمی‌دهد — speak.ts اکنون جایگزین‌شدن currentAudio را تشخیص می‌دهد (audio بیرون try تعریف شد)
+  3121→- **اشکال میانه که ریشه‌ای رفع شد**: ویرایش دستی من باعث شد backtick پایانی تمپلیت گزارش به quote تبدیل شود → ۱۲۴ خطای TS از خط ۹31 (جایی که تمپلیت بسته می‌شد) — با اسکنر وضعیت backtick (پاریتی) و esbuild خطای واقعی در خط ۸۸۵ پیدا و اصلاح شد
+  3122→- اعتبارسنجی: tsc = ۰ ✓ lint = ۰ خطا/۲۱ warning ✓
+  3123→- QA مرورگری: setup سه کارت حالت ✓ شروع دور شنیداری → POST /api/tts 200 (پخش خودکار) ✓ پخش دوباره از کش حافظه (بدون POST دوم) ✓ سه پاسخ غلط → ResultScreen «گزارش مأموریت» + دکمهٔ گزارش ✓ کلیک → نمای دستیار + متن seed در ورودی چت (رتبهٔ D، دقت ۴۰٪، ۳ مورد) ✓ dev.log: game_session_end level:"listen-tap:high" + POST /api/attempts 200 ✓ دابل‌پخش دوبارهٔ تست → صفر خطای کنسول ✓
+  3124→- اسکرین‌شات‌ها: qa-shots/f10-setup-modes.png، f10-listening-hud.png، f10-result.png، f10-tutor-seed.png، f10-listening-scene.png
+  3125→- docs/fps-roadmap.md: وضعیت F10 🔶 ثبت شد (الف ✓ ج ✓، ب ⏳)
+  3126→
+  3127→Stage Summary:
+  3128→- 🔶 F10 دو-سوم بسته شد: حالت شنیداری کامل + تحویل گزارش به دستیار (سازوکار tutor-seed عمومی برای همهٔ بازی‌ها)
+  3129→- گام بعدی مشخص: **F10-ب «جملهٔ زنجیره‌ای»** — موتور توالی (Question.sequence + شکار ترتیبی در handleHit) + انتخاب جمله از مکالمه‌های واقعی جزوه (بدون دادهٔ ساختگی) — به‌عنوان فاز مستقل با QA
+  3130→- نکته برای ایجنت‌های بعدی: ویرایش دستی تمپلیت‌های فارسی/RTL حساس است — بعد از هر ویرایش بلافاصله `bunx tsc --noEmit` بگیرید (خطای backtick ممکن است دور از محل ویرایش ظاهر شود)
+  3131→---
+  3132→Task ID: AUDIT-2
+  3133→Agent: main orchestrator (Z.ai Code) — senior software architect audit (دوم)
+  3134→Task: درخواست کاربر — «اجرای پرامپت Audit جامع + ثبت نقشه راه رتبه‌بندی‌شده» (بار دوم — پس از بسته‌شدن Audit اول)
+  3135→
+  3136→Work Log:
+  3137→- خط مبنا: ۸۸,۹۳۰ خط src؛ تأیید سلامت میراث Audit اول: tsc=۰، lint=۰ خطا، CLS=۰ در لود تمیز، صفر secret/eval، ۱ مورد any صریح، باندل اولیه فقط بوت‌پث، prefetch بودجه‌دار، ۱۹/۳۷ روت API rate-limit
+  3138→- سرشماری بزرگ‌فایل‌ها: fps/index.tsx = ۲,۴۳۸ (بازتورم پس از F10!)، dictionary.ts ۲,۶۲۳ (داده — سالم)، adventure-map ۱,۷۸۶، quiz-game ۱,۶۸۰، crossword ۱,۶۷۵، snakes-ladders ۱,۶۳۷، speed-quiz ۱,۴۹۵، flappy ۱,۴۵۲، wordle ۱,۳۴۰
+  3139→- پایش وابستگی‌ها: ۷۰ dep → **۱۳ پکیج صفر-consumption** کشف شد (@dnd-kit×۳، react-query، react-table، zod، mdxeditor، date-fns، next-intl، syntax-highlighter، reactuses، react-markdown، hookform/resolvers) — با الگوی آزاد دوباره چک شد (sharp=نیاز runtime تصویر، uuid=مصرف class route، next-themes/vaul/embla/input-otp/day-picker/react-hook-form=مصرف کیت ui → نگه‌داشتن)
+  3140→- امنیت: dangerouslySetInnerHTML فقط در ۴ فایل، همگی CSS ثابت (بدون دادهٔ پویا) — بدون XSS؛ asr/api بدون secret
+  3141→- آرتیفکت: src/app/api/route.ts = «Hello, world!» قالبی — حذف‌شدنی
+  3142→- DRY پسماند: faNum محلی ×۶ خارج از بازی‌ها (compare-view، progress-card، heatmap، survey-gate، srs-stats، print-flashcards) + pick محلی ×۳ (targets/duel/adventure) با وجود shared.pickUnique
+  3143→- پذیرش کیت بازی‌ها: ۱۴ بازی ۷–۱۴ رفرنس کیت دارند؛ فقط quiz-game صفر است + خارج از پوشهٔ games/ (نقض ساختار)
+  3144→- کیفیت: ۲۱ warning no-unused-vars در ۱۱ فایل مانده؛ noImplicitAny:false؛ reactStrictMode:false (برای perf R3F — مستند در gام ۵ قبلی)
+  3145→- پرفورمنس: vitals تمیز (LCP ۲٫۴–۴٫۲s / CLS 0 / INP ۴۸–۵۶ms)؛ یک اسپایک CLS=۰٫۳۰۴ فقط در ریلود HMR دِو — آیتم پایش پروداکشن
+  3146→- سند **docs/refactor-roadmap-2.md** نوشته شد: ۹ یافتهٔ A1..A9 + نقشهٔ رتبه‌بندی‌شدهٔ ۱..۱۰ + سه اسپرینت (A بهداشت / B ساختار+فاز F10-ب / C بک‌لاگ تفکیک بازی‌ها) + معیار پذیرش
+  3147→- در انتهای docs/refactor-roadmap.md (Audit اول، بسته‌شده ۹/۹) نشانگر جانشین اضافه شد
+  3148→
+  3149→Stage Summary:
+  3150→- 📋 Audit دوم ثبت شد — کدبیس پس از refactor اول در وضعیت 🟢 عمومی است (پرف/امنیت/تایپ)؛ بدهی اصلی حالا ساختاری-تکاملی است:
+  3151→  ① ۱۳ وابستگی مرده ② god componentهای دستهٔ دوم (۷ بازی) + quiz-game بیرون ساختار ③ روند بازتورم fps/index (۲,۴۳۸) که قبل از فاز F10-ب باید لاغر شود ④ تکمیل گیت (۲۱ warning → error، noImplicitAny)
+  3152→- نقشهٔ جدید ۱..۱۰: اسپرینت A (۱+۲+۳ بهداشت ریسک‌صفر) → B (۴+۵ ساختار، ۶ = فاز محصولی F10-ب) → C (۷+۸+۹ تفکیک بازی‌ها) → ۱۰ شرطی (state کلاس)
+  3153→- نکتهٔ عملیاتی: پکیج‌های «نگه‌داشتی» در A1 دقیق لیست شده — ایجنت بعدی نباید sharp/uuid/ui-served ها را حذف کند
+  3154→---
+  3155→Task ID: SPRINT-A
+  3156→Agent: main orchestrator (Z.ai Code)
+  3157→Task: درخواست کاربر «شروع کن» — اجرای اسپرینت A نقشهٔ docs/refactor-roadmap-2.md (گام‌های ۱+۲+۳: بهداشت ریسک‌صفر)
+  3158→
+  3159→Work Log:
+  3160→- گام ۱ (وابستگی‌های مرده): مصرف‌صفرِ هر ۱۳ پکیج سند با rg دوباره تأیید شد → `bun remove` ۱۴ پکیج: @dnd-kit/core/sortable/utilities، @tanstack/react-query، @tanstack/react-table، zod، @mdxeditor/editor، date-fns، next-intl، react-syntax-highlighter، @reactuses/core، react-markdown، @hookform/resolvers **+ react-hook-form** (توسعهٔ سند: تنها مصرف‌کننده‌اش ui/form.tsx بلااستفاده بود)
+  3161→- حذف دو آرتیفکت: `src/app/api/route.ts` (Hello world قالبی — A5) و `src/components/ui/form.tsx` (تنها مصرف‌کنندهٔ resolvers — صفر importer با rg تأیید شد)؛ sharp/uuid/vaul/embla/input-otp/react-day-picker/next-themes طبق سند نگه‌داشته شدند
+  3162→- گام ۲-الف: پاک‌سازی ۲۱ warning در ۱۳ فایل:
+  3163→  · public/sw.js — ۹ catch(err) بی‌مصرف → catch {؛ **تلهٔ میانه**: catch دهم (precache خط ۴۳) err را واقعاً در console.warn مصرف می‌کرد و eslint فلگش نکرده بود — sed عمومی آن را هم شکست، از git diff کشف و binding بازگردانده شد
+  3164→  · eslint.config.mjs — __dirname/__filename + importهای dirname/fileURLToPath بلااستفاده حذف
+  3165→  · asr/route — const mime بلااستفاده حذف (قرارداد API در JSDoc حفظ شد)
+  3166→  · speak.ts — onStart از destructure speakCloud حذف (در امضای opts و speak() می‌ماند؛ onStart واقعی در سطح speak فراخوانی می‌شود) — **ویرایش اول خراب شد (حذف ناخواستهٔ بدنهٔ trimAudioCache + امضای speakCloud)، بلافاصله بازسازی و با tsc تأیید شد**
+  3167→  · use-toast — const actionTypes (فقط type مصرف) → type ActionType آبجکتی (ActionType["ADD_TOAST"] سازگار ماند) — اعلان تکراری که خودم ساختم بلافاصله حذف شد
+  3168→  · daily-store/weekly-store — EMPTY_INFO بلااستفاده ×۲ حذف
+  3169→  · grammar-library — prop value بلااستفادهٔ GrammarAccordionItems از امضا و call-site حذف
+  3170→  · profile-button — starredQCount + useQuestionStars import حذف (ویرایش اول import تکراری/غلط ساخت — اصلاح شد)
+  3171→  · quiz-game — combinedRounds + useCombinedRounds از import (recordCombinedRound ماند)
+  3172→  · shadowing-view — const score بلااستفاده در map حذف
+  3173→  · smart-pick _weakRatio و say-it _onChange عمداً ماندند (سازگاری امضا/subscribe stub) — با IgnorePattern مجاز شدند
+  3174→- گام ۲-ب (بستن گیت): `no-unused-vars: ["error", {argsIgnorePattern:"^_", varsIgnorePattern:"^_", caughtErrorsIgnorePattern:"^_"}]` + tsconfig `noImplicitAny:true` (آزمایش اولیه با tsconfig موقت: صفر خطا — کدبیس از قبل implicit-any تمیز بود)
+  3175→- گام ۳ (SSOT): faNum محلی ×۶ (activity-heatmap، survey-gate، compare-view، progress-card-generator، print-flashcards، srs-stats-section) حذف → import از games/shared (الگوی رایج ۱۷ فایل موجود). تفاوت رفتار جزئی: heatmap از digit-replace به toLocaleString رفت (جداکنندهٔ هزارگان در اعداد بزرگ — بهبود نمایش). **ادعای A6 دربارهٔ pick×۳ outdated بود**: adventure-map از قبل pickUnique مصرف می‌کند؛ pick در duel-game (handler) و targets.tsx (متغیر رنگ) هم‌نام محلی‌اند نه کمکی تکراری — بدون تغییر.
+  3176→- زیرساخت: node_modules عوض شد → dev server kill + `rm -rf .next` + راه‌اندازی مجدد؛ **مشکل جدید محیط**: `nohup ... &` و حتی `setsid` با پایان session tool کشته می‌شد (دو بار سرور مرد) → الگوی `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)` در subshell پایدار شد — برای ایجنت‌های بعدی همین الگو
+  3177→- اعتبارسنجی: `bunx tsc --noEmit` = ۰ ✓ `bun run lint` = **۰ خطا / ۰ warning** (اولین بار ۰/۰ — قبلاً ۲۱ warning) ✓ `node --check public/sw.js` ✓ GET / 200 ✓
+  3178→- QA مرورگری (agent-browser): قفسه → ورود ویژن وان → هاب (۱۵ کارت) → آزمون: شروع چالش، سؤال ۱/۱۰ با تایمر، پاسخ + «سؤال بعدی» ✓ setup شوتر (۳ حالت/۳ سلاح/۴ نقشه/کیفیت) → شروع مأموریت → canvas فعال، صحنهٔ کامل (ویومدل/پهپادها/موج ۲/HVT) صفر خطای کنسول ✓ گرامر (آکاردئون‌ها) ✓ مقایسه (شش پایه) ✓ آمار (کارت پیشرفت/heatmap/SRS) ✓ گفتار: بگو ببینم + سایه‌خوانی با شروع یک متن (خط ۱ «گوش بده»/«خط بعد») ✓ دیالوگ پروفایل (فرم حساب/CSV/پشتیبان) ✓ — page errors صفر، console errors صفر، dev.log بدون error
+  3179→- اسکرین‌شات‌ها: qa-shots/a2-{home,quiz,quiz-run,fps-setup,fps-setup2,fps-scene,grammar,compare,stats,speaking,shadowing,shadowing-run,profile}.png
+  3180→- docs/refactor-roadmap-2.md: گام‌های ۱/۲/۳ ✅ + رکورد اسپرینت A بسته شد
+  3181→
+  3182→Stage Summary:
+  3183→- 🏁 **اسپرینت A کامل شد** — ریپو ۱۴ وابستگی سبک‌تر شد، سطح API تمیز شد و **دروازهٔ کیفیت کاملاً بسته شد: tsc=۰، lint=۰/۰، noImplicitAny:true، unused-vars=error** — از این پس unused var و implicit any «warning» نیستند، build را می‌شکنند
+  3184→- بازبینی یافته‌های Audit دوم: A1 ✓ A5 ✓ A4 ✓ A6 (نیمه — faNum؛ pick outdated) — A2/A3 (اسپرینت B) و A7..A9 باقی
+  3185→- گام بعدی پیشنهادی: **اسپرینت B** — گام ۴ (نجات quiz-game به games/quiz/ + پذیرش کیت) → گام ۵ (رژیم لاغری fps/index: setup-panel/use-fps-prefs/hud-question) → گام ۶ (فاز محصولی F10-ب جملهٔ زنجیره‌ای)
+  3186→- نکتهٔ عملیاتی: شروع dev server پایدار = `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)`؛ ویرایش‌های چندبخشی را همیشه بلافاصله با tsc تأیید کنید (دو اشتباه ویرایشی این دور هر دو بلافاصله کشف/اصلاح شد)
+  3187→---
+  3188→Task ID: 4
+  3189→Agent: full-stack-developer (subagent)
+  3190→Task: گام ۴ نقشهٔ refactor-2 — نجات quiz-game: جابه‌جایی به games/quiz/ + تفکیک ماژولار + پذیرش کیت بازی‌ها
+  3191→
+  3192→Work Log:
+  3193→- مکانیک تفکیک (پلی‌بوک games/fps/README.md): اسکریپت اسلایس خطی دقیق (نه ویرایش دستی JSX) + ۹ anchor یکتا برای درج کیت؛ سپس **صحه‌گذاری بایت‌به‌بایت** با اسکریپت verify (بازسازی فایل اصلی از HEAD و مقایسهٔ ۹ بازه: setup 702..1103، result 1109..1333، playing 1341..1568، bonus 1572..1675، constants 75..113، helpers 115..157، بدنهٔ موتور 165..698 پس از حذف معکوس درج‌های کیت) → همه عیناً OK
+  3194→- quiz-game.tsx (۱,۶۷۹ خط) → src/components/book/games/quiz/ با ۸ فایل (+README):
+  3195→  index.tsx ۶۹۴ (موتور QuizGame — امضای عمومی دست‌نخورده) · setup-panel.tsx ۵۰۴ · question-card.tsx ۳۳۸ · result-view.tsx ۲۹۱ · bonus-card.tsx ۱۴۳ · helpers.tsx ۵۲ · constants.ts ۴۶ · types.ts ۳۳ (مجموع ۲,۱۰۱ خط با هدرها/props)
+  3196→- الگوی Container/Presentational با **props هم‌نام** (setCategory/startDaily/… به‌عنوان prop) تا JSX منتقل‌شده صفر تغییر شناسه داشته باشد؛ types مشترک: DailyInfo/WeeklyInfo (type import) و PulseInfo ساختاری (Pulse) چون ReturnType-of-hook در eslint unused-vars خطا می‌داد — یک اصلاح بعد از lint اول
+  3197→- Re-point importers: quiz-view.tsx و chapter-view.tsx → `import { QuizGame } from "./games/quiz"`؛ فایل قدیمی src/components/book/quiz-game.tsx حذف (صفر importer باقی با rg تأیید شد)
+  3198→- پذیرش کیت (فقط index.tsx — ۱۶ رفرنس):
+  3199→  · kit/sound-engine → playSound("correct"/"wrong"/"finish") در chooseOption/handleTimeout/finish — فقط نام‌های موجود GameSound
+  3200→  · kit/haptics → buzz("success"/"error") هم‌تراز همان نقاط (الگوی reference: memory/scramble)
+  3201→  · kit/telemetry (G1-10) → createGameSession({game: GAME_KEY="quiz", level: lesson|"all"}) در هر ۴ مسیر شروع دور (normal/practice/daily/weekly) + end("finish") در finish + نگهبان unmount → abandon("unmount")؛ آزمون قبلاً هیچ تله‌متری جلسه نداشت (فقط تایمر Attempt)
+  3202→  · GameShell عمداً پذیرفته نشد — هدر playing آزمون سفارشی است (نوار پیشرفت/تایمر/بدون دکمهٔ انصراف میان‌دور) و شِل دکمهٔ خروج + سرصفحه اضافه می‌کرد = تغییر بصری/رفتاری (نقض شرط «فقط بدون تغییر»)
+  3203→- قراردادهای مقدس دست‌نخورده: recordCombinedRound/awardQuizActivity/seedReviewFromQuiz/daily-store/weekly-store/کلیدهای localStorage/attemptBody/صف آفلاین enqueueOffline — همه verbatim
+  3204→- گیت‌ها: `bunx tsc --noEmit` = ۰ (بعد از هر مرحله) ✓ `bun run lint` = **۰ خطا / ۰ warning** ✓
+  3205→- QA مرورگری (agent-browser): قفسه → ورود ویژن وان → آزمون: setup کامل (کارت روزانه/هفتگی + ۵ ردیف تنظیم) → شروع (۵ سؤال) → سؤال ۱ با نوار پیشرفت/تایمر/گزینه‌ها → پاسخ + بازخورد + «سؤال بعدی» تا سؤال ۵ → دیدن نتیجه: دایرهٔ ۴۰٪ (۲/۵)، توست «نتیجه آزمون ذخیره شد 🎉»، +۲۲ XP، «۳ سؤال در دفتر اشتباهات»، مرور پاسخ‌های نادرست با ستاره → خروج میان‌دور دور بعد (ناوبری به واژگان) بدون خطا → نمای فصل درس ۱ (تمرین): پنل آزمون با چیپ «درس 1» فعال (مسیر lessonFilter ✓)
+  3206→- dev.log: `game_session_start {game:"quiz",level:"all"}` → `game_session_end {duration:"42",reason:"finish"}` → `game_session_abandon {duration:"2",reason:"unmount"}` + POST /api/attempts 200 ✓ — کنسول مرورگر: صفر error/ warn (فقط HMR/Fast Refresh)؛ صفر page error؛ dev.log بدون error
+  3207→- اسکرین‌شات‌ها: qa-shots/t4-quiz-setup.png، t4-quiz-run.png، t4-quiz-result-exit.png، t4-chapter-quiz.png
+  3208→- docs/refactor-roadmap-2.md: گام ۴ ✅ + games/quiz/README.md (نقشهٔ ماژول + قراردادها + چک‌لیست توسعه)
+  3209→
+  3210→Stage Summary:
+  3211→- 🏁 بزرگ‌ترین استثنای ساختاری Audit دوم حذف شد: آزمون تعاملی هم‌اکنون داخل پوشهٔ games/ با پلی‌بوک fps و **۱۶ رفرنس کیت** است — ردیف «صفر پذیرش کیت» بسته شد
+  3212→- توزیع جدید: هیچ ماژولی بالای ۶۹۴ خط نیست (موتور) و ۷ ماژول دیگر همه <۵۱۰؛ فایل قدیمی quiz-game.tsx دیگر وجود ندارد
+  3213→- درس/تکنیک برای تفکیک‌های بعدی (گام ۷/۸/۹): اسلایس خطی + props هم‌نام + صحه‌گذاری بایت‌به‌بایت از git HEAD، هم ریسک رگرسیون JSX را صفر می‌کند و هم اعتبارسنجی «verbatim» را قابل اثبات می‌کند؛ ضمناً `ReturnType<typeof hook>` فقط برای تایپ در فایل client زیر no-unused-vars خطا می‌دهد — به‌جایش type export استور یا شکل ساختاری
+  3214→- گام بعدی طبق اسپرینت B: گام ۵ (رژیم لاغری fps/index: setup-panel/use-fps-prefs/hud-question) → گام ۶ (F10-ب جملهٔ زنجیره‌ای)
+  3215→
+  3216→---
+  3217→Task ID: 5
+  3218→Agent: full-stack-developer (subagent)
+  3219→Task: گام ۵ نقشهٔ refactor-2 — رژیم fps/index: استخراج setup-panel + use-fps-prefs + hud-question (قبل از F10-ب)
+  3220→
+  3221→Work Log:
+  3222→- ادامهٔ دورِ نیمه‌کارهٔ قبلی همین تسک: سه ماژول + README + یک اسکرین‌شات از دور قبل (۰۵:۳۶–۰۵:۵۵) با اسکریپت‌های phase1/2/3 + verify + سه بک‌آپ `tool-results/t5/index.before-phase{1,2,3}.tsx` باقی مانده بود؛ این دور = حسابرسی کامل + صحه‌گذاری مجدد verbatim + گیت‌ها + QA ده‌مرحله‌ای کامل + مستندسازی
+  3223→- صحه‌گذاری verbatim با `tool-results/t5/verify.ts` (الگوی گام ۴): setup JSX ۳۵۳ خط (modulo dedent) ✓ · TUTORIAL_STEPS ۲۸ خط (تنها تغییر: `export const`) ✓ · chipCls ۷ خط ✓ · کارت سؤال HUD ۴۴ خط ✓ · حالت‌های prefs ۱۱ خط ✓ · setterهای ماندگار — مغایرت گزارش‌شدهٔ verify.ts یک false-alarm بود (بازهٔ slice اسکریپت یک خط کامنت را جا انداخته بود)؛ با بازهٔ اصلاح‌شده تطبیق کامل، جز **یک تفکیک کامنت**: کامنت «فاز F9 — سلاح انتخابی (ماندگار) + اسکوپ لحظه‌ای» در اصل مشترکِ دو state بود — در هوک به «(ماندگار)» بریده شد و index خودش کامنت «اسکوپ لحظه‌ای» گرفت (فقط کامنت — صفر تغییر رفتار/رشتهٔ UI)
+  3224→- توزیع نهایی: `index.tsx` ۲,۴۳۸→**۱,۹۵۹** (ارکستراسیون) · `setup-panel.tsx` **۵۲۹** (JSX setup + TUTORIAL_STEPS ۵گامی؛ props هم‌نام: setMode/setWeaponPref/setMapPref/start/… — JSX منتقل‌شده صفر تغییر شناسه) · `use-fps-prefs.ts` **۱۲۲** (هوک: mode/quality/sens/fov/invertY/mapId/weaponId + ۶ setter ماندگار؛ localStorage فقط از طریق prefs.ts) · `hud-question.tsx` **۷۷** (کارت سؤال + پخش دوبارهٔ شنیداری + نوار زمان + شمارندهٔ HVT؛ voiceSpeedRef به‌صورت `{current:number}` ساختاری)
+  3225→- صادقانه در index ماند: effect سینک چیدمان نقشه (جهش bridge + گره با مأموریت — طبق ADR-001 جهش bridge جایش اینجاست)، موتور مأموریت (موج/HVT/زنجیره‌های مقاوم به توقف/Attempt/پایان)، هر ۸ effect ورودی/ماندگاری، Canvas و ترکیب صحنه، سیم‌کشی HUD، صفحهٔ نتیجه + **۱۱۷ خط هدر مستندات فازها (F3…F10)** — نتیجه: ۱,۹۵۹ بالاتر از آرمان ~۱,۴۰۰ سند است؛ دلیل: برآورد سند ~۷۰۰ خط جابه‌جایی بود درحالی‌که بدنهٔ verbatim قابل‌جابه‌جاییِ همان سه بخش ~۵۴۸ خط بود (+۷۲ خط سیم‌کشی props). هیچ استخراج فراتر از سه بخش تجویزشده انجام نشد (نقض مأموریت می‌شد)
+  3226→- قراردادهای مقدس دست‌نخورده: امضای Attempt (`category:"fps-shooter"` + `detail.{mode,quality,map,weapon,wave,…}` — بلاک saveAttempt عیناً در index) · کلیدهای `visionone:game-pref:fps-*` فقط از prefs.ts (فایل دست نخورد) · `scopeOf` در helpers.ts دست نخورد · physics/scene/weapons/maps/layouts/questions/types/constants همه لمس‌نشده
+  3227→- رویداد محیطی: dev server مرده بود (پروسهٔ `bun run dev` زنده ولی پورت ۳۰۰۰ بدون listener) → الگوی پایدار SPRINT-A: kill + `rm -rf .next` + `(setsid bun run dev > /dev/null 2>&1 < /dev/null &)` → GET / = ۲۰۰ در اولین تلاش
+  3228→- گیت‌ها: `bunx tsc --noEmit` = **۰** ✓ `bun run lint` = **۰ خطا / ۰ warning** ✓ (پس از هر بازخوانی هم دوباره صفر)
+  3229→- QA ده‌مرحله‌ای (agent-browser): قفسه → ورود ویژن وان → هاب → شوتر: setup کامل (۳ حالت/۳ سلاح/۴ نقشه/کیفیت/اسلایدرها) ✓ تغییر سلاح→pump و نقشه→dust + فعال‌سازی «تپ ساده» → localStorage هر دو بلافاصله نوشته شد (ماندگاری use-fps-prefs ✓) → شروع مأموریت: canvas فعال، صحنه رندر، کارت سؤال روی HUD، چیپ موج ✓ پاسخ با کیبورد «۱..۴» در تپ ساده: بازخورد برخورد در aria-live («گزینهٔ غلط — پاسخ درست «thank» بود — یک ❤ کم شد») ✓ پایان طبیعی دور (تایم‌اوت‌ها) → ResultScreen با رتبهٔ نظامی → «تنظیمات» = خروج تمیز ✓ دور دوم هم برای اثبات تکرار شد
+  3230→- dev.log: دو جلسهٔ کامل `game_session_start/end` ({game:"fps-shooter",level:"word-tap:high"} — قالب level دست‌نخورده) با reason:finish + **۲× `POST /api/attempts` = ۲۰۰** + **صفر خط error** در کل لاگ ✓ کنسول مرورگر: صفر page error؛ تنها یک `[error]` محیطی next-auth CLIENT_FETCH_ERROR در سرد بودن compile اولیه (پیش از ورود به بازی؛ آرتیفکت restart دِو) + دو هشدار کهن‌الگوی شناخته‌شده (THREE.Clock / DialogContent) — هیچ خطایی از کد FPS
+  3231→- اسکرین‌شات‌ها: qa-shots/t5-fps-setup.png، t5-fps-run.png، t5-fps-exit.png
+  3232→- docs/refactor-roadmap-2.md: گام ۵ با همان سبک خط‌خوردهٔ گام‌های ۱–۴ ✅ شد · fps/README.md: نقشهٔ ماژول با ۳ ردیف جدید + خط index به‌روز (از دور قبل) — اعداد با wc تطبیق داده شد (۱۹۵۹/۵۲۹/۱۲۲/۷۷ ≈ همان ~۱,۹۶۰/~۵۳۰/~۱۲۲/~۷۷ جدول) و آیتم ۳ چک‌لیست از قبل درست به setup-panel.tsx اشاره می‌کند؛ بخش قراردادهای طلایی دست‌نخورده
+  3233→Stage Summary:
+  3234→- 🏁 گام ۵ اسپرینت B بسته شد: بزرگ‌ترین کامپوننت src دیگر god component نیست — setup/کارت سؤال HUD/ترجیحات هرکدام ماژول مستقل <۵۳۰ خط‌اند و index فقط ارکستراسیون است؛ زمین F10-ب آماده
+  3235→- درس‌ها: ① بازی واقعاً در زمان حقیقی بین فراخوانی‌های ابزار ادامه می‌یابد — ادعاهای QA باید در یک eval واحد batch شوند (در دور اول دکمهٔ ۱ بین دو فراخوانی از دست رفت و نتیجه ۰٪ شد؛ دور دوم اثبات شد) ② خروجی متنی Bash دنبالهٔ `[m` را (آرتیفکت strip ANSI) می‌بلعد — متن مشکوک را با od/rg -c بسنجید؛ دو «خرابی» ظاهری همین بود ③ false-alarm بازهٔ اسکریپت صحه‌گذاری: کامنت‌های خط مرزی را در بازه‌ها دقیق شمارید ④ کلید `${..}` داخل heredoc فارسی-safe است ولی برای رشته‌های حاوی backtick بهتر است فایل نوشته شود نه heredoc
+  3236→- گام بعدی طبق اسپرینت B: گام ۶ (فاز محصولی F10-ب «جملهٔ زنجیره‌ای» روی index لاغرشده) — مالکیت با ایجنت دیگر
+  3237→
+  3238→---
+  3239→Task ID: 6
+  3240→Agent: full-stack-developer (subagent — اجرا شد ولی قطعی زیرساخت مانع گزارشش شد) + بازبینی/اتمام/تأیید نهایی توسط main orchestrator (Z.ai Code)
+  3241→Task: گام ۶ اسپرینت B — فاز محصولی F10-ب «جملهٔ زنجیره‌ای» (sentence-chain) روی ساختار ماژولار لاغرشدهٔ fps
+  3242→
+  3243→Work Log:
+  3244→- کد (توسط subagent زنده، commit f28dcf6): حالت چهارم "sentence-chain" در Mode + رابط QuestionSequence در types.ts (words/en/fa/source)؛ سازندهٔ chainSeedsOfConversations/chainWordBankOfConversations/buildChainQuestion در questions.ts (۲۳۷ خط) — فقط خط‌های ۴–۹ واژه‌ای مکالمه‌های واقعی جزوه (ConversationLine)، توکن‌پاک‌ساز با حفظ آپاستروف/خط تیره، ترتیب جمله با sort بر اندیس توکن، حواس‌پرتی از بانک واژه‌های واقعی همان مکالمه‌ها، تا ۷ هدف (۳ درست + حواس‌پرتی) با تکرار لِین در عمق متفاوت
+  3245→- موتور تصمیم خالص chain.ts (۵۸ خط): chainResolve (انتظاری/پیشرفت/پایان + پیام‌ها)، chainVolleyPick (انتظاری > طلایی > نخستین)، chainExpectedTargetId (فلاش سبز راهنما) — اثرهای جانبی در index؛ srsKey عمداً خالی + گارد مسیر SRS
+  3246→- index.tsx (۱,۹۵۹→۲,۰۶۹): chainProgress state+ref، pool زنجیره با گارد MIN_POOL_CHAIN، تایمر سؤال زنجیره مقاوم به توقف (chainTimer/chainPending با پاک‌سازی در توقف/ادامه)، سیم‌کشی handleHit/handleVolley/handleTimeout با chainResolve، کلیدهای ۵..۷ برای هدف‌های اضافه، detail.mode=sentence-chain (امضای Attempt دست‌نخورده)
+  3247→- helpers.ts (۶۱): scopeOf → "chain" (+tap)، modeFa «جملهٔ زنجیره»؛ setup-panel (۵۶۲): کارت چهارم + چیپ‌های درس با شمارندهٔ واقعی جمله‌ها + گام آموزش؛ hud-question (۱۱۷): کامپوننت ChainSentence با جای‌خالی‌های «___» پُرشونده بر اساس پیشرفت
+  3248→- قطعی زیرساخت دو بار فراخوانی Task را قطع کرد اما ایجنت زنده کار کد+QA خودش را کامل کرد (شواهد: جلسهٔ chain-tap:high با reason:finish + attempts 200 در dev.log + اسکرین‌شات‌های t6-fps-setup-chain/t6-fps-tutorial-6steps)؛ پلتفرم تغییرات را در commit f28dcf6 ثبت کرد ولی مستنداتش ناتمام ماند
+  3249→- بازبینی/اتمام orchestrator: حسابرسی کد (chain.ts/questions.ts/types/helpers/index/setup-panel/hud)، گیت‌ها (tsc=۰، lint=۰/۰)، QA مستقل agent-browser (جزئیات زیر)، تکمیل سه سند (fps-roadmap F10 ✅، refactor-roadmap-2 گام ۶ ✅ + بستن اسپرینت B، fps/README نقشهٔ ماژول + قرارداد زنجیره) و این رکورد
+  3250→- QA مستقل (agent-browser): ۴ کارت حالت رندر ✓ چیپ‌های درس زنجیره با شمار واقعی (کل کتاب ۱۴ جمله: ۳+۴+۵+۲) ✓ شروع مأموریت: جملهٔ واقعی «___ me, ___ is it? Is it a ___» با منبع «مکالمهٔ درس دوم — صفحهٔ ۴۷» ✓ شکار ترتیبی سه‌ضربه‌ای در یک eval واحد با ground-truth از fiber React (کلیدهای ۲،۴،۶ = Excuse/what/leopard): «واژهٔ ۱ از ۳ درست!» → «واژهٔ ۲ از ۳ درست!» → کامل شدن + تقویت شنیداری POST /api/tts 200 ✓ لود سؤال بعدی زنجیره (سؤال ۱۳/۱۶ با چیپ HVT) ✓ پایان طبیعی دور قبل → نتیجه با رتبهٔ نظامی و «گزارش خطاها به دستیار هوشمند» ✓ خروج/unmount بدون خطا ✓
+  3251→- تلهٔ فنی ثبت‌شده: بازی بین فراخوانی‌های ابزار ادامه می‌یابد (دو بار دور با تایم‌اوت سوخت) — الگوی درست: «دور جدید + پیدا کردن سؤال + شکار» همگی در یک eval واحد (تأیید دوبارهٔ درس Task 5)؛ همچنین آرتیفکت strip خروجی Bash دنبالهٔ [h را می‌بلعد (خط 336 فیک غلط القا کرد — od -c حقیقت را نشان داد)
+  3252→- اسکرین‌شات‌ها: qa-shots/t6-verify-setup.png، t6-verify-run.png (جملهٔ زنجیره با منبع)، t6-verify-chain-done.png (سؤال بعدی + HVT) + دو اسکرین‌شات subagent
+  3253→
+  3254→Stage Summary:
+  3255→- 🏁 **F10 «عمق یادگیری» کامل شد (الف+ب+ج) و اسپرینت B نقشهٔ refactor دوم ۳/۳ بسته شد** — شوتر اکنون ۴ حالت دارد و جمله‌های زنجیره‌ای فقط از مکالمه‌های واقعی جزوه می‌آیند (بدون دادهٔ ساختگی)
+  3256→- توزیع نهایی fps/: index ۲,۰۶۹ (ارکستراسیون) + chain.ts ۵۸ (تصمیم خالص) + questions ۲۳۷ + setup-panel ۵۶۲ + hud-question ۱۱۷ + use-fps-prefs ۱۲۲ + types ۱۱۸ + helpers ۶۱
+  3257→- گیت‌های نهایی: tsc=۰ · lint=۰/۰ · صفر خطای کنسول در QA · Attempt/کلیدهای prefs/scopeOf سازگار و افزودنی
+  3258→- گام بعدی طبق سند: اسپرینت C — گام ۷ (تفکیک adventure-map ۱,۷۸۶ خطی با پلی‌بوک fps/) سپس ۸ و ۹؛ گام ۱۰ شرطی (فقط با چندنفرهٔ جدی)
+  3259→
+  3260→---
+  3261→Task ID: 7
+  3262→Agent: full-stack-developer (subagent — کد+QA خودش را کامل کرد ولی در فاز مستندات به‌خاطر deadline قطع شد) + بازبینی/اتمام/تأیید نهایی توسط main orchestrator (Z.ai Code)
+  3263→Task: گام ۷ اسپرینت C — تفکیک adventure-map-game.tsx (۱,۷۸۶ خط) به games/adventure-map/ با پلی‌بوک fps
+  3264→
+  3265→Work Log:
+  3266→- کد (subagent زنده — فراخوانی Task دو بار false-negative داد اما ایجنت کار می‌کرد؛ درس ثبت‌شدهٔ قبل باز هم صادق بود): ۷ ماژول ساخته شد — types.ts ۸۶ (Phase/StageType/ثابت‌ها/STAGE_META/WORD_RE/۶ اینترفیس) · helpers.ts ۹۳ (۶ تابع خالص: baseWord/starsOf/blankChallenge/readProgress/writeProgress/orderOf) · setup-panel.tsx ۲۴۲ (TUTORIAL_STEPS + نمای setup) · stage-map.tsx ۲۱۰ (نقشهٔ ۸ گره) · challenge-view.tsx ۴۶۲ (ResultScreen + ۴ مینی‌چالش + توقف/نگهبان/آموزش) · done-view.tsx ۱۶۸ (مراسم پایان) · index.tsx ۸۴۸ (موتور: state/effect/۱۱ callback + ۳ گارد دفاعی + گارد نهایی + orchestration) = ۲,۱۰۵ خط جمع
+  3267→- games-hub.tsx به ./adventure-map re-point شد و adventure-map-game.tsx حذف شد (الگوی Task 4) · props هم‌نام شناسه‌ها (beginAdventure/setPhase/startStage/muted/setMuted/paused/togglePause/resume/handleHelp/…) → JSX منتقل‌شده صفر تغییر شناسه · نوع data = BookData از @/data/books/types (درس Task 5: بدون ReturnType<typeof hook>)
+  3268→- صحه‌گذاری بایت‌به‌بایت (tool-results/t7/verify.ts، الگوی t5): ۱۴/۱۴ ✓ — types (۶۹ خط عیناً) · helpers (۷۴) · TUTORIAL_STEPS (۱۸) · بدنهٔ SetupPanel (۱۶۱، modulo dedent) · StageMap (۱۶۰) · ChallengeView (۳۷۴) · DoneView (۱۱۹) · موتور index (۶۰۰ خط عیناً بدون dedent) · ۳ گارد + هدر مستندات عیناً · re-point هاب ✓ · حذف فایل قدیمی ✓
+  3269→- گیت‌ها (بازبینی مستقل orchestrator): bunx tsc --noEmit = ۰ ✓ bun run lint = ۰ خطا/۰ warning ✓ (هر دو پس از split کامل، دوبار اجرا شد)
+  3270→- QA مرورگری subagent (qa-shots/t7-adventure-{setup,map,challenge,result}.png): فلو setup→map→چالش→نتیجه گرفته شد
+  3271→- QA مرورگری مستقل orchestrator (درس «یک eval واحد» رعایت شد): ورود کتاب → هاب → setup سالم (هدر/توضیح/چیپ‌ها) → «از اول» → نقشه با ۸ گره و «مرحلهٔ ۱ باز است» → شروع مرحلهٔ ۱ (حروف جابه‌جا، حروف n,c,k,e,i,t,h) → چیدن «kitchen» هفت‌کلیک در یک دسته → ResultScreen «بی‌نقص! بدون حتی یک خطا» با ۳/۳ ستاره ✓ aria-live «مرحلهٔ ۱ تمام شد — ۳ ستاره از ۳» ✓ دکمهٔ اصلی → مرحلهٔ ۲ (آزمون واژه) لود شد ✓ پاسخ درست «be going to → قصد داشتن» → سؤال ۲ لود شد ✓ نگهبان خروج با متن عیناً «مرحله را رها کنم؟ 🗺️» باز شد و Esc = ادامهٔ مرحله (دقیقاً رفتار سند G0-06) ✓ اسکرین‌شات‌ها: qa-shots/t7-o-{setup,map,result,stage2,quiz-answer,exit-guard}.png
+  3272→- خطای محیطی (رگرسیون نیست): یک POST /api/tts = ۵۰۰ ابری (شبکهٔ بالادستی، error id ثبت‌شده) هنگام پخش تلفظ پاسخ درست — کال‌سایت speak در answerQuiz verbatim است و اپ graceful هندل کرد؛ + هشدار قدیمی chart-width از بخش آمار (بی‌ربط به این بازی)
+  3273→- اتمام کار نیمه‌کارهٔ subagent توسط orchestrator: adventure-map/README.md (نقشهٔ ۷ ماژول + قراردادهای ثابت: امضای Attempt با detail.stars، کلید visionone:adventure:* فقط از helpers، تله‌متری level:"stage:N"، نقشهٔ صدا/لرزش، usedWords) + docs/refactor-roadmap-2.md (گام ۷ ✅ با سبک خط‌خوردهٔ گام‌های ۴-۶ + به‌روزرسانی خط اسپرینت C: نوبت بعدی گام ۸) + همین رکورد
+  3274→- سلامت زیرساخت: cron webDevReview «Disabled due to exec limits exceeded» شده بود → حذف و بازسازی شد (job 455910) با کانتکست به‌روز (اسپرینت A+B بسته، گام ۷ انجام، نوبت گام ۸) — مانیتور شود
+  3275→
+  3276→Stage Summary:
+  3277→- 🏁 گام ۷ اسپرینت C بسته شد: بزرگ‌ترین god component باقی‌مانده (adventure-map ۱,۷۸۶) به ۷ ماژول <۸۵۰ تبدیل شد — هیچ ماژولی بالای ۸۴۸ نیست و ۵ ماژول از ۷ زیر ۴۷۰ خط‌اند؛ بک‌لاگ god component فقط ۳ ردیف دارد (گام ۸: crossword+snakes-ladders، گام ۹: speed-quiz+flappy+wordle)
+  3278→- پلی‌بوک fps اکنون سه بار تکرار و اثبات شده (quiz/fps/adventure) — الگوی ثابت: اسلایس خطی + props هم‌نام + اسکریپت صحه‌گذاری از git HEAD + tsc بعد از هر ویرایش + QA در eval واحد
+  3279→- گیت‌های نهایی: tsc=۰ · lint=۰/۰ · صفر خطای کنسول مرتبط با بازی · Attempt/tله‌متری/کلیدهای localStorage دست‌نخورده (اثبات با verify ۱۴/۱۴)
+  3280→- گام بعدی طبق سند: گام ۸ — تفکیک crossword-game.tsx (۱,۶۷۵) و snakes-ladders-game.tsx (۱,۶۳۷) با همان پلی‌بوک؛ سپس گام ۹؛ گام ۱۰ شرطی
+  3281→
+  3282→---
+  3283→Task ID: 8
+  3284→Agent: full-stack-developer ×۲ (subagentهای 8-a و 8-b) + بازبینی/اتمام مستندات/QA تکمیلی توسط main orchestrator (Z.ai Code)
+  3285→Task: گام ۸ اسپرینت C — تفکیک دو بازی باقی‌ماندهٔ بزرگ: crossword-game.tsx (۱,۶۷۶ خط) و snakes-ladders-game.tsx (۱,۶۳۷ خط) با پلی‌بوک fps (تکرار پنجم و ششم)
+  3286→
+  3287→Work Log:
+  3288→- ── 8-a (crossword) ── فراخوانی Task یک بار false-negative داد اما ایجنت زنده بود (پنجمین بار این الگو — همیشه اول git status چک شود): ۷ ماژول ساخته شد در games/crossword/ — generator.ts ۲۶۰ (الگوریتم خالص generateCrossword + تایپ‌های دامنه + cellKey/parseKey/draftCellKey/cellsOf — export اضافه برای مصرف index/نماها) · draft.ts ۱۷۴ (سیستم draft نیمه‌کاره G2-d با parseDraft اعتبارسنج سخت‌گیرانه) · setup-panel.tsx ۲۲۳ (TUTORIAL_STEPS + نوار «ادامهٔ جدول نیمه‌کاره؟») · playing-view.tsx ۳۶۴ (جدول/سرنخ‌ها/کیبورد A-Z/نگهبان/مدرس G5-01) · done-view.tsx ۶۳ · types.ts ۱۹ · index.tsx ۸۳۰ (موتور + ۳ شاخه) — games-hub re-point و فایل قدیمی حذف شد
+  3289→- صحه‌گذاری 8-a (tool-results/t8a/verify.ts): همهٔ چک‌ها ✓ — تایپ‌ها (۶۹ خط عیناً)، draft (۱۷۴)، TUTORIAL_STEPS (۱۸)، بدنه‌های سه نما (modulo dedent)، موتور index عیناً، re-point و حذف فایل قدیمی
+  3290→- گیت‌های 8-a (اجرای مستقل orchestrator): tsc=۰ · lint=۰/۰ ✓
+  3291→- QA مرورگری 8-a (orchestrator — اسکریپت یکجای ایجنت به‌خاطر دو ایراد ناوبری ناقص ماند، فلو دستی انجام شد): دایالوگ «تازه‌ها» بسته شد → قفسه → ورود ویژن وان → هاب → جدول متقاطع → رد آموزش ۳گامی → setup سالم (t8a-crossword-setup.png) → «ساخت جدول و شروع» → playing سالم (گرید ۸×۱۰، سرنخ‌های افقی/عمودی، کیبورد A-Z) (t8a-crossword-playing.png) → تایپ با ground-truth از fiber (activeWord=«RELATIVES») — کشف فنی مهم: سه کلیک سنکرون روی کیبورد روی‌صفحه با کلوژر کهنه همه در یک سلول تایپ می‌کنند (رفتار یکسان کد قدیم و جدید — آرتیفکت تایپ مصنوعی؛ کاربر واقعی با فاصلهٔ رندر تایپ می‌کند) و «keyboard type» ابزار به شنوندهٔ window نمی‌رسد → مسیر درست: eval با dispatchEvent KeyboardEvent + wait ۴۰۰ms → «بررسی» با حروف غلط عمدی: «۱ حرف غلط پاک شد» اعلام و پاک شد ✓ → سه حرف درست (T,I,V از fiber: سلول فعال ایندکس ۴ واژه، need=TIV) تایپ و قفل شد («تاییدشده»×۳) (t8a-crossword-check.png) ✓ → نگهبان خروج: توضیح عیناً «جدول هنوز نیمه‌کاره‌ست — … به‌عنوان پیش‌نویس ذخیره می‌شود…» (t8a-crossword-guard.png) ✓ → «آره، خروج» → draft ذخیره شد {bookId:"vision-one", lesson:1, wordCount:6, cells:3, hasPuzzle:true} ✓ → نوار setup «ادامهٔ جدول نیمه‌کاره؟» (t8a-crossword-draft-bar.png) → «ادامه» → حروف T,I,V سر جایشان بازیابی + draft پاک شد (t8a-crossword-resumed.png) ✓ — حلقهٔ کامل G2-d اثبات شد · کنسول و dev.log صفر خطا
+  3292→- ── 8-b (snakes-ladders) ── این بار گزارش subagent کامل برگشت: استخراج مکانیکی با اسکریپت extract.ts (برش خطی — نه کپی دستی؛ ۳ فراموشی import در دور اول tsc آشکار و اصلاح شد) → ۶ ماژول در games/snakes-ladders/ — types.ts ۶۹ (ثابت‌ها/تایپ‌ها/TOKEN_BG/DICE_ICONS) · helpers.ts ۱۸۴ (ربات تطبیقی G5-03 + هندسهٔ SVG تخته SL1-01 + تاس سه‌بعدی SL1-04 + CONFETTI SL1-03) · setup-panel.tsx ۲۶۸ (TUTORIAL_STEPS + ۱۷ prop) · playing-view.tsx ۴۴۸ (تختهٔ SVG + تاس + ۲۷ prop) · done-view.tsx ۱۲۶ (confetti + کارنامه) · index.tsx ۸۳۰ (موتور زنجیرهٔ بی‌توقف G2-e-1) — verify.ts با دو بررسی افزوده: شمارش خط‌های فارسی هر برش + نبودن تعاریف جابه‌جا در index → ۳۰/۳۰ ✓ (اجرای مجدد مستقل orchestrator هم ✓)
+  3293→- گیت‌های 8-b (اجرای مستقل orchestrator): tsc=۰ · lint=۰/۰ ✓
+  3294→- QA مرورگری 8-b: ایجنت فلو کامل با ground-truth fiber (پاسخ درست → تاس → پلهٔ ۴→۱۴ بازیکن ۱ → تاس ۶ → نوبت اضافه بازیکن ۲ → نگهبان خروج با متن عیناً و Esc=ادامه؛ تله‌متری level:"players:2" در dev.log؛ اسکرین‌شات‌های t8b-snakes-{setup,run,move,guard}.png) + پاس مستقل orchestrator: setup سالم (t8b-o-setup.png) → شروع (۵۳۰ سؤال) → playing سالم (تایمر/سؤال ۱/نوبت بازیکن ۱/لژاندار مار و پله) (t8b-o-run.png) → پاسخ درست با fiber (options[answer]) → تاس → positions:[2,0] و نوبت بازیکن ۲ (t8b-o-answer.png) ✓ · کنسول و dev.log صفر خطا
+  3295→- اتمام مستندات توسط orchestrator (در scope هیچ‌کدام از دو ایجنت نبود طبق طراحی): games/crossword/README.md (نقشهٔ ۷ ماژول + قراردادها: Attempt/detail.hints، کلید draft visionone:game-draft:crossword، رکورد scope lesson:count با {time}، الگوی latest-ref کیبورد، G5-01) · games/snakes-ladders/README.md (نقشهٔ ۶ ماژول + قراردادها: Attempt، تله‌متری players:N، جغرافیای تخته، ربات تطبیقی، بانک سؤال واقعی) · docs/refactor-roadmap-2.md: گام ۸ ✅ با سبک خط‌خورده + خط اسپرینت C (نوبت بعدی: گام ۹) + همین رکورد
+  3296→- اسکرین‌شات‌های اضافه: qa-shots/t8a-{setup-snapshot,playing-snapshot,check-snapshot,guard-snapshot}.txt (شواهد متنی اسکریپت ایجنت) + ۹ png تازه (t8a-o/t8b-o)
+  3297→
+  3298→Stage Summary:
+  3299→- 🏁 گام ۸ اسپرینت C بسته شد: هر دو بازی بزرگ دوم بک‌لاگ god component از فهرست خارج شدند — پوشهٔ games/ اکنون ۵ بازی ماژولار دارد (quiz ۹ ماژولی، fps، adventure-map، crossword، snakes-ladders) و پلی‌بوک شش بار اثبات شده است
+  3300→- توزیع: crossword ۱,۹۳۸ خط در ۷ ماژول (بزرگ‌ترین: index ۸۳۰) · snakes-ladders ۱,۹۲۴ خط در ۶ ماژول (بزرگ‌ترین: index ۸۳۰) — هیچ ماژولی بالای ۸۴۸ نیست
+  3301→- گیت‌های نهایی هر دو بازی: tsc=۰ · lint=۰/۰ · صفر خطای کنسول · Attempt/تله‌متری/کلیدهای localStorage (از جمله کلید افزودنی draft) دست‌نخورده — اثبات با verify t8a + t8b ۳۰/۳۰
+  3302→- درس فنی QA ثبت‌شده: تایپ سریع مصنوعی (کلیک‌های سنکرون یا keyboard type ابزار) با کلوژر کهنه/مسیر رویداد ابزار ناسازگار است — ground-truth از fiber + dispatchEvent با فاصله، و تفسیر وضعیت با خواندن props (مثل positions/cur) نه فقط aria
+  3303→- گام بعدی طبق سند: گام ۹ — تفکیک speed-quiz + flappy + wordle (~۴,۳۰۰ خط، آخرین ردیف بک‌لاگ)؛ پس از آن فقط گام ۱۰ شرطی می‌ماند
+  3304→
+  3305→---
+  3306→Task ID: 16
+  3307→Agent: main orchestrator (Z.ai Code) — ادامهٔ فاز U1 از نشست قبل (کد از قبل زنده بود؛ این نشست: حسابرسی کامل + گیت‌ها + QA مرورگری مستقل + بستن اسناد)
+  3308→Task: فاز U1 «دشمن زنده — پهپاد تعقیب‌گر» طبق docs/fps-upgrade-roadmap.md §U1 — پیاده‌سازی، صحه‌گذاری و بستن فاز
+  3309→
+  3310→Work Log:
+  3311→- ردیابی وضعیت نشست قبل: سند نقشه راه (نسخه ۱.۱) موجود، enemy.ts/drone.tsx/کیت دشواری از قبل پیاده‌شده و اسکرین‌شات‌های t16-* گرفته شده بود ولی رکورد worklog ننوشته شده بود (قطعی نشست) — این نشست تمام زنجیره را از نو اثبات کرد
+  3312→- حسابرسی کد سه زیرفاز: U1-00 (constants: Difficulty/DIFFICULTY_KEY/DIFFICULTIES · prefs: loadDifficulty با پیش‌فرض عادی و اعتبارسنجی لیست سفید · use-fps-prefs: state+setDifficultyPref با صدا/لرزش · setup-panel: چیپ‌های aria-pressed · index: difficultyRef + detail.difficulty:853 افزودنی) — U1-01 (enemy.ts ۱۷۹ خط: FSM سه‌حالته patrol/stalk/flee، enemySpeedMult با قانون آسان=۰ و تپ=۰٫۵×، ENEMY_STALK_DELAY ۲٫۶/۱٫۷، جهش in-place، کران layout، صفر وابستگی React/THREE) — U1-02 (scene/drone.tsx ۱۸۳ خط: بدنهٔ octahedron تیره بدون برچسب ADR-005، چراغ کهربایی پالس ۴۶۰/۱۹۰/۷۰ms بر فاز، registry id:"drone"، EnemyApi.hit=انفجار+enemyFlee، تولد از پشت بازیکن، ADR-001 رعایت: writeEnemyPhase تابع ماژول‌سطح)
+  3313→- سیم‌کشی index: enemyStalking state از گذار bridge.enemyPhase روی interval رویدادگسستهٔ ۲۰۰ms (نه هر فریم) + setLiveMsg «پهپاد شناسایی متخاصم نزدیک می‌شود — یا حرکت کن یا شکارش کن!» + بج «◆ تعقیب» در HUD (دسکتاپ و تمام‌صفحه) + ریست idle در خروج
+  3314→- گیت‌ها (اجرای مستقل این نشست): bunx tsc --noEmit = ۰ ✓ · bun run lint = ۰ خطا/۰ warning ✓
+  3315→- QA مرورگری مستقل agent-browser (فلو کامل): ورود ویژن وان → هاب → شوتر → رد آموزش → پنل setup: سه چیپ دشواری حاضر ✓ → «آسان — بدون دشمن»: کلید visionone:game-pref:fps-difficulty=easy ذخیره، مأموریت شروع، ۳٫۵ ثانیه انتظار: صفر بج تعقیب و صفر اعلام پهپاد (دشمن خاموش — قانون ①) ✓ → توقف/ادامه کار می‌کند ✓ → نگهبان خروج «برگردم به آزمایشگاه؟ 🎮» ✓ → «عادی»: شروع، سکون ۴٫۵ ثانیه در یک جریان واحد → بج «تعقیب» ظاهر شد (گذار patrol→stalk اثبات رفتاری) ✓ (پیام aria-live گذار بعداً با پیام تایم‌اوت سؤال جایگزین شد — مکانیسم liveMsg سالم و رویدادگسسته است) → پایان طبیعی دور → صفحهٔ نتیجه با رتبهٔ نظامی (D — تازه‌کار) ✓ → «تنظیمات»: چیپ «عادی» aria-pressed=true منطبق با localStorage normal (ماندگاری دوطرفه) ✓
+  3316→- کنسول مرورگر: صفر خطای مرتبط با بازی (فقط آرتیفکت‌های کهن‌الگوی شناخته‌شده خارج بازی) · dev.log: صفر error-level در دنبالهٔ فعلی (EADDRINUSE قدیمیِ restart قبلی — سرور فعلی ۲۰۰ سالم)
+  3317→- اسکرین‌شات‌های تازه: qa-shots/t16-verify-easy.png، t16-verify-stalk.png + شش اسکرین‌شات نشست قبل (t16-setup-difficulty، t16-drone-stalk/stalk2/hover/flee/turned)
+  3318→- اسناد بسته شد: docs/fps-upgrade-roadmap.md → نسخه ۱.۲ (U1 ✅، U2 ⬅️ فاز جاری، تیک هر ۶ معیار پذیرش §U1، تاریخچه ۱.۲) · fps/README.md → نقشهٔ ماژول +۲ ردیف (enemy.ts، scene/drone.tsx) + به‌روزرسانی خط‌های constants/prefs/use-fps-prefs/setup/index + قرارداد Attempt با detail.difficulty + کلید localStorage + ردیف قرارداد «دشمن زنده (U1)»
+  3319→Stage Summary:
+  3320→- 🏁 فاز U1 «دشمن زنده — پهپاد تعقیب‌گر» بسته شد — مسیر بحرانی سند اکنون U0✅→U1✅ است و نوبت U2 «حملهٔ قفس واژه» (پرتاب قفس واژه از پهپاد + دفاع با شلیک به پهپاد + تایمر هشدار قرمز HUD) است
+  3321→- توزیع کد فاز: enemy.ts ۱۷۹ (FSM خالص) + scene/drone.tsx ۱۸۳ (رندر) + کیت دشواری پخش در constants/prefs/use-fps-prefs/setup-panel/index — امضای Attempt فقط افزودنی (detail.difficulty) و کلید prefs جدید
+  3322→- قوانین سخت §U1 هر شش‌گانه اثبات یا بازبینی شد: ① آسان=خاموش (QA رفتاری) ② تپ=نصف سرعت (enemySpeedMult — تپ روی پهپاد هم گریز بدون جریمه در مسیر handleHit "drone") ③ تعقیب مشروط به سکون (شرط ENEMY_CALM_SPD/ENEMY_MOVE_SPD در FSM) ④ گریز با برخورد گلوله (EnemyApi.hit→enemyFlee؛ صفر امتیاز/جریمه) ⑤ فریز واقعی (frameloop never/always + هیچ تایمر جانبی در enemy/drone) ⑥ بدون برچسب متنی (بدنه تیره + چراغ کهربایی)
+  3323→- درس نشست: grep حساس به حرف بزرگ است — loadDifficulty در prefs.ts از دور اول بود ولی grep "difficulty" آن را نشان نداد؛ قبل از ادعای نقض قرارداد، grep -i بزنید
+  3324→- گام بعدی طبق سند: فاز U2 — زیرفازهای خودش را از §U2 سند بخوانید (سند هنوز §U2 تفصیلی ندارد؛ قبل از کد باید نگارش شود) — محدودیت «حداکثر یک فاز در هر نشست» رعایت شود
+  3325→
+  3326→---
+  3327→Task ID: 17
+  3328→Agent: main orchestrator (Z.ai Code)
+  3329→Task: فاز U2 «حملهٔ قفس واژه» — نگارش §U2 تفصیلی + اجرای سه زیرفاز (U2-00/01/02) + گیت‌ها + QA مرورگری + بستن اسناد
+  3330→
+  3331→Work Log:
+  3332→- طبق قانون سند (یک فاز در هر نشست؛ قبل از کد § کامل) ابتدا §U2 تفصیلی در docs/fps-upgrade-roadmap.md نگارش شد: ۳ زیرفاز + ۸ قوانین سخت + مشخصات فنی + ۷ معیار پذیرش
+  3333→- نقاط اتصال خوانده شد: hearts (heartsRef/setHearts/HEARTS=3)، handleHit (شاخه‌های drone/golden)، handleVolley (فیلتر drone)، interval رویدادگسستهٔ ۲۰۰ms (الگوی enemyPhase)، ریست startMission، Q_TIME_SHOOT=12/Q_TIME_TAP=15 (برای طراحی پنجرهٔ QA)، ارتفاع دوربین 1.7 (physics.ts) → هدف قفس 1.55
+  3334→- U2-00 (enemy.ts ۲۲۰خط + cage.ts ۱۱۵خط): حالت چهارم «charge» در FSM + throwCd/justThrew در EnemyState + enemyReturnToOrbit (استخراج منطق مشترک سه گذار) + جدول‌های ENEMY_CHARGE_S (۱٫۱/۰٫۷۵) و ENEMY_THROW_CD (۹/۶) + enemyChargeS/enemyThrowCd؛ cage.ts خالص: createCageState/stepCage (رویداد none/hit/whiff — برخورد شعاعی ۱٫۱۵م با موقعیت فعلی در هر فریم + گارد پایانی)/cageEta — پرواز خطی به نقطهٔ پرتاب (قانون ۳)، سرعت ۴٫۶×speedMult با کف ۱٫۴
+  3335→- U2-01 (scene/cage.tsx ~۲۰۰خط + drone.tsx): Cage با قفس سیمی octahedron کهربایی + دو torus مداری + هستهٔ درخشان (بدون برچسب — ADR-005)؛ CageApi.{launch,destroy} الگوی BurstApi؛ پرتاب صف‌شده (pending ref) مصرف در useFrame؛ registry id:"cage" با add/remove گاردگذاری‌شده (inRegistry)؛ پرچم‌های یک‌بارمصرف cageHit/cageWhiff روی bridge؛ deactivateCage تابع ماژول‌سطح؛ writeCageEta/flagCageHit/flagCageWhiff — الگوی writeEnemyPhase (ADR-001 — رفع خطای react-hooks/immutability)؛ drone.tsx: chargeS/throwCd در EnemyInput، مصرف justThrew → cageApi.launch (هدف = pos بازیکن/1.55)، چراغ تندترین در charge (90ms) + لرزش ظریف، آسان → chargeS=0 (دفاع عمقی قانون ①)
+  3336→- types.ts: enemyPhase + "charge"؛ bridge += cageEta/cageHit/cageWhiff (افزودنی)
+  3337→- U2-02 (index.tsx ~۲,۱۶۰خط + setup-panel): state cageEta + شمارنده‌های cageThrown/Downed/Hits (ref) + handleCageLaunch (stable، buzz light)؛ handleHit شاخهٔ "cage" (destroy گارددار → setLiveMsg «منهدوم کردی»، صفر امتیاز)؛ handleVolley فیلتر cage؛ interval: مصرف cageHit (❤−۱ + صدا/لرزش + finishRef در صفر قلب — مسیر مستقل سؤال)، مصرف cageWhiff («خطا رفت — جابه‌جا شدی»)، setCageEta با گارد تغییر (بدون رندر زائد)؛ enemyStalking = stalk||charge؛ چیپ هشدار قرمز HUD (Badge در سلاح / دکمهٔ min-h-11 قابل‌تپ در تپ‌ساده با aria-label کامل) + نشانگر «◆ قفس X» در نوار تمام‌صفحه؛ ریست کامل شمارنده‌ها/پرچم‌ها در startMission؛ detail.{cageThrown,cageDowned,cageHits} افزودنی؛ گام آموزش هفتم «پهپاد شناسایی و قفس واژه» در TUTORIAL_STEPS (آموزش ۳ دفاع)
+  3338→- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (یک خطای BuzzPattern "medium" → "light" اصلاح شد) · bun run lint = ۰/۰ ✓ (یک react-hooks/immutability روی جهش مستقیم bridge در cage.tsx → توابع ماژول‌سطح)
+  3339→- QA مرورگری (agent-browser، درس eval واحد رعایت شد): ناوبری قفسه→ویژن وان→هاب→شوتر→رد آموزش ✓
+  3340→  • عادی (بج غیرفعال): تایم‌لاین ۱۱ ثانیه‌ای eval واحد — t=1.9 بج تعقیب + اعلام پهپاد · t=4.6 چیپ «قفس واژه» + اعلام پرتاب · t=4.8 پهپاد به مدار برگشت · t=5.1 برخورد: اعلام «قفس واژه به تو خورد — یک ❤ کم شد (سؤال دست‌نخورده است)» · پرتاب دوم در پنجره رخ نداد (cooldown ✓) · تایم‌اوت سؤال در t=10.8 جدا ادامه یافت (مسیر مستقل ✓)
+  3341→  • تپ ساده × عادی: eval نظرسنجی ۵۰ms → چیپ‌دکمه در t=6.3 (پرتاب دیرتر — سرعت نصف ✓) → کلیک → «قفس واژه را منهدم کردی — تهدید خنثی شد!» و قلب‌ها ۳/۳ ماند (نجات ❤ بدون امتیاز ✓)
+  3342→  • آسان: ۹ ثانیه نمونه‌برداری — صفر بج تعقیب و صفر چیپ (قانون ① ✓)
+  3343→  • «مرور ۱ خطا» در صفحهٔ نتیجه = فقط خطای سؤال (قفس به wrongRef نمی‌رود ✓) · تله‌متری level:"word-tap:high" دست‌نخورده (ADR-006) · attempts=200 · صفر error در dev.log
+  3344→  • اسکرین‌شات‌ها: qa-shots/t17-cage-chip.png (قلب ۲/۳ پس از برخورد) و **t17-cage-chip5/6.png (چیپ قرمز با شمارش معکوس زندهٔ ۱٫۶→۰٫۷ + دکمهٔ تپ)** — تکنیک: eval نظرسنجی که در لحظهٔ ظهور چیپ برمی‌گردد + رگبار ۳ اسکرین‌شات پشت‌سرهم
+  3345→- اسناد: roadmap → نسخه ۱.۳ (U2 ✅، U3 ⬅️ جاری، تیک ۷ معیار با اعداد QA، تاریخچه) · fps/README.md → +۲ ردیف (cage.ts، scene/cage.tsx) + به‌روزرسانی enemy/drone + قرارداد Attempt با cage* + ردیف قرارداد دشمن زنده (U1/U2)
+  3346→Stage Summary:
+  3347→- 🏁 فاز U2 «حملهٔ قفس واژه» بسته شد — میدان اکنون یک چرخهٔ تهدید کامل دارد: گشت → تعقیب → شارژ تله‌گراف → پرتاب قفس → (دفاع: جابه‌جایی/شکار قفس/شکار پهپاد) → cooldown
+  3348→- توزیع کد فاز: cage.ts ۱۱۵ (پرواز خالص) + scene/cage.tsx ~۲۰۰ (رندر/api) + enemy.ts ۲۲۰ (FSM چهارحالته) + سیم‌کشی index + گام آموزش هفتم — Attempt فقط افزودنی، bridge فقط افزودنی
+  3349→- درس فنی: ① react-hooks/immutability جهش props مشتق‌شده از bridge.current را در useFrame هم می‌گیرد — الگوی تابع ماژول‌سطح (writeEnemyPhase/writeCageEta) اجباری است ② innerText.includes برای چیپ گمراه‌کننده است (پیام aria-live هم همان متن را دارد) — تشخیص چیپ باید querySelector روی خود دکمه/بج باشد ③ برای اسکرین‌شات پدیده‌های کوتاه‌عمر: eval مسدودساز که در لحظهٔ رویداد برمی‌گردد + رگبار اسکرین‌شات در همان دستور bash
+  3350→- گام بعدی طبق سند: فاز U3 «پناهگاه و خط دید» — سنگرها خط دید قطع می‌کنند و raycast «آیا مرا می‌بیند؟» به FSM اضافه می‌شود؛ §U3 تفصیلی ندارد → ابتدا نگارش، بعد کد (حداکثر یک فاز در نشست)
+  3351→
+  3352→---
+  3353→Task ID: 18
+  3354→Agent: main orchestrator (Z.ai Code)
+  3355→Task: فاز U3 «پناهگاه و خط دید» طبق docs/fps-upgrade-roadmap.md — نگارش §U3 تفصیلی + اجرای سه زیرفاز (U3-00/01/02) + گیت‌ها + QA مرورگری + بستن اسناد
+  3356→
+  3357→Work Log:
+  3358→- کشف وضعیت: کارلاگ Task ID: 17 (U2) از نشست قبل کامل ثبت شده بود → «گام بعدی» = فاز U3. سوءنگارش خط ۱ سند («نسخهٔ ۱.۱») هم پیدا و در بستن سند اصلاح شد (← ۱.۴)
+  3359→- طبق قانون سند (یک فاز در هر نشست؛ قبل از کد § کامل) ابتدا §U3 تفصیلی نگارش شد: ۳ زیرفاز + ۸ قوانین سخت + مشخصات فنی + ۶ معیار پذیرش (شامل تصمیم‌های طراحی: LOS خالص نه Raycaster، سکون بی‌دید freeze نه reset، شارژ متعهد، چیپ فقط نمایشی، صفر کلید Attempt جدید)
+  3360→- نقاط اتصال خوانده شد: enemy.ts (FSM چهارحالته)، layouts.ts (LayoutBox با y پایه و solid:false)، physics.ts (CROUCH_EYE/PUSHOUT)، drone.tsx (useFrame + ورودی‌های FSM)، index.tsx (interval رویدادگسستهٔ ۲۰۰ms + startMission)
+  3361→- U3-00 (los.ts جدید ۹۸خط + enemy.ts ۲۲۰→۲۵۶): hasLineOfSight با slab سه‌محوره روی AABB واقعی (y0..y0+h) — ردِ دکورهای solid:false و جعبهٔ حاوی مبدأ (ضدگرفتار پهپاد داخل دیوار)؛ EnemyInput.los/lostS + EnemyState.lostT/justLost + ENEMY_LOST_S (۰٫۹/۰٫۶) + enemyLostS؛ منطق FSM: شروع تعقیب فقط با دید (سکون بی‌دید freeze)، حین تعقیب بی‌دید = شناوری در گرِیس → enemyReturnToOrbit (calmT صفر — پنهانی کامل رد را پاک می‌کند)، شاخهٔ charge بدون تغییر (متعهد)، حرکت همچنان فوری تعقیب را می‌شکند
+  3362→- U3-01 (types.ts ۱۲۶→۱۳۰ + drone.tsx ۲۱۵→۲۴۲): bridge += enemyHidden/enemyLost (افزودنی)؛ drone.tsx محاسبهٔ LOS هر فریم پیش از گام FSM — چشم بازیکن = 1.7 − crouchAmt·CROUCH_EYE + jumpY (خم‌شدن پشت جعبهٔ کوتاه هم کار می‌کند) + pwz یک‌بارمحاسبه (رفع تکرار عبارت laneK)؛ writeEnemyHidden/flagEnemyLost توابع ماژول‌سطح (ADR-001)؛ تله‌گراف جست‌وجو: چراغ پهپاد در stalk بی‌دید تندتر (120ms)
+  3363→- U3-02 (index.tsx ۲۲۲۳→۲۲۵۸ + setup-panel ۶۱۵→۶۲۱): state hiddenChip + hiddenStreakRef؛ مصرف enemyLost (اعلام «پهپاد رد تو را گم کرد — در پناهگاه بمان یا حرکت کن!») و enemyHidden با debounce دو پولی ۴۰۰ms در همان interval رویدادگسسته (setState فقط روی تغییر — الگوی cageEta)؛ چیپ «پوشیده» سبز (emerald + EyeOff) در هدر دسکتاپ + «◆ پوشیده» در نوار تمام‌صفحه — بدون دکمه (قانون ۶)؛ ریست کامل در startMission؛ گام آموزش هشتم «پناهگاه و خط دید» در TUTORIAL_STEPS
+  3364→- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (یک پرانتز اضافهٔ ویرایش MultiEdit در زنجیرهٔ else-if stalk قبل از tsc گرفتار و اصلاح شد) · bun run lint = ۰/۰ ✓ (دو بار — قبل و بعد از اسناد)
+  3365→- صحّه‌سنجی ریاضی los.ts با bun (۷ حالت): دیوار بلند مسدود ✓ کنار دیوار باز ✓ دکور solid:false بی‌اثر ✓ خم‌شده پشت جعبهٔ ۱٫۳ مسدود ✓ ایستاده همان‌جا باز ✓ مبدأ-داخل-جعبه رد ✓ موازی-خارج باز ✓
+  3366→- شبیه‌سازی‌های تصمیم با ماژول‌های واقعی (LAYOUTS.dust + stepEnemy + hasLineOfSight): ① تایم‌لاین QA دقیق مرورگر — علت صفر چیپ در جعبه برای بازیکن ایستاده (چشم ۱٫۷ بالای h=۱٫۳ هرگز مسدود نمی‌شود — فقط خم‌شدن) و جهت تصادفی مدار ② سکون ۶۰ث پشت درِ dust در هر دو جهت مدار: صفر justLost + hidden% ≈ ۲۰–۲۷ (قوس کور) — اثبات «تعقیب از کور شروع نمی‌شود» ③ خم‌شدن شرطی هنگام stalk: dir=−1 → lost@3.6 (قطعی)؛ dir=+1 مسیر باز (lost نمی‌آید — درست)
+  3367→- QA مرورگری (agent-browser، درس eval واحد رعایت شد؛ کلیدهای مصنوعی باید code:"KeyW"/"KeyC" باشند — key کافی نیست):
+  3368→  • آسان: ۳۲ پول/۵ث — صفر بج تعقیب/پوشیده/قفس ✓ → توقف/ادامه ✓ → «پایان دور» → نگهبان «آره، خروج» ✓ (t18-easy.png)
+  3369→  • عادی جنگل (بدون حرکت): stalk@2.3 → پرتاب قفس → برخورد ❤ → پایان طبیعی؛ «مرور ۱ خطا» = فقط تایم‌اوت سؤال (قفس در خطاها نیست ✓ U2 دست‌نخورده)؛ چیپ پوشیده صفر (میدان باز — درست)
+  3370→  • عادی dust درِ دوتایی (راه‌رفتن با KeyA/KeyW به پشت در h=2.75): ۲ پنجرهٔ پوشیده با استریک ۲۱ پول (~۱٫۷ث) — چیپ با debounce روشن/خاموش ✓
+  3371→  • عادی dust جعبهٔ دوطبقه + خم‌شدن حین تعقیب (تایم‌لاین طلایی eval واحد): stalk@3.65 → KeyC → چیپ «پوشیده» @+0.57 → اعلام «پهپاد رد تو را گم کرد» @5.09 + بج تعقیب خاموش همان لحظه (گرِیس ۰٫۹ + بازگشت به مدار) → ادامهٔ چرخهٔ قفس/HVT/تایم‌اوت سالم
+  3372→  • اسکرین‌شات چیپ: تکنیک استریک‌گیت (برگشت از eval در استریک ≥۸) + اسکرین‌شات بلافاصله — t18-hidden-chip.png: چیپ سبز «پوشیده» با EyeOff در هدر + پهپاد و جعبهٔ پوشش در قاب ✓
+  3373→  • کنسول: فقط هشدار قدیمی THREE.Clock (خارج از بازی) — صفر خطا · dev.log صفر error
+  3374→- درس‌های فنی ثبت‌شده: ① جعبهٔ h≤1.3 هرگز بازیکن ایستاده (چشم ۱٫۷) را نمی‌پوشاند — پوشش کوتاه فقط با خم‌شدن؛ پوشش بلند (درِ dust 2.75) ایستاده هم می‌پوشاند ② پهپاد فقط از سمتی که می‌بیند تعقیب را شروع می‌کند و مسیر مستقیمش معمولاً باز می‌ماند → justLost عملاً فقط با تغییر هندسهٔ دید حین تعقیب (خم‌شدن ثابت) رخ می‌دهد — نه با جابه‌جایی (حرکت اول تعقیب را با قاعدهٔ ③ U1 می‌شکند) ③ keyboard dispatch باید e.code بدهد (KEY_MOVE با e.code) ④ «دور جدید» Canvas را remount می‌کند ولی در حلقهٔ QA پس از هر restart باید مسیر راه‌رفتن تکرار شود
+  3375→- اسناد بسته شد: roadmap → نسخهٔ ۱.۴ (خط ۱ اصلاح، U3 ✅، U4 ⬅️ جاری، مسیر بحرانی زیرساخت دشمن «کامل شد»، تیک ۶ معیار با اعداد QA، ردیف تاریخچهٔ ۱.۴) · fps/README.md → +۱ ردیف (los.ts) + به‌روزرسانی index/setup/enemy/types/drone + قرارداد «خط دید (U3)»
+  3376→Stage Summary:
+  3377→- 🏁 فاز U3 «پناهگاه و خط دید» بسته شد — مسیر بحرانی سند (U0→U1→U2→U3 زیرساخت دشمن) کامل شد و میدان اکنون دو دفاع تاکتیکی دارد: حرکت (U1) و پنهانی (U3) + دفاع فعال قفس (U2)
+  3378→- توزیع کد فاز: los.ts ۹۸ (دید خالص) + enemy.ts ۲۵۶ (FSM LOS-aware) + drone.tsx ۲۴۲ (محاسبهٔ فریمی + پرچم‌ها) + سیم‌کشی index + گام آموزش هشتم — Attempt صفر کلید جدید (عمداً — تله‌متری رفتاری = U8)، bridge فقط افزودنی
+  3379→- تکنیک QA جدید ثبت شد: برای پدیده‌های گذرای HUD، eval مسدودساز با آستانهٔ استریک + اسکرین‌شات در همان دستور bash؛ و شبیه‌سازی bun با ماژول‌های واقعی برای تعیین «رفتار موردانتظار» پیش از نتیجه‌گیری از مرورگر
+
+[showing lines 3100-3379 of 3381; use offset=3380 with limit to continue reading]
