@@ -29,10 +29,12 @@ import {
 import { clamp } from "./helpers";
 import {
   FOV_KEY,
+  FIELD_SFX_KEY,
   INVERT_KEY,
   MAP_KEY,
   SENS_KEY,
   loadDifficulty,
+  loadFieldSfxPref,
   loadMapPref,
   loadPrefBool,
   loadPrefNum,
@@ -58,6 +60,8 @@ export function useFpsPrefs() {
   const [weaponId, setWeaponId] = useState<WeaponId>(() => loadWeaponPref());
   // ── فاز U1-00 — درجهٔ دشواری مأموریت (ماندگار؛ پیش‌فرض عادی) ──
   const [difficulty, setDifficulty] = useState<Difficulty>(() => loadDifficulty());
+  // ── فاز U5 — صدای میدان جهت‌دار (ماندگار؛ پیش‌فرض روشن) ──
+  const [fieldSfx, setFieldSfx] = useState(() => loadFieldSfxPref());
 
   // ── فاز G2-e — انتخاب کیفیت گرافیک (ماندگار؛ کلید افزودنی) ──
   const setQualityPref = useCallback((q: Quality) => {
@@ -116,6 +120,14 @@ export function useFpsPrefs() {
     savePref(DIFFICULTY_KEY, d);
   }, []);
 
+  // ── فاز U5 — سوییچ صدای میدان (ماندگار؛ کلید افزودنی ADR-003) ──
+  const setFieldSfxPref = useCallback((v: boolean) => {
+    playSound("click");
+    buzz("light");
+    setFieldSfx(v);
+    savePref(FIELD_SFX_KEY, v ? "1" : "0");
+  }, []);
+
   return {
     mode,
     setMode,
@@ -133,5 +145,7 @@ export function useFpsPrefs() {
     setWeaponPref,
     difficulty,
     setDifficultyPref,
+    fieldSfx,
+    setFieldSfxPref,
   };
 }

@@ -120,6 +120,20 @@
  * - «گزارش خطاها به دستیار هوشمند» در صفحهٔ نتیجه: متن گزارش (رتبه/دقت/فهرست خطاها)
  *   با tutor-seed به sessionStorage می‌رود و FreeChat آن را در ورودی چت می‌گذارد —
  *   کاربر مرور و ارسال می‌کند تا دستیار مینی‌تمرین بسازد (سقف روزانهٔ AI هدر نمی‌رود).
+ *
+ * فاز U5 — هوش صوتی میدان (نقشهٔ docs/fps-upgrade-roadmap.md §U5):
+ * - صدا به ابزار آگاهی میدانی تبدیل می‌شود: منابع متخاصم (پهپاد/قفس/رئیس) با پاس چپ/راست
+ *   و افت فاصله شنیده می‌شوند — `audio.ts` خالص (`fieldPan` از قرارداد yaw در physics.ts +
+ *   کاتالوگ ۱۰ افکت سنتزی با StereoPannerNode) و پن لحظهٔ رویداد از موقعیت‌های bridge
+ *   (`enemyPos`/`cagePos`/`bossPos` — نوشتهٔ صحنه‌ها هر فریم با توابع ماژول‌سطح ADR-001).
+ * - دشمن به گذارهای FSM واکنش صوتی می‌دهد (فقط در interval ۲۰۰ms رویدادگسسته — قرارداد
+ *   G2-e): تعقیب = «detected»، شارژ تله‌گراف = سوت بالارونده + اعلام، گم‌کردن رد = «lost»،
+ *   گریز = «retreat»؛ قفس: پرتاب = «throw» (از سمت پرتاب‌کننده — پهپاد یا رئیس)، خطا = «thud»،
+ *   منهدم = «cageDown»؛ رئیس: ورود = «bossWarn» (مرکزی)، شکستن سپر = «shieldBreak»،
+ *   فروپاشی = «bossDown» — جایگزین صدای طلای عمومی در رویدادهای رئیس.
+ * - صداهای بازخورد UI (correct/wrong/hit/…) عمداً مرکزی می‌مانند؛ دو گیت بی‌صدا: کلید
+ *   سراسری کیت (حاکم) + کلید افزودنی «visionone:game-pref:fps-field-sfx» (ADR-003) با
+ *   سوییچ در setup و تنظیمات سریع توقف.
  */
 
 import {
@@ -182,6 +196,8 @@ import {
 } from "../shared";
 // فاز G2-e — کیت GameKit v2 (قرارداد API سند)
 import { playSound, toggleSoundMuted, isSoundMuted } from "../kit/sound-engine";
+// فاز U5 — هوش صوتی میدان: پن استریو + افکت‌های واکنشی FSM (§U5)
+import { fieldPan, playFieldSound, setFieldSfxEnabled } from "./audio";
 import { buzz } from "../kit/haptics";
 import { useGamePause } from "../kit/use-pause";
 import { GameExitGuard } from "../kit/exit-guard";
@@ -304,6 +320,11 @@ function useBestRecord(bookId: string, scope: string): string {
   );
 }
 
+/** فاز U5 — پن لحظهٔ رویداد از موقعیت منبع صوتی (موقعیت جهان بازیکن با همان نگاشت پهپاد/قفس) */
+function sourceFieldPan(b: SceneBridge, src: { x: number; z: number }): { pan: number; gain: number } {
+  return fieldPan(src.x, src.z, b.pos.x, 7 + (1 - b.laneK) * 4.2 + b.pos.z, b.aim.yaw);
+}
+
 export function FpsShooterGame() {
   const data = useBookData();
   const { bookId } = useBook();
@@ -330,7 +351,15 @@ export function FpsShooterGame() {
     setWeaponPref,
     difficulty,
     setDifficultyPref,
+    // فاز U5 — صدای میدان جهت‌دار (ماندگار)
+    fieldSfx,
+    setFieldSfxPref,
   } = useFpsPrefs();
+
+  // ── فاز U5 — sync ترجیح صدای میدان با موتور صوت (مونت + تغییر زنده از سوییچ‌ها) ──
+  useEffect(() => {
+    setFieldSfxEnabled(fieldSfx);
+  }, [fieldSfx]);
   const [lesson, setLesson] = useState<number>(ALL_LESSONS);
   const [tapMode, setTapMode] = useState(false);
   const [locked, setLocked] = useState(false);
@@ -478,6 +507,10 @@ export function FpsShooterGame() {
     enemyLost: false,
     // فاز U4 — رئیس واژه: بیرون نبرد در شروع
     bossPhase: "idle",
+    // فاز U5 — موقعیت‌های جهان منابع صوتی میدان (نوشتهٔ صحنه‌ها هر فریم)
+    enemyPos: { x: 0, z: 0 },
+    cagePos: { x: 0, z: 0 },
+    bossPos: { x: 0, z: 0 },
   });
   const meshRegistry = useRef<THREE.Mesh[]>([]);
   const burstApi = useRef<BurstApi | null>(null);
@@ -902,7 +935,8 @@ export function FpsShooterGame() {
     bridge.current.enemyLost = false;
     setHiddenChip(false);
     hiddenStreakRef.current = 0;
-    playSound("golden");
+    // فاز U5 — شیپور بم فرماندهی (رویداد تمام‌صفحه — پن مرکزی با گین کامل؛ جایگزین طلای عمومی)
+    playFieldSound("bossWarn", 0, 1);
     buzz("light");
     setLiveMsg(`رئیس واژه وارد میدان شد — سه سپر دارد و گلوله اثر ندارد؛ فقط پاسخ درست سپرش را می‌شکند!`);
     bossBuildStage(1);
@@ -925,7 +959,9 @@ export function FpsShooterGame() {
         bossStageRef.current = stage + 1;
         maxBossStageRef.current = Math.max(maxBossStageRef.current, stage + 1);
         setBossStage(stage + 1);
-        playSound("golden");
+        // فاز U5 — دو نت شیشه‌ای شکستن سپر از سمت رئیس (جایگزین طلای عمومی — امضای اختصاصی §U5)
+        const sfx = sourceFieldPan(bridge.current, bridge.current.bossPos);
+        playFieldSound("shieldBreak", sfx.pan, sfx.gain);
         buzz("success");
         setLiveMsg(`سپر ${faNum(stage)} از ${faNum(BOSS_STAGES)} منهدم شد — مرحلهٔ ${faNum(stage + 1)} شروع شد!`);
         bossBuildStage(stage + 1);
@@ -933,7 +969,9 @@ export function FpsShooterGame() {
         // قانون ۶ §U4 — فروپاشی رئیس: انفجار نهایی صحنه + پیروزی + نتیجه (زنجیرهٔ مقاوم به توقف)
         bossDefeatedRef.current = true;
         bridge.current.bossPhase = "down";
-        playSound("golden");
+        // فاز U5 — انفجار بم کشیده فروپاشی از سمت رئیس (گین کامل — رویداد اوج مأموریت)
+        const sfx = sourceFieldPan(bridge.current, bridge.current.bossPos);
+        playFieldSound("bossDown", sfx.pan, Math.max(0.9, sfx.gain));
         buzz("record");
         setLiveMsg("رئیس واژه منهدم شد — مأموریت با پیروزی کامل پایان یافت!");
         later(() => finishRef.current(), 1500);
@@ -1088,6 +1126,9 @@ export function FpsShooterGame() {
   // فاز U2 — رویداد پرتاب قفس از scene/cage (stable — فقط ref/state setter)
   const handleCageLaunch = useCallback(() => {
     cageThrownRef.current += 1;
+    // فاز U5 — سوت پرتاب از سمت پرتاب‌کننده (موقعیت ثبت‌شدهٔ scene/cage هنگام مصرف صف — پهپاد یا رئیس)
+    const sfx = sourceFieldPan(bridge.current, bridge.current.cagePos);
+    playFieldSound("throw", sfx.pan, sfx.gain);
     // فاز U4 — متن خنثی: پرتاب‌کننده پهپاد تعقیب‌گر یا رئیس واژه هر دو ممکن است
     setLiveMsg("قفس واژه پرتاب شد — منهدمش کن یا جابه‌جا شو!");
     buzz("light");
@@ -1109,7 +1150,9 @@ export function FpsShooterGame() {
       if (id === "cage") {
         if (cageApiRef.current?.destroy()) {
           cageDownedRef.current += 1;
-          playSound("hit");
+          // فاز U5 — کلانک فلزی منهدم از سمت قفس (جایگزین «hit» عمومی — امضای اختصاصی §U5)
+          const sfx = sourceFieldPan(bridge.current, bridge.current.cagePos);
+          playFieldSound("cageDown", sfx.pan, sfx.gain);
           buzz("light");
           setLiveMsg("قفس واژه را منهدم کردی — تهدید خنثی شد!");
         }
@@ -1340,11 +1383,23 @@ export function FpsShooterGame() {
       if (overRef.current) return;
       if (pausedRef.current) return; // فریز حین توقف — جبران در onChange ادامه
       // فاز U1 — اعلام گذارهای FSM پهپاد (روی رویداد گسسته — نه هر فریم)؛ شارژ U2 هم «تعقیب فعال» است
+      // فاز U5 — هر گذار امضای شنیداری جهت‌دار دارد (پن از آخرین موقعیت نوشته‌شدهٔ پهپاد)
       const ep = bridge.current.enemyPhase;
       if (ep !== enemyPhaseRef.current) {
+        const sfx = sourceFieldPan(bridge.current, bridge.current.enemyPos);
         enemyPhaseRef.current = ep;
         setEnemyStalking(ep === "stalk" || ep === "charge");
-        if (ep === "stalk") setLiveMsg("پهپاد شناسایی متخاصم نزدیک می‌شود — یا حرکت کن یا شکارش کن!");
+        if (ep === "stalk") {
+          playFieldSound("detected", sfx.pan, sfx.gain);
+          setLiveMsg("پهپاد شناسایی متخاصم نزدیک می‌شود — یا حرکت کن یا شکارش کن!");
+        } else if (ep === "charge") {
+          // فاز U5 — تله‌گراف شنیداری شارژ (هم‌خانوادهٔ چشمک تند هسته) + اعلام
+          playFieldSound("charge", sfx.pan, sfx.gain);
+          setLiveMsg("پهپاد قفس واژه را شارژ می‌کند — آمادهٔ دفاع یا جابه‌جایی!");
+        } else if (ep === "flee") {
+          // گذار به گریز (برخورد گلوله به پهپاد) — استامپ نزولی دورشدن
+          playFieldSound("retreat", sfx.pan, sfx.gain);
+        }
       }
       // ── فاز U2 — قفس واژه: رویدادهای یک‌بارمصرف + شمارش معکوس چیپ (همه در این interval رویدادگسسته) ──
       if (bridge.current.cageHit) {
@@ -1360,12 +1415,18 @@ export function FpsShooterGame() {
       }
       if (bridge.current.cageWhiff) {
         bridge.current.cageWhiff = false;
+        // فاز U5 — برخورد نرم قفس به زمین از سمت نهایی پرواز
+        const sfx = sourceFieldPan(bridge.current, bridge.current.cagePos);
+        playFieldSound("thud", sfx.pan, sfx.gain);
         setCageEta(0);
         setLiveMsg("قفس واژه خطا رفت — جابه‌جا شدی!");
       }
       // ── فاز U3 — پناهگاه و خط دید: پرچم گم‌کردن رد + چیپ «پوشیده» با debounce (همه رویدادگسسته) ──
       if (bridge.current.enemyLost) {
         bridge.current.enemyLost = false;
+        // فاز U5 — دو نت نزولی «رد گم شد» از سمت پهپاد عقب‌کشنده
+        const sfx = sourceFieldPan(bridge.current, bridge.current.enemyPos);
+        playFieldSound("lost", sfx.pan, sfx.gain);
         setLiveMsg("پهپاد رد تو را گم کرد — در پناهگاه بمان یا حرکت کن!");
       }
       if (bridge.current.enemyHidden) {
@@ -1854,6 +1915,8 @@ export function FpsShooterGame() {
         setWeaponPref={setWeaponPref}
         difficulty={difficulty}
         setDifficultyPref={setDifficultyPref}
+        fieldSfx={fieldSfx}
+        setFieldSfxPref={setFieldSfxPref}
         mapId={mapId}
         setMapPref={setMapPref}
         chipFeedback={chipFeedback}
@@ -2410,6 +2473,11 @@ export function FpsShooterGame() {
                       <div className="flex items-center justify-between gap-3">
                         <span className="text-[11px] font-bold">وارون‌سازی عمودی</span>
                         <Switch checked={invertY} onCheckedChange={setInvertPref} aria-label="وارون‌سازی عمودی نگاه" />
+                      </div>
+                      {/* فاز U5 — صدای میدان جهت‌دار — همان ترجیح setup، زنده حین دور */}
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-[11px] font-bold">صدای میدان (چپ/راست)</span>
+                        <Switch checked={fieldSfx} onCheckedChange={setFieldSfxPref} aria-label="صدای میدان جهت‌دار" />
                       </div>
                     </div>
                   </div>

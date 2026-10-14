@@ -9,6 +9,13 @@ export const MAP_KEY = "visionone:game-pref:fps-map";
 export const SENS_KEY = "visionone:game-pref:fps-sens";
 export const FOV_KEY = "visionone:game-pref:fps-fov";
 export const INVERT_KEY = "visionone:game-pref:fps-invert";
+/** فاز U5 — کلید افزودنی صدای میدان (پاس چپ/راست) — پیش‌فرض روشن (ADR-003) */
+export const FIELD_SFX_KEY = "visionone:game-pref:fps-field-sfx";
+
+/** فاز U5 — خواندن ترجیح صدای میدان (پیش‌فرض روشن) */
+export function loadFieldSfxPref(): boolean {
+  return loadPrefBool(FIELD_SFX_KEY, true);
+}
 
 export function loadMapPref(): MapId {
   if (typeof window === "undefined") return "forest";

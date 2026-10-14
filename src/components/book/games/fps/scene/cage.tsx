@@ -40,6 +40,12 @@ function flagCageWhiff(b: SceneBridge): void {
   b.cageWhiff = true;
 }
 
+/** فاز U5 — نوشتن موقعیت جهان قفس برای پن استریو صوت میدان (تابع ماژول‌سطح — ADR-001) */
+function writeCagePos(b: SceneBridge, x: number, z: number): void {
+  b.cagePos.x = x;
+  b.cagePos.z = z;
+}
+
 /** غیرفعال‌سازی مشترک: خروج از registry + پنهان‌سازی گروه — تابع ماژول‌سطح (الگوی writeEnemyPhase — ADR-001) */
 function deactivateCage(
   st: React.MutableRefObject<CageState | null>,
@@ -124,6 +130,8 @@ export function Cage({
     const p = pending.current;
     if (p) {
       pending.current = null;
+      // فاز U5 — نقطهٔ پرتاب قبل از onLaunch ثبت می‌شود تا صوت «throw» از سمت پرتاب‌کننده پن شود
+      writeCagePos(b, p.from.x, p.from.z);
       st.current = createCageState(p.from, p.to, p.speedMult);
       onLaunch();
     }
@@ -140,6 +148,8 @@ export function Cage({
     const py = CAGE_TARGET_Y - b.crouchAmt * 0.5;
 
     const ev = stepCage(s, px, py, pz, Math.min(delta, 0.05));
+    // فاز U5 — موقعیت لحظه‌ای قفس (رویدادهای hit/whiff هم همین موقعیت نهایی را می‌خوانند)
+    writeCagePos(b, s.x, s.z);
     if (ev === "hit") {
       // برخورد به بازیکن — رویداد یک‌بارمصرف برای index (❤ −۱ در مسیر مستقل سؤال)
       flagCageHit(b);

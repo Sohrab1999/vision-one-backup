@@ -120,6 +120,12 @@ export interface SceneBridge {
   enemyLost: boolean;
   /** فاز U4 — فاز رئیس واژه (نوشتهٔ index روی رویداد گسسته؛ خواندهٔ scene/boss هر فریم — fight حین نبرد، down = فروپاشی نهایی) */
   bossPhase: "idle" | "fight" | "down";
+  /** فاز U5 — آخرین موقعیت جهان پهپاد (نوشتهٔ scene/drone هر فریم — خواندهٔ index لحظهٔ رویداد صوتی میدان برای پن استریو) */
+  enemyPos: { x: number; z: number };
+  /** فاز U5 — آخرین موقعیت جهان قفس (نوشتهٔ scene/cage: نقطهٔ پرتاب هنگام مصرف صف + موقعیت هر فریم در پرواز) */
+  cagePos: { x: number; z: number };
+  /** فاز U5 — آخرین موقعیت جهان رئیس (نوشتهٔ scene/boss هر فریم — پن رویدادهای شکستن سپر/فروپاشی) */
+  bossPos: { x: number; z: number };
 }
 
 export interface BurstApi {

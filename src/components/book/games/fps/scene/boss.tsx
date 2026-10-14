@@ -55,6 +55,12 @@ function stepShieldRing(r: THREE.Mesh | null, alive: boolean, dt: number, chargi
   }
 }
 
+/** فاز U5 — نوشتن موقعیت جهان رئیس برای پن استریو صوت میدان (تابع ماژول‌سطح — ADR-001) */
+function writeBossPos(b: SceneBridge, x: number, z: number): void {
+  b.bossPos.x = x;
+  b.bossPos.z = z;
+}
+
 export function WordBoss({
   bridge,
   registry,
@@ -163,6 +169,9 @@ export function WordBoss({
     const s = st.current;
 
     stepBoss(s, { dt, speedMult, strafeAmp, chargeS, cdS });
+
+    // فاز U5 — موقعیت جهان رئیس برای پن استریو رویدادهای صوتی (سپر/فروپاشی)
+    writeBossPos(b, s.x, s.z);
 
     // پایان شارژ: پرتاب قفس از موقعیت رئیس به سینه/سر بازیکن (قانون ۳ §U2 — خطی قابل پیش‌بینی)
     if (s.justThrew) {

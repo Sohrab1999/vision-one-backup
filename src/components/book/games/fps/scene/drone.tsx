@@ -51,6 +51,12 @@ function flagEnemyLost(b: SceneBridge): void {
   b.enemyLost = true; // یک‌بارمصرف — مصرف+پاک‌سازی index در interval
 }
 
+/** فاز U5 — نوشتن موقعیت جهان پهپاد برای پن استریو صوت میدان (تابع ماژول‌سطح — ADR-001) */
+function writeEnemyPos(b: SceneBridge, x: number, z: number): void {
+  b.enemyPos.x = x;
+  b.enemyPos.z = z;
+}
+
 export function HunterDrone({
   difficulty,
   tap,
@@ -154,6 +160,8 @@ export function HunterDrone({
       flagEnemyLost(b);
     }
     writeEnemyHidden(b, !sees);
+    // فاز U5 — موقعیت جهان پهپاد برای پن استریو رویدادهای صوتی (detected/charge/retreat)
+    writeEnemyPos(b, st.current.x, st.current.z);
     // فاز U2 — پایان شارژ: پرتاب قفس واژه از موقعیت فعلی پهپاد به سینه/سر بازیکن (قانون ۳ §U2)
     if (st.current.justThrew) {
       st.current.justThrew = false;

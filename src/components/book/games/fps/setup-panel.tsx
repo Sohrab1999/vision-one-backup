@@ -134,6 +134,9 @@ export interface SetupPanelProps {
   /** فاز U1-00 — درجهٔ دشواری مأموریت (رفتار پهپاد تعقیب‌گر) */
   difficulty: Difficulty;
   setDifficultyPref: (d: Difficulty) => void;
+  /** فاز U5 — صدای میدان جهت‌دار (پاس چپ/راست — ماندگار) */
+  fieldSfx: boolean;
+  setFieldSfxPref: (v: boolean) => void;
   mapId: MapId;
   setMapPref: (id: MapId) => void;
   chipFeedback: () => void;
@@ -170,6 +173,8 @@ export function SetupPanel({
   setWeaponPref,
   difficulty,
   setDifficultyPref,
+  fieldSfx,
+  setFieldSfxPref,
   mapId,
   setMapPref,
   chipFeedback,
@@ -577,6 +582,16 @@ export function SetupPanel({
                   </p>
                 </div>
                 <Switch checked={invertY} onCheckedChange={setInvertPref} aria-label="وارون‌سازی عمودی نگاه" />
+              </div>
+              {/* فاز U5 — صدای میدان جهت‌دار: پن چپ/راست منابع متخاصم + امضای شنیداری FSM */}
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[12px] font-bold">صدای میدان (چپ/راست)</p>
+                  <p className="text-[10px] leading-4 text-muted-foreground">
+                    پهپاد، قفس و رئیس از سمت خودشان صدا می‌دهند — تعقیب، شارژ و گریز امضای شنیداری دارند.
+                  </p>
+                </div>
+                <Switch checked={fieldSfx} onCheckedChange={setFieldSfxPref} aria-label="صدای میدان جهت‌دار" />
               </div>
             </div>
           </div>
