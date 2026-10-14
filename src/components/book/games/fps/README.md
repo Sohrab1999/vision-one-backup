@@ -11,7 +11,8 @@
 | `index.tsx` | ~۲,۱۳۰ | `FpsShooterGame`: ارکستراسیون — موتور مأموریت (موج/HVT/Attempt/پایان) + Canvas و ترکیب صحنه + سیم‌کشی HUD + نتیجه؛ تنها فایل دارای state موتور |
 | `setup-panel.tsx` | ~۵۷۰ | پنل setup (presentational): حالت/سلاح/نقشه/درس/دشواری/کیفیت/گزینه‌های نگاه + آموزش (`TUTORIAL_STEPS`) — props هم‌نام از index |
 | `chain.ts` | ~۵۸ | موتور تصمیم خالص «جملهٔ زنجیره‌ای» (F10-ب): `chainResolve`/`chainVolleyPick`/`chainExpectedTargetId` — بدون اثر جانبی؛ اثرها در index |
-| `enemy.ts` | ~۱۷۹ | موتور FSM خالص «پهپاد تعقیب‌گر» (U1-01): `patrol → stalk → flee` — `stepEnemy`/`createEnemyState`/`enemyFlee`/`enemySpeedMult` — صفر وابستگی به React/THREE؛ جهش in-place |
+| `cage.ts` | ~۱۱۵ | هستهٔ خالص «قفس واژه» (U2-00): `createCageState`/`stepCage` (رویداد none/hit/whiff)/`cageEta` — پرواز خطی قابل پیش‌بینی به نقطهٔ پرتاب؛ صفر وابستگی React/THREE |
+| `enemy.ts` | ~۲۲۰ | موتور FSM خالص «پهپاد تعقیب‌گر» (U1-01/U2): `patrol → stalk → charge → flee` + `throwCd` — `stepEnemy`/`createEnemyState`/`enemyFlee`/`enemyReturnToOrbit`/`enemySpeedMult`/`enemyChargeS`/`enemyThrowCd` — صفر وابستگی به React/THREE؛ جهش in-place |
 | `use-fps-prefs.ts` | ~۱۳۸ | هوک ترجیحات ماندگار: mode/quality/sens/fov/invert/map/weapon/difficulty + setterهای ماندگار (فقط از طریق `prefs.ts`) |
 | `hud-question.tsx` | ~۱۱۷ | کارت سؤال روی HUD (presentational): متن سؤال + جملهٔ زنجیره با جای‌خالی‌های پُرشونده + پخش دوبارهٔ شنیداری + نوار زمان + شمارندهٔ HVT |
 | `constants.ts` | ~۱۲۲ | ثابت‌های تنظیمی: لِین‌ها، کمبو، موج/فرار/طلایی، حرکت (ACCEL/JUMP/…)، اسکوپ، کیفیت، `Difficulty` + `DIFFICULTY_KEY` (U1-00) |
@@ -29,22 +30,24 @@
 | `scene/sky.tsx` | ~۹۴ | `StarField`/`SkyOrb`/`CloudDrift` — آسمان هر نقشه |
 | `scene/world.tsx` | ~۲۶۵ | `Arena`+`FieldProps`+`DecoShape` (رندر سازه‌ها) + `World` (ری‌کست شلیک/والی پمپ) |
 | `scene/targets.tsx` | ~۳۳۵ | `Target` (پهپاد واژه‌دار + فرار)، `GoldenTarget` (HVT)، `Burst` (انفجار آتش/دود) |
-| `scene/drone.tsx` | ~۱۸۳ | `HunterDrone` (U1-02): رندر پهپاد متخاصم بدون برچسب (ADR-005) — FSM از enemy.ts در useFrame، registry id ویژهٔ «drone»، `EnemyApi.hit` = انفجار + گریز، فریز رایگان با frameloop (ADR-004) |
+| `scene/drone.tsx` | ~۲۲۰ | `HunterDrone` (U1-02/U2): رندر پهپاد متخاصم بدون برچسب (ADR-005) — FSM از enemy.ts در useFrame (شامل شارژ پرتاب U2)، registry id ویژهٔ «drone»، `EnemyApi.hit` = انفجار + گریز، پرتاب قفس از cageApi در پایان شارژ، فریز رایگان با frameloop (ADR-004) |
+| `scene/cage.tsx` | ~۲۰۰ | `Cage` (U2-01): رندر قفس سیمی کهربایی بدون برچسب — پرتاب صف‌شده از api، registry id ویژهٔ «cage»، `CageApi.{launch,destroy}`، پرچم‌های یک‌بارمصرف cageHit/cageWhiff روی bridge، `writeCageEta` تابع ماژول‌سطح (ADR-001) |
 | `scene/input.tsx` | ~۱۰۱ | `TouchJoystick` لمسی + `setStick` (تابع ماژول‌سطح قاعدهٔ bridge) |
 
 ## قراردادهای ثابت (دست نزنید بدون QA کامل)
 
-- **امضای Attempt**: `category: GAME_KEY ("fps-shooter")` + `detail.{mode,quality,map,weapon,wave,difficulty}` —
-  داشبورد/رکوردها به این کلیدها وابسته‌اند (کلیدهای قدیمی دست‌نخورده؛ `difficulty` از U1-00 افزودنی است).
+- **امضای Attempt**: `category: GAME_KEY ("fps-shooter")` + `detail.{mode,quality,map,weapon,wave,difficulty,cageThrown,cageDowned,cageHits}` —
+  داشبورد/رکوردها به این کلیدها وابسته‌اند (کلیدهای قدیمی دست‌نخورده؛ `difficulty` از U1-00 و `cage*` از U2 افزودنی‌اند).
 - **کلیدهای localStorage**: `visionone:game-pref:fps-{weapon,map,quality,sens,fov,invert,difficulty}` — فقط از طریق `prefs.ts`.
 - **`scopeOf(mode, tap)`**: قالب `"word|grammar|listen|chain[-tap]"` — کلید رکورد شخصی per-scope.
 - **تپ ساده**: کلیدهای `۱..۷` به هدف‌های مرتب‌شده بر اساس X (چپ→راست) — `۵..۷` فقط برای هدف‌های اضافهٔ زنجیره (F10-ب).
 - **زنجیره (F10-ب)**: سؤال فقط از خط‌های واقعی مکالمه‌های جزوه (`ConversationLine.en`)؛ `srsKey` عمداً خالی و مسیر SRS در index گارد می‌شود؛ شکار بی‌ترتیب = مسیر خطا (قلب −۱).
 - **registry هدف‌ها**: هر mesh شلیک‌پذیر با `userData.id` وارد `registry.current` می‌شود؛ عناصر دکوری
   هرگز وارد registry نمی‌شوند (قانون «شلیک فقط به هدف»).
-- **دشمن زنده (U1)**: FSM پهپاد تعقیب‌گر فقط در `enemy.ts` (تصمیم) و `scene/drone.tsx` (رندر/useFrame) —
-  آسان = `null` رندر (بدون هزینهٔ فریم)؛ شکار پهپاد هیچ امتیاز/جریمه‌ای ندارد (اقتصاد امتیاز دست‌نخورده)؛
-  اعلام گذار تعقیب روی رویداد گسستهٔ interval سؤال (نه هر فریم) با `setLiveMsg`.
+- **دشمن زنده (U1/U2)**: FSM پهپاد تعقیب‌گر فقط در `enemy.ts` (تصمیم: patrol/stalk/charge/flee + throwCd) و `scene/drone.tsx` (رندر/useFrame) —
+  آسان = `null` رندر (بدون هزینهٔ فریم) و `chargeS=0` (دفاع عمقی)؛ شکار پهپاد/قفس هیچ امتیاز/جریمه‌ای ندارد (اقتصاد امتیاز دست‌نخورده)؛
+  اعلام گذارها/رویدادهای قفس روی رویداد گسستهٔ interval سؤال (نه هر فریم) با `setLiveMsg`؛ قفس پرتابهٔ خطی به نقطهٔ پرتاب است (جابه‌جایی = whiff بی‌جریمه) —
+  برخورد قفس فقط ❤ کم می‌کند و سؤال جاری دست‌نخورده می‌ماند (مسیر مستقل از خطای سؤال).
 
 ## افزودن قابلیت جدید — چک‌لیست
 

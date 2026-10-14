@@ -18,17 +18,20 @@ import * as THREE from "three";
 import { SceneBridge, BurstApi } from "../types";
 import {
   createEnemyState,
+  enemyChargeS,
   enemyFlee,
   enemySpeedMult,
   enemyStalkDelay,
+  enemyThrowCd,
   stepEnemy,
   type EnemyState,
 } from "../enemy";
+import type { CageApi } from "./cage";
 import type { Difficulty } from "../constants";
 
 /** api پهپاد برای index — الگوی BurstApi */
 export interface EnemyApi {
-  /** برخورد گلوله: انفجار در محل + گریز فوری FSM */
+  /** برخورد گلوله: انفجار در محل + گریز فوری FSM (حین شارژ = لغو پرتاب — قانون ۴ §U2) */
   hit: () => void;
 }
 
@@ -44,6 +47,7 @@ export function HunterDrone({
   registry,
   burstApi,
   apiRef,
+  cageApi,
 }: {
   difficulty: Difficulty;
   tap: boolean;
@@ -51,6 +55,8 @@ export function HunterDrone({
   registry: React.RefObject<THREE.Mesh[]>;
   burstApi: React.RefObject<BurstApi | null>;
   apiRef: React.RefObject<EnemyApi | null>;
+  /** فاز U2 — api قفس واژه: در پایان شارژ پرتاب می‌شود */
+  cageApi: React.RefObject<CageApi | null>;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const bodyRef = useRef<THREE.Mesh>(null);
@@ -91,6 +97,9 @@ export function HunterDrone({
   const enabled = difficulty !== "easy";
   const speedMult = enemySpeedMult(difficulty, tap);
   const stalkDelay = enemyStalkDelay(difficulty);
+  // فاز U2 — شارژ/cooldown پرتاب؛ برای دفاع عمقی در «آسان» هم صفر می‌ماند (قانون ① §U2)
+  const chargeS = enabled ? enemyChargeS(difficulty) : 0;
+  const throwCd = enabled ? enemyThrowCd(difficulty) : 0;
 
   useFrame((state, delta) => {
     const g = groupRef.current;
@@ -115,9 +124,20 @@ export function HunterDrone({
       playerSpeed: Math.hypot(b.vel.x, b.vel.z),
       speedMult,
       stalkDelay,
+      chargeS,
+      throwCd,
       dt,
       bounds: { minX: layout.minX - 1.2, maxX: layout.maxX + 1.2, minZ: layout.minZ - 1.2, maxZ: layout.maxZ + 1.2 },
     });
+    // فاز U2 — پایان شارژ: پرتاب قفس واژه از موقعیت فعلی پهپاد به سینه/سر بازیکن (قانون ۳ §U2)
+    if (st.current.justThrew) {
+      st.current.justThrew = false;
+      cageApi.current?.launch(
+        { x: st.current.x, y: st.current.y, z: st.current.z },
+        { x: b.pos.x, y: 1.55, z: 7 + (1 - b.laneK) * 4.2 + b.pos.z },
+        speedMult, // تپ ساده × عادی/سخت = نصف سرعت قفس (قانون ۲ §U2)
+      );
+    }
     if (st.current.phase !== prevPhase || b.enemyPhase !== st.current.phase) {
       writeEnemyPhase(b, st.current.phase);
     }
@@ -125,13 +145,25 @@ export function HunterDrone({
     g.visible = true;
     g.position.set(st.current.x, st.current.y, st.current.z);
     g.rotation.y = st.current.face;
-    g.rotation.z = st.current.phase === "flee" ? Math.sin(st.current.t * 9) * 0.18 : Math.sin(state.clock.elapsedTime * 1.4) * 0.05;
+    g.rotation.z =
+      st.current.phase === "flee"
+        ? Math.sin(st.current.t * 9) * 0.18
+        : st.current.phase === "charge"
+          ? Math.sin(st.current.t * 30) * 0.04 // فاز U2 — لرزش ظریف شارژ تله‌گراف
+          : Math.sin(state.clock.elapsedTime * 1.4) * 0.05;
     // روتورها همیشه چرخان
     if (rotorRef.current) rotorRef.current.rotation.y += dt * 22;
-    // چراغ کهربایی: پالس آرام در گشت، تند در تعقیب، چشمک در گریز
+    // چراغ کهربایی: پالس آرام در گشت، تند در تعقیب، تندترین در شارژ (تله‌گراف)، چشمک در گریز
     if (beaconRef.current) {
       const mat = beaconRef.current.material as THREE.MeshStandardMaterial;
-      const hz = st.current.phase === "stalk" ? 190 : st.current.phase === "flee" ? 70 : 460;
+      const hz =
+        st.current.phase === "charge"
+          ? 90
+          : st.current.phase === "stalk"
+            ? 190
+            : st.current.phase === "flee"
+              ? 70
+              : 460;
       mat.emissiveIntensity = 1.35 + Math.sin(performance.now() / hz) * 0.75;
     }
     // پنهان‌سازی وقتی پشت دوربین نیست؟ — نه؛ مه نقشه عمق را می‌پوشاند و رادار میدان زنده است

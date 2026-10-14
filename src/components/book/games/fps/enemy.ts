@@ -17,8 +17,8 @@
 import { clamp } from "./helpers";
 import type { Difficulty } from "./constants";
 
-/** حالت‌های FSM پهپاد */
-export type EnemyPhase = "patrol" | "stalk" | "flee";
+/** حالت‌های FSM پهپاد — فاز U2: «charge» = شارژ تله‌گراف پرتاب قفس واژه */
+export type EnemyPhase = "patrol" | "stalk" | "charge" | "flee";
 
 // ── پیش‌فرض‌های تیون (مرکزیت اینجا — سند §U1) ──
 /** شعاع مدار گشت دور بازیکن (متر) */
@@ -42,8 +42,26 @@ export const ENEMY_STALK_DELAY: Record<Exclude<Difficulty, "easy">, number> = {
   normal: 2.6,
   hard: 1.7,
 };
+
+/** فاز U2 — شارژ/cooldown پرتاب بر حسب دشواری (آسان هرگز نمی‌رسد — پهپاد خاموش) */
+export function enemyChargeS(difficulty: Difficulty): number {
+  return difficulty === "hard" ? ENEMY_CHARGE_S.hard : ENEMY_CHARGE_S.normal;
+}
+export function enemyThrowCd(difficulty: Difficulty): number {
+  return difficulty === "hard" ? ENEMY_THROW_CD.hard : ENEMY_THROW_CD.normal;
+}
 /** مدت گریز پس از برخورد گلوله (ثانیه) */
 export const ENEMY_FLEE_S = 2.8;
+/** فاز U2 — مدت شارژ تله‌گراف پیش از پرتاب قفس (ثانیه) */
+export const ENEMY_CHARGE_S: Record<Exclude<Difficulty, "easy">, number> = {
+  normal: 1.1,
+  hard: 0.75,
+};
+/** فاز U2 — cooldown پرتاب قفس پس از هر پرتاب (ثانیه — شمارش در فریم‌های FSM) */
+export const ENEMY_THROW_CD: Record<Exclude<Difficulty, "easy">, number> = {
+  normal: 9,
+  hard: 6,
+};
 
 /** ضریب سرعت FSM بر حسب دشواری × سبک کنترل — قانون سخت ① و ② سند */
 export function enemySpeedMult(difficulty: Difficulty, tap: boolean): number {
@@ -69,6 +87,10 @@ export interface EnemyState {
   calmT: number;
   /** زمان باقی‌ماندهٔ گریز (ثانیه) */
   fleeT: number;
+  /** فاز U2 — cooldown تا پرتاب بعدی قفس (ثانیه؛ صفر = آمادهٔ پرتاب) */
+  throwCd: number;
+  /** فاز U2 — پرچم یک‌بارمصرف «قفس پرتاب شد» — مصرف‌کننده: scene/drone در همان فریم */
+  justThrew: boolean;
   /** زاویهٔ رو به بازیکن (رادیان — برای رندر) */
   face: number;
 }
@@ -80,6 +102,10 @@ export interface EnemyInput {
   playerSpeed: number;
   speedMult: number;
   stalkDelay: number;
+  /** فاز U2 — مدت شارژ پرتاب (۰ = پرتاب خاموش — آسان هرگز نمی‌رسد) */
+  chargeS: number;
+  /** فاز U2 — cooldown پس از هر پرتاب (ثانیه) */
+  throwCd: number;
   dt: number;
   bounds: { minX: number; maxX: number; minZ: number; maxZ: number };
 }
@@ -96,8 +122,18 @@ export function createEnemyState(px: number, pz: number): EnemyState {
     t: 0,
     calmT: 0,
     fleeT: 0,
+    throwCd: 0,
+    justThrew: false,
     face: 0,
   };
+}
+
+/** فاز U2 — بازگشت تمیز به مدار گشت از موقعیت فعلی (بدون پرش ناگهانی) — الگوی مشترک سه گذار */
+export function enemyReturnToOrbit(st: EnemyState, px: number, pz: number): void {
+  st.phase = "patrol";
+  st.orbitAngle = Math.atan2(st.z - pz, st.x - px);
+  st.t = 0;
+  st.calmT = 0;
 }
 
 /** درخواست گریز فوری (برخورد گلوله — از index به‌واسطهٔ api پهپاد) */
@@ -109,12 +145,13 @@ export function enemyFlee(st: EnemyState): void {
 
 /**
  * گام FSM — جهش in-place روی st (فراخوانی هر فریم از useFrame پهپاد).
- * ترتیب تصمیم: گریز (تا تمام شود) → تعقیب (سکون) → گشت (مدار).
+ * ترتیب تصمیم: گریز (تا تمام شود) → تعقیب (سکون) → شارژ پرتاب قفس (U2) → گشت (مدار).
  */
 export function stepEnemy(st: EnemyState, inp: EnemyInput): void {
   const dt = Math.min(inp.dt, 0.05);
   const m = inp.speedMult;
   st.t += dt;
+  if (st.throwCd > 0) st.throwCd = Math.max(0, st.throwCd - dt); // فاز U2 — cooldown در فریم‌های FSM (فریز رایگان)
   const dx = st.x - inp.px;
   const dz = st.z - inp.pz;
   const dist = Math.hypot(dx, dz) || 0.0001;
@@ -132,24 +169,29 @@ export function stepEnemy(st: EnemyState, inp: EnemyInput): void {
     st.z += vz * dt;
     if (st.fleeT <= 0) {
       // بازگشت به مدار — زاویهٔ مدار از موقعیت فعلی ادامه می‌یابد (پرش ناگهانی ندارد)
-      st.phase = "patrol";
-      st.orbitAngle = Math.atan2(st.z - inp.pz, st.x - inp.px);
-      st.t = 0;
-      st.calmT = 0;
+      enemyReturnToOrbit(st, inp.px, inp.pz);
     }
   } else if (st.phase === "stalk") {
     if (inp.playerSpeed > ENEMY_MOVE_SPD) {
       // بازیکن راه افتاد — تعقیب شکست خورد؛ به مدار برمی‌گردد
-      st.phase = "patrol";
-      st.orbitAngle = Math.atan2(st.z - inp.pz, st.x - inp.px);
-      st.t = 0;
-      st.calmT = 0;
+      enemyReturnToOrbit(st, inp.px, inp.pz);
     } else if (dist > ENEMY_STOP_DIST) {
       const spd = Math.min(ENEMY_STALK_SPD * m, (dist - ENEMY_STOP_DIST) / dt || 0);
       st.x -= (dx / dist) * spd * dt;
       st.z -= (dz / dist) * spd * dt;
+    } else if (inp.chargeS > 0 && st.throwCd <= 0) {
+      // فاز U2 — به فاصلهٔ توقف رسید و آمادهٔ پرتاب است: شارژ تله‌گراف شروع می‌شود
+      st.phase = "charge";
+      st.t = 0;
     }
     // نزدیکِ توقف: شناور می‌ماند (فقط bob رندر) — تهدید حاضر ولی بدون برخورد بدنی
+  } else if (st.phase === "charge") {
+    // فاز U2 — شارژ متعهد: شناور می‌ماند (حتی اگر بازیکن راه افتاد — قانون ۴ §U2)
+    if (st.t >= inp.chargeS) {
+      st.justThrew = true; // مصرف‌کننده: scene/drone در همان فریم — پرتاب قفس
+      st.throwCd = inp.throwCd;
+      enemyReturnToOrbit(st, inp.px, inp.pz);
+    }
   } else {
     // patrol — مدار حول بازیکن + شمارش سکون
     st.orbitAngle += st.orbitDir * ENEMY_ORBIT_SPD * m * dt;

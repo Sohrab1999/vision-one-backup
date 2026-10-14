@@ -106,8 +106,14 @@ export interface SceneBridge {
   dodge: boolean;
   /** فاز F8 — شمارهٔ موج جاری (سرعت فرار و حرکت اهداف) */
   wave: number;
-  /** فاز U1 — فاز FSM پهپاد تعقیب‌گر (نوشتهٔ scene/drone در useFrame، خواندهٔ index هر ۲۰۰ms) — idle = پهپاد خاموش */
-  enemyPhase: "idle" | "patrol" | "stalk" | "flee";
+  /** فاز U1/U2 — فاز FSM پهپاد تعقیب‌گر (نوشتهٔ scene/drone در useFrame، خواندهٔ index هر ۲۰۰ms) — idle = پهپاد خاموش؛ charge = شارژ پرتاب قفس */
+  enemyPhase: "idle" | "patrol" | "charge" | "stalk" | "flee";
+  /** فاز U2 — ثانیه تا برخورد قفس واژه (نوشتهٔ scene/cage هر فریم؛ ۰ = قفسی در پرواز نیست) */
+  cageEta: number;
+  /** فاز U2 — پرچم یک‌بارمصرف «قفس به بازیکن خورد» (نوشتهٔ scene/cage، مصرف+پاک‌سازی index در interval) */
+  cageHit: boolean;
+  /** فاز U2 — پرچم یک‌بارمصرف «قفس خطا رفت» (همان الگوی cageHit — بدون جریمه) */
+  cageWhiff: boolean;
 }
 
 export interface BurstApi {

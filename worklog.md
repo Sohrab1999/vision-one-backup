@@ -3322,3 +3322,29 @@ Stage Summary:
 - قوانین سخت §U1 هر شش‌گانه اثبات یا بازبینی شد: ① آسان=خاموش (QA رفتاری) ② تپ=نصف سرعت (enemySpeedMult — تپ روی پهپاد هم گریز بدون جریمه در مسیر handleHit "drone") ③ تعقیب مشروط به سکون (شرط ENEMY_CALM_SPD/ENEMY_MOVE_SPD در FSM) ④ گریز با برخورد گلوله (EnemyApi.hit→enemyFlee؛ صفر امتیاز/جریمه) ⑤ فریز واقعی (frameloop never/always + هیچ تایمر جانبی در enemy/drone) ⑥ بدون برچسب متنی (بدنه تیره + چراغ کهربایی)
 - درس نشست: grep حساس به حرف بزرگ است — loadDifficulty در prefs.ts از دور اول بود ولی grep "difficulty" آن را نشان نداد؛ قبل از ادعای نقض قرارداد، grep -i بزنید
 - گام بعدی طبق سند: فاز U2 — زیرفازهای خودش را از §U2 سند بخوانید (سند هنوز §U2 تفصیلی ندارد؛ قبل از کد باید نگارش شود) — محدودیت «حداکثر یک فاز در هر نشست» رعایت شود
+
+---
+Task ID: 17
+Agent: main orchestrator (Z.ai Code)
+Task: فاز U2 «حملهٔ قفس واژه» — نگارش §U2 تفصیلی + اجرای سه زیرفاز (U2-00/01/02) + گیت‌ها + QA مرورگری + بستن اسناد
+
+Work Log:
+- طبق قانون سند (یک فاز در هر نشست؛ قبل از کد § کامل) ابتدا §U2 تفصیلی در docs/fps-upgrade-roadmap.md نگارش شد: ۳ زیرفاز + ۸ قوانین سخت + مشخصات فنی + ۷ معیار پذیرش
+- نقاط اتصال خوانده شد: hearts (heartsRef/setHearts/HEARTS=3)، handleHit (شاخه‌های drone/golden)، handleVolley (فیلتر drone)، interval رویدادگسستهٔ ۲۰۰ms (الگوی enemyPhase)، ریست startMission، Q_TIME_SHOOT=12/Q_TIME_TAP=15 (برای طراحی پنجرهٔ QA)، ارتفاع دوربین 1.7 (physics.ts) → هدف قفس 1.55
+- U2-00 (enemy.ts ۲۲۰خط + cage.ts ۱۱۵خط): حالت چهارم «charge» در FSM + throwCd/justThrew در EnemyState + enemyReturnToOrbit (استخراج منطق مشترک سه گذار) + جدول‌های ENEMY_CHARGE_S (۱٫۱/۰٫۷۵) و ENEMY_THROW_CD (۹/۶) + enemyChargeS/enemyThrowCd؛ cage.ts خالص: createCageState/stepCage (رویداد none/hit/whiff — برخورد شعاعی ۱٫۱۵م با موقعیت فعلی در هر فریم + گارد پایانی)/cageEta — پرواز خطی به نقطهٔ پرتاب (قانون ۳)، سرعت ۴٫۶×speedMult با کف ۱٫۴
+- U2-01 (scene/cage.tsx ~۲۰۰خط + drone.tsx): Cage با قفس سیمی octahedron کهربایی + دو torus مداری + هستهٔ درخشان (بدون برچسب — ADR-005)؛ CageApi.{launch,destroy} الگوی BurstApi؛ پرتاب صف‌شده (pending ref) مصرف در useFrame؛ registry id:"cage" با add/remove گاردگذاری‌شده (inRegistry)؛ پرچم‌های یک‌بارمصرف cageHit/cageWhiff روی bridge؛ deactivateCage تابع ماژول‌سطح؛ writeCageEta/flagCageHit/flagCageWhiff — الگوی writeEnemyPhase (ADR-001 — رفع خطای react-hooks/immutability)؛ drone.tsx: chargeS/throwCd در EnemyInput، مصرف justThrew → cageApi.launch (هدف = pos بازیکن/1.55)، چراغ تندترین در charge (90ms) + لرزش ظریف، آسان → chargeS=0 (دفاع عمقی قانون ①)
+- types.ts: enemyPhase + "charge"؛ bridge += cageEta/cageHit/cageWhiff (افزودنی)
+- U2-02 (index.tsx ~۲,۱۶۰خط + setup-panel): state cageEta + شمارنده‌های cageThrown/Downed/Hits (ref) + handleCageLaunch (stable، buzz light)؛ handleHit شاخهٔ "cage" (destroy گارددار → setLiveMsg «منهدوم کردی»، صفر امتیاز)؛ handleVolley فیلتر cage؛ interval: مصرف cageHit (❤−۱ + صدا/لرزش + finishRef در صفر قلب — مسیر مستقل سؤال)، مصرف cageWhiff («خطا رفت — جابه‌جا شدی»)، setCageEta با گارد تغییر (بدون رندر زائد)؛ enemyStalking = stalk||charge؛ چیپ هشدار قرمز HUD (Badge در سلاح / دکمهٔ min-h-11 قابل‌تپ در تپ‌ساده با aria-label کامل) + نشانگر «◆ قفس X» در نوار تمام‌صفحه؛ ریست کامل شمارنده‌ها/پرچم‌ها در startMission؛ detail.{cageThrown,cageDowned,cageHits} افزودنی؛ گام آموزش هفتم «پهپاد شناسایی و قفس واژه» در TUTORIAL_STEPS (آموزش ۳ دفاع)
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (یک خطای BuzzPattern "medium" → "light" اصلاح شد) · bun run lint = ۰/۰ ✓ (یک react-hooks/immutability روی جهش مستقیم bridge در cage.tsx → توابع ماژول‌سطح)
+- QA مرورگری (agent-browser، درس eval واحد رعایت شد): ناوبری قفسه→ویژن وان→هاب→شوتر→رد آموزش ✓
+  • عادی (بج غیرفعال): تایم‌لاین ۱۱ ثانیه‌ای eval واحد — t=1.9 بج تعقیب + اعلام پهپاد · t=4.6 چیپ «قفس واژه» + اعلام پرتاب · t=4.8 پهپاد به مدار برگشت · t=5.1 برخورد: اعلام «قفس واژه به تو خورد — یک ❤ کم شد (سؤال دست‌نخورده است)» · پرتاب دوم در پنجره رخ نداد (cooldown ✓) · تایم‌اوت سؤال در t=10.8 جدا ادامه یافت (مسیر مستقل ✓)
+  • تپ ساده × عادی: eval نظرسنجی ۵۰ms → چیپ‌دکمه در t=6.3 (پرتاب دیرتر — سرعت نصف ✓) → کلیک → «قفس واژه را منهدم کردی — تهدید خنثی شد!» و قلب‌ها ۳/۳ ماند (نجات ❤ بدون امتیاز ✓)
+  • آسان: ۹ ثانیه نمونه‌برداری — صفر بج تعقیب و صفر چیپ (قانون ① ✓)
+  • «مرور ۱ خطا» در صفحهٔ نتیجه = فقط خطای سؤال (قفس به wrongRef نمی‌رود ✓) · تله‌متری level:"word-tap:high" دست‌نخورده (ADR-006) · attempts=200 · صفر error در dev.log
+  • اسکرین‌شات‌ها: qa-shots/t17-cage-chip.png (قلب ۲/۳ پس از برخورد) و **t17-cage-chip5/6.png (چیپ قرمز با شمارش معکوس زندهٔ ۱٫۶→۰٫۷ + دکمهٔ تپ)** — تکنیک: eval نظرسنجی که در لحظهٔ ظهور چیپ برمی‌گردد + رگبار ۳ اسکرین‌شات پشت‌سرهم
+- اسناد: roadmap → نسخه ۱.۳ (U2 ✅، U3 ⬅️ جاری، تیک ۷ معیار با اعداد QA، تاریخچه) · fps/README.md → +۲ ردیف (cage.ts، scene/cage.tsx) + به‌روزرسانی enemy/drone + قرارداد Attempt با cage* + ردیف قرارداد دشمن زنده (U1/U2)
+Stage Summary:
+- 🏁 فاز U2 «حملهٔ قفس واژه» بسته شد — میدان اکنون یک چرخهٔ تهدید کامل دارد: گشت → تعقیب → شارژ تله‌گراف → پرتاب قفس → (دفاع: جابه‌جایی/شکار قفس/شکار پهپاد) → cooldown
+- توزیع کد فاز: cage.ts ۱۱۵ (پرواز خالص) + scene/cage.tsx ~۲۰۰ (رندر/api) + enemy.ts ۲۲۰ (FSM چهارحالته) + سیم‌کشی index + گام آموزش هفتم — Attempt فقط افزودنی، bridge فقط افزودنی
+- درس فنی: ① react-hooks/immutability جهش props مشتق‌شده از bridge.current را در useFrame هم می‌گیرد — الگوی تابع ماژول‌سطح (writeEnemyPhase/writeCageEta) اجباری است ② innerText.includes برای چیپ گمراه‌کننده است (پیام aria-live هم همان متن را دارد) — تشخیص چیپ باید querySelector روی خود دکمه/بج باشد ③ برای اسکرین‌شات پدیده‌های کوتاه‌عمر: eval مسدودساز که در لحظهٔ رویداد برمی‌گردد + رگبار اسکرین‌شات در همان دستور bash
+- گام بعدی طبق سند: فاز U3 «پناهگاه و خط دید» — سنگرها خط دید قطع می‌کنند و raycast «آیا مرا می‌بیند؟» به FSM اضافه می‌شود؛ §U3 تفصیلی ندارد → ابتدا نگارش، بعد کد (حداکثر یک فاز در نشست)

@@ -143,6 +143,7 @@ import {
   Pause,
   Play,
   Radar,
+  ShieldAlert,
   RotateCcw,
   SlidersHorizontal,
   Star,
@@ -267,6 +268,7 @@ import {
   type GoldenSpec,
 } from "./scene/targets";
 import { HunterDrone, type EnemyApi } from "./scene/drone";
+import { Cage, type CageApi } from "./scene/cage";
 import { TouchJoystick } from "./scene/input";
 import { useFpsPrefs } from "./use-fps-prefs";
 import { SetupPanel, TUTORIAL_STEPS } from "./setup-panel";
@@ -353,8 +355,10 @@ export function FpsShooterGame() {
   const [goldenActive, setGoldenActive] = useState(false);
   const [goldenLeft, setGoldenLeft] = useState(0);
   const [goldenSpec, setGoldenSpec] = useState<GoldenSpec | null>(null);
-  // ── فاز U1 — پهپاد تعقیب‌گر: بج هشدار حین تعقیب ──
+  // ── فاز U1 — پهپاد تعقیب‌گر: بج هشدار حین تعقیب/شارژ ──
   const [enemyStalking, setEnemyStalking] = useState(false);
+  // ── فاز U2 — قفس واژه: ثانیه تا برخورد (۰ = قفسی در پرواز نیست — چیپ خاموش) ──
+  const [cageEta, setCageEta] = useState(0);
 
   // ── فاز G2-e — موتور کمبو مشترک کیت (G1-09) ──
   // حالت bonus = دقیقاً قانون فعلی شوتر: gained = ۱۰ + min(کمبو−۱, ۶) × ۲ (امتیاز یکسان می‌ماند)
@@ -447,12 +451,21 @@ export function FpsShooterGame() {
     dodge: false,
     wave: 1,
     enemyPhase: "idle",
+    // فاز U2 — قفس واژه: بدون پرواز و بدون رویداد در شروع
+    cageEta: 0,
+    cageHit: false,
+    cageWhiff: false,
   });
   const meshRegistry = useRef<THREE.Mesh[]>([]);
   const burstApi = useRef<BurstApi | null>(null);
   // فاز U1 — api پهپاد تعقیب‌گر (الگوی BurstApi) + آخرین فاز اعلام‌شدهٔ FSM
   const enemyApiRef = useRef<EnemyApi | null>(null);
-  const enemyPhaseRef = useRef<"idle" | "patrol" | "stalk" | "flee">("idle");
+  const enemyPhaseRef = useRef<"idle" | "patrol" | "charge" | "stalk" | "flee">("idle");
+  // فاز U2 — api قفس واژه + شمارنده‌های تله‌متری (خروجی فقط در Attempt)
+  const cageApiRef = useRef<CageApi | null>(null);
+  const cageThrownRef = useRef(0);
+  const cageDownedRef = useRef(0);
+  const cageHitsRef = useRef(0);
   // فاز F10-ب — استخر/کارتابل زنجیره: نوع ChainSeed هم اضافه می‌شود
   const deckRef = useRef<Array<VocabEntry | QuizQuestionSeed | ChainSeed>>([]);
   const deckIdxRef = useRef(0);
@@ -851,6 +864,10 @@ export function FpsShooterGame() {
           weapon: weaponRef.current,
           // فاز U1-00 — افزودنی: درجهٔ دشواری مأموریت (امضای Attempt دست‌نخورده)
           difficulty: difficultyRef.current,
+          // فاز U2 — افزودنی: تله‌متری قفس واژه (پرتاب/منهدوم/برخورد)
+          cageThrown: cageThrownRef.current,
+          cageDowned: cageDownedRef.current,
+          cageHits: cageHitsRef.current,
         },
       });
     }
@@ -925,16 +942,33 @@ export function FpsShooterGame() {
   }, [pauseGame, resume, setExitAskSafe, clearTimers]);
 
   // ── پاسخ به شلیک/تپ — فاز G2-e: بازخورد سه‌کاناله فقط در لحظهٔ رویداد برخورد ──
+  // فاز U2 — رویداد پرتاب قفس از scene/cage (stable — فقط ref/state setter)
+  const handleCageLaunch = useCallback(() => {
+    cageThrownRef.current += 1;
+    setLiveMsg("پهپاد قفس واژه پرتاب کرد — منهدمش کن یا جابه‌جا شو!");
+    buzz("light");
+  }, []);
   const handleHit = useCallback(
     (id: string | null) => {
       if (overRef.current || id === null) return;
       if (pausedRef.current || exitAskRef.current) return;
       // فاز U1 — شکار بدنهٔ پهپاد تعقیب‌گر: گریز دشمن (خارج از چرخهٔ سؤال — بدون امتیاز/جریمه؛ قانون ④ سند §U1)
+      // حین شارژ U2 همین مسیر پرتاب را لغو می‌کند (قانون ۴ §U2 — پهپاد متعهد شده ولی هنوز پرتاب نکرده)
       if (id === "drone") {
         playSound("hit");
         buzz("light");
         enemyApiRef.current?.hit();
         setLiveMsg("پهپاد شناسایی متخاصم عقب کشید!");
+        return;
+      }
+      // فاز U2 — شکار قفس واژه در پرواز: منهدم + نجات ❤ (بدون امتیاز — قانون ۶ §U2)
+      if (id === "cage") {
+        if (cageApiRef.current?.destroy()) {
+          cageDownedRef.current += 1;
+          playSound("hit");
+          buzz("light");
+          setLiveMsg("قفس واژه را منهدم کردی — تهدید خنثی شد!");
+        }
         return;
       }
       // فاز F8 — شکار هدف طلایی: بونوس خارج از چرخهٔ سؤال (نه پاسخ، نه قلب، نه جلو رفتن)
@@ -1070,10 +1104,12 @@ export function FpsShooterGame() {
   });
   const handleVolley = useCallback((ids: Array<string | null>) => {
     const raw = [...new Set(ids.filter((x): x is string => x !== null))];
-    // فاز U1 — برخورد پهپاد در والی پمپ: اول گریز دشمن، سپس تصمیم بقیهٔ برخوردها بدون او
+    // فاز U1/U2 — برخورد پهپاد/قفس در والی پمپ: خارج از چرخهٔ سؤال تصمیم بقیهٔ برخوردها
     const droneHit = raw.includes("drone");
-    const hits = droneHit ? raw.filter((x) => x !== "drone") : raw;
+    const cageShot = raw.includes("cage");
+    const hits = raw.filter((x) => x !== "drone" && x !== "cage");
     if (droneHit) handleHitRef.current("drone");
+    if (cageShot) handleHitRef.current("cage");
     if (hits.length === 0) return; // والی خالی = خطا رفتن — بی‌جریمه (الگوی شلیک به خالی)
     const cur = qRef.current;
     // فاز F10-ب — زنجیره: والی فقط در بر دارندهٔ واژهٔ انتظاری حساب می‌شود (یک‌بار؛ تصمیم در chain.ts)
@@ -1145,13 +1181,32 @@ export function FpsShooterGame() {
     const iv = window.setInterval(() => {
       if (overRef.current) return;
       if (pausedRef.current) return; // فریز حین توقف — جبران در onChange ادامه
-      // فاز U1 — اعلام گذارهای FSM پهپاد (روی رویداد گسسته — نه هر فریم)
+      // فاز U1 — اعلام گذارهای FSM پهپاد (روی رویداد گسسته — نه هر فریم)؛ شارژ U2 هم «تعقیب فعال» است
       const ep = bridge.current.enemyPhase;
       if (ep !== enemyPhaseRef.current) {
         enemyPhaseRef.current = ep;
-        setEnemyStalking(ep === "stalk");
+        setEnemyStalking(ep === "stalk" || ep === "charge");
         if (ep === "stalk") setLiveMsg("پهپاد شناسایی متخاصم نزدیک می‌شود — یا حرکت کن یا شکارش کن!");
       }
+      // ── فاز U2 — قفس واژه: رویدادهای یک‌بارمصرف + شمارش معکوس چیپ (همه در این interval رویدادگسسته) ──
+      if (bridge.current.cageHit) {
+        bridge.current.cageHit = false;
+        cageHitsRef.current += 1;
+        heartsRef.current -= 1;
+        setHearts(heartsRef.current);
+        setCageEta(0);
+        playSound("wrong");
+        buzz("error");
+        setLiveMsg("قفس واژه به تو خورد — یک ❤ کم شد (سؤال دست‌نخورده است)");
+        if (heartsRef.current <= 0) later(() => finishRef.current(), HIT_FREEZE_MS);
+      }
+      if (bridge.current.cageWhiff) {
+        bridge.current.cageWhiff = false;
+        setCageEta(0);
+        setLiveMsg("قفس واژه خطا رفت — جابه‌جا شدی!");
+      }
+      const eta = Math.round((bridge.current.cageEta || 0) * 10) / 10;
+      setCageEta((prev) => (prev === eta ? prev : eta)); // setState فقط روی تغییر — بدون رندر زائد
       // فاز F8 — شمارش معکوس فرصت هدف طلایی (روی رویداد گسسته — نه هر فریم)
       if (goldenUntilRef.current > 0) {
         setGoldenLeft(Math.max(0, Math.ceil((goldenUntilRef.current - performance.now()) / 1000)));
@@ -1165,7 +1220,7 @@ export function FpsShooterGame() {
       if (left <= 0) timeoutRef.current();
     }, 200);
     return () => window.clearInterval(iv);
-  }, [phase]);
+  }, [phase, later]);
 
   // ── ورودی: Pointer Lock دسکتاپ + درگ/تپ لمسی + کیبورد ۱..۴ ──
   // فاز G2-e: گارد pausedRef/exitAskRef روی همهٔ مسیرها + صدای شلیک فقط در رویداد شلیک.
@@ -1475,6 +1530,14 @@ export function FpsShooterGame() {
     bridge.current.enemyPhase = "idle";
     enemyPhaseRef.current = "idle";
     setEnemyStalking(false);
+    // فاز U2 — قفس واژه از نو: شمارنده‌ها + چیپ + پرچم‌های bridge
+    cageThrownRef.current = 0;
+    cageDownedRef.current = 0;
+    cageHitsRef.current = 0;
+    setCageEta(0);
+    bridge.current.cageEta = 0;
+    bridge.current.cageHit = false;
+    bridge.current.cageWhiff = false;
     goldenUntilRef.current = 0;
     goldenPendingRef.current = null;
     if (goldenTimerRef.current !== null) {
@@ -1750,6 +1813,27 @@ export function FpsShooterGame() {
                 تعقیب!
               </Badge>
             )}
+            {/* فاز U2 — هشدار قفس واژه: شمارش معکوس تا برخورد (تپ ساده = دکمهٔ منهدم لمسی — قانون ۲ §U2) */}
+            {cageEta > 0 &&
+              (tapMode ? (
+                <button
+                  type="button"
+                  onClick={() => handleHitRef.current("cage")}
+                  aria-label={`قفس واژه در پرواز — ${faNum(Math.round(cageEta * 10) / 10)} ثانیه تا برخورد؛ برای منهدم تپ کن`}
+                  className="inline-flex min-h-11 animate-pulse items-center gap-1 rounded-full border border-red-500/70 bg-red-500/15 px-2.5 py-1 text-[11px] font-black text-red-600 motion-reduce:animate-none dark:text-red-400"
+                >
+                  <ShieldAlert size={11} />
+                  قفس واژه — {faNum(Math.round(cageEta * 10) / 10)}s — تپ!
+                </button>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="gap-1 border-red-500/60 bg-red-500/10 px-2 py-1 text-[11px] font-black text-red-600 motion-reduce:animate-none dark:text-red-400 animate-pulse"
+                >
+                  <ShieldAlert size={11} />
+                  قفس واژه — {faNum(Math.round(cageEta * 10) / 10)} ثانیه
+                </Badge>
+              ))}
             {!tapMode && (
               <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-[12px]">
                 {reloading ? (
@@ -1840,6 +1924,15 @@ export function FpsShooterGame() {
                 registry={meshRegistry}
                 burstApi={burstApi}
                 apiRef={enemyApiRef}
+                cageApi={cageApiRef}
+              />
+              {/* فاز U2 — قفس واژهٔ پرتابی (پرتاب از پهپاد؛ پرچم‌ها روی bridge) */}
+              <Cage
+                bridge={bridge}
+                registry={meshRegistry}
+                burstApi={burstApi}
+                apiRef={cageApiRef}
+                onLaunch={handleCageLaunch}
               />
               <Burst apiRef={burstApi} count={qualityLow ? BURST_LOW : weak ? BURST_WEAK : BURST_FULL} />
               <World bridge={bridge} registry={meshRegistry} burstApi={burstApi} />
@@ -1874,6 +1967,7 @@ export function FpsShooterGame() {
                 <span aria-hidden className="mx-0.5 h-3.5 w-px bg-white/25" />
                 <span className="text-teal-300">موج {faNum(wave)}</span>
                 {enemyStalking && <span className="text-amber-300">◆ تعقیب</span>}
+                {cageEta > 0 && <span className="text-red-300">◆ قفس {faNum(Math.round(cageEta * 10) / 10)}</span>}
                 {goldenActive && <span className="text-amber-300">★ {faNum(goldenLeft)}</span>}
               </div>
             )}
