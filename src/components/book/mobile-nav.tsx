@@ -12,7 +12,8 @@
  * برای ۱۳ مقصد بقیه + ردیف اقدامات کم‌تکرار (نصب PWA / پوسته) — پروگرسیو دیسکلوژر.
  *  - min-h 56px هر زبانه، safe-area-inset-bottom رعایت می‌شود
  *  - هنگام فوکوس روی input/textarea (کیبورد نرم) خودکار مخفی می‌شود
- *  - در md+ رندر نمی‌شود (هدر قرصی md..xl و ریل xl+ برقرارند)
+ *  - در lg+ رندر نمی‌شود (فاز ۱ نقشه راه کیفیت: تبلت ۷۶۸-۱۰۲۳ هم ناوبری لمسی شست‌دست
+ *    می‌گیرد، نه موبایل کشیده‌شده؛ هدر قرصی lg..xl و ریل xl+ برقرارند)
  */
 
 import { useEffect, useState } from "react";
@@ -78,7 +79,7 @@ export function MobileNav({
     <nav
       aria-label="ناوبری پایین"
       className={cn(
-        "fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ease-out md:hidden",
+        "fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ease-out lg:hidden",
         keyboardOpen && "translate-y-full",
       )}
     >

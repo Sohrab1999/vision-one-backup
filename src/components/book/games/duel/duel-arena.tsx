@@ -644,7 +644,8 @@ export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
   );
 
   return (
-    <div className="flex max-h-[75vh] flex-col gap-3 overflow-y-auto pl-0.5" aria-label="دوئل آنلاین">
+    // فاز ۱ نقشه راه کیفیت — کران عرض: در دیالوگ پهن lg (max-w-4xl) محتوا تا 672px وسط‌چین می‌ماند
+    <div className="mx-auto flex max-h-[75vh] w-full max-w-2xl flex-col gap-3 overflow-y-auto pl-0.5" aria-label="دوئل آنلاین">
       <p role="status" aria-live="polite" className="sr-only">
         {liveMsg}
       </p>
@@ -953,11 +954,11 @@ export function DuelArena({ onLockChange, onExit }: DuelArenaProps) {
                           {q.text}
                         </p>
                         {mine === undefined || mine === null ? (
-                          <Badge variant="outline" className="shrink-0 text-[9px]">بی‌پاسخ</Badge>
+                          <Badge variant="outline" className="shrink-0 text-[10px]">بی‌پاسخ</Badge>
                         ) : answeredCorrectly ? (
-                          <Badge className="shrink-0 bg-emerald-500/15 text-[9px] text-emerald-700 dark:text-emerald-300">درست</Badge>
+                          <Badge className="shrink-0 bg-emerald-500/15 text-[10px] text-emerald-700 dark:text-emerald-300">درست</Badge>
                         ) : (
-                          <Badge variant="outline" className="shrink-0 border-rose-500/40 text-[9px] text-rose-600">غلط</Badge>
+                          <Badge variant="outline" className="shrink-0 border-rose-500/40 text-[10px] text-rose-600">غلط</Badge>
                         )}
                       </div>
                       <div className="grid grid-cols-2 gap-1.5">

@@ -192,34 +192,43 @@ export function AppHeader({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* ناوبری دسکتاپ — فقط md تا lg؛ از xl به بعد ریل کناری جانشین می‌شود
-            (۱۸ قرص در هدر سرریز می‌کرد و ۸ مقصد عملاً نامرئی بود) */}
+        {/* ناوبری قرصی هدر — فقط lg تا xl (1024-1279)؛ تبلت ۷۶۸-۱۰۲۳ ناوبری پایین دارد و از xl ریل کناری جانشین می‌شود
+            افق‌محوی دو لبه: نشان می‌دهد نوار قابل‌اسکرول است (قبلاً سرریز نامرئی بود — فاز ۱ نقشه راه کیفیت) */}
         {hasBook && (
-          <nav className="hidden md:flex xl:hidden flex-1 min-w-0 items-center gap-1 overflow-x-auto px-2 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="ناوبری اصلی">
-            {NAV.map((item) => {
-              const active = view === item.id || (view === "chapter" && item.id === "contents");
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => onNavigate(item.id)}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-[13px] font-medium transition-all",
-                    active
-                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                  )}
-                >
-                  <item.icon size={15} />
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
+          <div className="relative hidden min-w-0 flex-1 lg:block xl:hidden">
+            <nav
+              className="flex w-full min-w-0 items-center gap-1 overflow-x-auto px-2 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              aria-label="ناوبری اصلی — قابل اسکرول افقی"
+            >
+              {NAV.map((item) => {
+                const active = view === item.id || (view === "chapter" && item.id === "contents");
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => onNavigate(item.id)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-[13px] font-medium transition-all",
+                      active
+                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    )}
+                  >
+                    <item.icon size={15} />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </nav>
+            {/* افق‌محوی لبهٔ شروع (راست در RTL) و پایان (چپ) — ثابت، pointer-events-none، روی محتوا نمی‌آید */}
+            <div aria-hidden className="pointer-events-none absolute inset-y-0 start-0 z-10 w-8 bg-gradient-to-l from-background to-transparent" />
+            <div aria-hidden className="pointer-events-none absolute inset-y-0 end-0 z-10 w-8 bg-gradient-to-r from-background to-transparent" />
+          </div>
         )}
 
-        <div className="flex-1 md:hidden" />
+        {/* فاصله‌گذار اکشن‌ها: <lg بدون قرص (ناوبری پایین) → اکشن‌ها به لبه رانده شوند */}
+        <div className="flex-1 lg:hidden" />
 
         {/* اکشن‌های ثابت — هرگز از هدر بیرون نمی‌زنند */}
         <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">

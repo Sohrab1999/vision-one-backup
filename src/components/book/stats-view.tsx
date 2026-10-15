@@ -601,7 +601,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                           </span>
                           <p className="mt-1.5 flex items-center justify-center gap-1 truncate text-[13px] font-black">
                             {row.name}
-                            {isMe && <span className="text-[9px] font-bold text-primary">(تو)</span>}
+                            {isMe && <span className="text-[10px] font-bold text-primary">(تو)</span>}
                           </p>
                           <p className={cn("mt-1 font-black leading-none", styles.h)}>
                             {metric.value}
@@ -635,7 +635,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                               </span>
                               <p className="min-w-0 flex-1 truncate font-bold">
                                 {row.name}
-                                {isMe && <span className="mr-1 text-[9px] font-bold text-primary">(تو)</span>}
+                                {isMe && <span className="mr-1 text-[10px] font-bold text-primary">(تو)</span>}
                               </p>
                               <span className={cn("shrink-0", leaderSort === "quizzes" ? "font-black text-primary" : "text-muted-foreground")}>
                                 {row.quizzes.toLocaleString("fa-IR")} آزمون

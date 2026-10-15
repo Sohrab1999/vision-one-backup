@@ -62,7 +62,7 @@ export function GameShell({
   // تم فصلی (G3-06) — یک‌بار در mount؛ "default" = دقیقاً رفتار و کلاس‌های قبلی
   const season = useMemo(() => getSeasonTheme(), []);
   return (
-    <div role="group" aria-label={`بازی ${title}`} className="mx-auto max-w-2xl space-y-4 rise-in xl:max-w-4xl">
+    <div role="group" aria-label={`بازی ${title}`} className="mx-auto max-w-2xl space-y-4 rise-in md:max-w-3xl lg:max-w-4xl">
       {/* نوار جشن مهرگان — فقط در تم mehregan رندر می‌شود (ظریف، بدون دست‌زدن به فاصله‌های پیش‌فرض) */}
       {season === "mehregan" && (
         <div

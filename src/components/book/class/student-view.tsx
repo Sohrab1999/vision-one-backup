@@ -45,7 +45,8 @@ export function StudentView() {
   const liveFinished = liveEnded || state?.live?.status === "finished";
 
   return (
-    <div className="space-y-4" aria-label="نمای دانش‌آموز">
+    // فاز ۱ نقشه راه کیفیت — تنگ‌کردن محور در تبلت: استک ۵ کارت در باند md..lg تمام‌عرض کشیده نمی‌شود
+    <div className="mx-auto max-w-2xl space-y-4" aria-label="نمای دانش‌آموز">
       {/* سرصفحه */}
       <div className="rise-in flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
         <div className="min-w-0 space-y-0.5">

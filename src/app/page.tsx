@@ -152,7 +152,8 @@ function App() {
 
       <AppHeader view={effectiveView} onNavigate={navigate} />
 
-      {/* ناوبری پایین موبایل (Task 23) — جانشین نوار قرصی هدر؛ فقط <md */}
+      {/* ناوبری پایین لمسی (Task 23 + فاز ۱ نقشه راه کیفیت) — جانشین نوار قرصی هدر؛ فقط <lg
+          تبلت ۷۶۸-۱۰۲۳ هم ناوبری پایین می‌گیرد (لمسی است)؛ قرص‌های هدر فقط lg..xl */}
       {hasData && <MobileNav view={effectiveView} onNavigate={navigate} />}
 
       <main
@@ -194,10 +195,10 @@ function App() {
 
       <AppFooter />
 
-      {/* فاصله‌ی پایین برای ناوبری موبایل — فوتر زیر نوار پایین دفن نشود */}
+      {/* فاصله‌ی پایین برای ناوبری پایین لمسی (<lg) — فوتر زیر نوار دفن نشود */}
       <div
         aria-hidden
-        className="h-[calc(57px+env(safe-area-inset-bottom))] shrink-0 md:hidden"
+        className="h-[calc(57px+env(safe-area-inset-bottom))] shrink-0 lg:hidden"
       />
 
       {/* فاز ۶ — جشن گیمیفیکیشن: توست‌های XP/سطح/نشان + کانفتی (سراسری) */}
