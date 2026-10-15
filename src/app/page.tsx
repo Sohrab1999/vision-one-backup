@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { AppHeader, type ViewId } from "@/components/book/app-header";
+import { DesktopSidebar } from "@/components/book/desktop-sidebar";
 import { AppFooter } from "@/components/book/app-footer";
 import { BookshelfView } from "@/components/book/bookshelf-view";
 import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
@@ -73,6 +74,19 @@ function BookDataLoading() {
   );
 }
 
+// ترتیب ناوبری برای میان‌برهای Alt+1..9 (۹ مقصد اول سایدبار دسکتاپ)
+const NAV_SHORTCUT: ViewId[] = [
+  "home",
+  "contents",
+  "vocab",
+  "flashcards",
+  "review",
+  "notebook",
+  "grammar",
+  "quiz",
+  "games",
+];
+
 function App() {
   const { bookId, data } = useBook();
   // null = هنوز کاربر ناوبری نکرده — نمای اولیه از کتاب فعال مشتق می‌شود
@@ -88,6 +102,30 @@ function App() {
   // اجرا می‌شود نه همزمان در effect، پس با react-hooks v6 سازگار است.
   useEffect(() => registerNavHandler((v) => setView(v)), []);
 
+  // میان‌برهای کیبورد دسکتاپ: Alt+1..9 → پرش مستقیم به بخش‌های پرکاربرد
+  // (فقط Alt خالص — ترکیب با Ctrl/Meta یا تایپ در فیلدها هرگز مداخله نمی‌کند)
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      const idx = Number(e.key) - 1;
+      if (!Number.isInteger(idx) || idx < 0 || idx >= NAV_SHORTCUT.length) return;
+      const target = document.activeElement;
+      if (
+        target instanceof HTMLElement &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      )
+        return;
+      e.preventDefault();
+      setView(NAV_SHORTCUT[idx]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   function navigate(v: ViewId) {
     setView(v);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -99,10 +137,25 @@ function App() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col xl:pr-[72px]">
+      {/* پرش‌لینک دسترس‌پذیری (WCAG 2.4.1) — اولین تمرکز Tab */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:right-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-primary-foreground focus:shadow-lg"
+      >
+        پرش به محتوای اصلی
+      </a>
+
+      {/* ریل ناوبری دسکتاپ — فقط xl+؛ زیر آن هدر قرصی کار می‌کند */}
+      {hasData && <DesktopSidebar view={effectiveView} onNavigate={navigate} />}
+
       <AppHeader view={effectiveView} onNavigate={navigate} />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-3 py-6 sm:px-4">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-6xl flex-1 px-3 py-6 focus:outline-none sm:px-4 xl:max-w-7xl"
+      >
         {/* انیمیشن نرم انتقال بین نماها و کتاب‌ها (فاز ۷ — Framer Motion):
             کلید شامل bookId است، پس سوییچ کتاب هم موجب حرکت جداگانه می‌شود */}
         <motion.div

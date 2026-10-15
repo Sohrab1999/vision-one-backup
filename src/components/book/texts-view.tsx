@@ -74,7 +74,7 @@ export function ReadingCard({
   showFa?: boolean;
 }) {
   return (
-    <Card>
+    <Card className="mx-auto w-full max-w-3xl">
       <CardContent className="p-5 space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>

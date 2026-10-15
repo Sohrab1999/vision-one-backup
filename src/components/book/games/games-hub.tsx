@@ -418,7 +418,7 @@ export function GamesHub() {
   }
 
   return (
-    <section className="mx-auto max-w-3xl space-y-5" aria-label="آزمایشگاه بازی‌های فکری">
+    <section className="mx-auto max-w-3xl space-y-5 lg:max-w-5xl" aria-label="آزمایشگاه بازی‌های فکری">
       {/* سربرگ */}
       <Card className="rise-in overflow-hidden border-primary/20 bg-gradient-to-bl from-primary/10 via-card to-card">
         <CardContent className="space-y-3 p-6">
@@ -476,8 +476,8 @@ export function GamesHub() {
         </div>
       </button>
 
-      {/* کارت بازی‌ها */}
-      <div className="grid gap-3 sm:grid-cols-2">
+      {/* کارت بازی‌ها — دسکتاپ: ۳ ستون (۱۵ بازی = ۵ ردیف منظم) */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {[...GAMES, ...GAMES_EXTRA].map((g, i) => (
           <button
             key={g.key}

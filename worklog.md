@@ -3436,3 +3436,30 @@ Stage Summary:
 - توزیع کد فاز: audio.ts ۲۰۷ (خالص) + prefs +۷ + types +۹ + scene/{drone,cage,boss} +۶/+۶/+۶ + index ~+۶۰ (کمکی sourceFieldPan + بلوک‌های رویداد) + setup-panel +۱۵ + use-fps-prefs +۱۴ · بدون هیچ کلید detail جدید (ADR-002) و فقط یک کلید prefs افزودنی (ADR-003)
 - مهم‌ترین شواهد: دنبال‌کردن زندهٔ جهت پهپاد توسط پن (−۰٫۲ چپ → +۰٫۸۵ راست در دو موج متوالی) · توالی دقیق detected→charge→throw در هر چرخه · خاموشی کامل میدان با سوییچ (صفر رویداد در ۲۰ث) · ۴۸٫۹fps (صفر هزینه)
 - گام بعدی طبق سند: فاز U6 «نقشهٔ پنجم — طاق عمودی» (M — چیدمان دوطبقه با گذر بالا/پایین + حمله از لایهٔ عمودی) — §U6 تفصیلی ندارد → ابتدا نگارش، بعد کد (حداکثر یک فاز در نشست)؛ گزینه‌های موازی: U7 (بقا M) یا U8 (تله‌متری دشمن S)
+---
+Task ID: 21
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «باکرون جاب بهبود رو ادامه بده» — اجرای کامل بهینه‌سازی دسکتاپ (Laptop/Desktop) طبق درخواست ممیزی UI/UX قبلی: کشف شد که کارهای نشست قبل (خلاصهٔ جلسه) هرگز روی دیسک نوشته نشده بودند → کل بسته از صفر بازسازی شد
+
+Work Log:
+- کشف بحرانی: خلاصهٔ نشست قبل ادعای ساخت desktop-sidebar.tsx و ویرایش‌های page.tsx را داشت اما هیچ‌کدام روی دیسک نبود (فایل غایب، grep خالی) → بازسازی کامل از صفر
+- سایدبار دسکتاپ (فایل جدید src/components/book/desktop-sidebar.tsx): ریل ثابت راست RTL فقط xl+ (۱۲۸۰+)، ۷۲px جمع‌شده → ۲۳۶px باز، overlay بدون جابه‌جایی محتوا، ۱۸ آیتم NAV مشترک با هدر (export NAV از app-header)، aria-current، title میان‌بر Alt+1..9، راهنمای کیبورد پایین ریل
+- کشف فنی مهم: کلاس hover: تیلویند ۴ داخل @media (hover:hover) کامپایل می‌شود و در محیط بدون اشاره‌گر (headless) بی‌اثر است → باز/بسته شدن به state JS منتقل شد (onMouseEnter/onMouseLeave/onFocus/onBlur با relatedTarget) — رفتار یکنواخت همه‌جا
+- page.tsx: wrapper با xl:pr-[72px] (آفست صفحه)، skip-link «پرش به محتوای اصلی» (sr-only → focus:fixed، WCAG 2.4.1)، mount شرطی سایدبار با hasData، main با id="main-content" tabIndex={-1} و ارتقای عرض xl:max-w-7xl، میان‌برهای کیبورد Alt+1..9 → ۹ مقصد اول NAV (گارد INPUT/TEXTAREA/contentEditable، بدون Ctrl/Meta/Shift)
+- app-header.tsx: ناوبری قرصی دسکتاپ اکنون md..xl:hidden (از xl ریل جانشین می‌شود) — رفع سرریز ۱۸ قرص که ۸ مقصد را نامرئی می‌کرد؛ NAV برای بازاستفاده export شد
+- چندستونه‌سازی: home-view (چالش روزانه+هفتگی کنار هم lg:grid-cols-2؛ دفتر خطاها+ستاره‌دارها همین‌طور) · games-hub (max-w-3xl→lg:max-w-5xl + گرید lg:grid-cols-3 برای ۱۵ بازی=۵ ردیف) · quiz setup-panel (max-w-xl→lg:2xl/xl:3xl) · vocab-card-grid (xl:grid-cols-4)
+- تایپوگرافی: ReadingCard → mx-auto max-w-3xl (سقف طول خط ریدینگ‌ها) · GrammarLibrary → xl:max-w-4xl (آکاردئون‌ها)
+- Performance: بررسی شد — ۲۲ نما و ۱۴ بازی همگی dynamic import با loading skeleton (از قبل مطلوب)؛ بدون رگرسیون
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (سه بار — خطای export نبودن NAV و آثار ویرایش اولیه گرفته و رفع شد) · bun run lint = ۰/۰ ✓ · dev.log بدون error
+- QA مرورگری (agent-browser — ماتریس کامل):
+  • ۱۹۲۰×۱۰۸۰: ریل نمایان + آفست محتوا + قرص‌ها مخفی ✓ · hover ریل: ۷۲→۲۳۶px با برچسب‌ها (opacity 0→1) و جمع‌شدن بر خروج ✓ (تکنیک: dispatch mouseover bubbles برای فعال‌سازی onMouseEnter ری‌اکت — mouseenter خام به state نمی‌رسد)
+  • میان‌برها زنده: Alt+2→«فهرست مطالب»، Alt+8→«آزمون تعاملی»، Alt+1→جلد ✓ · skip-link: اولین Tab = لینک پرش visible fixed ✓
+  • نمای آزمون: کارت پهن‌شده وسط‌چین ✓ · بازی‌ها: ۳ ستون منظم + کارت دوئل تمام‌عرض ✓ · واژگان: ۴ ستون فلش‌کارت ✓ · هوم: چالش‌ها کنار هم ✓
+  • ۱۰۲۴: قرص‌ها flex / ریل none ✓ · ۱۴۴۰: ریل flex (xl≥۱۲۸۰ درست) ✓ · ۳۹۰: ناوبری موبایل + تک‌ستون، بدون ریل ✓
+  • فوتر: در بازی‌ها (صفحهٔ کوتاه) چسبیده به کف ویوپورت ✓
+- درس فنی QA: synthetic MouseEvent('mouseenter') غیر bubble به onMouseEnter ری‌اکت نمی‌رسد (دیلگیشن ری‌اکت mouseover/mouseout را می‌شنود) — برای تست state باید mouseover bubbles:true فرستاد
+- اسکرین‌شات‌ها: qa-shots/d26-1920-initial.png (قفسه) · d26-1920-home.png · d26-1920-rail-expanded.png (ریل باز با ۱۸ برچسب) · d26-1920-quiz.png (skip-link + کارت پهن) · d26-1920-games.png (۳ ستون) · d26-1920-vocab.png (۴ ستون) · d26-1920-final-home.png · d26-390-vocab.png
+Stage Summary:
+- 🏁 بستهٔ کامل «بهینه‌سازی دسکتاپ» تحویل شد: ریل ناوبری هوشمند xl+ با expand/collapse state-driven، جایگزینی هدر قرصی سرریزشده، آفست صحیح RTL، میان‌برهای Alt+1..9 + skip-link، کانتینر پهن‌تر (max-w-7xl)، چندستونه‌سازی چهار نما، سقف خطوط متن بلند — همگی QA مرورگری شده در ۱۹۲۰/۱۴۴۰/۱۰۲۴/۳۹۰
+- نکتهٔ فرایندی مهم برای جلسات بعد: خلاصهٔ مکالمه ≠ واقعیت دیسک؛ همیشه قبل از ادامه، وجود فایل/محتوا را با ls/grep راستی‌آزمایی کن (این نشست یک بازسازی کامل از دست‌رفته را ثابت کرد)
+- گام بعدی پیشنهادی: پردازش جزوهٔ جدید کاربر (وظیفهٔ معلق از نشست‌های قبل — قرارداد registry.ts) یا فاز U6 «طاق عمودی» نقشهٔ FPS

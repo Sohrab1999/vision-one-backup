@@ -72,7 +72,8 @@ interface NavItem {
   icon: React.ComponentType<{ size?: number | string; className?: string }>;
 }
 
-const NAV: NavItem[] = [
+/** فهرست ناوبری سراسری — هدر (md..lg) و ریل دسکتاپ (xl+) هر دو از همین منبع می‌خوانند */
+export const NAV: NavItem[] = [
   { id: "home", label: "جلد", icon: Home },
   { id: "contents", label: "فهرست", icon: ListOrdered },
   { id: "vocab", label: "واژگان", icon: BookOpen },
@@ -190,9 +191,10 @@ export function AppHeader({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* ناوبری دسکتاپ */}
+        {/* ناوبری دسکتاپ — فقط md تا lg؛ از xl به بعد ریل کناری جانشین می‌شود
+            (۱۸ قرص در هدر سرریز می‌کرد و ۸ مقصد عملاً نامرئی بود) */}
         {hasBook && (
-          <nav className="hidden md:flex flex-1 min-w-0 items-center gap-1 overflow-x-auto px-2 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="ناوبری اصلی">
+          <nav className="hidden md:flex xl:hidden flex-1 min-w-0 items-center gap-1 overflow-x-auto px-2 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="ناوبری اصلی">
             {NAV.map((item) => {
               const active = view === item.id || (view === "chapter" && item.id === "contents");
               return (

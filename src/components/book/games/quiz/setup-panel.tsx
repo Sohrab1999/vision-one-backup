@@ -98,7 +98,7 @@ export function SetupPanel({
   clearMistakes,
 }: SetupPanelProps) {
   return (
-      <Card className="mx-auto max-w-xl rise-in">
+      <Card className="mx-auto max-w-xl rise-in lg:max-w-2xl xl:max-w-3xl">
         <CardContent className="space-y-6 p-6">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">

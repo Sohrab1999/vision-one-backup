@@ -304,6 +304,8 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
         </Card>
       </section>
 
+      {/* ── چالش روزانه + هفتگی — در دسکتاپ کنار هم (بهینه‌سازی xl) ── */}
+      <div className="grid gap-3 lg:grid-cols-2">
       {/* ── چالش روزانه ─────────────────────────────── */}
       <button
         type="button"
@@ -395,6 +397,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
         </span>
       </button>
+      </div>
 
       {/* ── نوار آمار ─────────────────────────────── */}
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -541,6 +544,8 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
         </Card>
       </section>
 
+      {/* ── دفتر اشتباهات + ستاره‌دارها — در دسکتاپ کنار هم ── */}
+      <div className="grid gap-3 lg:grid-cols-2">
       {/* ── دفتر اشتباهات ─────────────────────────────── */}
       {mistakeCount > 0 && (
         <button
@@ -590,6 +595,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           <ArrowLeft size={17} className="shrink-0 text-yellow-600 transition-transform group-hover:-translate-x-1 dark:text-yellow-400" />
         </button>
       )}
+      </div>
 
       {/* ── بخش‌های کتاب ─────────────────────────────── */}
       <section className="space-y-3">

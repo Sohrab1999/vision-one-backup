@@ -496,6 +496,18 @@
 }
 
 
+/* ─── سایدبار دسکتاپ (بهینه‌سازی صفحه‌نمایش بزرگ) ─── */
+/* برچسب‌های ریل فقط وقتی ریل باز است (hover/focus-within) نمایان می‌شوند —
+   با تأخیر کوتاه تا باز شدن عرض ریل اول کامل شود (بدون پرش متن) */
+.desktop-rail .sidebar-label {
+  opacity: 0;
+  transition: opacity 0.18s ease 0.06s;
+}
+.desktop-rail:hover .sidebar-label,
+.desktop-rail:focus-within .sidebar-label {
+  opacity: 1;
+}
+
 /* ─── دسترس‌پذیری (فاز ۱۱ — WCAG 2.2 AA) ─── */
 /* حلقه فوکوس مشترک برای همهٔ المان‌های قابل فوکوس — رنگ primary پروژه (سبز emerald).
    قاعدهٔ خاص .lookup-word دست‌نخورده ماند. */

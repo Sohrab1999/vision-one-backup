@@ -137,7 +137,13 @@ export function GrammarLibrary({ lessonFilter }: { lessonFilter?: number }) {
   const [value, setValue] = useState<string>("");
 
   return (
-    <Accordion type="single" collapsible value={value} onValueChange={setValue} className="space-y-3">
+    <Accordion
+      type="single"
+      collapsible
+      value={value}
+      onValueChange={setValue}
+      className="space-y-3 xl:max-w-4xl"
+    >
       <GrammarAccordionItems lessonFilter={lessonFilter} />
     </Accordion>
   );
