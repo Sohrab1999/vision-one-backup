@@ -926,7 +926,7 @@ export function WordleGame() {
           onHelp={handleHelp}
           onExit={handleExitClick}
         >
-          <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative mx-auto w-full max-w-sm md:max-w-lg xl:max-w-xl">
             <div
               className={cn("space-y-3", paused && "pointer-events-none select-none blur-sm")}
               aria-hidden={paused}
@@ -1168,7 +1168,7 @@ export function WordleGame() {
   const setupBest = bestForLen(setupPoolLen);
   return (
     <>
-      <Card className="mx-auto max-w-xl rise-in">
+      <Card className="mx-auto max-w-xl rise-in lg:max-w-2xl">
         <CardContent className="space-y-6 p-6">
         <div className="flex items-center gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">

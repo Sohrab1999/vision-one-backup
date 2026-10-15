@@ -112,7 +112,8 @@ export function AppHeader({
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/65">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-3 sm:gap-3 sm:px-4">
+      {/* دسکتاپ (xl+): هم‌تراز با main (max-w-7xl) — لبه‌های هدر و محتوا یکی می‌شوند */}
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-3 sm:gap-3 sm:px-4 xl:max-w-7xl">
         {/* لوگو */}
         <button
           type="button"
@@ -246,13 +247,14 @@ export function AppHeader({
           </Button>
 
           {/* نصب روی گوشی — راهنمای PWA (فاز ۱۲)
-              موبایل (Task 23): از هدر حذف شد (اقدام کم‌تکرار) → کشوی «بیشتر» ناوبری پایین */}
+              موبایل (Task 23): از هدر حذف شد (اقدام کم‌تکرار) → کشوی «بیشتر» ناوبری پایین
+              دسکتاپ (بهینه‌سازی xl+): بی‌معنا روی مانیتور → مخفی؛ فقط md..xl دیده می‌شود */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => window.dispatchEvent(new CustomEvent(OPEN_INSTALL_EVENT))}
             aria-label="نصب روی گوشی"
-            className="hidden h-11 w-11 shrink-0 rounded-full sm:inline-flex sm:h-9 sm:w-9"
+            className="hidden h-11 w-11 shrink-0 rounded-full sm:inline-flex sm:h-9 sm:w-9 xl:hidden"
           >
             <Smartphone size={17} />
           </Button>

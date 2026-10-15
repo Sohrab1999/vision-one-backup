@@ -48,7 +48,7 @@ export function ContentsView({
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {data.chapters.map((ch, idx) => {
           const c = COLOR_MAP[ch.color] ?? COLOR_MAP.emerald;
           const total = data.vocab.countByLesson[ch.id] ?? 0;

@@ -74,7 +74,7 @@ export function ResultView({
             : "نگران نباش! از واژگان و گرامر شروع کن و دوباره امتحان بده ✨";
 
     return (
-      <div className="mx-auto max-w-2xl space-y-4 rise-in">
+      <div className="mx-auto max-w-2xl space-y-4 rise-in xl:max-w-3xl">
         <Card className="result-pop relative overflow-hidden border-primary/30 no-print">
           {scorePct >= 80 && <Confetti />}
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
@@ -193,7 +193,7 @@ export function ResultView({
                 <BookMarked size={16} className="text-amber-500" />
                 مرور پاسخ‌های نادرست
               </h3>
-              <div className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-2">
                 {questions.map((q, i) =>
                   answers[i] === q.answer ? null : (
                     <div key={q.id} className="rounded-xl border bg-card p-3">

@@ -293,7 +293,7 @@ export function ErrorAnalysisPanel() {
                 </p>
 
                 <div
-                  className="mt-3 space-y-2"
+                  className="mt-3 grid gap-2 sm:grid-cols-2"
                   role="group"
                   aria-label={`گزینه‌های تمرین ${faNum(drillIdx + 1)}`}
                 >

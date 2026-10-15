@@ -17,8 +17,10 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   CheckCircle2,
+  CheckSquare,
   ChevronDown,
   Loader2,
+  Square,
   Target,
   Trash2,
   XCircle,
@@ -100,6 +102,17 @@ export function NotebookView() {
   const [idx, setIdx] = useState(0);
   const [starting, setStarting] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
+  // دسکتاپ (بهینه‌سازی): انتخاب گروهی خطاها برای «تمرین فقط انتخاب‌شده‌ها» — Batch action
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  function toggleSelected(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   // جزئیات سؤال‌ها برای فهرست — بهازای هر کتاب جدا تا سوییچ کتاب داده کهنه نشان ندهد
   const [detailsByBook, setDetailsByBook] = useState<Record<string, Record<string, NotebookQ>>>({});
@@ -132,10 +145,10 @@ export function NotebookView() {
     return () => ctrl.abort();
   }, [bookId, idsKey]);
 
-  // ── فاز تمرین: شروع با کلیک (رویدادمحور) ──
-  async function startPractice() {
+  // ── فاز تمرین: شروع با کلیک (رویدادمحور) — با ids انتخابی یا ۱۰ خطای اخیر ──
+  async function startPractice(customIds?: string[]) {
     if (!bookId || starting) return;
-    const ids = entries.slice(0, PRACTICE_CAP).map((e) => e.id);
+    const ids = customIds ?? entries.slice(0, PRACTICE_CAP).map((e) => e.id);
     if (ids.length === 0) {
       toast.error("دفتر خطاها خالی است — اول چند آزمون بده 🎯");
       return;
@@ -194,6 +207,7 @@ export function NotebookView() {
   function backToNotebook() {
     setSession(null);
     setIdx(0);
+    setSelected(new Set());
   }
 
   function confirmClear() {
@@ -214,7 +228,11 @@ export function NotebookView() {
     );
 
     return (
-      <section aria-label="دفتر خطاها — تمرین" className="space-y-4">
+      /* دسکتاپ: سقف عرض تمرین — چهار گزینه تا ۱۲۸۰px کشیده نمی‌شوند */
+      <section
+        aria-label="دفتر خطاها — تمرین"
+        className="mx-auto max-w-3xl space-y-4"
+      >
         {/* سربرگ تمرین */}
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -265,7 +283,7 @@ export function NotebookView() {
               </p>
 
               <div
-                className="space-y-2"
+                className="grid gap-2 sm:grid-cols-2"
                 role="group"
                 aria-label={`گزینه‌های سؤال ${faNum(idx + 1)}`}
               >
@@ -328,7 +346,7 @@ export function NotebookView() {
 
               {answered && (
                 <Button
-                  className="min-h-11 w-full gap-2 rounded-xl"
+                  className="min-h-11 w-full gap-2 rounded-xl sm:w-auto sm:px-8"
                   onClick={() => setIdx((v) => v + 1)}
                 >
                   {idx < qs.length - 1 ? "سؤال بعدی" : "دیدن نتیجه"}
@@ -454,8 +472,44 @@ export function NotebookView() {
         </AlertDialog>
       </div>
 
-      {/* فهرست کارت‌های خطا — اسکرول‌بار سفارشی سراسری اعمال می‌شود */}
-      <div className="max-h-96 space-y-2.5 overflow-y-auto pl-1 pr-0.5" role="list">
+      {/* نوار تمرین گروهی — دسکتاپ: Batch action (فقط وقتی انتخابی هست) */}
+      {selected.size > 0 && (
+        <div
+          className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 p-2.5"
+          role="toolbar"
+          aria-label="اقدام گروهی خطاهای انتخاب‌شده"
+        >
+          <Badge className="bg-primary text-[10.5px] text-primary-foreground">
+            {faNum(selected.size)} انتخاب‌شده
+          </Badge>
+          <Button
+            size="sm"
+            className="min-h-9 gap-1.5 rounded-lg px-3 text-[12px] font-bold"
+            disabled={starting}
+            onClick={() =>
+              startPractice(listed.filter((e) => selected.has(e.id)).map((e) => e.id))
+            }
+          >
+            <Target size={14} aria-hidden />
+            تمرین فقط انتخاب‌شده‌ها
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="min-h-9 rounded-lg px-3 text-[12px] text-muted-foreground"
+            onClick={() => setSelected(new Set())}
+          >
+            لغو انتخاب
+          </Button>
+        </div>
+      )}
+
+      {/* فهرست کارت‌های خطا — اسکرول‌بار سفارشی سراسری اعمال می‌شود؛
+          دسکتاپ: پنجرهٔ بلندتر (۶۰vh) به‌جای ۳۸۴px — اسکرول داخل اسکرول کمتر */}
+      <div
+        className="max-h-96 space-y-2.5 overflow-y-auto pl-1 pr-0.5 md:max-h-[60vh]"
+        role="list"
+      >
         {listed.map((entry) => {
           const q = details[entry.id];
           const open = openId === entry.id;
@@ -465,13 +519,33 @@ export function NotebookView() {
               role="listitem"
               className="overflow-hidden rounded-2xl border bg-card transition-colors hover:border-primary/30"
             >
-              {/* سربرگ کارت — باز/بسته */}
-              <button
-                type="button"
-                onClick={() => setOpenId(open ? null : entry.id)}
-                aria-expanded={open}
-                className="flex w-full items-start gap-2 p-3.5 text-right"
-              >
+              {/* سربرگ کارت — [انتخاب گروهی] + [باز/بسته] + [حل شد] */}
+              <div className="flex w-full items-start gap-1 p-2.5 sm:gap-1.5 sm:p-3">
+                <button
+                  type="button"
+                  onClick={() => toggleSelected(entry.id)}
+                  aria-pressed={selected.has(entry.id)}
+                  aria-label={
+                    selected.has(entry.id)
+                      ? "حذف از انتخاب تمرین گروهی"
+                      : "انتخاب برای تمرین گروهی"
+                  }
+                  title="انتخاب برای تمرین گروهی"
+                  className={cn(
+                    "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors",
+                    selected.has(entry.id)
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground/60 hover:bg-muted hover:text-foreground",
+                  )}
+                >
+                  {selected.has(entry.id) ? <CheckSquare size={16} /> : <Square size={16} />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpenId(open ? null : entry.id)}
+                  aria-expanded={open}
+                  className="flex min-w-0 flex-1 items-start gap-2 p-1 text-right"
+                >
                 <span className="min-w-0 flex-1">
                   {q ? (
                     <span
@@ -510,7 +584,27 @@ export function NotebookView() {
                     open && "rotate-180 text-primary",
                   )}
                 />
-              </button>
+                </button>
+                {/* حل سریع — با یک کلیک از دفتر حذف می‌شود (بدون تمرین) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    resolveMistake(entry.id);
+                    setSelected((prev) => {
+                      if (!prev.has(entry.id)) return prev;
+                      const next = new Set(prev);
+                      next.delete(entry.id);
+                      return next;
+                    });
+                    toast.success("از دفتر خطاها حل شد 🌱");
+                  }}
+                  aria-label="ثبت این خطا به‌عنوان حل‌شده"
+                  title="حل شد — از دفتر حذف می‌شود"
+                  className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground/60 transition-colors hover:bg-emerald-500/10 hover:text-emerald-600"
+                >
+                  <CheckCircle2 size={16} aria-hidden />
+                </button>
+              </div>
 
               {/* بازشدن: گزینه‌ها + توضیح */}
               {open && (

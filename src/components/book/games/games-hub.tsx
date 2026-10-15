@@ -418,7 +418,7 @@ export function GamesHub() {
   }
 
   return (
-    <section className="mx-auto max-w-3xl space-y-5 lg:max-w-5xl" aria-label="آزمایشگاه بازی‌های فکری">
+    <section className="mx-auto max-w-3xl space-y-5 lg:max-w-5xl xl:max-w-6xl" aria-label="آزمایشگاه بازی‌های فکری">
       {/* سربرگ */}
       <Card className="rise-in overflow-hidden border-primary/20 bg-gradient-to-bl from-primary/10 via-card to-card">
         <CardContent className="space-y-3 p-6">
@@ -477,7 +477,7 @@ export function GamesHub() {
       </button>
 
       {/* کارت بازی‌ها — دسکتاپ: ۳ ستون (۱۵ بازی = ۵ ردیف منظم) */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {[...GAMES, ...GAMES_EXTRA].map((g, i) => (
           <button
             key={g.key}
@@ -533,7 +533,7 @@ export function GamesHub() {
           setDuelOpen(o);
         }}
       >
-        <DialogContent className="max-w-lg gap-3">
+        <DialogContent className="max-w-lg gap-3 sm:max-w-2xl lg:max-w-4xl">
           <DialogTitle className="sr-only">دوئل آنلاین</DialogTitle>
           <DialogDescription className="sr-only">رقابت زندهٔ ۱ به ۱ با کد اتاق</DialogDescription>
           {duelOpen && <DuelArena onLockChange={handleDuelLockChange} onExit={handleDuelExit} />}

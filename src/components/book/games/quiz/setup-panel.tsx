@@ -112,6 +112,8 @@ export function SetupPanel({
             </div>
           </div>
 
+          {/* دسکتاپ (xl+): دو چالش کنار هم — به‌جای دو ردیف کشیده */}
+          <div className="grid gap-4 xl:grid-cols-2">
           {/* چالش روزانه — ۵ سؤال قطعی امروز */}
           <div className="relative overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4">
             <div className="flex items-center gap-3">
@@ -210,6 +212,7 @@ export function SetupPanel({
                 {weekly.doneThisWeek ? "دوباره" : "شروع چالش"}
               </Button>
             </div>
+          </div>
           </div>
 
           {/* دور تمرین سؤال‌های پراشتباه (ارسالی از آمار) */}

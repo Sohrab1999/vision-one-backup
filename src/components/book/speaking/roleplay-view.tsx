@@ -390,7 +390,7 @@ export function RoleplayPractice() {
   // ── فاز انتخاب مکالمه ──
   if (phase === "pick") {
     return (
-      <div className="mx-auto max-w-2xl space-y-4 rise-in">
+      <div className="mx-auto max-w-2xl space-y-4 rise-in xl:max-w-3xl">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
             <MessagesSquare size={22} />
@@ -461,7 +461,7 @@ export function RoleplayPractice() {
       return names.join(" · ");
     };
     return (
-      <Card className="mx-auto max-w-xl rise-in">
+      <Card className="mx-auto max-w-xl rise-in xl:max-w-2xl">
         <CardContent className="space-y-4 p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0">
@@ -572,7 +572,7 @@ export function RoleplayPractice() {
     const goodCount = scored.filter((r) => r.score >= 60 && r.score < 85).length;
     const skipped = Math.max(0, userLineCount - scored.length);
     return (
-      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+      <Card className="mx-auto max-w-xl rise-in border-amber-500/30 xl:max-w-2xl">
         <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
             <PartyPopper size={30} />
@@ -646,7 +646,7 @@ export function RoleplayPractice() {
   const pct = Math.round(((turn + 1) / ls.length) * 100);
 
   return (
-    <div className="mx-auto max-w-xl space-y-4 rise-in">
+    <div className="mx-auto max-w-xl space-y-4 rise-in xl:max-w-2xl">
       {/* نوار بالای صحنه */}
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant="secondary" className="gap-1 text-[11px]">

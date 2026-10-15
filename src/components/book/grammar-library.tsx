@@ -135,6 +135,74 @@ function BlockRenderer({ block }: { block: GrammarBlock }) {
 
 export function GrammarLibrary({ lessonFilter }: { lessonFilter?: number }) {
   const [value, setValue] = useState<string>("");
+  const data = useBookData();
+
+  // فهرست درس‌ها برای TOC چسبان دسکتاپ — هم‌فیلتر با خود آکاردئون
+  const lessons = useMemo(
+    () =>
+      lessonFilter === undefined
+        ? data.grammar.lessons
+        : data.grammar.lessons.filter((g) => g.lesson === lessonFilter),
+    [data.grammar.lessons, lessonFilter],
+  );
+
+  // دسکتاپ (xl+): دوپنل — فهرست چسبان درس‌ها + آکاردئون محتوا (کلیک = باز کردن و پرش)
+  // موبایل: همان آکاردئون قبلی — TOC فقطجا مکان می‌گیرد
+  if (lessons.length > 1) {
+    return (
+      <div className="xl:grid xl:grid-cols-[232px_minmax(0,1fr)] xl:items-start xl:gap-5">
+        <aside
+          aria-label="فهرست درس‌های گرامر"
+          className="hidden max-h-[calc(100vh-120px)] overflow-y-auto xl:sticky xl:top-20 xl:block"
+        >
+          <p className="mb-2 px-1 text-[11px] font-black text-muted-foreground">
+            درس‌نامه‌ها ({lessons.length.toLocaleString("fa-IR")})
+          </p>
+          <ul className="space-y-1">
+            {lessons.map((g) => {
+              const isActive = value === g.id;
+              return (
+                <li key={g.id}>
+                  <button
+                    type="button"
+                    aria-current={isActive ? "true" : undefined}
+                    onClick={() => {
+                      setValue(g.id);
+                      requestAnimationFrame(() => {
+                        document
+                          .getElementById(`grammar-${g.id}`)
+                          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      });
+                    }}
+                    className={cn(
+                      "block w-full rounded-xl px-3 py-2 text-right transition-colors",
+                      isActive
+                        ? "bg-primary/10 font-bold text-primary"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    )}
+                  >
+                    <span className="block truncate text-[11.5px] font-en" dir="ltr">
+                      {g.title}
+                    </span>
+                    <span className="block truncate text-[11px]">{g.titleFa}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </aside>
+        <Accordion
+          type="single"
+          collapsible
+          value={value}
+          onValueChange={setValue}
+          className="space-y-3"
+        >
+          <GrammarAccordionItems lessonFilter={lessonFilter} />
+        </Accordion>
+      </div>
+    );
+  }
 
   return (
     <Accordion
@@ -168,7 +236,8 @@ function GrammarAccordionItems({
         <AccordionItem
           key={g.id}
           value={g.id}
-          className="rounded-2xl border bg-card px-4 last:border-b"
+          id={`grammar-${g.id}`}
+          className="scroll-mt-24 rounded-2xl border bg-card px-4 last:border-b"
         >
           <AccordionTrigger className="hover:no-underline py-4">
             <div className="flex flex-1 flex-col items-start gap-1 text-right">

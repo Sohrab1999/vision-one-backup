@@ -9,15 +9,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
 
-/** تعداد ستون‌های گرید دیکشنری — موبایل ۱ ستون و دسکتاپ (md به بالا) ۲ ستون؛ هماهنگ با md:grid-cols-2 قبلی */
+/** تعداد ستون‌های گرید دیکشنری — موبایل ۱، دسکتاپ ۲ (md)، مانیتور بزرگ ۳ (2xl/۱۵۳۶px+);
+ *  هماهنگ با مجازی‌ساز (ردیف‌بندی بر اساس ستون‌ها + measureElement) */
 function useColumnCount() {
   const [cols, setCols] = useState(1);
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
-    const update = () => setCols(mq.matches ? 2 : 1);
+    const mq2xl = window.matchMedia("(min-width: 1536px)");
+    const update = () => setCols(mq2xl.matches ? 3 : mq.matches ? 2 : 1);
     update();
     mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    mq2xl.addEventListener("change", update);
+    return () => {
+      mq.removeEventListener("change", update);
+      mq2xl.removeEventListener("change", update);
+    };
   }, []);
   return cols;
 }

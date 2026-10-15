@@ -602,7 +602,10 @@ function TeacherLiveCard({
 
   useEffect(() => {
     const t0 = window.setTimeout(() => void fetchLiveRef.current(), 0);
-    const t = window.setInterval(() => void fetchLiveRef.current(), 3000);
+    const t = window.setInterval(() => {
+      // بهینه‌سازی دسکتاپ: تب مخفی → fetch بی‌خود نزن
+      if (!document.hidden) void fetchLiveRef.current();
+    }, 3000);
     return () => {
       window.clearTimeout(t0);
       window.clearInterval(t);

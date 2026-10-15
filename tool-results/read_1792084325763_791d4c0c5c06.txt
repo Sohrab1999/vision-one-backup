@@ -1,0 +1,766 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * نمای «مرور امروز» (فاز ۲ نقشه راه — سیم‌کشی موتور SRS).
+     5→ *
+     6→ * سه فاز: setup (داشبورد KPI + پیش‌بینی ۷روزه + تنظیم سقف کارت نو + دردسرسازها)
+     7→ * → playing (فلیپ‌کارت سه‌درجه‌ای با پیش‌نمایش فاصلهٔ مرور) → done (جمع‌بندی).
+     8→ * موتور: srs-engine (SM-2 خالص) + srs-store (استور ری‌اکتیو scoped کتاب فعال).
+     9→ *
+    10→ * قواعد react-hooks v6: هیچ setState مستقیم داخل effect انجام نمی‌شود —
+    11→ * صف و شمارنده‌ها در event handlerها ساخته می‌شوند و KPIها در رندر از
+    12→ * استور ری‌اکتیو با توابع خالص محاسبه می‌شوند.
+    13→ */
+    14→
+    15→import { useCallback, useEffect, useRef, useState } from "react";
+    16→import {
+    17→  AlertTriangle,
+    18→  Brain,
+    19→  CalendarClock,
+    20→  CheckCircle2,
+    21→  Clock,
+    22→  Eye,
+    23→  Home,
+    24→  PartyPopper,
+    25→  Play,
+    26→  RotateCcw,
+    27→  Timer,
+    28→  XCircle,
+    29→  Zap,
+    30→} from "lucide-react";
+    31→import { Button } from "@/components/ui/button";
+    32→import { Card, CardContent } from "@/components/ui/card";
+    33→import { Badge } from "@/components/ui/badge";
+    34→import { Progress } from "@/components/ui/progress";
+    35→import { cn } from "@/lib/utils";
+    36→import { toast } from "sonner";
+    37→import type { IrregularVerb, VocabEntry } from "@/data/types";
+    38→import { useBookData } from "@/lib/book-context";
+    39→import {
+    40→  bumpTodayReview,
+    41→  getDailyNewLimit,
+    42→  getTodayReview,
+    43→  gradeSrs,
+    44→  NEW_LIMIT_OPTIONS,
+    45→  setDailyNewLimit,
+    46→  useSRSData,
+    47→  type SrsItem,
+    48→} from "@/lib/srs-store";
+    49→import {
+    50→  DAY_MS,
+    51→  formatInterval,
+    52→  isLeech,
+    53→  previewIntervals,
+    54→  RELEARN_MS,
+    55→  type SrsGrade,
+    56→} from "@/lib/srs-engine";
+    57→import { awardReviewActivity } from "@/lib/gamification";
+    58→import { SpeakButton } from "./speak-button";
+    59→
+    60→type Phase = "setup" | "playing" | "done";
+    61→
+    62→/** سقف کارت در هر جلسهٔ مرور */
+    63→const QUEUE_CAP = 60;
+    64→
+    65→const fa = (n: number) => n.toLocaleString("fa-IR");
+    66→
+    67→const EMPTY_QUEUE: QueueCard[] = [];
+    68→
+    69→/** کارت صف مرور — واژه یا فعل بی‌قاعده */
+    70→interface QueueCard {
+    71→  /** کلید SRS: متن واژه یا "v:base" */
+    72→  key: string;
+    73→  kind: "word" | "verb";
+    74→  /** روی کارت — واژه یا شکل سادهٔ فعل */
+    75→  front: string;
+    76→  /** پشت کارت — معنی فارسی */
+    77→  meaning: string;
+    78→  /** برچسب روی کارت: برچسب درس یا «فعل» */
+    79→  lessonLabel: string;
+    80→  /** فقط برای فعل‌ها */
+    81→  past?: string;
+    82→  participle?: string;
+    83→  /** کارت نو (هرگز پاسخ داده نشده)؟ — برای شمارندهٔ روزانه */
+    84→  isNewCard: boolean;
+    85→  /** ترتیب کارت‌های سررسید در صف */
+    86→  dueAt: number;
+    87→  /** تعداد فراموشی — برای صف دردسرسازها */
+    88→  lapses: number;
+    89→}
+    90→
+    91→function shuffle<T>(arr: T[]): T[] {
+    92→  const a = [...arr];
+    93→  for (let i = a.length - 1; i > 0; i--) {
+    94→    const j = Math.floor(Math.random() * (i + 1));
+    95→    [a[i], a[j]] = [a[j], a[i]];
+    96→  }
+    97→  return a;
+    98→}
+    99→
+   100→/**
+   101→ * صف استاندارد مرور: کارت‌های سررسید (صعودی dueAt) + کارت‌های نو تا سقف
+   102→ * باقی‌ماندهٔ روز (به‌ترتیب درس، شافل درون‌درس؛ فعل‌ها در پایان) — سقف کل ۶۰.
+   103→ */
+   104→function buildQueue(
+   105→  srs: Record<string, SrsItem>,
+   106→  words: VocabEntry[],
+   107→  verbs: IrregularVerb[],
+   108→  now: number,
+   109→  newLimit: number,
+   110→  newDone: number,
+   111→): QueueCard[] {
+   112→  const due: QueueCard[] = [];
+   113→  const newByLesson = new Map<number, QueueCard[]>();
+   114→  const newVerbs: QueueCard[] = [];
+   115→  let totalNew = 0;
+   116→
+   117→  for (const w of words) {
+   118→    const st = srs[w.word];
+   119→    if (!st || st.reps === 0) {
+   120→      totalNew++;
+   121→      const card: QueueCard = {
+   122→        key: w.word,
+   123→        kind: "word",
+   124→        front: w.word,
+   125→        meaning: w.meaning,
+   126→        lessonLabel: w.lessonLabel,
+   127→        isNewCard: true,
+   128→        dueAt: Number.MAX_SAFE_INTEGER,
+   129→        lapses: 0,
+   130→      };
+   131→      const list = newByLesson.get(w.lesson);
+   132→      if (list) list.push(card);
+   133→      else newByLesson.set(w.lesson, [card]);
+   134→    } else if (st.dueAt <= now) {
+   135→      due.push({
+   136→        key: w.word,
+   137→        kind: "word",
+   138→        front: w.word,
+   139→        meaning: w.meaning,
+   140→        lessonLabel: w.lessonLabel,
+   141→        isNewCard: false,
+   142→        dueAt: st.dueAt,
+   143→        lapses: st.lapses,
+   144→      });
+   145→    }
+   146→  }
+   147→
+   148→  for (const v of verbs) {
+   149→    const key = `v:${v.base}`;
+   150→    const st = srs[key];
+   151→    if (!st || st.reps === 0) {
+   152→      totalNew++;
+   153→      newVerbs.push({
+   154→        key,
+   155→        kind: "verb",
+   156→        front: v.base,
+   157→        meaning: v.meaning,
+   158→        lessonLabel: "فعل",
+   159→        past: v.past,
+   160→        participle: v.participle,
+   161→        isNewCard: true,
+   162→        dueAt: Number.MAX_SAFE_INTEGER,
+   163→        lapses: 0,
+   164→      });
+   165→    } else if (st.dueAt <= now) {
+   166→      due.push({
+   167→        key,
+   168→        kind: "verb",
+   169→        front: v.base,
+   170→        meaning: v.meaning,
+   171→        lessonLabel: "فعل",
+   172→        past: v.past,
+   173→        participle: v.participle,
+   174→        isNewCard: false,
+   175→        dueAt: st.dueAt,
+   176→        lapses: st.lapses,
+   177→      });
+   178→    }
+   179→  }
+   180→
+   181→  due.sort((a, b) => a.dueAt - b.dueAt);
+   182→
+   183→  // کارت‌های نو: ترتیب درس‌ها + شافل درون هر درس؛ فعل‌های نو در پایان
+   184→  const newCards: QueueCard[] = [];
+   185→  for (const lesson of [...newByLesson.keys()].sort((a, b) => a - b)) {
+   186→    newCards.push(...shuffle(newByLesson.get(lesson)!));
+   187→  }
+   188→  newCards.push(...shuffle(newVerbs));
+   189→
+   190→  const remaining = Math.max(0, Math.min(newLimit - newDone, totalNew));
+   191→  return [...due, ...newCards.slice(0, remaining)].slice(0, QUEUE_CAP);
+   192→}
+   193→
+   194→/** فهرست کارت‌های دردسرساز — پرتکرارترین فراموشی‌ها اول */
+   195→function collectLeeches(srs: Record<string, SrsItem>, words: VocabEntry[], verbs: IrregularVerb[]): QueueCard[] {
+   196→  const out: QueueCard[] = [];
+   197→  for (const w of words) {
+   198→    const st = srs[w.word];
+   199→    if (isLeech(st)) {
+   200→      out.push({
+   201→        key: w.word,
+   202→        kind: "word",
+   203→        front: w.word,
+   204→        meaning: w.meaning,
+   205→        lessonLabel: w.lessonLabel,
+   206→        isNewCard: false,
+   207→        dueAt: st.dueAt,
+   208→        lapses: st.lapses,
+   209→      });
+   210→    }
+   211→  }
+   212→  for (const v of verbs) {
+   213→    const key = `v:${v.base}`;
+   214→    const st = srs[key];
+   215→    if (isLeech(st)) {
+   216→      out.push({
+   217→        key,
+   218→        kind: "verb",
+   219→        front: v.base,
+   220→        meaning: v.meaning,
+   221→        lessonLabel: "فعل",
+   222→        past: v.past,
+   223→        participle: v.participle,
+   224→        isNewCard: false,
+   225→        dueAt: st.dueAt,
+   226→        lapses: st.lapses,
+   227→      });
+   228→    }
+   229→  }
+   230→  return out.sort((a, b) => b.lapses - a.lapses);
+   231→}
+   232→
+   233→/** شمارش کارت‌های نو (واژه + فعل) — هرگز وارد چرخه نشده‌اند */
+   234→function countNew(srs: Record<string, SrsItem>, words: VocabEntry[], verbs: IrregularVerb[]): number {
+   235→  let n = 0;
+   236→  for (const w of words) {
+   237→    const st = srs[w.word];
+   238→    if (!st || st.reps === 0) n++;
+   239→  }
+   240→  for (const v of verbs) {
+   241→    const st = srs[`v:${v.base}`];
+   242→    if (!st || st.reps === 0) n++;
+   243→  }
+   244→  return n;
+   245→}
+   246→
+   247→/** پیش‌بینی بار مرور ۷ روز آینده از کارت‌های در چرخه (سرریز گذشته → ستون «امروز») */
+   248→function buildForecast(srs: Record<string, SrsItem>, now: number): { label: string; count: number }[] {
+   249→  const start = new Date(now);
+   250→  start.setHours(0, 0, 0, 0);
+   251→  const day0 = start.getTime();
+   252→  const fmt = new Intl.DateTimeFormat("fa-IR", { weekday: "short" });
+   253→  const out: { label: string; count: number }[] = [];
+   254→  for (let i = 0; i < 7; i++) {
+   255→    const from = day0 + i * DAY_MS;
+   256→    const to = from + DAY_MS;
+   257→    let count = 0;
+   258→    for (const st of Object.values(srs)) {
+   259→      if (st.reps > 0 && (i === 0 ? st.dueAt < to : st.dueAt >= from && st.dueAt < to)) count++;
+   260→    }
+   261→    out.push({ label: i === 0 ? "امروز" : i === 1 ? "فردا" : fmt.format(new Date(from)), count });
+   262→  }
+   263→  return out;
+   264→}
+   265→
+   266→/**
+   267→ * نمای مرور هوشمند — onNavigate اختیاری است (بی‌استفاده هم امن).
+   268→ */
+   269→export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void }) {
+   270→  const data = useBookData();
+   271→  const srs = useSRSData();
+   272→
+   273→  const [phase, setPhase] = useState<Phase>("setup");
+   274→  const [queue, setQueue] = useState<QueueCard[]>(EMPTY_QUEUE);
+   275→  const [index, setIndex] = useState(0);
+   276→  const [flipped, setFlipped] = useState(false);
+   277→  const [againCount, setAgainCount] = useState(0);
+   278→  const [hardCount, setHardCount] = useState(0);
+   279→  const [goodCount, setGoodCount] = useState(0);
+   280→
+   281→  // سقف کارت نو و شمارندهٔ روزانه فقط یک‌بار در ابتدا خوانده می‌شوند و
+   282→  // در event handlerها (شروع جلسه / بازگشت به setup) تازه‌سازی می‌شوند.
+   283→  const [newLimit, setNewLimitUi] = useState(() => getDailyNewLimit());
+   284→  const [newDone, setNewDone] = useState(() => getTodayReview().newDone);
+   285→
+   286→  const startedAtRef = useRef(0);
+   287→  const againRef = useRef(0); // فاز ۶ — شمارش پاسخ‌های «باز هم» برای XP مرور
+   288→
+   289→  const words = data.vocab.all;
+   290→  const verbs = data.verbs;
+   291→  const now = Date.now();
+   292→  const current = queue[index];
+   293→
+   294→  // ── KPIها — توابع خالص روی استور ری‌اکتیو (محاسبه در رندر) ──
+   295→  let dueCount = 0;
+   296→  let inCycle = 0;
+   297→  for (const st of Object.values(srs)) {
+   298→    if (st.reps > 0) {
+   299→      inCycle++;
+   300→      if (st.dueAt <= now) dueCount++;
+   301→    }
+   302→  }
+   303→  const totalNew = countNew(srs, words, verbs);
+   304→  const newRemaining = Math.max(0, Math.min(newLimit - newDone, totalNew));
+   305→  const leeches = collectLeeches(srs, words, verbs);
+   306→  const forecast = buildForecast(srs, now);
+   307→  const forecastMax = Math.max(1, ...forecast.map((f) => f.count));
+   308→
+   309→  const preview = phase === "setup" ? buildQueue(srs, words, verbs, now, newLimit, newDone) : EMPTY_QUEUE;
+   310→  const previewFor =
+   311→    phase === "playing" && current ? previewIntervals(srs[current.key], now) : ([0, 0, 0] as [number, number, number]);
+   312→
+   313→  // جمع‌بندی فاز done — درصد موفقیت (بدون «نمی‌دونم») و مدت جلسه از ref زمان شروع
+   314→  const successPct = Math.round(((goodCount + hardCount) / Math.max(queue.length, 1)) * 100);
+   315→  const elapsedMs = Math.max(0, Date.now() - startedAtRef.current);
+   316→  const elapsedMin = Math.floor(elapsedMs / 60_000);
+   317→  const elapsedSec = Math.floor((elapsedMs % 60_000) / 1000);
+   318→  const duration = elapsedMin > 0 ? `${fa(elapsedMin)} دقیقه و ${fa(elapsedSec)} ثانیه` : `${fa(elapsedSec)} ثانیه`;
+   319→
+   320→  // ── event handlerها — صف و شمارنده‌ها اینجا ساخته می‌شوند ──
+   321→
+   322→  function beginSession(cards: QueueCard[]) {
+   323→    if (cards.length === 0) return;
+   324→    startedAtRef.current = Date.now();
+   325→    setQueue(cards);
+   326→    setIndex(0);
+   327→    setFlipped(false);
+   328→    setAgainCount(0);
+   329→    againRef.current = 0;
+   330→    setHardCount(0);
+   331→    setGoodCount(0);
+   332→    setPhase("playing");
+   333→  }
+   334→
+   335→  function startLeechSession() {
+   336→    const q = collectLeeches(srs, words, verbs).slice(0, QUEUE_CAP);
+   337→    if (q.length === 0) {
+   338→      toast.error("الان کارت دردسرسازی برای تمرین ویژه نیست.");
+   339→      return;
+   340→    }
+   341→    beginSession(q);
+   342→  }
+   343→
+   344→  function changeLimit(n: number) {
+   345→    setDailyNewLimit(n);
+   346→    setNewLimitUi(n);
+   347→    toast.info(`سقف کارت نو روزانه روی ${fa(n)} کارت تنظیم شد.`);
+   348→  }
+   349→
+   350→  function backToSetup() {
+   351→    // تازه‌سازی شمارنده‌ها پس از جلسه — صف در رندر setup بازمحاسبه می‌شود
+   352→    setNewDone(getTodayReview().newDone);
+   353→    setNewLimitUi(getDailyNewLimit());
+   354→    setPhase("setup");
+   355→  }
+   356→
+   357→  const answer = useCallback(
+   358→    (grade: SrsGrade) => {
+   359→      const card = queue[index];
+   360→      if (!card) return;
+   361→      gradeSrs(card.key, grade);
+   362→      bumpTodayReview(card.isNewCard ? 1 : 0);
+   363→      if (grade === 0) {
+   364→        setAgainCount((c) => c + 1);
+   365→        againRef.current += 1;
+   366→      }
+   367→      else if (grade === 1) setHardCount((c) => c + 1);
+   368→      else setGoodCount((c) => c + 1);
+   369→      if (index + 1 >= queue.length) {
+   370→        awardReviewActivity(queue.length, queue.length - againRef.current); // فاز ۶ — XP مرور + زنجیره + ماموریت
+   371→        setPhase("done");
+   372→      } else {
+   373→        setIndex((i) => i + 1);
+   374→        setFlipped(false);
+   375→      }
+   376→    },
+   377→    [queue, index],
+   378→  );
+   379→
+   380→  // میان‌برهای کیبورد — الگوی flashcard-view (setState فقط در callback رویداد)
+   381→  useEffect(() => {
+   382→    if (phase !== "playing") return;
+   383→    function onKey(e: KeyboardEvent) {
+   384→      if (e.code === "Space" || e.key === "Enter") {
+   385→        e.preventDefault();
+   386→        setFlipped((f) => !f);
+   387→      } else if (!flipped) {
+   388→        return; // درجه‌ها فقط پس از دیدن پاسخ
+   389→      } else if (e.key === "1" || e.key === "۱") {
+   390→        answer(0);
+   391→      } else if (e.key === "2" || e.key === "۲") {
+   392→        answer(1);
+   393→      } else if (e.key === "3" || e.key === "۳") {
+   394→        answer(2);
+   395→      }
+   396→    }
+   397→    window.addEventListener("keydown", onKey);
+   398→    return () => window.removeEventListener("keydown", onKey);
+   399→  }, [phase, flipped, answer]);
+   400→
+   401→  const announcement =
+   402→    phase === "setup"
+   403→      ? "نمای مرور هوشمند امروز آماده است"
+   404→      : phase === "playing"
+   405→        ? `کارت ${fa(index + 1)} از ${fa(queue.length)}`
+   406→        : "جلسهٔ مرور به پایان رسید";
+   407→
+   408→  return (
+   409→    <div className="space-y-4" role="region" aria-label="مرور هوشمند امروز">
+   410→      <div className="sr-only" role="status" aria-live="polite">
+   411→        {announcement}
+   412→      </div>
+   413→
+   414→      {/* ── فاز setup ── */}
+   415→      {phase === "setup" && (
+   416→        <>
+   417→          <Card className="mx-auto max-w-2xl rise-in">
+   418→            <CardContent className="space-y-6 p-6">
+   419→              {/* سربرگ */}
+   420→              <div className="flex items-center gap-3">
+   421→                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+   422→                  <Brain size={24} />
+   423→                </span>
+   424→                <div>
+   425→                  <h1 className="text-lg font-black">مرور هوشمند امروز</h1>
+   426→                  <p className="text-xs leading-5 text-muted-foreground">
+   427→                    الگوریتم SM-2 — هر کارت دقیقاً لحظه‌ای تکرار می‌شود که نزدیک فراموشی‌ات باشی.
+   428→                  </p>
+   429→                </div>
+   430→              </div>
+   431→
+   432→              {/* KPIها */}
+   433→              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="list" aria-label="آمار مرور امروز">
+   434→                <div role="listitem" className="rounded-2xl border border-amber-500/25 bg-amber-500/8 p-3 text-center">
+   435→                  <p className="text-2xl font-black text-amber-600 dark:text-amber-400">{fa(dueCount)}</p>
+   436→                  <p className="mt-0.5 text-[11px] text-muted-foreground">سررسید امروز</p>
+   437→                </div>
+   438→                <div role="listitem" className="rounded-2xl border border-emerald-500/25 bg-emerald-500/8 p-3 text-center">
+   439→                  <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">{fa(newRemaining)}</p>
+   440→                  <p className="mt-0.5 text-[11px] text-muted-foreground">نو باقی‌مانده امروز</p>
+   441→                </div>
+   442→                <div role="listitem" className="rounded-2xl border bg-muted/40 p-3 text-center">
+   443→                  <p className="text-2xl font-black text-amber-600 dark:text-amber-400">{fa(leeches.length)}</p>
+   444→                  <p className="mt-0.5 text-[11px] text-muted-foreground">دردسرساز</p>
+   445→                </div>
+   446→                <div role="listitem" className="rounded-2xl border bg-muted/40 p-3 text-center">
+   447→                  <p className="text-2xl font-black text-teal-600 dark:text-teal-400">{fa(inCycle)}</p>
+   448→                  <p className="mt-0.5 text-[11px] text-muted-foreground">کارت در چرخه</p>
+   449→                </div>
+   450→              </div>
+   451→
+   452→              {/* سقف کارت نو روزانه */}
+   453→              <div>
+   454→                <p className="mb-2 text-[13px] font-bold">سقف کارت نو روزانه</p>
+   455→                <div className="flex flex-wrap gap-2" role="group" aria-label="سقف کارت نو روزانه">
+   456→                  {NEW_LIMIT_OPTIONS.map((n) => (
+   457→                    <button
+   458→                      key={n}
+   459→                      type="button"
+   460→                      onClick={() => changeLimit(n)}
+   461→                      aria-pressed={newLimit === n}
+   462→                      className={cn(
+   463→                        "h-11 min-w-11 rounded-full border px-4 text-[13px] font-black transition-all",
+   464→                        newLimit === n
+   465→                          ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   466→                          : "text-muted-foreground hover:bg-muted",
+   467→                      )}
+   468→                    >
+   469→                      {fa(n)}
+   470→                    </button>
+   471→                  ))}
+   472→                </div>
+   473→              </div>
+   474→
+   475→              {/* پیش‌بینی بار مرور ۷ روز آینده — نمودار میله‌ای CSS خالص */}
+   476→              <div>
+   477→                <p className="mb-3 flex items-center gap-1.5 text-[13px] font-bold">
+   478→                  <CalendarClock size={15} className="text-amber-500" />
+   479→                  پیش‌بینی بار مرور ۷ روز آینده
+   480→                </p>
+   481→                <div
+   482→                  className="grid grid-cols-7 gap-1.5 sm:gap-2"
+   483→                  role="img"
+   484→                  aria-label={`بار مرور ۷ روز آینده: ${forecast.map((f) => `${f.label} ${fa(f.count)} کارت`).join("، ")}`}
+   485→                >
+   486→                  {forecast.map((f, i) => (
+   487→                    <div key={i} className="flex flex-col items-center gap-1">
+   488→                      <span className="h-4 text-[10px] font-black text-amber-600 dark:text-amber-400">
+   489→                        {f.count > 0 ? fa(f.count) : ""}
+   490→                      </span>
+   491→                      <div className="flex h-20 w-full items-end overflow-hidden rounded-lg bg-muted/50">
+   492→                        <div
+   493→                          className="w-full rounded-t bg-amber-500/60"
+   494→                          style={{
+   495→                            height: `${f.count > 0 ? Math.max(8, Math.round((f.count / forecastMax) * 100)) : 0}%`,
+   496→                          }}
+   497→                        />
+   498→                      </div>
+   499→                      <span className="max-w-full truncate text-[10px] text-muted-foreground">{f.label}</span>
+   500→                    </div>
+   501→                  ))}
+   502→                </div>
+   503→              </div>
+   504→            </CardContent>
+   505→          </Card>
+   506→
+   507→          {/* هشدار دردسرسازها */}
+   508→          {leeches.length > 0 && (
+   509→            <Card className="mx-auto max-w-2xl border-amber-500/40 bg-amber-500/5 rise-in-1">
+   510→              <CardContent className="space-y-3 p-5">
+   511→                <div className="flex items-center gap-2">
+   512→                  <AlertTriangle size={17} className="shrink-0 text-amber-500" />
+   513→                  <h2 className="flex-1 text-[14px] font-black">کلمات دردسرساز</h2>
+   514→                  <Badge className="border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
+   515→                    {fa(leeches.length)} کارت
+   516→                  </Badge>
+   517→                </div>
+   518→                <div
+   519→                  className="max-h-44 space-y-1.5 overflow-y-auto pl-1"
+   520→                  role="list"
+   521→                  aria-label="فهرست کلمات دردسرساز"
+   522→                >
+   523→                  {leeches.slice(0, 8).map((l) => (
+   524→                    <div
+   525→                      key={l.key}
+   526→                      role="listitem"
+   527→                      className="flex items-center gap-2 rounded-xl border border-amber-500/20 bg-card px-3 py-2"
+   528→                    >
+   529→                      <span dir="ltr" className="shrink-0 font-en text-[13px] font-bold">
+   530→                        {l.front}
+   531→                      </span>
+   532→                      <span className="min-w-0 flex-1 truncate text-[11px] text-muted-foreground">{l.meaning}</span>
+   533→                      <Badge
+   534→                        variant="outline"
+   535→                        className="shrink-0 border-amber-500/35 text-[10px] text-amber-700 dark:text-amber-300"
+   536→                      >
+   537→                        ×{fa(l.lapses)} فراموشی
+   538→                      </Badge>
+   539→                    </div>
+   540→                  ))}
+   541→                </div>
+   542→                <Button
+   543→                  variant="outline"
+   544→                  onClick={startLeechSession}
+   545→                  className="h-11 w-full gap-2 border-amber-500/50 text-amber-700 hover:bg-amber-500/10 dark:text-amber-300"
+   546→                >
+   547→                  <Zap size={16} />
+   548→                  تمرین ویژه این‌ها ({fa(Math.min(leeches.length, QUEUE_CAP))} کارت)
+   549→                </Button>
+   550→              </CardContent>
+   551→            </Card>
+   552→          )}
+   553→
+   554→          {/* شروع جلسه */}
+   555→          <Card className="mx-auto max-w-2xl rise-in-2">
+   556→            <CardContent className="space-y-3 p-5">
+   557→              <Button
+   558→                size="lg"
+   559→                className="h-12 w-full gap-2 text-base"
+   560→                disabled={preview.length === 0}
+   561→                onClick={() => beginSession(preview)}
+   562→              >
+   563→                <Play size={18} />
+   564→                شروع مرور ({fa(preview.length)} کارت)
+   565→              </Button>
+   566→              {preview.length === 0 ? (
+   567→                <p className="text-center text-[13px] font-bold text-emerald-600 dark:text-emerald-400">
+   568→                  همه‌چیز مرور شده! 🎉 فردا دوباره سر بزن.
+   569→                </p>
+   570→              ) : (
+   571→                <p className="text-center text-[11px] text-muted-foreground">
+   572→                  صف امروز: {fa(dueCount)} کارت سررسید + تا {fa(newRemaining)} کارت نو — سقف جلسه {fa(QUEUE_CAP)} کارت.
+   573→                </p>
+   574→              )}
+   575→              <p className="rounded-xl bg-muted/60 p-3 text-[11px] leading-5 text-muted-foreground">
+   576→                سه دکمهٔ پاسخ: «نمی‌دونم» کارت را {formatInterval(RELEARN_MS)} دیگر برمی‌گرداند · «سخت» فاصلهٔ کوتاه‌تری
+   577→                می‌سازد · «بلد بودم» فاصلهٔ مرور را نمایی بلند می‌کند. میان‌برها: Space فلیپ · 1/2/3 درجه‌ها.
+   578→              </p>
+   579→            </CardContent>
+   580→          </Card>
+   581→        </>
+   582→      )}
+   583→
+   584→      {/* ── فاز playing ── */}
+   585→      {phase === "playing" && current && (
+   586→        <div className="mx-auto max-w-xl space-y-4 rise-in">
+   587→          <div className="flex items-center gap-3">
+   588→            <Progress value={((index + 1) / queue.length) * 100} className="h-2 flex-1" />
+   589→            <span className="shrink-0 text-[12px] font-bold text-muted-foreground">
+   590→              {fa(index + 1)} / {fa(queue.length)}
+   591→            </span>
+   592→            <Badge className="gap-1 border-emerald-500/40 bg-emerald-500/12 text-[11px] text-emerald-700 dark:text-emerald-300">
+   593→              <CheckCircle2 size={11} />
+   594→              بلد {fa(goodCount)}
+   595→            </Badge>
+   596→          </div>
+   597→
+   598→          <div
+   599→            className="flip-scene h-[320px] cursor-pointer select-none"
+   600→            onClick={() => setFlipped((f) => !f)}
+   601→            role="button"
+   602→            tabIndex={0}
+   603→            onKeyDown={(e) => e.key === "Enter" && setFlipped((f) => !f)}
+   604→            aria-label="کارت مرور — برای دیدن پاسخ کلیک کنید"
+   605→          >
+   606→            <div className={cn("flip-inner", flipped && "flipped")}>
+   607→              {/* روی کارت */}
+   608→              <div className="flip-face border bg-card shadow-lg flex flex-col items-center justify-center gap-4 p-8">
+   609→                {current.kind === "verb" ? (
+   610→                  <Badge className="border-amber-500/40 bg-amber-500/15 text-[11px] text-amber-700 dark:text-amber-300">
+   611→                    فعل
+   612→                  </Badge>
+   613→                ) : (
+   614→                  <Badge variant="secondary" className="text-[11px]">
+   615→                    {current.lessonLabel}
+   616→                  </Badge>
+   617→                )}
+   618→                <p dir="ltr" className="font-en text-4xl font-black text-center leading-tight">
+   619→                  {current.front}
+   620→                </p>
+   621→                <div onClick={(e) => e.stopPropagation()}>
+   622→                  <SpeakButton text={current.front} size="lg" />
+   623→                </div>
+   624→                <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+   625→                  <Eye size={12} />
+   626→                  برای دیدن پاسخ کلیک کن یا Space بزن
+   627→                </p>
+   628→              </div>
+   629→              {/* پشت کارت */}
+   630→              <div className="flip-face flip-back border border-primary/35 bg-primary/10 shadow-lg flex flex-col items-center justify-center gap-3 p-8">
+   631→                {current.kind === "verb" ? (
+   632→                  <>
+   633→                    <p dir="ltr" className="font-en text-2xl font-black text-center leading-tight">
+   634→                      {current.past} • {current.participle}
+   635→                    </p>
+   636→                    <p className="text-2xl font-black text-center leading-relaxed">{current.meaning}</p>
+   637→                  </>
+   638→                ) : (
+   639→                  <>
+   640→                    <p className="text-3xl font-black text-center leading-relaxed">{current.meaning}</p>
+   641→                    <p dir="ltr" className="font-en text-sm text-primary">
+   642→                      {current.front}
+   643→                    </p>
+   644→                  </>
+   645→                )}
+   646→              </div>
+   647→            </div>
+   648→          </div>
+   649→
+   650→          {flipped && (
+   651→            <div className="grid grid-cols-3 gap-2 rise-in">
+   652→              <Button
+   653→                variant="outline"
+   654→                onClick={() => answer(0)}
+   655→                className="h-13 flex-col gap-0.5 border-destructive/45 text-destructive hover:bg-destructive/10"
+   656→              >
+   657→                <span className="flex items-center gap-1.5 text-[13px] font-black">
+   658→                  <XCircle size={16} />
+   659→                  نمی‌دونم
+   660→                </span>
+   661→                <span className="block text-[10px] font-medium opacity-75">{formatInterval(previewFor[0])} دیگر</span>
+   662→              </Button>
+   663→              <Button
+   664→                variant="outline"
+   665→                onClick={() => answer(1)}
+   666→                className="h-13 flex-col gap-0.5 border-amber-500/50 text-amber-700 hover:bg-amber-500/10 dark:text-amber-300"
+   667→              >
+   668→                <span className="flex items-center gap-1.5 text-[13px] font-black">
+   669→                  <Clock size={16} />
+   670→                  سخت
+   671→                </span>
+   672→                <span className="block text-[10px] font-medium opacity-75">{formatInterval(previewFor[1])} دیگر</span>
+   673→              </Button>
+   674→              <Button onClick={() => answer(2)} className="h-13 flex-col gap-0.5">
+   675→                <span className="flex items-center gap-1.5 text-[13px] font-black">
+   676→                  <CheckCircle2 size={16} />
+   677→                  بلد بودم
+   678→                </span>
+   679→                <span className="block text-[10px] font-medium opacity-80">{formatInterval(previewFor[2])} دیگر</span>
+   680→              </Button>
+   681→            </div>
+   682→          )}
+   683→        </div>
+   684→      )}
+   685→
+   686→      {/* ── فاز done ── */}
+   687→      {phase === "done" && (
+   688→        <Card className="mx-auto max-w-xl border-primary/30 rise-in">
+   689→          <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+   690→            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+   691→              <PartyPopper size={30} />
+   692→            </span>
+   693→            <h2 className="text-xl font-black">جلسهٔ مرور تمام شد!</h2>
+   694→
+   695→            <div className="grid w-full grid-cols-3 gap-2">
+   696→              <div className="rounded-xl border border-destructive/25 bg-destructive/8 p-3">
+   697→                <p className="text-xl font-black text-destructive">{fa(againCount)}</p>
+   698→                <p className="text-[11px] text-muted-foreground">نمی‌دونم</p>
+   699→              </div>
+   700→              <div className="rounded-xl border border-amber-500/30 bg-amber-500/8 p-3">
+   701→                <p className="text-xl font-black text-amber-600 dark:text-amber-400">{fa(hardCount)}</p>
+   702→                <p className="text-[11px] text-muted-foreground">سخت</p>
+   703→              </div>
+   704→              <div className="rounded-xl border border-primary/25 bg-primary/8 p-3">
+   705→                <p className="text-xl font-black text-primary">{fa(goodCount)}</p>
+   706→                <p className="text-[11px] text-muted-foreground">بلد بودم</p>
+   707→              </div>
+   708→            </div>
+   709→
+   710→            <div className="relative h-28 w-28">
+   711→              <svg
+   712→                viewBox="0 0 120 120"
+   713→                className="h-full w-full -rotate-90"
+   714→                role="img"
+   715→                aria-label={`درصد موفقیت جلسه: ${fa(successPct)}٪`}
+   716→              >
+   717→                <circle cx="60" cy="60" r="52" fill="none" strokeWidth="12" className="stroke-muted" />
+   718→                <circle
+   719→                  cx="60"
+   720→                  cy="60"
+   721→                  r="52"
+   722→                  fill="none"
+   723→                  strokeWidth="12"
+   724→                  strokeLinecap="round"
+   725→                  className="stroke-primary"
+   726→                  strokeDasharray={`${(successPct / 100) * 326.7} 326.7`}
+   727→                />
+   728→              </svg>
+   729→              <div className="absolute inset-0 flex items-center justify-center text-2xl font-black">
+   730→                {fa(successPct)}٪
+   731→              </div>
+   732→            </div>
+   733→            <p className="-mt-2 text-[11px] text-muted-foreground">درصد موفقیت</p>
+   734→
+   735→            <p className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
+   736→              <Timer size={13} />
+   737→              مدت جلسه: {duration}
+   738→            </p>
+   739→
+   740→            {againCount > 0 && (
+   741→              <p className="flex w-full items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/8 p-3 text-right text-[11px] leading-5 text-muted-foreground">
+   742→                <Clock size={14} className="mt-0.5 shrink-0 text-amber-500" />
+   743→                <span>
+   744→                  {fa(againCount)} کارتی که «نمی‌دونم» زدی {formatInterval(RELEARN_MS)} دیگر آمادهٔ مرورند — کمی بعد
+   745→                  دوباره سر بزن!
+   746→                </span>
+   747→              </p>
+   748→            )}
+   749→
+   750→            <div className="flex flex-wrap justify-center gap-2">
+   751→              <Button onClick={backToSetup} className="h-11 gap-2">
+   752→                <RotateCcw size={16} />
+   753→                دور جدید
+   754→              </Button>
+   755→              <Button variant="outline" onClick={() => onNavigate?.("home")} className="h-11 gap-2">
+   756→                <Home size={16} />
+   757→                بازگشت به جلد
+   758→              </Button>
+   759→            </div>
+   760→          </CardContent>
+   761→        </Card>
+   762→      )}
+   763→    </div>
+   764→  );
+   765→}
+   766→

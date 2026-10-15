@@ -74,7 +74,7 @@ export function ReadingCard({
   showFa?: boolean;
 }) {
   return (
-    <Card className="mx-auto w-full max-w-3xl">
+    <Card className="mx-auto w-full max-w-3xl lg:max-w-5xl">
       <CardContent className="p-5 space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
@@ -98,7 +98,11 @@ export function ReadingCard({
 
         <div className="space-y-3">
           {reading.paragraphs.map((p, i) => (
-            <div key={i} className="rounded-xl border bg-muted/30 p-4 space-y-2">
+            /* دسکتاپ (lg+): EN و ترجمهٔ FA دوستونه — اسکرول نصف، مقایسهٔ خط‌به‌خط */
+            <div
+              key={i}
+              className="rounded-xl border bg-muted/30 p-4 space-y-2 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0"
+            >
               <div className="flex items-start gap-2.5">
                 <SpeakButton text={p.en} />
                 {/* موبایل (Task 23): متن ریدینگ از ۱۳٫۵px به ۱۵px — خوانایی با یک دست؛
@@ -109,7 +113,7 @@ export function ReadingCard({
                 />
               </div>
               {showFa && (
-                <p className="border-t pt-2 text-[13px] leading-7 text-muted-foreground">
+                <p className="border-t pt-2 text-[13px] leading-7 text-muted-foreground lg:border-s lg:border-t-0 lg:ps-4 lg:pt-0">
                   {p.fa}
                 </p>
               )}

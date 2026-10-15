@@ -411,10 +411,10 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
         {announcement}
       </div>
 
-      {/* ── فاز setup ── */}
+      {/* ── فاز setup — دسکتاپ (lg+): داشبورد + ستون کنار (دردسرسازها + شروع) ── */}
       {phase === "setup" && (
-        <>
-          <Card className="mx-auto max-w-2xl rise-in">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-4">
+          <Card className="rise-in">
             <CardContent className="space-y-6 p-6">
               {/* سربرگ */}
               <div className="flex items-center gap-3">
@@ -504,9 +504,11 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
             </CardContent>
           </Card>
 
+          {/* ستون کنار — در دسکتاپ کنار داشبورد، در موبایل زیر آن */}
+          <div className="mt-4 space-y-4 lg:mt-0">
           {/* هشدار دردسرسازها */}
           {leeches.length > 0 && (
-            <Card className="mx-auto max-w-2xl border-amber-500/40 bg-amber-500/5 rise-in-1">
+            <Card className="border-amber-500/40 bg-amber-500/5 rise-in-1">
               <CardContent className="space-y-3 p-5">
                 <div className="flex items-center gap-2">
                   <AlertTriangle size={17} className="shrink-0 text-amber-500" />
@@ -552,7 +554,7 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
           )}
 
           {/* شروع جلسه */}
-          <Card className="mx-auto max-w-2xl rise-in-2">
+          <Card className="rise-in-2">
             <CardContent className="space-y-3 p-5">
               <Button
                 size="lg"
@@ -578,12 +580,13 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
               </p>
             </CardContent>
           </Card>
-        </>
+          </div>
+        </div>
       )}
 
       {/* ── فاز playing ── */}
       {phase === "playing" && current && (
-        <div className="mx-auto max-w-xl space-y-4 rise-in">
+        <div className="mx-auto max-w-xl space-y-4 rise-in lg:max-w-2xl">
           <div className="flex items-center gap-3">
             <Progress value={((index + 1) / queue.length) * 100} className="h-2 flex-1" />
             <span className="shrink-0 text-[12px] font-bold text-muted-foreground">
@@ -596,7 +599,7 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
           </div>
 
           <div
-            className="flip-scene h-[320px] cursor-pointer select-none"
+            className="flip-scene h-[320px] cursor-pointer select-none lg:h-[400px]"
             onClick={() => setFlipped((f) => !f)}
             role="button"
             tabIndex={0}

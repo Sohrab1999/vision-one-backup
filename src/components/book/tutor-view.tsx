@@ -32,6 +32,12 @@ import { TeacherPanel } from "./ai/teacher-panel";
 import { StoryPanel } from "./ai/story-panel";
 import { PersonaPanel } from "./ai/persona-panel";
 
+/**
+ * رویداد «شروع‌کنندهٔ چت» — چیپ‌های پنل کناری دسکتاپ پیام آماده را به FreeChat می‌فرستند
+ * (جریان رویدادمحور — هم‌الگوی registerNavHandler؛ بدون لفت‌کردن state چت)
+ */
+const TUTOR_STARTER_EVENT = "visionone:tutor-starter";
+
 interface Msg {
   role: "user" | "assistant";
   content: string;
@@ -107,6 +113,21 @@ function FreeChat() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, sending]);
+
+  // دسکتاپ (بهینه‌سازی xl): چیپ‌های «پیشنهاد شروع» در پنل کناری همین رویداد را می‌فرستند —
+  // با latest-ref تا هر بار آخرین نسخهٔ send (با messages تازه) صدا زده شود
+  const sendRef = useRef(send);
+  useEffect(() => {
+    sendRef.current = send;
+  });
+  useEffect(() => {
+    function onStarter(e: Event) {
+      const text = (e as CustomEvent<string>).detail;
+      if (typeof text === "string" && text.trim()) sendRef.current(text);
+    }
+    window.addEventListener(TUTOR_STARTER_EVENT, onStarter);
+    return () => window.removeEventListener(TUTOR_STARTER_EVENT, onStarter);
+  }, []);
 
   async function send(text?: string) {
     const content = (text ?? input).trim();
@@ -223,9 +244,9 @@ function FreeChat() {
           </div>
         </ScrollArea>
 
-        {/* شروع‌کننده‌ها */}
+        {/* شروع‌کننده‌ها — در دسکتاپ (xl+) به پنل کناری منتقل شده‌اند تا چت تمیز بماند */}
         {messages.length <= 1 && (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 xl:hidden">
             {STARTERS.map((s) => (
               <button
                 key={s}
@@ -278,7 +299,7 @@ export function TutorView() {
   const active = TABS.find((t) => t.id === tab) ?? TABS[0];
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto w-full max-w-2xl space-y-4 xl:max-w-5xl">
       {/* تب‌های سه‌گانهٔ دستیار */}
       <div
         className="mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border bg-card p-1"
@@ -302,12 +323,60 @@ export function TutorView() {
       </div>
       <p className="text-center text-[11px] leading-5 text-muted-foreground">{active.hint}</p>
 
-      <div role="tabpanel" aria-label={active.label}>
-        {tab === "chat" && <FreeChat />}
-        {tab === "teacher" && <TeacherPanel />}
-        {tab === "story" && <StoryPanel />}
-        {tab === "persona" && <PersonaPanel />}
-      </div>
+      {tab === "chat" ? (
+        /* چت آزاد در دسکتاپ دوپنلی: چت + ستون کنار چسبان (شروع‌کننده‌ها + راهنما) —
+           به‌جای ستون باریک وسط ۱۹۲۰px با ~۱۲۰۰px فضای مرده */
+        <div
+          role="tabpanel"
+          aria-label={active.label}
+          className="xl:grid xl:grid-cols-[minmax(0,1fr)_248px] xl:items-start xl:gap-4"
+        >
+          <FreeChat />
+          <aside className="hidden space-y-3 xl:sticky xl:top-20 xl:block" aria-label="پیشنهاد و راهنمای چت">
+            <Card className="border-primary/20 bg-primary/5">
+              <CardContent className="space-y-2.5 p-4">
+                <p className="flex items-center gap-1.5 text-[12.5px] font-black text-primary">
+                  <Sparkles size={13} aria-hidden />
+                  پیشنهاد شروع
+                </p>
+                <div className="space-y-1.5">
+                  {STARTERS.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() =>
+                        window.dispatchEvent(new CustomEvent(TUTOR_STARTER_EVENT, { detail: s }))
+                      }
+                      className="block w-full rounded-xl border bg-card px-3 py-2 text-right text-[11.5px] leading-5 text-muted-foreground transition-all hover:border-primary/40 hover:text-primary active:scale-[0.98]"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="space-y-2 p-4">
+                <p className="text-[12.5px] font-black">راهنمای سریع</p>
+                <ul className="space-y-1.5 text-[11px] leading-5 text-muted-foreground">
+                  <li>
+                    <kbd className="rounded border bg-muted px-1 font-sans text-[10px]">Enter</kbd> ارسال ·{" "}
+                    <kbd className="rounded border bg-muted px-1 font-sans text-[10px]">Shift+Enter</kbd> خط جدید
+                  </li>
+                  <li>دکمهٔ بلندگو کنار هر پاسخ = تلفظ انگلیسی</li>
+                  <li>پاسخ‌ها با واژگان همین جزوه ساخته می‌شوند</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </aside>
+        </div>
+      ) : (
+        <div role="tabpanel" aria-label={active.label}>
+          {tab === "teacher" && <TeacherPanel />}
+          {tab === "story" && <StoryPanel />}
+          {tab === "persona" && <PersonaPanel />}
+        </div>
+      )}
 
       <p className="text-center text-[11px] leading-5 text-muted-foreground">
         پاسخ‌ها بر اساس محتوای کتاب {data.info.subtitle} ساخته می‌شوند — معلم خصوصی و داستان‌ساز سقف روزانهٔ ملایم دارند تا برای همه کافی باشد.

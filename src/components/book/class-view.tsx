@@ -79,7 +79,7 @@ function ClassLanding() {
           />
         </div>
       ) : (
-        <Card className="rise-in mx-auto max-w-md">
+        <Card className="rise-in mx-auto max-w-md md:max-w-lg">
           <CardContent className="p-5 space-y-4">
             <Button
               variant="ghost"

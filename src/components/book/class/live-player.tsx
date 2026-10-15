@@ -94,7 +94,10 @@ export function LivePlayer({ onExit }: { onExit: () => void }) {
 
   useEffect(() => {
     const t0 = window.setTimeout(() => void fetchRef.current(), 0);
-    const t = window.setInterval(() => void fetchRef.current(), 2500);
+    const t = window.setInterval(() => {
+      // بهینه‌سازی دسکتاپ: تب مخفی (جابه‌جایی زبانه) → fetch بی‌خود نزن
+      if (!document.hidden) void fetchRef.current();
+    }, 2500);
     return () => {
       window.clearTimeout(t0);
       window.clearInterval(t);

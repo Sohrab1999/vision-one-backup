@@ -359,7 +359,7 @@ export function SayItPractice() {
   // ─── رندر ───
 
   return (
-    <div className="mx-auto w-full max-w-2xl space-y-4">
+    <div className="mx-auto w-full max-w-2xl space-y-4 xl:max-w-4xl">
       {/* سربرگ */}
       <div className="flex items-center gap-3">
         <span
@@ -437,7 +437,7 @@ export function SayItPractice() {
             </p>
           ) : (
             <div
-              className="grid max-h-96 grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-3 md:grid-cols-4"
+              className="grid max-h-96 grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6"
               aria-label="فهرست واژه‌های این درس"
             >
               {pool.map((w, i) => (

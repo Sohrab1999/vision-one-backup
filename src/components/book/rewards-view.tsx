@@ -522,7 +522,7 @@ export function RewardsView() {
   };
 
   return (
-    <section aria-label="جایزه‌ها" className="mx-auto w-full max-w-4xl space-y-5">
+    <section aria-label="جایزه‌ها" className="mx-auto w-full max-w-4xl space-y-5 xl:max-w-6xl">
       {/* ── سربرگ نما ── */}
       <header className="flex flex-wrap items-center gap-2">
         <h2 className="text-lg font-black sm:text-xl">🏆 جایزه‌ها</h2>
@@ -628,7 +628,8 @@ export function RewardsView() {
               ۳ مأموریت روزانه
             </Badge>
           </div>
-          <div className="space-y-3">
+          {/* دسکتاپ (lg+): سه مأموریت کنار هم — به‌جای سه ردیف کشیده */}
+          <div className="grid gap-3 lg:grid-cols-3">
             {missions.quests.map((q) => (
               <MissionRow key={q.id} q={q} />
             ))}

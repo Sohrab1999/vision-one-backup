@@ -88,7 +88,7 @@ export function FlashcardView() {
   return (
     <div className="space-y-5">
       <div
-        className="mx-auto grid max-w-xl grid-cols-2 gap-1.5 rounded-2xl border bg-muted/50 p-1.5"
+        className="mx-auto grid max-w-xl grid-cols-2 gap-1.5 rounded-2xl border bg-muted/50 p-1.5 md:max-w-2xl"
         role="tablist"
         aria-label="حالت تمرین"
       >
@@ -229,7 +229,7 @@ function FlashcardGame() {
     const unlearned = pool.filter((w) => !learned.has(w.word)).length;
     const weakCount = basePool.filter((w) => isWeak(w.word, srs)).length;
     return (
-      <Card className="mx-auto max-w-xl rise-in">
+      <Card className="mx-auto max-w-xl rise-in md:max-w-2xl">
         <CardContent className="space-y-6 p-6">
           <div className="flex items-center justify-between gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -446,7 +446,7 @@ function FlashcardGame() {
   if (phase === "done") {
     const pct = Math.round(((knownCount + hardCount) / Math.max(deck.length, 1)) * 100);
     return (
-      <Card className="mx-auto max-w-xl rise-in border-primary/30">
+      <Card className="mx-auto max-w-xl rise-in border-primary/30 md:max-w-2xl">
         <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
             <PartyPopper size={30} />
@@ -495,7 +495,7 @@ function FlashcardGame() {
   if (!current) return null;
 
   return (
-    <div className="mx-auto max-w-xl space-y-4 rise-in">
+    <div className="mx-auto max-w-xl space-y-4 rise-in md:max-w-2xl">
       <div className="flex items-center gap-3">
         <Progress value={((index + 1) / deck.length) * 100} className="h-2 flex-1" />
         <span className="shrink-0 text-[12px] font-bold text-muted-foreground">
@@ -508,7 +508,7 @@ function FlashcardGame() {
       </div>
 
       <div
-        className="flip-scene h-[320px] cursor-pointer select-none"
+        className="flip-scene h-[320px] cursor-pointer select-none md:h-[420px]"
         onClick={() => setFlipped((f) => !f)}
         role="button"
         tabIndex={0}

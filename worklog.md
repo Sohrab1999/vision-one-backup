@@ -3509,3 +3509,30 @@ Stage Summary:
 - ماتریس سه‌لایهٔ ناوبری نهایی: <md ناوبری پایین · md..xl قرص‌های هدر · xl+ ریل کناری
 - باقی‌مانده صادقانه: همه‌چیز از ۱۵ یافتهٔ ممیزی رفع شد؛ دو آیتم تعمداً عقب‌افتاد (بلوک‌نشدن swipe-back iOS برای کشو — vaul خودش handle دارد؛ و مجازی‌سازی cards-mode — سقف ۲۴۰ کافی است) → Roadmap در گزارش کاربر
 - گام بعدی پیشنهادی: دستیار دوپنلی واقعی در xl (Roadmap دسکتاپ)، فاز U6 طاق عمودی FPS، یا PWA نصب‌شدهٔ واقعی روی گوشی فیزیکی برای تست لمس واقعی (خودکار headless جایگزین انگشت نیست)
+---
+Task ID: 24
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست Senior UI/UX Engineer — ممیزی عمیق دسکتاپ (Laptop 1440 / Desktop 1920) در ۷ بُعد + گزارش شدت‌بندی‌شده + پیاده‌سازی اصلاحات + Desktop Optimization Roadmap
+
+Work Log:
+- ممیزی اکسپلور (very thorough): ۷ بُعد × ~۲۵ کامپوننت → ۲۲ یافته (۲ High، ۱۴ Medium، ۶ Low) با file:line دقیق؛ الگوی غالب: «ستون مرکزی max-w-xl/2xl برای همه‌چیز» در ۱۹۲۰px = ~۱۲۰۰px فضای مرده
+- QA تأییدی ۱۹۲۰×۱۰۸۰ قبل از کد: review/tutor/class باریک وسط صفحه، هاب ۳ستونه، دیکشنری ۲ستونه — تأیید تصویری
+- 🔴 High 1 — tutor-view دوپنلی در xl+: چیدمان xl:grid-cols-[minmax(0,1fr)_248px] (چت + ستون کنار چسبان sticky) · شروع‌کننده‌های چت به پنل کنار منتقل شدند (xl:hidden داخل چت) با رویداد CustomEvent "visionone:tutor-starter" + latest-ref sendRef (هم‌الگوی registerNavHandler — بدون لفت state) · راهنمای کیبورد Enter/Shift+Enter در پنل کنار · کانتینر max-w-2xl→xl:max-w-5xl (سایر تب‌های AI هم پهن‌تر شدند)
+- 🔴 High 2 — notebook-view: فاز تمرین mx-auto max-w-3xl + گزینه‌ها grid sm:grid-cols-2 + دکمهٔ بعدی sm:w-auto · Batch action جدید: چک‌باکس انتخاب هر خطا + نوار toolbar «تمرین فقط انتخاب‌شده‌ها (N)» + «لغو انتخاب» · دکمهٔ per-item «حل شد» (حذف یک‌کلیکی بدون تمرین) · فهرست max-h-96→md:max-h-[60vh] (کاهش اسکرول-داخل-اسکرول)
+- 🟠 Med — review-view: setup دوپنلی lg:grid-cols-[minmax(0,1fr)_320px] (داشبورد | دردسرسازها+شروع) · playing lg:max-w-2xl + فلیپ lg:h-[400px]
+- 🟠 Med — flashcard-view: همهٔ فازها md:max-w-2xl + کارت فلیپ md:h-[420px] + تب‌ها md:max-w-2xl
+- 🟠 Med — بازی‌ها: game-shell (قاب مشترک ۱۵ بازی) xl:max-w-4xl · wordle برد max-w-sm→md:max-w-lg xl:max-w-xl + ستاپ lg:max-w-2xl · فلپی lg:h-[min(560px,…)] · هاب xl:max-w-6xl + گرید xl:grid-cols-4 (۱۵ بازی=۴ ردیف) · دیالوگ دوئل آنلاین max-w-lg→lg:max-w-4xl
+- 🟠 Med — contents xl:grid-cols-3 · rewards xl:max-w-6xl + مأموریت‌های روزانه lg:grid-cols-3 · دیکشنری ستون ۳ در 2xl (1536px+) در useColumnCount (مجازی‌ساز از قبل آماده بود) · texts-view ریدینگ: EN/FA دوستونه lg:grid-cols-2 با جداکنندهٔ lg:border-s (اسکرول نصف) + lg:max-w-5xl · گرامر: TOC چسبان xl+ با ۱۱ درس (کلیک=باز کردن+scrollIntoView+aria-current) — موبایل بدون تغییر · سه زیرنمای گفتار (say-it/roleplay/shadowing) xl:max-w-3xl/4xl + گرید واژهٔ say-it xl:grid-cols-6
+- 🟠 Med — app-header: هم‌ترازی xl:max-w-7xl با main + دکمهٔ PWA xl:hidden (فقط md..xl — روی مانیتور بی‌معنا)
+- 🟡 Low — quiz setup: دو بنر چالش روزانه/هفتگی xl:grid-cols-2 · result-view مرور اشتباهات md:grid-cols-2 + xl:max-w-3xl · vocab-card-grid 2xl:grid-cols-5 · error-analysis گزینه‌های تمرین sm:grid-cols-2 · class-view فرم md:max-w-lg
+- ⚡ پرفورمنس: polling گارد visibilitychange در live-player (2.5s) و teacher-dashboard (3s) — تب مخفی fetch نمی‌زند
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (دو بار) · bun run lint = ۰/۰ ✓ · dev.log صفر error (کشف: سرور حین کار مرده بود → reboot شد؛ علت نامشخص — شاید OOM حین lint همزمان)
+- QA مرورگری بعد از کد (۱۹۲۰×۱۰۸۰): review دوپنلی ✓ · tutor دوپنلی + کلیک چیپ «will vs going to» = پیام فرستاده و پاسخ واقعی AI رندر شد (end-to-end ✓) · TOC گرامر: ۱۱ آیتم + کلیک = بازشدن/پرش/active ✓ · هاب ۴ستونه ✓ · contents ۳ستونه ✓ · دیکشنری ۳ستونه (2xl) ✓ · فلش‌کارت پهن‌تر ✓ · هدر هم‌تراز 7xl + بدون دکمهٔ PWA ✓
+- رگرسیون موبایل ۳۹۰×۸۴۴: ریل none ✓ · ناوبری پایین ✓ · تک‌ستون ✓ · PWA مخفی ✓
+- درس فنی: کلاس «خراب» h-in(480px...) که rg گزارش کرد در فایل سالم بود (h-[min(...)] هنگام چاپ لاین خراب دیده می‌شد) — قبل از «باگ‌گیری» خروجی grep را با Read تأیید کن
+- اسکرین‌شات‌ها: qa-shots/d27-*.png (قبل) + d27b-*.png (بعد): review2/tutor2/tutor-sent/grammar-toc/games4/contents2/flash/mobile-home
+
+Stage Summary:
+- 🏁 بستهٔ «بهینه‌سازی دسکتاپ — دور ۲» تحویل شد: ۲۲ یافتهٔ ممیزی → ۲۰ مورد پیاده‌سازی شد (۲ High + ۱۴ Med + ۴ Low) + ۲ گارد پرفورمنس؛ سه نما کلیدی (دستیار/مرور/دفتر خطاها) از ستون باریک وسط مانیتور به چیدمان دوپنلی واقعی رسیدند و Batch actions (انتخاب گروهی خطاها + حل سریع) اضافه شد
+- نوار پیوستگی بریک‌پوینت‌ها حالا کامل است: <md ناوبری پایین · md..xl هدر قرصی+PWA · xl+ ریل کناری + دوپنل‌ها + PWA مخفی · 2xl دیکشنری/واژگان پنج‌ستونه
+- باقی‌مانده صادقانه (Roadmap برای دور بعد): ① دوئل آفلاین دو نیمه‌ای در lg (بازیکن‌ها کنار هم) — تغییر ساختاری بازی ② grammar-view (غیر library) فهرست کنار محتوا ③ مجازی‌سازی cards-mode فلش‌کارت ④ scoreboard چسبان در آزمون برای xl ⑤ داشبورد معلم دوپنلی (لیست دانش‌آموزان | نمودار)

@@ -434,7 +434,7 @@ export function ShadowingPractice() {
   // ── فاز انتخاب متن ──
   if (phase === "pick") {
     return (
-      <div className="mx-auto max-w-2xl space-y-4 rise-in">
+      <div className="mx-auto max-w-2xl space-y-4 rise-in xl:max-w-3xl">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
             <BookOpenText size={22} />
@@ -501,7 +501,7 @@ export function ShadowingPractice() {
       scored.length > 0 ? Math.round(scored.reduce((a, b) => a + b, 0) / scored.length) : null;
     const greatCount = scored.filter((s) => s >= 85).length;
     return (
-      <Card className="mx-auto max-w-xl rise-in border-amber-500/30">
+      <Card className="mx-auto max-w-xl rise-in border-amber-500/30 xl:max-w-2xl">
         <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400">
             <PartyPopper size={30} />
@@ -567,7 +567,7 @@ export function ShadowingPractice() {
   const curScore = scores[idx];
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4 rise-in">
+    <div className="mx-auto max-w-2xl space-y-4 rise-in xl:max-w-3xl">
       {/* سربرگ متن */}
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
