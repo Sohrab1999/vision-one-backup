@@ -69,6 +69,16 @@ export const BOOKS: BookMeta[] = [
     emoji: "📓",
     available: true,
   },
+  {
+    id: "collocations",
+    title: "۱۰۰۰ کالوکیشن کاربردی",
+    gradeLabel: "Collocations — مکالمه طبیعی",
+    author: "Shayna Oliveira — Espresso English",
+    tagline: "۵۰ درس کالوکیشن با متن دو زبانه، روخوانی و ۳۳۶ تست چهارگزینه‌ای از خود کتاب",
+    color: "teal",
+    emoji: "💬",
+    available: true,
+  },
 ];
 
 // ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
@@ -80,6 +90,7 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "grade-9": () => import("../grade-9").then((m) => m.GRADE_NINE_BOOK),
   "grade-11": () => import("../grade-11").then((m) => m.GRADE_ELEVEN_BOOK),
   "grade-12": () => import("../grade-12").then((m) => m.GRADE_TWELVE_BOOK),
+  collocations: () => import("../collocations").then((m) => m.COLLOCATIONS_BOOK),
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {

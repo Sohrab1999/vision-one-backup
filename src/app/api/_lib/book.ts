@@ -35,6 +35,7 @@ const GRADE_LABELS: Record<Exclude<BookId, "vision-one">, string> = {
   "grade-9": "پایه نهم",
   "grade-11": "پایه یازدهم",
   "grade-12": "پایه دوازدهم",
+  collocations: "۱۰۰۰ کالوکیشن کاربردی (مکالمه طبیعی)",
 };
 
 /**
@@ -54,6 +55,9 @@ export function bookPromptLine(
   if (BOOK_IDS.includes(id)) {
     if (id === "vision-one") {
       return "کتاب فعلی کاربر: جزوه جامع زبان انگلیسی پایه دهم — ویژن وان";
+    }
+    if (id === "collocations") {
+      return "کتاب فعلی کاربر: کتاب ۱۰۰۰ کالوکیشن کاربردی زبان انگلیسی (Espresso English) — تمرکز بر ترکیب طبیعی واژگان";
     }
     return `کتاب فعلی کاربر: جزوه زبان انگلیسی ${GRADE_LABELS[id as Exclude<BookId, "vision-one">]}`;
   }

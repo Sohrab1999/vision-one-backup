@@ -170,6 +170,8 @@ interface LookupHit {
   word: string;
   dict?: DictEntry;
   vocab?: VocabWord;
+  /** کالوکیشن‌های مرتبط — وقتی واژهٔ تکی در بانک نبود (کتاب‌های عبارت‌محور مثل کالوکیشن‌ها) */
+  related?: VocabWord[];
 }
 
 function lookup(maps: LookupMaps, norm: string): LookupHit {
@@ -186,6 +188,17 @@ function lookup(maps: LookupMaps, norm: string): LookupHit {
     const hit = maps.dict.get(c);
     const vocab = maps.vocab.get(c);
     if (hit || vocab) return { word: c, dict: hit, vocab };
+  }
+  // فال‌بک عبارت‌محور: کالوکیشن‌های کتاب که همین واژه را دارند (سقف ۵) —
+  // برای کتاب‌هایی مثل «کالوکیشن‌ها» که بانک واژگانشان عبارت‌های چندواژه‌ای است
+  if (norm.length >= 3) {
+    const re = new RegExp(`(^|\\s|[^a-z])${norm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}($|\\s|[^a-z])`);
+    const related: VocabWord[] = [];
+    for (const v of maps.vocab.values()) {
+      if (related.length >= 5) break;
+      if (re.test(normalize(v.word))) related.push(v);
+    }
+    if (related.length > 0) return { word: norm, related };
   }
   return { word: norm };
 }
@@ -598,12 +611,32 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
           )}
         </div>
       ) : !hit.vocab ? (
-        <p className="mt-2 flex items-center gap-1.5 text-[11px] leading-5 text-muted-foreground">
-          <SearchX size={12} />
-          {hit.word.includes(" ")
-            ? "این عبارت در دیکشنری و واژگان جزوه پیدا نشد."
-            : "این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد."}
-        </p>
+        <div className="mt-2 space-y-2">
+          <p className="flex items-center gap-1.5 text-[11px] leading-5 text-muted-foreground">
+            <SearchX size={12} />
+            {hit.word.includes(" ")
+              ? "این عبارت در دیکشنری و واژگان جزوه پیدا نشد."
+              : "این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد."}
+          </p>
+          {hit.related && hit.related.length > 0 && (
+            <div className="rounded-xl border bg-muted/40 p-2.5">
+              <p className="mb-1.5 flex items-center gap-1 text-[10.5px] font-black text-primary">
+                <BookOpen size={11} />
+                کالوکیشن‌های مرتبط در همین کتاب
+              </p>
+              <ul className="space-y-1">
+                {hit.related.slice(0, 5).map((v) => (
+                  <li key={v.word} className="flex items-baseline justify-between gap-2 text-[11px]">
+                    <span dir="ltr" className="font-en text-left font-bold text-foreground">
+                      {v.word}
+                    </span>
+                    <span className="shrink-0 text-muted-foreground">{v.meaning}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       ) : null}
 
       {/* میان‌بر تمرین واژه‌های ستاره‌دار */}

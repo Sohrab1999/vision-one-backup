@@ -20,7 +20,8 @@ export type BookId =
   | "grade-8"
   | "grade-9"
   | "grade-11"
-  | "grade-12";
+  | "grade-12"
+  | "collocations"; // ۱۰۰۰ کالوکیشن کاربردی — Espresso English
 
 /** نام‌های مجاز برای بخش‌های scoped در localStorage (پیشرفت مخصوص هر کتاب) */
 export const SCOPED_STORE_NAMES = [

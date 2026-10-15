@@ -82,15 +82,19 @@ export function ChapterView({
           <TabsTrigger value="vocab" className="gap-1.5 text-[12px]">
             <BookOpen size={13} /> واژگان
           </TabsTrigger>
-          <TabsTrigger value="conv" className="gap-1.5 text-[12px]">
-            <MessagesSquare size={13} /> مکالمه
-          </TabsTrigger>
+          {data.conversations.length > 0 && (
+            <TabsTrigger value="conv" className="gap-1.5 text-[12px]">
+              <MessagesSquare size={13} /> مکالمه
+            </TabsTrigger>
+          )}
           <TabsTrigger value="reading" className="gap-1.5 text-[12px]">
             <FileText size={13} /> ریدینگ
           </TabsTrigger>
-          <TabsTrigger value="grammar" className="gap-1.5 text-[12px]">
-            <GraduationCap size={13} /> گرامر
-          </TabsTrigger>
+          {data.grammar.lessons.length > 0 && (
+            <TabsTrigger value="grammar" className="gap-1.5 text-[12px]">
+              <GraduationCap size={13} /> گرامر
+            </TabsTrigger>
+          )}
           <TabsTrigger value="quiz" className="gap-1.5 text-[12px]">
             <ClipboardList size={13} /> تمرین
           </TabsTrigger>
@@ -155,8 +159,12 @@ function ChapterIntro({
   const steps = [
     { icon: BookOpen, title: "واژگان", desc: `${words.length.toLocaleString("fa-IR")} واژه کلیدی درس با کارت فلپ و روخوانی`, tab: "vocab" },
     { icon: FileText, title: "ریدینگ", desc: "متن کتاب درسی و کتاب کار با ترجمه روان فارسی", tab: "reading" },
-    { icon: MessagesSquare, title: "مکالمه", desc: "گفت‌وگوی کتاب با روایت صوتی هر جمله", tab: "conv" },
-    { icon: GraduationCap, title: "گرامر", desc: chapter.grammarTopics.join(" • "), tab: "grammar" },
+    ...(data.conversations.length > 0
+      ? [{ icon: MessagesSquare, title: "مکالمه", desc: "گفت‌وگوی کتاب با روایت صوتی هر جمله", tab: "conv" as const }]
+      : []),
+    ...(data.grammar.lessons.length > 0
+      ? [{ icon: GraduationCap, title: "گرامر", desc: chapter.grammarTopics.join(" • "), tab: "grammar" as const }]
+      : []),
     { icon: ClipboardList, title: "تمرین", desc: "تست‌های آموزشی اختصاصی همین درس", tab: "quiz" },
   ];
 
