@@ -174,7 +174,7 @@ function ChapterIntro({
         {steps.map((s, i) => (
           <Card
             key={s.title}
-            className={cn("cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg", `rise-in rise-in-${(i % 4) + 1}`)}
+            className={cn("cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] active:shadow-md", `rise-in rise-in-${(i % 4) + 1}`)}
             onClick={() => onTabChange(s.tab)}
             role="button"
             tabIndex={0}

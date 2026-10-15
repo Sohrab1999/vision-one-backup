@@ -77,6 +77,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // موبایل (Task 23): هنگام بازشدن کیبورد نرم، viewport واقعی کوچک می‌شود تا
+  // چت دستیار و فرم‌ها پشت کیبورد مدفون نشوند (به‌جای 100vh ثابت iOS)
+  interactiveWidget: "resizes-content",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f4faf6" },
     { media: "(prefers-color-scheme: dark)", color: "#14231d" },

@@ -1372,7 +1372,8 @@ export function FlappyQuizGame() {
               ref={canvasRef}
               role="img"
               aria-label="بازی فلپی گزینش — برای بال زدن کلیک کن یا Space بزن"
-              className="block h-[480px] w-full touch-none select-none bg-gradient-to-b from-teal-50 via-emerald-50/60 to-emerald-100 dark:from-teal-950 dark:via-emerald-950/70 dark:to-emerald-950"
+              // موبایل (Task 23): 480px ثابت در گوشی‌های کوتاه HUD/خروج را زیر فولد می‌برد
+              className="block h-[min(480px,calc(100dvh-260px))] min-h-[340px] w-full touch-none select-none bg-gradient-to-b from-teal-50 via-emerald-50/60 to-emerald-100 dark:from-teal-950 dark:via-emerald-950/70 dark:to-emerald-950"
             />
           </div>
 

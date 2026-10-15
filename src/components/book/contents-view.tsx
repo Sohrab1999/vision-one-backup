@@ -57,7 +57,7 @@ export function ContentsView({
             <Card
               key={ch.id}
               className={cn(
-                `rise-in rise-in-${(idx % 4) + 1} group cursor-pointer transition-all hover:-translate-y-1 hover:shadow-xl ${c.border}`,
+                `rise-in rise-in-${(idx % 4) + 1} group cursor-pointer transition-all hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.99] active:shadow-md ${c.border}`,
               )}
               onClick={() => onOpenChapter(ch.id)}
               role="button"

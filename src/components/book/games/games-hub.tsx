@@ -453,7 +453,7 @@ export function GamesHub() {
         aria-label="باز کردن دوئل آنلاین — رقابت زنده ۱ به ۱"
         className={cn(
           "group rise-in relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-bl from-emerald-500/15 via-amber-500/10 to-card p-4 text-right transition-all",
-          "hover:-translate-y-0.5 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10",
+          "hover:-translate-y-0.5 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10 active:translate-y-0 active:scale-[0.99] active:shadow-md",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600",
         )}
       >
@@ -486,7 +486,7 @@ export function GamesHub() {
             aria-label={`شروع بازی ${g.name}`}
             className={cn(
               "group rise-in rounded-2xl border bg-card p-4 text-right transition-all",
-              "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/8",
+              "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/8 active:translate-y-0 active:scale-[0.99] active:shadow-md",
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
             )}
             style={{ animationDelay: `${i * 70}ms` }}

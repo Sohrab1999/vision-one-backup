@@ -152,10 +152,9 @@ export function SetupPanel({
                 )}
               </div>
               <Button
-                size="sm"
                 onClick={startDaily}
                 disabled={loading}
-                className="shrink-0 gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+                className="min-h-11 shrink-0 gap-1.5 bg-amber-500 px-4 text-white hover:bg-amber-600"
               >
                 {loading ? <Loader2 size={14} className="animate-spin" /> : <CalendarCheck size={14} />}
                 {daily.doneToday ? "دوباره" : "شروع چالش"}
@@ -203,10 +202,9 @@ export function SetupPanel({
                 )}
               </div>
               <Button
-                size="sm"
                 onClick={startWeekly}
                 disabled={loading}
-                className="shrink-0 gap-1.5 bg-violet-600 text-white hover:bg-violet-700"
+                className="min-h-11 shrink-0 gap-1.5 bg-violet-600 px-4 text-white hover:bg-violet-700"
               >
                 {loading ? <Loader2 size={14} className="animate-spin" /> : <CalendarRange size={14} />}
                 {weekly.doneThisWeek ? "دوباره" : "شروع چالش"}
@@ -233,10 +231,9 @@ export function SetupPanel({
                   </p>
                 </div>
                 <Button
-                  size="sm"
                   onClick={() => startPracticeRound(practiceIds)}
                   disabled={loading}
-                  className="shrink-0 gap-1.5"
+                  className="min-h-11 shrink-0 gap-1.5 px-4"
                 >
                   {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
                   شروع تمرین

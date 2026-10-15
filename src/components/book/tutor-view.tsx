@@ -144,7 +144,8 @@ function FreeChat() {
   }
 
   return (
-    <Card className="flex h-[calc(100vh-260px)] min-h-[460px] flex-col border-primary/25">
+    // موبایل (Task 23): 100vh → 100dvh — کیبورد نرم مدفون‌کنندهٔ ورودی چت نباشد
+    <Card className="flex h-[calc(100dvh-260px)] min-h-[460px] flex-col border-primary/25">
       <CardContent className="flex h-full flex-col gap-3 p-4">
         {/* هدر چت */}
         <div className="flex items-center justify-between border-b pb-3">
@@ -254,6 +255,7 @@ function FreeChat() {
             className="min-h-[46px] flex-1 resize-none bg-card"
             rows={1}
             aria-label="پیام به دستیار"
+            enterKeyHint="send"
           />
           <Button
             size="icon"

@@ -96,7 +96,7 @@ function VoiceSpeedControl() {
             title={o.hint + (o.value === "browser" && !nativeOk ? " — روی این مرورگر موجود نیست" : "")}
             onClick={() => setEngine(o.value)}
             className={cn(
-              "rounded-full px-2.5 py-1 text-[11px] font-bold transition-all disabled:opacity-40 disabled:line-through",
+              "flex min-h-9 items-center rounded-full px-3 text-xs font-bold transition-all active:scale-95 disabled:opacity-40 disabled:line-through",
               engine === o.value
                 ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
                 : "text-muted-foreground hover:bg-muted",
@@ -120,7 +120,7 @@ function VoiceSpeedControl() {
             title={`سرعت روخوانی: ${o.label}`}
             onClick={() => setSpeed(o.value)}
             className={cn(
-              "rounded-full px-2.5 py-1 text-[11px] font-bold transition-all",
+              "flex min-h-9 items-center rounded-full px-3 text-xs font-bold transition-all active:scale-95",
               speed === o.value
                 ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
                 : "text-muted-foreground hover:bg-muted",

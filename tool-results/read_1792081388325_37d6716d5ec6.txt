@@ -1,0 +1,820 @@
+     1→"use client";
+     2→
+     3→import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+     4→import { X, Star, BookOpen, SearchX, GraduationCap, CheckCircle2, Search, ImagePlay, Loader2, Save, Trash2, LogIn } from "lucide-react";
+     5→import { toast } from "sonner";
+     6→import { useSession } from "next-auth/react";
+     7→import { Textarea } from "@/components/ui/textarea";
+     8→import { Separator } from "@/components/ui/separator";
+     9→import { readUserName } from "@/lib/name-store";
+    10→import { Badge } from "@/components/ui/badge";
+    11→import { cn } from "@/lib/utils";
+    12→import { useBook, useBookData } from "@/lib/book-context";
+    13→import type { DictEntry, VocabEntry, VocabWord } from "@/data/types";
+    14→import { SpeakButton } from "./speak-button";
+    15→import { useStarredWords, toggleStar } from "@/lib/star-store";
+    16→import { useSRSData, SRS_MAX_BOX } from "@/lib/srs-store";
+    17→import { useLearnedWords } from "@/lib/learned-store";
+    18→import { setPracticeIntent } from "@/lib/practice-intent";
+    19→import { requestView } from "@/lib/nav-store";
+    20→
+    21→/**
+    22→ * Word lookup — کلیک روی هر واژهٔ انگلیسی در متن‌ها، معنی و دیکشنری همان واژه را نشان می‌دهد.
+    23→ * داده از دیکشنری و واژگانِ جزوهٔ فعال می‌آید (بدون درخواست شبکه) و با تغییر کتاب بازسازی می‌شود.
+    24→ */
+    25→
+    26→// ── نگاشت‌های جست‌وجو — از دادهٔ کتاب فعال ساخته می‌شوند ──
+    27→interface LookupMaps {
+    28→  dict: Map<string, DictEntry>;
+    29→  vocab: Map<string, VocabWord>;
+    30→  phrases: Set<string>;
+    31→}
+    32→
+    33→function normalize(raw: string): string {
+    34→  return raw
+    35→    .replace(/[’‘]/g, "'")
+    36→    .replace(/[^A-Za-z' \-]/g, "")
+    37→    .trim()
+    38→    .toLowerCase();
+    39→}
+    40→
+    41→function buildMaps(dictionary: DictEntry[], vocabList: VocabEntry[]): LookupMaps {
+    42→  const dict = new Map<string, DictEntry>();
+    43→  const vocab = new Map<string, VocabWord>();
+    44→  const phrases = new Set<string>();
+    45→  for (const d of dictionary) {
+    46→    const key = normalize(d.word);
+    47→    if (key && !dict.has(key)) dict.set(key, d);
+    48→    if (key.includes(" ")) phrases.add(key);
+    49→  }
+    50→  for (const v of vocabList) {
+    51→    const key = normalize(v.word);
+    52→    if (key && !vocab.has(key)) vocab.set(key, v);
+    53→    if (key.includes(" ")) phrases.add(key);
+    54→  }
+    55→  return { dict, vocab, phrases };
+    56→}
+    57→
+    58→/** کش سبک بهازای آرایه‌های دادهٔ کتاب فعال — با تغییر کتاب (تغییر رفرنس داده) بازسازی می‌شود */
+    59→let mapsCache: { dictionary: DictEntry[]; vocab: VocabEntry[]; maps: LookupMaps } | null = null;
+    60→
+    61→function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[]): LookupMaps {
+    62→  if (mapsCache && mapsCache.dictionary === dictionary && mapsCache.vocab === vocab) {
+    63→    return mapsCache.maps;
+    64→  }
+    65→  const maps = buildMaps(dictionary, vocab);
+    66→  mapsCache = { dictionary, vocab, maps };
+    67→  return maps;
+    68→}
+    69→
+    70→// کش ماژول‌اسکوپ تصویر حافظه — تا جابه‌جایی میان واژه‌ها تصویر هر واژه نگه داشته شود (سقف ۴۰ ورودی، قدیمی‌ها حذف)
+    71→const memoryImageCache = new Map<string, string>();
+    72→const MEMORY_IMG_CAP = 40;
+    73→
+    74→// ── یادداشت شخصی واژه (فاز ۱۰) — همگام با /api/notes ──
+    75→// قرارداد: GET /api/notes?book= → {ok, notes:[{id,book,word,note,updatedAt}]} |
+    76→// PUT {book,word,note} → {ok, note} | DELETE ?id= → {ok:true} | بدون لاگین → 401
+    77→interface NoteRow {
+    78→  id: string;
+    79→  book: string;
+    80→  word: string;
+    81→  note: string;
+    82→  updatedAt: string;
+    83→}
+    84→
+    85→interface BookNotesState {
+    86→  rows: Map<string, NoteRow>;
+    87→  status: "idle" | "loading" | "ready" | "guest" | "error";
+    88→  fetchedAt: number;
+    89→}
+    90→
+    91→const NOTES_TTL_MS = 5 * 60 * 1000; // بعد از این مدت، اولین باز شدنِ بعدی دوباره fetch می‌کند
+    92→const NOTES_ROW_CAP = 500;
+    93→const NOTE_MAX_LEN = 500;
+    94→
+    95→// کش ماژول‌اسکوپ یادداشت‌ها به‌ازای کتاب — فقط اولین باز شدن پاپ‌آپ fetch می‌کند (الگوی memoryImageCache)
+    96→const notesCache = new Map<string, BookNotesState>();
+    97→let notesVersion = 0;
+    98→const notesListeners = new Set<() => void>();
+    99→
+   100→function notifyNotes() {
+   101→  notesVersion += 1;
+   102→  notesListeners.forEach((l) => l());
+   103→}
+   104→
+   105→function subscribeNotes(cb: () => void) {
+   106→  notesListeners.add(cb);
+   107→  return () => {
+   108→    notesListeners.delete(cb);
+   109→  };
+   110→}
+   111→
+   112→function getNotesVersion() {
+   113→  return notesVersion;
+   114→}
+   115→
+   116→/** ورود به دیالوگ حساب از عمق پاپ‌آپ — ProfileButton گوش می‌دهد (بدون prop-drilling) */
+   117→function openProfileLogin() {
+   118→  window.dispatchEvent(new CustomEvent("visionone:open-profile"));
+   119→}
+   120→
+   121→/** با رویداد باز شدن پاپ‌آپ صدا زده می‌شود — مهمان fetch نمی‌گیرد، فقط یک‌بار (یا پس از TTL) */
+   122→function ensureNotes(bookId: string, authenticated: boolean) {
+   123→  if (!bookId) return;
+   124→  const st = notesCache.get(bookId);
+   125→  if (!authenticated) {
+   126→    if (!st || st.status !== "guest") {
+   127→      notesCache.set(bookId, { rows: new Map(), status: "guest", fetchedAt: Date.now() });
+   128→      notifyNotes();
+   129→    }
+   130→    return;
+   131→  }
+   132→  if (st && (st.status === "ready" || st.status === "loading") && Date.now() - st.fetchedAt < NOTES_TTL_MS) return;
+   133→  notesCache.set(bookId, { rows: st?.rows ?? new Map(), status: "loading", fetchedAt: Date.now() });
+   134→  notifyNotes();
+   135→  void fetchNotes(bookId);
+   136→}
+   137→
+   138→async function fetchNotes(bookId: string) {
+   139→  const put = (rows: Map<string, NoteRow>, status: BookNotesState["status"]) => {
+   140→    notesCache.set(bookId, { rows, status, fetchedAt: Date.now() });
+   141→    notifyNotes();
+   142→  };
+   143→  try {
+   144→    const res = await fetch(`/api/notes?book=${encodeURIComponent(bookId)}`, { cache: "no-store" });
+   145→    const json = (await res.json().catch(() => null)) as { notes?: NoteRow[] } | null;
+   146→    if (res.status === 401) {
+   147→      put(new Map(), "guest");
+   148→      return;
+   149→    }
+   150→    if (!res.ok || !json) {
+   151→      // ۴۰۴ (سرویس هنوز آماده نیست) یا خطای سرور — محترمانه و بدون کرش
+   152→      put(new Map(), "error");
+   153→      toast.error("یادداشت‌ها بارگیری نشد — کمی بعد دوباره امتحان کن");
+   154→      return;
+   155→    }
+   156→    const rows = new Map<string, NoteRow>();
+   157→    for (const r of Array.isArray(json.notes) ? json.notes : []) {
+   158→      if (rows.size >= NOTES_ROW_CAP) break;
+   159→      if (r && typeof r.id === "string" && typeof r.word === "string" && typeof r.note === "string") {
+   160→        rows.set(r.word, r);
+   161→      }
+   162→    }
+   163→    put(rows, "ready");
+   164→  } catch {
+   165→    put(new Map(), "error");
+   166→  }
+   167→}
+   168→
+   169→interface LookupHit {
+   170→  word: string;
+   171→  dict?: DictEntry;
+   172→  vocab?: VocabWord;
+   173→  /** کالوکیشن‌های مرتبط — وقتی واژهٔ تکی در بانک نبود (کتاب‌های عبارت‌محور مثل کالوکیشن‌ها) */
+   174→  related?: VocabWord[];
+   175→}
+   176→
+   177→function lookup(maps: LookupMaps, norm: string): LookupHit {
+   178→  const candidates = [norm];
+   179→  // ساده‌سازی صرفی: جمع، فعل ساده، «'s»
+   180→  if (norm.endsWith("'s")) candidates.push(norm.slice(0, -2));
+   181→  if (norm.endsWith("ies")) candidates.push(norm.slice(0, -3) + "y");
+   182→  if (norm.endsWith("es")) candidates.push(norm.slice(0, -2));
+   183→  if (norm.endsWith("s") && !norm.endsWith("ss")) candidates.push(norm.slice(0, -1));
+   184→  if (norm.endsWith("ed")) candidates.push(norm.slice(0, -2), norm.slice(0, -1));
+   185→  if (norm.endsWith("ing")) candidates.push(norm.slice(0, -3), norm.slice(0, -3) + "e");
+   186→  for (const c of candidates) {
+   187→    if (!c) continue;
+   188→    const hit = maps.dict.get(c);
+   189→    const vocab = maps.vocab.get(c);
+   190→    if (hit || vocab) return { word: c, dict: hit, vocab };
+   191→  }
+   192→  // فال‌بک عبارت‌محور: کالوکیشن‌های کتاب که همین واژه را دارند (سقف ۵) —
+   193→  // برای کتاب‌هایی مثل «کالوکیشن‌ها» که بانک واژگانشان عبارت‌های چندواژه‌ای است
+   194→  if (norm.length >= 3) {
+   195→    const re = new RegExp(`(^|\\s|[^a-z])${norm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}($|\\s|[^a-z])`);
+   196→    const related: VocabWord[] = [];
+   197→    for (const v of maps.vocab.values()) {
+   198→      if (related.length >= 5) break;
+   199→      if (re.test(normalize(v.word))) related.push(v);
+   200→    }
+   201→    if (related.length > 0) return { word: norm, related };
+   202→  }
+   203→  return { word: norm };
+   204→}
+   205→
+   206→// ── توکنایز ایندکسمحور: واژه‌ها از regex + عبارت‌های دوتایی مثل "based on" ──
+   207→interface WordSpan {
+   208→  raw: string;
+   209→  norm: string;
+   210→  start: number;
+   211→  end: number;
+   212→}
+   213→
+   214→const WORD_RE = /[A-Za-z]+(?:['’-][A-Za-z]+)*/g;
+   215→
+   216→function extractWords(text: string, maps: LookupMaps): WordSpan[] {
+   217→  const words: WordSpan[] = [];
+   218→  for (const m of text.matchAll(WORD_RE)) {
+   219→    const start = m.index ?? 0;
+   220→    const raw = m[0];
+   221→    words.push({ raw, norm: normalize(raw), start, end: start + raw.length });
+   222→  }
+   223→  // ادغام عبارت دوتایی شناخته‌شده (فقط وقتی بین دو واژه فقط فاصله باشد)
+   224→  const merged: WordSpan[] = [];
+   225→  let i = 0;
+   226→  while (i < words.length) {
+   227→    const a = words[i];
+   228→    const b = words[i + 1];
+   229→    if (
+   230→      b &&
+   231→      maps.phrases.has(`${a.norm} ${b.norm}`) &&
+   232→      /^\s+$/.test(text.slice(a.end, b.start))
+   233→    ) {
+   234→      merged.push({
+   235→        raw: text.slice(a.start, b.end),
+   236→        norm: `${a.norm} ${b.norm}`,
+   237→        start: a.start,
+   238→        end: b.end,
+   239→      });
+   240→      i += 2;
+   241→    } else {
+   242→      merged.push(a);
+   243→      i += 1;
+   244→    }
+   245→  }
+   246→  return merged;
+   247→}
+   248→
+   249→interface Segment {
+   250→  kind: "text" | "word";
+   251→  raw: string;
+   252→  norm?: string;
+   253→}
+   254→
+   255→function segmentText(text: string, maps: LookupMaps): Segment[] {
+   256→  const words = extractWords(text, maps);
+   257→  const segs: Segment[] = [];
+   258→  let pos = 0;
+   259→  for (const w of words) {
+   260→    if (w.start > pos) segs.push({ kind: "text", raw: text.slice(pos, w.start) });
+   261→    segs.push({ kind: "word", raw: w.raw, norm: w.norm });
+   262→    pos = w.end;
+   263→  }
+   264→  if (pos < text.length) segs.push({ kind: "text", raw: text.slice(pos) });
+   265→  return segs;
+   266→}
+   267→
+   268→/** متن انگلیسی قابل‌کلیک: هر واژه (و عبارت شناخته‌شده) یک دکمهٔ جست‌وجوست + جست‌وجوی عبارتِ انتخاب‌شده */
+   269→export function ClickableEnText({ text, className }: { text: string; className?: string }) {
+   270→  const data = useBookData();
+   271→  const { bookId } = useBook();
+   272→  const { status: sessionStatus } = useSession();
+   273→  const [sel, setSel] = useState<{ hit: LookupHit; x: number; y: number } | null>(null);
+   274→  const [selSearch, setSelSearch] = useState<{ raw: string; x: number; y: number } | null>(null);
+   275→  const wrapRef = useRef<HTMLSpanElement>(null);
+   276→
+   277→  const maps = useMemo(
+   278→    () => getLookupMaps(data.dictionary, data.vocab.all),
+   279→    [data.dictionary, data.vocab.all],
+   280→  );
+   281→  const segs = useMemo(() => segmentText(text, maps), [text, maps]);
+   282→
+   283→  const onWordClick = useCallback(
+   284→    (e: React.MouseEvent<HTMLButtonElement>) => {
+   285→      const norm = e.currentTarget.dataset.norm ?? "";
+   286→      if (!norm) return;
+   287→      const rect = e.currentTarget.getBoundingClientRect();
+   288→      setSel({ hit: lookup(maps, norm), x: rect.left + rect.width / 2, y: rect.bottom });
+   289→      // یادداشت واژه — فقط اولین باز شدن پاپ‌آپ fetch می‌کند (کش ماژولی + TTL)
+   290→      ensureNotes(bookId ?? "", sessionStatus === "authenticated");
+   291→    },
+   292→    [maps, bookId, sessionStatus],
+   293→  );
+   294→
+   295→  // جست‌وجوی عبارت انتخاب‌شده با ماوس/لمس — علاوه بر کلیک تک‌واژه
+   296→  useEffect(() => {
+   297→    function extractSelection(): { raw: string; x: number; y: number } | null {
+   298→      const s = window.getSelection();
+   299→      if (!s || s.isCollapsed || s.rangeCount === 0) return null;
+   300→      const range = s.getRangeAt(0);
+   301→      const host = wrapRef.current;
+   302→      if (!host || !host.contains(range.commonAncestorContainer)) return null;
+   303→      const raw = s.toString().trim().replace(/\s+/g, " ");
+   304→      if (!raw || raw.length > 60 || !/[A-Za-z]/.test(raw)) return null;
+   305→      const rect = range.getBoundingClientRect();
+   306→      if (!rect || (rect.width === 0 && rect.height === 0)) return null;
+   307→      return { raw, x: rect.left + rect.width / 2, y: rect.bottom };
+   308→    }
+   309→    function onUp() {
+   310→      // صبر یک تیک تا selection نهایی شود (مخصوصاً در لمس)
+   311→      setTimeout(() => setSelSearch(extractSelection()), 0);
+   312→    }
+   313→    function onDown(e: Event) {
+   314→      const t = e.target as HTMLElement | null;
+   315→      // دکمهٔ جست‌وجوی خودِ انتخاب، انتخاب را پاک نکند
+   316→      if (t?.closest?.("[data-sel-search]")) return;
+   317→      setSelSearch(null);
+   318→    }
+   319→    document.addEventListener("mouseup", onUp);
+   320→    document.addEventListener("touchend", onUp);
+   321→    document.addEventListener("mousedown", onDown);
+   322→    return () => {
+   323→      document.removeEventListener("mouseup", onUp);
+   324→      document.removeEventListener("touchend", onUp);
+   325→      document.removeEventListener("mousedown", onDown);
+   326→    };
+   327→  }, []);
+   328→
+   329→  function openSelectionSearch() {
+   330→    if (!selSearch) return;
+   331→    const { raw, x, y } = selSearch;
+   332→    setSelSearch(null);
+   333→    setSel({ hit: lookup(maps, normalize(raw)), x, y });
+   334→    ensureNotes(bookId ?? "", sessionStatus === "authenticated");
+   335→  }
+   336→
+   337→  // موقعیت دکمهٔ شناور جست‌وجوی عبارت — clamp به دید
+   338→  const pillLeft = selSearch
+   339→    ? Math.min(Math.max(selSearch.x, 105), (typeof window !== "undefined" ? window.innerWidth : 400) - 105)
+   340→    : 0;
+   341→
+   342→  return (
+   343→    <>
+   344→      <span ref={wrapRef} dir="ltr" className={className}>
+   345→        {segs.map((s, i) =>
+   346→          s.kind === "text" ? (
+   347→            <span key={i}>{s.raw}</span>
+   348→          ) : (
+   349→            <button
+   350→              key={i}
+   351→              type="button"
+   352→              data-norm={s.norm}
+   353→              onClick={onWordClick}
+   354→              className="lookup-word cursor-pointer rounded px-0.5 transition-colors hover:bg-primary/15 hover:text-primary"
+   355→              title="معنی این واژه را ببین"
+   356→            >
+   357→              {s.raw}
+   358→            </button>
+   359→          ),
+   360→        )}
+   361→      </span>
+   362→      {selSearch && !sel && (
+   363→        <button
+   364→          type="button"
+   365→          data-sel-search
+   366→          onClick={openSelectionSearch}
+   367→          className="lookup-pop fixed z-100 flex max-w-[210px] items-center gap-1.5 rounded-full border border-primary/50 bg-card px-3.5 py-2 text-[11.5px] font-black text-primary shadow-xl shadow-black/20 transition-transform hover:scale-105 active:scale-95"
+   368→          style={{ left: pillLeft, top: selSearch.y + 8, transform: "translateX(-50%)" }}
+   369→        >
+   370→          <Search size={13} className="shrink-0" />
+   371→          <span className="truncate">جست‌وجوی «{selSearch.raw}»</span>
+   372→        </button>
+   373→      )}
+   374→      {sel && <LookupPopover sel={sel} onClose={() => setSel(null)} />}
+   375→    </>
+   376→  );
+   377→}
+   378→
+   379→function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: number }; onClose: () => void }) {
+   380→  const ref = useRef<HTMLDivElement>(null);
+   381→  const { bookId } = useBook();
+   382→  const starred = useStarredWords();
+   383→  const srs = useSRSData();
+   384→  const { learned, toggle: toggleLearnedWord } = useLearnedWords();
+   385→  const { hit } = sel;
+   386→
+   387→  // تصویر حافظه (Dual Coding) — کاملاً event-driven؛ بدون effect جدید
+   388→  const [memImg, setMemImg] = useState<{ word: string; data: string; loading: boolean }>({
+   389→    word: "",
+   390→    data: "",
+   391→    loading: false,
+   392→  });
+   393→
+   394→  // بستن با کلیک بیرون، Escape و اسکرول
+   395→  useEffect(() => {
+   396→    function onDown(e: MouseEvent) {
+   397→      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+   398→    }
+   399→    function onKey(e: KeyboardEvent) {
+   400→      if (e.key === "Escape") onClose();
+   401→    }
+   402→    window.addEventListener("mousedown", onDown);
+   403→    window.addEventListener("keydown", onKey);
+   404→    window.addEventListener("scroll", onClose, { once: true, passive: true });
+   405→    return () => {
+   406→      window.removeEventListener("mousedown", onDown);
+   407→      window.removeEventListener("keydown", onKey);
+   408→      window.removeEventListener("scroll", onClose);
+   409→    };
+   410→  }, [onClose]);
+   411→
+   412→  // موقعیت clamp شده به دید
+   413→  const W = 300;
+   414→  const vw = typeof window !== "undefined" ? window.innerWidth : 400;
+   415→  const vh = typeof window !== "undefined" ? window.innerHeight : 600;
+   416→  const left = Math.min(Math.max(sel.x - W / 2, 8), vw - W - 8);
+   417→  const top = Math.min(sel.y + 8, vh - 200);
+   418→
+   419→  const isStarred = starred.has(hit.word);
+   420→  const srsItem = srs[hit.word];
+   421→  const srsBox = srsItem?.box ?? 0;
+   422→  const isLearned = learned.has(hit.word);
+   423→
+   424→  // تولید تصویر حافظه برای واژه — ابتدا کش ماژولی، سپس POST به /api/word-image
+   425→  async function loadMemoryImage() {
+   426→    const word = hit.word;
+   427→    if (!word || memImg.loading) return;
+   428→    const hitCached = memoryImageCache.get(word);
+   429→    if (hitCached) {
+   430→      setMemImg({ word, data: hitCached, loading: false });
+   431→      return;
+   432→    }
+   433→    setMemImg({ word, data: "", loading: true });
+   434→    try {
+   435→      const guest = readUserName();
+   436→      const res = await fetch("/api/word-image", {
+   437→        method: "POST",
+   438→        headers: {
+   439→          "Content-Type": "application/json",
+   440→          ...(guest ? { "x-visionone-name": guest } : {}),
+   441→        },
+   442→        body: JSON.stringify({ word, meaning: hit.vocab?.meaning ?? "" }),
+   443→      });
+   444→      const payload: { image?: string; error?: string } = await res.json();
+   445→      if (!res.ok || !payload.image) {
+   446→        toast.error(payload.error ?? "تصویر حافظه ساخته نشد — دوباره تلاش کن");
+   447→        setMemImg({ word: "", data: "", loading: false });
+   448→        return;
+   449→      }
+   450→      memoryImageCache.set(word, payload.image);
+   451→      while (memoryImageCache.size > MEMORY_IMG_CAP) {
+   452→        const oldest = memoryImageCache.keys().next();
+   453→        if (oldest.done) break;
+   454→        memoryImageCache.delete(oldest.value);
+   455→      }
+   456→      setMemImg({ word, data: payload.image, loading: false });
+   457→    } catch {
+   458→      toast.error("خطا در ارتباط با تصویرساز حافظه — اتصال را بررسی کن و دوباره تلاش کن");
+   459→      setMemImg({ word: "", data: "", loading: false });
+   460→    }
+   461→  }
+   462→
+   463→  function startStarredPractice() {
+   464→    if (starred.count === 0) return;
+   465→    setPracticeIntent({ tab: "cards", starredOnly: true, weakOnly: false });
+   466→    onClose();
+   467→    requestView("flashcards");
+   468→  }
+   469→
+   470→  return (
+   471→    <div
+   472→      ref={ref}
+   473→      role="dialog"
+   474→      aria-label={`معنی ${hit.word}`}
+   475→      className="lookup-pop fixed z-100 max-h-[min(78vh,540px)] w-[300px] overflow-y-auto rounded-2xl border bg-card p-4 shadow-2xl shadow-black/25"
+   476→      style={{ left, top }}
+   477→    >
+   478→      <button
+   479→        type="button"
+   480→        onClick={onClose}
+   481→        aria-label="بستن"
+   482→        className="absolute left-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+   483→      >
+   484→        <X size={13} />
+   485→      </button>
+   486→
+   487→      <div className="flex items-start gap-2 pr-1">
+   488→        <div className="min-w-0 flex-1">
+   489→          <p dir="ltr" className="font-en text-left text-[17px] font-black leading-6 text-primary">
+   490→            {hit.word}
+   491→          </p>
+   492→          {hit.dict?.phonetic && (
+   493→            <p dir="ltr" className="font-en mt-0.5 text-left text-[11px] text-muted-foreground">
+   494→              {hit.dict.phonetic}
+   495→            </p>
+   496→          )}
+   497→        </div>
+   498→        <div className="flex items-center gap-1">
+   499→          <SpeakButton text={hit.word} size="md" />
+   500→          <button
+   501→            type="button"
+   502→            onClick={loadMemoryImage}
+   503→            disabled={memImg.loading}
+   504→            aria-label="تصویر حافظه"
+   505→            title="تصویر حافظه — یک تصویر آموزشی برای این واژه بکش"
+   506→            className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-all hover:scale-110 hover:text-primary active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+   507→          >
+   508→            {memImg.loading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlay size={14} />}
+   509→          </button>
+   510→          <button
+   511→            type="button"
+   512→            onClick={() => toggleStar(hit.word)}
+   513→            aria-label={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
+   514→            title={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
+   515→            className={cn(
+   516→              "flex h-7 w-7 items-center justify-center rounded-full transition-all hover:scale-110",
+   517→              isStarred ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500",
+   518→            )}
+   519→          >
+   520→            <Star size={14} className={cn(isStarred && "fill-yellow-500 star-pop")} />
+   521→          </button>
+   522→        </div>
+   523→      </div>
+   524→
+   525→      {hit.vocab && (
+   526→        <p className="mt-2 rounded-lg bg-primary/10 px-2.5 py-1.5 text-[13px] font-bold leading-6">
+   527→          {hit.vocab.meaning}
+   528→        </p>
+   529→      )}
+   530→
+   531→      {/* تصویر حافظه (Dual Coding) — فقط برای واژهِ فعلی رندر می‌شود */}
+   532→      {memImg.word === hit.word && memImg.loading && (
+   533→        <div className="mt-2.5 flex items-center justify-center gap-2 rounded-xl border border-primary/25 bg-primary/5 px-3 py-6">
+   534→          <Loader2 size={16} className="animate-spin text-primary" />
+   535→          <p className="text-[11.5px] font-bold text-muted-foreground">دارم تصویر حافظه را می‌کشم… ✏️</p>
+   536→        </div>
+   537→      )}
+   538→      {memImg.word === hit.word && memImg.data && (
+   539→        <figure className="mt-2.5 overflow-hidden rounded-xl border shadow-sm">
+   540→          <img
+   541→            src={"data:image/png;base64," + memImg.data}
+   542→            alt={"تصویر حافظه برای واژه " + hit.word}
+   543→            className="block aspect-square w-full bg-muted"
+   544→          />
+   545→          <figcaption className="flex items-center justify-center gap-2 bg-muted/40 px-2 py-1.5">
+   546→            <Badge variant="secondary" dir="ltr" className="font-en max-w-[45%]">
+   547→              {hit.word}
+   548→            </Badge>
+   549→            {hit.vocab?.meaning && (
+   550→              <span className="truncate text-[11px] font-bold text-foreground/80">{hit.vocab.meaning}</span>
+   551→            )}
+   552→          </figcaption>
+   553→        </figure>
+   554→      )}
+   555→
+   556→      {/* وضعیت SRS و «یاد گرفتم» — فقط برای واژه‌های جزوه */}
+   557→      {hit.vocab && (
+   558→        <div className="mt-2.5 flex items-center justify-between gap-2 rounded-xl border bg-muted/40 px-2.5 py-2">
+   559→          <button
+   560→            type="button"
+   561→            onClick={() => toggleLearnedWord(hit.word)}
+   562→            aria-pressed={isLearned}
+   563→            className={cn(
+   564→              "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-black transition-all active:scale-95",
+   565→              isLearned
+   566→                ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
+   567→                : "border border-primary/40 text-primary hover:bg-primary/10",
+   568→            )}
+   569→          >
+   570→            <CheckCircle2 size={12} />
+   571→            {isLearned ? "یاد گرفتم" : "یاد نگرفتم"}
+   572→          </button>
+   573→          <span
+   574→            className="flex items-center gap-1.5"
+   575→            title={
+   576→              srsItem
+   577→                ? `سطح مرور SRS: ${srsBox.toLocaleString("fa-IR")} از ${SRS_MAX_BOX.toLocaleString("fa-IR")}`
+   578→                : "این واژه هنوز در فلاش‌کارت‌ها دیده نشده"
+   579→            }
+   580→          >
+   581→            <span className="text-[10px] font-bold text-muted-foreground">مرور SRS</span>
+   582→            <span className="flex items-center gap-0.5">
+   583→              {Array.from({ length: SRS_MAX_BOX }).map((_, i) => (
+   584→                <span
+   585→                  key={i}
+   586→                  className={cn(
+   587→                    "h-1.5 w-3 rounded-full transition-colors",
+   588→                    i < srsBox ? "bg-amber-500" : "bg-muted-foreground/20",
+   589→                  )}
+   590→                />
+   591→              ))}
+   592→            </span>
+   593→          </span>
+   594→        </div>
+   595→      )}
+   596→
+   597→      {hit.dict ? (
+   598→        <div className="mt-2 space-y-1.5">
+   599→          <p className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground">
+   600→            <BookOpen size={11} className="text-primary" />
+   601→            دیکشنری جزوه
+   602→            <span dir="ltr" className="font-en rounded bg-muted px-1 py-px text-[9px]">{hit.dict.pos}</span>
+   603→          </p>
+   604→          <p dir="ltr" className="font-en text-left text-[12px] leading-5 text-foreground/90">
+   605→            {hit.dict.definition}
+   606→          </p>
+   607→          {hit.dict.examples[0] && (
+   608→            <p dir="ltr" className="font-en rounded-lg bg-muted/60 px-2.5 py-1.5 text-left text-[11px] leading-5 text-muted-foreground">
+   609→              “{hit.dict.examples[0]}”
+   610→            </p>
+   611→          )}
+   612→        </div>
+   613→      ) : !hit.vocab ? (
+   614→        <div className="mt-2 space-y-2">
+   615→          <p className="flex items-center gap-1.5 text-[11px] leading-5 text-muted-foreground">
+   616→            <SearchX size={12} />
+   617→            {hit.word.includes(" ")
+   618→              ? "این عبارت در دیکشنری و واژگان جزوه پیدا نشد."
+   619→              : "این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد."}
+   620→          </p>
+   621→          {hit.related && hit.related.length > 0 && (
+   622→            <div className="rounded-xl border bg-muted/40 p-2.5">
+   623→              <p className="mb-1.5 flex items-center gap-1 text-[10.5px] font-black text-primary">
+   624→                <BookOpen size={11} />
+   625→                کالوکیشن‌های مرتبط در همین کتاب
+   626→              </p>
+   627→              <ul className="space-y-1">
+   628→                {hit.related.slice(0, 5).map((v) => (
+   629→                  <li key={v.word} className="flex items-baseline justify-between gap-2 text-[11px]">
+   630→                    <span dir="ltr" className="font-en text-left font-bold text-foreground">
+   631→                      {v.word}
+   632→                    </span>
+   633→                    <span className="shrink-0 text-muted-foreground">{v.meaning}</span>
+   634→                  </li>
+   635→                ))}
+   636→              </ul>
+   637→            </div>
+   638→          )}
+   639→        </div>
+   640→      ) : null}
+   641→
+   642→      {/* میان‌بر تمرین واژه‌های ستاره‌دار */}
+   643→      {starred.count > 0 && (
+   644→        <button
+   645→          type="button"
+   646→          onClick={startStarredPractice}
+   647→          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-[11.5px] font-black text-yellow-700 transition-all hover:bg-yellow-500/20 dark:text-yellow-300"
+   648→        >
+   649→          <GraduationCap size={14} />
+   650→          تمرین {starred.count.toLocaleString("fa-IR")} واژهٔ ستاره‌دار
+   651→        </button>
+   652→      )}
+   653→
+   654→      {/* یادداشت شخصی واژه (فاز ۱۰) — با Separator جدا، پایین همهٔ بخش‌ها */}
+   655→      {bookId && (
+   656→        <>
+   657→          <Separator className="my-3" />
+   658→          <WordNoteSection key={hit.word} bookId={bookId} word={hit.word} />
+   659→        </>
+   660→      )}
+   661→    </div>
+   662→  );
+   663→}
+   664→
+   665→// ── بخش «📝 یادداشت من» — با key={word} مونت می‌شود تا هر واژه state تازه بگیرد ──
+   666→// داده از کش ماژولی خوانده می‌شود (بدون fetch در هر باز شدن) و با notifyNotes تازه می‌شود.
+   667→
+   668→function WordNoteSection({ bookId, word }: { bookId: string; word: string }) {
+   669→  const { status: sessionStatus } = useSession();
+   670→  useSyncExternalStore(subscribeNotes, getNotesVersion, getNotesVersion);
+   671→
+   672→  const state = notesCache.get(bookId);
+   673→  const row = state?.status === "ready" ? (state.rows.get(word) ?? undefined) : undefined;
+   674→  const [draft, setDraft] = useState<string | null>(null);
+   675→  const [busy, setBusy] = useState(false);
+   676→
+   677→  const value = (draft ?? row?.note ?? "").slice(0, NOTE_MAX_LEN);
+   678→  const guest = sessionStatus !== "authenticated" || state?.status === "guest";
+   679→
+   680→  async function saveNote() {
+   681→    const note = value.trim();
+   682→    if (!note) {
+   683→      toast.error("یادداشت خالی است — چیزی بنویس تا ذخیره شود");
+   684→      return;
+   685→    }
+   686→    setBusy(true);
+   687→    try {
+   688→      const res = await fetch("/api/notes", {
+   689→        method: "PUT",
+   690→        headers: { "Content-Type": "application/json" },
+   691→        body: JSON.stringify({ book: bookId, word, note }),
+   692→      });
+   693→      const json = (await res.json().catch(() => null)) as { note?: NoteRow; error?: string } | null;
+   694→      if (res.status === 401) {
+   695→        notesCache.set(bookId, { rows: new Map(), status: "guest", fetchedAt: Date.now() });
+   696→        notifyNotes();
+   697→        return;
+   698→      }
+   699→      if (!res.ok || !json?.note) {
+   700→        toast.error(json?.error ?? "ذخیرهٔ یادداشت نشد — دوباره تلاش کن");
+   701→        return;
+   702→      }
+   703→      const st = notesCache.get(bookId);
+   704→      if (st) {
+   705→        const rows = new Map(st.rows);
+   706→        rows.set(word, json.note);
+   707→        notesCache.set(bookId, { ...st, rows, status: "ready", fetchedAt: Date.now() });
+   708→        notifyNotes();
+   709→      }
+   710→      setDraft(null);
+   711→      toast.success("یادداشت ذخیره شد ✓");
+   712→    } catch {
+   713→      toast.error("خطا در ارتباط با سرور — اتصال اینترنتت را بررسی کن");
+   714→    } finally {
+   715→      setBusy(false);
+   716→    }
+   717→  }
+   718→
+   719→  async function removeNote() {
+   720→    if (!row || busy) return;
+   721→    setBusy(true);
+   722→    try {
+   723→      const res = await fetch(`/api/notes?id=${encodeURIComponent(row.id)}`, { method: "DELETE" });
+   724→      if (res.status === 401) {
+   725→        notesCache.set(bookId, { rows: new Map(), status: "guest", fetchedAt: Date.now() });
+   726→        notifyNotes();
+   727→        return;
+   728→      }
+   729→      if (!res.ok) {
+   730→        toast.error("حذف یادداشت نشد — دوباره تلاش کن");
+   731→        return;
+   732→      }
+   733→      const st = notesCache.get(bookId);
+   734→      if (st) {
+   735→        const rows = new Map(st.rows);
+   736→        rows.delete(word);
+   737→        notesCache.set(bookId, { ...st, rows, fetchedAt: Date.now() });
+   738→        notifyNotes();
+   739→      }
+   740→      setDraft(null);
+   741→      toast.success("یادداشت حذف شد");
+   742→    } catch {
+   743→      toast.error("خطا در ارتباط با سرور — اتصال اینترنتت را بررسی کن");
+   744→    } finally {
+   745→      setBusy(false);
+   746→    }
+   747→  }
+   748→
+   749→  // مهمان (بدون سشن یا 401) — کارت ورود کوچک، بدون خطا
+   750→  if (guest) {
+   751→    return (
+   752→      <div>
+   753→        <p className="text-[11.5px] font-black">📝 یادداشت من</p>
+   754→        <div className="mt-2 rounded-xl border border-dashed border-primary/40 bg-primary/5 p-3 text-center">
+   755→          <p className="text-[11.5px] leading-6 text-muted-foreground">
+   756→            برای همگام‌شدن یادداشت با حسابت وارد شو 🔑
+   757→          </p>
+   758→          <button
+   759→            type="button"
+   760→            onClick={openProfileLogin}
+   761→            className="mx-auto mt-2 flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-[11.5px] font-black text-primary-foreground shadow-sm transition-all hover:scale-105 active:scale-95"
+   762→          >
+   763→            <LogIn size={13} />
+   764→            ورود
+   765→          </button>
+   766→        </div>
+   767→      </div>
+   768→    );
+   769→  }
+   770→
+   771→  return (
+   772→    <div>
+   773→      <div className="flex items-center justify-between gap-2">
+   774→        <p className="text-[11.5px] font-black">📝 یادداشت من</p>
+   775→        <span dir="ltr" className="text-[9.5px] font-bold text-muted-foreground">
+   776→          {value.length.toLocaleString("fa-IR")} / {NOTE_MAX_LEN.toLocaleString("fa-IR")}
+   777→        </span>
+   778→      </div>
+   779→      {state?.status === "loading" && (
+   780→        <p className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+   781→          <Loader2 size={10} className="animate-spin" />
+   782→          در حال همگام‌سازی یادداشت‌ها…
+   783→        </p>
+   784→      )}
+   785→      <Textarea
+   786→        value={value}
+   787→        onChange={(e) => setDraft(e.target.value.slice(0, NOTE_MAX_LEN))}
+   788→        placeholder="نکتهٔ خودت را دربارهٔ این واژه بنویس… (مثلاً ترفند حفظش)"
+   789→        maxLength={NOTE_MAX_LEN}
+   790→        aria-label="یادداشت شخصی واژه"
+   791→        className="mt-2 min-h-[64px] resize-none bg-muted/30 text-[12px] leading-6"
+   792→      />
+   793→      <div className="mt-2 flex items-center gap-2">
+   794→        <button
+   795→          type="button"
+   796→          onClick={saveNote}
+   797→          disabled={busy}
+   798→          className="flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-primary px-4 text-[11.5px] font-black text-primary-foreground shadow-sm transition-all hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-60"
+   799→        >
+   800→          {busy ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
+   801→          ذخیره
+   802→        </button>
+   803→        {row && (
+   804→          <button
+   805→            type="button"
+   806→            onClick={removeNote}
+   807→            disabled={busy}
+   808→            aria-label="حذف یادداشت"
+   809→            title="حذف یادداشت"
+   810→            className="flex min-h-9 items-center justify-center gap-1.5 rounded-full border border-destructive/40 px-3.5 text-[11.5px] font-black text-destructive transition-all hover:bg-destructive/10 active:scale-95 disabled:pointer-events-none disabled:opacity-60"
+   811→          >
+   812→            <Trash2 size={13} />
+   813→            حذف
+   814→          </button>
+   815→        )}
+   816→      </div>
+   817→    </div>
+   818→  );
+   819→}
+   820→

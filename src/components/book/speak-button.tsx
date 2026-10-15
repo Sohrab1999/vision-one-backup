@@ -31,8 +31,10 @@ export function SpeakButton({
   const { speed: preferredSpeed } = useVoiceSpeed();
   const effectiveSpeed = speed ?? preferredSpeed;
 
-  const iconSize = size === "lg" ? 20 : size === "md" ? 17 : 14;
-  const slowSize = size === "lg" ? "h-10 w-10" : size === "md" ? "h-8 w-8" : "h-7 w-7";
+  // موبایل (Task 23): اندازهٔ «sm» از h-7 (28px) به h-9 (36px) رسید — پرتکرارترین کنترل اپ
+  // باید به هدف لمسی قابل‌اعتماد نزدیک باشد؛ فاصلهٔ دکمه‌ها هم gap-1 → gap-1.5
+  const iconSize = size === "lg" ? 20 : size === "md" ? 17 : 15;
+  const slowSize = size === "lg" ? "h-10 w-10" : size === "md" ? "h-9 w-9" : "h-9 w-9";
 
   async function handleClick(e: React.MouseEvent) {
     e.stopPropagation();
@@ -65,7 +67,7 @@ export function SpeakButton({
   }
 
   return (
-    <span className={cn("inline-flex items-center gap-1", className)}>
+    <span className={cn("inline-flex items-center gap-1.5", className)}>
       <button
         type="button"
         aria-label={label ?? `پخش صوتی: ${text.slice(0, 40)}`}
@@ -73,7 +75,7 @@ export function SpeakButton({
         onClick={handleClick}
         className={cn(
           "inline-flex items-center justify-center gap-1.5 rounded-full transition-all shrink-0",
-          size === "lg" ? "h-10 w-10" : size === "md" ? "h-8 w-8" : "h-7 w-7",
+          size === "lg" ? "h-10 w-10" : size === "md" ? "h-9 w-9" : "h-9 w-9",
           state === "playing"
             ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 scale-105"
             : "bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105",

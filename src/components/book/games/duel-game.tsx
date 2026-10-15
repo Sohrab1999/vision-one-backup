@@ -724,7 +724,7 @@ export function DuelGame() {
                     onChange={(e) => setP1Name(e.target.value)}
                     aria-label="نام بازیکن ۱"
                     maxLength={18}
-                    className="h-11 border-0 bg-transparent px-0 text-[13px] font-bold shadow-none focus-visible:ring-0"
+                    className="h-11 border-0 bg-transparent px-0 text-base font-bold shadow-none focus-visible:ring-0"
                   />
                 </div>
                 <div className="flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 px-3">
@@ -734,7 +734,7 @@ export function DuelGame() {
                     onChange={(e) => setP2Name(e.target.value)}
                     aria-label="نام بازیکن ۲"
                     maxLength={18}
-                    className="h-11 border-0 bg-transparent px-0 text-[13px] font-bold shadow-none focus-visible:ring-0"
+                    className="h-11 border-0 bg-transparent px-0 text-base font-bold shadow-none focus-visible:ring-0"
                   />
                 </div>
               </div>

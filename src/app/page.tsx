@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { AppHeader, type ViewId } from "@/components/book/app-header";
 import { DesktopSidebar } from "@/components/book/desktop-sidebar";
+import { MobileNav } from "@/components/book/mobile-nav";
 import { AppFooter } from "@/components/book/app-footer";
 import { BookshelfView } from "@/components/book/bookshelf-view";
 import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
@@ -151,6 +152,9 @@ function App() {
 
       <AppHeader view={effectiveView} onNavigate={navigate} />
 
+      {/* ناوبری پایین موبایل (Task 23) — جانشین نوار قرصی هدر؛ فقط <md */}
+      {hasData && <MobileNav view={effectiveView} onNavigate={navigate} />}
+
       <main
         id="main-content"
         tabIndex={-1}
@@ -189,6 +193,12 @@ function App() {
       </main>
 
       <AppFooter />
+
+      {/* فاصله‌ی پایین برای ناوبری موبایل — فوتر زیر نوار پایین دفن نشود */}
+      <div
+        aria-hidden
+        className="h-[calc(57px+env(safe-area-inset-bottom))] shrink-0 md:hidden"
+      />
 
       {/* فاز ۶ — جشن گیمیفیکیشن: توست‌های XP/سطح/نشان + کانفتی (سراسری) */}
       <GamificationToasts />

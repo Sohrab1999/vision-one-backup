@@ -245,13 +245,14 @@ export function AppHeader({
             )}
           </Button>
 
-          {/* نصب روی گوشی — راهنمای PWA (فاز ۱۲) */}
+          {/* نصب روی گوشی — راهنمای PWA (فاز ۱۲)
+              موبایل (Task 23): از هدر حذف شد (اقدام کم‌تکرار) → کشوی «بیشتر» ناوبری پایین */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => window.dispatchEvent(new CustomEvent(OPEN_INSTALL_EVENT))}
             aria-label="نصب روی گوشی"
-            className="h-11 w-11 shrink-0 rounded-full sm:h-9 sm:w-9"
+            className="hidden h-11 w-11 shrink-0 rounded-full sm:inline-flex sm:h-9 sm:w-9"
           >
             <Smartphone size={17} />
           </Button>
@@ -269,34 +270,9 @@ export function AppHeader({
         </div>
       </div>
 
-      {/* ناوبری موبایل */}
-      {hasBook && (
-        <nav
-          className="md:hidden flex gap-1 overflow-x-auto px-3 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          aria-label="ناوبری موبایل"
-        >
-          {NAV.map((item) => {
-            const active = view === item.id || (view === "chapter" && item.id === "contents");
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => onNavigate(item.id)}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-all",
-                  active
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "bg-muted text-muted-foreground",
-                )}
-              >
-                <item.icon size={13} />
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
-      )}
+      {/* ناوبری موبایل — Task 23: نوار قرصی افقی ۱۸ آیتمی حذف شد؛
+          جانشین: ناوبری پایین با ۵ زبانهٔ اصلی + کشوی «بیشتر» (mobile-nav.tsx)
+          چرا: قرص‌ها ~۳۰px و ۱۲ مقصد بیرون از دید بود، هدر ~۱۰۰px رشد می‌کرد */}
     </header>
   );
 }

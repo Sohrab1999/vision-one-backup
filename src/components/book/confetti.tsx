@@ -67,9 +67,14 @@ export function ConfettiCanvas() {
     let running = false;
     let last = 0;
 
+    // موبایل (Task 23): مقیاس devicePixelRatio — کانفتی روی نمایشگر ۲x/۳x تار نبود
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); // سقف ۲ برای باتری گوشی ضعیف
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = Math.round(window.innerWidth * dpr);
+      canvas.height = Math.round(window.innerHeight * dpr);
+      canvas.style.width = "100vw";
+      canvas.style.height = "100vh";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resize();
     window.addEventListener("resize", resize);

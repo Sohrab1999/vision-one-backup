@@ -351,7 +351,8 @@ export function ClickableEnText({ text, className }: { text: string; className?:
               type="button"
               data-norm={s.norm}
               onClick={onWordClick}
-              className="lookup-word cursor-pointer rounded px-0.5 transition-colors hover:bg-primary/15 hover:text-primary"
+              // موبایل (Task 23): py-0.5/-my-0.5 = هدف لمسی بلندتر بدون بهم‌زدن ریتم خطوط
+              className="lookup-word cursor-pointer rounded px-1 py-0.5 -my-0.5 transition-colors hover:bg-primary/15 hover:text-primary"
               title="معنی این واژه را ببین"
             >
               {s.raw}
@@ -399,22 +400,30 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
     }
+    // موبایل (Task 23): بستن با اولین اسکرول، اسکرول اینرسی تصادفی هنگام خواندن
+    // تعریف را نابود می‌کرد → فقط با جابه‌جایی واقعی (>۸۰px) بسته شود
+    const startY = window.scrollY;
+    function onScroll() {
+      if (Math.abs(window.scrollY - startY) > 80) onClose();
+    }
     window.addEventListener("mousedown", onDown);
     window.addEventListener("keydown", onKey);
-    window.addEventListener("scroll", onClose, { once: true, passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("keydown", onKey);
-      window.removeEventListener("scroll", onClose);
+      window.removeEventListener("scroll", onScroll);
     };
   }, [onClose]);
 
-  // موقعیت clamp شده به دید
+  // موقعیت clamp شده به دید — موبایل (Task 23): کلمپ عمودی با ارتفاع واقعیِ بیشینهٔ
+  // پاپ‌آپ (پیش‌تر vh-200 بود و تا ۳۴۰px پایین پاپ‌آپ از صفحه بیرون می‌زد)
   const W = 300;
   const vw = typeof window !== "undefined" ? window.innerWidth : 400;
   const vh = typeof window !== "undefined" ? window.innerHeight : 600;
+  const maxH = Math.min(vh * 0.78, 540); // = سقف max-h کلاس
   const left = Math.min(Math.max(sel.x - W / 2, 8), vw - W - 8);
-  const top = Math.min(sel.y + 8, vh - 200);
+  const top = Math.min(Math.max(sel.y + 8, 8), Math.max(8, vh - maxH - 12));
 
   const isStarred = starred.has(hit.word);
   const srsItem = srs[hit.word];
@@ -479,9 +488,9 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
         type="button"
         onClick={onClose}
         aria-label="بستن"
-        className="absolute left-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="absolute left-2 top-2 flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-90"
       >
-        <X size={13} />
+        <X size={15} />
       </button>
 
       <div className="flex items-start gap-2 pr-1">
@@ -503,9 +512,9 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
             disabled={memImg.loading}
             aria-label="تصویر حافظه"
             title="تصویر حافظه — یک تصویر آموزشی برای این واژه بکش"
-            className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-all hover:scale-110 hover:text-primary active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-all hover:scale-110 hover:text-primary active:scale-95 disabled:pointer-events-none disabled:opacity-50"
           >
-            {memImg.loading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlay size={14} />}
+            {memImg.loading ? <Loader2 size={15} className="animate-spin" /> : <ImagePlay size={15} />}
           </button>
           <button
             type="button"
@@ -513,11 +522,11 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
             aria-label={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
             title={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
             className={cn(
-              "flex h-7 w-7 items-center justify-center rounded-full transition-all hover:scale-110",
+              "flex h-9 w-9 items-center justify-center rounded-full transition-all hover:scale-110 active:scale-90",
               isStarred ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500",
             )}
           >
-            <Star size={14} className={cn(isStarred && "fill-yellow-500 star-pop")} />
+            <Star size={15} className={cn(isStarred && "fill-yellow-500 star-pop")} />
           </button>
         </div>
       </div>
@@ -540,6 +549,7 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
           <img
             src={"data:image/png;base64," + memImg.data}
             alt={"تصویر حافظه برای واژه " + hit.word}
+            decoding="async"
             className="block aspect-square w-full bg-muted"
           />
           <figcaption className="flex items-center justify-center gap-2 bg-muted/40 px-2 py-1.5">
@@ -561,7 +571,7 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
             onClick={() => toggleLearnedWord(hit.word)}
             aria-pressed={isLearned}
             className={cn(
-              "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-black transition-all active:scale-95",
+              "flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs font-black transition-all active:scale-95",
               isLearned
                 ? "bg-primary text-primary-foreground shadow-sm shadow-primary/30"
                 : "border border-primary/40 text-primary hover:bg-primary/10",
@@ -599,13 +609,13 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
           <p className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground">
             <BookOpen size={11} className="text-primary" />
             دیکشنری جزوه
-            <span dir="ltr" className="font-en rounded bg-muted px-1 py-px text-[9px]">{hit.dict.pos}</span>
+            <span dir="ltr" className="font-en rounded bg-muted px-1 py-px text-[10px]">{hit.dict.pos}</span>
           </p>
-          <p dir="ltr" className="font-en text-left text-[12px] leading-5 text-foreground/90">
+          <p dir="ltr" className="font-en text-left text-[13px] leading-5.5 text-foreground/90">
             {hit.dict.definition}
           </p>
           {hit.dict.examples[0] && (
-            <p dir="ltr" className="font-en rounded-lg bg-muted/60 px-2.5 py-1.5 text-left text-[11px] leading-5 text-muted-foreground">
+            <p dir="ltr" className="font-en rounded-lg bg-muted/60 px-2.5 py-1.5 text-left text-[12px] leading-5 text-muted-foreground">
               “{hit.dict.examples[0]}”
             </p>
           )}
@@ -620,13 +630,13 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
           </p>
           {hit.related && hit.related.length > 0 && (
             <div className="rounded-xl border bg-muted/40 p-2.5">
-              <p className="mb-1.5 flex items-center gap-1 text-[10.5px] font-black text-primary">
+              <p className="mb-1.5 flex items-center gap-1 text-[11px] font-black text-primary">
                 <BookOpen size={11} />
                 کالوکیشن‌های مرتبط در همین کتاب
               </p>
               <ul className="space-y-1">
                 {hit.related.slice(0, 5).map((v) => (
-                  <li key={v.word} className="flex items-baseline justify-between gap-2 text-[11px]">
+                  <li key={v.word} className="flex items-baseline justify-between gap-2 text-xs">
                     <span dir="ltr" className="font-en text-left font-bold text-foreground">
                       {v.word}
                     </span>
@@ -772,7 +782,7 @@ function WordNoteSection({ bookId, word }: { bookId: string; word: string }) {
     <div>
       <div className="flex items-center justify-between gap-2">
         <p className="text-[11.5px] font-black">📝 یادداشت من</p>
-        <span dir="ltr" className="text-[9.5px] font-bold text-muted-foreground">
+        <span dir="ltr" className="text-[10.5px] font-bold text-muted-foreground">
           {value.length.toLocaleString("fa-IR")} / {NOTE_MAX_LEN.toLocaleString("fa-IR")}
         </span>
       </div>
@@ -788,7 +798,8 @@ function WordNoteSection({ bookId, word }: { bookId: string; word: string }) {
         placeholder="نکتهٔ خودت را دربارهٔ این واژه بنویس… (مثلاً ترفند حفظش)"
         maxLength={NOTE_MAX_LEN}
         aria-label="یادداشت شخصی واژه"
-        className="mt-2 min-h-[64px] resize-none bg-muted/30 text-[12px] leading-6"
+        // موبایل (Task 23): override text-[12px] حذف شد — iOS هنگام فوکوس زوم می‌کرد
+        className="mt-2 min-h-[64px] resize-none bg-muted/30 leading-6"
       />
       <div className="mt-2 flex items-center gap-2">
         <button

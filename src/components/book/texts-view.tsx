@@ -40,7 +40,7 @@ export function ReadingsLibrary({ lessonFilter }: { lessonFilter?: number }) {
               type="button"
               onClick={() => setActiveLesson(t.lesson)}
               className={cn(
-                "rounded-full px-4 py-1.5 text-[12px] font-bold transition-all",
+                "rounded-full px-4 min-h-9 flex items-center text-[12px] font-bold transition-all active:scale-95",
                 activeLesson === t.lesson
                   ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
                   : "bg-muted text-muted-foreground hover:text-foreground",
@@ -101,9 +101,11 @@ export function ReadingCard({
             <div key={i} className="rounded-xl border bg-muted/30 p-4 space-y-2">
               <div className="flex items-start gap-2.5">
                 <SpeakButton text={p.en} />
+                {/* موبایل (Task 23): متن ریدینگ از ۱۳٫۵px به ۱۵px — خوانایی با یک دست؛
+                    هدف لمسی واژه‌های درون‌متنی هم با padding همسطح بزرگ‌تر شد */}
                 <ClickableEnText
                   text={p.en}
-                  className="font-en flex-1 text-[13.5px] leading-7 text-foreground"
+                  className="font-en flex-1 text-[15px] leading-7 text-foreground md:text-base"
                 />
               </div>
               {showFa && (
@@ -113,8 +115,8 @@ export function ReadingCard({
               )}
             </div>
           ))}
-          <p className="flex items-center justify-center gap-1.5 text-[10.5px] text-muted-foreground">
-            💡 روی هر واژه کلیک کن — یا یک عبارت را با ماوس انتخاب کن تا «جست‌وجو» ظاهر شود
+          <p className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+            💡 روی هر واژه بزن — یا یک عبارت را نگه‌دار و انتخاب کن تا «جست‌وجو» ظاهر شود
           </p>
         </div>
       </CardContent>
@@ -137,7 +139,7 @@ export function ConversationsList({ lessonFilter }: { lessonFilter?: number }) {
             type="button"
             onClick={() => setActiveLesson(t.lesson)}
             className={cn(
-              "rounded-full px-4 py-1.5 text-[12px] font-bold transition-all",
+              "rounded-full px-4 min-h-9 flex items-center text-[12px] font-bold transition-all active:scale-95",
               activeLesson === t.lesson
                 ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
                 : "bg-muted text-muted-foreground hover:text-foreground",

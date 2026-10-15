@@ -377,7 +377,8 @@ export function ProfileButton() {
         size="icon"
         aria-label={user ? `حساب ${user.username}` : "نام من"}
         onClick={() => setOpen(true)}
-        className="sm:hidden h-9 w-9 rounded-full text-[14px]"
+        // موبایل (Task 23): h-9 → h-11 — هم‌راستا با همسایه‌های ۴۴px هدر
+        className="sm:hidden h-11 w-11 rounded-full text-[15px]"
       >
         {user?.avatar ?? <User size={16} />}
       </Button>

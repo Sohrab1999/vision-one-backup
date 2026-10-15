@@ -3484,3 +3484,28 @@ Stage Summary:
 - باقی‌مانده صادقانه: ۳ درس ترجمهٔ فارسی ناقص (پاراگراف فارسی خالی = فقط EN نمایش داده می‌شود)، ۷ درس بدون سؤال کوئیز (متن PDF قابل استخراج نبود) — قابل تکمیل با rerun اسکریپت‌ها در نشست بعد
 - درس فنی: rg -rln تلهٔ --replace دارد (پرچم -r!)؛ MultiEdit ناتمام = ویرایش‌های قبل از خطا اعمال شده‌اند (بعدش همیشه state فایل را چک کن)؛ LLM gateway حدود ۴29 در ~۱۰۰+ درخواست متوالی — pacing ۹s + resume ضروری
 - گام بعدی پیشنهادی: تکمیل ترجمهٔ ۳ درس باقی‌مانده با rerun، اضافه‌کردن entry تازه‌ها (whats-new) برای کتاب جدید، یا فاز U6 «طاق عمودی» نقشهٔ FPS
+
+---
+Task ID: 23
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست Senior Mobile UX Engineer — ممیزی عمیق موبایل (۳۹۰px/لمسی) در ۷ بُعد + پیاده‌سازی اصلاحات + گزارش شدت‌بندی‌شده + Mobile Optimization Roadmap
+
+Work Log:
+- ممیزی اکسپلور (very thorough): ۷ بُعد × تمام src/components/book/** و games/** → ۱۵ یافتهٔ اولویت‌دار با file:line دقیق (جدول شدت High/Med/Low در گزارش نهایی کاربر)
+- 🧭 ساختاری — mobile-nav.tsx جدید: ناوبری پایین با ۵ زبانهٔ اصلی (خانه/فهرست/واژگان/آزمون/بازی‌ها) + کشوی vaul «بیشتر» با ۱۳ مقصد گرید ۴ستونه + ردیف نصب PWA/پوسته (پروگرسیو دیسکلوژر)؛ min-h-56px هر زبانه، safe-area-inset، مخفی‌شدن خودکار با focusin/focusin روی input (کیبورد نرم)، بستن خودکار پس از ناوبری؛ زبانهٔ «نصب روی گوشی» از هدر موبایل حذف شد (اقدام کم‌تکرار)
+- 🧭 نوار قرصی افقی ۱۸ آیتمی هدر موبایل حذف شد (قرص ~۳۰px، ۱۲ مقصد بیرون از دید، هدر ~۱۰۰px) → هدر موبایل ۵۶px؛ page.tsx: spacer h-[calc(57px+env(safe-area-inset-bottom))] بعد از فوتر (بدون هم‌پوشانی — تأیید QA: footer bottom=787 = nav top=787)
+- 👆 لمسی: SpeakButton sm از h-7 (28px) → h-9 (36px) + gap-1.5 (پرتکرارترین کنترل اپ)؛ StarToggle و چیپ‌های vocab (ستاره/تمرین/نمای کارت-جدول) h-7 → h-9؛ چیپ هدف روزانه home و چیپ‌های stats و voice-engine vocabulary و درس‌پیل‌های texts/flashcards → min-h-9/h-10؛ دکمهٔ بستن Dialog پایه → h-10 w-10 (یک‌جا، همهٔ دیالوگ‌ها)؛ دکمهٔ بستن/تصویر/ستارهٔ پاپ‌آپ واژه → h-9؛ Close پاپ‌آپ واژه 24→36px
+- 👆 hover-only → active: کارت‌های فصل (contents)، کارت‌های home (روزانه/هفتگی/خطاها/ستاره‌دارها + group-active:scale-95)، کاشی‌های games-hub، کارت‌های گام chapter — همه active:scale/active:shadow گرفتند
+- ⌨️ کیبورد/iOS: interactiveWidget:"resizes-content" در viewport layout؛ CommandInput (جست‌وجوی سراسری) text-base md:text-sm (ضد زوم iOS)؛ حذف overrideهای text-[12px]/text-sm روی Textarea یادداشت واژه و survey-gate؛ duel inputs text-[13px]→text-base؛ autoCapitalize=none/autoCorrect=off/spellCheck=false + enterKeyHint=search روی جست‌وجوهای vocab/dict/verbs؛ enterKeyHint=send روی چت دستیار؛ tutor 100vh→100dvh
+- 📖 تایپوگرافی: متن ریدینگ texts-view ۱۳٫۵px→۱۵px (md:text-base) + بازنویسی راهنمای ماوس‌محور به لمسی («بزن/نگه‌دار و انتخاب کن»)؛ تعریف دیکشنری پاپ‌آپ ۱۲→۱۳px، مثال ۱۱→۱۲px، چیپ POS ۹→۱۰px، لیست کالوکیشن‌های مرتبط →text-xs؛ دکمه‌های واژهٔ درون‌متنی px-1 py-0.5 -my-0.5 (هدف بلندتر بدون شکستن ریتم خط)
+- 📐 لِی‌اوت: verbs-view ستون‌بندی پاسخ‌گو (<md: ۴ ستون #/شکل اول/معنی/صدا؛ md+: ۶ ستون کامل) + ارتفاع dvh؛ dict/verbs اسکرول‌پن h-[calc(100dvh-230px)] max-h-600 min-h-360؛ جدول واژگان min-w-[430px] داخل ScrollArea (پن افقی قابل‌کشف)؛ بوم flappy h-[min(480px,calc(100dvh-260px))] min-h-340؛ پاپ‌آپ واژه: کلمپ عمودی با maxH واقعی (قبلاً vh-200 و تا ۳۴۰px بیرون‌زدگی؛ QA: bottom=734<844 ✓) و بستن با اسکرول فقط بعد از جابه‌جایی >۸۰px
+- ⚡ پرفورمنس: جدول واژگان از رندر ۱۴۸۸ سطر (~۱۵هزار DOM) → سقف ۳۰۰ + فوتر شمارنده؛ learnedInList → useMemo (قبلاً در هر کلید جستجو scan کامل)؛ confetti DPR-scaling (سقف ۲x برای باتری) + decoding=async روی img حافظه؛ touch-action:manipulation و -webkit-tap-highlight-color:transparent روی body (ضد دبل‌تپ‌زوم و فلش خاکستری تپ)
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (سه خطای تایپ وسط کار گرفته و رفع: LucideIcon↔ComponentType، strokeWidth، ویرایش JSX کامنت dictionary) · bun run lint = ۰/۰ ✓ · dev.log بدون hydration/runtime error (فقط EADDRINUSE بوت‌استرپ = سرور از قبل روشن)
+- QA مرورگری ۳۹۰×۸۴۴ (agent-browser، ۱۵ اسکرین‌شات qa-shots/m23-*): قفسه ✓ · جلد+ناوبری پایین (خانه فعال+نقطه) ✓ · فهرست با تب فعال ✓ · کشوی بیشتر ۱۳ کاشی+PWA/پوسته ✓ · ناوبری کشو→دستیار+بستن خودکار (open-count=0) ✓ · مخفی‌شدن ناوبری با فوکوس textarea ✓ · واژگان چیپ‌ها/کارت‌ها ✓ · متن‌ها ۱۵px ✓ · پاپ‌آپ واژه کاملاً در دید+close 36px ✓ · آزمون CTAهای min-h-11 + aria-current=آزمون ✓ · بازی‌ها تک‌ستون ✓ · فوتر بدون هم‌پوشانی ✓ · رگرسیون: ۱۴۴۰ ریل ۷۲px ✓ · ۱۰۲۴ قرص‌های هدر ✓
+- 🐛 درس دیباگ: MultiEdit این محیط غیراتمیک است (ویرایش‌های قبل از خطا اعمال می‌مانند — بعد از هر شکست state را grep کن)؛ انتخابگر آزمایشی document.querySelectorAll('button') دکمهٔ ریل دسکتاپِ hidden را در DOM می‌بیند و کلیکِ آزمایشی به جای کشو آن را می‌زند — سلکتور always-scope کن
+
+Stage Summary:
+- 🏁 اپ حالا موبایل‌محور واقعی است: ناوبری شست دست (bottom nav+کشو)، هدف‌های لمسی ≥۳۶px (CTAها ۴۴+)، بدون زوم iOS روی هیچ ورودی، ریدینگ ۱۵px، جدول‌های پاسخ‌گو، پاپ‌آپ واژه همیشه در دید، و کف پرفورمنس جدول واژگان از ۱۵هزار نود به ۳۰۰ سقف رسید
+- ماتریس سه‌لایهٔ ناوبری نهایی: <md ناوبری پایین · md..xl قرص‌های هدر · xl+ ریل کناری
+- باقی‌مانده صادقانه: همه‌چیز از ۱۵ یافتهٔ ممیزی رفع شد؛ دو آیتم تعمداً عقب‌افتاد (بلوک‌نشدن swipe-back iOS برای کشو — vaul خودش handle دارد؛ و مجازی‌سازی cards-mode — سقف ۲۴۰ کافی است) → Roadmap در گزارش کاربر
+- گام بعدی پیشنهادی: دستیار دوپنلی واقعی در xl (Roadmap دسکتاپ)، فاز U6 طاق عمودی FPS، یا PWA نصب‌شدهٔ واقعی روی گوشی فیزیکی برای تست لمس واقعی (خودکار headless جایگزین انگشت نیست)

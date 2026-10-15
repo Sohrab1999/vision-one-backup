@@ -272,7 +272,7 @@ function FlashcardGame() {
                 type="button"
                 onClick={() => setLesson(ALL_LESSONS)}
                 className={cn(
-                  "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                  "flex min-h-10 items-center rounded-full border px-4 text-[12px] font-bold transition-all active:scale-95",
                   lesson === ALL_LESSONS
                     ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
                     : "text-muted-foreground hover:bg-muted",
@@ -286,7 +286,7 @@ function FlashcardGame() {
                   type="button"
                   onClick={() => setLesson(l.lesson)}
                   className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+                    "flex min-h-10 items-center rounded-full border px-4 text-[12px] font-bold transition-all active:scale-95",
                     lesson === l.lesson
                       ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
                       : "text-muted-foreground hover:bg-muted",

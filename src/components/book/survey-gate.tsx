@@ -170,7 +170,7 @@ export function SurveyGate() {
             rows={3}
             placeholder="دوست داری چه چیزی اضافه شود؟ (اختیاری)"
             aria-label="پیشنهاد برای بهبود ویژن‌وان (اختیاری)"
-            className="resize-none text-sm"
+            className="resize-none"
           />
           <p className="text-left text-[10px] tabular-nums text-muted-foreground" aria-live="polite">
             {faNum(text.length)} / {faNum(TEXT_MAX)}

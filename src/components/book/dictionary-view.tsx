@@ -81,6 +81,10 @@ export function DictionaryView() {
           placeholder="Search a word… (جستجوی واژه یا تعریف)"
           className="pr-9 bg-card font-en"
           aria-label="جستجوی دیکشنری"
+          enterKeyHint="search"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
         />
       </div>
 
@@ -89,7 +93,11 @@ export function DictionaryView() {
           واژه‌ای یافت نشد.
         </p>
       ) : (
-        <div ref={parentRef} className="h-[600px] overflow-y-auto rounded-xl border bg-card/40 px-3 pt-3">
+        <div
+          ref={parentRef}
+          // موبایل (Task 23): ارتفاع dvh به‌جای 600px ثابت (اسکرول-داخل-اسکرول در گوشی کوتاه)
+          className="h-[calc(100dvh-230px)] max-h-[600px] min-h-[360px] overflow-y-auto rounded-xl border bg-card/40 px-3 pt-3"
+        >
           <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
             {virtualizer.getVirtualItems().map((virtualRow) => {
               const rowItems = rows[virtualRow.index];

@@ -530,7 +530,7 @@ export function StatsView({ onNavigate }: { onNavigate?: (v: ViewId) => void }) 
                     onClick={() => setLeaderSort(s.id)}
                     aria-pressed={leaderSort === s.id}
                     className={cn(
-                      "h-7 rounded-full border px-2.5 text-[11px] font-black transition-all",
+                      "h-9 rounded-full border px-3 text-xs font-black transition-all active:scale-95",
                       leaderSort === s.id
                         ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
                         : "text-muted-foreground hover:bg-muted",

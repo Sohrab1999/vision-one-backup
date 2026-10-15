@@ -36,13 +36,13 @@ function StarToggle({ active, onClick }: { active: boolean; onClick: () => void 
       aria-pressed={active}
       title={active ? "حذف نشان" : "نشان‌گذاری برای مرور بعدی"}
       className={cn(
-        "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border transition-all active:scale-90",
+        "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-all active:scale-90",
         active
           ? "border-amber-500/50 bg-amber-500/15 text-amber-500"
           : "border-transparent bg-muted/50 text-muted-foreground/50 hover:border-amber-500/30 hover:text-amber-500",
       )}
     >
-      <Star size={13} className={cn(active && "fill-amber-500 star-pop")} />
+      <Star size={15} className={cn(active && "fill-amber-500 star-pop")} />
     </button>
   );
 }
@@ -75,7 +75,11 @@ export function VocabCardGrid({
     );
   }, [words, query, starredOnly, hasStar]);
 
-  const learnedInList = filtered.filter((w) => learned.has(w.word)).length;
+  // موبایل (Task 23): اسکن ۱۵۰۰ آیتمی روی هر رندر (هر کلید جستجو) → useMemo
+  const learnedInList = useMemo(
+    () => filtered.filter((w) => learned.has(w.word)).length,
+    [filtered, learned],
+  );
 
   return (
     <div className="space-y-4">
@@ -89,6 +93,10 @@ export function VocabCardGrid({
             placeholder="جستجو در واژه‌ها یا معنی فارسی…"
             className="pr-9 bg-card"
             aria-label="جستجوی واژه"
+            enterKeyHint="search"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -104,7 +112,7 @@ export function VocabCardGrid({
             onClick={() => setStarredOnly((v) => !v)}
             aria-pressed={starredOnly}
             className={cn(
-              "flex h-7 shrink-0 items-center gap-1 rounded-full border px-2.5 text-[11px] font-black transition-all",
+              "flex h-9 shrink-0 items-center gap-1 rounded-full border px-3 text-xs font-black transition-all",
               starredOnly
                 ? "border-amber-500/60 bg-amber-500/15 text-amber-600 shadow-sm dark:text-amber-400"
                 : "text-muted-foreground hover:bg-muted",
@@ -119,7 +127,7 @@ export function VocabCardGrid({
               type="button"
               onClick={onPracticeStarred}
               title="شروع فلاش‌کارت با واژه‌های ستاره‌دار"
-              className="flex h-7 shrink-0 items-center gap-1 rounded-full border border-yellow-500/50 bg-yellow-500/10 px-2.5 text-[11px] font-black text-yellow-700 transition-all hover:bg-yellow-500/20 dark:text-yellow-300"
+              className="flex h-9 shrink-0 items-center gap-1 rounded-full border border-yellow-500/50 bg-yellow-500/10 px-3 text-xs font-black text-yellow-700 transition-all hover:bg-yellow-500/20 dark:text-yellow-300"
             >
               <GraduationCap size={12} />
               تمرین ستاره‌دارها
@@ -129,20 +137,20 @@ export function VocabCardGrid({
             <Button
               size="icon"
               variant={mode === "cards" ? "secondary" : "ghost"}
-              className="h-7 w-7 rounded-md"
+              className="h-9 w-9 rounded-md"
               onClick={() => setMode("cards")}
               aria-label="نمای کارت"
             >
-              <LayoutGrid size={14} />
+              <LayoutGrid size={15} />
             </Button>
             <Button
               size="icon"
               variant={mode === "table" ? "secondary" : "ghost"}
-              className="h-7 w-7 rounded-md"
+              className="h-9 w-9 rounded-md"
               onClick={() => setMode("table")}
               aria-label="نمای جدول"
             >
-              <Rows3 size={14} />
+              <Rows3 size={15} />
             </Button>
           </div>
         </div>
@@ -151,6 +159,9 @@ export function VocabCardGrid({
       {mode === "table" ? (
         <Card className="overflow-hidden">
           <ScrollArea className="h-[560px]">
+            {/* موبایل: عرض کمینه برای فعال‌شدن پن افقی داخل ScrollArea
+                (اسکرول‌بار افقی مخفی + جدول ۵ ستونه در ۳۹۰px = پن نامرئی بود) */}
+            <div className="min-w-[430px]">
             <Table>
               <TableHeader className="sticky top-0 bg-card z-10">
                 <TableRow>
@@ -162,7 +173,9 @@ export function VocabCardGrid({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((w, i) => (
+                {/* موبایل (Task 23): رندر ۱۴۸۸ سطر (‏~۱۵هزار نود DOM) در گوشی ضعیف = جم
+                    — سقف ۳۰۰ سطر مثل نما کارت‌ها */}
+                {filtered.slice(0, 300).map((w, i) => (
                   <TableRow key={`${w.word}-${i}`} className={cn(learned.has(w.word) && "opacity-55")}>
                     <TableCell className="text-muted-foreground text-xs">{(i + 1).toLocaleString("fa-IR")}</TableCell>
                     <TableCell>
@@ -186,7 +199,13 @@ export function VocabCardGrid({
                 ))}
               </TableBody>
             </Table>
+            </div>
           </ScrollArea>
+          {filtered.length > 300 && (
+            <p className="border-t bg-muted/30 px-4 py-2.5 text-center text-xs text-muted-foreground">
+              ۳۰۰ واژهٔ اول نمایش داده شد — بقیه را با جستجو ببینید.
+            </p>
+          )}
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -9,8 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { useBookData } from "@/lib/book-context";
 import { SpeakButton } from "./speak-button";
 
-/** ستون‌بندی جدول — معادل w-10 (ستون #) و w-12 (ستون صدا) در Table قبلی */
-const GRID_COLS = "grid-cols-[2.5rem_1fr_1fr_1fr_1fr_3rem]";
+/** ستون‌بندی جدول — موبایل (Task 23): در <md فقط شکل اول + معنی + صدا
+    (۶ ستون در ۳۹۰px یعنی ~۷۲px برای هر ستون و شکستن سه‌خطی سرستون‌ها) */
+const GRID_COLS =
+  "grid-cols-[2rem_1.2fr_1fr_2.75rem] md:grid-cols-[2.5rem_1fr_1fr_1fr_1fr_3rem]";
 
 export function VerbsView() {
   const data = useBookData();
@@ -62,20 +64,25 @@ export function VerbsView() {
             placeholder="جستجو (go / went / رفتن)"
             className="pr-9 bg-card"
             aria-label="جستجوی فعل"
+            enterKeyHint="search"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
           />
         </div>
       </div>
 
       <Card>
         <CardContent className="p-0">
-          <div ref={parentRef} className="h-[600px] overflow-y-auto">
+          {/* موبایل: ارتفاع وابسته به dvh به‌جای 600px ثابت (اسکرول-داخل-اسکرول) */}
+          <div ref={parentRef} className="h-[calc(100dvh-230px)] max-h-[600px] min-h-[360px] overflow-y-auto">
             {/* سرجدول چسبان — ظاهر همان TableHeader قبلی */}
             <div className="sticky top-0 z-10 border-b bg-card">
               <div className={`grid h-10 items-center ${GRID_COLS}`}>
                 <div className="text-center text-sm font-medium">#</div>
                 <div className="px-2 text-left text-sm font-medium">شکل اول</div>
-                <div className="px-2 text-left text-sm font-medium">شکل دوم (گذشته)</div>
-                <div className="px-2 text-left text-sm font-medium">شکل سوم (p.p)</div>
+                <div className="hidden px-2 text-left text-sm font-medium md:block">شکل دوم (گذشته)</div>
+                <div className="hidden px-2 text-left text-sm font-medium md:block">شکل سوم (p.p)</div>
                 <div className="px-2 text-left text-sm font-medium">معنی</div>
                 <div className="px-2 text-left text-sm font-medium">صدا</div>
               </div>
@@ -99,10 +106,10 @@ export function VerbsView() {
                         {v.base}
                       </Badge>
                     </div>
-                    <div dir="ltr" className="font-en p-2 text-left text-[13px] font-semibold">
+                    <div dir="ltr" className="font-en hidden p-2 text-left text-[13px] font-semibold md:block">
                       {v.past}
                     </div>
-                    <div dir="ltr" className="font-en p-2 text-left text-[13px] font-semibold text-primary">
+                    <div dir="ltr" className="font-en hidden p-2 text-left text-[13px] font-semibold text-primary md:block">
                       {v.participle}
                     </div>
                     <div className="min-w-0 p-2 text-[13px]">{v.meaning}</div>
