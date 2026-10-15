@@ -1,0 +1,841 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * داشبورد معلم (فاز ۹ — کلاس مجازی):
+     5→ *  • نوار بالایی با کد ۶رقمی بزرگ + کپی + خروج دوکلیکی
+     6→ *  • Polling وضعیت کلاس هر ۴ثانیه (useClassStatePoll)
+     7→ *  • کارت اعضا / واژه‌های مشکل‌دار و گزارش هفته / تکلیف / اعلان / آزمون زنده
+     8→ *
+     9→ * هیچ setState در بدنهٔ effect نیست — همهٔ به‌روزرسانی‌ها داخل callback
+    10→ * تایمر یا ادامهٔ async آن‌ها رخ می‌دهند (سازگار با react-hooks v6).
+    11→ */
+    12→
+    13→import { useCallback, useEffect, useRef, useState } from "react";
+    14→import {
+    15→  Bell,
+    16→  CheckCircle2,
+    17→  ClipboardList,
+    18→  Copy,
+    19→  Lightbulb,
+    20→  Loader2,
+    21→  LogOut,
+    22→  Megaphone,
+    23→  Plus,
+    24→  Send,
+    25→  Trophy,
+    26→  Users,
+    27→} from "lucide-react";
+    28→import { Button } from "@/components/ui/button";
+    29→import { Card, CardContent } from "@/components/ui/card";
+    30→import { Badge } from "@/components/ui/badge";
+    31→import { Input } from "@/components/ui/input";
+    32→import { Label } from "@/components/ui/label";
+    33→import { Progress } from "@/components/ui/progress";
+    34→import { Textarea } from "@/components/ui/textarea";
+    35→import { cn } from "@/lib/utils";
+    36→import { toast } from "sonner";
+    37→import { TeacherChallengeCard } from "./challenge";
+    38→import {
+    39→  faNum,
+    40→  fmtClock,
+    41→  fmtJalaliDate,
+    42→  readApiError,
+    43→  setClassSession,
+    44→  useClassSession,
+    45→  useClassStatePoll,
+    46→  type ClassAssignment,
+    47→  type ClassState,
+    48→  type TeacherLivePayload,
+    49→} from "@/lib/class-store";
+    50→
+    51→export function TeacherDashboard() {
+    52→  const session = useClassSession();
+    53→  const { state, lastSync, refresh } = useClassStatePoll();
+    54→
+    55→  if (!session) return null;
+    56→  return (
+    57→    <div className="space-y-4" aria-label="داشبورد معلم">
+    58→      <TeacherTopBar state={state} session={session} lastSync={lastSync} />
+    59→      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    60→        <MembersCard state={state} />
+    61→        <ProblemCard state={state} />
+    62→      </div>
+    63→      <AssignmentsCard state={state} session={session} refresh={refresh} />
+    64→      <TeacherChallengeCard session={session} />
+    65→      <TeacherLiveCard session={session} state={state} refresh={refresh} />
+    66→      <TeacherNotificationsCard session={session} refresh={refresh} />
+    67→    </div>
+    68→  );
+    69→}
+    70→
+    71→// ─────────────────────────── نوار بالایی ───────────────────────────
+    72→
+    73→function TeacherTopBar({
+    74→  state,
+    75→  session,
+    76→  lastSync,
+    77→}: {
+    78→  state: ClassState | null;
+    79→  session: NonNullable<ReturnType<typeof useClassSession>>;
+    80→  lastSync: number | null;
+    81→}) {
+    82→  const [confirmLeave, setConfirmLeave] = useState(false);
+    83→  const [leaving, setLeaving] = useState(false);
+    84→
+    85→  async function copyCode() {
+    86→    try {
+    87→      await navigator.clipboard.writeText(session.code);
+    88→      toast.success("کد کپی شد");
+    89→    } catch {
+    90→      toast.error("کپی نشد — کد را دستی بردار");
+    91→    }
+    92→  }
+    93→
+    94→  async function leave() {
+    95→    if (!confirmLeave) {
+    96→      setConfirmLeave(true);
+    97→      window.setTimeout(() => setConfirmLeave(false), 3500);
+    98→      return;
+    99→    }
+   100→    setLeaving(true);
+   101→    try {
+   102→      const res = await fetch(
+   103→        `/api/class/${encodeURIComponent(session.code)}?key=${encodeURIComponent(session.key)}`,
+   104→        { method: "DELETE" },
+   105→      );
+   106→      if (!res.ok) throw new Error();
+   107→      setClassSession(null);
+   108→      toast.success("کلاس حذف شد");
+   109→    } catch {
+   110→      toast.error("حذف کلاس ممکن نشد — دوباره تلاش کن");
+   111→      setLeaving(false);
+   112→      setConfirmLeave(false);
+   113→    }
+   114→  }
+   115→
+   116→  return (
+   117→    <div className="rise-in flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4">
+   118→      <div className="min-w-0 space-y-0.5">
+   119→        <h1 className="truncate text-lg font-black">{state?.classroom.name ?? session.name ?? "کلاس من"}</h1>
+   120→        <p className="text-[11.5px] text-muted-foreground">
+   121→          داشبورد معلم
+   122→          {lastSync !== null && (
+   123→            <>
+   124→              <span aria-hidden> · </span>
+   125→              <span>به‌روزرسانی: {fmtClock(lastSync)}</span>
+   126→            </>
+   127→          )}
+   128→        </p>
+   129→      </div>
+   130→
+   131→      <div className="flex flex-wrap items-center gap-2">
+   132→        {/* کد ۶رقمی بزرگ */}
+   133→        <div className="flex items-center gap-1.5 rounded-2xl border-2 border-dashed border-primary/40 bg-primary/5 px-3 py-1.5">
+   134→          <span
+   135→            dir="ltr"
+   136→            className="font-en text-2xl font-black tracking-[0.3em] text-primary sm:text-3xl"
+   137→            aria-label={`کد کلاس ${session.code}`}
+   138→          >
+   139→            {session.code}
+   140→          </span>
+   141→          <Button
+   142→            variant="ghost"
+   143→            size="sm"
+   144→            onClick={() => void copyCode()}
+   145→            className="min-h-9 gap-1 px-2 text-[12px] font-bold text-primary"
+   146→            aria-label="کپی کد کلاس"
+   147→          >
+   148→            <Copy size={14} aria-hidden />
+   149→            کپی کد
+   150→          </Button>
+   151→        </div>
+   152→
+   153→        {/* خروج دوکلیکی */}
+   154→        <Button
+   155→          variant="ghost"
+   156→          size="sm"
+   157→          disabled={leaving}
+   158→          onClick={() => void leave()}
+   159→          className={cn(
+   160→            "min-h-11 gap-1.5 px-3 text-[12px] font-bold",
+   161→            confirmLeave
+   162→              ? "bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 dark:text-amber-400"
+   163→              : "text-muted-foreground hover:bg-muted",
+   164→          )}
+   165→          aria-label={confirmLeave ? "تأیید حذف کلاس" : "خروج از کلاس"}
+   166→        >
+   167→          {leaving ? <Loader2 size={15} className="animate-spin" aria-hidden /> : <LogOut size={15} aria-hidden />}
+   168→          {confirmLeave ? "مطمئنی؟ (کلیک دوم)" : "خروج از کلاس"}
+   169→        </Button>
+   170→      </div>
+   171→    </div>
+   172→  );
+   173→}
+   174→
+   175→// ─────────────────────────── کارت اعضا ───────────────────────────
+   176→
+   177→function MembersCard({ state }: { state: ClassState | null }) {
+   178→  const members = state?.members ?? [];
+   179→
+   180→  return (
+   181→    <Card className="rise-in rise-in-1 h-full">
+   182→      <CardContent className="space-y-3 p-4">
+   183→        <div className="flex items-center justify-between gap-2">
+   184→          <h2 className="flex items-center gap-1.5 text-sm font-black">
+   185→            <Users size={16} className="text-primary" aria-hidden />
+   186→            اعضای کلاس
+   187→          </h2>
+   188→          <Badge variant="secondary" className="bg-primary/10 text-primary">
+   189→            {faNum(members.length)} نفر
+   190→          </Badge>
+   191→        </div>
+   192→
+   193→        {members.length === 0 ? (
+   194→          <p className="rounded-xl bg-muted/50 p-4 text-center text-[12.5px] text-muted-foreground">
+   195→            هنوز کسی نیامده — کد را بده به بچه‌ها! 🎒
+   196→          </p>
+   197→        ) : (
+   198→          <ul className="max-h-96 space-y-2 overflow-y-auto pe-1" aria-label="فهرست اعضا">
+   199→            {members.map((m) => (
+   200→              <li
+   201→                key={m.studentKey}
+   202→                className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border bg-muted/20 px-3 py-2"
+   203→              >
+   204→                <span className="min-w-0 flex-1 truncate text-[13px] font-bold">{m.displayName}</span>
+   205→                <Badge
+   206→                  variant="outline"
+   207→                  className="border-emerald-500/30 bg-emerald-500/10 text-[10.5px] text-emerald-700 dark:text-emerald-400"
+   208→                >
+   209→                  آزمون: {faNum(m.attempts7d)}
+   210→                </Badge>
+   211→                <Badge
+   212→                  variant="outline"
+   213→                  className="border-teal-500/30 bg-teal-500/10 text-[10.5px] text-teal-700 dark:text-teal-400"
+   214→                >
+   215→                  میانگین: ٪{faNum(Math.round(m.avgScore7d))}
+   216→                </Badge>
+   217→                <Badge
+   218→                  variant="outline"
+   219→                  className="border-amber-500/30 bg-amber-500/10 text-[10.5px] text-amber-700 dark:text-amber-400"
+   220→                >
+   221→                  تکالیف: {faNum(m.assignmentsDone)}
+   222→                </Badge>
+   223→              </li>
+   224→            ))}
+   225→          </ul>
+   226→        )}
+   227→      </CardContent>
+   228→    </Card>
+   229→  );
+   230→}
+   231→
+   232→// ─────────────────────────── واژه‌های مشکل‌دار و گزارش هفته ───────────────────────────
+   233→
+   234→function ProblemCard({ state }: { state: ClassState | null }) {
+   235→  const problem = state?.problem;
+   236→  const ws = problem?.weekSummary;
+   237→
+   238→  return (
+   239→    <Card className="rise-in rise-in-2 h-full">
+   240→      <CardContent className="space-y-3 p-4">
+   241→        <h2 className="flex items-center gap-1.5 text-sm font-black">
+   242→          <Lightbulb size={16} className="text-amber-500" aria-hidden />
+   243→          واژه‌های مشکل‌دار و گزارش هفته
+   244→        </h2>
+   245→
+   246→        {problem && problem.liveWrong.length > 0 ? (
+   247→          <div className="flex flex-wrap gap-1.5" aria-label="واژه‌های مشکل‌دار">
+   248→            {problem.liveWrong.map((w) => (
+   249→              <Badge
+   250→                key={w.content}
+   251→                variant="outline"
+   252→                className="max-w-full border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[12px] text-amber-700 dark:text-amber-400"
+   253→              >
+   254→                <span dir="ltr" className="font-en max-w-[190px] truncate font-bold sm:max-w-[260px]">
+   255→                  {w.content}
+   256→                </span>
+   257→                <span aria-hidden> · </span>
+   258→                <span className="shrink-0">{faNum(w.count)} بار</span>
+   259→              </Badge>
+   260→            ))}
+   261→          </div>
+   262→        ) : (
+   263→          <p className="rounded-xl bg-muted/50 p-3 text-center text-[12px] text-muted-foreground">
+   264→            هنوز خطای مشخصی ثبت نشده ✨
+   265→          </p>
+   266→        )}
+   267→
+   268→        {ws && (
+   269→          <div className="rounded-xl border border-teal-500/25 bg-teal-500/5 px-3 py-2.5 text-[12.5px] leading-relaxed text-foreground/90">
+   270→            آزمون‌های ۷روز اخیر: <b>{faNum(ws.attempts)}</b>
+   271→            <span aria-hidden> · </span>
+   272→            میانگین کلاس: <b>٪{faNum(Math.round(ws.avgPercent))}</b>
+   273→            <span aria-hidden> · </span>
+   274→            اعضای فعال: <b>{faNum(ws.activeMembers)}</b>
+   275→          </div>
+   276→        )}
+   277→      </CardContent>
+   278→    </Card>
+   279→  );
+   280→}
+   281→
+   282→// ─────────────────────────── کارت تکلیف ───────────────────────────
+   283→
+   284→type AssignKind = "review" | "quiz";
+   285→
+   286→function AssignmentsCard({
+   287→  state,
+   288→  session,
+   289→  refresh,
+   290→}: {
+   291→  state: ClassState | null;
+   292→  session: NonNullable<ReturnType<typeof useClassSession>>;
+   293→  refresh: () => void;
+   294→}) {
+   295→  const [title, setTitle] = useState("");
+   296→  const [kind, setKind] = useState<AssignKind>("review");
+   297→  const [lesson, setLesson] = useState(1);
+   298→  const [questionCount, setQuestionCount] = useState(10);
+   299→  const [busy, setBusy] = useState(false);
+   300→
+   301→  const assignments = state?.assignments ?? [];
+   302→  const memberCount = state?.members?.length ?? 0;
+   303→
+   304→  async function submit() {
+   305→    const t = title.trim();
+   306→    if (t.length < 2) {
+   307→      toast.error("عنوان تکلیف را بنویس");
+   308→      return;
+   309→    }
+   310→    const qc = Math.min(50, Math.max(5, Math.round(questionCount) || 10));
+   311→    const les = Math.min(12, Math.max(0, Math.round(lesson) || 0));
+   312→    setBusy(true);
+   313→    try {
+   314→      const res = await fetch(`/api/class/${encodeURIComponent(session.code)}/assignments`, {
+   315→        method: "POST",
+   316→        headers: { "Content-Type": "application/json" },
+   317→        body: JSON.stringify({
+   318→          teacherKey: session.key,
+   319→          title: t,
+   320→          kind,
+   321→          lesson: kind === "review" ? les : undefined,
+   322→          questionCount: kind === "quiz" ? qc : undefined,
+   323→        }),
+   324→      });
+   325→      if (res.status === 201) {
+   326→        toast.success("تکلیف اعلام شد 📣");
+   327→        setTitle("");
+   328→        refresh();
+   329→      } else {
+   330→        toast.error(await readApiError(res, "اعلام تکلیف ممکن نشد"));
+   331→      }
+   332→    } catch {
+   333→      toast.error("ارتباط با سرور برقرار نشد");
+   334→    } finally {
+   335→      setBusy(false);
+   336→    }
+   337→  }
+   338→
+   339→  async function remind(a: ClassAssignment) {
+   340→    try {
+   341→      const res = await fetch(`/api/class/${encodeURIComponent(session.code)}/notifications`, {
+   342→        method: "POST",
+   343→        headers: { "Content-Type": "application/json" },
+   344→        body: JSON.stringify({ teacherKey: session.key, text: `⏰ تکلیف «${a.title}» را فراموش نکن!` }),
+   345→      });
+   346→      if (res.status === 201) toast.success("یادآوری ارسال شد ⏰");
+   347→      else toast.error(await readApiError(res, "ارسال یادآوری ممکن نشد"));
+   348→    } catch {
+   349→      toast.error("ارتباط با سرور برقرار نشد");
+   350→    }
+   351→  }
+   352→
+   353→  return (
+   354→    <Card className="rise-in">
+   355→      <CardContent className="space-y-4 p-4">
+   356→        <h2 className="flex items-center gap-1.5 text-sm font-black">
+   357→          <ClipboardList size={16} className="text-primary" aria-hidden />
+   358→          تکالیف
+   359→        </h2>
+   360→
+   361→        {/* فرم فشرده اعلام تکلیف */}
+   362→        <div className="space-y-2.5 rounded-xl border bg-muted/20 p-3">
+   363→          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-[1fr_auto]">
+   364→            <Input
+   365→              value={title}
+   366→              onChange={(e) => setTitle(e.target.value)}
+   367→              placeholder="عنوان تکلیف — مثلاً واژگان درس ۳ را مرور کن"
+   368→              maxLength={80}
+   369→              className="min-h-11"
+   370→              aria-label="عنوان تکلیف"
+   371→            />
+   372→            <div className="flex gap-1 self-start rounded-xl border bg-card p-1" role="group" aria-label="نوع تکلیف">
+   373→              <Button
+   374→                type="button"
+   375→                variant={kind === "review" ? "secondary" : "ghost"}
+   376→                size="sm"
+   377→                className="min-h-9"
+   378→                onClick={() => setKind("review")}
+   379→                aria-pressed={kind === "review"}
+   380→              >
+   381→                مرور واژگان
+   382→              </Button>
+   383→              <Button
+   384→                type="button"
+   385→                variant={kind === "quiz" ? "secondary" : "ghost"}
+   386→                size="sm"
+   387→                className="min-h-9"
+   388→                onClick={() => setKind("quiz")}
+   389→                aria-pressed={kind === "quiz"}
+   390→              >
+   391→                آزمون
+   392→              </Button>
+   393→            </div>
+   394→          </div>
+   395→
+   396→          <div className="grid grid-cols-1 items-end gap-2.5 sm:grid-cols-[1fr_auto]">
+   397→            {kind === "review" ? (
+   398→              <div className="space-y-1">
+   399→                <Label htmlFor="assign-lesson" className="text-[11.5px] text-muted-foreground">
+   400→                  شماره درس (۰ تا ۱۲)
+   401→                </Label>
+   402→                <Input
+   403→                  id="assign-lesson"
+   404→                  type="number"
+   405→                  inputMode="numeric"
+   406→                  min={0}
+   407→                  max={12}
+   408→                  value={lesson}
+   409→                  onChange={(e) => setLesson(Number(e.target.value))}
+   410→                  className="min-h-11"
+   411→                  aria-label="شماره درس مرور"
+   412→                />
+   413→              </div>
+   414→            ) : (
+   415→              <div className="space-y-1">
+   416→                <Label htmlFor="assign-qc" className="text-[11.5px] text-muted-foreground">
+   417→                  تعداد سؤال (۵ تا ۵۰)
+   418→                </Label>
+   419→                <Input
+   420→                  id="assign-qc"
+   421→                  type="number"
+   422→                  inputMode="numeric"
+   423→                  min={5}
+   424→                  max={50}
+   425→                  value={questionCount}
+   426→                  onChange={(e) => setQuestionCount(Number(e.target.value))}
+   427→                  className="min-h-11"
+   428→                  aria-label="تعداد سؤال آزمون"
+   429→                />
+   430→              </div>
+   431→            )}
+   432→            <Button type="button" disabled={busy} onClick={() => void submit()} className="min-h-11 gap-1.5 font-bold">
+   433→              {busy ? <Loader2 size={15} className="animate-spin" aria-hidden /> : <Plus size={15} aria-hidden />}
+   434→              اعلام تکلیف
+   435→            </Button>
+   436→          </div>
+   437→        </div>
+   438→
+   439→        {/* فهرست تکالیف */}
+   440→        {assignments.length === 0 ? (
+   441→          <p className="rounded-xl bg-muted/50 p-3 text-center text-[12px] text-muted-foreground">
+   442→            هنوز تکلیفی ندادی — اولین تکلیف را اعلام کن! 📋
+   443→          </p>
+   444→        ) : (
+   445→          <ul className="max-h-96 space-y-2 overflow-y-auto pe-1" aria-label="فهرست تکالیف">
+   446→            {assignments.map((a) => {
+   447→              const pct = memberCount > 0 ? Math.round((a.doneCount / memberCount) * 100) : 0;
+   448→              return (
+   449→                <li key={a.id} className="space-y-2 rounded-xl border bg-card px-3 py-2.5">
+   450→                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+   451→                    <span className="min-w-0 flex-1 truncate text-[13px] font-bold">{a.title}</span>
+   452→                    <Badge
+   453→                      variant="outline"
+   454→                      className={cn(
+   455→                        "text-[10.5px]",
+   456→                        a.kind === "quiz"
+   457→                          ? "border-teal-500/30 bg-teal-500/10 text-teal-700 dark:text-teal-400"
+   458→                          : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+   459→                      )}
+   460→                    >
+   461→                      {a.kind === "quiz"
+   462→                        ? `آزمون ${faNum(a.questionCount ?? 0)} سؤالی`
+   463→                        : `مرور${a.lesson != null ? ` — درس ${faNum(a.lesson)}` : ""}`}
+   464→                    </Badge>
+   465→                    {a.dueAt && (
+   466→                      <span className="text-[10.5px] text-muted-foreground" aria-label="مهلت تکلیف">
+   467→                        مهلت: {fmtJalaliDate(a.dueAt)}
+   468→                      </span>
+   469→                    )}
+   470→                  </div>
+   471→                  <div className="flex items-center gap-2">
+   472→                    <Progress value={pct} className="h-2 flex-1" aria-label={`پیشرفت تکلیف ${a.title}`} />
+   473→                    <span className="w-16 shrink-0 text-[11px] tabular-nums text-muted-foreground">
+   474→                      {faNum(a.doneCount)}/{faNum(memberCount)}
+   475→                    </span>
+   476→                    <Button
+   477→                      variant="ghost"
+   478→                      size="sm"
+   479→                      className="min-h-9 gap-1 px-2 text-[11.5px] font-bold text-amber-700 dark:text-amber-400"
+   480→                      onClick={() => void remind(a)}
+   481→                      aria-label={`یادآوری تکلیف ${a.title}`}
+   482→                    >
+   483→                      <Bell size={13} aria-hidden />
+   484→                      یادآوری
+   485→                    </Button>
+   486→                  </div>
+   487→                </li>
+   488→              );
+   489→            })}
+   490→          </ul>
+   491→        )}
+   492→      </CardContent>
+   493→    </Card>
+   494→  );
+   495→}
+   496→
+   497→// ─────────────────────────── کارت اعلان (معلم) ───────────────────────────
+   498→
+   499→function TeacherNotificationsCard({
+   500→  session,
+   501→  refresh,
+   502→}: {
+   503→  session: NonNullable<ReturnType<typeof useClassSession>>;
+   504→  refresh: () => void;
+   505→}) {
+   506→  const [text, setText] = useState("");
+   507→  const [busy, setBusy] = useState(false);
+   508→
+   509→  async function send() {
+   510→    const t = text.trim();
+   511→    if (!t) {
+   512→      toast.error("متن اعلان را بنویس");
+   513→      return;
+   514→    }
+   515→    setBusy(true);
+   516→    try {
+   517→      const res = await fetch(`/api/class/${encodeURIComponent(session.code)}/notifications`, {
+   518→        method: "POST",
+   519→        headers: { "Content-Type": "application/json" },
+   520→        body: JSON.stringify({ teacherKey: session.key, text: t }),
+   521→      });
+   522→      if (res.status === 201) {
+   523→        toast.success("اعلان برای همه ارسال شد 📣");
+   524→        setText("");
+   525→        refresh();
+   526→      } else {
+   527→        toast.error(await readApiError(res, "ارسال اعلان ممکن نشد"));
+   528→      }
+   529→    } catch {
+   530→      toast.error("ارتباط با سرور برقرار نشد");
+   531→    } finally {
+   532→      setBusy(false);
+   533→    }
+   534→  }
+   535→
+   536→  return (
+   537→    <Card className="rise-in">
+   538→      <CardContent className="space-y-2.5 p-4">
+   539→        <h2 className="flex items-center gap-1.5 text-sm font-black">
+   540→          <Megaphone size={16} className="text-primary" aria-hidden />
+   541→          اعلان به کلاس
+   542→        </h2>
+   543→        <Textarea
+   544→          value={text}
+   545→          onChange={(e) => setText(e.target.value)}
+   546→          placeholder="مثلاً فردا آزمون درس ۳ داریم — آماده باشید! 📚"
+   547→          rows={2}
+   548→          maxLength={300}
+   549→          className="min-h-11 resize-none"
+   550→          aria-label="متن اعلان"
+   551→        />
+   552→        <div className="flex justify-end">
+   553→          <Button size="sm" disabled={busy} onClick={() => void send()} className="min-h-11 gap-1.5 px-4 font-bold">
+   554→            {busy ? <Loader2 size={14} className="animate-spin" aria-hidden /> : <Send size={14} aria-hidden />}
+   555→            ارسال به همه
+   556→          </Button>
+   557→        </div>
+   558→      </CardContent>
+   559→    </Card>
+   560→  );
+   561→}
+   562→
+   563→// ─────────────────────────── کارت آزمون زنده (معلم) ───────────────────────────
+   564→
+   565→const MEDALS = ["🥇", "🥈", "🥉"];
+   566→
+   567→function TeacherLiveCard({
+   568→  session,
+   569→  state,
+   570→  refresh,
+   571→}: {
+   572→  session: NonNullable<ReturnType<typeof useClassSession>>;
+   573→  state: ClassState | null;
+   574→  refresh: () => void;
+   575→}) {
+   576→  const [liveData, setLiveData] = useState<TeacherLivePayload | null>(null);
+   577→  const [count, setCount] = useState(5);
+   578→  const [starting, setStarting] = useState(false);
+   579→  const [patching, setPatching] = useState(false);
+   580→
+   581→  // ── polling دادهٔ زنده هر ۳ ثانیه (بدون setState در بدنهٔ effect) ──
+   582→  // نکته: سرور پس از «پایان آزمون»، live را null می‌کند؛ گزارش پایانی فقط در
+   583→  // پاسخ PATCH finish است — پس گزارش تمام‌شده را تا «بستن گزارش» نگه می‌داریم.
+   584→  const fetchLive = useCallback(async () => {
+   585→    try {
+   586→      const res = await fetch(
+   587→        `/api/class/${encodeURIComponent(session.code)}/live?key=${encodeURIComponent(session.key)}&role=teacher`,
+   588→        { cache: "no-store" },
+   589→      );
+   590→      if (!res.ok) throw new Error();
+   591→      const d = (await res.json()) as TeacherLivePayload;
+   592→      setLiveData((prev) => (prev?.live?.status === "finished" && !d.live ? prev : d));
+   593→    } catch {
+   594→      /* ساکت — دور بعد تلاش می‌شود */
+   595→    }
+   596→  }, [session.code, session.key]);
+   597→
+   598→  const fetchLiveRef = useRef(fetchLive);
+   599→  useEffect(() => {
+   600→    fetchLiveRef.current = fetchLive;
+   601→  }, [fetchLive]);
+   602→
+   603→  useEffect(() => {
+   604→    const t0 = window.setTimeout(() => void fetchLiveRef.current(), 0);
+   605→    const t = window.setInterval(() => {
+   606→      // بهینه‌سازی دسکتاپ: تب مخفی → fetch بی‌خود نزن
+   607→      if (!document.hidden) void fetchLiveRef.current();
+   608→    }, 3000);
+   609→    return () => {
+   610→      window.clearTimeout(t0);
+   611→      window.clearInterval(t);
+   612→    };
+   613→  }, []);
+   614→
+   615→  const live = liveData?.live ?? null;
+   616→  const isActive = live !== null && live.status !== "finished";
+   617→  const isFinished = live !== null && live.status === "finished";
+   618→
+   619→  async function start() {
+   620→    setStarting(true);
+   621→    try {
+   622→      const res = await fetch(`/api/class/${encodeURIComponent(session.code)}/live`, {
+   623→        method: "POST",
+   624→        headers: { "Content-Type": "application/json" },
+   625→        body: JSON.stringify({ teacherKey: session.key, count }),
+   626→      });
+   627→      if (res.status === 201) {
+   628→        toast.success("آزمون زنده شروع شد — بچه‌ها هم‌زمان می‌بینند! 🔴");
+   629→        await fetchLiveRef.current();
+   630→        refresh();
+   631→      } else {
+   632→        toast.error(await readApiError(res, "شروع آزمون ممکن نشد"));
+   633→      }
+   634→    } catch {
+   635→      toast.error("ارتباط با سرور برقرار نشد");
+   636→    } finally {
+   637→      setStarting(false);
+   638→    }
+   639→  }
+   640→
+   641→  async function patch(action: "next" | "finish") {
+   642→    setPatching(true);
+   643→    try {
+   644→      const res = await fetch(`/api/class/${encodeURIComponent(session.code)}/live`, {
+   645→        method: "PATCH",
+   646→        headers: { "Content-Type": "application/json" },
+   647→        body: JSON.stringify({ teacherKey: session.key, action }),
+   648→      });
+   649→      if (!res.ok) {
+   650→        toast.error(await readApiError(res, "انجام نشد — دوباره تلاش کن"));
+   651→      } else {
+   652→        // پاسخ PATCH همان shape GET معلم است — برای «پایان» همین را گزارش نهایی کن
+   653→        const j = (await res.json().catch(() => null)) as TeacherLivePayload | null;
+   654→        if (j?.live) setLiveData(j);
+   655→        else await fetchLiveRef.current();
+   656→      }
+   657→      if (action === "finish" && res.ok) {
+   658→        refresh();
+   659→        toast.success("آزمون زنده تمام شد 🏁");
+   660→      }
+   661→    } catch {
+   662→      toast.error("ارتباط با سرور برقرار نشد");
+   663→    } finally {
+   664→      setPatching(false);
+   665→    }
+   666→  }
+   667→
+   668→  const q = liveData?.question ?? null;
+   669→  const leaderboard = liveData?.leaderboard ?? [];
+   670→
+   671→  return (
+   672→    <Card className="rise-in border-primary/25 bg-gradient-to-bl from-primary/5 to-transparent">
+   673→      <CardContent className="space-y-3.5 p-4">
+   674→        <div className="flex flex-wrap items-center justify-between gap-2">
+   675→          <h2 className="flex items-center gap-1.5 text-sm font-black">
+   676→            <Trophy size={16} className="text-amber-500" aria-hidden />
+   677→            آزمون زنده
+   678→          </h2>
+   679→          {isActive && live && (
+   680→            <Badge className="bg-primary text-primary-foreground">
+   681→              در جریان — سؤال {faNum(live.currentIndex + 1)} از {faNum(live.questionCount)}
+   682→            </Badge>
+   683→          )}
+   684→        </div>
+   685→
+   686→        {/* ── آزمون در جریان ── */}
+   687→        {isActive && (
+   688→          <div className="space-y-3">
+   689→            {q ? (
+   690→              <div className="space-y-2 rounded-xl border bg-card p-3.5" aria-label="سؤال جاری آزمون زنده">
+   691→                <p dir="ltr" className="font-en text-[15px] font-bold leading-relaxed">
+   692→                  {q.text}
+   693→                </p>
+   694→                <div className="grid gap-1.5">
+   695→                  {q.options.map((o, i) => (
+   696→                    <div
+   697→                      key={i}
+   698→                      className={cn(
+   699→                        "flex items-center gap-2 rounded-lg border px-3 py-2 text-[13px]",
+   700→                        i === q.answer
+   701→                          ? "border-emerald-500/50 bg-emerald-500/10 font-bold text-emerald-700 dark:text-emerald-400"
+   702→                          : "bg-muted/30 text-foreground/80",
+   703→                      )}
+   704→                    >
+   705→                      <span dir="ltr" className="font-en text-[11px] text-muted-foreground">
+   706→                        {String.fromCharCode(65 + i)})
+   707→                      </span>
+   708→                      <span dir="ltr" className="font-en">
+   709→                        {o}
+   710→                      </span>
+   711→                      {i === q.answer && <CheckCircle2 size={15} className="ms-auto shrink-0" aria-hidden />}
+   712→                    </div>
+   713→                  ))}
+   714→                </div>
+   715→              </div>
+   716→            ) : (
+   717→              <div className="flex items-center gap-2 rounded-xl border bg-card p-3.5 text-[12.5px] text-muted-foreground">
+   718→                <Loader2 size={14} className="animate-spin" aria-hidden />
+   719→                در حال آماده‌سازی سؤال اول…
+   720→              </div>
+   721→            )}
+   722→
+   723→            <p className="text-[12px] text-muted-foreground">
+   724→              پاسخ‌دهندگان تا این لحظه: <b>{faNum(liveData?.answeredCount ?? 0)}</b> نفر
+   725→            </p>
+   726→
+   727→            <LeaderboardRows rows={leaderboard} />
+   728→
+   729→            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+   730→              <Button disabled={patching} onClick={() => void patch("next")} className="min-h-11 gap-1.5 font-bold">
+   731→                {patching ? <Loader2 size={15} className="animate-spin" aria-hidden /> : null}
+   732→                سؤال بعدی
+   733→              </Button>
+   734→              <Button
+   735→                variant="outline"
+   736→                disabled={patching}
+   737→                onClick={() => void patch("finish")}
+   738→                className="min-h-11 gap-1.5 border-amber-500/40 font-bold text-amber-700 hover:bg-amber-500/10 dark:text-amber-400"
+   739→              >
+   740→                پایان آزمون
+   741→              </Button>
+   742→            </div>
+   743→          </div>
+   744→        )}
+   745→
+   746→        {/* ── آزمون تمام‌شده (گزارش نهایی) ── */}
+   747→        {isFinished && (
+   748→          <div className="space-y-3">
+   749→            <p className="text-[13px] font-bold">🏁 آزمون تمام شد — جدول برنده‌های نهایی:</p>
+   750→            <LeaderboardRows rows={leaderboard} />
+   751→            <div className="flex justify-end">
+   752→              <Button
+   753→                variant="ghost"
+   754→                size="sm"
+   755→                className="min-h-9 text-[12px]"
+   756→                onClick={() => setLiveData(null)}
+   757→              >
+   758→                بستن گزارش
+   759→              </Button>
+   760→            </div>
+   761→          </div>
+   762→        )}
+   763→
+   764→        {/* ── شروع آزمون ── */}
+   765→        {!live && (
+   766→          <div className="space-y-3">
+   767→            <div className="flex flex-wrap items-center gap-2" role="group" aria-label="تعداد سؤال آزمون زنده">
+   768→              <span className="text-[12px] text-muted-foreground">تعداد سؤال:</span>
+   769→              {[3, 5, 10].map((c) => (
+   770→                <Button
+   771→                  key={c}
+   772→                  variant={count === c ? "secondary" : "outline"}
+   773→                  size="sm"
+   774→                  className="min-h-9 min-w-11 font-black"
+   775→                  onClick={() => setCount(c)}
+   776→                  aria-pressed={count === c}
+   777→                >
+   778→                  {faNum(c)}
+   779→                </Button>
+   780→              ))}
+   781→            </div>
+   782→            <Button
+   783→              disabled={starting || (state?.members?.length ?? 0) === 0}
+   784→              onClick={() => void start()}
+   785→              className="min-h-12 w-full gap-2 text-[15px] font-black"
+   786→            >
+   787→              {starting ? <Loader2 size={16} className="animate-spin" aria-hidden /> : <span aria-hidden>🔴</span>}
+   788→              شروع آزمون زنده
+   789→            </Button>
+   790→            <p className="text-center text-[11.5px] text-muted-foreground">
+   791→              همه هم‌زمان می‌بینند؛ جدول برنده‌ها لحظه‌ای پر می‌شود
+   792→              {(state?.members?.length ?? 0) === 0 && " — اول صبر کن بچه‌ها بیایند 🎒"}
+   793→            </p>
+   794→          </div>
+   795→        )}
+   796→      </CardContent>
+   797→    </Card>
+   798→  );
+   799→}
+   800→
+   801→/** جدول برنده‌ها — ردیف‌های 🥇🥈🥉 + نام + تعداد درست + زمان */
+   802→function LeaderboardRows({ rows }: { rows: TeacherLivePayload["leaderboard"] }) {
+   803→  if (rows.length === 0) {
+   804→    return (
+   805→      <p className="rounded-xl bg-muted/50 p-3 text-center text-[12px] text-muted-foreground">
+   806→        هنوز کسی پاسخ نداده…
+   807→      </p>
+   808→    );
+   809→  }
+   810→  return (
+   811→    <ol className="max-h-72 space-y-1.5 overflow-y-auto pe-1" aria-label="جدول برنده‌ها">
+   812→      {rows.map((r, i) => (
+   813→        <li
+   814→          key={`${r.displayName}-${i}`}
+   815→          className={cn(
+   816→            "flex items-center gap-2 rounded-xl border px-3 py-2",
+   817→            i === 0 && "border-amber-500/40 bg-amber-500/10",
+   818→            i === 1 && "bg-muted/40",
+   819→            i === 2 && "border-amber-500/20 bg-amber-500/5",
+   820→            i > 2 && "bg-card",
+   821→          )}
+   822→        >
+   823→          <span className="w-7 shrink-0 text-center text-base" aria-hidden>
+   824→            {i < 3 ? MEDALS[i] : faNum(i + 1)}
+   825→          </span>
+   826→          <span className="min-w-0 flex-1 truncate text-[13px] font-bold">{r.displayName}</span>
+   827→          <Badge
+   828→            variant="outline"
+   829→            className="border-emerald-500/30 bg-emerald-500/10 text-[10.5px] text-emerald-700 dark:text-emerald-400"
+   830→          >
+   831→            {faNum(r.correct)} درست
+   832→          </Badge>
+   833→          <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
+   834→            {faNum(Number((r.totalMs / 1000).toFixed(1)))} ثانیه
+   835→          </span>
+   836→        </li>
+   837→      ))}
+   838→    </ol>
+   839→  );
+   840→}
+   841→

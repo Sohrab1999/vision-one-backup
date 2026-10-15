@@ -668,6 +668,7 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       current={current}
       index={index}
       questions={questions}
+      answers={answers}
       selected={selected}
       shownLeft={shownLeft}
       elapsed={elapsed}

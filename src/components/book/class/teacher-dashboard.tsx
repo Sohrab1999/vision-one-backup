@@ -56,14 +56,22 @@ export function TeacherDashboard() {
   return (
     <div className="space-y-4" aria-label="داشبورد معلم">
       <TeacherTopBar state={state} session={session} lastSync={lastSync} />
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <MembersCard state={state} />
-        <ProblemCard state={state} />
+      {/* نقشه راه دسکتاپ — xl+: اعضای کلاس ستون چسبان کنار بقیهٔ کارت‌ها؛
+          lg: همان چیدمان دوستونه قبلی (اعضا | واژه‌های مشکل‌دار) */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-[minmax(0,320px)_minmax(0,1fr)] xl:items-start">
+        <div className="min-w-0 xl:sticky xl:top-20 xl:col-start-1 xl:row-start-1 xl:row-span-5 xl:self-start">
+          <MembersCard state={state} />
+        </div>
+        <div className="min-w-0 xl:col-start-2 xl:row-start-1">
+          <ProblemCard state={state} />
+        </div>
+        <div className="min-w-0 space-y-4 lg:col-span-2 xl:col-span-1 xl:col-start-2 xl:row-start-2">
+          <AssignmentsCard state={state} session={session} refresh={refresh} />
+          <TeacherChallengeCard session={session} />
+          <TeacherLiveCard session={session} state={state} refresh={refresh} />
+          <TeacherNotificationsCard session={session} refresh={refresh} />
+        </div>
       </div>
-      <AssignmentsCard state={state} session={session} refresh={refresh} />
-      <TeacherChallengeCard session={session} />
-      <TeacherLiveCard session={session} state={state} refresh={refresh} />
-      <TeacherNotificationsCard session={session} refresh={refresh} />
     </div>
   );
 }

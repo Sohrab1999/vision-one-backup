@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Hourglass,
   Layers,
+  ListChecks,
   Loader2,
   NotebookPen,
   Sparkles,
@@ -39,6 +40,8 @@ export interface QuestionCardProps {
   current: Question;
   index: number;
   questions: Question[];
+  /** پاسخ‌های ثبت‌شده تا الان (null = بی‌پاسخ، -1 = اتمام وقت) — برای کارنامهٔ چسبان xl+ */
+  answers: (number | null)[];
   selected: number | null;
   shownLeft: number;
   elapsed: number;
@@ -66,6 +69,7 @@ export function QuestionCard({
   current,
   index,
   questions,
+  answers,
   selected,
   shownLeft,
   elapsed,
@@ -90,8 +94,16 @@ export function QuestionCard({
 }: QuestionCardProps) {
   const answered = selected !== null;
 
+  // ── کارنامهٔ زندهٔ چسبان (نقشه راه دسکتاپ — فقط xl+) ──
+  const answeredCount = answers.filter((a) => a !== null).length;
+  const accuracy =
+    answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+  const dotStatus = (i: number): "correct" | "wrong" | "pending" =>
+    answers[i] == null ? "pending" : answers[i] === questions[i].answer ? "correct" : "wrong";
+
   return (
-    <div className="mx-auto max-w-2xl space-y-4 rise-in">
+    <div className="mx-auto max-w-2xl rise-in xl:max-w-5xl xl:grid xl:grid-cols-[minmax(0,1fr)_236px] xl:items-start xl:gap-6">
+      <div className="min-w-0 space-y-4">
       {/* نوار پیشرفت */}
       <div className="flex items-center gap-3">
         <Progress value={((index + 1) / questions.length) * 100} className="h-2 flex-1" />
@@ -333,6 +345,95 @@ export function QuestionCard({
           generateSimilar={generateSimilar}
         />
       )}
+      </div>
+
+      {/* نقشه راه دسکتاپ — کارنامهٔ چسبان کنار سؤال؛ موبایل/تبلت مخفی (همان نوار پیشرفت بالا) */}
+      <aside
+        aria-label="کارنامهٔ زندهٔ آزمون"
+        className="hidden xl:sticky xl:top-20 xl:block"
+      >
+        <Card className="border-primary/25 bg-gradient-to-b from-primary/8 to-transparent">
+          <CardContent className="space-y-3.5 p-4">
+            <p className="flex items-center gap-1.5 text-[12px] font-black">
+              <ListChecks size={15} className="text-primary" aria-hidden />
+              کارنامهٔ زنده
+            </p>
+
+            <div className="grid grid-cols-2 gap-2 text-center" role="status">
+              <div className="rounded-xl border bg-card p-2.5">
+                <p className="font-en text-xl font-black leading-7 text-primary tabular-nums">
+                  {correctCount.toLocaleString("fa-IR")}
+                </p>
+                <p className="text-[10px] font-bold text-muted-foreground">پاسخ صحیح</p>
+              </div>
+              <div className="rounded-xl border bg-card p-2.5">
+                <p className="font-en text-xl font-black leading-7 text-amber-600 tabular-nums dark:text-amber-400">
+                  ٪{accuracy.toLocaleString("fa-IR")}
+                </p>
+                <p className="text-[10px] font-bold text-muted-foreground">دقت تا اینجا</p>
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-1.5 text-[10.5px] font-bold text-muted-foreground">
+                وضعیت سؤال‌ها
+              </p>
+              <div className="flex flex-wrap gap-1.5" role="img" aria-label="نقشهٔ پاسخ سؤال‌ها">
+                {questions.map((qq, i) => {
+                  const st = dotStatus(i);
+                  return (
+                    <span
+                      key={qq.id ?? i}
+                      aria-hidden
+                      title={`سؤال ${(i + 1).toLocaleString("fa-IR")}: ${st === "correct" ? "صحیح" : st === "wrong" ? "غلط" : "بی‌پاسخ"}`}
+                      className={cn(
+                        "flex h-6.5 w-6.5 items-center justify-center rounded-lg text-[10px] font-black tabular-nums transition-colors",
+                        st === "correct" && "bg-primary/15 text-primary",
+                        st === "wrong" && "bg-destructive/15 text-destructive",
+                        st === "pending" && "bg-muted text-muted-foreground/70",
+                        i === index &&
+                          "ring-2 ring-primary/70 ring-offset-1 ring-offset-background",
+                      )}
+                    >
+                      {(i + 1).toLocaleString("fa-IR")}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <span aria-hidden className="h-2.5 w-2.5 rounded bg-primary/50" />
+                صحیح
+              </span>
+              <span className="flex items-center gap-1">
+                <span aria-hidden className="h-2.5 w-2.5 rounded bg-destructive/50" />
+                غلط
+              </span>
+              <span className="flex items-center gap-1">
+                <span aria-hidden className="h-2.5 w-2.5 rounded bg-muted-foreground/30" />
+                مانده
+              </span>
+            </div>
+
+            <div className="space-y-1.5 rounded-xl border bg-card px-3 py-2.5 text-[11px]">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted-foreground">پاسخ‌داده</span>
+                <span className="font-black tabular-nums">
+                  {answeredCount.toLocaleString("fa-IR")} از {questions.length.toLocaleString("fa-IR")}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted-foreground">زمان سپری‌شده</span>
+                <span className="font-en font-black tabular-nums" dir="ltr">
+                  {fmtTime(elapsed)}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </aside>
     </div>
   );
 }

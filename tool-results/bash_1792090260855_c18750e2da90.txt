@@ -1,0 +1,221 @@
+3538 /home/z/my-project/worklog.md
+Stage Summary:
+- 🏁 فاز U1 «دشمن زنده — پهپاد تعقیب‌گر» بسته شد — مسیر بحرانی سند اکنون U0✅→U1✅ است و نوبت U2 «حملهٔ قفس واژه» (پرتاب قفس واژه از پهپاد + دفاع با شلیک به پهپاد + تایمر هشدار قرمز HUD) است
+- توزیع کد فاز: enemy.ts ۱۷۹ (FSM خالص) + scene/drone.tsx ۱۸۳ (رندر) + کیت دشواری پخش در constants/prefs/use-fps-prefs/setup-panel/index — امضای Attempt فقط افزودنی (detail.difficulty) و کلید prefs جدید
+- قوانین سخت §U1 هر شش‌گانه اثبات یا بازبینی شد: ① آسان=خاموش (QA رفتاری) ② تپ=نصف سرعت (enemySpeedMult — تپ روی پهپاد هم گریز بدون جریمه در مسیر handleHit "drone") ③ تعقیب مشروط به سکون (شرط ENEMY_CALM_SPD/ENEMY_MOVE_SPD در FSM) ④ گریز با برخورد گلوله (EnemyApi.hit→enemyFlee؛ صفر امتیاز/جریمه) ⑤ فریز واقعی (frameloop never/always + هیچ تایمر جانبی در enemy/drone) ⑥ بدون برچسب متنی (بدنه تیره + چراغ کهربایی)
+- درس نشست: grep حساس به حرف بزرگ است — loadDifficulty در prefs.ts از دور اول بود ولی grep "difficulty" آن را نشان نداد؛ قبل از ادعای نقض قرارداد، grep -i بزنید
+- گام بعدی طبق سند: فاز U2 — زیرفازهای خودش را از §U2 سند بخوانید (سند هنوز §U2 تفصیلی ندارد؛ قبل از کد باید نگارش شود) — محدودیت «حداکثر یک فاز در هر نشست» رعایت شود
+
+---
+Task ID: 17
+Agent: main orchestrator (Z.ai Code)
+Task: فاز U2 «حملهٔ قفس واژه» — نگارش §U2 تفصیلی + اجرای سه زیرفاز (U2-00/01/02) + گیت‌ها + QA مرورگری + بستن اسناد
+
+Work Log:
+- طبق قانون سند (یک فاز در هر نشست؛ قبل از کد § کامل) ابتدا §U2 تفصیلی در docs/fps-upgrade-roadmap.md نگارش شد: ۳ زیرفاز + ۸ قوانین سخت + مشخصات فنی + ۷ معیار پذیرش
+- نقاط اتصال خوانده شد: hearts (heartsRef/setHearts/HEARTS=3)، handleHit (شاخه‌های drone/golden)، handleVolley (فیلتر drone)، interval رویدادگسستهٔ ۲۰۰ms (الگوی enemyPhase)، ریست startMission، Q_TIME_SHOOT=12/Q_TIME_TAP=15 (برای طراحی پنجرهٔ QA)، ارتفاع دوربین 1.7 (physics.ts) → هدف قفس 1.55
+- U2-00 (enemy.ts ۲۲۰خط + cage.ts ۱۱۵خط): حالت چهارم «charge» در FSM + throwCd/justThrew در EnemyState + enemyReturnToOrbit (استخراج منطق مشترک سه گذار) + جدول‌های ENEMY_CHARGE_S (۱٫۱/۰٫۷۵) و ENEMY_THROW_CD (۹/۶) + enemyChargeS/enemyThrowCd؛ cage.ts خالص: createCageState/stepCage (رویداد none/hit/whiff — برخورد شعاعی ۱٫۱۵م با موقعیت فعلی در هر فریم + گارد پایانی)/cageEta — پرواز خطی به نقطهٔ پرتاب (قانون ۳)، سرعت ۴٫۶×speedMult با کف ۱٫۴
+- U2-01 (scene/cage.tsx ~۲۰۰خط + drone.tsx): Cage با قفس سیمی octahedron کهربایی + دو torus مداری + هستهٔ درخشان (بدون برچسب — ADR-005)؛ CageApi.{launch,destroy} الگوی BurstApi؛ پرتاب صف‌شده (pending ref) مصرف در useFrame؛ registry id:"cage" با add/remove گاردگذاری‌شده (inRegistry)؛ پرچم‌های یک‌بارمصرف cageHit/cageWhiff روی bridge؛ deactivateCage تابع ماژول‌سطح؛ writeCageEta/flagCageHit/flagCageWhiff — الگوی writeEnemyPhase (ADR-001 — رفع خطای react-hooks/immutability)؛ drone.tsx: chargeS/throwCd در EnemyInput، مصرف justThrew → cageApi.launch (هدف = pos بازیکن/1.55)، چراغ تندترین در charge (90ms) + لرزش ظریف، آسان → chargeS=0 (دفاع عمقی قانون ①)
+- types.ts: enemyPhase + "charge"؛ bridge += cageEta/cageHit/cageWhiff (افزودنی)
+- U2-02 (index.tsx ~۲,۱۶۰خط + setup-panel): state cageEta + شمارنده‌های cageThrown/Downed/Hits (ref) + handleCageLaunch (stable، buzz light)؛ handleHit شاخهٔ "cage" (destroy گارددار → setLiveMsg «منهدوم کردی»، صفر امتیاز)؛ handleVolley فیلتر cage؛ interval: مصرف cageHit (❤−۱ + صدا/لرزش + finishRef در صفر قلب — مسیر مستقل سؤال)، مصرف cageWhiff («خطا رفت — جابه‌جا شدی»)، setCageEta با گارد تغییر (بدون رندر زائد)؛ enemyStalking = stalk||charge؛ چیپ هشدار قرمز HUD (Badge در سلاح / دکمهٔ min-h-11 قابل‌تپ در تپ‌ساده با aria-label کامل) + نشانگر «◆ قفس X» در نوار تمام‌صفحه؛ ریست کامل شمارنده‌ها/پرچم‌ها در startMission؛ detail.{cageThrown,cageDowned,cageHits} افزودنی؛ گام آموزش هفتم «پهپاد شناسایی و قفس واژه» در TUTORIAL_STEPS (آموزش ۳ دفاع)
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (یک خطای BuzzPattern "medium" → "light" اصلاح شد) · bun run lint = ۰/۰ ✓ (یک react-hooks/immutability روی جهش مستقیم bridge در cage.tsx → توابع ماژول‌سطح)
+- QA مرورگری (agent-browser، درس eval واحد رعایت شد): ناوبری قفسه→ویژن وان→هاب→شوتر→رد آموزش ✓
+  • عادی (بج غیرفعال): تایم‌لاین ۱۱ ثانیه‌ای eval واحد — t=1.9 بج تعقیب + اعلام پهپاد · t=4.6 چیپ «قفس واژه» + اعلام پرتاب · t=4.8 پهپاد به مدار برگشت · t=5.1 برخورد: اعلام «قفس واژه به تو خورد — یک ❤ کم شد (سؤال دست‌نخورده است)» · پرتاب دوم در پنجره رخ نداد (cooldown ✓) · تایم‌اوت سؤال در t=10.8 جدا ادامه یافت (مسیر مستقل ✓)
+  • تپ ساده × عادی: eval نظرسنجی ۵۰ms → چیپ‌دکمه در t=6.3 (پرتاب دیرتر — سرعت نصف ✓) → کلیک → «قفس واژه را منهدم کردی — تهدید خنثی شد!» و قلب‌ها ۳/۳ ماند (نجات ❤ بدون امتیاز ✓)
+  • آسان: ۹ ثانیه نمونه‌برداری — صفر بج تعقیب و صفر چیپ (قانون ① ✓)
+  • «مرور ۱ خطا» در صفحهٔ نتیجه = فقط خطای سؤال (قفس به wrongRef نمی‌رود ✓) · تله‌متری level:"word-tap:high" دست‌نخورده (ADR-006) · attempts=200 · صفر error در dev.log
+  • اسکرین‌شات‌ها: qa-shots/t17-cage-chip.png (قلب ۲/۳ پس از برخورد) و **t17-cage-chip5/6.png (چیپ قرمز با شمارش معکوس زندهٔ ۱٫۶→۰٫۷ + دکمهٔ تپ)** — تکنیک: eval نظرسنجی که در لحظهٔ ظهور چیپ برمی‌گردد + رگبار ۳ اسکرین‌شات پشت‌سرهم
+- اسناد: roadmap → نسخه ۱.۳ (U2 ✅، U3 ⬅️ جاری، تیک ۷ معیار با اعداد QA، تاریخچه) · fps/README.md → +۲ ردیف (cage.ts، scene/cage.tsx) + به‌روزرسانی enemy/drone + قرارداد Attempt با cage* + ردیف قرارداد دشمن زنده (U1/U2)
+Stage Summary:
+- 🏁 فاز U2 «حملهٔ قفس واژه» بسته شد — میدان اکنون یک چرخهٔ تهدید کامل دارد: گشت → تعقیب → شارژ تله‌گراف → پرتاب قفس → (دفاع: جابه‌جایی/شکار قفس/شکار پهپاد) → cooldown
+- توزیع کد فاز: cage.ts ۱۱۵ (پرواز خالص) + scene/cage.tsx ~۲۰۰ (رندر/api) + enemy.ts ۲۲۰ (FSM چهارحالته) + سیم‌کشی index + گام آموزش هفتم — Attempt فقط افزودنی، bridge فقط افزودنی
+- درس فنی: ① react-hooks/immutability جهش props مشتق‌شده از bridge.current را در useFrame هم می‌گیرد — الگوی تابع ماژول‌سطح (writeEnemyPhase/writeCageEta) اجباری است ② innerText.includes برای چیپ گمراه‌کننده است (پیام aria-live هم همان متن را دارد) — تشخیص چیپ باید querySelector روی خود دکمه/بج باشد ③ برای اسکرین‌شات پدیده‌های کوتاه‌عمر: eval مسدودساز که در لحظهٔ رویداد برمی‌گردد + رگبار اسکرین‌شات در همان دستور bash
+- گام بعدی طبق سند: فاز U3 «پناهگاه و خط دید» — سنگرها خط دید قطع می‌کنند و raycast «آیا مرا می‌بیند؟» به FSM اضافه می‌شود؛ §U3 تفصیلی ندارد → ابتدا نگارش، بعد کد (حداکثر یک فاز در نشست)
+
+---
+Task ID: 18
+Agent: main orchestrator (Z.ai Code)
+Task: فاز U3 «پناهگاه و خط دید» طبق docs/fps-upgrade-roadmap.md — نگارش §U3 تفصیلی + اجرای سه زیرفاز (U3-00/01/02) + گیت‌ها + QA مرورگری + بستن اسناد
+
+Work Log:
+- کشف وضعیت: کارلاگ Task ID: 17 (U2) از نشست قبل کامل ثبت شده بود → «گام بعدی» = فاز U3. سوءنگارش خط ۱ سند («نسخهٔ ۱.۱») هم پیدا و در بستن سند اصلاح شد (← ۱.۴)
+- طبق قانون سند (یک فاز در هر نشست؛ قبل از کد § کامل) ابتدا §U3 تفصیلی نگارش شد: ۳ زیرفاز + ۸ قوانین سخت + مشخصات فنی + ۶ معیار پذیرش (شامل تصمیم‌های طراحی: LOS خالص نه Raycaster، سکون بی‌دید freeze نه reset، شارژ متعهد، چیپ فقط نمایشی، صفر کلید Attempt جدید)
+- نقاط اتصال خوانده شد: enemy.ts (FSM چهارحالته)، layouts.ts (LayoutBox با y پایه و solid:false)، physics.ts (CROUCH_EYE/PUSHOUT)، drone.tsx (useFrame + ورودی‌های FSM)، index.tsx (interval رویدادگسستهٔ ۲۰۰ms + startMission)
+- U3-00 (los.ts جدید ۹۸خط + enemy.ts ۲۲۰→۲۵۶): hasLineOfSight با slab سه‌محوره روی AABB واقعی (y0..y0+h) — ردِ دکورهای solid:false و جعبهٔ حاوی مبدأ (ضدگرفتار پهپاد داخل دیوار)؛ EnemyInput.los/lostS + EnemyState.lostT/justLost + ENEMY_LOST_S (۰٫۹/۰٫۶) + enemyLostS؛ منطق FSM: شروع تعقیب فقط با دید (سکون بی‌دید freeze)، حین تعقیب بی‌دید = شناوری در گرِیس → enemyReturnToOrbit (calmT صفر — پنهانی کامل رد را پاک می‌کند)، شاخهٔ charge بدون تغییر (متعهد)، حرکت همچنان فوری تعقیب را می‌شکند
+- U3-01 (types.ts ۱۲۶→۱۳۰ + drone.tsx ۲۱۵→۲۴۲): bridge += enemyHidden/enemyLost (افزودنی)؛ drone.tsx محاسبهٔ LOS هر فریم پیش از گام FSM — چشم بازیکن = 1.7 − crouchAmt·CROUCH_EYE + jumpY (خم‌شدن پشت جعبهٔ کوتاه هم کار می‌کند) + pwz یک‌بارمحاسبه (رفع تکرار عبارت laneK)؛ writeEnemyHidden/flagEnemyLost توابع ماژول‌سطح (ADR-001)؛ تله‌گراف جست‌وجو: چراغ پهپاد در stalk بی‌دید تندتر (120ms)
+- U3-02 (index.tsx ۲۲۲۳→۲۲۵۸ + setup-panel ۶۱۵→۶۲۱): state hiddenChip + hiddenStreakRef؛ مصرف enemyLost (اعلام «پهپاد رد تو را گم کرد — در پناهگاه بمان یا حرکت کن!») و enemyHidden با debounce دو پولی ۴۰۰ms در همان interval رویدادگسسته (setState فقط روی تغییر — الگوی cageEta)؛ چیپ «پوشیده» سبز (emerald + EyeOff) در هدر دسکتاپ + «◆ پوشیده» در نوار تمام‌صفحه — بدون دکمه (قانون ۶)؛ ریست کامل در startMission؛ گام آموزش هشتم «پناهگاه و خط دید» در TUTORIAL_STEPS
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (یک پرانتز اضافهٔ ویرایش MultiEdit در زنجیرهٔ else-if stalk قبل از tsc گرفتار و اصلاح شد) · bun run lint = ۰/۰ ✓ (دو بار — قبل و بعد از اسناد)
+- صحّه‌سنجی ریاضی los.ts با bun (۷ حالت): دیوار بلند مسدود ✓ کنار دیوار باز ✓ دکور solid:false بی‌اثر ✓ خم‌شده پشت جعبهٔ ۱٫۳ مسدود ✓ ایستاده همان‌جا باز ✓ مبدأ-داخل-جعبه رد ✓ موازی-خارج باز ✓
+- شبیه‌سازی‌های تصمیم با ماژول‌های واقعی (LAYOUTS.dust + stepEnemy + hasLineOfSight): ① تایم‌لاین QA دقیق مرورگر — علت صفر چیپ در جعبه برای بازیکن ایستاده (چشم ۱٫۷ بالای h=۱٫۳ هرگز مسدود نمی‌شود — فقط خم‌شدن) و جهت تصادفی مدار ② سکون ۶۰ث پشت درِ dust در هر دو جهت مدار: صفر justLost + hidden% ≈ ۲۰–۲۷ (قوس کور) — اثبات «تعقیب از کور شروع نمی‌شود» ③ خم‌شدن شرطی هنگام stalk: dir=−1 → lost@3.6 (قطعی)؛ dir=+1 مسیر باز (lost نمی‌آید — درست)
+- QA مرورگری (agent-browser، درس eval واحد رعایت شد؛ کلیدهای مصنوعی باید code:"KeyW"/"KeyC" باشند — key کافی نیست):
+  • آسان: ۳۲ پول/۵ث — صفر بج تعقیب/پوشیده/قفس ✓ → توقف/ادامه ✓ → «پایان دور» → نگهبان «آره، خروج» ✓ (t18-easy.png)
+  • عادی جنگل (بدون حرکت): stalk@2.3 → پرتاب قفس → برخورد ❤ → پایان طبیعی؛ «مرور ۱ خطا» = فقط تایم‌اوت سؤال (قفس در خطاها نیست ✓ U2 دست‌نخورده)؛ چیپ پوشیده صفر (میدان باز — درست)
+  • عادی dust درِ دوتایی (راه‌رفتن با KeyA/KeyW به پشت در h=2.75): ۲ پنجرهٔ پوشیده با استریک ۲۱ پول (~۱٫۷ث) — چیپ با debounce روشن/خاموش ✓
+  • عادی dust جعبهٔ دوطبقه + خم‌شدن حین تعقیب (تایم‌لاین طلایی eval واحد): stalk@3.65 → KeyC → چیپ «پوشیده» @+0.57 → اعلام «پهپاد رد تو را گم کرد» @5.09 + بج تعقیب خاموش همان لحظه (گرِیس ۰٫۹ + بازگشت به مدار) → ادامهٔ چرخهٔ قفس/HVT/تایم‌اوت سالم
+  • اسکرین‌شات چیپ: تکنیک استریک‌گیت (برگشت از eval در استریک ≥۸) + اسکرین‌شات بلافاصله — t18-hidden-chip.png: چیپ سبز «پوشیده» با EyeOff در هدر + پهپاد و جعبهٔ پوشش در قاب ✓
+  • کنسول: فقط هشدار قدیمی THREE.Clock (خارج از بازی) — صفر خطا · dev.log صفر error
+- درس‌های فنی ثبت‌شده: ① جعبهٔ h≤1.3 هرگز بازیکن ایستاده (چشم ۱٫۷) را نمی‌پوشاند — پوشش کوتاه فقط با خم‌شدن؛ پوشش بلند (درِ dust 2.75) ایستاده هم می‌پوشاند ② پهپاد فقط از سمتی که می‌بیند تعقیب را شروع می‌کند و مسیر مستقیمش معمولاً باز می‌ماند → justLost عملاً فقط با تغییر هندسهٔ دید حین تعقیب (خم‌شدن ثابت) رخ می‌دهد — نه با جابه‌جایی (حرکت اول تعقیب را با قاعدهٔ ③ U1 می‌شکند) ③ keyboard dispatch باید e.code بدهد (KEY_MOVE با e.code) ④ «دور جدید» Canvas را remount می‌کند ولی در حلقهٔ QA پس از هر restart باید مسیر راه‌رفتن تکرار شود
+- اسناد بسته شد: roadmap → نسخهٔ ۱.۴ (خط ۱ اصلاح، U3 ✅، U4 ⬅️ جاری، مسیر بحرانی زیرساخت دشمن «کامل شد»، تیک ۶ معیار با اعداد QA، ردیف تاریخچهٔ ۱.۴) · fps/README.md → +۱ ردیف (los.ts) + به‌روزرسانی index/setup/enemy/types/drone + قرارداد «خط دید (U3)»
+Stage Summary:
+- 🏁 فاز U3 «پناهگاه و خط دید» بسته شد — مسیر بحرانی سند (U0→U1→U2→U3 زیرساخت دشمن) کامل شد و میدان اکنون دو دفاع تاکتیکی دارد: حرکت (U1) و پنهانی (U3) + دفاع فعال قفس (U2)
+- توزیع کد فاز: los.ts ۹۸ (دید خالص) + enemy.ts ۲۵۶ (FSM LOS-aware) + drone.tsx ۲۴۲ (محاسبهٔ فریمی + پرچم‌ها) + سیم‌کشی index + گام آموزش هشتم — Attempt صفر کلید جدید (عمداً — تله‌متری رفتاری = U8)، bridge فقط افزودنی
+- تکنیک QA جدید ثبت شد: برای پدیده‌های گذرای HUD، eval مسدودساز با آستانهٔ استریک + اسکرین‌شات در همان دستور bash؛ و شبیه‌سازی bun با ماژول‌های واقعی برای تعیین «رفتار موردانتظار» پیش از نتیجه‌گیری از مرورگر
+- گام بعدی طبق سند: فاز U4 «رئیس واژه» (L — رئیس چندمرحله‌ای پایان مأموریت در موج ≥۴) — §U4 تفصیلی ندارد → ابتدا نگارش، بعد کد (حداکثر یک فاز در نشست)؛ گزینهٔ موازی کوچک‌تر: U5 (هوش صوتی میدان، S)
+---
+Task ID: 19
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «ادامه بده» — فاز U4 «رئیس واژه» نقشهٔ docs/fps-upgrade-roadmap.md — نگارش §U4 تفصیلی + اجرای سه زیرفاز (U4-00/01/02) + گیت‌ها + QA مرورگری + بستن اسناد
+
+Work Log:
+- کشف وضعیت: کارلاگ Task ID: 18 (U3) کامل بود → «گام بعدی» = فاز U4 (⬅️ جاری در سند نسخهٔ ۱.۴). طبق قانون سند ابتدا §U4 تفصیلی نگارش شد (نسخهٔ ۱.۵): ۳ زیرفاز + ۸ قوانین سخت + مشخصات فنی + ۶ معیار پذیرش — تصمیم‌های طراحی: سپر فقط با پاسخ درست (گلوله به بدنه = جرقه + اعلام — خودِ قانون آموزشی مکانیک دفاعی)، سه چالش متفاوت (مأموریت/هجی/شنیداری)، آسان = رئیس منفعل، قفس دوره‌ای در عادی/سخت با شارژ تله‌گراف، پهپاد تعقیب‌گر حین نبرد تعطیل، زمان چالش ۱٫۵×
+- نقاط اتصال خوانده شد: enemy.ts (الگوی FSM)، cage.ts/cage.tsx (پرتابه و api)، chain.ts (موتور ترتیبی — کشف طلایی: چالش هجی با mode:"sentence-chain" + sequence.words=حروف صفر شاخهٔ جدید می‌خواهد — HUD جای‌خالی‌ها/chainResolve/والی پمپ/تایم‌اوت همه رایگان کار می‌کنند)، textures.ts (بیلبورد Canvas — فارسی درست شکل می‌گیرد)
+- U4-00 (boss.ts جدید ۱۵۱خط + questions.ts ۲۳۷→۲۹۲ + types.ts +bossPhase): BossState/createBossState/stepBoss (سرگردانی خطی رفت‌وبرگشتی با برگشت از لبه + چرخهٔ قفس: آماده→شارژ تله‌گراف→پرتاب با cd در فریم‌های FSM) + bossInterrupt (لغو شارژ با نفس ۲٫۴ث) + ثابت‌ها BOSS_WAVE=4/BOSS_STAGES=3/BOSS_TIME_MULT=1.5 + bossSpeedMult (آسان=۰، تپ=۰٫۵، سخت=۱٫۲۲) + buildSpellQuestion (حروف به ترتیب + حواس‌پرتی حرفی واقعی بی‌حساس به بزرگی + sequence.en=واژه برای مرور خطا + speakText=واژه برای تقویت تلفظ) + pickSpellTarget
+- U4-01 (scene/boss.tsx جدید ۲۷۹خط): بدنهٔ فرماندهی بزرگ (~۳× پهپاد) + کمربند کهربایی + تاج آنتن سه‌شاخ + هستهٔ حس‌گر قرمز (تله‌گراف: تندچشمک حین شارژ + لرزش ظریف) + سه حلقهٔ سپر توری (کهربایی→قرمز؛ i+1>=stage دیده می‌شوند ۳→۲→۱؛ چرخش با شتاب حین شارژ) + registry id:"boss" + BossApi.interrupt (حین شارژ=لغو+جرقه؛ بیرون شارژ=جرقه) + پرتاب قفس از همان cageApi با cageMult (قانون تپ U2) + انفجار شکستن حلقه روی تغییر stage (پراپ، مصرف یک‌بارمصرف brokenRef) + فروپاشی نهایی روی bridge.bossPhase="down" (دو انفجار + خروج از registry) — درس تکراری: react-hooks/immutability جهش حلقهٔ ringRefs را گرفت → stepShieldRing تابع ماژول‌سطح (الگوی writeEnemyPhase — ADR-001)
+- U4-02 (index.tsx ۲۲۵۸→۲۴۵۵ + setup-panel ۶۲۱→۶۲۷): استخراج deckPop/buildModeQuestion مشترک (رفکتور بی‌تغییر رفتار) + تریگر در advanceImpl پس از موج F8 (w>=BOSS_WAVE && bossStageRef===0) + bossBuildStage (مرحلهٔ ۱=سؤال مأموریت، ۲=هجی با فالبک، ۳=شنیداری با فالبک؛ زمان ۱٫۵×؛ chainProgress صفر برای هجی) + startBoss (تعطیلی پهپاد: setEnemyStalking(false)+bridge.enemyPhase="idle" + اعلام ورود) + bossNextStage(success) (خطا=همان مرحله واژهٔ تازه؛ درست<۳=سپر بعد+اعلام؛ درست=۳=فروپاشی+پیروزی+later(finish,1500)) + routeNext با nextStepRef (الگوی latest-ref) روی هر پنج مسیر پاسخ (زنجیره×۲/درست/غلط/تایم‌اوت) + شاخهٔ handleHit("boss") + handleVolley bossShot + بج HUD «رئیس واژه — مرحلهٔ n/۳» با سه پیپ سپر + «◆ رئیس n/۳» نوار تمام‌صفحه + effQTime برای نوار زمان + detail.{bossStage,bossDefeated} + ریست کامل start + حذف موقت HunterDrone (bossStage===0) + متن خنثی handleCageLaunch + گام آموزش نهم «رئیس واژه» (Crown) — آموزش اکنون ۹ گام
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (سه بار) · bun run lint = ۰/۰ ✓ (سه بار — یک خطای react-hooks/immutability در ringRefs گرفته و با الگوی ADR-001 رفع شد)
+- شبیه‌سازی bun با ماژول‌های واقعی (tool-results/u4-sim.ts — ۲۶/۲۶ پاس): سرگردانی (کران ±۴٫۵ + ۴ برگشت در ۴۰ث) · چرخهٔ قفس (دو پرتاب در cd+۲شارژ — خطای پنجرهٔ تستِ خودم اصلاح شد) · لغو شارژ (cd≥۲٫۴) · آسان منفعل (۶۰ث صفر پرتاب/حرکت + شناوری زنده) · ضرایب سرعت (۱/۰٫۵/۱٫۲۲) · چالش هجی (ترتیب حروف + جای‌خالی‌ها + حواس‌پرتی بیرون واژه + chainResolve کامل/حوطی/بی‌ترتیب + فلاش انتظاری + واژه‌های مانده) · فالبک (بدون واژهٔ قابل هجی → null) · جریان (تریگر دقیقاً پاسخ ۱۵ + سه شکست → فروپاشی)
+- QA مرورگری (agent-browser — تکنیک fiber-reading برای پاسخ قطعی + اسکریپت‌های tool-results/u4-*.js؛ کلیدهای تپ = e.key "1".."7" با ترتیب lane):
+  • آسان: دور کامل تا پیروزی — تریگر در پاسخ ۱۵ (q16 فلگ BOSS) → مرحلهٔ ۱ → هجی (jای خالی‌های سبز) → شنیداری (بج ۳/۳ تک‌پیپ + پخش خودکار) → فروپاشی → گزارش مأموریت رتبهٔ A + رکورد ۴۰۲ · DB: bossStage=3/bossDefeated=true/cageThrown=0 (رئیس منفعل ✓)
+  • عادی ×۶ اجرا: قفس رئیس تأیید شد (cageThrown=3 با پهپاد حذف‌شده) + eta=7.6 در پرواز = دقیقاً نصف سرعت (تپ) + اسکرین‌شات چیپ قرمز «قفس واژه — ۷٫۶s — تپ!» حین پرواز (t19-boss-stage1-cage.png) + برخورد=❤ مسیر مستقل (correct=16/16 با ۳ برخورد) + مرگ حین نبرد = پایان عادی (bossStage=2/false در DB) + دفاع فعال: کلیک چیپ تپ = منهدم (DB: cageDowned=2 در diag؛ 1 در اجرای پیروزی) + پیروزی کامل عادی: bossStage=3/bossDefeated=true/correct=18/18/امتیاز ۳۹۸ با دفاع پیوسته
+  • شلیک به بدنهٔ رئیس (onHit "boss" از fiber): پیام «سپر رئیس...» ✓ + صفر آسیب (بازی ادامه یافت) + bridge.bossPhase="fight"/enemyPhase="idle" حین نبرد (پهپاد تعطیل ✓)
+  • فریز واقعی حین نبرد: تایمر ۲۲→۲۲ پس از ۲٫۲ث توقف → ادامه ✓ (frameloop کیت — رئیس هم رایگان فریز)
+  • retry همان مرحله: تایم‌اوت هجی «cheese» → واژهٔ تازهٔ «loud» (سپر نمی‌شکند ✓) — در سه اجرا دیده شد
+  • کنسول: فقط خطای TTS هدلس (محیطی) — صفر خطای بازی · dev.log صفر error مرتبط
+- **باگ کشف‌شده و رفع‌شده در QA**: چالش هجی با واژهٔ ۷ حرفی + ۲ حواس‌پرتی = ۹ هدف — کلیدهای ۸/۹ در قرارداد تپ ساده (۱..۷) وجود ندارند → هدف‌های انتهایی با کیبورد دست‌نیافتنی. اصلاح: سقف واژهٔ هجی ۵ حرف (۵+۲=۷ هدف ✓) در pickSpellTarget + سند §U4 قانون ۲ + README
+- درس‌های فنی QA: ① fiber-reading: قدم‌زدن >۹۰ هوک به هوک سمی می‌خورد (کرش) — q/bridge در هوک‌های اول فیبرهای بالا هستند (bridge=fiber5/hook72) ② شمارش پیشرفت هجی باید داخل کارت سؤال اسکوپ شود (کلاس bg-emerald-500/15 روی آیکون‌هولدر شِل هم هست — off-by-one کشنده) ③ خواندن q از fiber در تعویض سؤال ممکن است stale برگرداند (آرتیفکت اسکریپت — نه بازی؛ کاربر از DOM/canvas تعامل می‌کند) ④ eval های بلند (۳۰ث+) timeout می‌خورند — پنجره‌های مشاهده را کوتاه کن و پیام‌های aria-live را با پنجرهٔ ≥۳ث چک کن (برخورد قفس بعد از کلیک رخ می‌دهد) ⑤ مرگ QA-محور در عادی = رفتار درست بازی (بازیکن ساکن در برابر قفس‌ها) — دفاع فعال (کلیک چیپ) لازم است
+- بودجه §۳: dust پایه (موج ۱) ۲۹٫۷fps → حین نبرد رئیس (۷-۸ هدف + قفس + انفجارها) ۲۱٫۷-۲۵٫۳ — واریانس SwiftShader ±۱۵٪؛ هزینهٔ نهایی رئیس ≈ یک هدف (۱۲ مش) + ریاضیات خالص — سبک‌تر از LOS فریمی پهپاد U3 که زیر بودجه پاس شد؛ در سند با زمینه ثبت شد
+- اسناد بسته شد: roadmap → نسخهٔ ۱.۵ (U4 ✅ با تیک ۶ معیار + اعداد QA، U5 ⬅️ جاری، ردیف تاریخچهٔ ۱.۵) · fps/README.md → +۲ ردیف (boss.ts، scene/boss.tsx) + بروزرسانی index/setup/questions/types + امضای Attempt با boss* + ردیف قرارداد «رئیس واژه (U4)»
+- اسکرین‌شات‌ها: qa-shots/t19-boss-spell.png (بج ۲/۳ + پیپ‌ها + حرف سبز) · t19-boss-listen.png (بج ۳/۳) · t19-boss-stage1-cage.png (چیپ قرمز ۷٫۶s + بج رئیس) · t19-result-victory.png (رتبهٔ A + رکورد ۴۲۰) · t19-death-easy.png · t19-normal-victory.png
+Stage Summary:
+- 🏁 فاز U4 «رئیس واژه» بسته شد — مأموریت حالا نقطهٔ اوج دارد: موج ≥۴ = نبرد رئیس سه‌سپری که فقط پاسخ درست واژه سپرهایش را می‌شکند؛ سه چالش متفاوت (مأموریت/هجی/شنیداری) با بازاستفادهٔ کامل موتور زنجیره و شنیداری — صفر شاخهٔ برخورد جدید
+- توزیع کد فاز: boss.ts ۱۵۱ (حرکت خالص) + scene/boss.tsx ۲۷۹ (رندر/api) + questions.ts +۵۵ (هجی) + index.tsx +۱۹۷ (تریگر/مراحل/HUD) + گام آموزش نهم — Attempt فقط detail.{bossStage,bossDefeated} (ADR-002) · bridge فقط bossPhase (افزودنی)
+- مهم‌ترین کشف فنی: چالش هجی = mode:"sentence-chain" با sequence.words=حروف — کل زیرساخت زنجیره (HUD جای‌خالی، chainResolve، والی، تایم‌اوت) رایگان بازاستفاده شد؛ و باگ دسترس‌پذیری کلیدهای ۸/۹ که QA مرورگری گرفت و با سقف ۵ حرف حل شد
+- گام بعدی طبق سند: فاز U5 «هوش صوتی میدان» (S — SFX سه‌بعدی‌نما + واکنش صوتی دشمن به FSM) — §U5 تفصیلی ندارد → ابتدا نگارش، بعد کد (حداکثر یک فاز در نشست)؛ گزینه‌های موازی: U6 (طاق عمودی M) یا U7 (بقا M)
+---
+Task ID: 20
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «ادامه بده به صورت استاندارد و اصولی مثل یک برنامه‌نویس حرفه‌ای» — فاز U5 «هوش صوتی میدان» نقشهٔ docs/fps-upgrade-roadmap.md — نگارش §U5 تفصیلی (قانون سند: مشخصات قبل از کد) + اجرای سه زیرفاز (U5-00/01/02) + گیت‌ها + QA مرورگری + بستن اسناد
+
+Work Log:
+- کشف وضعیت: کارلاگ Task ID: 19 (U4 رئیس واژه) کامل بود → فاز جاری U5 (S)؛ طبق قانون طلایی سند ابتدا §U5 تفصیلی نوشته شد (سند → نسخهٔ ۱.۶) و بعد کد
+- نقاط اتصال خوانده شد: enemy.ts (FSM و گذارها) · kit/sound-engine.ts (کاتالوگ تخت — صفر پن؛ قرارداد «صدا فقط لحظهٔ رویداد») · scene/drone|cage|boss.tsx (الگوی توابع ماژول‌سطح ADR-001) · physics.ts (قرارداد yaw: جلو = (−sin yaw, −cos yaw)، راست = (cos yaw, −sin yaw)) · index.tsx (interval ۲۰۰ms رویدادگسسته + مسیرهای handleHit/startBoss/bossNextStage/handleCageLaunch) · prefs.ts (الگوی کلیدهای ADR-003)
+- U5-00 (audio.ts جدید ۲۰۷خط + prefs.ts +۴): `fieldPan(srcX,srcZ,px,pz,yaw)` خالص — پروجکشن روی بردار راست، کلمپ ±۰٫۸۵ (هیچ‌وقت تمام‌چپ/راست)، گین ۰٫۳۵+۰٫۶۵×(۱−dist/16) + `FIELD_RECIPES` ده افکت سنتزی (detected دو بیپ تهاجمی / charge سوت بالاروندهٔ ۰٫۵ث / throw سوت نزولی دویسته / lost دو نت نزولی / retreat استامپ سه‌تایی / thud برخورد نرم / cageDown کلانک فلزی سه‌لایه / bossWarn شیپور بم / shieldBreak شیشه‌ای + تُمپا / bossDown انفجار بم کشیده) + `playFieldSound` با دو گیت (isSoundMuted کیت حاکم + setFieldSfxEnabled) + StereoPannerNode با فال‌بک بدون پنر (قانون ۴) + AudioContext مستقل با سیاست autoplay کیت + `loadFieldSfxPref`/`FIELD_SFX_KEY` در prefs
+- U5-01 (types.ts +۳ فیلد · scene/drone +writeEnemyPos · scene/cage +writeCagePos (نقطهٔ پرتاب قبل از onLaunch + موقعیت هر فریم) · scene/boss +writeBossPos · index.tsx سیم‌کشی): همهٔ نوشته‌ها با توابع ماژول‌سطح (ADR-001) · صداهای FSM فقط در interval ۲۰۰ms (stalk=detected+پیام، charge=سوت+اعلام جدید، flee=retreat، enemyLost=lost) · قفس: handleCageLaunch=throw (پن از cagePos ثبت‌شده هنگام مصرف صف — هم پهپاد هم رئیس)، cageWhiff=thud، منهدم=cageDown (جایگزین hit عمومی) · رئیس: startBoss=bossWarn مرکزی، شکستن سپر=shieldBreak پن‌دار، فروپاشی=bossDown با گین ≥۰٫۹ (جایگزین سه «golden» عمومی)
+- U5-02 (use-fps-prefs +fieldSfx/setFieldSfxPref · setup-panel سوییچ در گزینه‌ها · index سوییچ در تنظیمات سریع اورلی توقف + sync effect): کلید `visionone:game-pref:fps-field-sfx` پیش‌فرض روشن · بدون گام آموزش جدید (توضیح در خود سوییچ — تصمیم §U5)
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (سه بار) · bun run lint = ۰/۰ ✓ (سه بار) · شبیه‌سازی bun (tool-results/u5-sim.ts — ۲۴/۲۴ پاس): چپ/راست/جلو/پشت/قطری + سه قرارداد yaw + کلمپ + گین + کاتالوگ کامل — یک مورد تستِ خودم غلط بود (منبع پشتِ بازیکن در yaw=π/2 باید pan صفر باشد نه چپ) — کد درست، تست اصلاح شد؛ FIELD_RECIPES برای آزمون‌پذیری عمومی شد (الگوی ثابت‌های enemy.ts)
+- QA مرورگری (agent-browser — spy استریو: wrap AudioContext.prototype.createStereoPanner + ثبت pan.setValueAtTime؛ تکنیک‌های u4 برای چیپ/درایو):
+  • setup: سوییچ «صدای میدان (چپ/راست)» در گزینه‌ها رندر و aria-checked درست · toggle → localStorage "0"/"1" (ماندگاری ✓) · پس از reload سوییچ از pref خوانده شد
+  • زنده — پن جهت واقعی: دور ۱ (عادی): detected(۲نت) pan=−۰٫۲ → charge(۱نت) pan=−۰٫۲ → throw(۲نت) pan=−۰٫۲ (پهپاد نیمهٔ چپ مدار) ؛ دور ۲: detected pan=+۰٫۸۵ → charge → throw pan=+۰٫۸۵ (پهپاد پس از گردش مداری سمت راست!) — پن موقعیت لحظه‌ای FSM را دنبال می‌کند + فاصلهٔ گذارها ~۲٫۷ث = دقیقاً stalkDelay — هر گذار یک‌بار، صفر صدای فریمی
+  • زنده — cageDown: در تپ ساده دو کلیک چیپ قرمز = DB: cageThrown=3/cageDowned=2/cageHits=1 با رویدادهای پن‌دار (tail 0.66) + امضای Attempt دست‌نخورده (همان کلیدهای U1-U4 — بدون detail جدید، تصمیم §U5)
+  • گیت بی‌صدا: خاموش از اورلی توقف → ۲۰ث بازی فعال با FSM زنده = صفر رویداد پن (grownSinceMark=0) + ماندگاری "0" · بازخورد UI (کیت مرکزی) دست‌نخورده · کلید سراسری کیت در playFieldSound گارد است (کد + گیت مشترک)
+  • بودجه §۳: سنجش rAF ده‌ثانیه‌ای بازی فعال = ۴۸٫۹fps — بالای خط پایهٔ U4 (~۳۰ در SwiftShader) → صفر هزینهٔ فریمی صوت رویدادی تأیید
+  • کنسول: فقط هشدار محیطی THREE.Clock (قبلی) + HMR — صفر خطای بازی · dev.log بدون error مرتبط
+  • صداهای رئیس (bossWarn/shieldBreak/bossDown) و retreat/lost/thud: مسیر کد همان الگوی یک‌خطیِ اثبات‌شدهٔ چهار صدای زنده است (جایگزینی مستقیم golden/hit در همان call-site ها) — جریان زندهٔ رئیس در headless این نشست اقتصادی نبود (درایو ۱۵ پاسخ با stale-fiber و مرگ‌های ساکن تکرار شکست) → تمرین زنده به ماتریس نهایی U9 موکول شد (صادقانه در معیار پذیرش §U5 ثبت شد)
+- درس‌های فنی QA: ① جاسوس صوت با reload پاک می‌شود — پس از هر reload دوباره نصب شود ② دکمهٔ restart این بازی «دور جدید» است نه «دوباره» ③ tapMode بین reload ها ماندگار نیست (state) ولی difficulty هست ④ خواندن stale فایبر بعد از تعویض سؤال حتی با صبر ۶۰۰ms گاهی می‌چرخد (الگوی -n/+n) — درایو طولانی سرِ وصال در headless قابل اتکا نیست
+- اسناد بسته شد: roadmap → نسخهٔ ۱.۶ (U5 ✅ تیک ۶ معیار با شواهد، U6 ⬅️ جاری، ردیف تاریخچهٔ ۱.۶) · fps/README.md → ردیف جدید audio.ts + بروزرسانی index/setup/prefs/types/drone/cage/boss + قرارداد «صدای میدان (U5)» + کلید field-sfx در فهرست کلیدها
+- اسکرین‌شات‌ها: qa-shots/t20-home.png · t20-setup.png · t20-fps-setup.png · t20-setup-switch.png (سوییچ روشن در گزینه‌ها) · t20-playing-stalk.png · t20-tap-state.png · t20-pause-switch2.png (سوییچ در اورلی توقف) · t20-final-playing.png
+Stage Summary:
+- 🏁 فاز U5 «هوش صوتی میدان» بسته شد — صدا از افکت تخت به ابزار آگاهی میدانی تبدیل شد: منابع متخاصم از سمت خودشان صدا می‌دهند (پن استریو + افت فاصله) و دشمن به گذارهای FSM واکنش صوتی دارد (تله‌گراف شنیداری تعقیب/شارژ/گریز) — بدون هیچ فایل صوتی (سنتز WebAudio) و با صفر هزینهٔ فریمی
+- توزیع کد فاز: audio.ts ۲۰۷ (خالص) + prefs +۷ + types +۹ + scene/{drone,cage,boss} +۶/+۶/+۶ + index ~+۶۰ (کمکی sourceFieldPan + بلوک‌های رویداد) + setup-panel +۱۵ + use-fps-prefs +۱۴ · بدون هیچ کلید detail جدید (ADR-002) و فقط یک کلید prefs افزودنی (ADR-003)
+- مهم‌ترین شواهد: دنبال‌کردن زندهٔ جهت پهپاد توسط پن (−۰٫۲ چپ → +۰٫۸۵ راست در دو موج متوالی) · توالی دقیق detected→charge→throw در هر چرخه · خاموشی کامل میدان با سوییچ (صفر رویداد در ۲۰ث) · ۴۸٫۹fps (صفر هزینه)
+- گام بعدی طبق سند: فاز U6 «نقشهٔ پنجم — طاق عمودی» (M — چیدمان دوطبقه با گذر بالا/پایین + حمله از لایهٔ عمودی) — §U6 تفصیلی ندارد → ابتدا نگارش، بعد کد (حداکثر یک فاز در نشست)؛ گزینه‌های موازی: U7 (بقا M) یا U8 (تله‌متری دشمن S)
+---
+Task ID: 21
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست کاربر «باکرون جاب بهبود رو ادامه بده» — اجرای کامل بهینه‌سازی دسکتاپ (Laptop/Desktop) طبق درخواست ممیزی UI/UX قبلی: کشف شد که کارهای نشست قبل (خلاصهٔ جلسه) هرگز روی دیسک نوشته نشده بودند → کل بسته از صفر بازسازی شد
+
+Work Log:
+- کشف بحرانی: خلاصهٔ نشست قبل ادعای ساخت desktop-sidebar.tsx و ویرایش‌های page.tsx را داشت اما هیچ‌کدام روی دیسک نبود (فایل غایب، grep خالی) → بازسازی کامل از صفر
+- سایدبار دسکتاپ (فایل جدید src/components/book/desktop-sidebar.tsx): ریل ثابت راست RTL فقط xl+ (۱۲۸۰+)، ۷۲px جمع‌شده → ۲۳۶px باز، overlay بدون جابه‌جایی محتوا، ۱۸ آیتم NAV مشترک با هدر (export NAV از app-header)، aria-current، title میان‌بر Alt+1..9، راهنمای کیبورد پایین ریل
+- کشف فنی مهم: کلاس hover: تیلویند ۴ داخل @media (hover:hover) کامپایل می‌شود و در محیط بدون اشاره‌گر (headless) بی‌اثر است → باز/بسته شدن به state JS منتقل شد (onMouseEnter/onMouseLeave/onFocus/onBlur با relatedTarget) — رفتار یکنواخت همه‌جا
+- page.tsx: wrapper با xl:pr-[72px] (آفست صفحه)، skip-link «پرش به محتوای اصلی» (sr-only → focus:fixed، WCAG 2.4.1)، mount شرطی سایدبار با hasData، main با id="main-content" tabIndex={-1} و ارتقای عرض xl:max-w-7xl، میان‌برهای کیبورد Alt+1..9 → ۹ مقصد اول NAV (گارد INPUT/TEXTAREA/contentEditable، بدون Ctrl/Meta/Shift)
+- app-header.tsx: ناوبری قرصی دسکتاپ اکنون md..xl:hidden (از xl ریل جانشین می‌شود) — رفع سرریز ۱۸ قرص که ۸ مقصد را نامرئی می‌کرد؛ NAV برای بازاستفاده export شد
+- چندستونه‌سازی: home-view (چالش روزانه+هفتگی کنار هم lg:grid-cols-2؛ دفتر خطاها+ستاره‌دارها همین‌طور) · games-hub (max-w-3xl→lg:max-w-5xl + گرید lg:grid-cols-3 برای ۱۵ بازی=۵ ردیف) · quiz setup-panel (max-w-xl→lg:2xl/xl:3xl) · vocab-card-grid (xl:grid-cols-4)
+- تایپوگرافی: ReadingCard → mx-auto max-w-3xl (سقف طول خط ریدینگ‌ها) · GrammarLibrary → xl:max-w-4xl (آکاردئون‌ها)
+- Performance: بررسی شد — ۲۲ نما و ۱۴ بازی همگی dynamic import با loading skeleton (از قبل مطلوب)؛ بدون رگرسیون
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (سه بار — خطای export نبودن NAV و آثار ویرایش اولیه گرفته و رفع شد) · bun run lint = ۰/۰ ✓ · dev.log بدون error
+- QA مرورگری (agent-browser — ماتریس کامل):
+  • ۱۹۲۰×۱۰۸۰: ریل نمایان + آفست محتوا + قرص‌ها مخفی ✓ · hover ریل: ۷۲→۲۳۶px با برچسب‌ها (opacity 0→1) و جمع‌شدن بر خروج ✓ (تکنیک: dispatch mouseover bubbles برای فعال‌سازی onMouseEnter ری‌اکت — mouseenter خام به state نمی‌رسد)
+  • میان‌برها زنده: Alt+2→«فهرست مطالب»، Alt+8→«آزمون تعاملی»، Alt+1→جلد ✓ · skip-link: اولین Tab = لینک پرش visible fixed ✓
+  • نمای آزمون: کارت پهن‌شده وسط‌چین ✓ · بازی‌ها: ۳ ستون منظم + کارت دوئل تمام‌عرض ✓ · واژگان: ۴ ستون فلش‌کارت ✓ · هوم: چالش‌ها کنار هم ✓
+  • ۱۰۲۴: قرص‌ها flex / ریل none ✓ · ۱۴۴۰: ریل flex (xl≥۱۲۸۰ درست) ✓ · ۳۹۰: ناوبری موبایل + تک‌ستون، بدون ریل ✓
+  • فوتر: در بازی‌ها (صفحهٔ کوتاه) چسبیده به کف ویوپورت ✓
+- درس فنی QA: synthetic MouseEvent('mouseenter') غیر bubble به onMouseEnter ری‌اکت نمی‌رسد (دیلگیشن ری‌اکت mouseover/mouseout را می‌شنود) — برای تست state باید mouseover bubbles:true فرستاد
+- اسکرین‌شات‌ها: qa-shots/d26-1920-initial.png (قفسه) · d26-1920-home.png · d26-1920-rail-expanded.png (ریل باز با ۱۸ برچسب) · d26-1920-quiz.png (skip-link + کارت پهن) · d26-1920-games.png (۳ ستون) · d26-1920-vocab.png (۴ ستون) · d26-1920-final-home.png · d26-390-vocab.png
+Stage Summary:
+- 🏁 بستهٔ کامل «بهینه‌سازی دسکتاپ» تحویل شد: ریل ناوبری هوشمند xl+ با expand/collapse state-driven، جایگزینی هدر قرصی سرریزشده، آفست صحیح RTL، میان‌برهای Alt+1..9 + skip-link، کانتینر پهن‌تر (max-w-7xl)، چندستونه‌سازی چهار نما، سقف خطوط متن بلند — همگی QA مرورگری شده در ۱۹۲۰/۱۴۴۰/۱۰۲۴/۳۹۰
+- نکتهٔ فرایندی مهم برای جلسات بعد: خلاصهٔ مکالمه ≠ واقعیت دیسک؛ همیشه قبل از ادامه، وجود فایل/محتوا را با ls/grep راستی‌آزمایی کن (این نشست یک بازسازی کامل از دست‌رفته را ثابت کرد)
+- گام بعدی پیشنهادی: پردازش جزوهٔ جدید کاربر (وظیفهٔ معلق از نشست‌های قبل — قرارداد registry.ts) یا فاز U6 «طاق عمودی» نقشهٔ FPS
+---
+Task ID: 22
+Agent: main orchestrator (Z.ai Code)
+Task: پرسش کاربر «چرا کتاب Collocations 1000 در برنامه دیده نمیشه؟» — کشف اینکه فایل آپلودشده هرگز پردازش نشده بود + پردازش کامل کتاب «۱۰۰۰ کالوکیشن کاربردی» طبق قرارداد registry.ts (وظیفهٔ معلق نشست‌های قبل) + قابلیت جدید پاپ‌آپ واژه
+
+Work Log:
+- کشف: upload/Collocations Book.pdf (۱۲۸ صفحه، Shayna Oliveira / Espresso English، ۵۰ درس) از ۱۴ اکتبر روی دیسک بود اما هیچ ورودی در registry/BOOKS/داده‌ها نداشت — «وظیفهٔ معلق» نشست‌های قبل که هرگز اجرا نشده بود
+- استخراج‌گر پایتون (tool-results/collo-extract.py — ۵ نسخهٔ تکراری): نرمال‌سازی pdftotext (فرم‌فید/گیومه/خط‌تیره)، ۵۰ درس + متن کامل + ۳۳۶ سؤال از چهار فرمت کوئیز متفاوت کتاب: ① گزینهٔ خطی «a / b / c» با الگوریتم بازسازی-جور exact-match علیه کلید پاسخ (با ترتیب کاندیداهای کوتاه→بلند برای جلوگیری از بلعیدن دنبالهٔ جمله) ② حرف‌دار a) b) c) در خطوط جدا ③ کلوئز-دیالوگ با بانک واژه (difflib opcode → جای‌خالی‌ها) ④ باکس تک‌خطی/عمودی — با پاکسازی نگشت/شمارهٔ چسبیده و یکدست‌سازی خط‌ها به «________» · ۷ درس بدون سؤال (متن کوئیز در PDF اصلاً استخراج نمی‌شود یا فرمت match-halves)
+- ترجمهٔ فارسی با مهارت LLM (z-ai-web-dev-sdk، بک‌اند bun): گذر ۱ = ۴۷/۵۰ درس {titleFa، quoteFa، ترجمهٔ ۵۰۰+ پاراگراف، گِلاس واژه‌های پاسخ} با ذخیرهٔ تدریجی/resume؛ گذر ۲ = استخراج ۹۱۱ کالوکیشن کامل از متن درس‌ها با گِلاس فارسی (۴۷/۵۰) — درس‌های ۴29-rate-limit با pacing ۹s و resume حل شد؛ ۳ درس ناتمام (۳۰/۳۴/۴۶-ish)
+- ژنراتور TS (tool-results/collo-gen.py): src/data/collocations/{book-meta,vocab,readings,quiz-seed,index}.ts — ۵۰ فصل با نقل‌قول دو زبانه، vocab = ۹۱۱ عبارت + ۳۱۷ گِلاس واژه (pos: phr./colloc.)، readings = متن دو زبانه، quiz-seed = ۳۳۶ سؤال (category vocabulary، scope «درس N — عنوان فارسی»)
+- سیم‌کشی رجیستری: BookId+"collocations" در books/types.ts، ورودی BOOKS (emoji 💬، teal، gradeLabel «Collocations — مکالمه طبیعی»)، loader تنبل، GRADE_LABELS و شاخهٔ اختصاصی bookPromptLine در api/_lib/book.ts
+- بهبود UI: ChapterView تب‌های مکالمه/گرامر + کارت‌های معرفی‌شان فقط وقتی داده دارند رندر می‌شوند (کتاب‌های بدون مکالمه/گرامر دیگر تب خالی ندارند) · word-lookup: فال‌بک جدید «کالوکیشن‌های مرتبط در همین کتاب» — وقتی واژهٔ تکی در بانک نبود، تا ۵ عبارت vocab که همان واژه را دارند با ترجمه نمایش داده می‌شود (کلیک family → immediate/extended/loving/close-knit family + family tree با ترجمهٔ فارسی)
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (چهار بار — خطاهای ویرگول/undefined میانی گرفته و رفع شد) · bun run lint = ۰/۰ ✓ · dev.log بدون error
+- QA مرورگری: قفسه ۱۹۲۰ = کارت جدید 💬 دیده می‌شود ✓ · جلد کتاب: ۱,۲۲۸ واژه/۳۳۶ تست/۵۰ متن ✓ · فهرست: ۵۰ کارت درس دو زبانه ✓ · درس ۱: تب‌های مخفی + نمونه واژه با گلاس فارسی ✓ · ریدینگ: پاراگراف EN + ترجمهٔ FA + روخوانی ✓ · پاپ‌آپ واژه با کالوکیشن‌های مرتبط ✓ · آزمون: سؤال با ۴ گزینه (بازی گزینهٔ چهارم را تکمیل می‌کند) + فیدبک سبز صحیح ✓ · فلاش‌کارت SRS: ۱,۲۲۸ واژه در ۵۰ درس ✓ · موبایل چک شد
+- اسکرین‌شات‌ها: qa-shots/c1-shelf.png · c2-book-home.png · c3-contents.png · c4-chapter1.png · c5-reading.png · c6-quiz.png · c7-quiz-playing.png · c8-quiz-feedback.png · c10-related-collocations.png · c11-final-home.png · c12-related.png · c14-flashcards.png
+Stage Summary:
+- 🏁 کتاب هفتم کتابخانه «۱۰۰۰ کالوکیشن کاربردی» کامل تحویل شد: ۵۰ درس، متن کامل دو زبانه با روخوانی، ۹۱۱ کالوکیشن + ۳۱۷ گلاس = ۱,۲۲۸ مدخل واژگان برای فلش‌کارت/SRS، ۳۳۶ تست از خود کتاب، جای‌گذاری کامل در همهٔ نماها (قفسه/جلد/فهرست/فصل/آزمون/واژگان/مرور/جست‌وجوی سراسری/دستیار)
+- ردپای داده: 3 فایل JSON استخراجی + ۳ اسکریپت در tool-results/ (قابل اجرای مجدد برای جزوه‌های بعدی — خط تولید «PDF → extract → translate → generate» اکنون به‌صورت متد ثبت شده)
+- باقی‌مانده صادقانه: ۳ درس ترجمهٔ فارسی ناقص (پاراگراف فارسی خالی = فقط EN نمایش داده می‌شود)، ۷ درس بدون سؤال کوئیز (متن PDF قابل استخراج نبود) — قابل تکمیل با rerun اسکریپت‌ها در نشست بعد
+- درس فنی: rg -rln تلهٔ --replace دارد (پرچم -r!)؛ MultiEdit ناتمام = ویرایش‌های قبل از خطا اعمال شده‌اند (بعدش همیشه state فایل را چک کن)؛ LLM gateway حدود ۴29 در ~۱۰۰+ درخواست متوالی — pacing ۹s + resume ضروری
+- گام بعدی پیشنهادی: تکمیل ترجمهٔ ۳ درس باقی‌مانده با rerun، اضافه‌کردن entry تازه‌ها (whats-new) برای کتاب جدید، یا فاز U6 «طاق عمودی» نقشهٔ FPS
+
+---
+Task ID: 23
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست Senior Mobile UX Engineer — ممیزی عمیق موبایل (۳۹۰px/لمسی) در ۷ بُعد + پیاده‌سازی اصلاحات + گزارش شدت‌بندی‌شده + Mobile Optimization Roadmap
+
+Work Log:
+- ممیزی اکسپلور (very thorough): ۷ بُعد × تمام src/components/book/** و games/** → ۱۵ یافتهٔ اولویت‌دار با file:line دقیق (جدول شدت High/Med/Low در گزارش نهایی کاربر)
+- 🧭 ساختاری — mobile-nav.tsx جدید: ناوبری پایین با ۵ زبانهٔ اصلی (خانه/فهرست/واژگان/آزمون/بازی‌ها) + کشوی vaul «بیشتر» با ۱۳ مقصد گرید ۴ستونه + ردیف نصب PWA/پوسته (پروگرسیو دیسکلوژر)؛ min-h-56px هر زبانه، safe-area-inset، مخفی‌شدن خودکار با focusin/focusin روی input (کیبورد نرم)، بستن خودکار پس از ناوبری؛ زبانهٔ «نصب روی گوشی» از هدر موبایل حذف شد (اقدام کم‌تکرار)
+- 🧭 نوار قرصی افقی ۱۸ آیتمی هدر موبایل حذف شد (قرص ~۳۰px، ۱۲ مقصد بیرون از دید، هدر ~۱۰۰px) → هدر موبایل ۵۶px؛ page.tsx: spacer h-[calc(57px+env(safe-area-inset-bottom))] بعد از فوتر (بدون هم‌پوشانی — تأیید QA: footer bottom=787 = nav top=787)
+- 👆 لمسی: SpeakButton sm از h-7 (28px) → h-9 (36px) + gap-1.5 (پرتکرارترین کنترل اپ)؛ StarToggle و چیپ‌های vocab (ستاره/تمرین/نمای کارت-جدول) h-7 → h-9؛ چیپ هدف روزانه home و چیپ‌های stats و voice-engine vocabulary و درس‌پیل‌های texts/flashcards → min-h-9/h-10؛ دکمهٔ بستن Dialog پایه → h-10 w-10 (یک‌جا، همهٔ دیالوگ‌ها)؛ دکمهٔ بستن/تصویر/ستارهٔ پاپ‌آپ واژه → h-9؛ Close پاپ‌آپ واژه 24→36px
+- 👆 hover-only → active: کارت‌های فصل (contents)، کارت‌های home (روزانه/هفتگی/خطاها/ستاره‌دارها + group-active:scale-95)، کاشی‌های games-hub، کارت‌های گام chapter — همه active:scale/active:shadow گرفتند
+- ⌨️ کیبورد/iOS: interactiveWidget:"resizes-content" در viewport layout؛ CommandInput (جست‌وجوی سراسری) text-base md:text-sm (ضد زوم iOS)؛ حذف overrideهای text-[12px]/text-sm روی Textarea یادداشت واژه و survey-gate؛ duel inputs text-[13px]→text-base؛ autoCapitalize=none/autoCorrect=off/spellCheck=false + enterKeyHint=search روی جست‌وجوهای vocab/dict/verbs؛ enterKeyHint=send روی چت دستیار؛ tutor 100vh→100dvh
+- 📖 تایپوگرافی: متن ریدینگ texts-view ۱۳٫۵px→۱۵px (md:text-base) + بازنویسی راهنمای ماوس‌محور به لمسی («بزن/نگه‌دار و انتخاب کن»)؛ تعریف دیکشنری پاپ‌آپ ۱۲→۱۳px، مثال ۱۱→۱۲px، چیپ POS ۹→۱۰px، لیست کالوکیشن‌های مرتبط →text-xs؛ دکمه‌های واژهٔ درون‌متنی px-1 py-0.5 -my-0.5 (هدف بلندتر بدون شکستن ریتم خط)
+- 📐 لِی‌اوت: verbs-view ستون‌بندی پاسخ‌گو (<md: ۴ ستون #/شکل اول/معنی/صدا؛ md+: ۶ ستون کامل) + ارتفاع dvh؛ dict/verbs اسکرول‌پن h-[calc(100dvh-230px)] max-h-600 min-h-360؛ جدول واژگان min-w-[430px] داخل ScrollArea (پن افقی قابل‌کشف)؛ بوم flappy h-in(480px,calc(100dvh-260px))] min-h-340؛ پاپ‌آپ واژه: کلمپ عمودی با maxH واقعی (قبلاً vh-200 و تا ۳۴۰px بیرون‌زدگی؛ QA: bottom=734<844 ✓) و بستن با اسکرول فقط بعد از جابه‌جایی >۸۰px
+- ⚡ پرفورمنس: جدول واژگان از رندر ۱۴۸۸ سطر (~۱۵هزار DOM) → سقف ۳۰۰ + فوتر شمارنده؛ learnedInList → useMemo (قبلاً در هر کلید جستجو scan کامل)؛ confetti DPR-scaling (سقف ۲x برای باتری) + decoding=async روی img حافظه؛ touch-action:manipulation و -webkit-tap-highlight-color:transparent روی body (ضد دبل‌تپ‌زوم و فلش خاکستری تپ)
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (سه خطای تایپ وسط کار گرفته و رفع: LucideIcon↔ComponentType، strokeWidth، ویرایش JSX کامنت dictionary) · bun run lint = ۰/۰ ✓ · dev.log بدون hydration/runtime error (فقط EADDRINUSE بوت‌استرپ = سرور از قبل روشن)
+- QA مرورگری ۳۹۰×۸۴۴ (agent-browser، ۱۵ اسکرین‌شات qa-shots/m23-*): قفسه ✓ · جلد+ناوبری پایین (خانه فعال+نقطه) ✓ · فهرست با تب فعال ✓ · کشوی بیشتر ۱۳ کاشی+PWA/پوسته ✓ · ناوبری کشو→دستیار+بستن خودکار (open-count=0) ✓ · مخفی‌شدن ناوبری با فوکوس textarea ✓ · واژگان چیپ‌ها/کارت‌ها ✓ · متن‌ها ۱۵px ✓ · پاپ‌آپ واژه کاملاً در دید+close 36px ✓ · آزمون CTAهای min-h-11 + aria-current=آزمون ✓ · بازی‌ها تک‌ستون ✓ · فوتر بدون هم‌پوشانی ✓ · رگرسیون: ۱۴۴۰ ریل ۷۲px ✓ · ۱۰۲۴ قرص‌های هدر ✓
+- 🐛 درس دیباگ: MultiEdit این محیط غیراتمیک است (ویرایش‌های قبل از خطا اعمال می‌مانند — بعد از هر شکست state را grep کن)؛ انتخابگر آزمایشی document.querySelectorAll('button') دکمهٔ ریل دسکتاپِ hidden را در DOM می‌بیند و کلیکِ آزمایشی به جای کشو آن را می‌زند — سلکتور always-scope کن
+
+Stage Summary:
+- 🏁 اپ حالا موبایل‌محور واقعی است: ناوبری شست دست (bottom nav+کشو)، هدف‌های لمسی ≥۳۶px (CTAها ۴۴+)، بدون زوم iOS روی هیچ ورودی، ریدینگ ۱۵px، جدول‌های پاسخ‌گو، پاپ‌آپ واژه همیشه در دید، و کف پرفورمنس جدول واژگان از ۱۵هزار نود به ۳۰۰ سقف رسید
+- ماتریس سه‌لایهٔ ناوبری نهایی: <md ناوبری پایین · md..xl قرص‌های هدر · xl+ ریل کناری
+- باقی‌مانده صادقانه: همه‌چیز از ۱۵ یافتهٔ ممیزی رفع شد؛ دو آیتم تعمداً عقب‌افتاد (بلوک‌نشدن swipe-back iOS برای کشو — vaul خودش handle دارد؛ و مجازی‌سازی cards-mode — سقف ۲۴۰ کافی است) → Roadmap در گزارش کاربر
+- گام بعدی پیشنهادی: دستیار دوپنلی واقعی در xl (Roadmap دسکتاپ)، فاز U6 طاق عمودی FPS، یا PWA نصب‌شدهٔ واقعی روی گوشی فیزیکی برای تست لمس واقعی (خودکار headless جایگزین انگشت نیست)
+---
+Task ID: 24
+Agent: main orchestrator (Z.ai Code)
+Task: درخواست Senior UI/UX Engineer — ممیزی عمیق دسکتاپ (Laptop 1440 / Desktop 1920) در ۷ بُعد + گزارش شدت‌بندی‌شده + پیاده‌سازی اصلاحات + Desktop Optimization Roadmap
+
+Work Log:
+- ممیزی اکسپلور (very thorough): ۷ بُعد × ~۲۵ کامپوننت → ۲۲ یافته (۲ High، ۱۴ Medium، ۶ Low) با file:line دقیق؛ الگوی غالب: «ستون مرکزی max-w-xl/2xl برای همه‌چیز» در ۱۹۲۰px = ~۱۲۰۰px فضای مرده
+- QA تأییدی ۱۹۲۰×۱۰۸۰ قبل از کد: review/tutor/class باریک وسط صفحه، هاب ۳ستونه، دیکشنری ۲ستونه — تأیید تصویری
+- 🔴 High 1 — tutor-view دوپنلی در xl+: چیدمان xl:grid-cols-inmax(0,1fr)_248px] (چت + ستون کنار چسبان sticky) · شروع‌کننده‌های چت به پنل کنار منتقل شدند (xl:hidden داخل چت) با رویداد CustomEvent "visionone:tutor-starter" + latest-ref sendRef (هم‌الگوی registerNavHandler — بدون لفت state) · راهنمای کیبورد Enter/Shift+Enter در پنل کنار · کانتینر max-w-2xl→xl:max-w-5xl (سایر تب‌های AI هم پهن‌تر شدند)
+- 🔴 High 2 — notebook-view: فاز تمرین mx-auto max-w-3xl + گزینه‌ها grid sm:grid-cols-2 + دکمهٔ بعدی sm:w-auto · Batch action جدید: چک‌باکس انتخاب هر خطا + نوار toolbar «تمرین فقط انتخاب‌شده‌ها (N)» + «لغو انتخاب» · دکمهٔ per-item «حل شد» (حذف یک‌کلیکی بدون تمرین) · فهرست max-h-96→md:max-h-[60vh] (کاهش اسکرول-داخل-اسکرول)
+- 🟠 Med — review-view: setup دوپنلی lg:grid-cols-inmax(0,1fr)_320px] (داشبورد | دردسرسازها+شروع) · playing lg:max-w-2xl + فلیپ lg:h-[400px]
+- 🟠 Med — flashcard-view: همهٔ فازها md:max-w-2xl + کارت فلیپ md:h-[420px] + تب‌ها md:max-w-2xl
+- 🟠 Med — بازی‌ها: game-shell (قاب مشترک ۱۵ بازی) xl:max-w-4xl · wordle برد max-w-sm→md:max-w-lg xl:max-w-xl + ستاپ lg:max-w-2xl · فلپی lg:h-in(560px,…)] · هاب xl:max-w-6xl + گرید xl:grid-cols-4 (۱۵ بازی=۴ ردیف) · دیالوگ دوئل آنلاین max-w-lg→lg:max-w-4xl
+- 🟠 Med — contents xl:grid-cols-3 · rewards xl:max-w-6xl + مأموریت‌های روزانه lg:grid-cols-3 · دیکشنری ستون ۳ در 2xl (1536px+) در useColumnCount (مجازی‌ساز از قبل آماده بود) · texts-view ریدینگ: EN/FA دوستونه lg:grid-cols-2 با جداکنندهٔ lg:border-s (اسکرول نصف) + lg:max-w-5xl · گرامر: TOC چسبان xl+ با ۱۱ درس (کلیک=باز کردن+scrollIntoView+aria-current) — موبایل بدون تغییر · سه زیرنمای گفتار (say-it/roleplay/shadowing) xl:max-w-3xl/4xl + گرید واژهٔ say-it xl:grid-cols-6
+- 🟠 Med — app-header: هم‌ترازی xl:max-w-7xl با main + دکمهٔ PWA xl:hidden (فقط md..xl — روی مانیتور بی‌معنا)
+- 🟡 Low — quiz setup: دو بنر چالش روزانه/هفتگی xl:grid-cols-2 · result-view مرور اشتباهات md:grid-cols-2 + xl:max-w-3xl · vocab-card-grid 2xl:grid-cols-5 · error-analysis گزینه‌های تمرین sm:grid-cols-2 · class-view فرم md:max-w-lg
+- ⚡ پرفورمنس: polling گارد visibilitychange در live-player (2.5s) و teacher-dashboard (3s) — تب مخفی fetch نمی‌زند
+- گیت‌ها: bunx tsc --noEmit = ۰ ✓ (دو بار) · bun run lint = ۰/۰ ✓ · dev.log صفر error (کشف: سرور حین کار مرده بود → reboot شد؛ علت نامشخص — شاید OOM حین lint همزمان)
+- QA مرورگری بعد از کد (۱۹۲۰×۱۰۸۰): review دوپنلی ✓ · tutor دوپنلی + کلیک چیپ «will vs going to» = پیام فرستاده و پاسخ واقعی AI رندر شد (end-to-end ✓) · TOC گرامر: ۱۱ آیتم + کلیک = بازشدن/پرش/active ✓ · هاب ۴ستونه ✓ · contents ۳ستونه ✓ · دیکشنری ۳ستونه (2xl) ✓ · فلش‌کارت پهن‌تر ✓ · هدر هم‌تراز 7xl + بدون دکمهٔ PWA ✓
+- رگرسیون موبایل ۳۹۰×۸۴۴: ریل none ✓ · ناوبری پایین ✓ · تک‌ستون ✓ · PWA مخفی ✓
+- درس فنی: کلاس «خراب» h-in(480px...) که rg گزارش کرد در فایل سالم بود (h-in(...)] هنگام چاپ لاین خراب دیده می‌شد) — قبل از «باگ‌گیری» خروجی grep را با Read تأیید کن
+- اسکرین‌شات‌ها: qa-shots/d27-*.png (قبل) + d27b-*.png (بعد): review2/tutor2/tutor-sent/grammar-toc/games4/contents2/flash/mobile-home
+
+Stage Summary:
+- 🏁 بستهٔ «بهینه‌سازی دسکتاپ — دور ۲» تحویل شد: ۲۲ یافتهٔ ممیزی → ۲۰ مورد پیاده‌سازی شد (۲ High + ۱۴ Med + ۴ Low) + ۲ گارد پرفورمنس؛ سه نما کلیدی (دستیار/مرور/دفتر خطاها) از ستون باریک وسط مانیتور به چیدمان دوپنلی واقعی رسیدند و Batch actions (انتخاب گروهی خطاها + حل سریع) اضافه شد
+- نوار پیوستگی بریک‌پوینت‌ها حالا کامل است: <md ناوبری پایین · md..xl هدر قرصی+PWA · xl+ ریل کناری + دوپنل‌ها + PWA مخفی · 2xl دیکشنری/واژگان پنج‌ستونه
+- باقی‌مانده صادقانه (Roadmap برای دور بعد): ① دوئل آفلاین دو نیمه‌ای در lg (بازیکن‌ها کنار هم) — تغییر ساختاری بازی ② grammar-view (غیر library) فهرست کنار محتوا ③ مجازی‌سازی cards-mode فلش‌کارت ④ scoreboard چسبان در آزمون برای xl ⑤ داشبورد معلم دوپنلی (لیست دانش‌آموزان | نمودار)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Search, CheckCircle2, LayoutGrid, Rows3, Star, GraduationCap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,33 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { useStarredWords } from "@/lib/star-store";
 import { SpeakButton } from "./speak-button";
 import type { VocabEntry } from "@/data/types";
+
+/**
+ * نقشه راه دسکتاپ (دور ۳) — نمایش تدریجی به‌جای سقف سخت:
+ * به‌جای «فقط ۲۴۰/۳۰۰ واژهٔ اول + برو جستجو کن»، لیست با اسکرول اضافه می‌شود
+ * (IntersectionObserver + بافر ۴۸۰px) — بدون کتابخانهٔ مجازی‌سازی، بدون جهش layout،
+ * و DOM فقط به‌اندازهٔ چیزی که کاربر دیده رشد می‌کند.
+ *
+ * شمارنده «state مشتق‌شده» است (الگوی مستند ری‌اکت — بدون effect و بدون ریست در effect):
+ * با تغییر resetKey (نما/تعداد فیلتر) خواندن به initial برمی‌گردد و loadMoreِ بعدی
+ * روی کلید جدید ذخیره می‌شود. ref حسگر هم جدا از مقدارهای state نگه داشته می‌شود
+ * (قاعدهٔ react-hooks/refs — آبجکت برگشتی هوک فقط state خالص دارد).
+ */
+function useIncrementalReveal(total: number, initial: number, step: number, resetKey: string) {
+  const [st, setSt] = useState(() => ({ key: resetKey, visible: initial }));
+
+  const visible = st.key === resetKey ? Math.min(st.visible, total) : Math.min(initial, total);
+  const hasMore = visible < total;
+
+  const loadMore = useCallback(() => {
+    setSt((prev) => {
+      const base = prev.key === resetKey ? prev.visible : initial;
+      return { key: resetKey, visible: Math.min(base + step, total) };
+    });
+  }, [resetKey, initial, step, total]);
+
+  return { visible, hasMore, loadMore };
+}
 
 /** دکمه نشان‌گذاری (ستاره) — کلیکش نباید کارت را فلیپ کند */
 function StarToggle({ active, onClick }: { active: boolean; onClick: () => void }) {
@@ -80,6 +107,29 @@ export function VocabCardGrid({
     () => filtered.filter((w) => learned.has(w.word)).length,
     [filtered, learned],
   );
+
+  // نمایش تدریجی — با تغییر نما یا تعدادِ فیلتر، شمارش از ابتدا (resetKey شامل هر دو)
+  const initialForMode = mode === "table" ? 120 : 60;
+  const reveal = useIncrementalReveal(
+    filtered.length,
+    initialForMode,
+    120,
+    `${mode}:${filtered.length}`,
+  );
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !reveal.hasMore) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) reveal.loadMore();
+      },
+      { rootMargin: "480px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reveal.hasMore, reveal.loadMore]);
 
   return (
     <div className="space-y-4">
@@ -173,9 +223,8 @@ export function VocabCardGrid({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* موبایل (Task 23): رندر ۱۴۸۸ سطر (‏~۱۵هزار نود DOM) در گوشی ضعیف = جم
-                    — سقف ۳۰۰ سطر مثل نما کارت‌ها */}
-                {filtered.slice(0, 300).map((w, i) => (
+                {/* نقشه راه دسکتاپ: نمایش تدریجی — سقف سخت ۳۰۰ حذف شد */}
+                {filtered.slice(0, reveal.visible).map((w, i) => (
                   <TableRow key={`${w.word}-${i}`} className={cn(learned.has(w.word) && "opacity-55")}>
                     <TableCell className="text-muted-foreground text-xs">{(i + 1).toLocaleString("fa-IR")}</TableCell>
                     <TableCell>
@@ -200,16 +249,24 @@ export function VocabCardGrid({
               </TableBody>
             </Table>
             </div>
+            {/* حسگر نمایش تدریجی — داخل ویوپورت ScrollArea */}
+            {reveal.hasMore && <div ref={sentinelRef} aria-hidden className="h-px" />}
           </ScrollArea>
-          {filtered.length > 300 && (
+          {reveal.hasMore ? (
             <p className="border-t bg-muted/30 px-4 py-2.5 text-center text-xs text-muted-foreground">
-              ۳۰۰ واژهٔ اول نمایش داده شد — بقیه را با جستجو ببینید.
+              {reveal.visible.toLocaleString("fa-IR")} واژه از {filtered.length.toLocaleString("fa-IR")} نمایش داده شده — به اسکرول ادامه بده…
             </p>
+          ) : (
+            filtered.length > 120 && (
+              <p className="border-t bg-muted/30 px-4 py-2.5 text-center text-xs text-muted-foreground">
+                همهٔ {filtered.length.toLocaleString("fa-IR")} واژه نمایش داده شد ✓
+              </p>
+            )
           )}
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {filtered.slice(0, 240).map((w, i) => {
+          {filtered.slice(0, reveal.visible).map((w, i) => {
             const isLearned = learned.has(w.word);
             return (
               <div key={`${w.word}-${i}`} className="flip-scene h-[108px]">
@@ -257,10 +314,10 @@ export function VocabCardGrid({
         </div>
       )}
 
-      {mode === "cards" && filtered.length > 240 && (
-        <p className="text-center text-xs text-muted-foreground">
-          ۲۴۰ واژه اول نمایش داده شده — برای واژه‌های دیگر جستجو کنید.
-        </p>
+      {mode === "cards" && reveal.hasMore && (
+        <div ref={sentinelRef} className="py-2 text-center text-xs text-muted-foreground">
+          {reveal.visible.toLocaleString("fa-IR")} از {filtered.length.toLocaleString("fa-IR")} واژه — اسکرول کن تا بیشتر بیاید…
+        </div>
       )}
       {starredOnly && filtered.length === 0 && (
         <p className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-6 text-center text-xs leading-6 text-muted-foreground">
