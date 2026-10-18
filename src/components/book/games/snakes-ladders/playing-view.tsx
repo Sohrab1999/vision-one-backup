@@ -217,7 +217,7 @@ export function PlayingView({
                         {opt}
                       </span>
                       {reveal?.byBot === true && isPicked && (
-                        <Badge className="shrink-0 bg-amber-500 px-1.5 py-0 text-[9px] text-amber-950">ربات</Badge>
+                        <Badge className="shrink-0 bg-amber-500 px-1.5 py-0 text-[10px] text-amber-950">ربات</Badge>
                       )}
                     </button>
                   );
@@ -302,13 +302,13 @@ export function PlayingView({
                             pulse?.cells.includes(n) && (pulse.kind === "snake" ? "sl-pulse-bad" : "sl-pulse-good"),
                           )}
                         >
-                          <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-foreground/75 sm:text-[11px]">
+                          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-foreground/75 sm:text-[11px]">
                             {faNum(n)}
                           </span>
                           {snakeTo !== undefined && (
                             <span
                               aria-hidden
-                              className="absolute left-0 top-0 flex items-center gap-px rounded-br-[4px] bg-destructive/10 px-0.5 text-[7px] font-black leading-[11px] text-destructive sm:text-[8px]"
+                              className="absolute left-0 top-0 flex items-center gap-px rounded-br-[4px] bg-destructive/10 px-0.5 text-[10px] font-black leading-[11px] text-destructive sm:text-[11px]"
                             >
                               <TrendingDown size={8} />
                               {faNum(snakeTo)}
@@ -317,7 +317,7 @@ export function PlayingView({
                           {ladderTo !== undefined && (
                             <span
                               aria-hidden
-                              className="absolute left-0 top-0 flex items-center gap-px rounded-br-[4px] bg-primary/10 px-0.5 text-[7px] font-black leading-[11px] text-primary sm:text-[8px]"
+                              className="absolute left-0 top-0 flex items-center gap-px rounded-br-[4px] bg-primary/10 px-0.5 text-[10px] font-black leading-[11px] text-primary sm:text-[11px]"
                             >
                               <TrendingUp size={8} />
                               {faNum(ladderTo)}

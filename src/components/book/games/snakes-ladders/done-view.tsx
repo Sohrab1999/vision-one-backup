@@ -103,9 +103,9 @@ export function DoneView({
             <div key={i} className="flex items-center gap-2 rounded-xl bg-muted/50 px-3 py-2 text-[12px]">
               <span className={cn("h-3 w-3 shrink-0 rounded-full", TOKEN_BG[pl.ci])} aria-hidden />
               <span className="font-bold">{pl.name}</span>
-              {pl.isBot && <Badge variant="outline" className="px-1 py-0 text-[9px]">ربات</Badge>}
+              {pl.isBot && <Badge variant="outline" className="px-1 py-0 text-[10px]">ربات</Badge>}
               {winner === i && (
-                <Badge className="gap-1 bg-amber-500 px-1.5 py-0 text-[9px] text-amber-950">
+                <Badge className="gap-1 bg-amber-500 px-1.5 py-0 text-[10px] text-amber-950">
                   <Crown size={10} />
                   برنده
                 </Badge>
