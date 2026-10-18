@@ -459,7 +459,7 @@ export function SetupPanel({
               <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
                 ۵. حالت زمان‌دار (کنکوری)
                 {timed > 0 && (
-                  <Badge className="gap-1 border-amber-500/40 bg-amber-500/15 text-[9.5px] text-amber-700 dark:text-amber-300">
+                  <Badge className="gap-1 border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
                     <Hourglass size={10} />
                     فعال
                   </Badge>
