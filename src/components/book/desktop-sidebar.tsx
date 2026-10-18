@@ -51,7 +51,7 @@ export function DesktopSidebar({
         </span>
         <span className="sidebar-label min-w-0 whitespace-nowrap text-[13px] font-black leading-tight">
           کتابخانه ویژن
-          <span className="block text-[9.5px] font-medium text-muted-foreground">
+          <span className="block text-[10px] font-medium text-muted-foreground">
             ناوبری سریع
           </span>
         </span>
