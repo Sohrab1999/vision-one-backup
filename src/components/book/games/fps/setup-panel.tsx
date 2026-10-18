@@ -311,7 +311,7 @@ export function SetupPanel({
                   <span className="mt-1 block text-[10px] leading-4 text-muted-foreground">{w.desc}</span>
                   <Badge
                     variant="outline"
-                    className="mt-1.5 border-emerald-500/30 px-1.5 py-0 text-[9px] font-bold text-emerald-600 dark:text-emerald-400"
+                    className="mt-1.5 max-w-full whitespace-normal border-emerald-500/30 px-1.5 py-0 text-[9px] font-bold text-emerald-600 dark:text-emerald-400"
                   >
                     {w.stats}
                   </Badge>
