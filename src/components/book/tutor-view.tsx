@@ -188,7 +188,7 @@ function FreeChat() {
 
         {/* پیام‌ها */}
         <ScrollArea className="flex-1 pr-2">
-          <div ref={scrollRef} className="space-y-3 py-2">
+          <div ref={scrollRef} aria-busy={sending} className="space-y-3 py-2">
             {messages.map((m, i) => (
               <div
                 key={i}
@@ -284,6 +284,7 @@ function FreeChat() {
             onClick={() => send()}
             disabled={sending || !input.trim()}
             aria-label="ارسال"
+            aria-busy={sending}
           >
             {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={17} className="-scale-x-100" />}
           </Button>
