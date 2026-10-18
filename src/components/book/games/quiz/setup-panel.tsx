@@ -446,7 +446,7 @@ export function SetupPanel({
                   >
                     {o.label}
                     {poolMeta && o.value !== "all" && (
-                      <span className="text-[9px] font-bold opacity-70">
+                      <span className="text-[10px] font-bold opacity-70">
                         {(poolMeta.byLevel[o.value] ?? 0).toLocaleString("fa-IR")} سؤال
                       </span>
                     )}
