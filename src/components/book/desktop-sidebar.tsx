@@ -93,14 +93,14 @@ export function DesktopSidebar({
         <div className="sidebar-label flex items-start gap-2 whitespace-nowrap text-[10px] leading-4 text-muted-foreground">
           <Keyboard size={13} className="mt-0.5 shrink-0" aria-hidden />
           <span>
-            <kbd className="rounded border bg-muted px-1 font-sans text-[9.5px]">Alt</kbd>
+            <kbd className="rounded border bg-muted px-1 font-sans text-[10px]">Alt</kbd>
             {" + "}
-            <kbd className="rounded border bg-muted px-1 font-sans text-[9.5px]">۱..۹</kbd>{" "}
+            <kbd className="rounded border bg-muted px-1 font-sans text-[10px]">۱..۹</kbd>{" "}
             پرش سریع
             <span className="block">
-              <kbd className="rounded border bg-muted px-1 font-sans text-[9.5px]">Ctrl</kbd>
+              <kbd className="rounded border bg-muted px-1 font-sans text-[10px]">Ctrl</kbd>
               {" + "}
-              <kbd className="rounded border bg-muted px-1 font-sans text-[9.5px]">K</kbd>{" "}
+              <kbd className="rounded border bg-muted px-1 font-sans text-[10px]">K</kbd>{" "}
               جست‌وجو
             </span>
           </span>
