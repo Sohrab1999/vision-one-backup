@@ -128,12 +128,12 @@ export function PlayingView({
         </span>
         <Badge
           variant="outline"
-          className="shrink-0 border-teal-500/40 px-1.5 text-[9px] text-teal-600 dark:text-teal-400"
+          className="shrink-0 border-teal-500/40 px-1.5 text-[10px] text-teal-600 dark:text-teal-400"
         >
           {p.lessonLabel}
         </Badge>
         {isSolved ? (
-          <Badge className="shrink-0 gap-1 bg-emerald-500 px-1.5 text-[9px] text-emerald-950">
+          <Badge className="shrink-0 gap-1 bg-emerald-500 px-1.5 text-[10px] text-emerald-950">
             <CheckCircle2 size={10} />
             {faNum(p.word.length)} حرف
           </Badge>
@@ -201,7 +201,7 @@ export function PlayingView({
                 <span className="flex-1 font-bold leading-5">{activeWord.meaning}</span>
                 <Badge
                   variant="outline"
-                  className="shrink-0 border-teal-500/40 text-[9px] text-teal-600 dark:text-teal-400"
+                  className="shrink-0 border-teal-500/40 text-[10px] text-teal-600 dark:text-teal-400"
                 >
                   {activeWord.lessonLabel}
                 </Badge>
@@ -256,7 +256,7 @@ export function PlayingView({
                         )}
                       >
                         {cell.num !== null && (
-                          <span className="absolute left-0.5 top-0.5 text-[8px] font-bold leading-none text-muted-foreground">
+                          <span className="absolute left-0.5 top-0.5 text-[10px] font-bold leading-none text-muted-foreground">
                             {faNum(cell.num)}
                           </span>
                         )}
