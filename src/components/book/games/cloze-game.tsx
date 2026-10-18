@@ -831,7 +831,7 @@ export function ClozeGame() {
                       {o.label}
                       <Badge
                         className={cn(
-                          "rounded-full border-0 px-1.5 py-0 text-[9px] font-bold",
+                          "rounded-full border-0 px-1.5 py-0 text-[10px] font-bold",
                           active
                             ? "bg-primary-foreground/20 text-primary-foreground"
                             : "bg-muted text-muted-foreground",
