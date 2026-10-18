@@ -96,8 +96,12 @@ function FreeChat() {
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  // SR-2 — اعلام دریافت پاسخ برای صفحه‌خوان؛ متن اولیه خالی تا mount اعلامی نداشته باشد
+  const [liveMsg, setLiveMsg] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // SR-2 — شمارندهٔ پایدار فقط برای پاسخ‌های موفق (مستقل از index آرایه)
+  const replyCount = useRef(0);
 
   // فاز F10-c — گزارش پایان دور بازی‌ها: seed از sessionStorage مصرف و در ورودی گذاشته می‌شود
   // (ارسال خودکار نه — کاربر مرور و ارسال می‌کند تا سقف روزانهٔ دستیار بی‌دلیل مصرف نشود)
@@ -154,6 +158,9 @@ function FreeChat() {
       const resData = await res.json();
       if (res.ok) {
         setMessages((prev) => [...prev, { role: "assistant", content: resData.reply }]);
+        // SR-2 — سیاست تک‌کانال: فقط موفقیت وارد ناحیهٔ زنده می‌شود؛ خطا فقط از toast (sonner)
+        replyCount.current += 1;
+        setLiveMsg(`پاسخ دستیار رسید — پیام شمارهٔ ${replyCount.current.toLocaleString("fa-IR")}`);
       } else {
         toast.error(resData.error ?? "خطا در ارتباط با دستیار");
       }
@@ -243,6 +250,11 @@ function FreeChat() {
             )}
           </div>
         </ScrollArea>
+
+        {/* SR-2 — یگانه ناحیهٔ زندهٔ چت آزاد؛ خارج از ظرف aria-busy؛ الگوی games/shared.ts */}
+        <p role="status" aria-live="polite" className="sr-only">
+          {liveMsg}
+        </p>
 
         {/* شروع‌کننده‌ها — در دسکتاپ (xl+) به پنل کناری منتقل شده‌اند تا چت تمیز بماند */}
         {messages.length <= 1 && (
