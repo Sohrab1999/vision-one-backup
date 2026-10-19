@@ -63,6 +63,11 @@ export function ResultView({
   reset,
   startQuiz,
 }: ResultViewProps) {
+    // SR-3 — اعلام صفحه‌خوانی نتیجهٔ آزمون: متن با همان قالب «fa-IR» نمایش بصری (درصد/شمارش)
+    // ساخته می‌شود و مستقیم به live region «role=status» بسته می‌شود (هم‌الگوی games/shared.ts)؛
+    // بدون state/effect اضافی — نتیجه یک‌بار و از یک مسیر واحد اعلام می‌شود.
+    const liveScore = `نمرهٔ شما ${scorePct.toLocaleString("fa-IR")} درصد است؛ از ${questions.length.toLocaleString("fa-IR")} سؤال، به ${correctCount.toLocaleString("fa-IR")} سؤال پاسخ درست دادید.`;
+
     const wrongCount = questions.length - correctCount;
     const message =
       scorePct >= 90
@@ -78,6 +83,10 @@ export function ResultView({
         <Card className="result-pop relative overflow-hidden border-primary/30 no-print">
           {scorePct >= 80 && <Confetti />}
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+            {/* SR-3 — اعلان نتیجه برای فناوری‌های کمکی؛ مخفی بصری (sr-only) و بی‌اثر بر چیدمان */}
+            <p role="status" aria-live="polite" className="sr-only">
+              {liveScore}
+            </p>
             <div className="relative h-36 w-36">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
                 <circle cx="60" cy="60" r="52" fill="none" strokeWidth="12" className="stroke-muted" />
