@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { mkdirSync, existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
+import { checkRate, rateLimited } from "../_lib/rate-limit";
+import { consumeDailyQuota, userKeyOf } from "../_lib/ai-guard";
+import { logEvent } from "../_lib/logger";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -9,6 +12,21 @@ export const maxDuration = 60;
 const CACHE_DIR = path.join("/tmp", "vision-tts");
 const MAX_INPUT = 1000;
 const SAMPLE_RATE = 24000;
+
+// ── محافظ مصوب N1-2 فاز ۳-ب (سند: «نقشه راه ها/نقشه-راه-فاز-۳-N1-2.md») ──
+const RATE_LIMIT = 20; // درخواست در دقیقه — مصوب مالک ۱۴۰۵/۸/۱ (۲۰۲۶-۱۰-۲۳)
+const RATE_WINDOW_MS = 60_000;
+const DAILY_LIMIT = 60; // درخواست در شبانه‌روز تهران — مصوب مالک ۱۴۰۵/۸/۱ (۲۰۲۶-۱۰-۲۳)
+
+/**
+ * ثانیه تا نیمه‌شب بعدی تهران — قرارداد مصوب U3 (فاز ۱/B): عدد صحیح ≥ ۱.
+ * محاسبهٔ محلی با همان ثابت آفست ai-guard؛ بدون تغییر helper مشترک.
+ */
+function secondsToTehranMidnight(): number {
+  const TEHRAN_UTC_OFFSET_MS = 3.5 * 60 * 60 * 1000; // UTC+3:30
+  const msIntoDay = (Date.now() + TEHRAN_UTC_OFFSET_MS) % 86_400_000;
+  return Math.max(1, Math.ceil((86_400_000 - msIntoDay) / 1000));
+}
 
 /** Wrap raw 16-bit mono PCM data in a standard RIFF/WAVE header. */
 function pcmToWav(pcm: Buffer, sampleRate = SAMPLE_RATE, channels = 1, bitsPerSample = 16): Buffer {
@@ -70,6 +88,14 @@ async function generateChunk(
 }
 
 export async function POST(req: NextRequest) {
+  // ۱) محافظ نرخ — اولین دستور، پیش از خواندن بدنه و بررسی کش (قرارداد فاز ۱/E؛
+  //    کش‌خورد هم مشمول نرخ دقیقه‌ای است — تصمیم مصوب مالک فاز ۳-ب)
+  const rl = checkRate(req, "tts:post", RATE_LIMIT, RATE_WINDOW_MS);
+  if (!rl.ok) {
+    logEvent("tts", "rate-limited");
+    return rateLimited(rl.retryAfter);
+  }
+
   try {
     const { text, voice = "jam", speed = 1 } = (await req.json()) as {
       text?: string;
@@ -101,6 +127,16 @@ export async function POST(req: NextRequest) {
           "Cache-Control": "public, max-age=86400",
         },
       });
+    }
+
+    // ۲) سقف روزانه — فقط روی مسیر تولید واقعی (کش‌خورد بالاتر برگشته و سقف روزانه نمی‌گیرد —
+    //    تصمیم مصوب مالک ۳-ب؛ یک POST = یک واحد، مستقل از تعداد قطعه‌ها؛
+    //    تصمیم مصوب U1: خطای upstream بازپرداخت ندارد؛ 429 با Retry-After طبق U3)
+    if (!consumeDailyQuota(userKeyOf(req, "tts"), DAILY_LIMIT)) {
+      return NextResponse.json(
+        { error: "سقف روزانهٔ روایت صوتی پر شد — فردا دوباره بیا! 🌱" },
+        { status: 429, headers: { "Retry-After": String(secondsToTehranMidnight()) } },
+      );
     }
 
     mkdirSync(CACHE_DIR, { recursive: true });
