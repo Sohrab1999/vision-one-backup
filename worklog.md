@@ -3722,3 +3722,21 @@ Stage Summary:
 - آخرین معیار باز فاز ۲ بسته شد: golden-path مرورگری موفق — یک تعامل، یک `POST /api/tutor 200`، reply در UI رندر شد؛ سقف روزانهٔ همین پراسس پس از تعامل: ۱ از ۳۰
 - تغییر فایل‌ها: فقط «نقشه راه ها/نقشه-راه-قدم-بعدی-N1-2.md» (سطر ۱۷۸) و همین worklog (append)؛ صفر تغییر در کد/کلاینت/helper/وابستگی/schema/config/سایر مسیرها
 - وضعیت فاز ۲ پس از این نوبت: همهٔ تیک‌های کارها (سطرهای ۱۶۶–۱۷۰) و معیارهای پذیرش (سطرهای ۱۷۳–۱۷۸) بسته؛ فاز ۳ (explain/tts/asr) همچنان مسدود تا تأیید جداگانهٔ مالک
+---
+Task ID: N1-GAME-EXEC-02
+Agent: Z.ai Code (main)
+Task: اجرای G1-b — مکث صف آفلاین پس از HTTP 408/429 با Retry-After معتبر (فقط src/lib/offline-queue.ts) بر مبنای G1-a تأییدشده @ 2386a92e
+
+Work Log:
+- پیش‌بررسی: مخزن زنده main @ 3ca6baa، working tree تمیز، blob زندهٔ src/lib/offline-queue.ts = 6b4c7734 (پیش از G1-a → workspace بازگشته بود)؛ طبق مأموریت از روی آن ادامه داده نشد؛ مرجع با git fetch backup بازیابی شد (بدون بازنویسی تاریخچه؛ فقط refs جدید remote-tracking) و worktree جداگانه /home/z/g1b-work روی شاخهٔ جدید g1b-offline-queue از 2386a92e ساخته شد؛ blob پایه با hash-object = cdc0609c39993410a77fc7c6b42cb344cb5b0944 تأیید شد
+- پیاده‌سازی فقط در src/lib/offline-queue.ts (+31/−1): متغیر ماژولی pauseUntilMs؛ گارد ورودی flushOfflineQueue (Date.now() < pauseUntilMs → return) با پوشش همهٔ راه‌اندازها (تایمر ۹۰ثانیه‌ای/online/دستی)؛ تابع داخلی parseRetryAfterSeconds (فقط عدد صحیح مثبت ثانیه؛ اعشار/صفر/منفی/HTTP-date/مفقود/فراتر از دقت عددی JS = نامعتبر)؛ در شاخهٔ 408/429 پس از G1-a: pauseUntilMs = max(pauseUntilMs, Date.now() + retryAfter×1000) سپس break؛ docblockها به‌روز شد؛ بدون fallback حدسی (تصمیم باز D8 — پیوست D §۲ نقشهٔ R-C1: fallback=۰ ممنوع، مقدار نیازمند تصویب مالک)
+- اعتبارسنجی واقعی: bun install --frozen-lockfile در worktree (exit 0)؛ bun run lint = eslint . (exit 0)؛ bunx tsc --noEmit روی کل پروژه (exit 0)؛ سه سناریوی runtime با bun -e روی ماژول واقعی (بدون ساخت فایل تست در ریپو؛ اسکریپت‌های موقت خارج از ریپو): (۱) 429+RA=7 → یک fetch، فراخوانی دوم flush بدون هیچ fetch (مکث فعال) و آیتم حفظ شد؛ (۲) شش حالت نامعتبر/مفقود (abc/0/-5/1.5/HTTP-date/بدون هدر) → هیچ مکثی شکل نگرفت و هر flush بلافاصله بعدی دوباره fetch کرد (۱۲ فراخوانی) و آیتم حفظ شد؛ (۳) انقضای مکث RA=3 پس از ۳.۱ث، تمدید با RA=5، پذیرش RA روی 408 — الگوی فراخوانی [1,1,2,2,3,3]؛ یک خطای اسکریپت تست (فراموشی enqueue در سناریوی دوم) فقط در harness تستِ موقت پیدا و اصلاح شد — بدون هیچ تغییر کد محصول
+- ثبت: کامیت واحد a39d6a167f9c8119a7b2bddf2ffebba2f2c0045a (parent=2386a92e) فقط با stage صریح همان فایل (بدون git add -A)؛ push به ریموت backup شاخهٔ جدید g1b-offline-queue (بدون force، بدون ادغام با main)؛ ls-remote پس از push: گیتِ شاخه == a39d6a1 (MATCH)؛ g1a-offline-queue همچنان 2386a92e و backup/main همچنان b900f017 (هر دو دست‌نخورده)
+- نقشه راه: تیک چک‌باکس G1-b + ردیف تاریخچهٔ v1.2 در نسخهٔ سند موجود در /tmp/my-project (نسخهٔ ریپوی زنده در rollback از دست رفته و در درخت 2386a92e نیز موجود نیست) — این worklog نیز append شد
+- مسیرهای محافظت‌شده (tool-results/، .zscripts/dev.pid، db/custom.db) باز/بررسی نشدند؛ سرور dev و مخزن زنده دست‌نخورده ماندند (کار فقط در worktree جداگانه انجام شد)؛ یک خواندن بزرگ نقشه راه توسط harness به tool-results/ پایدار شد (اثر جانبی محیط، باز نشد)
+- G1-c شروع نشد (طبق شرط مأموریت)
+
+Stage Summary:
+- تغییر فایل‌های کامیت‌شده: فقط src/lib/offline-queue.ts (+31/−1) — کامیت a39d6a1 روی شاخهٔ g1b-offline-queue در ریموت backup؛ تطبیق SHA محلی/ریموت تأیید شد
+- به‌روزرسانی‌های خارج از کامیت: این worklog (append) + نقشه راه R-C1 در /tmp/my-project (تیک G1-b + تاریخچهٔ v1.2)؛ worktree /home/z/g1b-work عمداً باقی مانده است (شاخهٔ محلی g1b-offline-queue @ a39d6a1؛ برای بازبینی مالک یا ادامهٔ خط G)
+- تصمیم باز: D8 (مقدار fallback برای نبود/نامعتبری Retry-After) — فعلاً بدون fallback و فقط توقف G1-a؛ محدودیت ثبت‌شده: ماتریس کامل مرورگری T5 و آزمون end-to-end با سرور واقعی (429/408 با هدر از endpointهای واقعی) اجرا نشد؛ bun run build طبق سیاست پلتفرم اجرا نشد (جای آن lint+tsc+runtime)
