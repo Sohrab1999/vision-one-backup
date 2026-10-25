@@ -7,6 +7,9 @@
  * صف می‌شوند و به‌محض برگشت اتصال به‌ترتیبِ قدیم ارسال می‌شوند:
  *   - پاسخ 4xx به‌جز 408/429: «رد نامعتبر» است — همان رکورد دور انداخته می‌شود (دوباره تلاش نمی‌شود)
  *   - پاسخ 408/429: خطای موقتی است — رکورد همان‌جا می‌ماند و چرخهٔ flush قطع می‌شود (G1-a)
+ *   - 408/429 با «Retry-After» معتبر (عدد صحیح ثانیه): مکث سراسری تا پایان مهلت هدر
+ *     تنظیم می‌شود و هیچ flush تازه‌ای پیش از آن آغاز نمی‌شود (G1-b)
+ *   - 408/429 بدون هدر یا با مقدار نامعتبر: بدون fallback حدسی (تصمیم باز D8) — فقط توقف G1-a
  *   - پاسخ 5xx یا خطای شبکه: رکورد همان‌جا می‌ماند و حلقه قطع می‌شود
  *   - پس از هر flush موفق، توست فارسی «X مورد آفلاین همگام شد ✓» (فقط اگر sent > 0)
  *
@@ -46,6 +49,9 @@ let items: QueueItem[] = [];
 let online = true;
 let initialized = false;
 let flushing = false;
+// G1-b — مکث سراسری صف پس از 408/429 همراه با «Retry-After» معتبر (epoch ms؛ ۰ = بدون مکث).
+// نبود/نامعتبری هدر → بدون fallback حدسی؛ مقدار fallback هنوز تصمیم باز مالک است (D8 — پیوست D §۲ نقشهٔ راه R-C1).
+let pauseUntilMs = 0;
 let nextId = 1;
 const listeners = new Set<() => void>();
 let snapshot: QueueStatus = { pending: 0, online: true };
@@ -141,15 +147,32 @@ export function enqueueOffline(req: OfflineRequest): void {
 }
 
 /**
+ * G1-b — اعتبارسنجی هدر «Retry-After»: فقط عدد صحیح مثبت بر حسب ثانیه معتبر است.
+ * نبود هدر، اعشار، صفر، منفی یا مقدار غیرعددی (مانند HTTP-date) → null (نامعتبر).
+ * مقادیر فراتر از دقت عددی JavaScript نیز نامعتبر تلقی می‌شوند.
+ */
+function parseRetryAfterSeconds(value: string | null): number | null {
+  if (value === null) return null;
+  const trimmed = value.trim();
+  if (!/^\d+$/.test(trimmed)) return null;
+  const seconds = Number(trimmed);
+  if (!Number.isSafeInteger(seconds) || seconds < 1) return null;
+  return seconds;
+}
+
+/**
  * ارسال صف به‌ترتیب قدیم.
  *  - 2xx → رکورد حذف می‌شود (sent)
  *  - 4xx به‌جز 408/429 → رد نامعتبر — رکورد حذف می‌شود (failed)
- *  - 408/429 → موقتی — رکورد می‌ماند و حلقه همان‌جا قطع می‌شود (G1-a)
+ *  - 408/429 → موقتی — رکورد می‌ماند و حلقه همان‌جا قطع می‌شود (G1-a)؛
+ *    با «Retry-After» معتبر، مکث سراسری (pauseUntilMs) نیز به‌روز می‌شود (G1-b)
  *  - 5xx/خطای شبکه → رکورد می‌ماند و حلقه قطع می‌شود
  */
 export async function flushOfflineQueue(): Promise<{ sent: number; failed: number }> {
   if (typeof window === "undefined") return { sent: 0, failed: 0 };
   initOfflineQueue();
+  // G1-b — در دورهٔ مکث سراسری هیچ راه‌اندازی (تایمر ۹۰ثانیه‌ای/رویداد online/فراخوانی دستی) flush را شروع نمی‌کند
+  if (Date.now() < pauseUntilMs) return { sent: 0, failed: 0 };
   if (flushing || !items.length || !online) return { sent: 0, failed: 0 };
   flushing = true;
   let sent = 0;
@@ -168,6 +191,13 @@ export async function flushOfflineQueue(): Promise<{ sent: number; failed: numbe
           sent++;
         } else if (res.status === 408 || res.status === 429) {
           // G1-a — خطای موقتی: رکورد می‌ماند و همین چرخهٔ flush قطع می‌شود (تصمیم D1 — گزینه A)
+          // G1-b — «Retry-After» فقط برای 408/429 خوانده می‌شود؛ مقدار معتبر (عدد صحیح ثانیه ≥۱)
+          // مکث سراسری را با فرمول max(قبلی، اکنون + ثانیه×۱۰۰۰) به‌روز می‌کند (بدون کسر FLUSH_INTERVAL_MS).
+          // نبود/نامعتبری هدر → بدون fallback حدسی (تصمیم باز D8)؛ در این حالت فقط توقف G1-a اعمال می‌شود.
+          const retryAfterSeconds = parseRetryAfterSeconds(res.headers.get("retry-after"));
+          if (retryAfterSeconds !== null) {
+            pauseUntilMs = Math.max(pauseUntilMs, Date.now() + retryAfterSeconds * 1000);
+          }
           break;
         } else if (res.status >= 400 && res.status < 500) {
           // رد نامعتبر — دوباره تلاش نمی‌شود
