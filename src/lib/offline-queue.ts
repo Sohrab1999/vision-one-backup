@@ -17,10 +17,15 @@
  *   - شمارش تلاش‌ها (G1-c مرحلهٔ ۲ — تصمیم‌های تأییدشدهٔ مالک): خطای شبکه، 408 و 5xx برای
  *     آیتمِ واقعاً تلاش‌شده (سر صف) `tries` را +۱ می‌کنند؛ 429 معاف است و مکث G1-b آن دقیقاً
  *     حفظ می‌شود؛ آیتم‌های پشت سر صف هرگز شمرده نمی‌شوند؛ مقدار در MAX_TRIES=۱۰ clamp
- *     می‌شود؛ افزایش در مسیرهای break بلافاصله persist می‌شود (بدون افت پس از reload)؛
- *     رسیدن به سقف فقط «هشدار شمارشی» است — در این مرحله retry واقعی پس از ۱۰ متوقف
- *     نمی‌شود و هیچ حذف/skip/قرنطینه‌ای انجام نمی‌شود (سیاست نهایی پس از سقف = گام G4،
- *     خارج از مجوز این مرحله)
+ *     می‌شود؛ افزایش در مسیرهای break بلافاصله persist می‌شود (بدون افت پس از reload)
+ *   - توقف پردازش پس از سقف (G1-c مرحلهٔ ۳ — تصمیم تأییدشدهٔ مالک): در ابتدای هر دور حلقهٔ
+ *     پردازش و پیش از هر ارسال شبکه‌ای، سرصفٔ واقعی صف بررسی می‌شود؛ اگر tries نرمال‌شدهٔ آن
+ *     ≥ MAX_TRIES باشد (شامل مقادیر بزرگ‌ترِ حفظ‌شدهٔ دادهٔ قدیمی) پردازش همان‌جا متوقف می‌شود —
+ *     بدون fetch، بدون حذف یا عبور از آیتم، بدون افزایش شمارنده و بدون persist/توست اضافی؛
+ *     FIFO و نگه‌داری آیتم دقیقاً حفظ می‌شود (سیاست نهایی پس از سقف = گام G4، تصمیم آتی مالک)
+ *   - قرارداد وضعیت (G1-c مرحلهٔ ۳): `QueueStatus` فیلد مشتق‌شدهٔ `cappedHead` دارد — «آیا
+ *     سرصفٔ واقعی صف به سقف تلاش رسیده است؟» — در snapshot اولیه، مقایسه/انتشار، بازسازی و
+ *     server snapshot به‌روز می‌شود (بدون API عمومی جدید یا UI جدید)
  *
  * ذخیره‌سازی: localStorage با کلید «visionone:offline-queue» (کوشش/خطا با try/catch).
  * سقف صف ۲۰۰ رکورد است — جدیدترین می‌ماند و قدیمی‌ترین‌ها حذف می‌شوند.
@@ -45,19 +50,25 @@ interface QueueItem {
   method: "POST" | "PUT";
   body: unknown;
   at: number;
-  /** G1-c مرحلهٔ ۱/۲ — شمارندهٔ تلاش‌ها (اختیاری برای سازگاری با داده‌های قدیمی)؛ مرحلهٔ ۲: شبکه/408/5xx آن را تا سقف ۱۰ افزایش می‌دهند، 429 معاف است */
+  /** G1-c مرحلهٔ ۱/۲ — شمارندهٔ تلاش‌ها (اختیاری برای سازگاری با داده‌های قدیمی)؛ مرحلهٔ ۲: شبکه/408/5xx آن را تا سقف ۱۰ افزایش می‌دهند، 429 معاف است؛ مرحلهٔ ۳: سرصفٔ سقف‌خورده (≥۱۰) پیش از ارسال پردازش نمی‌شود */
   tries?: number;
 }
 
-type QueueStatus = { pending: number; online: boolean };
+/**
+ * قرارداد داخلی وضعیت صف.
+ * G1-c مرحلهٔ ۳ — فیلد مشتق‌شدهٔ `cappedHead`: «آیا سرصفٔ واقعی صف به سقف تلاش رسیده است؟»
+ * (بر پایهٔ شرط tries نرمال‌شدهٔ سرصف ≥ MAX_TRIES؛ بدون API عمومی جدید یا UI جدید)
+ */
+type QueueStatus = { pending: number; online: boolean; cappedHead: boolean };
 
 const MAX_ITEMS = 200;
 const FLUSH_INTERVAL_MS = 90_000;
 /**
  * G1-c مرحلهٔ ۲ — سقف شمارندهٔ تلاش‌ها (تصمیم تأییدشدهٔ مالک: ۱۰).
- * این عدد فقط «سقف شمارنده/آستانهٔ هشدار» است: در این مرحله با رسیدن به ۱۰، retry واقعی
- * متوقف نمی‌شود و آیتم نگه داشته می‌شود (بدون حذف/skip/قرنطینه) — سیاست نهایی پس از سقف
- * (گام G4) خارج از مجوز این مرحله است و نیازمند تصمیم جداگانهٔ مالک.
+ * G1-c مرحلهٔ ۳ — با رسیدن سرصفٔ واقعی صف به این سقف (tries نرمال‌شده ≥ ۱۰، شامل مقادیر
+ * بزرگ‌ترِ حفظ‌شدهٔ دادهٔ قدیمی) پردازش صف پیش از هر ارسال شبکه‌ای متوقف می‌شود؛ آیتم نگه
+ * داشته می‌شود (بدون حذف/skip/قرنطینه) و وضعیت آن از طریق `cappedHead` در QueueStatus
+ * منتشر می‌شود — سیاست نهایی پس از سقف (گام G4) نیازمند تصمیم جداگانهٔ مالک است.
  */
 const MAX_TRIES = 10;
 
@@ -72,18 +83,41 @@ let flushing = false;
 let pauseUntilMs = 0;
 let nextId = 1;
 const listeners = new Set<() => void>();
-let snapshot: QueueStatus = { pending: 0, online: true };
+let snapshot: QueueStatus = { pending: 0, online: true, cappedHead: false };
 
 function emit() {
   const pending = items.length;
-  if (snapshot.pending !== pending || snapshot.online !== online) {
-    snapshot = { pending, online };
+  const cappedHead = isHeadCapped();
+  // G1-c مرحلهٔ ۳ — cappedHead در مقایسه و انتشار تغییرات وضعیت لحاظ می‌شود؛
+  // در نبود تغییر، همان snapshot قبلی (هویت پایدار برای useSyncExternalStore) نگه داشته می‌شود
+  if (snapshot.pending !== pending || snapshot.online !== online || snapshot.cappedHead !== cappedHead) {
+    snapshot = { pending, online, cappedHead };
   }
   listeners.forEach((l) => l());
 }
 
 function rebuildSnapshot() {
-  snapshot = { pending: items.length, online };
+  snapshot = { pending: items.length, online, cappedHead: isHeadCapped() };
+}
+
+/**
+ * G1-c مرحلهٔ ۳ — نرمال‌سازی مقدار شمارندهٔ تلاش‌ها (قرارداد مشترک مرحلهٔ ۱):
+ * فقط عدد صحیح امن نامنفی معتبر است؛ نبودِ tries در داده‌های قدیمی و هر مقدار دیگر
+ * (منفی/اعشاری/رشته/null/boolean/ناامن) → ۰. readStorage، bumpTries، گیت توقف سرصف و
+ * فیلد cappedHead همه از همین یک قرارداد استفاده می‌کنند.
+ */
+function normalizeTriesValue(value: unknown): number {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : 0;
+}
+
+/**
+ * G1-c مرحلهٔ ۳ — فیلد مشتق‌شدهٔ قرارداد وضعیت: آیا سرصفٔ واقعی صف به سقف تلاش رسیده است؟
+ * بر پایهٔ شرط tries نرمال‌شدهٔ سرصف ≥ MAX_TRIES (مقادیر بزرگ‌ترِ حفظ‌شدهٔ دادهٔ قدیمی هم
+ * سقف‌خورده شمرده می‌شوند)؛ صف خالی → false. هیچ آیتمی را تغییر نمی‌دهد.
+ */
+function isHeadCapped(): boolean {
+  const head = items[0];
+  return head !== undefined && normalizeTriesValue(head.tries) >= MAX_TRIES;
 }
 
 function isQueueItem(value: unknown): value is QueueItem {
@@ -116,12 +150,10 @@ function readStorage() {
           method: v.method,
           body: v.body ?? null,
           at: typeof v.at === "number" ? v.at : Date.now(),
-          // G1-c مرحلهٔ ۱ — نرمال‌سازی شمارندهٔ تلاش‌ها: فقط عدد صحیح امن نامنفی پذیرفته می‌شود؛
-          // نبودِ tries در داده‌های قدیمی و هر مقدار دیگر (منفی/اعشاری/رشته/null/ناامن) → ۰
-          tries:
-            typeof v.tries === "number" && Number.isSafeInteger(v.tries) && v.tries >= 0
-              ? v.tries
-              : 0,
+          // G1-c مرحلهٔ ۱ — نرمال‌سازی شمارندهٔ تلاش‌ها (کمکی مشترک normalizeTriesValue):
+          // فقط عدد صحیح امن نامنفی پذیرفته می‌شود؛ نبودِ tries در داده‌های قدیمی و هر
+          // مقدار دیگر (منفی/اعشاری/رشته/null/ناامن) → ۰
+          tries: normalizeTriesValue(v.tries),
         }));
     } else {
       items = [];
@@ -193,21 +225,18 @@ function parseRetryAfterSeconds(value: string | null): number | null {
  *  - مقدار در MAX_TRIES (۱۰) clamp می‌شود و از آن بالاتر نمی‌رود؛ آیتمِ از قبل سقف‌خورده
  *    (شامل مقادیر بزرگ‌ترِ حفظ‌شده از دادهٔ قدیمی) بدون تغییر رد می‌شود.
  *  - رسیدن به آستانه فقط «هشدار شمارشی» console.warn می‌سازد — بدون URL کامل، query
- *    string، توکن یا دادهٔ شخصی؛ در این مرحله retry واقعی پس از سقف متوقف نمی‌شود و آیتم
- *    نگه داشته می‌شود (بدون حذف/skip/قرنطینه — G4 نیازمند مجوز جداگانهٔ مالک است).
+ *    string، توکن یا دادهٔ شخصی؛ از G1-c مرحلهٔ ۳ پردازشِ آیتمِ سقف‌خورده توسط گیت توقف
+ *    سرصف انجام نمی‌شود (بدون حذف/skip/قرنطینه — G4 نیازمند مجوز جداگانهٔ مالک است).
  *  - هشدار فقط در گذرِ آستانه صادر می‌شود (آیتمِ از قبل سقف‌خورده دوباره هشدار نمی‌دهد).
  * خروجی: true اگر مقدار تغییر کرد (فراخواننده باید persist کند)، وگرنه false.
  */
 function bumpTries(item: QueueItem): boolean {
-  const current =
-    typeof item.tries === "number" && Number.isSafeInteger(item.tries) && item.tries >= 0
-      ? item.tries
-      : 0;
+  const current = normalizeTriesValue(item.tries);
   if (current >= MAX_TRIES) return false;
   item.tries = current + 1;
   if (item.tries === MAX_TRIES) {
     console.warn(
-      `[offline-queue] آیتم صف به سقف تلاش رسید (${item.tries}/${MAX_TRIES} تلاش ناموفق) — نگه‌داری بدون حذف؛ توقف retry پس از سقف در این مرحله اعمال نمی‌شود`
+      `[offline-queue] آیتم صف به سقف تلاش رسید (${item.tries}/${MAX_TRIES} تلاش ناموفق) — نگه‌داری بدون حذف؛ پردازش صف تا تغییر سرصف متوقف می‌شود (G1-c مرحلهٔ ۳)`
     );
   }
   return true;
@@ -221,8 +250,10 @@ function bumpTries(item: QueueItem): boolean {
  *    با «Retry-After» معتبر، مکث سراسری (pauseUntilMs) نیز به‌روز می‌شود (G1-b)؛
  *    شمارش تلاش فقط برای 408 انجام می‌شود و 429 معاف است (G1-c مرحلهٔ ۲)
  *  - 5xx/خطای شبکه → رکورد می‌ماند و حلقه قطع می‌شود؛ شمارندهٔ tries سرصف +۱ تا سقف ۱۰ (G1-c مرحلهٔ ۲)
- *  - سقف تلاش فقط آستانهٔ هشدار است: در این مرحله پس از سقف، retry واقعی ادامه می‌یابد و
- *    هیچ حذف/skip/قرنطینه‌ای انجام نمی‌شود (G1-c مرحلهٔ ۲؛ G4 = تصمیم آتی مالک)
+ *  - توقف پس از سقف (G1-c مرحلهٔ ۳): در ابتدای هر دور حلقه و پیش از هر ارسال شبکه‌ای،
+ *    سرصفٔ واقعی صف بررسی می‌شود؛ اگر tries نرمال‌شدهٔ آن ≥ MAX_TRIES باشد پردازش همان‌جا
+ *    متوقف می‌شود — بدون fetch، بدون حذف/عبور از آیتم، بدون افزایش شمارنده و بدون
+ *    persist/توست اضافی (FIFO و نگه‌داری حفظ می‌شود؛ G4 = تصمیم آتی مالک)
  */
 export async function flushOfflineQueue(): Promise<{ sent: number; failed: number }> {
   if (typeof window === "undefined") return { sent: 0, failed: 0 };
@@ -236,6 +267,13 @@ export async function flushOfflineQueue(): Promise<{ sent: number; failed: numbe
   try {
     while (items.length) {
       const item = items[0];
+      // G1-c مرحلهٔ ۳ — گیت توقف: سرصفٔ واقعی صف در ابتدای هر دور و پیش از هر ارسال شبکه‌ای
+      // بررسی می‌شود؛ سقف‌خورده (شامل مقادیر بزرگ‌ترِ دادهٔ قدیمی) → توقف فوری همان‌جا:
+      // بدون fetch، بدون shift/عبور از آیتم، بدون افزایش tries، بدون persist/توست اضافی؛
+      // FIFO و نگه‌داری آیتم دقیقاً حفظ می‌شود (سیاست نهایی پس از سقف = گام G4).
+      if (normalizeTriesValue(item.tries) >= MAX_TRIES) {
+        break;
+      }
       try {
         const res = await fetch(item.url, {
           method: item.method,
@@ -312,7 +350,9 @@ function getStatusSnapshot(): QueueStatus {
 }
 
 function getServerSnapshot(): QueueStatus {
-  return { pending: 0, online: true };
+  // G1-c مرحلهٔ ۳ — server snapshot همان قرارداد pending=0 و online=true را دارد و فیلد
+  // مشتق‌شده را با مقدار بی‌طرف false نگه می‌دارد (سمت سرور صف/سرصفی وجود ندارد)
+  return { pending: 0, online: true, cappedHead: false };
 }
 
 // ─── init یک‌بارهٔ ماژول (شنونده‌ها + تایمر ۹۰ ثانیه) ───
