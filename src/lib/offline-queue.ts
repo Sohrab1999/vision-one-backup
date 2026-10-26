@@ -12,6 +12,9 @@
  *   - 408/429 بدون هدر یا با مقدار نامعتبر: بدون fallback حدسی (تصمیم باز D8) — فقط توقف G1-a
  *   - پاسخ 5xx یا خطای شبکه: رکورد همان‌جا می‌ماند و حلقه قطع می‌شود
  *   - پس از هر flush موفق، توست فارسی «X مورد آفلاین همگام شد ✓» (فقط اگر sent > 0)
+ *   - شمارندهٔ تلاش‌ها (G1-c مرحلهٔ ۱): هر آیتم صفت اختیاری `tries` دارد — هنگام ساخت ۰ است و
+ *     هنگام خواندن نرمال می‌شود (فقط عدد صحیح امن نامنفی معتبر؛ بقیه → ۰)؛ هنوز در منطق
+ *     ارسال/حذف به‌کار نمی‌رود (تعیین MAX_TRIES و رفتار پس از سقف = مراحل بعدی G1-c)
  *
  * ذخیره‌سازی: localStorage با کلید «visionone:offline-queue» (کوشش/خطا با try/catch).
  * سقف صف ۲۰۰ رکورد است — جدیدترین می‌ماند و قدیمی‌ترین‌ها حذف می‌شوند.
@@ -36,6 +39,8 @@ interface QueueItem {
   method: "POST" | "PUT";
   body: unknown;
   at: number;
+  /** G1-c مرحلهٔ ۱ — شمارندهٔ تلاش‌ها (اختیاری برای سازگاری با داده‌های قدیمی)؛ هنوز در منطق ارسال استفاده نمی‌شود */
+  tries?: number;
 }
 
 type QueueStatus = { pending: number; online: boolean };
@@ -98,6 +103,12 @@ function readStorage() {
           method: v.method,
           body: v.body ?? null,
           at: typeof v.at === "number" ? v.at : Date.now(),
+          // G1-c مرحلهٔ ۱ — نرمال‌سازی شمارندهٔ تلاش‌ها: فقط عدد صحیح امن نامنفی پذیرفته می‌شود؛
+          // نبودِ tries در داده‌های قدیمی و هر مقدار دیگر (منفی/اعشاری/رشته/null/ناامن) → ۰
+          tries:
+            typeof v.tries === "number" && Number.isSafeInteger(v.tries) && v.tries >= 0
+              ? v.tries
+              : 0,
         }));
     } else {
       items = [];
@@ -137,6 +148,7 @@ export function enqueueOffline(req: OfflineRequest): void {
     method: req.method,
     body: req.body ?? null,
     at: Date.now(),
+    tries: 0, // G1-c مرحلهٔ ۱ — هر آیتم تازه با صفر تلاش آغاز می‌شود
   };
   items.push(item);
   if (items.length > MAX_ITEMS) {
