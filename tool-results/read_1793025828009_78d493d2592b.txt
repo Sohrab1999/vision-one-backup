@@ -1,0 +1,662 @@
+     1→/* eslint-disable */
+     2→/**
+     3→ * ============================================================================
+     4→ * G1-c — هارنس آزمون خارجی صف آفلاین (بازسازی‌شده از مستندات مخزن — نسخهٔ ۱.۰)
+     5→ * ============================================================================
+     6→ * این فایل بیرون از مخزن و همهٔ worktreeها قرار دارد و هرگز commit نمی‌شود.
+     7→ * نسخهٔ اصلی در پاک‌سازی کانتینر از دست رفته بود؛ این بازسازی «فقط از روی
+     8→ * مستندات» انجام شده است. تاریخ بازسازی: ۲۰۲۶-۱۰-۲۶.
+     9→ *
+    10→ * منابع مشخصات (تنها منابع مجاز — بدون هیچ حدس اضافه):
+    11→ *  ۱) /home/z/g1c-work/worklog.md — رکوردهای G1-c-stage-1/2/3 (خطوط ~۴۰۱۱–۴۰۶۶)
+    12→ *  ۲) نقشه راه ها/نقشه-راه-اجرایی-G1-c-مرحله-۱-... §۳-۲ (جدول ۲۰ مورد با نام)
+    13→ *  ۳) نقشه راه ها/نقشه-راه-اجرایی-G1-c-مرحله-۲-... §۴-۲ (جدول ۱۵ مورد با نام + یادداشت پروب)
+    14→ *  ۴) نقشه راه ها/نقشه-راه-اجرایی-G1-c-مرحله-۳-... §۴-۲ (نتایج هارنس موجود)
+    15→ *  ۵) /home/z/g1c-work/src/lib/offline-queue.ts @ 407b1bce (مرحلهٔ ۳) — تطبیق رابط واقعی
+    16→ *
+    17→ * موارد مستند و رعایت‌شده:
+    18→ *  - ماژول واقعی از worktree G1-c بارگذاری می‌شود؛ seed حتماً «پیش از» import
+    19→ *    (عیب شناخته‌شدهٔ نوبت اول مرحلهٔ ۱: ماژول در زمان import صف را می‌خواند).
+    20→ *  - استاب‌های مرورگر: localStorage نقشه‌ای، navigator، document، window،
+    21→ *    fetch با Response واقعی.
+    22→ *  - هر مورد در فرایند مستقل bun (runner → یک زیرفرایند به‌ازای هر مورد).
+    23→ *  - دنبالهٔ پروب نرمال‌سازی: [400، 429-بی‌هدر] (تغییر مرحلهٔ ۲ + گارد معافیت 429).
+    24→ *  - سبک assert «غایب-یا-صفر» برای مسیرهای بدون persist (429 معاف؛ سقف‌خورده).
+    25→ *  - «s2-clamp-at-10» و «s2-cap-fifo-no-skip» عمداً سیاست قدیمیِ «ادامهٔ retry
+    26→ *    پس از سقف» را assert می‌کنند؛ در برابر ماژول مرحلهٔ ۳ شکستِ «گذار
+    27→ *    انتظار‌رفتهٔ خط‌مشی» هستند (طبق سند مرحلهٔ ۳: انتظار calls=۲/۱، واقعی ۰) —
+    28→ *    حذف/تضعیف/تغییر نشده‌اند و باید به‌عنوان شکستِ ثبت‌شده بمانند.
+    29→ *
+    30→ * انحراف بازسازی برای قابل‌اجرا بودن در محیط فعلی (شفاف‌سازی صریح):
+    31→ *  - react و sonner امروز از هیچ مسیر رزولوشن ماژول در دسترس نیستند
+    32→ *    (node_modules کارت تازه است و /home/z/node_modules آن‌ها را ندارد)؛
+    33→ *    بنابراین در این هارنس هر دو با mock.module حداقلی استاب شده‌اند. برای
+    34→ *    assertedهای این فایل بی‌اثر است (هیچ موردی به رفتار react/sonner وابسته
+    35→ *    نیست). اگر مالک node_modules worktree را فراهم کند، این دو mock حذف‌شدنی‌اند.
+    36→ *
+    37→ * گزینه‌های بازسازی که مستندات برایشان شاهد صریح ندارند (انتخاب معقولِ اعلام‌شده):
+    38→ *  - مکانیزم runner (Bun.spawn به‌ازای هر مورد) و قالب خروجی «RESULT …»
+    39→ *  - استاب setInterval (برای خروج تمیز فرایند؛ سند فقط استاب‌های بالا را نام می‌برد)
+    40→ *  - مشاهدهٔ نرمال‌سازی از طریق persistِ مسیر 4xx (نوشتن آرایهٔ نرمال‌شده)
+    41→ *  - خواب ۱۱۰۰ms برای انقضای مکث Retry-After:1
+    42→ *  - شبیه‌سازی reload با انتقال JSON خام storage به فرایند تازه از طریق env
+    43→ *  - یادداشت شمارش: مرحلهٔ ۲ «۳۵ مورد» ثبت کرده؛ سند مرحلهٔ ۳ از case.ts به
+    44→ *    «۳۴ مورد» اشاره کرده است (ناسازگاری شمارش در مستندات؛ هویت موردِ اختلاف
+    45→ *    نامعلوم است). برای جلوگیری از تضعیف پوشش، هر ۳۵ موردِ مستند نگه داشته شده.
+    46→ *
+    47→ * اجرا:
+    48→ *   bun case.ts            ← runner: هر ۳۵ مورد، هر کدام در فرایند مستقل
+    49→ *   bun case.ts --run NAME ← اجرای تنها یک مورد در همین فرایند
+    50→ */
+    51→
+    52→import { mock } from "bun:test";
+    53→
+    54→const MODULE_PATH = "/home/z/g1c-work/src/lib/offline-queue.ts";
+    55→const QUEUE_KEY = "visionone:offline-queue";
+    56→
+    57→// ─── استاب‌های react/sonner (حداقلی؛ بی‌اثر برای assertedهای این فایل) ───
+    58→mock.module("react", () => ({
+    59→  useSyncExternalStore: () => null,
+    60→  default: {},
+    61→}));
+    62→const toasts: string[] = [];
+    63→mock.module("sonner", () => ({
+    64→  toast: {
+    65→    success: (m: string) => { toasts.push(m); },
+    66→    error: (m: string) => { toasts.push(m); },
+    67→    warning: (m: string) => { toasts.push(m); },
+    68→    info: (m: string) => { toasts.push(m); },
+    69→  },
+    70→}));
+    71→
+    72→// ─── وضعیت هر فرایند آزمون ───
+    73→type ScriptedStep = { status: number; headers?: Record<string, string> } | "network-error";
+    74→interface RecordedCall {
+    75→  url: string;
+    76→  method?: string;
+    77→  body?: string;
+    78→  headers?: Record<string, unknown>;
+    79→  status?: number;
+    80→}
+    81→
+    82→const storageMap = new Map<string, string>();
+    83→let scripted: ScriptedStep[] = [];
+    84→const calls: RecordedCall[] = [];
+    85→const warns: string[] = [];
+    86→let stubsInstalled = false;
+    87→
+    88→function defineGlobal(key: string, value: unknown): void {
+    89→  Object.defineProperty(globalThis, key, { value, configurable: true, writable: true });
+    90→}
+    91→
+    92→function installStubs(): void {
+    93→  if (stubsInstalled) return;
+    94→  stubsInstalled = true;
+    95→  defineGlobal("window", {
+    96→    addEventListener: () => {},
+    97→    removeEventListener: () => {},
+    98→  });
+    99→  defineGlobal("navigator", { onLine: true });
+   100→  defineGlobal("document", { visibilityState: "visible" });
+   101→  defineGlobal("localStorage", {
+   102→    getItem: (k: string) => (storageMap.has(k) ? (storageMap.get(k) as string) : null),
+   103→    setItem: (k: string, v: string) => { storageMap.set(k, String(v)); },
+   104→    removeItem: (k: string) => { storageMap.delete(k); },
+   105→    clear: () => { storageMap.clear(); },
+   106→  });
+   107→  defineGlobal("fetch", async (input: unknown, init?: { method?: string; body?: string; headers?: unknown }) => {
+   108→    calls.push({
+   109→      url: String(input),
+   110→      method: init?.method,
+   111→      body: init?.body,
+   112→      headers: init?.headers as Record<string, unknown> | undefined,
+   113→    });
+   114→    const step = scripted.shift();
+   115→    if (!step || step === "network-error") {
+   116→      throw new TypeError("harness: simulated network failure (or scripted responses exhausted)");
+   117→    }
+   118→    return new Response(null, { status: step.status, headers: step.headers });
+   119→  });
+   120→  // تایمر ۹۰ثانیه‌ای ماژول نباید فرایند آزمون را نگه دارد (گزینهٔ بازسازی اعلام‌شده)
+   121→  defineGlobal("setInterval", () => 0);
+   122→  const realWarn = console.warn.bind(console);
+   123→  console.warn = (...args: unknown[]) => {
+   124→    warns.push(args.map((a) => String(a)).join(" "));
+   125→    void realWarn; // در خروجی runner چاپ نمی‌شود تا parsing تمیز بماند
+   126→  };
+   127→}
+   128→
+   129→// ─── کمکی‌های seed / مشاهده ───
+   130→interface SeedItem {
+   131→  id: string;
+   132→  url: string;
+   133→  method: "POST" | "PUT";
+   134→  body?: unknown;
+   135→  at?: number;
+   136→  tries?: unknown;
+   137→}
+   138→
+   139→function item(partial: { id: string; url: string; method?: "POST" | "PUT"; body?: unknown; tries?: unknown }): SeedItem {
+   140→  return { method: "POST", body: { n: 1 }, ...partial } as SeedItem;
+   141→}
+   142→
+   143→/** seed عادی (JSON استاندارد) — رشتهٔ خام بازگردانده می‌شود برای assert بایت‌به‌بایت */
+   144→function seed(items: SeedItem[]): string {
+   145→  const raw = JSON.stringify(items);
+   146→  storageMap.set(QUEUE_KEY, raw);
+   147→  return raw;
+   148→}
+   149→
+   150→/** seed با literal خام برای مقادیری که JSON استاندارد نمایش نمی‌دهد (1e999، 9007199254740993) */
+   151→function seedWithRawLiterals(items: SeedItem[]): string {
+   152→  let raw = JSON.stringify(items);
+   153→  raw = raw.replace(/"tries":"RAW:([^"]+)"/g, '"tries":$1');
+   154→  storageMap.set(QUEUE_KEY, raw);
+   155→  return raw;
+   156→}
+   157→
+   158→function rawNow(): string | null {
+   159→  return storageMap.get(QUEUE_KEY) ?? null;
+   160→}
+   161→
+   162→function assert(cond: boolean, msg: string): void {
+   163→  if (!cond) throw new Error("ASSERT: " + msg);
+   164→}
+   165→
+   166→function absentOrZero(v: unknown): boolean {
+   167→  return v === undefined || v === 0;
+   168→}
+   169→
+   170→const sleep = (ms: number): Promise<void> => new Promise((resolve) => { setTimeout(resolve, ms); });
+   171→
+   172→async function loadQueue(): Promise<any> {
+   173→  // import پویا — پس از seed (قرارداد مستندشدهٔ هارنس)
+   174→  return (await import(MODULE_PATH)) as any;
+   175→}
+   176→
+   177→// ─── ۳۵ مورد مستند (۲۰ مرحلهٔ ۱ + ۱۵ مرحلهٔ ۲) ───
+   178→// الگوی پروب نرمال‌سازی (تغییر مستند مرحلهٔ ۲): [400 روی سرصفٔ قربانی، 429-بی‌هدر روی هدف]
+   179→// مشاهدهٔ نرمال‌سازی: persist مسیر 4xx آرایهٔ نرمال‌شده را در storage می‌نویسد (گزینهٔ بازسازی اعلام‌شده)
+   180→
+   181→const cases: Record<string, () => Promise<void>> = {
+   182→  // ── مرحلهٔ ۱ (۲۰ مورد) ──
+   183→
+   184→  "norm-missing": async () => {
+   185→    const raw = seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target" })]);
+   186→    void raw;
+   187→    const q = await loadQueue();
+   188→    scripted = [{ status: 400 }, { status: 429 }];
+   189→    await q.flushOfflineQueue();
+   190→    assert(calls.length === 2, "دو پروب [400، 429]؛ واقعی=" + calls.length);
+   191→    assert(calls[0]!.url === "/probe" && calls[0]!.status === 400, "پروب اول: 400 روی سرصفٔ قربانی");
+   192→    assert(calls[1]!.url === "/target" && calls[1]!.status === 429, "پروب دوم: 429 بی‌هدر روی هدف");
+   193→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   194→    assert(parsed.length === 1 && parsed[0]!.id === "t", "سرصفٔ 400شده حذف؛ هدف نگه‌داری‌شده (FIFO)");
+   195→    assert(parsed[0]!.tries === 0, "نبودِ tries → ۰ (نرمال‌سازی در persist)؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   196→  },
+   197→
+   198→  "norm-neg": async () => {
+   199→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: -3 })]);
+   200→    const q = await loadQueue();
+   201→    scripted = [{ status: 400 }, { status: 429 }];
+   202→    await q.flushOfflineQueue();
+   203→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   204→    assert(parsed.length === 1 && parsed[0]!.id === "t", "FIFO و نگه‌داری هدف");
+   205→    assert(parsed[0]!.tries === 0, "−۳ → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   206→    assert(calls.length === 2 && calls[1]!.status === 429, "پروب [400، 429]؛ معافیت 429 حفظ");
+   207→  },
+   208→
+   209→  "norm-float": async () => {
+   210→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: 2.5 })]);
+   211→    const q = await loadQueue();
+   212→    scripted = [{ status: 400 }, { status: 429 }];
+   213→    await q.flushOfflineQueue();
+   214→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   215→    assert(parsed[0]!.tries === 0, "۲٫۵ → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   216→  },
+   217→
+   218→  "norm-str": async () => {
+   219→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: "۳" })]);
+   220→    const q = await loadQueue();
+   221→    scripted = [{ status: 400 }, { status: 429 }];
+   222→    await q.flushOfflineQueue();
+   223→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   224→    assert(parsed[0]!.tries === 0, "«۳» (رشته) → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   225→  },
+   226→
+   227→  "norm-strbad": async () => {
+   228→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: "abc" })]);
+   229→    const q = await loadQueue();
+   230→    scripted = [{ status: 400 }, { status: 429 }];
+   231→    await q.flushOfflineQueue();
+   232→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   233→    assert(parsed[0]!.tries === 0, "«abc» → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   234→  },
+   235→
+   236→  "norm-null": async () => {
+   237→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: null })]);
+   238→    const q = await loadQueue();
+   239→    scripted = [{ status: 400 }, { status: 429 }];
+   240→    await q.flushOfflineQueue();
+   241→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   242→    assert(parsed[0]!.tries === 0, "null → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   243→  },
+   244→
+   245→  "norm-bool": async () => {
+   246→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: true })]);
+   247→    const q = await loadQueue();
+   248→    scripted = [{ status: 400 }, { status: 429 }];
+   249→    await q.flushOfflineQueue();
+   250→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   251→    assert(parsed[0]!.tries === 0, "true → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   252→  },
+   253→
+   254→  "norm-huge": async () => {
+   255→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: 1e21 })]);
+   256→    const q = await loadQueue();
+   257→    scripted = [{ status: 400 }, { status: 429 }];
+   258→    await q.flushOfflineQueue();
+   259→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   260→    assert(parsed[0]!.tries === 0, "1e21 (ناامن) → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   261→  },
+   262→
+   263→  "norm-unsafe": async () => {
+   264→    // 9007199254740993 فراتر از MAX_SAFE — literal خام تا دقت JSON حفظ شود
+   265→    seedWithRawLiterals([item({ id: "h", url: "/probe" }), { ...(item({ id: "t", url: "/target" }) as SeedItem), tries: "RAW:9007199254740993" }]);
+   266→    const q = await loadQueue();
+   267→    scripted = [{ status: 400 }, { status: 429 }];
+   268→    await q.flushOfflineQueue();
+   269→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   270→    assert(parsed[0]!.tries === 0, "9007199254740993 (فراتر از MAX_SAFE) → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   271→  },
+   272→
+   273→  "norm-infjson": async () => {
+   274→    // 1e999 در JSON → Infinity در parse
+   275→    seedWithRawLiterals([item({ id: "h", url: "/probe" }), { ...(item({ id: "t", url: "/target" }) as SeedItem), tries: "RAW:1e999" }]);
+   276→    const q = await loadQueue();
+   277→    scripted = [{ status: 400 }, { status: 429 }];
+   278→    await q.flushOfflineQueue();
+   279→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   280→    assert(parsed[0]!.tries === 0, "1e999 → Infinity → ۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   281→  },
+   282→
+   283→  "keep-zero": async () => {
+   284→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: 0 })]);
+   285→    const q = await loadQueue();
+   286→    scripted = [{ status: 400 }, { status: 429 }];
+   287→    await q.flushOfflineQueue();
+   288→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   289→    assert(parsed[0]!.tries === 0, "۰ حفظ می‌شود");
+   290→    assert(calls.length === 2 && calls[1]!.status === 429, "پروب [400، 429] بدون شمارش هدف");
+   291→  },
+   292→
+   293→  "keep-5": async () => {
+   294→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: 5 })]);
+   295→    const q = await loadQueue();
+   296→    scripted = [{ status: 400 }, { status: 429 }];
+   297→    await q.flushOfflineQueue();
+   298→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   299→    assert(parsed[0]!.tries === 5, "۵ حفظ دقیق؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   300→    assert(calls.length === 2 && calls[1]!.status === 429, "429 معاف — ۵ بدون افزایش می‌ماند");
+   301→  },
+   302→
+   303→  "keep-maxsafe": async () => {
+   304→    // سرصفٔ قربانی 400 می‌شود؛ پس از حذف آن، هدف (maxsafe) سرصف می‌شود و گیت مرحلهٔ ۳
+   305→    // پیش از fetch متوقف می‌کند (سند مرحلهٔ ۳: «keep-maxsafe اکنون هم PASS است — گیت با >=»)
+   306→    seed([item({ id: "h", url: "/probe" }), item({ id: "t", url: "/target", tries: 9007199254740991 })]);
+   307→    const q = await loadQueue();
+   308→    scripted = [{ status: 400 }, { status: 429 }];
+   309→    await q.flushOfflineQueue();
+   310→    assert(calls.length === 1 && calls[0]!.url === "/probe" && calls[0]!.status === 400, "تنها پروب 400؛ گیت، fetch هدفِ maxsafe را متوقف کرد");
+   311→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   312→    assert(parsed.length === 1 && parsed[0]!.id === "t", "هدف نگه‌داری‌شده (بدون حذف/عبور)");
+   313→    assert(parsed[0]!.tries === 9007199254740991, "حفظ دقیق 9007199254740991؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   314→  },
+   315→
+   316→  "new-item": async () => {
+   317→    storageMap.clear(); // بدون کلید → readStorage: صف خالی
+   318→    const q = await loadQueue();
+   319→    q.enqueueOffline({ url: "/new-endpoint", method: "POST", body: { a: 1 } });
+   320→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   321→    assert(parsed.length === 1, "یک آیتم تازه");
+   322→    const it = parsed[0]!;
+   323→    assert(it.tries === 0, "tries: 0 برای آیتم تازه؛ واقعی=" + JSON.stringify(it.tries));
+   324→    assert(typeof it.id === "string" && it.url === "/new-endpoint" && it.method === "POST" && typeof it.at === "number" && JSON.stringify(it.body) === JSON.stringify({ a: 1 }), "شکل فیلدهای آیتم تازه");
+   325→  },
+   326→
+   327→  "fifo-success": async () => {
+   328→    seed([item({ id: "a", url: "/a" }), item({ id: "b", url: "/b" }), item({ id: "c", url: "/c" })]);
+   329→    const q = await loadQueue();
+   330→    scripted = [{ status: 200 }, { status: 200 }, { status: 200 }];
+   331→    const r = await q.flushOfflineQueue();
+   332→    assert(calls.length === 3 && calls.map((c) => c.url).join() === "/a,/b,/c", "ارسال دقیقاً FIFO؛ واقعی=" + calls.map((c) => c.url).join());
+   333→    assert(calls.every((c) => c.method === "POST" && (c.headers as Record<string, unknown> | undefined)?.["Content-Type"] === "application/json"), "شکل درخواست (متد/هدر)");
+   334→    assert(calls.every((c) => typeof c.body === "string" && JSON.parse(c.body as string).n === 1), "بدنهٔ JSON");
+   335→    assert(r.sent === 3 && r.failed === 0, "خروجی {sent:3, failed:0}");
+   336→    assert(rawNow() === "[]", "تخلیهٔ کامل صف");
+   337→  },
+   338→
+   339→  "neterror-retain": async () => {
+   340→    seed([item({ id: "a", url: "/a" }), item({ id: "b", url: "/b" })]);
+   341→    const q = await loadQueue();
+   342→    scripted = ["network-error"];
+   343→    await q.flushOfflineQueue();
+   344→    assert(calls.length === 1 && calls[0]!.url === "/a", "فقط یک فراخوانی؛ عبوری از سرِ ناموفق نیست");
+   345→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   346→    assert(parsed.length === 2 && parsed[0]!.id === "a" && parsed[1]!.id === "b", "نگه‌داری سرصف و پیرو (FIFO)");
+   347→    assert(parsed[0]!.tries === 1 && absentOrZero(parsed[1]!.tries), "سرصف شمرده شد (persist مسیر break)؛ پیرو هرگز");
+   348→  },
+   349→
+   350→  "e408-retain-nopause": async () => {
+   351→    seed([item({ id: "a", url: "/a" })]);
+   352→    const q = await loadQueue();
+   353→    scripted = [{ status: 408 }];
+   354→    await q.flushOfflineQueue();
+   355→    scripted = [{ status: 408 }];
+   356→    await q.flushOfflineQueue(); // بلافاصله — اگر مکث سراسری بود این فراخوانی انجام نمی‌شد
+   357→    assert(calls.length === 2 && calls[1]!.url === "/a", "408 بی‌هدر → بدون مکث سراسری (مرز G1-b)؛ فراخوانی دوم انجام شد");
+   358→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   359→    assert(parsed.length === 1 && parsed[0]!.id === "a", "نگه‌داری آیتم");
+   360→    assert(parsed[0]!.tries === 2, "شمارش 408 (مرحلهٔ ۲): ۰→۱→۲؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   361→  },
+   362→
+   363→  "e429-pause-expiry": async () => {
+   364→    const seedRaw = seed([item({ id: "a", url: "/a" })]);
+   365→    const q = await loadQueue();
+   366→    scripted = [{ status: 429, headers: { "retry-after": "1" } }];
+   367→    await q.flushOfflineQueue();
+   368→    assert(calls.length === 1, "پروب اول");
+   369→    assert(rawNow() === seedRaw, "429 معاف: storage بایت‌به‌بایت برابر seed (بدون persist)");
+   370→    await q.flushOfflineQueue(); // بلافاصله — باید توسط مکث G1-b مسدود شود
+   371→    assert(calls.length === 1, "مکث فوری: فراخوانی دوم انجام نشد");
+   372→    await sleep(1100); // انقضای پنجرهٔ ۱ثانیه‌ای
+   373→    scripted = [{ status: 429, headers: { "retry-after": "1" } }];
+   374→    await q.flushOfflineQueue();
+   375→    assert(calls.length === 2, "پس از انقضای مکث، flush دوباره تلاش کرد");
+   376→    assert(rawNow() === seedRaw, "در تمام مسیرها 429 معاف مانده و storage دست‌نخورده است");
+   377→  },
+   378→
+   379→  "e500-retain": async () => {
+   380→    seed([item({ id: "a", url: "/a" })]);
+   381→    const q = await loadQueue();
+   382→    scripted = [{ status: 500 }];
+   383→    await q.flushOfflineQueue();
+   384→    assert(calls.length === 1, "توقف در سرصف (بدون عبور)");
+   385→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   386→    assert(parsed.length === 1 && parsed[0]!.id === "a", "نگه‌داری");
+   387→    assert(parsed[0]!.tries === 1, "5xx شمرده شد (مرحلهٔ ۲): ۰→۱");
+   388→  },
+   389→
+   390→  "mixed-dispatch": async () => {
+   391→    seed([item({ id: "a", url: "/a" }), item({ id: "b", url: "/b" }), item({ id: "c", url: "/c" })]);
+   392→    const q = await loadQueue();
+   393→    scripted = [{ status: 400 }, { status: 400 }, { status: 200 }];
+   394→    const r = await q.flushOfflineQueue();
+   395→    assert(calls.length === 3 && calls.map((c) => c.url).join() === "/a,/b,/c", "دقیقاً FIFO؛ واقعی=" + calls.map((c) => c.url).join());
+   396→    assert(r.sent === 1 && r.failed === 2, "خروجی {sent:1, failed:2}");
+   397→    assert(rawNow() === "[]", "4xxهای نامعتبر حذف و موفق ارسال شد؛ صف خالی");
+   398→  },
+   399→
+   400→  // ── مرحلهٔ ۲ (۱۵ مورد) ──
+   401→
+   402→  "s2-neterror-increment": async () => {
+   403→    seed([item({ id: "a", url: "/a" })]);
+   404→    const q = await loadQueue();
+   405→    scripted = ["network-error"];
+   406→    await q.flushOfflineQueue();
+   407→    assert(calls.length === 1, "یک تلاش");
+   408→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   409→    assert(parsed[0]!.tries === 1, "خطای شبکه: ۰→۱؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   410→    assert(parsed.length === 1, "نگه‌داری");
+   411→  },
+   412→
+   413→  "s2-408-count-nora": async () => {
+   414→    seed([item({ id: "a", url: "/a" })]);
+   415→    const q = await loadQueue();
+   416→    scripted = [{ status: 408 }];
+   417→    await q.flushOfflineQueue();
+   418→    scripted = [{ status: 408 }];
+   419→    await q.flushOfflineQueue(); // بلافاصله — بدون مکث (بی‌هدر)
+   420→    assert(calls.length === 2, "دو تلاش متوالی (بدون مکث)");
+   421→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   422→    assert(parsed[0]!.tries === 2, "408 بی‌هدر ×۲: ۱→۲ (۰→۱→۲)؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   423→  },
+   424→
+   425→  "s2-408-count-with-ra": async () => {
+   426→    seed([item({ id: "a", url: "/a" })]);
+   427→    const q = await loadQueue();
+   428→    scripted = [{ status: 408, headers: { "retry-after": "1" } }];
+   429→    await q.flushOfflineQueue();
+   430→    let parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   431→    assert(parsed[0]!.tries === 1 && calls.length === 1, "شمارش و مکث هم‌زمان: ۰→۱");
+   432→    await q.flushOfflineQueue(); // بلافاصله — مسدود توسط مکث
+   433→    assert(calls.length === 1, "مکث G1-b فعال است");
+   434→    await sleep(1100);
+   435→    scripted = [{ status: 408, headers: { "retry-after": "1" } }];
+   436→    await q.flushOfflineQueue();
+   437→    parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   438→    assert(parsed[0]!.tries === 2 && calls.length === 2, "پس از انقضا: شمارش ادامه یافت ۱→۲؛ مستقل از مکث");
+   439→  },
+   440→
+   441→  "s2-429-exempt-ra": async () => {
+   442→    const seedRaw = seed([item({ id: "a", url: "/a" })]);
+   443→    const q = await loadQueue();
+   444→    scripted = [{ status: 429, headers: { "retry-after": "1" } }];
+   445→    await q.flushOfflineQueue();
+   446→    assert(calls.length === 1 && rawNow() === seedRaw, "429+RA: صفر افزایش؛ storage بایت‌به‌بایت seed");
+   447→    await q.flushOfflineQueue();
+   448→    assert(calls.length === 1, "مکث دقیق G1-b فعال");
+   449→    await sleep(1100);
+   450→    scripted = [{ status: 429, headers: { "retry-after": "1" } }];
+   451→    await q.flushOfflineQueue();
+   452→    assert(calls.length === 2 && rawNow() === seedRaw, "پس از انقضا: همچنان صفر افزایش و storage خام");
+   453→  },
+   454→
+   455→  "s2-429-exempt-nora": async () => {
+   456→    const seedRaw = seed([item({ id: "a", url: "/a" })]);
+   457→    const q = await loadQueue();
+   458→    scripted = [{ status: 429 }];
+   459→    await q.flushOfflineQueue();
+   460→    scripted = [{ status: 429 }];
+   461→    await q.flushOfflineQueue(); // بلافاصله — بدون مکث
+   462→    assert(calls.length === 2, "429 بی‌هدر ×۲: بدون مکث، هر دو تلاش انجام شد");
+   463→    assert(rawNow() === seedRaw, "صفر افزایش؛ storage بایت‌به‌بایت seed (غایب-یا-صفر)");
+   464→  },
+   465→
+   466→  "s2-5xx-increment": async () => {
+   467→    seed([item({ id: "a", url: "/a" })]);
+   468→    const q = await loadQueue();
+   469→    scripted = [{ status: 500 }];
+   470→    await q.flushOfflineQueue();
+   471→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   472→    assert(parsed[0]!.tries === 1 && parsed.length === 1, "500: ۰→۱ با نگه‌داری");
+   473→  },
+   474→
+   475→  "s2-401-unchanged": async () => {
+   476→    seed([item({ id: "a", url: "/a" })]);
+   477→    const q = await loadQueue();
+   478→    scripted = [{ status: 401 }];
+   479→    const r = await q.flushOfflineQueue();
+   480→    assert(calls.length === 1 && calls[0]!.status === 401, "یک تلاش با 401");
+   481→    assert(r.sent === 0 && r.failed === 1, "401: حذف قطعی مانند قبل");
+   482→    assert(rawNow() === "[]", "آیتم حذف شد؛ شمارشی در کار نبود");
+   483→  },
+   484→
+   485→  "s2-403-unchanged": async () => {
+   486→    seed([item({ id: "a", url: "/a" }), item({ id: "b", url: "/b" })]);
+   487→    const q = await loadQueue();
+   488→    scripted = [{ status: 403 }, { status: 200 }];
+   489→    const r = await q.flushOfflineQueue();
+   490→    assert(calls.length === 2 && calls.map((c) => c.url).join() === "/a,/b", "FIFO");
+   491→    assert(r.sent === 1 && r.failed === 1, "حذف 403 + ارسال موفق");
+   492→    assert(rawNow() === "[]", "صف خالی؛ 4xx قطعی شمرده نمی‌شود");
+   493→  },
+   494→
+   495→  "s2-behind-not-counted": async () => {
+   496→    seed([item({ id: "a", url: "/a" }), item({ id: "b", url: "/b" }), item({ id: "c", url: "/c" })]);
+   497→    const q = await loadQueue();
+   498→    scripted = [{ status: 500 }];
+   499→    await q.flushOfflineQueue();
+   500→    assert(calls.length === 1 && calls[0]!.url === "/a", "توقف روی a");
+   501→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   502→    assert(parsed.length === 3, "هر سه نگه‌داری‌شده");
+   503→    assert(parsed[0]!.tries === 1, "فقط a شمرده شد: ۰→۱");
+   504→    assert(absentOrZero(parsed[1]!.tries) && absentOrZero(parsed[2]!.tries), "b/c هرگز شمرده نشدند (غایب-یا-صفر)");
+   505→  },
+   506→
+   507→  "s2-clamp-9to10": async () => {
+   508→    seed([item({ id: "a", url: "/a", tries: 9 })]);
+   509→    const q = await loadQueue();
+   510→    scripted = [{ status: 500 }];
+   511→    await q.flushOfflineQueue();
+   512→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   513→    assert(parsed[0]!.tries === 10, "clamp: ۹→۱۰؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   514→    assert(parsed.length === 1, "نگه‌داری (بدون حذف)");
+   515→  },
+   516→
+   517→  // ⚠️ مورد گذار خط‌مشی (طبق سند مرحلهٔ ۳، شکستِ انتظار‌رفته — حذف/تضعیف ممنوع):
+   518→  // «real retry continues after cap (warn-only stage)» — سیاست قدیمیِ قبل از مرحلهٔ ۳ را
+   519→  // assert می‌کند؛ در برابر ماژول مرحلهٔ ۳: انتظار calls=۲، واقعی ۰ (گیت توقف).
+   520→  "s2-clamp-at-10": async () => {
+   521→    seed([item({ id: "a", url: "/a", tries: 10 }), item({ id: "b", url: "/b" })]);
+   522→    const q = await loadQueue();
+   523→    scripted = [{ status: 500 }, { status: 500 }];
+   524→    await q.flushOfflineQueue();
+   525→    scripted = [{ status: 500 }, { status: 500 }];
+   526→    await q.flushOfflineQueue();
+   527→    assert(calls.length === 2, "real retry continues after cap (warn-only stage) — انتظار سیاست قدیمی؛ واقعی=" + calls.length);
+   528→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   529→    assert(parsed.length === 2, "بدون حذف");
+   530→    assert(parsed[0]!.tries === 10, "هرگز >۱۰ (clamp)");
+   531→  },
+   532→
+   533→  // ⚠️ مورد گذار خط‌مشی (طبق سند مرحلهٔ ۳، شکستِ انتظار‌رفته — حذف/تضعیف ممنوع):
+   534→  // «no skip: only head attempted» — انتظار قدیمی calls=۱؛ واقعی ۰ (گیت قوی‌تر شده است).
+   535→  // assertهای نگه‌داری/FIFO همان مورد باید سبز بمانند (سند مرحلهٔ ۳).
+   536→  "s2-cap-fifo-no-skip": async () => {
+   537→    const seedRaw = seed([item({ id: "cap", url: "/cap", tries: 10 }), item({ id: "b", url: "/b" }), item({ id: "c", url: "/c" })]);
+   538→    const q = await loadQueue();
+   539→    scripted = [{ status: 500 }];
+   540→    await q.flushOfflineQueue();
+   541→    assert(calls.length === 1 && calls[0]!.url === "/cap", "no skip: only head attempted — انتظار سیاست قدیمی؛ واقعی=" + calls.length);
+   542→    assert(rawNow() === seedRaw, "FIFO و بدون حذف: storage بایت‌به‌بایت seed");
+   543→  },
+   544→
+   545→  "s2-warn-privacy": async () => {
+   546→    seed([item({ id: "a", url: "/api/save?token=SECRET123&user=user1", tries: 9 })]);
+   547→    const q = await loadQueue();
+   548→    scripted = [{ status: 500 }];
+   549→    await q.flushOfflineQueue();
+   550→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   551→    assert(parsed[0]!.tries === 10, "گذر آستانه ۹→۱۰");
+   552→    assert(warns.length === 1, "دقیقاً یک هشدار شمارشی در گذر آستانه؛ واقعی=" + warns.length);
+   553→    const w = warns[0]!;
+   554→    assert(!w.includes("SECRET123") && !w.includes("/api/save") && !w.includes("token") && !w.includes("user1"), "هشدار بدون URL/query/توکن/id");
+   555→    assert(w.includes("10"), "هشدار همراه شمارش (۱۰/۱۰)");
+   556→  },
+   557→
+   558→  "s2-persist-on-break": async () => {
+   559→    seed([item({ id: "a", url: "/a" })]);
+   560→    const q = await loadQueue();
+   561→    scripted = ["network-error"];
+   562→    await q.flushOfflineQueue();
+   563→    const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>; // بلافاصله پس از خروج flush
+   564→    assert(parsed[0]!.tries === 1, "tries=۱ در storage خام پیش از خروج از مسیر break؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   565→  },
+   566→
+   567→  "s2-continue-after-reload": async () => {
+   568→    if (process.env.RELOAD_SEED === undefined) {
+   569→      // فاز ۱ (این فرایند): خطای شبکه → tries=۱ پایدارشده در storage
+   570→      const a = item({ id: "a", url: "/a" });
+   571→      const raw = seed([a]);
+   572→      const q = await loadQueue();
+   573→      scripted = ["network-error"];
+   574→      await q.flushOfflineQueue();
+   575→      const after = rawNow()!;
+   576→      assert(JSON.parse(after)[0].tries === 1, "فاز ۱: tries=۱ در storage خام");
+   577→      // فرایند تازه (شبیه‌سازی reload) با همان storage خام — گزینهٔ بازسازی اعلام‌شده
+   578→      const p = Bun.spawn(["bun", import.meta.path, "--run", "s2-continue-after-reload"], {
+   579→        env: { ...process.env, RELOAD_SEED: after, HARNESS_SEED_RAW: raw },
+   580→        stdout: "pipe",
+   581→        stderr: "pipe",
+   582→      });
+   583→      const out = (await new Response(p.stdout).text()).trim();
+   584→      const code = await p.exited;
+   585→      assert(code === 0 && out.includes("RESULT PASS"), "فاز ۲ (فرایند تازه) باید PASS باشد؛ خروجی=" + out);
+   586→    } else {
+   587→      storageMap.set(QUEUE_KEY, process.env.RELOAD_SEED);
+   588→      const q = await loadQueue(); // خواندن صف در زمان import (مانند reload واقعی)
+   589→      scripted = ["network-error"];
+   590→      await q.flushOfflineQueue();
+   591→      const parsed = JSON.parse(rawNow()!) as Array<Record<string, unknown>>;
+   592→      assert(parsed[0]!.tries === 2, "ادامهٔ شمارنده پس از reload: ۱→۲؛ واقعی=" + JSON.stringify(parsed[0]!.tries));
+   593→    }
+   594→  },
+   595→};
+   596→
+   597→// ─── ترتیب مستند ۳۵ مورد ───
+   598→const ORDER: string[] = [
+   599→  "norm-missing", "norm-neg", "norm-float", "norm-str", "norm-strbad", "norm-null", "norm-bool",
+   600→  "norm-huge", "norm-unsafe", "norm-infjson", "keep-zero", "keep-5", "keep-maxsafe",
+   601→  "new-item", "fifo-success", "neterror-retain", "e408-retain-nopause", "e429-pause-expiry", "e500-retain", "mixed-dispatch",
+   602→  "s2-neterror-increment", "s2-408-count-nora", "s2-408-count-with-ra", "s2-429-exempt-ra", "s2-429-exempt-nora",
+   603→  "s2-5xx-increment", "s2-401-unchanged", "s2-403-unchanged", "s2-behind-not-counted", "s2-clamp-9to10",
+   604→  "s2-clamp-at-10", "s2-cap-fifo-no-skip", "s2-warn-privacy", "s2-persist-on-break", "s2-continue-after-reload",
+   605→];
+   606→
+   607→/** شکست‌های «گذار انتظار‌رفتهٔ خط‌مشی» طبق سند مرحلهٔ ۳ — حذف/تضعیف/پنهان‌سازی ممنوع */
+   608→const EXPECTED_POLICY_TRANSITION_FAILURES = new Set<string>(["s2-clamp-at-10", "s2-cap-fifo-no-skip"]);
+   609→
+   610→const argv = process.argv.slice(2);
+   611→
+   612→if (argv[0] === "--run") {
+   613→  // حالت فرایندِ یک مورد
+   614→  const name = argv[1] ?? "";
+   615→  const fn = cases[name];
+   616→  if (!fn) {
+   617→    console.log("RESULT FAIL " + name + " unknown-case");
+   618→    await Bun.sleep(30);
+   619→    process.exit(2);
+   620→  }
+   621→  try {
+   622→    installStubs();
+   623→    await fn();
+   624→    console.log("RESULT PASS " + name);
+   625→    // خروج طبیعی فرایند (setInterval استاب شده است)
+   626→  } catch (e) {
+   627→    console.log("RESULT FAIL " + name + " :: " + (e instanceof Error ? e.message : String(e)));
+   628→    await Bun.sleep(30);
+   629→    process.exit(1);
+   630→  }
+   631→} else {
+   632→  // runner — هر مورد در فرایند مستقل (الزام مستند)
+   633→  let pass = 0;
+   634→  let expectedFail = 0;
+   635→  let unexpectedFail = 0;
+   636→  for (const name of ORDER) {
+   637→    const p = Bun.spawn(["bun", import.meta.path, "--run", name], {
+   638→      stdout: "pipe",
+   639→      stderr: "pipe",
+   640→      env: { ...process.env },
+   641→    });
+   642→    const out = (await new Response(p.stdout).text()).trim();
+   643→    await p.exited;
+   644→    const line = out.split("\n").find((l) => l.startsWith("RESULT")) ?? "(no RESULT line)";
+   645→    if (line.startsWith("RESULT PASS")) {
+   646→      pass++;
+   647→      console.log("PASS  " + name);
+   648→    } else if (line.startsWith("RESULT FAIL") && EXPECTED_POLICY_TRANSITION_FAILURES.has(name)) {
+   649→      expectedFail++;
+   650→      console.log("EXPECTED-FAIL(گذار خط‌مشی — ثبت‌شده، طبق سند مرحلهٔ ۳)  " + name + " :: " + line.replace("RESULT FAIL " + name + " :: ", ""));
+   651→    } else {
+   652→      unexpectedFail++;
+   653→      console.log("FAIL  " + name + " :: " + line.replace(/^RESULT (PASS|FAIL) \S+ ?/, ""));
+   654→    }
+   655→  }
+   656→  console.log("");
+   657→  console.log("جمع case.ts: " + pass + " PASS · " + expectedFail + " شکستِ انتظار‌رفتهٔ گذار خط‌مشی (s2-clamp-at-10، s2-cap-fifo-no-skip) · " + unexpectedFail + " FAIL غیرمنتظره");
+   658→  console.log("توجه: دو مورد علامت‌دار آگاهانه سیاست قدیمیِ پیش از مرحلهٔ ۳ را assert می‌کنند و باید به‌عنوان شکستِ ثبت‌شده بمانند.");
+   659→  await Bun.sleep(30);
+   660→  process.exit(unexpectedFail === 0 ? 0 : 1);
+   661→}
+   662→
