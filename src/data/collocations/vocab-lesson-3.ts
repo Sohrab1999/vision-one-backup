@@ -1,0 +1,32 @@
+import type { VocabWord } from "../types";
+
+/** هم‌آیندهای درس ۳ (Appearance) از «1000 English Collocations» — عبارت بولد متن درس + توضیح ایتالیک */
+export const VOCAB_LESSON_3: VocabWord[] = [
+  { word: "gorgeous", meaning: "بسیار زیبا (فوق‌العاده خوش‌سیما)", lesson: 3, pos: "adj." },
+  { word: "sleek", meaning: "صاف و یکدست (برای مو: صاف و لیس‌و‌لیس)", lesson: 3, pos: "adj." },
+  { word: "jet-black", meaning: "زغالی (کاملاً مشکی)", lesson: 3, pos: "adj." },
+  { word: "pale", meaning: "کم‌رنگ (رنگ روشن)", lesson: 3, pos: "adj." },
+  { word: "radiant complexion", meaning: "پوست شاداب و درخشان (پوستی که سالم و پرانرژی به‌نظر می‌رسد)", lesson: 3, pos: "phr." },
+  { word: "hourglass figure", meaning: "اندام ساعت‌شنی (وقتی زنی سینه و باسن بزرگ اما کمر باریک دارد)", lesson: 3, pos: "phr." },
+  { word: "slender waist", meaning: "کمر باریک و کشیده", lesson: 3, pos: "phr." },
+  { word: "round face", meaning: "صورت گرد", lesson: 3, pos: "phr." },
+  { word: "upturned nose", meaning: "بینی سرپه (نوکش رو به بالا)", lesson: 3, pos: "phr." },
+  { word: "bear a striking resemblance", meaning: "شباهت چشمگیر داشتن (بسیار شبیه کسی بودن)", lesson: 3, pos: "phr." },
+  { word: "hideously ugly", meaning: "زشت و کریه‌نما", lesson: 3, pos: "phr." },
+  { word: "shoulder-length hair", meaning: "موی هم‌اندازهٔ شانه (مویی که تا شانه می‌رسد)", lesson: 3, pos: "phr." },
+  { word: "curly", meaning: "فرفری (مو)", lesson: 3, pos: "adj." },
+  { word: "unkempt", meaning: "ژولیده (موی آشفته؛ انگار صاحبش از آن مراقبت نمی‌کند)", lesson: 3, pos: "adj." },
+  { word: "square face", meaning: "صورت چهارگوش (مربعی‌شکل)", lesson: 3, pos: "phr." },
+  { word: "ruddy complexion", meaning: "پوست سرخ‌رو (پوست مایل به قرمز)", lesson: 3, pos: "phr." },
+  { word: "deep-set eyes", meaning: "چشم‌های گود (چشم‌هایی که در عمق صورت فرو رفته‌اند)", lesson: 3, pos: "phr." },
+  { word: "bushy eyebrows", meaning: "ابروهای پرپشت و کلفت", lesson: 3, pos: "phr." },
+  { word: "thick mustache", meaning: "سبیل پرپشت", lesson: 3, pos: "phr." },
+  { word: "shaggy beard", meaning: "ریش شلخته و پرپشت (ریش پرمو)", lesson: 3, pos: "phr." },
+  { word: "facial hair", meaning: "موهای صورت (ریش و/یا سبیل)", lesson: 3, pos: "phr." },
+  { word: "athletic build", meaning: "اندام ورزشی (بدنی با عضلات زیاد)", lesson: 3, pos: "phr." },
+  { word: "broad shoulders", meaning: "شانه‌های پهن", lesson: 3, pos: "phr." },
+  { word: "muscular arms", meaning: "بازوهای عضلانی", lesson: 3, pos: "phr." },
+  { word: "trim", meaning: "کوتاه و مرتب کردن (ریش/مو را کمی کوتاه‌تر کردن)", lesson: 3, pos: "v." },
+  { word: "comb", meaning: "شانه کردن (مو)", lesson: 3, pos: "v." },
+  { word: "somewhat attractive", meaning: "تا حدی جذاب (کم‌وبیش خوش‌سیما)", lesson: 3, pos: "phr." },
+];

@@ -1,0 +1,31 @@
+import type { VocabWord } from "../types";
+
+/** هم‌آیندهای درس ۸ از «1000 English Collocations» — عبارت بولد متن درس + توضیح ایتالیک */
+export const VOCAB_LESSON_8: VocabWord[] = [
+  { word: "movie trailer", meaning: "تریلر فیلم (ویدیوی کوتاهی که پیش‌نمایش فیلم است)", lesson: 8, pos: "phr." },
+  { word: "come out", meaning: "اکران/منتشر شدن (فیلم به روی پرده آمدن)", lesson: 8, pos: "phr." },
+  { word: "movie theater", meaning: "سالن سینما", lesson: 8, pos: "phr." },
+  { word: "opening night", meaning: "شب افتتاح (اولین روزی که فیلم، نمایش یا کنسرت به روی عموم باز می‌شود)", lesson: 8, pos: "phr." },
+  { word: "film critics' reviews", meaning: "نقد منتقدان فیلم (ارزیابی‌های کسانی که شغل‌شان نقد فیلم است)", lesson: 8, pos: "phr." },
+  { word: "nominated for an award", meaning: "نامزد دریافت جایزه شدن", lesson: 8, pos: "phr." },
+  { word: "movie stars", meaning: "ستاره‌های سینما (بازیگران و بازیگران مشهور)", lesson: 8, pos: "phr." },
+  { word: "upcoming film", meaning: "فیلم در شرف اکران (فیلمی که به‌زودی منتشر می‌شود)", lesson: 8, pos: "phr." },
+  { word: "based on a true story", meaning: "بر اساس داستانی واقعی", lesson: 8, pos: "phr." },
+  { word: "shooting on-site", meaning: "فیلم‌برداری در محل (ضبط فیلم در همان مکانی که داستان رخ می‌دهد)", lesson: 8, pos: "phr." },
+  { word: "leading role", meaning: "نقش اصلی (فرصت بازی در مهم‌ترین نقش فیلم)", lesson: 8, pos: "phr." },
+  { word: "box-office hit", meaning: "موفقیت گیشه (فیلمی بسیار پرفروش و موفق)", lesson: 8, pos: "phr." },
+  { word: "turn it down", meaning: "پیشنهاد را رد کردن (نپذیرفتن)", lesson: 8, pos: "phr." },
+  { word: "engrossed in a book", meaning: "غرق در کتاب (کتاب تمام توجه را جلب کرده)", lesson: 8, pos: "phr." },
+  { word: "trilogy", meaning: "سه‌گانه (مجموعه‌ای از سه کتاب یا سه فیلم)", lesson: 8, pos: "n." },
+  { word: "main character", meaning: "شخصیت اصلی (مهم‌ترین شخصیت کتاب)", lesson: 8, pos: "phr." },
+  { word: "collection of books", meaning: "مجموعه‌ای از کتاب‌ها (کتابخانهٔ شخصی)", lesson: 8, pos: "phr." },
+  { word: "borrow books from the library", meaning: "قرض گرفتن کتاب از کتابخانه", lesson: 8, pos: "phr." },
+  { word: "deals with", meaning: "به موضوعی می‌پردازد (دربارهٔ موضوعی بودن)", lesson: 8, pos: "phr." },
+  { word: "controversial topic", meaning: "موضوع بحث‌برانگیز (جنجالی)", lesson: 8, pos: "phr." },
+  { word: "enjoyable read", meaning: "خواندنی لذت‌بخش (کتابی خوش‌خوان)", lesson: 8, pos: "phr." },
+  { word: "return the book to the library", meaning: "برگرداندن کتاب به کتابخانه", lesson: 8, pos: "phr." },
+  { word: "renew", meaning: "تمدید کردن (بیشتر کردن مهلت نگه‌داشتن کتاب)", lesson: 8, pos: "v." },
+  { word: "beginning and end", meaning: "آغاز و پایان (کتاب، داستان یا فیلم)", lesson: 8, pos: "phr." },
+  { word: "opening and closing scenes", meaning: "صحنه‌های آغازین و پایانی (در فیلم)", lesson: 8, pos: "phr." },
+  { word: "opening and closing chapters", meaning: "فصل‌های آغازین و پایانی (در کتاب)", lesson: 8, pos: "phr." },
+];

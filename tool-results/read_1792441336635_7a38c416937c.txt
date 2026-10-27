@@ -1,0 +1,698 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * موتور آزمون تعاملی (QuizGame) — امضای عمومی دست‌نخورده: QuizGame({ lessonFilter? })
+     5→ * تفکیک مکانیکی گام ۴ نقشهٔ docs/refactor-roadmap-2.md از quiz-game.tsx (پلی‌بوک games/fps/README.md):
+     6→ * وضعیت/افکت‌ها/منطق پاسخ/ماندگاری (روزانه/هفتگی/زنجیره/اشتباهات/SRS/گیمیفیکیشن) همین‌جاست؛
+     7→ * نمایش سه فاز به SetupPanel / ResultView / QuestionCard (+ BonusCard) منتقل شده است.
+     8→ * پذیرش کیت بازی‌ها: kit/sound-engine + kit/haptics + kit/telemetry (فاز G1-10).
+     9→ */
+    10→
+    11→import { useEffect, useMemo, useRef, useState } from "react";
+    12→import { toast } from "sonner";
+    13→import { useUserName } from "@/lib/name-store";
+    14→import { touchStreak } from "@/lib/streak-store";
+    15→import { awardQuizActivity } from "@/lib/gamification";
+    16→import { useMistakes, recordMistake, resolveMistake } from "@/lib/mistakes-store";
+    17→import { usePracticeIds, clearPracticeIds } from "@/lib/practice-store";
+    18→import { useQuestionStars } from "@/lib/question-star-store";
+    19→import { recordStudySession } from "@/lib/goal-store";
+    20→import { recordDailyResult, useDailyInfo, todayKey } from "@/lib/daily-store";
+    21→import { useWeeklyInfo, recordWeeklyResult, weekKeyOf } from "@/lib/weekly-store";
+    22→import { recordCombinedRound } from "@/lib/round-counters";
+    23→import { usePulses } from "@/lib/use-daily-pulse";
+    24→import { useBook } from "@/lib/book-context";
+    25→import { seedReviewFromQuiz } from "@/lib/srs-store";
+    26→import { enqueueOffline } from "@/lib/offline-queue";
+    27→// کیت بازی‌ها — پذیرش گام ۴ نقشهٔ refactor-2 (صدا/لرزش/تله‌متری)
+    28→import { playSound } from "../kit/sound-engine";
+    29→import { buzz } from "../kit/haptics";
+    30→import { createGameSession, type GameSessionTracker } from "../kit/telemetry";
+    31→import { BASE_LESSON_OPTIONS, GAME_KEY } from "./constants";
+    32→import type { Mode, Phase, PoolMeta, Question, SimilarBonus } from "./types";
+    33→import { SetupPanel } from "./setup-panel";
+    34→import { ResultView } from "./result-view";
+    35→import { QuestionCard } from "./question-card";
+    36→
+    37→export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
+    38→  const { bookId, meta, data: bookData } = useBook();
+    39→  const [phase, setPhase] = useState<Phase>("setup");
+    40→  const [mode, setMode] = useState<Mode>("normal");
+    41→  const [category, setCategory] = useState("all");
+    42→  const [lesson, setLesson] = useState(lessonFilter !== undefined ? String(lessonFilter) : "all");
+    43→  const [count, setCount] = useState(10);
+    44→  const [level, setLevel] = useState("all");
+    45→  const [poolMeta, setPoolMeta] = useState<PoolMeta | null>(null);
+    46→
+    47→  /** گزینه‌های محدوده درس — به‌صورت خودکار از واژگان کتاب فعال ساخته می‌شوند (پشتیبانی از هر تعداد درس) */
+    48→  const lessonOptions = useMemo(() => {
+    49→    if (!bookData) return BASE_LESSON_OPTIONS;
+    50→    return [
+    51→      ...BASE_LESSON_OPTIONS,
+    52→      ...bookData.vocab.lessons
+    53→        .filter((l) => l.lesson > 0)
+    54→        .map((l) => ({ value: String(l.lesson), label: `درس ${l.lesson}` })),
+    55→    ];
+    56→  }, [bookData]);
+    57→
+    58→  const [questions, setQuestions] = useState<Question[]>([]);
+    59→  const [loading, setLoading] = useState(false);
+    60→
+    61→  const [index, setIndex] = useState(0);
+    62→  const [selected, setSelected] = useState<number | null>(null);
+    63→  const [answers, setAnswers] = useState<(number | null)[]>([]);
+    64→  const [aiExplaining, setAiExplaining] = useState(false);
+    65→  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+    66→  /** کارت بونس «سؤال مشابه» — تمرین بی‌پایان از روی سؤال جاری */
+    67→  const [bonus, setBonus] = useState<SimilarBonus | null>(null);
+    68→  const [bonusSelected, setBonusSelected] = useState<number | null>(null);
+    69→  const [bonusLoading, setBonusLoading] = useState(false);
+    70→  const [bonusRegen, setBonusRegen] = useState(0); // کلید ری‌انیمیشن کارت بونس
+    71→  const [elapsed, setElapsed] = useState(0);
+    72→  const [timed, setTimed] = useState(0);
+    73→  const [, setQTick] = useState(0);
+    74→  const [exporting, setExporting] = useState(false);
+    75→  const pulses = usePulses(phase === "setup");
+    76→  const userName = useUserName();
+    77→  const { entries: mistakeEntries, count: mistakeCount, clear: clearMistakes } = useMistakes();
+    78→  const mistakeIds = useMemo(() => mistakeEntries.map((e) => e.id), [mistakeEntries]);
+    79→  const { ids: practiceIds } = usePracticeIds();
+    80→  const { ids: starredQIds, count: starredQCount, has: hasQStar, toggle: toggleQStar } = useQuestionStars();
+    81→  const daily = useDailyInfo();
+    82→  const weekly = useWeeklyInfo();
+    83→  /** مرور ترکیبی: اشتباهات + ستاره‌دارها (بدون تکرار، حداکثر ۸۰ سؤال) */
+    84→  const combinedIds = useMemo(
+    85→    () => Array.from(new Set([...mistakeIds, ...starredQIds])).slice(0, 80),
+    86→    [mistakeIds, starredQIds],
+    87→  );
+    88→  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    89→  const deadlineRef = useRef(0);
+    90→  const answeredLeftRef = useRef(0);
+    91→  const advanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    92→  // کیت بازی‌ها (G1-10) — ردیاب جلسهٔ تله‌متری؛ هر دور یک نمونهٔ تازه (هنگام شروع دور ساخته می‌شود)
+    93→  const sessionRef = useRef<GameSessionTracker | null>(null);
+    94→
+    95→  async function startPracticeRound(ids: string[], nextMode: Mode = "normal") {
+    96→    setLoading(true);
+    97→    setMode(nextMode);
+    98→    try {
+    99→      const params = new URLSearchParams({ count: String(Math.max(ids.length, 1)) });
+   100→      params.set("ids", ids.join(","));
+   101→      params.set("book", String(bookId));
+   102→      const res = await fetch(`/api/questions?${params.toString()}`);
+   103→      const data = await res.json();
+   104→      if (!res.ok || !data.questions?.length) {
+   105→        toast.error("سؤالی برای تمرین یافت نشد.");
+   106→        return;
+   107→      }
+   108→      setQuestions(data.questions as Question[]);
+   109→      setAnswers(new Array(data.questions.length).fill(null));
+   110→      setIndex(0);
+   111→      setSelected(null);
+   112→      setAiExplanation(null);
+   113→      setBonus(null);
+   114→      setBonusSelected(null);
+   115→      setElapsed(0);
+   116→      deadlineRef.current = Date.now() + timed * 1000;
+   117→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   118→      // کیت بازی‌ها (G1-10) — جلسهٔ تازهٔ تله‌متری برای این دور
+   119→      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+   120→      sessionRef.current.start();
+   121→      setPhase("playing");
+   122→      clearPracticeIds();
+   123→    } catch {
+   124→      toast.error("خطا در دریافت سؤالات");
+   125→    } finally {
+   126→      setLoading(false);
+   127→    }
+   128→  }
+   129→
+   130→  useEffect(() => {
+   131→    if (lessonFilter !== undefined) setLesson(String(lessonFilter));
+   132→  }, [lessonFilter]);
+   133→
+   134→  // شمارنده‌های بانک سؤال برای چیپ‌های سطح — با تغییر کتاب دوباره دریافت می‌شود
+   135→  useEffect(() => {
+   136→    let cancelled = false;
+   137→    fetch(`/api/questions?meta=1&book=${bookId}`)
+   138→      .then((r) => (r.ok ? r.json() : null))
+   139→      .then((d) => {
+   140→        if (!cancelled && d && typeof d.total === "number") setPoolMeta(d as PoolMeta);
+   141→      })
+   142→      .catch(() => undefined);
+   143→    return () => {
+   144→      cancelled = true;
+   145→    };
+   146→  }, [bookId]);
+   147→
+   148→  useEffect(() => {
+   149→    if (phase === "playing") {
+   150→      timerRef.current = setInterval(() => setElapsed((s) => s + 1), 1000);
+   151→    }
+   152→    return () => {
+   153→      if (timerRef.current) clearInterval(timerRef.current);
+   154→    };
+   155→  }, [phase]);
+   156→
+   157→  const current = questions[index];
+   158→  /** ثانیه‌های باقی‌ماندهٔ سؤال جاری در حالت زمان‌دار — پس از پاسخ‌دادن منجمد می‌شود */
+   159→  const qLeft =
+   160→    timed > 0 && phase === "playing" && deadlineRef.current > 0
+   161→      ? Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000))
+   162→      : 0;
+   163→  const shownLeft = selected === null ? qLeft : selected === -1 ? 0 : answeredLeftRef.current;
+   164→  const correctCount = useMemo(
+   165→    () => questions.reduce((acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0), 0),
+   166→    [questions, answers],
+   167→  );
+   168→  const scorePct = questions.length
+   169→    ? Math.round((correctCount / questions.length) * 100)
+   170→    : 0;
+   171→
+   172→  async function startQuiz(nextMode: Mode = "normal") {
+   173→    setLoading(true);
+   174→    try {
+   175→      const params = new URLSearchParams({
+   176→        category: category === "all" ? "all" : category,
+   177→        lesson: lesson === "all" ? "all" : lesson,
+   178→        count: String(count),
+   179→      });
+   180→      if (level !== "all") params.set("level", level);
+   181→      if (nextMode === "review") params.set("ids", mistakeIds.join(","));
+   182→      params.set("book", String(bookId));
+   183→      const res = await fetch(`/api/questions?${params.toString()}`);
+   184→      const data = await res.json();
+   185→      if (!res.ok || !data.questions?.length) {
+   186→        toast.error(
+   187→          level !== "all"
+   188→            ? "با این تنظیمات سؤالی یافت نشد — سطح دیگری را امتحان کنید."
+   189→            : "سؤالی یافت نشد — تنظیمات دیگری را امتحان کنید.",
+   190→        );
+   191→        return;
+   192→      }
+   193→      setQuestions(data.questions as Question[]);
+   194→      setAnswers(new Array(data.questions.length).fill(null));
+   195→      setIndex(0);
+   196→      setSelected(null);
+   197→      setAiExplanation(null);
+   198→      setBonus(null);
+   199→      setBonusSelected(null);
+   200→      setElapsed(0);
+   201→      deadlineRef.current = Date.now() + timed * 1000;
+   202→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   203→      // کیت بازی‌ها (G1-10) — جلسهٔ تازهٔ تله‌متری برای این دور
+   204→      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+   205→      sessionRef.current.start();
+   206→      // اصلاح SR-3-loading — mode فقط پس از موفقیت و هم‌گام با گذار فاز تغییر می‌کند تا
+   207→      // کارت پیشنهاد مرور حین loading در DOM بماند و شکست درخواست، state نتیجه را آلوده نکند
+   208→      setMode(nextMode);
+   209→      setPhase("playing");
+   210→    } catch {
+   211→      toast.error("خطا در دریافت سؤالات");
+   212→    } finally {
+   213→      setLoading(false);
+   214→    }
+   215→  }
+   216→
+   217→  /** شروع چالش روزانه — ۵ سؤال قطعی امروز، بدون زمان‌سنج */
+   218→  async function startDaily() {
+   219→    setLoading(true);
+   220→    setMode("daily");
+   221→    try {
+   222→      const res = await fetch(`/api/questions?daily=1&count=5&book=${bookId}`);
+   223→      const data = await res.json();
+   224→      if (!res.ok || !data.questions?.length) {
+   225→        toast.error("چالش امروز آماده نیست — بعداً دوباره امتحان کن.");
+   226→        return;
+   227→      }
+   228→      setQuestions(data.questions as Question[]);
+   229→      setAnswers(new Array(data.questions.length).fill(null));
+   230→      setIndex(0);
+   231→      setSelected(null);
+   232→      setAiExplanation(null);
+   233→      setBonus(null);
+   234→      setBonusSelected(null);
+   235→      setElapsed(0);
+   236→      deadlineRef.current = 0;
+   237→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   238→      // کیت بازی‌ها (G1-10) — جلسهٔ تازهٔ تله‌متری برای این دور
+   239→      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+   240→      sessionRef.current.start();
+   241→      setPhase("playing");
+   242→      toast.info("چالش روزانه شروع شد — ۵ سؤال امروز همه یکسان است! 🎯", { duration: 3200 });
+   243→    } catch {
+   244→      toast.error("خطا در دریافت چالش روزانه");
+   245→    } finally {
+   246→      setLoading(false);
+   247→    }
+   248→  }
+   249→
+   250→  /** شروع چالش هفتگی — ۱۰ سؤال قطعی این هفته، بدون زمان‌سنج */
+   251→  async function startWeekly() {
+   252→    setLoading(true);
+   253→    setMode("weekly");
+   254→    try {
+   255→      const res = await fetch(`/api/questions?weekly=1&count=10&book=${bookId}`);
+   256→      const data = await res.json();
+   257→      if (!res.ok || !data.questions?.length) {
+   258→        toast.error("چالش این هفته آماده نیست — بعداً دوباره امتحان کن.");
+   259→        return;
+   260→      }
+   261→      setQuestions(data.questions as Question[]);
+   262→      setAnswers(new Array(data.questions.length).fill(null));
+   263→      setIndex(0);
+   264→      setSelected(null);
+   265→      setAiExplanation(null);
+   266→      setBonus(null);
+   267→      setBonusSelected(null);
+   268→      setElapsed(0);
+   269→      deadlineRef.current = 0;
+   270→      if (advanceRef.current) clearTimeout(advanceRef.current);
+   271→      // کیت بازی‌ها (G1-10) — جلسهٔ تازهٔ تله‌متری برای این دور
+   272→      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+   273→      sessionRef.current.start();
+   274→      setPhase("playing");
+   275→      toast.info(`چالش هفتگی شروع شد — ۱۰ سؤال هفتهٔ ${weekly.weekIndex.toLocaleString("fa-IR")} برای همه یکسان است! 📅`, { duration: 3200 });
+   276→    } catch {
+   277→      toast.error("خطا در دریافت چالش هفتگی");
+   278→    } finally {
+   279→      setLoading(false);
+   280→    }
+   281→  }
+   282→
+   283→  /** هنگام اتمام زمان یک سؤال: بدون پاسخ ثبت و اشتباه، سپس نمایش پاسخ و رفتن خودکار */
+   284→  function handleTimeout() {
+   285→    if (!current || selected !== null) return;
+   286→    toast.info("وقت این سؤال تمام شد ⏰", { duration: 1900 });
+   287→    // کیت بازی‌ها — بازخورد صوتی/لرزشی اتمام وقت (هم‌تراز پاسخ غلط)
+   288→    playSound("wrong");
+   289→    buzz("error");
+   290→    recordMistake(current.id);
+   291→    if (current.category === "vocabulary") seedVocabReview(current.options[current.answer]);
+   292→    setSelected(-1);
+   293→    setAnswers((prev) => {
+   294→      const next = [...prev];
+   295→      next[index] = -1;
+   296→      return next;
+   297→    });
+   298→    setAiExplanation(null);
+   299→    setBonus(null);
+   300→    setBonusSelected(null);
+   301→    advanceRef.current = setTimeout(() => nextQuestion(), 1900);
+   302→  }
+   303→
+   304→  // شمارش معکوس حالت زمان‌دار — دی‌دلاین هر سؤال با تغییر سؤال/فاز بازنشانی می‌شود (در چالش روزانه/هفتگی غیرفعال)
+   305→  useEffect(() => {
+   306→    if (phase !== "playing" || timed <= 0 || selected !== null || mode === "daily" || mode === "weekly") return;
+   307→    if (deadlineRef.current === 0 || deadlineRef.current < Date.now() - timed * 1000) {
+   308→      deadlineRef.current = Date.now() + timed * 1000;
+   309→    }
+   310→    const iv = setInterval(() => {
+   311→      if (Date.now() >= deadlineRef.current) {
+   312→        clearInterval(iv);
+   313→        handleTimeout();
+   314→      } else {
+   315→        setQTick((t) => t + 1);
+   316→      }
+   317→    }, 1000);
+   318→    return () => clearInterval(iv);
+   319→  }, [phase, timed, selected, index]);
+   320→
+   321→  /** یکپارچگی آزمون با SRS (فاز ۲): واژهٔ غلط‌زدهٔ واژگانی به صف مرور برمی‌گردد */
+   322→  function seedVocabReview(correctOption: string | undefined) {
+   323→    if (!correctOption || !bookData) return;
+   324→    const exact = bookData.vocab.all.find((v) => v.word === correctOption);
+   325→    const loose = exact ?? bookData.vocab.all.find((v) => correctOption.includes(v.word));
+   326→    if (loose) seedReviewFromQuiz(loose.word);
+   327→  }
+   328→
+   329→  function chooseOption(optIdx: number) {
+   330→    if (selected !== null) return;
+   331→    if (timed > 0 && deadlineRef.current > 0) {
+   332→      answeredLeftRef.current = Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000));
+   333→    }
+   334→    setSelected(optIdx);
+   335→    setAnswers((prev) => {
+   336→      const next = [...prev];
+   337→      next[index] = optIdx;
+   338→      return next;
+   339→    });
+   340→    if (current) {
+   341→      if (optIdx === current.answer) {
+   342→        // کیت بازی‌ها — بازخورد صوتی/لرزشی پاسخ درست
+   343→        playSound("correct");
+   344→        buzz("success");
+   345→        // در مرور اشتباهات و مرور ترکیبی، پاسخ درست سؤال را از دفتر اشتباهات حذف می‌کند
+   346→        if (mode === "review" || mode === "combined") resolveMistake(current.id);
+   347→      } else {
+   348→        // کیت بازی‌ها — بازخورد صوتی/لرزشی پاسخ غلط
+   349→        playSound("wrong");
+   350→        buzz("error");
+   351→        recordMistake(current.id);
+   352→        if (current.category === "vocabulary") seedVocabReview(current.options[current.answer]);
+   353→      }
+   354→    }
+   355→  }
+   356→
+   357→  async function askAiExplanation() {
+   358→    if (!current) return;
+   359→    setAiExplaining(true);
+   360→    try {
+   361→      const res = await fetch("/api/explain", {
+   362→        method: "POST",
+   363→        headers: { "Content-Type": "application/json" },
+   364→        body: JSON.stringify({
+   365→          text: current.text,
+   366→          options: current.options,
+   367→          answer: current.answer,
+   368→          book: {
+   369→            id: bookId,
+   370→            title: bookData?.info.title ?? "",
+   371→            grade: meta?.gradeLabel ?? "",
+   372→          },
+   373→        }),
+   374→      });
+   375→      const data = await res.json();
+   376→      if (res.ok) setAiExplanation(data.explanation);
+   377→      else toast.error(data.error ?? "خطا در توضیح هوشمند");
+   378→    } catch {
+   379→      toast.error("خطا در ارتباط با هوش مصنوعی");
+   380→    } finally {
+   381→      setAiExplaining(false);
+   382→    }
+   383→  }
+   384→
+   385→  /** ساخت یک تست مشابه از سؤال جاری با هوش مصنوعی — نمایش به‌صورت کارت بونس */
+   386→  async function generateSimilar(fromBonus = false) {
+   387→    if (!current || bonusLoading) return;
+   388→    // «سؤال مشابه بعدی» از روی سؤالِ مشابهٔ فعلی زنجیر می‌شود (تولید بی‌نهایت)؛
+   389→    // دکمهٔ اصلی همیشه از سؤال اصلی منبع می‌گیرد (تکرار همان سؤال → پاسخ کش‌شده).
+   390→    const src = fromBonus && bonus ? bonus : current;
+   391→    setBonusLoading(true);
+   392→    try {
+   393→      const res = await fetch("/api/similar-question", {
+   394→        method: "POST",
+   395→        headers: { "Content-Type": "application/json" },
+   396→        body: JSON.stringify({
+   397→          text: src.text,
+   398→          options: src.options,
+   399→          answer: src.answer,
+   400→          category: current.category,
+   401→          book: {
+   402→            id: bookId,
+   403→            title: bookData?.info.title ?? "",
+   404→            grade: meta?.gradeLabel ?? "",
+   405→          },
+   406→        }),
+   407→      });
+   408→      const data = await res.json();
+   409→      if (!res.ok || !data.question) {
+   410→        toast.error(data.error ?? "سؤال مشابه ساخته نشد — دوباره تلاش کن");
+   411→        return;
+   412→      }
+   413→      setBonus(data.question as SimilarBonus);
+   414→      setBonusSelected(null);
+   415→      setBonusRegen((n) => n + 1);
+   416→    } catch {
+   417→      toast.error("خطا در ارتباط با هوش مصنوعی");
+   418→    } finally {
+   419→      setBonusLoading(false);
+   420→    }
+   421→  }
+   422→
+   423→  function nextQuestion() {
+   424→    if (advanceRef.current) clearTimeout(advanceRef.current);
+   425→    if (index + 1 >= questions.length) {
+   426→      finish();
+   427→      return;
+   428→    }
+   429→    setIndex((i) => i + 1);
+   430→    setSelected(answers[index + 1]);
+   431→    setAiExplanation(null);
+   432→    setBonus(null);
+   433→    setBonusSelected(null);
+   434→    deadlineRef.current = mode === "daily" || mode === "weekly" ? 0 : Date.now() + timed * 1000;
+   435→  }
+   436→
+   437→  // میان‌برهای کیبورد حین آزمون: ۱-۴ (فارسی/انگلیسی) انتخاب گزینه، Enter سؤال بعدی
+   438→  // الگوی latest-ref: شنونده فقط یک‌بار ثبت می‌شود و همیشه آخرین وضعیت/توابع را می‌بیند
+   439→  const kbChooseRef = useRef<(i: number) => void>(() => {});
+   440→  const kbNextRef = useRef<() => void>(() => {});
+   441→  const kbStateRef = useRef({ playing: false, selected: null as number | null, options: 0 });
+   442→  useEffect(() => {
+   443→    kbChooseRef.current = chooseOption;
+   444→    kbNextRef.current = nextQuestion;
+   445→    kbStateRef.current = { playing: phase === "playing", selected, options: current?.options.length ?? 0 };
+   446→  });
+   447→  useEffect(() => {
+   448→    function onKey(e: KeyboardEvent) {
+   449→      const target = e.target as HTMLElement | null;
+   450→      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+   451→      const kb = kbStateRef.current;
+   452→      if (!kb.playing) return;
+   453→      // وقتی دیالوگ/مودالی باز است میان‌بر فعال نماند
+   454→      if (document.querySelector('[role="dialog"], [role="alertdialog"]')) return;
+   455→      if (e.key === "Enter" && kb.selected !== null) {
+   456→        e.preventDefault();
+   457→        kbNextRef.current();
+   458→        return;
+   459→      }
+   460→      if (kb.selected !== null) return;
+   461→      const fa = "۱۲۳۴".indexOf(e.key);
+   462→      const en = "1234".indexOf(e.key);
+   463→      const digit = fa >= 0 ? fa : en;
+   464→      if (digit >= 0 && digit < kb.options) {
+   465→        e.preventDefault();
+   466→        kbChooseRef.current(digit);
+   467→      }
+   468→    }
+   469→    window.addEventListener("keydown", onKey);
+   470→    return () => window.removeEventListener("keydown", onKey);
+   471→  }, []);
+   472→
+   473→  // کیت بازی‌ها (G1-10) — دورِ باز در unmount «رهاشده» ثبت می‌شود (اگر قبلاً گزارش شده باشد no-op)
+   474→  useEffect(
+   475→    () => () => {
+   476→      sessionRef.current?.abandon("unmount");
+   477→    },
+   478→    [],
+   479→  );
+   480→
+   481→  function finish() {
+   482→    if (timerRef.current) clearInterval(timerRef.current);
+   483→    if (advanceRef.current) clearTimeout(advanceRef.current);
+   484→    setPhase("result");
+   485→    // کیت بازی‌ها (G1-10) — پایان عادی جلسهٔ تله‌متری + بازخورد پایان دور
+   486→    sessionRef.current?.end("finish");
+   487→    playSound("finish");
+   488→    buzz("success");
+   489→    recordStudySession();
+   490→    const streak = touchStreak();
+   491→    awardQuizActivity(correctCount, questions.length); // فاز ۶ — XP/ماموریت/نشان
+   492→    if (mode === "daily") recordDailyResult(todayKey(), scorePct, questions.length);
+   493→    if (mode === "weekly") recordWeeklyResult(weekKeyOf(), scorePct, questions.length);
+   494→    if (mode === "combined") recordCombinedRound();
+   495→    const detail = questions.map((q, i) => ({ id: q.id, chosen: answers[i], answer: q.answer }));
+   496→    const attemptBody = {
+   497→      category:
+   498→        mode === "review"
+   499→          ? "review"
+   500→          : mode === "daily"
+   501→            ? "daily"
+   502→            : mode === "weekly"
+   503→              ? "weekly"
+   504→              : mode === "starred"
+   505→                ? "starred"
+   506→                : mode === "combined"
+   507→                  ? "combined"
+   508→                  : category,
+   509→      lesson: lesson === "all" ? 0 : Number(lesson),
+   510→      total: questions.length,
+   511→      correct: correctCount,
+   512→      duration: elapsed,
+   513→      name: userName || undefined,
+   514→      detail,
+   515→      book: bookId,
+   516→    };
+   517→    fetch("/api/attempts", {
+   518→      method: "POST",
+   519→      headers: { "Content-Type": "application/json" },
+   520→      body: JSON.stringify(attemptBody),
+   521→    })
+   522→      .then((res) => {
+   523→        // 5xx مثل خطای شبکه به صف آفلاین می‌رود؛ موفق/4xx (مهمان، اعتبارسنجی) = همان رفتار قبلی
+   524→        if (!res.ok && res.status >= 500) throw new Error("server");
+   525→        try {
+   526→          window.dispatchEvent(new CustomEvent("visionone:attempt-saved"));
+   527→        } catch {
+   528→          /* noop */
+   529→        }
+   530→        return toast.success(
+   531→          mode === "daily"
+   532→            ? `چالش امروز ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ${scorePct >= 80 ? "🏆" : "💪"}`
+   533→            : mode === "weekly"
+   534→              ? `چالش هفتگی ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ 📅 ${scorePct >= 80 ? "🏆" : "💪"}`
+   535→            : mode === "review"
+   536→              ? `دور مرور تمام شد! ${mistakeCount.toLocaleString("fa-IR")} سؤال دیگر در دفتر اشتباهات مانده`
+   537→              : mode === "starred"
+   538→                ? `تمرین ستاره‌دارها ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ ⭐`
+   539→                : mode === "combined"
+   540→                  ? `مرور ترکیبی ثبت شد — ${scorePct.toLocaleString("fa-IR")}٪ 🧩`
+   541→                  : `نتیجه آزمون ذخیره شد ${userName ? `— موفق باشی ${userName}!` : "🎉"}${streak.count > 1 ? ` 🔥 زنجیره ${streak.count.toLocaleString("fa-IR")} روزه` : ""}`,
+   542→        );
+   543→      })
+   544→      .catch(() => {
+   545→        // آفلاین/خطای سرور — آزمون در صف می‌ماند و با برگشت اینترنت خودکار ارسال می‌شود
+   546→        // (شمارش محلی درست است؛ امتیاز و نتیجه همین‌جا نشان داده می‌شود)
+   547→        enqueueOffline({ url: "/api/attempts", method: "POST", body: attemptBody });
+   548→        toast("آزمونت ذخیره شد — وقتی اینترنت برگشت ارسال می‌شود 📴→📡");
+   549→      });
+   550→  }
+   551→
+   552→  /** خروجی CSV از دفتر اشتباهات — فایل UTF-8 با BOM برای اکسل */
+   553→  async function exportMistakesCsv() {
+   554→    if (!mistakeIds.length || exporting) return;
+   555→    setExporting(true);
+   556→    try {
+   557→      const res = await fetch(`/api/questions?count=${mistakeIds.length}&ids=${mistakeIds.join(",")}&book=${bookId}`);
+   558→      const data = await res.json();
+   559→      const qs = (data.questions ?? []) as Question[];
+   560→      if (!qs.length) {
+   561→        toast.error("سؤالی برای خروجی یافت نشد.");
+   562→        return;
+   563→      }
+   564→      const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
+   565→      const rows = [
+   566→        ["ردیف", "متن سؤال", "پاسخ صحیح", "دسته", "مبحث", "سطح"].join(","),
+   567→        ...qs.map((q, i) =>
+   568→          [
+   569→            i + 1,
+   570→            esc(q.text),
+   571→            esc(q.options[q.answer] ?? ""),
+   572→            q.category === "grammar" ? "گرامر" : "واژگان",
+   573→            esc(q.scope),
+   574→            esc(q.level),
+   575→          ].join(","),
+   576→        ),
+   577→      ];
+   578→      const blob = new Blob(["\uFEFF" + rows.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+   579→      const url = URL.createObjectURL(blob);
+   580→      const a = document.createElement("a");
+   581→      a.href = url;
+   582→      a.download = "vision-one-mistakes.csv";
+   583→      document.body.appendChild(a);
+   584→      a.click();
+   585→      a.remove();
+   586→      URL.revokeObjectURL(url);
+   587→      toast.success(`فایل CSV با ${qs.length.toLocaleString("fa-IR")} سؤال دانلود شد.`);
+   588→    } catch {
+   589→      toast.error("خطا در ساخت فایل CSV");
+   590→    } finally {
+   591→      setExporting(false);
+   592→    }
+   593→  }
+   594→
+   595→  function reset() {
+   596→    if (advanceRef.current) clearTimeout(advanceRef.current);
+   597→    deadlineRef.current = 0;
+   598→    setPhase("setup");
+   599→    setQuestions([]);
+   600→    setAnswers([]);
+   601→    setIndex(0);
+   602→    setSelected(null);
+   603→    setBonus(null);
+   604→    setBonusSelected(null);
+   605→    setElapsed(0);
+   606→  }
+   607→
+   608→  // ─────────── Setup — پنل تنظیم (ماژول presentational با props هم‌نام) ───────────
+   609→  if (phase === "setup") {
+   610→    return (
+   611→      <SetupPanel
+   612→        lessonOptions={lessonOptions}
+   613→        daily={daily}
+   614→        weekly={weekly}
+   615→        pulses={pulses}
+   616→        practiceIds={practiceIds}
+   617→        starredQIds={starredQIds}
+   618→        starredQCount={starredQCount}
+   619→        mistakeCount={mistakeCount}
+   620→        combinedIds={combinedIds}
+   621→        poolMeta={poolMeta}
+   622→        loading={loading}
+   623→        exporting={exporting}
+   624→        category={category}
+   625→        setCategory={setCategory}
+   626→        lesson={lesson}
+   627→        setLesson={setLesson}
+   628→        count={count}
+   629→        setCount={setCount}
+   630→        level={level}
+   631→        setLevel={setLevel}
+   632→        timed={timed}
+   633→        setTimed={setTimed}
+   634→        startDaily={startDaily}
+   635→        startWeekly={startWeekly}
+   636→        startPracticeRound={startPracticeRound}
+   637→        startQuiz={startQuiz}
+   638→        exportMistakesCsv={exportMistakesCsv}
+   639→        clearMistakes={clearMistakes}
+   640→      />
+   641→    );
+   642→  }
+   643→
+   644→  // ─────────── Result — صفحهٔ نتیجه (ماژول presentational) ───────────
+   645→  if (phase === "result") {
+   646→    return (
+   647→      <ResultView
+   648→        questions={questions}
+   649→        answers={answers}
+   650→        correctCount={correctCount}
+   651→        scorePct={scorePct}
+   652→        elapsed={elapsed}
+   653→        mode={mode}
+   654→        level={level}
+   655→        timed={timed}
+   656→        userName={userName}
+   657→        loading={loading}
+   658→        hasQStar={hasQStar}
+   659→        toggleQStar={toggleQStar}
+   660→        reset={reset}
+   661→        startQuiz={startQuiz}
+   662→      />
+   663→    );
+   664→  }
+   665→
+   666→  // ─────────── Playing — کارت سؤال (ماژول presentational) ───────────
+   667→  if (!current) return null;
+   668→  return (
+   669→    <QuestionCard
+   670→      current={current}
+   671→      index={index}
+   672→      questions={questions}
+   673→      answers={answers}
+   674→      selected={selected}
+   675→      shownLeft={shownLeft}
+   676→      elapsed={elapsed}
+   677→      timed={timed}
+   678→      mode={mode}
+   679→      weekly={weekly}
+   680→      correctCount={correctCount}
+   681→      aiExplanation={aiExplanation}
+   682→      aiExplaining={aiExplaining}
+   683→      bonus={bonus}
+   684→      bonusLoading={bonusLoading}
+   685→      bonusSelected={bonusSelected}
+   686→      bonusRegen={bonusRegen}
+   687→      setBonus={setBonus}
+   688→      setBonusSelected={setBonusSelected}
+   689→      hasQStar={hasQStar}
+   690→      toggleQStar={toggleQStar}
+   691→      chooseOption={chooseOption}
+   692→      nextQuestion={nextQuestion}
+   693→      askAiExplanation={askAiExplanation}
+   694→      generateSimilar={generateSimilar}
+   695→    />
+   696→  );
+   697→}
+   698→

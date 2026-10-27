@@ -1,0 +1,36 @@
+// واژگان درس ۲۸ — Size (صفحهٔ ۵۷ کتاب 1000 English Collocations)
+// شامل فهرست high/low و مثال‌های little (cute little house، poor little dog، a little money و...).
+import type { VocabWord } from "../types";
+
+export const VOCAB_LESSON_28: VocabWord[] = [
+  { word: "big house", meaning: "خانهٔ بزرگ (با large هم گفته می‌شود)", lesson: 28, pos: "phr." },
+  { word: "a large coffee", meaning: "یک قهوهٔ سایز بزرگ", lesson: 28, pos: "phr." },
+  { word: "medium", meaning: "سایز متوسط (لباس)", lesson: 28, pos: "adj." },
+  { word: "large-scale production", meaning: "تولید در مقیاس کلان", lesson: 28, pos: "phr." },
+  { word: "small scale", meaning: "مقیاس کوچک", lesson: 28, pos: "phr." },
+  { word: "a large number of", meaning: "تعداد زیادی از", lesson: 28, pos: "phr." },
+  { word: "a large amount of", meaning: "مقدار زیادی از", lesson: 28, pos: "phr." },
+  { word: "a large proportion of", meaning: "نسبت/سهم بزرگی از", lesson: 28, pos: "phr." },
+  { word: "a large increase", meaning: "افزایش چشمگیر", lesson: 28, pos: "phr." },
+  { word: "big accomplishment", meaning: "دستاورد بزرگ", lesson: 28, pos: "phr." },
+  { word: "big decision", meaning: "تصمیم بزرگ", lesson: 28, pos: "phr." },
+  { word: "big disappointment", meaning: "ناامیدی بزرگ", lesson: 28, pos: "phr." },
+  { word: "big failure", meaning: "شکست بزرگ", lesson: 28, pos: "phr." },
+  { word: "big improvement", meaning: "بهبود چشمگیر", lesson: 28, pos: "phr." },
+  { word: "big mistake", meaning: "اشتباه بزرگ", lesson: 28, pos: "phr." },
+  { word: "big surprise", meaning: "غافلگیری بزرگ", lesson: 28, pos: "phr." },
+  { word: "big brother", meaning: "برادر بزرگ‌تر", lesson: 28, pos: "phr." },
+  { word: "big sister", meaning: "خواهر بزرگ‌تر", lesson: 28, pos: "phr." },
+  { word: "tall building", meaning: "ساختمان بلند", lesson: 28, pos: "phr." },
+  { word: "tall trees", meaning: "درختان بلندقد", lesson: 28, pos: "phr." },
+  { word: "high/low prices", meaning: "قیمت‌های بالا/پایین", lesson: 28, pos: "phr." },
+  { word: "high/low levels", meaning: "سطح‌های بالا/پایین", lesson: 28, pos: "phr." },
+  { word: "high/low quality", meaning: "کیفیت بالا/پایین", lesson: 28, pos: "phr." },
+  { word: "high/low rate", meaning: "نرخ/میزان بالا/پایین", lesson: 28, pos: "phr." },
+  { word: "high/low degree", meaning: "درجهٔ بالا/پایین", lesson: 28, pos: "phr." },
+  { word: "cute little house", meaning: "خانهٔ کوچک و دوست‌داشتنی", lesson: 28, pos: "phr." },
+  { word: "pretty little girls", meaning: "دختر کوچولوهای خوشگل", lesson: 28, pos: "phr." },
+  { word: "poor little dog", meaning: "سگ کوچولوی بیچاره", lesson: 28, pos: "phr." },
+  { word: "a little money", meaning: "کمی پول", lesson: 28, pos: "phr." },
+  { word: "tiny little diamonds", meaning: "نگین‌های خیلی ریز", lesson: 28, pos: "phr." },
+];

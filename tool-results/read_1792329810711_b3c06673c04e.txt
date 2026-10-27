@@ -1,0 +1,643 @@
+     1→"use client";
+     2→
+     3→/**
+     4→ * setup-panel — پنل تنظیمات مأموریت شوتر (گام ۵ نقشهٔ docs/refactor-roadmap-2.md).
+     5→ *
+     6→ * استخراج مکانیکی JSX فاز setup از index.tsx (بایت‌به‌بایت — پلی‌بوک games/fps/README.md):
+     7→ * کارت معرفی، انتخاب حالت/سلاح/نقشه/درس/سبک کنترل/کیفیت/گزینه‌های نگاه، هشدار استخر،
+     8→ * پیام هدف‌های هوشمند، بج رکورد، دکمهٔ «شروع مأموریت» + آموزش ۵گامی (TUTORIAL_STEPS).
+     9→ * کامپوننت presentational — state و موتور مأموریت در index.tsx می‌ماند؛ props هم‌نام
+    10→ * شناسه‌های قبلی‌اند تا JSX منتقل‌شده صفر تغییر شناسه داشته باشد.
+    11→ */
+    12→
+    13→import type { Dispatch, SetStateAction } from "react";
+    14→import {
+    15→  Bomb,
+    16→  Crosshair,
+    17→  Crown,
+    18→  DoorOpen,
+    19→  Headphones,
+    20→  ListOrdered,
+    21→  MapPinned,
+    22→  MonitorSmartphone,
+    23→  MoonStar,
+    24→  MousePointerClick,
+    25→  EyeOff,
+    26→  Play,
+    27→  Radar,
+    28→  SlidersHorizontal,
+    29→  Sparkles,
+    30→  Star,
+    31→  Sun,
+    32→  Swords,
+    33→  Target as TargetIcon,
+    34→  Trees,
+    35→  Trophy,
+    36→  Zap,
+    37→} from "lucide-react";
+    38→import { Badge } from "@/components/ui/badge";
+    39→import { Button } from "@/components/ui/button";
+    40→import { Card, CardContent } from "@/components/ui/card";
+    41→import { Slider } from "@/components/ui/slider";
+    42→import { Switch } from "@/components/ui/switch";
+    43→import { cn } from "@/lib/utils";
+    44→import type { QuizQuestionSeed, VocabEntry } from "@/data/types";
+    45→import { faNum } from "../shared";
+    46→import { TutorialOverlay, type TutorialStep } from "../kit/tutorial-overlay";
+    47→import {
+    48→  ALL_LESSONS,
+    49→  FOV_DEF,
+    50→  FOV_MAX,
+    51→  FOV_MIN,
+    52→  GAME_KEY,
+    53→  MIN_POOL_CHAIN,
+    54→  MIN_POOL_QUIZ,
+    55→  MIN_POOL_WORD,
+    56→  SENS_DEF,
+    57→  SENS_MAX,
+    58→  SENS_MIN,
+    59→  type Difficulty,
+    60→  type Quality,
+    61→} from "./constants";
+    62→import { lessonLabel, modeName } from "./helpers";
+    63→import { MAPS, type MapConfig, type MapId } from "./maps";
+    64→import { WEAPONS, type WeaponConfig, type WeaponId } from "./weapons";
+    65→import type { Mode } from "./types";
+    66→
+    67→// ─── فاز G2-e — آموزش ۳-گامی استاندارد (الگوی پایلوت memory / flappy) ───
+    68→
+    69→export const TUTORIAL_STEPS: TutorialStep[] = [
+    70→  {
+    71→    icon: <Crosshair size={24} />,
+    72→    title: "پهپادهای متخاصم را حذف کن",
+    73→    text: "سؤال روی HUD بالای میدان می‌ماند و هر پهپاد متخاصم یک گزینهٔ انگلیسی روی پلاک دارد — دقیقاً به گزینهٔ درست شلیک کن. شلیک درست پهپاد را با انفجار آتش‌و‌دودی منفجر می‌کند و امتیاز با کمبو دارد. در حالت «شنیداری» سؤال خوانده نمی‌شود بلکه واژه پخش می‌شود — گوش کن و پهپادِ همان واژه را شکار کن؛ دکمهٔ «پخش دوباره» زیر سؤال است و در دسکتاپ کلید V هم دوباره پخش می‌کند.",
+    74→  },
+    75→  {
+    76→    icon: <ListOrdered size={24} />,
+    77→    title: "جملهٔ زنجیره‌ای",
+    78→    text: "در حالت «جملهٔ زنجیره» سؤال یک جملهٔ واقعی از مکالمه‌های جزوه است که سه واژه‌اش جا خالی دارد — سه پهپادِ واژه‌های گم‌شده را دقیقاً به ترتیبِ جمله شکار کن تا جای خالی‌های HUD پر شود و با کامل شدن جمله، تلفظ کاملش را بشنوی؛ شکارِ بی‌ترتیب یک ❤ می‌سوزاند.",
+    79→  },
+    80→  {
+    81→    icon: <MousePointerClick size={24} />,
+    82→    title: "نشانه‌گیری و شلیک",
+    83→    text: "دسکتاپ: کلیک اول قفلِ نشانگر، حرکت موس نشانه‌گیری، WASD حرکت داخل میدان و کلیک بعدی شلیک — R خشاب را عوض می‌کند. نگه‌داشتن کلیک راست اسکوپ می‌گیرد: دید باریک‌تر، نشانه‌گیری دقیق‌تر. حرکت حرفه‌ای: Shift دویدن، Space پرش و C خم‌شدن. موبایل: جوی‌استیک چپ حرکت، کشیدن صحنه نگاه و دکمهٔ راست (یا تپ روی هدف) شلیک + دکمهٔ پرش. در «تپ ساده» تپ روی هدف کافی است و کلیدهای ۱ تا ۴ هم هدف‌ها را از چپ انتخاب می‌کنند. مأموریت تمام‌صفحه شروع می‌شود (Esc = خروج).",
+    84→  },
+    85→  {
+    86→    icon: <TargetIcon size={24} />,
+    87→    title: "خشاب، مهمات و سلاح",
+    88→    text: "خشاب بسته به سلاح ۴ تا ۸ فشنگ دارد — شمارندهٔ فشنگ کنار رتیکل است. خالی شدن = ریلود خودکار با صدای تعویض؛ می‌توانی با R (دسکتاپ) زودتر ریلود کنی. سه سلاح در setup داری: کلت تک‌تیر (خشاب ۸)، دژکوب سنگین (خشاب ۵، لگد و انفجار بزرگ) و پمپ زون‌کن (خشاب ۴؛ هر ماشه سه پرتو می‌کاود). شلیک حین ریلود یا فریز برخورد مهمات هدر نمی‌دهد، ولی هر شلیکِ خطا یک فشنگ کم است — درست نشانه بگیر!",
+    89→  },
+    90→  {
+    91→    icon: <Zap size={24} />,
+    92→    title: "هدف‌های هوشمند و HVT",
+    93→    text: "پهپادهای غلط وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر نزدیک شو! هر ۵ پاسخ یک «موج» سخت‌تر با دشمنان سریع‌تر شروع می‌شود. هر از گاهی هم «هدف ویژهٔ HVT» با حلقهٔ هشدار قرمز ظاهر می‌شود: ۳ ثانیه فرصت داری حذفش کنی تا ۲۰ امتیاز بونوس بگیری (حذفش قلب کم نمی‌کند).",
+    94→  },
+    95→  {
+    96→    icon: <Radar size={24} />,
+    97→    title: "پهپاد شناسایی و قفس واژه",
+    98→    text: "در دشواری‌های «عادی» و «سخت» یک پهپاد تعقیب‌گر تیره با چراغ کهربایی دور میدان گشت می‌زند (بدون پلاک واژه — به گزینه‌ها ربطی ندارد). اگر ساکن بمانی نزدیک می‌شود و پس از یک لحظه شارژ — چراغش تند می‌زند و لرزش می‌گیرد — «قفس واژه» پرتاب می‌کند: چیپ قرمز HUD شمارش معکوس می‌زند. سه دفاع داری: جابه‌جا شو تا قفس به جای خالی بخورد، خود قفس را در هوا شکار کن (در «تپ ساده» روی چیپ قرمز تپ کن) یا پیش از پرتاب به خود پهپاد شلیک کن تا عقب بنشیند. برخورد قفس فقط یک ❤ کم می‌کند و سؤال جاری دست‌نخورده می‌ماند؛ در «آسان» هیچ دشمنی وجود ندارد.",
+    99→  },
+   100→  {
+   101→    icon: <EyeOff size={24} />,
+   102→    title: "پناهگاه و خط دید",
+   103→    text: "سنگرها دوست تو هستند: پهپاد تعقیب‌گر از پشت دیوارهای بلند و جعبه‌ها نمی‌تواند تو را ببیند. وقتی پنهان شوی چیپ سبز «پوشیده» روشن می‌شود؛ اگر حین تعقیب خط دیدش قطع شود چند لحظه شناور می‌ماند (چراغش تند می‌زند) و بعد ردت را گم می‌کند و به گشت برمی‌گردد. اما حواس‌ت باشد: بدون دید، سکونت هم شمرده نمی‌شود و شارژِ شروع‌شده را هیچ سنگری لغو نمی‌کند — شلیک به پهپاد یا جابه‌جایی پس از پرتاب نجاتت می‌دهد.",
+   104→  },
+   105→  {
+   106→    icon: <Crown size={24} />,
+   107→    title: "رئیس واژه",
+   108→    text: "هر مأموریتی که تا «موج ۴» پیش ببری با نبرد رئیس تمام می‌شود: پهپاد فرماندهٔ بزرگ با سه حلقهٔ سپر که گلوله اثر ندارد — فقط پاسخ درست واژه سپرش را می‌شکند! سه مرحله با سه چالش متفاوت: اول سؤال معمولی مأموریت، بعد «هجی» (حروف واژه را به ترتیب شکار کن تا جای‌خالی‌های HUD پُر شود) و در پایان «شنیداری». هر خطا فقط همان مرحله را با واژهٔ تازه تکرار می‌کند و چالش‌ها یک‌ونیم برابر زمان دارند. در دشواری‌های عادی/سخت رئیس قفس واژه هم پرتاب می‌کند (شلیک به خودش در لحظهٔ شارژ = لغو پرتاب) و شکستن سپر سوم = پیروزی کامل مأموریت. در «آسان» رئیس ساکن است و حمله نمی‌کند.",
+   109→  },
+   110→  {
+   111→    icon: <MonitorSmartphone size={24} />,
+   112→    title: "نقشه‌ها و گزینه‌ها",
+   113→    text: "اگر صحنه روی گوشی سنگین بود، در تنظیمات «کیفیت سبک» را انتخاب کن. چهار نقشهٔ مأموریت با چیدمان واقعی متفاوت داری: جنگل زمردی (درخت و جعبه)، کویر کهربا (دیوار ماسه‌سنگی و طاق)، سکوت شب (جنگل کریستال) و دروازهٔ دو در — الهام از دی‌داست۲ با درِ دوتایی میانه، گذرگاه بلند، تونل B و برج دیدبانی. حساسیت نگاه، زاویهٔ دید (FOV) و وارون‌سازی عمودی را هم در بخش «گزینه‌ها» تنظیم کن — همهٔ انتخاب‌ها ذخیره می‌شوند و حین بازی هم از منوی توقف قابل تغییرند. پایان هر مأموریت رتبهٔ نظامی می‌گیری (S تا D).",
+   114→  },
+   115→];
+   116→
+   117→export interface SetupPanelProps {
+   118→  mode: Mode;
+   119→  setMode: Dispatch<SetStateAction<Mode>>;
+   120→  lesson: number;
+   121→  setLesson: Dispatch<SetStateAction<number>>;
+   122→  tapMode: boolean;
+   123→  setTapMode: Dispatch<SetStateAction<boolean>>;
+   124→  quality: Quality;
+   125→  setQualityPref: (q: Quality) => void;
+   126→  sens: number;
+   127→  setSensPref: (v: number) => void;
+   128→  fov: number;
+   129→  setFovPref: (v: number) => void;
+   130→  invertY: boolean;
+   131→  setInvertPref: (v: boolean) => void;
+   132→  weaponId: WeaponId;
+   133→  setWeaponPref: (id: WeaponId) => void;
+   134→  /** فاز U1-00 — درجهٔ دشواری مأموریت (رفتار پهپاد تعقیب‌گر) */
+   135→  difficulty: Difficulty;
+   136→  setDifficultyPref: (d: Difficulty) => void;
+   137→  /** فاز U5 — صدای میدان جهت‌دار (پاس چپ/راست — ماندگار) */
+   138→  fieldSfx: boolean;
+   139→  setFieldSfxPref: (v: boolean) => void;
+   140→  mapId: MapId;
+   141→  setMapPref: (id: MapId) => void;
+   142→  chipFeedback: () => void;
+   143→  poolOk: boolean;
+   144→  poolCount: number;
+   145→  quizLessons: number[];
+   146→  wordLessons: { lesson: number; label: string }[];
+   147→  /** فاز F10-ب — درس‌های دارای مکالمهٔ قابل‌بازی + تعداد جمله‌های هر درس */
+   148→  chainLessons: { lesson: number; count: number }[];
+   149→  vocabAll: VocabEntry[];
+   150→  quizSeed: QuizQuestionSeed[];
+   151→  bestVal: number | null;
+   152→  start: () => void;
+   153→  tutorialOpen: boolean;
+   154→  handleTutorialOpenChange: (o: boolean) => void;
+   155→}
+   156→
+   157→export function SetupPanel({
+   158→  mode,
+   159→  setMode,
+   160→  lesson,
+   161→  setLesson,
+   162→  tapMode,
+   163→  setTapMode,
+   164→  quality,
+   165→  setQualityPref,
+   166→  sens,
+   167→  setSensPref,
+   168→  fov,
+   169→  setFovPref,
+   170→  invertY,
+   171→  setInvertPref,
+   172→  weaponId,
+   173→  setWeaponPref,
+   174→  difficulty,
+   175→  setDifficultyPref,
+   176→  fieldSfx,
+   177→  setFieldSfxPref,
+   178→  mapId,
+   179→  setMapPref,
+   180→  chipFeedback,
+   181→  poolOk,
+   182→  poolCount,
+   183→  quizLessons,
+   184→  wordLessons,
+   185→  chainLessons,
+   186→  vocabAll,
+   187→  quizSeed,
+   188→  bestVal,
+   189→  start,
+   190→  tutorialOpen,
+   191→  handleTutorialOpenChange,
+   192→}: SetupPanelProps) {
+   193→  const chipCls = (active: boolean) =>
+   194→    cn(
+   195→      "min-h-11 rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-all",
+   196→      active
+   197→        ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+   198→        : "text-muted-foreground hover:bg-muted",
+   199→    );
+   200→
+   201→  return (
+   202→    <>
+   203→      <Card className="mx-auto max-w-xl rise-in">
+   204→        <CardContent className="space-y-6 p-6">
+   205→          <div className="flex items-center gap-3">
+   206→            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+   207→              <Crosshair size={22} />
+   208→            </span>
+   209→            <div>
+   210→              <h2 className="text-lg font-black">شوتر آموزشی</h2>
+   211→              <p className="text-xs text-muted-foreground">میدان سه‌بعدی low-poly — به گزینهٔ درست شلیک کن!</p>
+   212→            </div>
+   213→          </div>
+   214→
+   215→          <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   216→            <Sparkles size={15} className="mt-0.5 shrink-0 text-emerald-500" />
+   217→            <p>
+   218→              سؤال بالای صفحه می‌آید و روی هر پهپاد متخاصم یک گزینه نوشته شده — دقیقاً به <b>گزینهٔ درست</b> شلیک کن.
+   219→              در حالت «شنیداری» سؤال متن ندارد بلکه <b>واژه پخش می‌شود</b> — گوش کن و پهپادِ همان واژه را شکار کن (با دکمهٔ «پخش دوباره» می‌توانی دوباره بشنوی).
+   220→              شلیک درست = انفجار آتش‌و‌دودی و امتیاز با کمبو؛ شلیک غلط یا پایان زمان = یک ❤ کم می‌شود. خطا رفتن
+   221→              (شلیک به خالی) جریمه ندارد! صحنه با «شروع مأموریت» تمام‌صفحه می‌شود و با WASD داخل میدان می‌دوی —
+   222→              حرکت نرم با شتاب واقعی، Shift دویدن، Space پرش و C خم‌شدن؛ دیوارها، درها و جعبه‌ها پوشش واقعی‌اند و از داخلشان رد نمی‌شوی.
+   223→              سه سلاح داری — کلت، دژکوب سنگین و پمپ زون‌کن — با R ریلود می‌کنی و با کلیک راست اسکوپ می‌گیری،
+   224→              چهار نقشهٔ مأموریت با چیدمان متفاوت داری (جنگل، کویر، شب و دروازهٔ دو در به سبک دی‌داست۲ با برج دیدبانی)،
+   225→              حساسیت و زاویهٔ دید را در «گزینه‌ها» تنظیم می‌کنی و روی گوشی جوی‌استیک، شلیک، پرش و اسکوپ داری —
+   226→              دنبال گزینهٔ درست بگرد و بعد شلیک کن!
+   227→            </p>
+   228→          </div>
+   229→
+   230→          <div>
+   231→            <p className="mb-2 text-[13px] font-bold">حالت بازی</p>
+   232→            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+   233→              {(
+   234→                [
+   235→                  {
+   236→                    key: "word-hunt" as const,
+   237→                    title: "شکار واژه",
+   238→                    desc: "معنی فارسی روی HUD؛ واژهٔ انگلیسی درست را بین اهداف شکار کن.",
+   239→                    icon: Star,
+   240→                  },
+   241→                  {
+   242→                    key: "grammar-gate" as const,
+   243→                    title: "سد گرامری",
+   244→                    desc: "جملهٔ ناقص سؤال‌ها؛ گزینهٔ درست را نشانه بگیر و شلیک کن.",
+   245→                    icon: Swords,
+   246→                  },
+   247→                  {
+   248→                    key: "listening-hunt" as const,
+   249→                    title: "شنیداری",
+   250→                    desc: "سؤال پخش می‌شود، نه متن! واژهٔ شنیده‌شده را بین پهپادها پیدا و شکار کن.",
+   251→                    icon: Headphones,
+   252→                  },
+   253→                  {
+   254→                    key: "sentence-chain" as const,
+   255→                    title: "جملهٔ زنجیره",
+   256→                    desc: "سه واژه را به ترتیب شکار کن تا جمله از مکالمهٔ جزوه کامل شود.",
+   257→                    icon: ListOrdered,
+   258→                  },
+   259→                ] satisfies Array<{ key: Mode; title: string; desc: string; icon: typeof Star }>
+   260→              ).map((m) => (
+   261→                <button
+   262→                  key={m.key}
+   263→                  type="button"
+   264→                  aria-pressed={mode === m.key}
+   265→                  onClick={() => {
+   266→                    chipFeedback();
+   267→                    setMode(m.key);
+   268→                    setLesson(ALL_LESSONS);
+   269→                  }}
+   270→                  className={cn(
+   271→                    "min-h-11 rounded-2xl border p-3 text-right transition-all",
+   272→                    mode === m.key
+   273→                      ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
+   274→                      : "hover:border-primary/30 hover:bg-muted/50",
+   275→                  )}
+   276→                >
+   277→                  <span className="flex items-center gap-2 text-[13px] font-black">
+   278→                    <m.icon size={16} className={mode === m.key ? "text-primary" : "text-muted-foreground"} />
+   279→                    {m.title}
+   280→                  </span>
+   281→                  <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">{m.desc}</span>
+   282→                </button>
+   283→              ))}
+   284→            </div>
+   285→          </div>
+   286→
+   287→          {/* فاز F9 — سلاح مأموریت: سه سلاح با خشاب/ریلود/لگد متفاوت */}
+   288→          <div>
+   289→            <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+   290→              <Bomb size={14} className="text-emerald-500" />
+   291→              سلاح مأموریت
+   292→            </p>
+   293→            <div className="grid gap-2 sm:grid-cols-3">
+   294→              {(Object.values(WEAPONS) as WeaponConfig[]).map((w) => (
+   295→                <button
+   296→                  key={w.id}
+   297→                  type="button"
+   298→                  aria-pressed={weaponId === w.id}
+   299→                  onClick={() => setWeaponPref(w.id)}
+   300→                  className={cn(
+   301→                    "min-h-11 rounded-2xl border p-2.5 text-right transition-all",
+   302→                    weaponId === w.id
+   303→                      ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
+   304→                      : "hover:border-primary/30 hover:bg-muted/50",
+   305→                  )}
+   306→                >
+   307→                  <span className="flex items-center gap-1.5 text-[12px] font-black">
+   308→                    <w.icon size={13} className={weaponId === w.id ? "text-primary" : "text-muted-foreground"} />
+   309→                    {w.name}
+   310→                  </span>
+   311→                  <span className="mt-1 block text-[10px] leading-4 text-muted-foreground">{w.desc}</span>
+   312→                  <Badge
+   313→                    variant="outline"
+   314→                    className="mt-1.5 border-emerald-500/30 px-1.5 py-0 text-[9px] font-bold text-emerald-600 dark:text-emerald-400"
+   315→                  >
+   316→                    {w.stats}
+   317→                  </Badge>
+   318→                </button>
+   319→              ))}
+   320→            </div>
+   321→            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+   322→              حین بازی با نگه‌داشتن کلیک راست (دسکتاپ) یا دکمهٔ ذره‌بین (گوشی) اسکوپ می‌گیری — نشانه‌گیری دقیق‌تر، دید باریک‌تر.
+   323→            </p>
+   324→          </div>
+   325→
+   326→          {/* فاز F6/F10 — نقشهٔ مأموریت: چهار میدان با چیدمان واقعی متفاوت */}
+   327→          <div>
+   328→            <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+   329→              <MapPinned size={14} className="text-emerald-500" />
+   330→              نقشهٔ مأموریت
+   331→            </p>
+   332→            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+   333→              {(Object.values(MAPS) as MapConfig[]).map((m) => (
+   334→                <button
+   335→                  key={m.id}
+   336→                  type="button"
+   337→                  aria-pressed={mapId === m.id}
+   338→                  onClick={() => setMapPref(m.id)}
+   339→                  className={cn(
+   340→                    "min-h-11 rounded-2xl border p-2.5 text-right transition-all",
+   341→                    mapId === m.id
+   342→                      ? "border-primary bg-primary/8 shadow-md shadow-primary/10"
+   343→                      : "hover:border-primary/30 hover:bg-muted/50",
+   344→                  )}
+   345→                >
+   346→                  <span
+   347→                    aria-hidden
+   348→                    className={cn("mb-2 block h-12 w-full rounded-xl border border-black/10 shadow-inner", m.swatch)}
+   349→                  />
+   350→                  <span className="flex items-center gap-1.5 text-[12px] font-black">
+   351→                    {m.id === "forest" ? (
+   352→                      <Trees size={13} className="text-emerald-500" />
+   353→                    ) : m.id === "desert" ? (
+   354→                      <Sun size={13} className="text-amber-500" />
+   355→                    ) : m.id === "night" ? (
+   356→                      <MoonStar size={13} className="text-teal-300" />
+   357→                    ) : (
+   358→                      <DoorOpen size={13} className="text-yellow-600" />
+   359→                    )}
+   360→                    {m.name}
+   361→                  </span>
+   362→                  <span className="mt-1 block text-[10px] leading-4 text-muted-foreground">{m.desc}</span>
+   363→                </button>
+   364→              ))}
+   365→            </div>
+   366→            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+   367→              هر نقشه چیدمان خودش را دارد: دیوار، در، طاق و جعبه‌ها با برخورد واقعی — در «دروازهٔ دو در» (الهام از دی‌داست۲)
+   368→              درِ دوتایی میانه، گذرگاه بلند و تونل B داری. انتخابت ذخیره می‌شود؛ در «سکوت شب» کریستال‌ها درخشان‌ترند تا
+   369→              خوانایی حفظ شود.
+   370→            </p>
+   371→          </div>
+   372→
+   373→          <div>
+   374→            <p className="mb-2 text-[13px] font-bold">کدام درس؟</p>
+   375→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درس">
+   376→              <button
+   377→                type="button"
+   378→                aria-pressed={lesson === ALL_LESSONS}
+   379→                onClick={() => {
+   380→                  chipFeedback();
+   381→                  setLesson(ALL_LESSONS);
+   382→                }}
+   383→                className={chipCls(lesson === ALL_LESSONS)}
+   384→              >
+   385→                کل کتاب ({faNum(poolCount)} {mode === "grammar-gate" ? "سؤال" : mode === "sentence-chain" ? "جمله" : "واژه"})
+   386→              </button>
+   387→              {mode === "grammar-gate"
+   388→                ? quizLessons.map((l) => (
+   389→                    <button
+   390→                      key={l}
+   391→                      type="button"
+   392→                      aria-pressed={lesson === l}
+   393→                      onClick={() => {
+   394→                        chipFeedback();
+   395→                        setLesson(l);
+   396→                      }}
+   397→                      className={chipCls(lesson === l)}
+   398→                    >
+   399→                      {lessonLabel(l)} ({faNum(quizSeed.filter((s) => s.lesson === l).length)})
+   400→                    </button>
+   401→                  ))
+   402→                : mode === "sentence-chain"
+   403→                  ? chainLessons.map((l) => (
+   404→                      <button
+   405→                        key={l.lesson}
+   406→                        type="button"
+   407→                        aria-pressed={lesson === l.lesson}
+   408→                        onClick={() => {
+   409→                          chipFeedback();
+   410→                          setLesson(l.lesson);
+   411→                        }}
+   412→                        className={chipCls(lesson === l.lesson)}
+   413→                      >
+   414→                        {lessonLabel(l.lesson)} ({faNum(l.count)} جمله)
+   415→                      </button>
+   416→                    ))
+   417→                  : wordLessons.map((l) => (
+   418→                    <button
+   419→                      key={l.lesson}
+   420→                      type="button"
+   421→                      aria-pressed={lesson === l.lesson}
+   422→                      onClick={() => {
+   423→                        chipFeedback();
+   424→                        setLesson(l.lesson);
+   425→                      }}
+   426→                      className={chipCls(lesson === l.lesson)}
+   427→                    >
+   428→                      {l.label} ({faNum(vocabAll.filter((w) => w.lesson === l.lesson).length)})
+   429→                    </button>
+   430→                  ))}
+   431→            </div>
+   432→          </div>
+   433→
+   434→          <div>
+   435→            <p className="mb-2 text-[13px] font-bold">سبک کنترل</p>
+   436→            <button
+   437→              type="button"
+   438→              aria-pressed={tapMode}
+   439→              onClick={() => {
+   440→                chipFeedback();
+   441→                setTapMode((v) => !v);
+   442→              }}
+   443→              className={chipCls(tapMode)}
+   444→            >
+   445→              <span className="inline-flex items-center gap-1.5">
+   446→                <MousePointerClick size={14} />
+   447→                تپ ساده (بدون شلیک) {tapMode ? "— فعال" : ""}
+   448→              </span>
+   449→            </button>
+   450→            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+   451→              {tapMode ? (
+   452→                <>تپ روی هدف کافی است؛ روی دسکتاپ هم کلیک روی هدف می‌زند و کلیدهای ۱ تا ۴ هدف را انتخاب می‌کنند.</>
+   453→              ) : (
+   454→                <>دسکتاپ: کلیک قفلِ نشانگر، حرکت موس نشانه‌گیری، کلیک بعدی شلیک — موبایل: کشیدن نگاه، تپ روی هدف شلیک.</>
+   455→              )}
+   456→            </p>
+   457→          </div>
+   458→
+   459→          {/* فاز U1-00 — درجهٔ دشواری مأموریت: رفتار پهپاد تعقیب‌گر (سند fps-upgrade §U1) */}
+   460→          <div>
+   461→            <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+   462→              <Radar size={14} className="text-amber-500" />
+   463→              درجهٔ دشواری
+   464→            </p>
+   465→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب درجهٔ دشواری">
+   466→              <button
+   467→                type="button"
+   468→                aria-pressed={difficulty === "easy"}
+   469→                onClick={() => setDifficultyPref("easy")}
+   470→                className={chipCls(difficulty === "easy")}
+   471→              >
+   472→                آسان — بدون دشمن
+   473→              </button>
+   474→              <button
+   475→                type="button"
+   476→                aria-pressed={difficulty === "normal"}
+   477→                onClick={() => setDifficultyPref("normal")}
+   478→                className={chipCls(difficulty === "normal")}
+   479→              >
+   480→                عادی
+   481→              </button>
+   482→              <button
+   483→                type="button"
+   484→                aria-pressed={difficulty === "hard"}
+   485→                onClick={() => setDifficultyPref("hard")}
+   486→                className={chipCls(difficulty === "hard")}
+   487→              >
+   488→                سخت
+   489→              </button>
+   490→            </div>
+   491→            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+   492→              {difficulty === "easy"
+   493→                ? "میدان بدون پهپاد تعقیب‌گر — تمرکز کامل روی واژه‌ها و گزینه‌ها."
+   494→                : difficulty === "hard"
+   495→                  ? "پهپاد تعقیب‌گر چابک: زودتر متوجه سکونت می‌شود و تندتر تعقیب می‌کند — با شلیک به بدنه‌اش او را می‌گریزانی."
+   496→                  : "پهپاد تعقیب‌گر در میدان گشت می‌زند؛ اگر ساکن بمانی نزدیک می‌شود — حرکت کن یا با شلیک او را عقب بران."}
+   497→            </p>
+   498→          </div>
+   499→
+   500→          {/* فاز G2-e — تنظیم کیفیت گرافیک */}
+   501→          <div>
+   502→            <p className="mb-2 text-[13px] font-bold">کیفیت گرافیک</p>
+   503→            <div className="flex flex-wrap gap-2" role="group" aria-label="انتخاب کیفیت گرافیک">
+   504→              <button
+   505→                type="button"
+   506→                aria-pressed={quality === "high"}
+   507→                onClick={() => setQualityPref("high")}
+   508→                className={chipCls(quality === "high")}
+   509→              >
+   510→                کیفیت عادی
+   511→              </button>
+   512→              <button
+   513→                type="button"
+   514→                aria-pressed={quality === "low"}
+   515→                onClick={() => setQualityPref("low")}
+   516→                className={chipCls(quality === "low")}
+   517→              >
+   518→                کیفیت سبک (گوشی)
+   519→              </button>
+   520→            </div>
+   521→            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+   522→              {quality === "low"
+   523→                ? "کیفیت سبک: رزولوشن کمتر، بدون antialias، ذرات و اجسام تزئینی کمتر و ۳ هدف هم‌زمان به‌جای ۴ — روی گوشی‌های ضعیف روان‌تر است."
+   524→                : "کیفیت عادی: کامل‌ترین نمای صحنه (رفتار همیشگی بازی). انتخابت برای دفعات بعد ذخیره می‌شود."}
+   525→            </p>
+   526→          </div>
+   527→
+   528→          {/* فاز F5 — گزینه‌های نگاه: حساسیت، FOV و وارون‌سازی عمودی */}
+   529→          <div>
+   530→            <p className="mb-2 flex items-center gap-1.5 text-[13px] font-bold">
+   531→              <SlidersHorizontal size={14} className="text-emerald-500" />
+   532→              گزینه‌ها
+   533→            </p>
+   534→            <div className="space-y-4 rounded-2xl border p-4">
+   535→              <div>
+   536→                <div className="mb-1.5 flex items-center justify-between">
+   537→                  <span id="fps-sens-label" className="text-[12px] font-bold">
+   538→                    حساسیت نگاه
+   539→                  </span>
+   540→                  <Badge variant="secondary" className="text-[11px]">
+   541→                    {faNum(Math.round(sens * 100))}٪
+   542→                  </Badge>
+   543→                </div>
+   544→                <Slider
+   545→                  aria-labelledby="fps-sens-label"
+   546→                  min={SENS_MIN * 100}
+   547→                  max={SENS_MAX * 100}
+   548→                  step={5}
+   549→                  value={[Math.round(sens * 100)]}
+   550→                  onValueChange={(v) => setSensPref((v[0] ?? SENS_DEF * 100) / 100)}
+   551→                />
+   552→                <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+   553→                  سرعت چرخش با موس و کشیدن لمسی — پیش‌فرض ۱۰۰٪.
+   554→                </p>
+   555→              </div>
+   556→              <div>
+   557→                <div className="mb-1.5 flex items-center justify-between">
+   558→                  <span id="fps-fov-label" className="text-[12px] font-bold">
+   559→                    زاویهٔ دید (FOV)
+   560→                  </span>
+   561→                  <Badge variant="secondary" className="text-[11px]">
+   562→                    {faNum(fov)}°
+   563→                  </Badge>
+   564→                </div>
+   565→                <Slider
+   566→                  aria-labelledby="fps-fov-label"
+   567→                  min={FOV_MIN}
+   568→                  max={FOV_MAX}
+   569→                  step={2}
+   570→                  value={[fov]}
+   571→                  onValueChange={(v) => setFovPref(v[0] ?? FOV_DEF)}
+   572→                />
+   573→                <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+   574→                  عدد بالاتر = دید بازتر در میدان — حین بازی هم زنده اعمال می‌شود.
+   575→                </p>
+   576→              </div>
+   577→              <div className="flex items-center justify-between gap-3">
+   578→                <div>
+   579→                  <p className="text-[12px] font-bold">وارون‌سازی عمودی</p>
+   580→                  <p className="text-[10px] leading-4 text-muted-foreground">
+   581→                    عادت بازیکنان کنسول — بالا کشیدن، نگاه به پایین.
+   582→                  </p>
+   583→                </div>
+   584→                <Switch checked={invertY} onCheckedChange={setInvertPref} aria-label="وارون‌سازی عمودی نگاه" />
+   585→              </div>
+   586→              {/* فاز U5 — صدای میدان جهت‌دار: پن چپ/راست منابع متخاصم + امضای شنیداری FSM */}
+   587→              <div className="flex items-center justify-between gap-3">
+   588→                <div>
+   589→                  <p className="text-[12px] font-bold">صدای میدان (چپ/راست)</p>
+   590→                  <p className="text-[10px] leading-4 text-muted-foreground">
+   591→                    پهپاد، قفس و رئیس از سمت خودشان صدا می‌دهند — تعقیب، شارژ و گریز امضای شنیداری دارند.
+   592→                  </p>
+   593→                </div>
+   594→                <Switch checked={fieldSfx} onCheckedChange={setFieldSfxPref} aria-label="صدای میدان جهت‌دار" />
+   595→              </div>
+   596→            </div>
+   597→          </div>
+   598→
+   599→          {!poolOk && (
+   600→            <div className="rounded-xl border border-destructive/30 bg-destructive/8 p-3 text-[11px] leading-5 text-destructive">
+   601→              {mode === "word-hunt"
+   602→                ? `برای این انتخاب دست‌کم ${faNum(MIN_POOL_WORD)} واژه لازم است — درس دیگری یا «کل کتاب» را انتخاب کن.`
+   603→                : mode === "sentence-chain"
+   604→                  ? `برای این انتخاب دست‌کم ${faNum(MIN_POOL_CHAIN)} جملهٔ مناسب لازم است — درس دیگری یا «کل کتاب» را انتخاب کن.`
+   605→                  : `برای این انتخاب دست‌کم ${faNum(MIN_POOL_QUIZ)} سؤال لازم است — محدودهٔ دیگری را انتخاب کن.`}
+   606→            </div>
+   607→          )}
+   608→
+   609→          {/* فاز F8 — هدف‌های هوشمند: فرار، موج، طلایی */}
+   610→          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/8 p-3 text-[11px] leading-5 text-muted-foreground">
+   611→            <Zap size={15} className="mt-0.5 shrink-0 text-amber-500" />
+   612→            <p>
+   613→              میدان هوشمند شد: <b>پهپادهای غلط</b> وقتی نشانه را رویشان نگه داری به کناره‌ها فرار می‌کنند — از زاویهٔ دیگر
+   614→              نزدیک شو! هر <b>۵ پاسخ</b> یک موج سخت‌تر با دشمنان سریع‌تر شروع می‌شود (تا موج ۶) و هر از گاهی
+   615→              <b>هدف ویژهٔ HVT</b> با حلقهٔ هشدار قرمز ۳ثانیه‌ای ظاهر می‌شود: حذفش ۲۰ امتیاز بونوس دارد و قلب نمی‌سوزاند.
+   616→              پایان مأموریت هم <b>رتبهٔ نظامی</b> می‌گیری (S تا D بر اساس دقت و امتیاز).
+   617→            </p>
+   618→          </div>
+   619→
+   620→          {bestVal !== null && (
+   621→            <Badge variant="outline" className="gap-1.5 border-amber-500/40 text-amber-600 dark:text-amber-400">
+   622→              <Trophy size={12} />
+   623→              بهترین امتیاز ({modeName(mode)}{tapMode ? " · تپ ساده" : ""}): {faNum(bestVal)}
+   624→            </Badge>
+   625→          )}
+   626→
+   627→          <Button size="lg" className="h-12 w-full gap-2 text-base" disabled={!poolOk} onClick={start}>
+   628→            <Play size={18} />
+   629→            شروع مأموریت
+   630→          </Button>
+   631→        </CardContent>
+   632→      </Card>
+   633→      {/* فاز G2-e — آموزش یک‌بارنمایش در اولین ورود */}
+   634→      <TutorialOverlay
+   635→        game={GAME_KEY}
+   636→        steps={TUTORIAL_STEPS}
+   637→        open={tutorialOpen}
+   638→        onOpenChange={handleTutorialOpenChange}
+   639→      />
+   640→    </>
+   641→  );
+   642→}
+   643→

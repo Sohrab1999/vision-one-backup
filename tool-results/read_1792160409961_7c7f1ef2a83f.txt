@@ -1,0 +1,673 @@
+     1→"use client";
+     2→
+     3→import { useEffect, useMemo, useState } from "react";
+     4→import {
+     5→  BookOpen,
+     6→  GraduationCap,
+     7→  ClipboardList,
+     8→  FileText,
+     9→  Library,
+    10→  Repeat,
+    11→  Bot,
+    12→  ListOrdered,
+    13→  Sparkles,
+    14→  Quote,
+    15→  BadgeCheck,
+    16→  Volume2,
+    17→  ArrowLeft,
+    18→  Trophy,
+    19→  Target,
+    20→  Flame,
+    21→  Layers,
+    22→  TrendingUp,
+    23→  NotebookPen,
+    24→  CheckCircle2,
+    25→  CalendarCheck,
+    26→  CalendarRange,
+    27→  Star,
+    28→} from "lucide-react";
+    29→import { Button } from "@/components/ui/button";
+    30→import { Card, CardContent } from "@/components/ui/card";
+    31→import { Badge } from "@/components/ui/badge";
+    32→import { Progress } from "@/components/ui/progress";
+    33→import { cn } from "@/lib/utils";
+    34→import {
+    35→  ResponsiveContainer,
+    36→  AreaChart,
+    37→  Area,
+    38→  XAxis,
+    39→  YAxis,
+    40→  Tooltip as ChartTooltip,
+    41→} from "recharts";
+    42→import { useBook, useBookData } from "@/lib/book-context";
+    43→import type { VocabEntry } from "@/data/types";
+    44→import { useLearnedWords } from "@/lib/learned-store";
+    45→import { useUserName } from "@/lib/name-store";
+    46→import { useStreak } from "@/lib/streak-store";
+    47→import { useMistakes } from "@/lib/mistakes-store";
+    48→import { useQuestionStars } from "@/lib/question-star-store";
+    49→import { useDailyGoal } from "@/lib/goal-store";
+    50→import { useDailyInfo } from "@/lib/daily-store";
+    51→import { useWeeklyInfo } from "@/lib/weekly-store";
+    52→import { usePulses } from "@/lib/use-daily-pulse";
+    53→import type { ViewId } from "./app-header";
+    54→import { SpeakButton } from "./speak-button";
+    55→import { NextActionCard } from "./next-action-card";
+    56→
+    57→interface AttemptStats {
+    58→  attempts: number;
+    59→  accuracy: number;
+    60→  best: number;
+    61→}
+    62→
+    63→interface ChartPoint {
+    64→  id: string;
+    65→  accuracy: number;
+    66→  category: string;
+    67→  idx: number;
+    68→}
+    69→
+    70→function useWordOfDay(vocab: VocabEntry[]) {
+    71→  return useMemo(() => {
+    72→    const day = Math.floor(Date.now() / 86400000);
+    73→    return vocab[day % vocab.length];
+    74→  }, [vocab]);
+    75→}
+    76→
+    77→/** کارت‌های بخش‌های کتاب — آمارها از دادهٔ کتاب فعال می‌آیند */
+    78→function useFeatureCards(): {
+    79→  view: ViewId;
+    80→  title: string;
+    81→  desc: string;
+    82→  icon: React.ComponentType<{ size?: number | string; className?: string }>;
+    83→  stat?: string;
+    84→}[] {
+    85→  const data = useBookData();
+    86→  return useMemo(
+    87→    () => [
+    88→      { view: "contents", title: "فهرست فصل‌ها", desc: "مسیر یادگیری گام‌به‌گام کتاب", icon: ListOrdered },
+    89→      { view: "vocab", title: "واژگان تعاملی", desc: "جستجو، کارت فلپ و علامت‌گذاری واژه‌های یادگرفته", icon: BookOpen, stat: `${data.stats.words.toLocaleString("fa-IR")} واژه` },
+    90→      { view: "flashcards", title: "تمرین واژه‌ها", desc: "فلاش‌کارت SRS و بازی تطبیق واژه و معنی", icon: Layers, stat: "SRS" },
+    91→      { view: "grammar", title: "درسنامه گرامر", desc: "درسنامه‌های گرامر با جدول‌ها و مثال‌های ترجمه‌شده", icon: GraduationCap, stat: `${data.stats.grammarLessons.toLocaleString("fa-IR")} درسنامه` },
+    92→      { view: "quiz", title: "آزمون تعاملی", desc: `بانک سؤال واقعی جزوه با فیلتر سطح، چالش روزانه و هفتگی`, icon: ClipboardList, stat: `${data.stats.questions.toLocaleString("fa-IR")} تست` },
+    93→      { view: "stats", title: "آمار و نشان‌ها", desc: "کارنامه یادگیری، نمودار دقت و ۱۶ نشان افتخار", icon: TrendingUp, stat: "۱۶ نشان" },
+    94→      { view: "texts", title: "متن و مکالمه", desc: "ریدینگ‌ها و مکالمه‌ها با روایت صوتی", icon: FileText, stat: `${(data.stats.readings + data.stats.conversations).toLocaleString("fa-IR")} متن` },
+    95→      { view: "dict", title: "دیکشنری", desc: "تعریف انگلیسی به انگلیسی با تلفظ و مثال", icon: Library, stat: `${data.stats.dictionary.toLocaleString("fa-IR")} مدخل` },
+    96→      { view: "verbs", title: "افعال بی‌قاعده", desc: "جدول کامل افعال با جستجو", icon: Repeat, stat: `${data.stats.verbs.toLocaleString("fa-IR")} فعل` },
+    97→      { view: "tutor", title: "دستیار هوشمند", desc: "تمرین مکالمه با معلم AI فارسی‌زبان", icon: Bot, stat: "۲۴/۷" },
+    98→    ],
+    99→    [data.stats],
+   100→  );
+   101→}
+   102→
+   103→export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
+   104→  const { bookId } = useBook();
+   105→  const data = useBookData();
+   106→  const wordOfDay = useWordOfDay(data.vocab.all);
+   107→  const featureCards = useFeatureCards();
+   108→  const { count: learned } = useLearnedWords();
+   109→  const userName = useUserName();
+   110→  const streak = useStreak();
+   111→  const { count: mistakeCount } = useMistakes();
+   112→  const { count: starredQCount } = useQuestionStars();
+   113→  const daily = useDailyGoal();
+   114→  const dailyInfo = useDailyInfo();
+   115→  const weekly = useWeeklyInfo();
+   116→  const pulses = usePulses();
+   117→  const [stats, setStats] = useState<AttemptStats | null>(null);
+   118→  const [chart, setChart] = useState<ChartPoint[]>([]);
+   119→
+   120→  useEffect(() => {
+   121→    let cancelled = false;
+   122→    fetch(`/api/attempts?book=${bookId}`)
+   123→      .then((r) => (r.ok ? r.json() : null))
+   124→      .then((d) => {
+   125→        if (cancelled || !d) return;
+   126→        if (d.stats) setStats(d.stats);
+   127→        if (Array.isArray(d.chart)) {
+   128→          setChart(
+   129→            d.chart.map((c: Omit<ChartPoint, "idx">, i: number) => ({
+   130→              ...c,
+   131→              idx: i + 1,
+   132→            })),
+   133→          );
+   134→        }
+   135→      })
+   136→      .catch(() => undefined);
+   137→    return () => {
+   138→      cancelled = true;
+   139→    };
+   140→  }, [bookId]);
+   141→
+   142→  const learnedPct = Math.round((learned / data.stats.words) * 100);
+   143→
+   144→  return (
+   145→    <div className="space-y-8 pb-4">
+   146→      {/* ── جلد کتاب ─────────────────────────────── */}
+   147→      <section className="relative overflow-hidden rounded-2xl border bg-gradient-to-bl from-primary/15 via-card to-accent/25 dot-grid">
+   148→        <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
+   149→        <div className="absolute -bottom-20 -right-10 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
+   150→        <div className="hero-ring pointer-events-none absolute -left-24 top-1/2 hidden h-72 w-72 -translate-y-1/2 md:block" />
+   151→        <div className="hero-ring-reverse pointer-events-none absolute -right-28 -top-28 hidden h-80 w-80 md:block" />
+   152→
+   153→        <div className="relative mx-auto max-w-4xl px-4 py-12 sm:py-16 text-center space-y-5">
+   154→          <div className="rise-in flex flex-wrap items-center justify-center gap-2">
+   155→            <Badge className="gap-1 bg-accent text-accent-foreground border-accent/40 text-[12px]">
+   156→              <BadgeCheck size={13} />
+   157→              {data.info.price}
+   158→            </Badge>
+   159→            <Badge variant="outline" className="text-[12px]">
+   160→              {data.info.edition}
+   161→            </Badge>
+   162→            <Badge variant="secondary" className="font-en text-[11px]">
+   163→              {data.info.subtitle}
+   164→            </Badge>
+   165→          </div>
+   166→
+   167→          <p className="rise-in text-[12px] font-bold text-primary">
+   168→            {userName ? `سلام ${userName}! 👋 خوش برگشتی` : `به کتاب وب «${data.info.subtitle}» خوش آمدی 👋`}
+   169→            {streak.count > 0 && (
+   170→              <span className="mr-2 inline-flex translate-y-px items-center gap-1 rounded-full border border-orange-500/40 bg-orange-500/10 px-2 py-0.5 text-[10px] font-black text-orange-500">
+   171→                <Flame size={11} className="streak-flame" />
+   172→                زنجیره {streak.count.toLocaleString("fa-IR")} روزه
+   173→              </span>
+   174→            )}
+   175→          </p>
+   176→
+   177→          <h1 className="rise-in rise-in-1 text-3xl sm:text-5xl font-black leading-[1.25]">
+   178→            <span className="bg-gradient-to-l from-primary via-emerald-400 to-accent-foreground bg-clip-text text-transparent">
+   179→              {data.info.title}
+   180→            </span>
+   181→          </h1>
+   182→
+   183→          <p className="rise-in rise-in-2 mx-auto max-w-2xl text-sm sm:text-base text-muted-foreground leading-7">
+   184→            حالا به شکل یک کتاب وب تعاملی؛ با روایت صوتی واژه‌ها و متن‌ها، درسنامه‌های گرامر،
+   185→            بانک {data.stats.questions.toLocaleString("fa-IR")} تست واقعی جزوه و دستیار هوشمند مکالمه — همه در یک‌جا.
+   186→          </p>
+   187→
+   188→          <p className="rise-in rise-in-2 text-[12px] text-muted-foreground/80">
+   189→            {data.info.author}
+   190→          </p>
+   191→
+   192→          <div className="rise-in rise-in-3 flex flex-wrap items-center justify-center gap-3 pt-1">
+   193→            <Button size="lg" onClick={() => onNavigate("contents")} className="gap-2 shadow-lg shadow-primary/30 text-base h-12 px-6">
+   194→              <BookOpen size={19} />
+   195→              شروع مطالعه
+   196→              <ArrowLeft size={17} />
+   197→            </Button>
+   198→            <Button size="lg" variant="outline" onClick={() => onNavigate("quiz")} className="gap-2 h-12 px-6 text-base">
+   199→              <ClipboardList size={18} />
+   200→              آزمون بده
+   201→            </Button>
+   202→          </div>
+   203→        </div>
+   204→      </section>
+   205→
+   206→      {/* ── قدم بعدی — موتور Next Best Action (N1-1.c) ─────────────────────────────── */}
+   207→      <NextActionCard onNavigate={onNavigate} />
+   208→
+   209→      {/* ── هدف روزانه ─────────────────────────────── */}
+   210→      <section>
+   211→        <Card
+   212→          className={`rise-in overflow-hidden border transition-colors ${
+   213→            daily.todayCount >= daily.goal
+   214→              ? "border-primary/45 bg-gradient-to-l from-primary/12 via-card to-accent/15"
+   215→              : "border-primary/20 bg-gradient-to-l from-primary/6 via-card to-accent/8"
+   216→          }`}
+   217→        >
+   218→          <CardContent className="flex flex-wrap items-center gap-5 p-5">
+   219→            {/* حلقه پیشرفت */}
+   220→            <div className="relative h-24 w-24 shrink-0">
+   221→              <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+   222→                <circle cx="60" cy="60" r="52" fill="none" strokeWidth="11" className="stroke-muted" />
+   223→                <circle
+   224→                  cx="60"
+   225→                  cy="60"
+   226→                  r="52"
+   227→                  fill="none"
+   228→                  strokeWidth="11"
+   229→                  strokeLinecap="round"
+   230→                  className={daily.todayCount >= daily.goal ? "stroke-amber-500" : "stroke-primary"}
+   231→                  strokeDasharray={`${(daily.pct / 100) * 326.7} 326.7`}
+   232→                  style={{ transition: "stroke-dasharray 0.7s cubic-bezier(0.22,1,0.36,1)" }}
+   233→                />
+   234→              </svg>
+   235→              <div className="absolute inset-0 flex flex-col items-center justify-center">
+   236→                <span className="text-lg font-black leading-none">
+   237→                  {daily.todayCount.toLocaleString("fa-IR")}
+   238→                  <span className="text-[11px] font-bold text-muted-foreground"> / {daily.goal.toLocaleString("fa-IR")}</span>
+   239→                </span>
+   240→                <span className="mt-0.5 text-[10px] font-bold text-muted-foreground">واژه امروز</span>
+   241→              </div>
+   242→            </div>
+   243→
+   244→            <div className="min-w-0 flex-1 space-y-2.5">
+   245→              <div className="flex flex-wrap items-center gap-2">
+   246→                <h2 className="flex items-center gap-2 text-sm font-black">
+   247→                  <Target size={16} className="text-primary" />
+   248→                  هدف روزانه
+   249→                </h2>
+   250→                {daily.todayCount >= daily.goal ? (
+   251→                  <Badge className="gap-1 bg-primary text-primary-foreground text-[10px] shadow-sm shadow-primary/25">
+   252→                    <CheckCircle2 size={11} />
+   253→                    امروز انجام شد! 🎉
+   254→                  </Badge>
+   255→                ) : (
+   256→                  <Badge variant="secondary" className="text-[10px]">
+   257→                    {(daily.goal - daily.todayCount).toLocaleString("fa-IR")} واژه تا هدف
+   258→                  </Badge>
+   259→                )}
+   260→              </div>
+   261→              <p className="text-[11.5px] leading-5 text-muted-foreground">
+   262→                {daily.todayCount >= daily.goal
+   263→                  ? "آفرین! هدف امروز کامل شد — زنجیره یادگیری‌ات هم شارژ شد 🔥"
+   264→                  : "هر واژه‌ای که علامت بزنی این‌جا شمرده می‌شود؛ هدف را انتخاب کن و روزانه برس."}
+   265→              </p>
+   266→              <div className="flex flex-wrap items-center gap-1.5">
+   267→                <span className="ml-0.5 text-[11px] font-bold text-muted-foreground">هدف:</span>
+   268→                {[5, 10, 15, 20].map((n) => (
+   269→                  <button
+   270→                    key={n}
+   271→                    type="button"
+   272→                    onClick={() => daily.setGoal(n)}
+   273→                    aria-pressed={daily.goal === n}
+   274→                    className={cn(
+   275→                      "h-9 min-w-9 rounded-full border px-2.5 text-xs font-black transition-all active:scale-95",
+   276→                      daily.goal === n
+   277→                        ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+   278→                        : "text-muted-foreground hover:bg-muted",
+   279→                    )}
+   280→                  >
+   281→                    {n.toLocaleString("fa-IR")}
+   282→                  </button>
+   283→                ))}
+   284→                {/* نوار ۷ روز اخیر */}
+   285→                <span className="mr-2 hidden items-center gap-1 sm:flex" title="فعالیت ۷ روز اخیر">
+   286→                  {daily.week.map((d) => (
+   287→                    <span
+   288→                      key={d.day}
+   289→                      className={cn(
+   290→                        "h-2.5 w-2.5 rounded-full border",
+   291→                        d.count >= daily.goal
+   292→                          ? "border-amber-500/60 bg-amber-500"
+   293→                          : d.count > 0
+   294→                            ? "border-primary/50 bg-primary/60"
+   295→                            : "bg-muted",
+   296→                      )}
+   297→                    />
+   298→                  ))}
+   299→                </span>
+   300→              </div>
+   301→            </div>
+   302→
+   303→            <Button onClick={() => onNavigate("vocab")} className="shrink-0 gap-2">
+   304→              <BookOpen size={16} />
+   305→              یادگیری واژه‌ها
+   306→            </Button>
+   307→          </CardContent>
+   308→        </Card>
+   309→      </section>
+   310→
+   311→      {/* ── چالش روزانه + هفتگی — در دسکتاپ کنار هم (بهینه‌سازی xl) ── */}
+   312→      <div className="grid gap-3 lg:grid-cols-2">
+   313→      {/* ── چالش روزانه ─────────────────────────────── */}
+   314→      <button
+   315→        type="button"
+   316→        onClick={() => onNavigate("quiz")}
+   317→        className="rise-in group flex w-full flex-wrap items-center gap-4 rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4 text-right transition-all hover:border-amber-500/70 hover:shadow-lg hover:shadow-amber-500/10 active:scale-[0.99] active:shadow-md"
+   318→      >
+   319→        <span className="daily-pulse flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 transition-transform group-hover:scale-105 group-active:scale-95 dark:text-amber-400">
+   320→          <CalendarCheck size={22} />
+   321→        </span>
+   322→        <span className="min-w-0 flex-1">
+   323→          <span className="flex flex-wrap items-center gap-2 text-[14px] font-black">
+   324→            چالش روزانه
+   325→            <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+   326→              ۵ سؤال · امروز
+   327→            </Badge>
+   328→            {dailyInfo.doneToday ? (
+   329→              <Badge className="gap-1 bg-primary text-[10px] text-primary-foreground">
+   330→                <CheckCircle2 size={10} />
+   331→                انجام شد — {dailyInfo.bestToday?.toLocaleString("fa-IR")}٪
+   332→              </Badge>
+   333→            ) : (
+   334→              <Badge variant="secondary" className="text-[10px]">منتظر توئه</Badge>
+   335→            )}
+   336→          </span>
+   337→          <span className="mt-1 block text-[11.5px] leading-5 text-muted-foreground">
+   338→            {dailyInfo.doneToday
+   339→              ? `رکورد امروز ${dailyInfo.bestToday?.toLocaleString("fa-IR")}٪ — دوباره امتحان کن و بهترش کن! (مجموع ${dailyInfo.totalDone.toLocaleString("fa-IR")} چالش)`
+   340→              : "هر روز ۵ سؤال جدید؛ سؤال‌های امروز برای همه یکسانه — آزمونش بده و جایگاهت در کلاس رو بساز."}
+   341→          </span>
+   342→          {pulses.daily && pulses.daily.players > 0 && (
+   343→            <span className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-amber-700 dark:text-amber-300">
+   344→              <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+   345→              امروز {pulses.daily.players.toLocaleString("fa-IR")} نفر چالش دادند
+   346→              {pulses.daily.avg !== null && <> — میانگین دقت {pulses.daily.avg.toLocaleString("fa-IR")}٪</>}
+   347→              {pulses.daily.best !== null && pulses.daily.best > 0 && (
+   348→                <span className="text-muted-foreground">· بهترین {pulses.daily.best.toLocaleString("fa-IR")}٪</span>
+   349→              )}
+   350→            </span>
+   351→          )}
+   352→        </span>
+   353→        <span className="flex shrink-0 items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2 text-[12.5px] font-black text-white shadow-md shadow-amber-500/25 transition-transform group-hover:scale-105 group-active:scale-95">
+   354→          {dailyInfo.doneToday ? "دوباره" : "شروع چالش"}
+   355→          <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
+   356→        </span>
+   357→      </button>
+   358→
+   359→      {/* ── چالش هفتگی ─────────────────────────────── */}
+   360→      <button
+   361→        type="button"
+   362→        onClick={() => onNavigate("quiz")}
+   363→        className="rise-in group flex w-full flex-wrap items-center gap-4 rounded-2xl border border-violet-500/40 bg-gradient-to-l from-violet-500/12 via-violet-500/5 to-transparent p-4 text-right transition-all hover:border-violet-500/70 hover:shadow-lg hover:shadow-violet-500/10 active:scale-[0.99] active:shadow-md"
+   364→      >
+   365→        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600 transition-transform group-hover:scale-105 dark:text-violet-400">
+   366→          <CalendarRange size={22} />
+   367→        </span>
+   368→        <span className="min-w-0 flex-1">
+   369→          <span className="flex flex-wrap items-center gap-2 text-[14px] font-black">
+   370→            چالش هفتگی
+   371→            <Badge className="border-violet-500/40 bg-violet-500/15 text-[10px] text-violet-700 dark:text-violet-300">
+   372→              هفتهٔ {weekly.weekIndex.toLocaleString("fa-IR")} · ۱۰ سؤال
+   373→            </Badge>
+   374→            {weekly.doneThisWeek ? (
+   375→              <Badge className="gap-1 bg-primary text-[10px] text-primary-foreground">
+   376→                <CheckCircle2 size={10} />
+   377→                انجام شد — {weekly.bestThisWeek?.toLocaleString("fa-IR")}٪
+   378→              </Badge>
+   379→            ) : (
+   380→              <Badge variant="secondary" className="text-[10px]">منتظر توئه</Badge>
+   381→            )}
+   382→          </span>
+   383→          <span className="mt-1 block text-[11.5px] leading-5 text-muted-foreground">
+   384→            {weekly.doneThisWeek
+   385→              ? `رکورد این هفته ${weekly.bestThisWeek?.toLocaleString("fa-IR")}٪ — تا شنبهٔ بعد فرصت داری بهترش کنی! (مجموع ${weekly.totalDone.toLocaleString("fa-IR")} هفته)`
+   386→              : "هر هفته ۱۰ سؤال قطعی جدید؛ سؤال‌های این هفته برای همه کلاس یکسانه — تا شنبه فرصت داری."}
+   387→          </span>
+   388→          {pulses.weekly && pulses.weekly.players > 0 && (
+   389→            <span className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10.5px] font-bold text-violet-700 dark:text-violet-300">
+   390→              <span className="soft-ping relative inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500" />
+   391→              این هفته {pulses.weekly.players.toLocaleString("fa-IR")} نفر چالش دادند
+   392→              {pulses.weekly.avg !== null && <> — میانگین دقت {pulses.weekly.avg.toLocaleString("fa-IR")}٪</>}
+   393→              {pulses.weekly.best !== null && pulses.weekly.best > 0 && (
+   394→                <span className="text-muted-foreground">· بهترین {pulses.weekly.best.toLocaleString("fa-IR")}٪</span>
+   395→              )}
+   396→            </span>
+   397→          )}
+   398→        </span>
+   399→        <span className="flex shrink-0 items-center gap-1.5 rounded-xl bg-violet-600 px-4 py-2 text-[12.5px] font-black text-white shadow-md shadow-violet-600/25 transition-transform group-hover:scale-105 group-active:scale-95">
+   400→          {weekly.doneThisWeek ? "دوباره" : "شروع چالش"}
+   401→          <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
+   402→        </span>
+   403→      </button>
+   404→      </div>
+   405→
+   406→      {/* ── نوار آمار ─────────────────────────────── */}
+   407→      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+   408→        {[
+   409→          { icon: BookOpen, label: "واژه", value: data.stats.words, color: "text-primary" },
+   410→          { icon: ClipboardList, label: "تست", value: data.stats.questions, color: "text-amber-500" },
+   411→          { icon: FileText, label: "متن و مکالمه", value: data.stats.readings + data.stats.conversations, color: "text-teal-500" },
+   412→          { icon: Library, label: "مدخل دیکشنری", value: data.stats.dictionary, color: "text-orange-500" },
+   413→        ].map((s, i) => (
+   414→          <Card key={s.label} className={`rise-in rise-in-${i + 1} border/60`}>
+   415→            <CardContent className="flex items-center gap-3 p-4">
+   416→              <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-muted ${s.color}`}>
+   417→                <s.icon size={19} />
+   418→              </span>
+   419→              <div>
+   420→                <p className="text-xl font-black leading-none">{s.value.toLocaleString("fa-IR")}</p>
+   421→                <p className="mt-1 text-[11px] text-muted-foreground">{s.label}</p>
+   422→              </div>
+   423→            </CardContent>
+   424→          </Card>
+   425→        ))}
+   426→      </section>
+   427→
+   428→      {/* ── پیشرفت من + واژه روز ─────────────────────────────── */}
+   429→      <section className="grid gap-3 md:grid-cols-2">
+   430→        <Card className="rise-in">
+   431→          <CardContent className="p-5 space-y-4">
+   432→            <div className="flex items-center justify-between">
+   433→              <h2 className="flex items-center gap-2 text-sm font-bold">
+   434→                <Flame size={16} className="text-orange-500" />
+   435→                پیشرفت من
+   436→              </h2>
+   437→              <Badge variant="secondary" className="text-[11px]">
+   438→                {learned.toLocaleString("fa-IR")} از {data.stats.words.toLocaleString("fa-IR")} واژه
+   439→              </Badge>
+   440→            </div>
+   441→            <Progress value={learnedPct} className="h-2.5" />
+   442→            <div className="grid grid-cols-3 gap-2 text-center">
+   443→              <div className="rounded-xl bg-muted/60 p-3">
+   444→                <Trophy size={16} className="mx-auto text-amber-500" />
+   445→                <p className="mt-1.5 text-lg font-black leading-none">
+   446→                  {stats ? `${stats.best}٪` : "—"}
+   447→                </p>
+   448→                <p className="mt-1 text-[10px] text-muted-foreground">بهترین رکورد آزمون</p>
+   449→              </div>
+   450→              <div className="rounded-xl bg-muted/60 p-3">
+   451→                <Target size={16} className="mx-auto text-primary" />
+   452→                <p className="mt-1.5 text-lg font-black leading-none">
+   453→                  {stats ? `${stats.accuracy}٪` : "—"}
+   454→                </p>
+   455→                <p className="mt-1 text-[10px] text-muted-foreground">دقت کل پاسخ‌ها</p>
+   456→              </div>
+   457→              <div className="rounded-xl bg-muted/60 p-3">
+   458→                <ClipboardList size={16} className="mx-auto text-teal-500" />
+   459→                <p className="mt-1.5 text-lg font-black leading-none">
+   460→                  {stats ? stats.attempts.toLocaleString("fa-IR") : "۰"}
+   461→                </p>
+   462→                <p className="mt-1 text-[10px] text-muted-foreground">آزمون برگزارشده</p>
+   463→              </div>
+   464→            </div>
+   465→            <Button variant="outline" size="sm" className="w-full" onClick={() => onNavigate("vocab")}>
+   466→              ادامه یادگیری واژه‌ها
+   467→            </Button>
+   468→
+   469→            {/* نمودار روند دقت */}
+   470→            {chart.length >= 2 && (
+   471→              <div className="rounded-xl border bg-card/60 p-3">
+   472→                <p className="mb-1 flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground">
+   473→                  <TrendingUp size={12} className="text-primary" />
+   474→                  روند دقت {chart.length.toLocaleString("fa-IR")} آزمون آخر (٪)
+   475→                </p>
+   476→                <div className="h-28" dir="ltr">
+   477→                  <ResponsiveContainer width="100%" height="100%">
+   478→                    <AreaChart data={chart} margin={{ top: 4, right: 4, bottom: 0, left: -22 }}>
+   479→                      <defs>
+   480→                        <linearGradient id="acc" x1="0" y1="0" x2="0" y2="1">
+   481→                          <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.45} />
+   482→                          <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.02} />
+   483→                        </linearGradient>
+   484→                      </defs>
+   485→                      <XAxis
+   486→                        dataKey="idx"
+   487→                        tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+   488→                        axisLine={false}
+   489→                        tickLine={false}
+   490→                      />
+   491→                      <YAxis
+   492→                        domain={[0, 100]}
+   493→                        tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+   494→                        axisLine={false}
+   495→                        tickLine={false}
+   496→                      />
+   497→                      <ChartTooltip
+   498→                        contentStyle={{
+   499→                          background: "var(--card)",
+   500→                          border: "1px solid var(--border)",
+   501→                          borderRadius: 12,
+   502→                          fontSize: 12,
+   503→                          fontFamily: "inherit",
+   504→                        }}
+   505→                        formatter={(v: number) => [`${v}٪`, "دقت"]}
+   506→                        labelFormatter={(l: number) => `آزمون ${l}`}
+   507→                      />
+   508→                      <Area
+   509→                        type="monotone"
+   510→                        dataKey="accuracy"
+   511→                        stroke="var(--primary)"
+   512→                        strokeWidth={2.5}
+   513→                        fill="url(#acc)"
+   514→                        dot={{ r: 3, fill: "var(--primary)" }}
+   515→                      />
+   516→                    </AreaChart>
+   517→                  </ResponsiveContainer>
+   518→                </div>
+   519→              </div>
+   520→            )}
+   521→          </CardContent>
+   522→        </Card>
+   523→
+   524→        <Card className="rise-in rise-in-1 border-primary/25 bg-gradient-to-bl from-primary/8 to-transparent">
+   525→          <CardContent className="p-5 space-y-3">
+   526→            <div className="flex items-center justify-between">
+   527→              <h2 className="flex items-center gap-2 text-sm font-bold">
+   528→                <Sparkles size={16} className="text-amber-500" />
+   529→                واژه‌ی امروز
+   530→              </h2>
+   531→              <Badge variant="secondary" className="text-[11px]">
+   532→                {wordOfDay.lessonLabel}
+   533→              </Badge>
+   534→            </div>
+   535→            <div className="flex items-center gap-3 rounded-xl bg-background/60 p-4 border">
+   536→              <SpeakButton text={wordOfDay.word} size="lg" />
+   537→              <div className="min-w-0">
+   538→                <p dir="ltr" className="font-en text-2xl font-black text-primary truncate">
+   539→                  {wordOfDay.word}
+   540→                </p>
+   541→                <p className="mt-0.5 text-sm text-muted-foreground truncate">{wordOfDay.meaning}</p>
+   542→              </div>
+   543→            </div>
+   544→            <p className="text-[11px] leading-5 text-muted-foreground">
+   545→              هر روز یک واژه از {data.stats.words.toLocaleString("fa-IR")} واژه کتاب را بشناس. روی دکمه بلندگو بزن تا تلفظش را بشنوی.
+   546→            </p>
+   547→          </CardContent>
+   548→        </Card>
+   549→      </section>
+   550→
+   551→      {/* ── دفتر اشتباهات + ستاره‌دارها — در دسکتاپ کنار هم ──
+   552→          فاز ۴ (QA رگرسیون): grid-cols-1 صریح — بدون آن، ترک ضمنیِ auto در موبایل
+   553→          max-contentِ دکمهٔ بنر (متن بلند truncate) را می‌سازد و از عرض ۳۹۰ بیرون می‌زند */}
+   554→      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+   555→      {/* ── دفتر اشتباهات ─────────────────────────────── */}
+   556→      {mistakeCount > 0 && (
+   557→        <button
+   558→          type="button"
+   559→          onClick={() => onNavigate("quiz")}
+   560→          className="rise-in group flex w-full flex-wrap items-center gap-3 rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4 text-right transition-all hover:border-amber-500/70 hover:shadow-lg hover:shadow-amber-500/10 active:scale-[0.99] active:shadow-md"
+   561→        >
+   562→          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 transition-transform group-hover:scale-105 dark:text-amber-400">
+   563→            <NotebookPen size={20} />
+   564→          </span>
+   565→          <span className="min-w-0 flex-1">
+   566→            <span className="flex items-center gap-2 text-[13.5px] font-black">
+   567→              دفتر اشتباهات تو
+   568→              <Badge className="border-amber-500/40 bg-amber-500/15 text-[10px] text-amber-700 dark:text-amber-300">
+   569→                {mistakeCount.toLocaleString("fa-IR")} سؤال
+   570→              </Badge>
+   571→            </span>
+   572→            <span className="mt-0.5 block truncate text-[11.5px] text-muted-foreground">
+   573→              {mistakeCount.toLocaleString("fa-IR")} سؤال منتظر مروره — با حالت «مرور هوشمند» هر کدوم رو درست جواب بدی، از دفتر حذف می‌شه.
+   574→            </span>
+   575→          </span>
+   576→          <ArrowLeft size={17} className="shrink-0 text-amber-600 transition-transform group-hover:-translate-x-1 dark:text-amber-400" />
+   577→        </button>
+   578→      )}
+   579→
+   580→      {/* ── سؤال‌های ستاره‌دار ─────────────────────────── */}
+   581→      {starredQCount > 0 && (
+   582→        <button
+   583→          type="button"
+   584→          onClick={() => onNavigate("quiz")}
+   585→          className="rise-in group flex w-full flex-wrap items-center gap-3 rounded-2xl border border-yellow-500/40 bg-gradient-to-l from-yellow-500/12 via-yellow-500/5 to-transparent p-4 text-right transition-all hover:border-yellow-500/70 hover:shadow-lg hover:shadow-yellow-500/10 active:scale-[0.99] active:shadow-md"
+   586→        >
+   587→          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-yellow-500/15 text-yellow-600 transition-transform group-hover:scale-105 dark:text-yellow-400">
+   588→            <Star size={20} />
+   589→          </span>
+   590→          <span className="min-w-0 flex-1">
+   591→            <span className="flex items-center gap-2 text-[13.5px] font-black">
+   592→              سؤال‌های ستاره‌دار تو
+   593→              <Badge className="border-yellow-500/40 bg-yellow-500/15 text-[10px] text-yellow-700 dark:text-yellow-300">
+   594→                {starredQCount.toLocaleString("fa-IR")} سؤال
+   595→              </Badge>
+   596→            </span>
+   597→            <span className="mt-0.5 block truncate text-[11.5px] text-muted-foreground">
+   598→              نکته‌های سختی که خودت نشانه‌گذاری کردی — از تنظیمات آزمون با «تمرین ستاره‌دارها» مرورشون کن.
+   599→            </span>
+   600→          </span>
+   601→          <ArrowLeft size={17} className="shrink-0 text-yellow-600 transition-transform group-hover:-translate-x-1 dark:text-yellow-400" />
+   602→        </button>
+   603→      )}
+   604→      </div>
+   605→
+   606→      {/* ── بخش‌های کتاب ─────────────────────────────── */}
+   607→      <section className="space-y-3">
+   608→        <h2 className="text-lg font-black flex items-center gap-2">
+   609→          <Volume2 size={18} className="text-primary" />
+   610→          بخش‌های کتاب وب
+   611→        </h2>
+   612→        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
+   613→          {featureCards.map((f, i) => (
+   614→            <button
+   615→              key={f.view}
+   616→              type="button"
+   617→              onClick={() => onNavigate(f.view)}
+   618→              className={`rise-in rise-in-${(i % 4) + 1} group text-right rounded-2xl border bg-card p-4 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+   619→            >
+   620→              <div className="flex items-start justify-between">
+   621→                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+   622→                  <f.icon size={21} />
+   623→                </span>
+   624→                {f.stat && (
+   625→                  <Badge variant="secondary" className="text-[10px] font-bold">
+   626→                    {f.stat}
+   627→                  </Badge>
+   628→                )}
+   629→              </div>
+   630→              <h3 className="mt-3 font-bold">{f.title}</h3>
+   631→              <p className="mt-1 text-xs leading-5 text-muted-foreground">{f.desc}</p>
+   632→            </button>
+   633→          ))}
+   634→        </div>
+   635→      </section>
+   636→
+   637→      {/* ── نقل قول ─────────────────────────────── */}
+   638→      <section>
+   639→        <Card className="border-accent/40 bg-accent/30">
+   640→          <CardContent className="p-6 text-center space-y-3">
+   641→            <Quote size={22} className="mx-auto text-accent-foreground/60" />
+   642→            <p dir="ltr" className="font-en mx-auto max-w-xl text-sm sm:text-[15px] font-semibold leading-7">
+   643→              Failure is a part of life. If you don&apos;t fail, you won&apos;t learn. If you don&apos;t learn, you will never succeed.
+   644→            </p>
+   645→            <p className="text-xs text-muted-foreground leading-5">
+   646→              شکست بخشی از زندگی است؛ اگر شکست نخوری یاد نمی‌گیری و اگر یاد نگیری هرگز موفق نمی‌شوی.
+   647→            </p>
+   648→            <p className="text-[11px] font-bold text-accent-foreground">— صفحه ۳ جزوه، {data.info.author.replace("تألیف و گردآوری: ", "")}</p>
+   649→          </CardContent>
+   650→        </Card>
+   651→      </section>
+   652→
+   653→      {/* فصل‌ها پیش‌نمایش سریع */}
+   654→      <section className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+   655→        {data.chapters.map((ch) => (
+   656→          <button
+   657→            key={ch.id}
+   658→            type="button"
+   659→            onClick={() => onNavigate("contents")}
+   660→            className="rounded-2xl border bg-card p-4 text-right transition-all hover:border-primary/40 hover:shadow-lg"
+   661→          >
+   662→            <p className="text-[10px] font-bold text-primary">{ch.number}</p>
+   663→            <p dir="ltr" className="mt-1 font-en text-[13px] font-bold truncate">
+   664→              {ch.title}
+   665→            </p>
+   666→            <p className="mt-0.5 text-[11px] text-muted-foreground">{ch.titleFa}</p>
+   667→          </button>
+   668→        ))}
+   669→      </section>
+   670→    </div>
+   671→  );
+   672→}
+   673→

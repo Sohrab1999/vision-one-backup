@@ -1,0 +1,252 @@
+/home/z/my-project/src/components/book/games/speed-quiz/README.md:19:| `types.ts` | ~۲۶ | `GAME_KEY ("speed-quiz")`، `DURATIONS [30,60,90]`، `MIN_POOL`، تایپ‌ها — خالص .ts |
+/home/z/my-project/src/components/book/games/speed-quiz/README.md:23:- **امضای Attempt**: `category: GAME_KEY` + امتیاز/دقت/کمبو در فیلدهای استاندارد؛
+/home/z/my-project/src/components/book/games/speed-quiz/playing-view.tsx:36:import { GAME_KEY, type Phase, type RoundMode } from "./types";
+/home/z/my-project/src/components/book/games/speed-quiz/playing-view.tsx:310:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:100:  GAME_KEY,
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:124:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:176:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:231:    saveLevelPref(GAME_KEY, l);
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:307:      const rec = loadBest<BestRecord>(id, GAME_KEY, bestScope);
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:380:        loadBest<BestRecord>(id, GAME_KEY, scopeFor(lesson, cat, duration, level, roundMode))
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:389:        game: GAME_KEY,
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:451:    bumpPlays(id, GAME_KEY);
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:460:      saveAttempt(id, GAME_KEY, {
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:477:      saveBest(id, GAME_KEY, scopeFor(lesson, cat, duration, level, "timed"), {
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:505:    bumpPlays(id, GAME_KEY);
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:510:      saveAttempt(id, GAME_KEY, {
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:527:    const prev = loadBest<BestRecord>(id, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/speed-quiz/index.tsx:529:      saveBest(id, GAME_KEY, scope, { score });
+/home/z/my-project/src/components/book/games/speed-quiz/setup-panel.tsx:33:import { ALL_LESSON, DURATIONS, GAME_KEY, type CatKey, type RoundMode } from "./types";
+/home/z/my-project/src/components/book/games/speed-quiz/setup-panel.tsx:296:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/speed-quiz/types.ts:4: * تنها دلتا: پسوند export. قراردادهای مقدس: GAME_KEY/اسکوپ رکورد/کلیدهای localStorage.
+/home/z/my-project/src/components/book/games/speed-quiz/types.ts:7:export const GAME_KEY = "speed-quiz";
+/home/z/my-project/src/components/book/games/quiz/README.md:16:| `constants.ts` | گزینه‌های دسته/سطح/درس/تعداد/زمان‌دار + `LETTERS`/`CONFETTI_COLORS`/`levelBadgeClass` + `GAME_KEY = "quiz"` |
+/home/z/my-project/src/components/book/games/quiz/README.md:23:- `kit/telemetry` → `createGameSession({ game: GAME_KEY, level })` در شروع هر دور (normal/practice/daily/weekly)؛ `end("finish")` در `finish()` و `abandon("unmount")` در نگهبان unmount.
+/home/z/my-project/src/components/book/games/crossword/README.md:18:| `types.ts` | ~۱۹ | `Phase`، `BestRecord`، ثابت‌ها (`GAME_KEY`، `ALL_LESSONS`، `COUNT_OPTIONS`، `MIN_PLACED`، `SHAKE_MS`، `POP_MS`، `FINISH_MS`) — خالص .ts |
+/home/z/my-project/src/components/book/games/crossword/README.md:22:- **امضای Attempt** (در `finish` داخل index): `category: GAME_KEY ("crossword")` +
+/home/z/my-project/src/components/book/games/quiz/index.tsx:31:import { BASE_LESSON_OPTIONS, GAME_KEY } from "./constants";
+/home/z/my-project/src/components/book/games/quiz/index.tsx:119:      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+/home/z/my-project/src/components/book/games/quiz/index.tsx:205:      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+/home/z/my-project/src/components/book/games/quiz/index.tsx:237:      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+/home/z/my-project/src/components/book/games/quiz/index.tsx:270:      sessionRef.current = createGameSession({ game: GAME_KEY, level: lesson === "all" ? "all" : lesson });
+/home/z/my-project/src/components/book/games/crossword/playing-view.tsx:30:import { GAME_KEY } from "./types";
+/home/z/my-project/src/components/book/games/crossword/playing-view.tsx:356:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/crossword/index.tsx:68:  GAME_KEY,
+/home/z/my-project/src/components/book/games/crossword/index.tsx:125:  const hintCoach = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/crossword/index.tsx:153:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/crossword/index.tsx:224:      const b = loadBest<BestRecord>(activeBookId, GAME_KEY, bestScope);
+/home/z/my-project/src/components/book/games/crossword/index.tsx:260:    bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/crossword/index.tsx:261:    saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/crossword/index.tsx:276:      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/crossword/index.tsx:278:        saveBest(activeBookId, GAME_KEY, scope, { time: finalSecs });
+/home/z/my-project/src/components/book/games/crossword/index.tsx:378:    sessionRef.current = createGameSession({ game: GAME_KEY, level: bestScope });
+/home/z/my-project/src/components/book/games/crossword/index.tsx:426:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/crossword/setup-panel.tsx:22:import { ALL_LESSONS, COUNT_OPTIONS, GAME_KEY, type BestRecord } from "./types";
+/home/z/my-project/src/components/book/games/crossword/setup-panel.tsx:215:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/crossword/types.ts:9:export const GAME_KEY = "crossword";
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:121:const GAME_KEY = "listening-hunt";
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:199:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:242:    saveLevelPref(GAME_KEY, l);
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:259:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:284:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:299:      const b = loadBest<BestRecord>(activeBookId, GAME_KEY, bestScope);
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:342:      bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:353:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:365:      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:367:        saveBest(activeBookId, GAME_KEY, scope, { score: finalScore });
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:553:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:723:          game={GAME_KEY}
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:742:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/listening-hunt-game.tsx:975:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/quiz/constants.ts:46:export const GAME_KEY = "quiz";
+/home/z/my-project/src/components/book/games/flappy-quiz/playing-view.tsx:28:import { GAME_KEY, HEARTS, type Phase } from "./types";
+/home/z/my-project/src/components/book/games/flappy-quiz/playing-view.tsx:248:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:76:  ALL_LESSONS, BIRD_R, EASY_CFG, FLASH_MS, GAME_KEY, GROUND_H, H, HEARTS, INVULN_MS,
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:167:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:315:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:335:    bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:342:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:351:    const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:353:      saveBest(activeBookId, GAME_KEY, scope, { score: finalScore });
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:418:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:448:      bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:457:        saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:466:      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/flappy-quiz/index.tsx:468:        saveBest(activeBookId, GAME_KEY, scope, { score: finalScore });
+/home/z/my-project/src/components/book/games/flappy-quiz/use-flappy-data.ts:15:import { ALL_LESSONS, GAME_KEY, type BestRecord } from "./types";
+/home/z/my-project/src/components/book/games/flappy-quiz/use-flappy-data.ts:65:    () => loadBest<BestRecord>(activeBookId, GAME_KEY, easy ? "easy" : "normal")?.score ?? null,
+/home/z/my-project/src/components/book/games/flappy-quiz/use-flappy-data.ts:73:      loadBest<BestRecord>(activeBookId, GAME_KEY, easy ? "easy:endless" : "normal:endless")?.score ??
+/home/z/my-project/src/components/book/games/flappy-quiz/setup-panel.tsx:23:import { ALL_LESSONS, GAME_KEY } from "./types";
+/home/z/my-project/src/components/book/games/flappy-quiz/setup-panel.tsx:191:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/flappy-quiz/types.ts:4: * کلیدهای مقدس: GAME_KEY / اسکوپ‌های رکورد / امضای Attempt — بدون تغییر.
+/home/z/my-project/src/components/book/games/flappy-quiz/types.ts:11:export const GAME_KEY = "flappy-quiz";
+/home/z/my-project/src/components/book/games/snakes-ladders/README.md:14:| `types.ts` | ~۶۹ | ثابت‌ها (`GAME_KEY`، `ALL_LESSON`، `MIN_POOL`، `STEP_MS/JUMP_MS`، `BOT_*`، `DICE_FLIPS`، `SNAKES/LADDERS`) + تایپ‌های دامنه (`Phase/Mode/CatKey/Player/PStats/Journey/BestRecord`) + `TOKEN_BG`/`DICE_ICONS` — خالص .ts |
+/home/z/my-project/src/components/book/games/snakes-ladders/README.md:22:- **امضای Attempt** (در `finish` داخل index): `category: GAME_KEY ("snakes-ladders")` +
+/home/z/my-project/src/components/book/games/snakes-ladders/playing-view.tsx:33:import { DICE_ICONS, GAME_KEY, LADDERS, SNAKES, TOKEN_BG, type Mode, type Player } from "./types";
+/home/z/my-project/src/components/book/games/snakes-ladders/playing-view.tsx:441:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:93:  GAME_KEY,
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:185:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:272:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:315:    () => loadBest<BestRecord>(activeBookId, GAME_KEY, modeScope)?.time ?? null,
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:585:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:600:    bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:613:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:634:      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, modeScope);
+/home/z/my-project/src/components/book/games/snakes-ladders/index.tsx:636:        saveBest(activeBookId, GAME_KEY, modeScope, { time: spent });
+/home/z/my-project/src/components/book/games/snakes-ladders/helpers.ts:17:  GAME_KEY,
+/home/z/my-project/src/components/book/games/snakes-ladders/helpers.ts:57:    const wins = readGameWins()[GAME_KEY] ?? 0;
+/home/z/my-project/src/components/book/games/snakes-ladders/helpers.ts:58:    const plays = getPlays(bookId)[GAME_KEY] ?? 0;
+/home/z/my-project/src/components/book/games/snakes-ladders/setup-panel.tsx:24:import { ALL_LESSON, GAME_KEY, TOKEN_BG, type CatKey, type Mode } from "./types";
+/home/z/my-project/src/components/book/games/snakes-ladders/setup-panel.tsx:261:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/kit/result-screen.tsx:77:  /** کلید تله‌متری بازی (GAME_KEY) برای رویداد K3 — اختیاری؛ بدون آن هم رویداد بدون نسبت‌دهی ارسال می‌شود */
+/home/z/my-project/src/components/book/games/snakes-ladders/types.ts:8:export const GAME_KEY = "snakes-ladders";
+/home/z/my-project/src/components/book/games/cloze-game.tsx:99:const GAME_KEY = "cloze";
+/home/z/my-project/src/components/book/games/cloze-game.tsx:383:    raw = localStorage.getItem(bestKeyOf(bookId, GAME_KEY, scope));
+/home/z/my-project/src/components/book/games/cloze-game.tsx:414:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/cloze-game.tsx:451:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/cloze-game.tsx:478:    saveLevelPref(GAME_KEY, lv);
+/home/z/my-project/src/components/book/games/cloze-game.tsx:588:        game: GAME_KEY,
+/home/z/my-project/src/components/book/games/cloze-game.tsx:634:      bumpPlays(bookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/cloze-game.tsx:641:      saveAttempt(bookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/cloze-game.tsx:668:        const prev = loadBest<BestRecord>(bookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/cloze-game.tsx:670:          saveBest<BestRecord>(bookId, GAME_KEY, scope, { score: finalCorrect, total: deck.length });
+/home/z/my-project/src/components/book/games/cloze-game.tsx:949:          game={GAME_KEY}
+/home/z/my-project/src/components/book/games/cloze-game.tsx:967:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/cloze-game.tsx:1156:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/adventure-map/README.md:12:| `types.ts` | ~۸۶ | `Phase`، `StageType`، ثابت‌ها (`GAME_KEY`، `TOTAL_STAGES`، `MAX_STARS`، `DEFAULT_ORDER`، `STAGE_META`، `WORD_RE`) و اینترفیس‌ها (`QuizQ`، `Tile`، `MatchCard`، `BestRec`، `AdventureProgress`، `ChallengeState`) — خالص .ts |
+/home/z/my-project/src/components/book/games/adventure-map/README.md:21:- **امضای Attempt** (در `completeStage` داخل index): `category: GAME_KEY ("adventure-map")` +
+/home/z/my-project/src/components/book/games/adventure-map/challenge-view.tsx:23:import { GAME_KEY, STAGE_META, TOTAL_STAGES, type ChallengeState, type MatchCard, type Phase } from "./types";
+/home/z/my-project/src/components/book/games/adventure-map/challenge-view.tsx:136:          game={GAME_KEY}
+/home/z/my-project/src/components/book/games/adventure-map/challenge-view.tsx:454:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:64:  GAME_KEY,
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:126:  } = useAutoTutorial(GAME_KEY, phase === "map");
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:178:      const b = loadBest<BestRec>(activeBookId, GAME_KEY, bestScope);
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:288:        game: GAME_KEY,
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:462:        bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:465:        saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:472:        const prev = loadBest<BestRec>(activeBookId, GAME_KEY, bestScope);
+/home/z/my-project/src/components/book/games/adventure-map/index.tsx:474:          saveBest(activeBookId, GAME_KEY, bestScope, { score: total });
+/home/z/my-project/src/components/book/games/adventure-map/stage-map.tsx:20:import { GAME_KEY, STAGE_META, TOTAL_STAGES, type AdventureProgress, type Phase } from "./types";
+/home/z/my-project/src/components/book/games/adventure-map/stage-map.tsx:203:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/adventure-map/types.ts:13:export const GAME_KEY = "adventure-map";
+/home/z/my-project/src/components/book/games/kit/tutorial-overlay.tsx:72:  /** کلید بازی — همان GAME_KEY */
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:133:const GAME_KEY = "sentence-builder";
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:237:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:240:    saveLevelPref(GAME_KEY, l);
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:284:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:294:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:340:      const b = loadBest<BestRec>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:423:      bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:429:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:446:        const prev = loadBest<BestRec>(activeBookId, GAME_KEY, recScope);
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:448:          saveBest<BestRec>(activeBookId, GAME_KEY, recScope, { time: secsRef.current });
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:708:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:948:          game={GAME_KEY}
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:964:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/sentence-builder-game.tsx:1212:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:143:const GAME_KEY = "word-search";
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:330:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:373:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:385:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:411:    saveLevelPref(GAME_KEY, lv);
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:438:      const b = loadBest<BestRecord>(bid, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:518:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:537:      bumpPlays(bid, GAME_KEY);
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:543:      saveAttempt(bid, GAME_KEY, {
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:551:      const prev = loadBest<BestRecord>(bid, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:553:        saveBest(bid, GAME_KEY, scope, { time: finalTime });
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:921:          game={GAME_KEY}
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:937:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/wordsearch-game.tsx:1147:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/kit/telemetry.ts:18: *   const session = useRef(createGameSession({ game: GAME_KEY }));
+/home/z/my-project/src/components/book/games/kit/telemetry.ts:28:  /** کلید بازی — دقیقاً همان GAME_KEY بازی (برای join با رکوردها) */
+/home/z/my-project/src/components/book/games/fps/README.md:35:- **امضای Attempt**: `category: GAME_KEY ("fps-shooter")` + `detail.{mode,quality,map,weapon,wave}` —
+/home/z/my-project/src/components/book/games/wordle/README.md:19:| `constants.ts` | ~۲۶ | `GAME_KEY ("wordle")`، `MAX_ROWS 6`، `FLIP_STAGGER_MS 200`، `FLIP_SETTLE_MS 450`، `MIN_POOL 10`، `LEVELS [4,5,6]` |
+/home/z/my-project/src/components/book/games/wordle/README.md:25:- **امضای Attempt**: `category: GAME_KEY` + `detail: {word, rows, mode: "daily"|"infinite", level}` —
+/home/z/my-project/src/components/book/games/wordle/playing-view.tsx:25:import { GAME_KEY, MAX_ROWS } from "./constants";
+/home/z/my-project/src/components/book/games/wordle/playing-view.tsx:286:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/wordle/index.tsx:63:import { FLIP_SETTLE_MS, FLIP_STAGGER_MS, GAME_KEY, MAX_ROWS, MIN_POOL, WORD_LEN } from "./constants";
+/home/z/my-project/src/components/book/games/wordle/index.tsx:180:        infBest: loadBest<BestMoves>(activeBookId, GAME_KEY, "infinite"),
+/home/z/my-project/src/components/book/games/wordle/index.tsx:181:        infBest4: loadBest<BestMoves>(activeBookId, GAME_KEY, "infinite:4"),
+/home/z/my-project/src/components/book/games/wordle/index.tsx:182:        infBest6: loadBest<BestMoves>(activeBookId, GAME_KEY, "infinite:6"),
+/home/z/my-project/src/components/book/games/wordle/index.tsx:183:        dailyBest: loadBest<BestScore>(activeBookId, GAME_KEY, "daily-streak"),
+/home/z/my-project/src/components/book/games/wordle/index.tsx:267:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/wordle/index.tsx:293:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/wordle/index.tsx:319:      bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/wordle/index.tsx:326:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/wordle/index.tsx:345:          const prev = loadBest<BestMoves>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/wordle/index.tsx:347:            saveBest<BestMoves>(activeBookId, GAME_KEY, scope, { moves: rowsUsed });
+/home/z/my-project/src/components/book/games/wordle/index.tsx:361:          const prevBest = loadBest<BestScore>(activeBookId, GAME_KEY, "daily-streak");
+/home/z/my-project/src/components/book/games/wordle/index.tsx:363:            saveBest<BestScore>(activeBookId, GAME_KEY, "daily-streak", { score: streak });
+/home/z/my-project/src/components/book/games/wordle/index.tsx:494:    sessionRef.current = createGameSession({ game: GAME_KEY, level: "daily" });
+/home/z/my-project/src/components/book/games/wordle/index.tsx:535:    sessionRef.current = createGameSession({ game: GAME_KEY, level: `endless:${len}` });
+/home/z/my-project/src/components/book/games/fps/index.tsx:203:  GAME_KEY,
+/home/z/my-project/src/components/book/games/fps/index.tsx:285:      const s = bookId ? loadBest<BestRecord>(bookId, GAME_KEY, scope) : null;
+/home/z/my-project/src/components/book/games/fps/index.tsx:681:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/fps/index.tsx:816:    bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/fps/index.tsx:820:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/fps/index.tsx:843:    const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/fps/index.tsx:845:      saveBest(activeBookId, GAME_KEY, scope, { score: final });
+/home/z/my-project/src/components/book/games/fps/index.tsx:1460:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/fps/index.tsx:2043:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/fps/setup-panel.tsx:49:  GAME_KEY,
+/home/z/my-project/src/components/book/games/fps/setup-panel.tsx:555:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/fps/constants.ts:5:export const GAME_KEY = "fps-shooter";
+/home/z/my-project/src/components/book/games/wordle/setup-panel.tsx:23:import { GAME_KEY, LEVELS, MIN_POOL } from "./constants";
+/home/z/my-project/src/components/book/games/wordle/setup-panel.tsx:255:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/wordle/constants.ts:11:export const GAME_KEY = "wordle";
+/home/z/my-project/src/components/book/games/memory-game.tsx:103:const GAME_KEY = "memory";
+/home/z/my-project/src/components/book/games/memory-game.tsx:144:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/memory-game.tsx:173:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/memory-game.tsx:184:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/memory-game.tsx:210:    saveLevelPref(GAME_KEY, lv);
+/home/z/my-project/src/components/book/games/memory-game.tsx:240:      const b = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/memory-game.tsx:331:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/memory-game.tsx:342:      bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/memory-game.tsx:348:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/memory-game.tsx:357:      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/memory-game.tsx:359:        saveBest(activeBookId, GAME_KEY, scope, { moves: finalMoves, time: finalSecs });
+/home/z/my-project/src/components/book/games/memory-game.tsx:655:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/memory-game.tsx:671:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/memory-game.tsx:837:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/hangman-game.tsx:114:const GAME_KEY = "hangman";
+/home/z/my-project/src/components/book/games/hangman-game.tsx:203:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/hangman-game.tsx:227:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/hangman-game.tsx:252:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/hangman-game.tsx:281:    saveLevelPref(GAME_KEY, l);
+/home/z/my-project/src/components/book/games/hangman-game.tsx:300:      const b = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/hangman-game.tsx:349:      bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/hangman-game.tsx:355:      saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/hangman-game.tsx:365:      const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, recScope);
+/home/z/my-project/src/components/book/games/hangman-game.tsx:367:        saveBest<BestRecord>(activeBookId, GAME_KEY, recScope, { score: scaled });
+/home/z/my-project/src/components/book/games/hangman-game.tsx:560:      game: GAME_KEY,
+/home/z/my-project/src/components/book/games/hangman-game.tsx:685:          game={GAME_KEY}
+/home/z/my-project/src/components/book/games/hangman-game.tsx:715:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/hangman-game.tsx:1035:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/wordle/done-view.tsx:21:import { GAME_KEY, MAX_ROWS } from "./constants";
+/home/z/my-project/src/components/book/games/wordle/done-view.tsx:125:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/wordle/done-view.tsx:228:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/duel-game.tsx:124:const GAME_KEY = "duel";
+/home/z/my-project/src/components/book/games/duel-game.tsx:351:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/duel-game.tsx:397:    () => loadBest<BestRecord>(activeBookId, GAME_KEY, bestScope)?.score ?? null,
+/home/z/my-project/src/components/book/games/duel-game.tsx:539:    bumpPlays(activeBookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/duel-game.tsx:545:    saveAttempt(activeBookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/duel-game.tsx:554:    const prev = loadBest<BestRecord>(activeBookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/duel-game.tsx:557:      saveBest(activeBookId, GAME_KEY, scope, { score: w1 });
+/home/z/my-project/src/components/book/games/duel-game.tsx:592:    sessionRef.current = createGameSession({ game: GAME_KEY, level: `rounds:${rounds}` });
+/home/z/my-project/src/components/book/games/duel-game.tsx:823:          game={GAME_KEY}
+/home/z/my-project/src/components/book/games/duel-game.tsx:840:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/duel-game.tsx:1116:        game={GAME_KEY}
+/home/z/my-project/src/components/book/games/scramble-game.tsx:96:const GAME_KEY = "scramble";
+/home/z/my-project/src/components/book/games/scramble-game.tsx:160:  const [level, setLevel] = useState<DifficultyKey>(() => loadLevelPref(GAME_KEY));
+/home/z/my-project/src/components/book/games/scramble-game.tsx:194:  } = useAutoTutorial(GAME_KEY, phase === "setup");
+/home/z/my-project/src/components/book/games/scramble-game.tsx:220:    saveLevelPref(GAME_KEY, lv);
+/home/z/my-project/src/components/book/games/scramble-game.tsx:225:  const hint = useHintCoach(GAME_KEY);
+/home/z/my-project/src/components/book/games/scramble-game.tsx:255:      const b = loadBest<BestRec>(bookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/scramble-game.tsx:293:      bumpPlays(bookId, GAME_KEY);
+/home/z/my-project/src/components/book/games/scramble-game.tsx:300:      saveAttempt(bookId, GAME_KEY, {
+/home/z/my-project/src/components/book/games/scramble-game.tsx:310:        const prev = loadBest<BestRec>(bookId, GAME_KEY, scope);
+/home/z/my-project/src/components/book/games/scramble-game.tsx:312:          saveBest<BestRec>(bookId, GAME_KEY, scope, { time: secsRef.current });
+/home/z/my-project/src/components/book/games/scramble-game.tsx:515:      game: GAME_KEY,
+
+[Showing results with pagination = limit: 250]

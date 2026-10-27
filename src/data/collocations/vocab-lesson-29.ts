@@ -1,0 +1,33 @@
+// واژگان درس ۲۹ — Light (صفحهٔ ۵۹ کتاب 1000 English Collocations)
+import type { VocabWord } from "../types";
+
+export const VOCAB_LESSON_29: VocabWord[] = [
+  { word: "the sun is shining", meaning: "خورشید در حال تابیدن است", lesson: 29, pos: "phr." },
+  { word: "blinding sunlight", meaning: "آفتاب خیره‌کننده", lesson: 29, pos: "phr." },
+  { word: "weak sunlight", meaning: "آفتاب کم‌رمق", lesson: 29, pos: "phr." },
+  { word: "the sun sets", meaning: "خورشید غروب می‌کند", lesson: 29, pos: "phr." },
+  { word: "grow dark", meaning: "تاریک شدن", lesson: 29, pos: "phr." },
+  { word: "full moon", meaning: "ماه بدر/کامل", lesson: 29, pos: "phr." },
+  { word: "crescent moon", meaning: "ماه هلالی", lesson: 29, pos: "phr." },
+  { word: "new moon", meaning: "ماه نو", lesson: 29, pos: "phr." },
+  { word: "pitch dark/black", meaning: "تاریک مطلق", lesson: 29, pos: "phr." },
+  { word: "stars twinkling", meaning: "چشمک‌زدن ستاره‌ها", lesson: 29, pos: "phr." },
+  { word: "bright light", meaning: "نور روشن و درخشان", lesson: 29, pos: "phr." },
+  { word: "dim light", meaning: "نور کم‌جان", lesson: 29, pos: "phr." },
+  { word: "fluorescent light bulb", meaning: "لامپ مهتابی", lesson: 29, pos: "phr." },
+  { word: "faint glow", meaning: "درخشش کم‌جان", lesson: 29, pos: "phr." },
+  { word: "flickering candle", meaning: "شمع با شعلهٔ لرزان", lesson: 29, pos: "phr." },
+  { word: "cast a shadow", meaning: "سایه انداختن", lesson: 29, pos: "phr." },
+  { word: "sit in the shade", meaning: "در سایه نشستن", lesson: 29, pos: "phr." },
+  { word: "lighting", meaning: "نورپردازی (مجموعهٔ نورهای مصنوعی)", lesson: 29, pos: "n." },
+  { word: "bright/strong lighting", meaning: "نورپردازی روشن/قوی", lesson: 29, pos: "phr." },
+  { word: "soft/subdued lighting", meaning: "نورپردازی ملایم و کم‌جان", lesson: 29, pos: "phr." },
+  { word: "street lights", meaning: "چراغ‌های خیابان", lesson: 29, pos: "phr." },
+  { word: "the power goes out", meaning: "برق رفتن/قطع شدن", lesson: 29, pos: "phr." },
+  { word: "power outage", meaning: "قطعی برق", lesson: 29, pos: "phr." },
+  { word: "plunged into darkness", meaning: "در تاریکی فرو رفتن", lesson: 29, pos: "phr." },
+  { word: "complete/total darkness", meaning: "تاریکی کامل و مطلق", lesson: 29, pos: "phr." },
+  { word: "flashlight", meaning: "چراغ‌قوه", lesson: 29, pos: "n." },
+  { word: "light candles", meaning: "شمع روشن کردن", lesson: 29, pos: "phr." },
+  { word: "the sun rises/comes up", meaning: "خورشید طلوع می‌کند", lesson: 29, pos: "phr." },
+];

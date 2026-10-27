@@ -1,0 +1,15 @@
+{
+  "extends": "/home/z/my-project/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "types": []
+  },
+  "include": [
+    "/home/z/my-project/src/components/book/games/speed-quiz/**/*",
+    "/home/z/my-project/src/components/book/games/speed-quiz-game.tsx",
+    "/home/z/my-project/src/components/book/games/shared.ts",
+    "/home/z/my-project/src/**/*.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

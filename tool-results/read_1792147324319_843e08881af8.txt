@@ -1,0 +1,222 @@
+  2090→Task ID: games-roadmap-1
+  2091→Agent: main orchestrator (Z.ai Code)
+  2092→Task: نگارش نقشه راه دقیق و استاندارد بهبود و ارتقای بازی‌های موجود (درخواست مستقیم کاربر)
+  2093→
+  2094→Work Log:
+  2095→- ممیزی کامل کد آزمایشگاه بازی‌ها: ۱۵ بازی (۱۳٬۴۶۲ خط) در src/components/book/games/ + کیت مشترک shared.ts + اتصال به page.tsx/hub
+  2096→- اسکن الگویی با grep برای ۲۰+ قابلیت: TTS (۱۳/۱۵)، کیبورد (۹/۱۵)، aria-live (۵/۱۵)، scope (۱۴/۱۵)، saveBest/bumpPlays/saveAttempt همه، ربات مار‌و‌پله، حالت روزانه وردل، ستارهٔ adventure، lazy chunk fps — و شکاف‌ها: صدا ۰/۱۵، لرزش ۰/۱۵، Pause ۰/۱۵، نگهبان خروج ۰/۱۵، visibilitychange ۰/۱۵، reduced-motion ۰/۱۵
+  2097→- کشف ۵ بدهی فنی مستند: D1 ناهم‌خوانی کلید GAME_TITLES (wordsearch ≠ word-search → توست رکورد عنوان خام)، D2 اسکن خطی localStorage در BestBadge، D3 استاتیک بودن ۱۴ بازی در باندل اصلی (فقط fps داینامیک)، D4 کلید هاردکد scramble، D5 پیشرفت adventure فقط localStorage
+  2098→- نگارش سند docs/games-roadmap.md (نسخه ۱.۰): چشم‌انداز + ۵ KPI کمی + ۸ استاندارد اجباری (WCAG 2.2 AA، قانون جویس، WebAudio autoplay، Vibration، Page Lifecycle، بودجه کارایی، حریم خصوصی نوجوان، آفلاین‌فرست) + ماتریس ممیزی + معماری هدف GameKit v2 (۱۰ ماژول در games/kit/) + ۷ فاز G0..G6 با ۴۲ کار شماره‌دار P0/P1/P2 و حجم S/M/L و معیار پذیرش + ماتریس اولویت + ۶ ریسک + DoD ۷بندی
+  2099→
+  2100→Stage Summary:
+  2101→- خروجی: docs/games-roadmap.md — سند حاکم ارتقای بازی‌ها با قواعد حفظ‌شوندگی (امضای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage تغییرناپذیر؛ تغییر فقط افزودنی)
+  2102→- مسیر پیشنهادی اجرا: G0 (رفع D1/D3/نگهبان خروج) → G1 (کیت: صدا/لرزش/Pause/ExitGuard/Shell/ResultScreen/دشواری/آموزش/تله‌متری با پایلوت memory) → G2 (مهاجرت گروهی ۵تایی) → G3 عمق/دشواری/ماموریت → G4 رده‌بندی per-game + دوئل آنلاین (socket.io پورت 3003 با XTransformPort) → G5 AI مدرس بازی → G6 QA ماتریسی/KPI
+  2103→- قاعدهٔ صریح: تا اتمام G4 هیچ بازی جدیدی ساخته نمی‌شود؛ اولویت P0 این هفته: G0-01، G0-06، G1-01..04، G4-02
+  2104→
+  2105→---
+  2106→Task ID: G0-05
+  2107→Agent: full-stack-developer
+  2108→Task: گارد visibilitychange در ۴ بازی زمان‌دار
+  2109→Work Log:
+  2110→- قدم صفر: worklog (ورودهای آخر) و بخش G0-05 سند games-roadmap.md خواند؛ مالکیت رعایت شد — فقط ۴ فایل بازی خودم ویرایش شد (shared.ts/games-hub/adventure-map/snakes-ladders/crossword عامل‌های موازی دست نخورد)؛ همهٔ ویرایش‌ها با python3 (open+read+replace با anchor یکتا+assert count==1) و بعد از هر فایل bun run lint صفر
+  2111→- ۱) speed-quiz-game.tsx (مهم‌ترین): تایمر کاهشی timeRef همان مکانیزم کتاب‌داری ماند (timestamp-based نیست پس پرش endTime موضوعیت ندارد) — effect تایمر بازنویسی شد: startTimer/stopTimer با گارد iv!==null (idempotent)؛ شنوندهٔ visibilitychange: hidden → clearInterval (شمارش می‌ایستد)، visible → startTimer با همان timeRef (ادامه از زمان باقی‌مانده، نه پرش)؛ شنوندهٔ pageshow persisted → stopTimer+startTimer تازه تا تیک معوقِ دورهٔ انجماد bfcache یک‌جا نپرد؛ cleanup همیشه stopTimer+removeEventListener (رفتار unmount حفظ شد)
+  2112→- ۲) flappy-quiz-game.tsx: فلگ paused داخل effect حلقه + شرط overRef.current||paused در tick؛ onVis: hidden → paused=true و cancelAnimationFrame (زنجیرهٔ rAF واقعاً قطع)، visible → resumeLoop با last=performance.now() تا اولین dt بعد از برگشت کوچک باشد (dt از قبل ≤۵۰ms clamp بود — دست نخورد)؛ pageshow persisted هم resumeLoop با cancel قبلی؛ گارد !overRef در resume تا بعد از پایان دور حلقه دوباره روشن نشود؛ cleanup کامل (cancel + removeEventListener هر دو شنونده)
+  2113→- ۳) duel-game.tsx: همان گارد پاز/ریزوم روی تایمر هر دور (timeRef کاهشی) + جبران زمان مخفی برای دو سنجش Date.now-محور: در بازگشت از hidden مقدار gap به roundStartRef (مبدأ ms پاسخ — ملاک برندهٔ «سریع‌تر در هر دو درست») و startAtRef (مدت کل مسابقه در Attempt) اضافه می‌شود تا سرعت پاسخ و duration متورم نشود؛ زنجیرهٔ later() (نمایش نتیجه → دور بعد) عمداً دست نخورد — در hidden دور جدید شروع می‌شود ولی شمارش‌اش پاز است و هیچ زمان/امتیازی نمی‌سوزد (یادداشت ریسک پایین)
+  2114→- ۴) memory-game.tsx: شمارندهٔ زمان افزایشی است (secsRef++/ثانیه، نه Date.now()-start) پس طبق دستور نیازی به elapsedAccum نیست — همان پاز/ریزوم interval با گارد idempotent + pageshow persisted؛ شمارش برای رکورد فقط وقتی تب visible است جلو می‌رود
+  2115→- راستی‌آزمایی agent-browser (الزامی): dev server سندباکس چند بار با OOM مُرد (dmesg: oom-kill next-server anon-rss ~1.8GB — الگوی شناخته‌شده؛ با setsid nohup bun run dev احیا شد و بین مرگ‌ها پنجرهٔ پایدار گرفته شد)؛ صفحه باز شد → قفسه → «ورود به ویژن وان» → ناوبری «بازی‌ها» → آزمایشگاه بازی‌ها → کارت «تست برقی» → «شروع مسابقه» رندر سالم: هدینگ «تست برقی» + دکمهٔ «انصراف» + progressbar «زمان باقیمانده» فعال؛ سنجهٔ دقیق نرخ تیک: aria-valuenow ۴۷→۳۰ در ۱۰٫۰۸۵ثانیه واقعی = ۱۷ واحد × (۱۰۰/۶۰) ≈ ۱۰٫۲ تیک در ۱۰ ثانیه = دقیقاً ۱ تیک/ثانیه — یعنی گارد جدید نه تیک دوباره می‌سازد نه تیک می‌خورد (رفتار کاربر عادی بدون تغییر)؛ اسکرین‌شات tool-results/g0-05-speed-quiz-playing.png؛ کنسول فقط خطاهای محیطی از پیش موجود (next-auth CLIENT_FETCH_ERROR و registry ChunkLoadError هنگام مرگ/احیای سرور) — هیچ خطایی از کد بازی‌ها
+  2116→- کیفیت نهایی: bun run lint صفر (بعد از هر فایل هم صفر)؛ bunx tsc --noEmit فیلتر games/ خالی (۷ خطای tsc کل فقط در examples/ و scripts/ و skills/ و tool-results/ — خارج از پروژه، از پیش موجود)؛ git diff هر ۴ فایل فقط در ناحیهٔ تایمر/حلقه است
+  2117→
+  2118→Stage Summary:
+  2119→- گارد حداقلی Page Lifecycle در ۴ بازی زمان‌دار فعال شد: در تب مخفی هیچ تایمری جلو نمی‌رود (زمان/امتیاز کاربر نمی‌سوزد) و در بازگشت همه از همان نقطه ادامه می‌دهند؛ بازگشت از bfcache هم با pageshow persisted پوشش داده شد؛ امتیاز/رکورد/منطق گیم‌پلی و رفتار unmount دست‌نخورده — برای کاربر بدون تب‌سوییچ صفر تغییر رفتار (نرخ تیک تایمر اندازه‌گیری و تأیید شد: ۱تیک/ثانیه)
+  2120→- فایل‌ها: games/{speed-quiz-game,flappy-quiz-game,duel-game,memory-game}.tsx — فقط همین ۴، همه با python3 و کامنت فارسی «فاز G0-05 — …» بالای هر تغییر
+  2121→- تصمیم‌ها: (۱) تایمر speed-quiz/duel کاهشی ثانیه‌شمار است نه timestamp-based → پاز/ریزوم interval کافی است و مکانیزم کتاب‌داری timeRef/timeLeft همان ماند (۲) memory شمارندهٔ افزایشی است → بدون offset طبق شاخهٔ «اگر» دستور (۳) در duel جبران gap مخفی به roundStartRef/startAtRef اضافه شد چون ملاک تساوی‌شکنی و duration بود (۴) در flappy فقط زنجیرهٔ rAF قطع/احیا می‌شود؛ clamp dt≤۵۰ms از قبل بود و حفظ شد
+  2122→- ریسک/یادداشت: (۱) زنجیرهٔ setTimeout «نمایش نتیجه → دور بعد» دوئل در تب مخفی با throttle مرورگر همچنان پیش می‌رود — دور عوض می‌شود ولی چون شمارش پاز است چیزی نمی‌سوزد؛ اگر بخواهند می‌توان در فاز Pause (G1-03) کامل فریز شود (۲) در دوئل اگر کاربر دقیقاً در پنجرهٔ ~۱٫۲ثانیه‌ای نمایش نتیجهٔ دور آخر تب را مخفی کند، finish در hidden اجرا و duration چند ثانیه بیشتر ثبت می‌شود — حالت مرزی ناچیز (۳) snakes-ladders و crossword (دو بازی دیگر فهرست G0-05 در سند) عمداً ویرایش نشدند — مالک عوامل موازی؛ پوشش من ۴ فایل محولهٔ همین تسک است
+  2123→- گام بعدی پیشنهادی: عامل مالک snakes-ladders/crossover همان الگوی startTimer/stopTimer + pageshow را کپی کند (بلوک‌ها self-contained و قابل کپی‌اند)؛ تست واقعی تب‌سوییچ روی موبایل واقعی در QA فاز G6
+  2124→
+  2125→---
+  2126→Task ID: G0-06
+  2127→Agent: full-stack-developer (تکمیل‌راستی‌آزمایی توسط orchestrator — عامل قبل از ثبت worklog تایم‌اوت شد ولی تغییراتش کامل بود)
+  2128→Task: نگهبان خروج در ۳ بازی چندمرحله‌ای + گارد visibility مار‌و‌پله
+  2129→
+  2130→Work Log:
+  2131→- عامل تغییرات را کامل اعمال کرد و بعد تایم‌اوت خورد؛ orchestrator با بازبینی git diff هر ۳ فایل + lint/tsc/سرور صحت را راستی‌آزمایی کرد
+  2132→- snakes-ladders-game.tsx: AlertDialog نگهبان خروج («برگردم به آزمایشگاه؟ 🎮») فقط در phase=playing؛ دکمهٔ انصراف → requestExit (playing → دیالوگ، setup/done → خروج مستقیم)؛ cancel() هم setExitAsk(false) می‌کند؛ + گارد visibilitychange روی ساعت دور (secsIvRef با stopClock/startClock idempotent و گارد visible؛ زنجیره‌های یک‌بارهٔ نوبت عمداً دست‌نخورده — کامنت مستند)
+  2133→- adventure-map-game.tsx: دکمهٔ «بازگشت به نقشه» حین مرحلهٔ فعال → AlertDialog («مرحله را رها کنم؟ 🗺️»)؛ تأیید → backToMap، انصراف/Esc → ادامهٔ مرحله
+  2134→- crossword-game.tsx: انصراف وقتی ≥۱ خانه پر شده → AlertDialog + گارد تایپ کیبورد حین باز بودن دیالوگ (exitAskRef آینه — بدون ثبت‌مجدد effect)؛ تأیید → stopSpeaking+setup
+  2135→- هر ۳ دیالوگ: AlertDialogCancel «نه، ادامه می‌دهم» min-h-11، Action سبک secondary، متن فارسی نوجوان‌پسند
+  2136→
+  2137→Stage Summary:
+  2138→- فاز G0 کامل شد (هر ۶ کار): G0-01 کلید "word-search" در GAME_TITLES · G0-02 کش bestLabelCache (اسکن localStorage فقط به‌ازای رویداد) · G0-03 هر ۱۵ بازی dynamic با GameChunkLoading + preload در requestIdleCallback بعد از باز شدن hub (loadBest بلااستفاده حذف شد) · G0-04 GAME_KEY در scramble · G0-05 گارد Page Lifecycle در speed-quiz/flappy/duel/memory (تیک تایمر اندازه‌گیری شد: دقیقاً ۱/ثانیه؛ اسکرین‌شات tool-results/g0-05-speed-quiz-playing.png) · G0-06 نگهبان خروج در adventure/snakes/crossword
+  2139→- فایل‌های G0: games/{shared,games-hub,scramble,speed-quiz,flappy-quiz,duel,memory,adventure-map,snakes-ladders,crossword} — هیچ امضای saveAttempt/saveBest/bumpPlays تغییر نکرد
+  2140→- راستی‌آزمایی orchestrator: bun run lint ۰ · tsc فیلتر games/ خالی · / = 200
+  2141→- ریسک/یادداشت: زنجیرهٔ نتیجه→دور بعد دوئل در hidden با throttle پیش می‌رود (بی‌ضرر — شمارش پاز است)؛ G1 باید Pause کامل را بسازد؛ تست واقعی تب‌سوییچ موبایل به QA فاز G6
+  2142→
+  2143→---
+  2144→Task ID: G1-round (orchestrator — کیت GameKit v1 + پایلوت memory)
+  2145→Agent: main orchestrator (Z.ai Code)
+  2146→Task: اجرای فاز G1 بخش اول سند games-roadmap.md — ۴ ماژول کیت (G1-01..04) + اتصال پایلوت به بازی تطبیق حافظه
+  2147→
+  2148→Work Log:
+  2149→- ۴ فایل جدید در games/kit/: sound-engine.ts (G1-01 — WebAudio سینتِتیک ۸ افکت correct/wrong/click/record/finish/tick/shoot/win بدون هیچ فایل صوتی؛ AudioContext فقط داخل playSound یعنی هندلر ژست کاربر — سیاست autoplay؛ کلید بی‌صدا سراسری visionone:sound-muted + subscribeSound الگوی استورها؛ همه مسیرها try/catch ساکت) · haptics.ts (G1-02 — ۴ الگوی لرزش light/success/error/record زیر همان کلید بی‌صدا؛ گارد navigator.vibrate برای iOS) · use-pause.ts (G1-03 — state توقف idempotent + توقف خودکار در hidden با اورلی بازگشت؛ کامنت قرارداد: مدیریت تایمر با خود بازی) · exit-guard.tsx (G1-04 — پوشش استاندارد AlertDialog با متن پیش‌فرض واحد، الگوی سه دیالوگ G0-06)
+  2150→- پایلوت memory-game.tsx (python3، ۱۶ ویرایش anchor یکتا): آیکون‌های Pause/Volume2/VolumeX + import کیت؛ useGamePause با اعلام liveMsg (فقط در phase=playing)؛ گیت paused روی effect تایمر (deps: phase,paused — هنگام توقف شنونده‌ها هم جمع می‌شوند، تداخلی با گارد G0-05 ندارد)؛ گارد paused در handleCardClick + صدای click/light برای کارت اول و correct/wrong برای جفت + buzz متناظر؛ finish → playSound("finish")+buzz("success") و در شاخهٔ رکورد playSound("record")+buzz("record")؛ هدر: دکمهٔ توقف (aria-pressed + لیبل پویا) و کلید صدا (muted state) و انصراف → نگهبان خروج وقتی moves>0 یا کارت باز یا جفت شده؛ گرید در قاب relative با blur-sm و pointer-events-none هنگام توقف + aria-hidden + اورلی «بازی متوقف شد» با دکمهٔ ادامه؛ start() → resume()+setExitAsk(false)؛ GameExitGuard در پایان نما
+  2151→- باگ lint حین کار: react-hooks/refs (v6) نوشتن cbRef.current هنگام رندر را گرفت → انتقال به useEffect بدون deps؛ بعد: lint ۰ / tsc فیلتر games/ خالی
+  2152→- QA مرورگری کامل با agent-browser: هاب با ۱۵ کارت سالم (چانک‌های داینامیک G0-03 لود شدند) → memory setup → ۴ جفت → شروع → هر ۳ کنترل جدید رندر شد → حرکت → توقف → اورلی «بازی متوقف شد» + دکمهٔ ادامه + سوییچ آیکون دکمهٔ هدر ✓ → resume → انصراف → دیالوگ «برگردم به آزمایشگاه؟ 🎮» ✓ → «نه، ادامه میدهم» → بازی ادامه یافت ✓ → کلید صدا: بی‌صدا ⇄ روشن‌کردن صدا (aria-label پویا) ✓ → کنسول و dev.log بدون خطای جدید؛ اسکرین‌شات‌ها: tool-results/g1-memory-pause-overlay.png و g1-memory-exit-guard.png
+  2153→- سند roadmap به ۱.۱ ارتقا یافت (وضعیت اجرا + جدول نسخه‌ها)
+  2154→
+  2155→Stage Summary:
+  2156→- فاز G0 (هر ۶ کار) + G1-01..04 با پایلوت memory بسته شد — بازی‌ها حالا صدا/لرزش/توقف استاندارد/نگهبان خروج دارند (حداقل پایلوت) و گارد Page Lifecycle از G0
+  2157→- فایل‌ها: games/kit/{sound-engine.ts,haptics.ts,use-pause.ts,exit-guard.tsx} (جدید) · games/memory-game.tsx (پایلوت) — امضاهای shared.ts و کلیدهای localStorage دست‌نخورده (قانون حفظ‌شوندگی سند)
+  2158→- کلید localStorage جدید: «visionone:sound-muted» (۱=بی‌صدا، پیش‌فرض روشن) — هپتیک هم زیر همین کلید
+  2159→- قرارداد برای عوامل بعدی: مهاجرت بقیهٔ بازی‌ها به کیت فقط با همین ۴ API (playSound/buzz/useGamePause/GameExitGuard)؛ در هر بازی تایمر باید روی paused گیت شود و paused در deps effect باشد؛ دکمه‌های کنترل با الگوی هدر memory (h-11 w-11 p-0، aria-pressed، لیبل پویا فارسی)
+  2160→- گام بعدی پیشنهادی: G1-05..10 (GameShell/ResultScreen/difficulty/tutorial/combo/telemetry) و سپس گروه‌های G2 به ترتیب سند (a: memory/scramble/hangman → e: fps) — این round عمداً فقط ۴ ماژول P0 + پایلوت را برداشت تا پایه پایدار شود
+  2161→
+  2162→---
+  2163→Task ID: G1-round-2
+  2164→Agent: main orchestrator (Z.ai Code)
+  2165→Task: ادامه اجرای سند games-roadmap.md — تکمیل فاز G1 (G1-05..08 + G1-10) و سوارکردن همهٔ ماژول‌های جدید روی پایلوت memory
+  2166→
+  2167→Work Log:
+  2168→- قدم صفر: worklog و سند خواند شد؛ وضعیت قبلی = G0 کامل + G1-01..04 با پایلوت memory — طبق سند، ماتریس اولویت P1 این دور: G1-05..08 و G1-10 (G1-09 کمبو عمداً نرفت چون P2 است و معیار پذیرشش مهاجرت speed-quiz/flappy می‌خواهد که ریسک امتیاز دارد)
+  2169→- ۵ ماژول جدید/به‌روزشده در games/kit/:
+  2170→  · difficulty.ts (G1-07): تایپ DifficultyKey/Preset + DIFFICULTY_PRESETS (آسان ×۱ / عادی ×۱٫۵ / سخت ×۲٫۲۵) + computeScore — فرمول واحد مستند در سربرگ: score = base × level × combo، خروجی همیشه round و ورودی خراب خنثی
+  2171→  · telemetry.ts (G1-10): createGameSession → start/end/abandon با reason قراردادی (finish/exit/hidden/unmount/restart)، duration رُند ثانیه، fire-and-forget با keepalive، هر جلسه فقط یک‌بار گزارش (reported flag) — فقط game/level/duration/reason، بدون PII
+  2172→  · tutorial-overlay.tsx (G1-08): TutorialOverlay سه‌گامی روی Dialog شادکنا (نقطه‌چین پیشرفت، قبلی/بعدی/شروع می‌کنم، «رد کردن — دیگر نشانم نده») + useAutoTutorial — کلید per-game «visionone:game-tutorial:{game}»، skip همیشه ذخیره می‌شود
+  2173→  · game-shell.tsx (G1-05): هدر یکنواخت [آیکون+نام]+[بج‌های آمار]+[راهنما|توقف|صدا|انصراف] + progress slot + باکس aria-live مرکزی sr-only؛ دکمه‌های اختیاری با الگوی h-11/aria-pressed/لیبل پویا
+  2174→  · result-screen.tsx (G1-06): ستاره‌بندی ۱..۳ (آستانه per-game مال بازی)، بج رکورد، شبکهٔ آمار، بخش «مرور N خطا» فقط با خطای >0 (بازشدن اول recordSRS(front,false) یک‌بار — مرور صریح = تمرین مجدد) و سه دکمهٔ ثابت دور جدید/مرور/خروج؛ کانفتی از مسیر موجود saveBest→emitRecord می‌آید (prop celebrate برای بازی‌های خارج از مسیر)
+  2175→- دو خطای lint حین کار و رفع: react-hooks/set-state-in-effect در useAutoTutorial → بازنویسی با الگوی رسمی پروژه useSyncExternalStore (snapshot سرور=بسته، رویداد «visionone:tutorial-change» + storage) و ریست قدم آموزش از effect به داخل close (تنها مسیر بستن)؛ handleExitClick بعد از early-return بود (rules-of-hooks) → انتقال به بالای کامپوننت
+  2176→- پایلوت memory-game.tsx (MultiEdit با anchor): GameShell جایگزین هدر دستی (بج‌ها به stats و پیشرفت به progress رفت؛ چیپ نام بازی اضافه شد — تنها تغییر ظاهری هدر طبق هدف یکنواخت‌سازی) · TUTORIAL_STEPS سه‌گامی · راهنمای شِل حین بازی = pauseGame + دیالوگ، بستن = resume (pausedForHelpRef) · ResultScreen جایگزین نمای done با آستانه ستاره acc≥85→۳/≥60→۲ · missedWords (یکتا بر اساس واژه) در شاخهٔ جفت غلط · تله‌متری: session تازه در start با level=«درس:جفت»، end(finish) در finish، abandon(exit) در تأیید گارد و — بعد از کشف QA — در مسیر خروج مستقیم بدون پیشرفت هم abandon زده شد، cleanup unmount → abandon(unmount)
+  2177→- QA مرورگری کامل agent-browser: آموزش خودکار در اولین ورود (۳ قدم پیمایش + «شروع می‌کنم») و کلید tutorial:memory=1 ذخیره ✓ · دکمهٔ راهنما حین بازی = توقف (liveMsg «بازی متوقف شد ⏸») و Esc = ادامه ✓ · توقف/اورلی/ادامه ✓ · جفت غلط عمدی (injured) → ResultScreen با ۳ ستاره (acc ۸۶٪)، بج رکورد، توست گیمیفیکیشن، «مرور ۱ خطا» باز شد و injured در SRS lapses=1 ثبت شد ✓ · «دور جدید» بدون نمایش دوبارهٔ آموزش ✓ · خروج بدون پیشرفت = مستقیم، با پیشرفت = دیالوگ گارد «برگردم به آزمایشگاه؟ 🎮» ✓ · موبایل ۳۹۰px بدون سرریز (390=390) با فوتر چسبیده (گزارش کامل in tool-results/g1-round2-*.png)
+  2178→- تله‌متری end-to-end از مرورگر واقعی در dev.log: game_session_start/end(reason=finish,duration=71)/abandon(reason=exit,duration=11)/abandon(reason=unmount,duration=34 — از HMR unmount، یعنی گارد unmount واقعاً کار می‌کند) — دقیقاً قالب قرارداد سربرگ telemetry.ts؛ تست curl مستقل هم دو رویداد را تأیید کرد
+  2179→- سند roadmap به ۱.۲ ارتقا یافت (وضعیت اجرا + ردیف چنگ‌ریز)
+  2180→
+  2181→Stage Summary:
+  2182→- فاز G1 عملاً بسته شد (۹/۱۰ کار؛ فقط G1-09 موتور کمبو به‌عنوان P2 مانده) — آزمایشگاه حالا شِل/نتیجه/آموزش/تله‌متری استاندارد دارد و همهٔ بازی‌های بعدی فقط باید از همین ۸ API کیت مصرف کنند: playSound/buzz/useGamePause/GameExitGuard/GameShell/ResultScreen/TutorialOverlay+useAutoTutorial/createGameSession (+difficulty برای فاز G3)
+  2183→- فایل‌ها: games/kit/{difficulty,telemetry,tutorial-overlay,game-shell,result-screen}.tsx? — دقیق: difficulty.ts و telemetry.ts و tutorial-overlay.tsx و game-shell.tsx و result-screen.tsx + games/memory-game.tsx (پایلوت)؛ امضاهای shared.ts و کلیدهای localStorage بازی دست‌نخورده (قانون حفظ‌شوندگی)
+  2184→- کلید localStorage جدید: «visionone:game-tutorial:{game}» (۱=دیده‌شده) · رویداد جدید: «visionone:tutorial-change»
+  2185→- قرارداد برای عوامل G2: هر مهاجرت بازی = GameShell(هدر)+ResultScreen(نتیجه)+TutorialOverlay(آموزش ۳گامی)+تله‌متری(۴ نقطه: start در شروع دور، end در پایان، abandon در تأیید گارد و در خروج مستقیمِ بدون پیشرفت و cleanup unmount) — ستاره/آستانه و مرور خطا مال خود بازی است؛ در بازی‌های زمان‌دار راهنما باید مثل memory توقف بزند
+  2186→- ریسک/یادداشت: (۱) چیپ نام بازی در هدر playing اضافه شد — تغییر ظاهری آگاهانهٔ هدف G1-05 (۲) tsc کل پروژه ۷ خطا دارد که همه خارج src/ و از پیش موجودند؛ lint صفر (۳) G1-09 کمبو باید هم‌زمان با G2 گروه speed-quiz/flappy برود تا امتیاز یکسان بماند (۴) rate-limit تله‌متری ۳۰/۵دقیقه است — بازی‌های سریع کافی است چون هر دور فقط ۲-۳ رویداد می‌فرستد
+  2187→- گام بعدی پیشنهادی: G2 به ترتیب سند — گروه a (memory/scramble/hangman: کیبورد ۴-جهته memory، راهنمای هزینه‌دار scramble، بادکنک hangman) و گروه b (cloze/word-search/sentence-builder)؛ سپس G3
+  2188→
+  2189→---
+  2190→Task ID: G2-a-3
+  2191→Agent: full-stack-developer (Z.ai Code)
+  2192→Task: مهاجرت کامل بازی «دارباز» (hangman) به کیت GameKit v2 + کار اختصاصی G2-a — افکت ترکیدن بادکنک سه‌کاناله (فاز G2 گروه a نقشه راه بازی‌ها)
+  2193→
+  2194→Work Log:
+  2195→- قدم صفر: worklog (از خط ۱۹۰۰) + docs/games-roadmap.md + پایلوت memory-game.tsx + هر ۹ فایل kit/ خوانده شد؛ سپس فقط فایل مالکیت hangman-game.tsx بازنویسی شد (۷۳۶ → ~۹۶۵ خط؛ کلیدها/امضاها دست‌نخورده)
+  2196→- کار اختصاصی — ترکیدن بادکنک (سه‌کاناله): state جدید popIdx (ایندکس بادکنک درحال‌ترکیدن = MAX_WRONG − wrongCount) + تایمر POP_MS+۲۰ برای حذف کلاس پس از پایان انیمیشن؛ CSS در خود فایل (`<style>` یک‌بار در نمای playing): keyframes hangman-pop (scale 1→1.3→1.7 + fade-out، ۴۰۰ms، fill forwards) — پس از پایان، کلاس برداشته می‌شود و بادکنک به حالت ترکیده (scale-0) و حباب خط‌چین می‌رود (حباب عمداً بعد از popIdx پاک‌شدن ظاهر می‌شود تا سکانس «ترکیدن→حذف→حباب» رعایت شود)؛ رعایت prefers-reduced-motion با media query: animation-name به hangman-flash سوییچ می‌شود (چشمک opacity+brightness بدون هیچ حرکتی = فلاش سادهٔ رنگ)؛ صدا/لرزش: popBalloon() = playSound("wrong")+buzz("error") برای هر اشتباه شامل ششمین (باخت)؛ aria: liveMsg = «یک بادکنک ترکید — N جان مانده» (faNum) — هر سه کانال با eval مرورگر راستی‌آزمایی شد (کلاس hangman-pop حین انیمیشن گرفته شد)
+  2197→- مهاجرت ۵گانه به کیت (الگوی پایلوت memory، فقط API قراردادی): (۱) GameShell جایگزین هدر دستی — title=«دارباز»، icon=SpellCheck، بج‌ها=واژه i/N · زمان · N جان (Heart) · N حدس (MousePointerClick) · N برد/باخت شرطی، liveMsg، progress=نوار پیشرفت قبلی، صدا/توقف/راهنما/انصراف استاندارد h-11 (۲) صدا/لرزش: حدس درست حرف=correct+success، بازکردن کل واژه=win+buzz(record)، باخت واژه=wrong+error (متنی «کلمه X بود» حفظ)، پایان دور=finish+success، رکورد=record+record (الگوی memory)، کلیک حروف on-screen=click+light قبل از guessLetter (کیبورد فیزیکی فقط صدای نتیجه) (۳) Pause: useGamePause + گیت تایمر ثانیه‌شمار روی paused (deps: phase,paused) + گیت guessLetter روی paused + اورلی «بازی متوقف شد» با blur-sm/pointer-events-none/aria-hidden روی کل محتوا (بادکنک+کارت واژه+کیبورد) — توقف خودکار تب مخفی از useGamePause (۴) نگهبان خروج: حداقل یک حدس یا پیشرفت (used.length>0 || detail.length>0) → GameExitGuard با abandon("exit")؛ بدون حدس → خروج مستقیم + abandon("exit") (۵) ResultScreen جایگزین نمای done سفارشی: title سه‌حالته (بی‌خطا=«همه واژه‌ها را بردی!» / همه‌باخت=«کلمه‌ها این بودند!» / مخلوط=«دور تمام شد!»)، ستاره per-game (بی‌خطا=۳، مخلوط=۲، همه‌باخت=۱ — با هر خطا ستارهٔ کامل نیست)، stats=برد/باخت/زمان، isRecord، errorCount=باخت‌ها، reviewItems={front:word, back:معنی} از دادهٔ خود بازی؛ مسیر SRS دوطرفهٔ موجود (recordSRS در برد/باخت حین بازی) عیناً حفظ شد و نتیجهٔ کیت جایگزینش نشد
+  2198→- آموزش: TUTORIAL_STEPS سه‌گامی (SpellCheck/Heart/Trophy) + useAutoTutorial(GAME_KEY, phase==="setup") + TutorialOverlay در setup و playing؛ راهنمای شِل حین بازی = pausedForHelpRef (توقف هنگام باز، resume هنگام بستن)
+  2199→- تله‌متری: sessionRef الگوی memory — createGameSession({game:"hangman", level:"{lesson}:{count}"}) در start، end("finish") در finish، abandon("exit") در هر دو مسیر خروج، abandon("unmount") در cleanup (همراه پاک‌سازی تایمرهای قفل برد/باخت و انیمیشن pop)
+  2200→- دو انحراف آگاهانه از متن تسک (هم‌رفتار با پایلوت، برای سبز-ماندن react-hooks v6): (۱) به‌جای «useEffect → setMuted(isSoundMuted())» الگوی واقعی memory یعنی useState(isSoundMuted()) + شنوندهٔ storage برای همگام‌سازی بین-تب — چون rule set-state-in-effect setState مستقیم در effect را می‌گیرد (۲) «stars=1 اگر… else 1» تسک متناقض بود → فرمول سه‌حالته بالا که «بدون ستارهٔ کامل در باخت» و «stats=برد/باخت/زمان» را نگه می‌دارد
+  2201→- راستی‌آزمایی: bun run lint صفر؛ bunx tsc --noEmit فیلتر games/ خالی (۷ خطای کل، همه از پیش موجود در examples/scripts/skills/tool-results — خارج src)؛ فقط فایل مالکیت تغییر کرد (git diff: ۵۸۵+/۳۸۰−)
+  2202→- QA مرورگری کامل agent-browser (سرور وسط کار با OOM کشته شد — dmesg: oom-kill next-server ~1.9GB، الگوی شناخته‌شده؛ با setsid nohup bun run dev احیا و ادامه داده شد): ورود با حساب آزمایشی tester10c از UI → بازی‌ها → آزمایشگاه → کارت «دارباز» → آموزش خودکار ۳قدمی (محتوای هر قدم خوانده شد + «شروع می‌کنم») و ذخیرهٔ visionone:game-tutorial:hangman=1 ✓ → setup (انتخاب «۳ واژه») → شروع: GameShell با ۴ کنترل و بج‌های جان/حدس + ۶ بادکنک + liveBox ✓ → حدس غلط Z: کلاس hangman-pop حین انیمیشن گرفته شد + liveMsg «یک بادکنک ترکید — ۵ جان مانده» + پس از ~۴۰۰ms بادکنک حذف و حباب خط‌چین ظاهر + بج جان ۶→۵ و حدس ۰→۱ ✓ → keyframes hangman-pop و media-rule prefers-reduced-motion در document.styleSheets تأیید شد ✓ → واژهٔ COULD با C/O/U/L/D برد (win badge + liveMsg کامل‌شدن + advance خودکار با ریست جان/حدس) ✓ → توقف: اورلی + blur + aria-hidden + سنجش دقیق تایمر (۲:09→۲:09 حین توقف، ۲:11 بعد از resume) ✓ → راهنما حین بازی: توقف خودکار پشت دیالوگ و resume با Esc ✓ → انصراف با پیشرفت → نگهبان «برگردم به آزمایشگاه؟ 🎮» (تصمیم «نه» = ادامه) ✓ → حدس غلط با کیبورد فیزیکی (press a) هم کار می‌کند ✓ → واژهٔ ERASER عمداً با ۶ غلط باخته شد (liveMsg «واژه «ERASER» بود — به مرور اضافه شد» + نمایش کامل + بج مرور) → ResultScreen: title «دور تمام شد!»، ستاره ۲/۳، بج رکورد، stats ۲برد/۱باخت/۲:۴۱، «مرور ۱ خطا» → ردیف ERASER/پاک کن و ثبت دوباره در SRS (lapses:2 — یکی حین باخت از مسیر بازی، یکی در مرور صریح = رفتار مستند کیت) ✓ → «دور جدید» بدون نمایش دوبارهٔ آموزش ✓ → خروج بدون حدس = مستقیم بدون دیالوگ ✓ → دکمهٔ بی‌صدا: visionone:sound-muted=1 و برگشت label/aria-pressed و برگشت به 0 ✓ → نگهبان خروج در دور دوم (با یک حدس) → «آره، خروج» = بازگشت + abandon ✓ → موبایل ۳۹۰px: scrollWidth=390 بدون اسکرول افقی، دکمه‌ها ۴۴px ✓؛ تله‌متری end-to-end در dev.log: game_session_start(level=all:3) / end(duration=182, reason=finish) / abandon(reason=exit, duration=6 و ۱۱) و POST /api/attempts 200؛ اسکرین‌شات‌ها: tool-results/g2a-hangman-*.png (۱۱ عدد: tutorial/setup/playing/balloon-pop/pause-overlay/exit-guard/word-lost/result/review-open/help-during-play/mobile-390)
+  2203→
+  2204→Stage Summary:
+  2205→- دارباز چهارمین بازی سوارشده روی GameKit v2 شد (بعد از memory): GameShell + ResultScreen + آموزش ۳گامی + Pause/نگهبان خروج + تله‌متری + صدا/لرزش — و کار اختصاصی G2-a (ترکیدن بادکنک سه‌کاناله با fallback reduced-motion) کامل و مرورگری راستی‌آزمایی شد
+  2206→- فایل‌ها: فقط src/components/book/games/hangman-game.tsx (مالکیت همین تسک) — هیچ فایلی از kit/ و shared.ts و games-hub ویرایش نشد؛ امضای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage (visionone:game-best:*:hangman:*، tutorial، srs) تغییر نکرد (قانون §۳-۴)
+  2207→- کلید/رویداد جدید: هیچ (همه از کیت: visionone:game-tutorial:hangman و رویدادهای game_session_*)؛ تنها CSS جدید دو keyframes محلی در خود فایل (hangman-pop/hangman-flash)
+  2208→- تصمیم‌ها: (۱) صدای click فقط روی حروف on-screen نه keydown فیزیکی (کلید فیزیکی خودش بازخورد سخت‌افزاری دارد) (۲) بج‌های شِل طبق تسک = جان/حدس (+زمان/واژه/برد/باخت شرطی حفظ شد) (۳) حباب خط‌چین تا پایان انیمیشن pop نگه داشته می‌شود تا سکانس دیدنی باشد (۴) تایمرهای قفل برد/باخت (۱٫۴/۲٫۲ث) مثل پایلوت memory روی paused گیت نمی‌شوند — پنجرهٔ کوتاه و self-cleaning؛ ریسک ناچیز: توقف در همان پنجره = advance پشت اورلی
+  2209→- ریسک/یادداشت: (۱) warning قدیمی Radix «Missing Description برای DialogContent» مربوط به کیت (TutorialOverlay) است و در memory هم هست — خارج از مالکیت این تسک (۲) سرور سندباکس OOM-پrone است؛ در QA دوباره از دست رفت و احیا شد — بازیابی جریان QA مشکلی نساخت (۳) «keyboard type» ابزار agent-browser رویداد keydown واقعی نمی‌فرستد؛ با «press» تست شد و بازی سالم پاسخ داد — برای QA بازی‌های کیبوردی بعدی از press استفاده شود
+  2210→- گام بعدی پیشنهادی: ادامهٔ G2 گروه a — scramble (راهنمای هزینه‌دار −۳۰) و memory (کیبورد ۴-جهته + aria-label کارت‌ها) که در این گروه باقی مانده‌اند؛ سپس گروه b
+  2211→
+  2212→---
+  2213→Task ID: G2-a-1
+  2214→Agent: memory-keyboard agent (Z.ai Code)
+  2215→Task: فاز G2-a سند بازی‌ها — پر کردن شکاف اختصاصی memory: کیبورد ۴-جهته روی گرید کارت‌ها (فلش‌ها + Enter/Space) با aria-label وضعیت‌مند و حلقهٔ aria-live — بدون دست‌زدن به بقیهٔ سیستم بازی
+  2216→
+  2217→Work Log:
+  2218→- قدم صفر: worklog (خط ۱۹۰۰ به بعد) + سند §۵/G2 خواند شد؛ وضعیت = فاز G0/G1 بسته، memory پایلوت کامل کیت (صدا/لرزش/توقف/نگهبان/ResultScreen/آموزش/تله‌متری) — کار فقط پر کردن شکاف کیبورد؛ Read کامل memory-game.tsx و shared.ts و kit/game-shell.tsx برای رعایت قراردادها (faNum/describeOption/الگوی liveMsg)
+  2219→- پیاده‌سازی الگوی نشانگر سیار (roving cursor) در memory-game.tsx: ثابت GRID_COLS=4 + state focusIdx (null = هنوز وارد نشده) + gridRef؛ onKeyDown روی wrapper گرید (نه هر کارت) با tabIndex={0} (هنگام توقف -۱) + role=group + aria-label راهنمای فارسی؛ ArrowRight=+۱ و ArrowLeft=−۱ با گارد مرز سطر (عبور از ستون اول/آخر ممنوع) و ArrowDown/Up=±COLS با clamp؛ ورود اول با هر فلش از کارت ۱ شروع می‌شود؛ فلش‌ها preventDefault می‌شوند (بدون اسکرول صفحه)
+  2220→- Enter/Space → همان handleCardClick(cards[focusIdx]) با preventDefault — گاردهای موجود busy/paused/matched/open داخل همان تابع قبلی رعایت می‌شوند (هیچ منطق جدیدی)؛ کل هندلر در paused گارد می‌شود؛ در start() هم focusIdx ریست می‌شود
+  2221→- دکمه‌های کارت: tabIndex={-1} (فقط یک Tab-stop برای کل گرید تا دو نشانگر موازی DOM-focus/کیبورد واگرا نشوند)؛ onClick نشانگر کیبورد را با کارت لمس‌شده همگام می‌کند (setFocusIdx(i) + همان handleCardClick)؛ ring-2 ring-amber-400 ring-offset-1 مشروط + rounded-lg برای هم‌شکلی حلقه با کارت + data-focused
+  2222→- aria-label وضعیت‌مند (الگوی describeOption سند): بسته «کارت شمارهٔ N» / باز «کارت شمارهٔ N — واژه X|معنی Y» / جفت‌شده با پسوند «— جفت شد» (شماره‌ها با faNum)؛ حلقهٔ aria-live: در هر جابه‌جایی liveMsg با همین الگو (کارت بسته فقط شماره تا پاسخ لو نرود) و در Enter/Space محتوای برگشته اعلام می‌شود — برای کارت دوم، پیام جفت درست/غلطِ خود بازی جایگزین می‌شود
+  2223→- گارد اسکرول: useEffect روی focusIdx → scrollIntoView({block:"nearest"}) روی button[data-focused="true"] — بدون پرش صفحه
+  2224→- ریسک ابزاری: MultiEdit در این محیط atomic نیست (یک بلوک کامنت JSX وسط پراپ‌ها ناقص ماند) — با python3 بازسازی و با Read خط‌به‌خط راستی‌آزمایی شد؛ کامنت «فاز G2-a — کیبورد چهارجهته» بالای همهٔ بلوک‌های جدید
+  2225→- کیفیت: bun run lint = صفر خطا (تنها warning از پیش موجود hangman مال عامل موازی)؛ bunx tsc --noEmit فیلتر games/ = خالی (۷ خطای شناخته‌شده خارج src)؛ git diff فقط در memory-game.tsx (۱۲۳+/۱۰−) — امضاهای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage و رویدادهای visionone:game-data / visionone:attempt-saved دست‌نخورده
+  2226→- QA مرورگری با agent-browser (سرور دو بار با OOM مُرد — الگوی شناخته‌شده — و با setsid nohup bun run dev احیا شد): / → «ورود به ویژن وان» → ناوبری «بازی‌ها» → آزمایشگاه → کارت «تطبیق حافظه» → رد کردن آموزش → شروع دور (درس ۱، ۶ جفت = ۱۲ کارت)؛ Tab تا گرید (۱۶ Tab-stop؛ بلافاصله بعد از گرید NEXTJS-PORTAL — یعنی کارت‌ها واقعا از ترتیب Tab خارج‌اند)؛ ArrowDown → کارت ۱ با ring فعال و liveMsg «کارت شمارهٔ ۱»؛ Right×۲ → کارت ۳؛ Down/Up دقیقا ±۴ (۳↔۷)؛ گارد مرز در ستون آخر (Right از کارت ۴ بی‌اثر) و ستون اول (Left×۳ روی کارت ۱ ثابت)؛ Enter → بازشدن کارت + aria-label «کارت شمارهٔ ۱ — واژه leopard» + aria-pressed=true + اعلام محتوا در liveMsg؛ Space هم باز می‌کند؛ جفت غلط با کیبورد → پیام «جفت غلط...» + بج «۱ حرکت»؛ توقف حین کیبورد → فلش/Enter بی‌اثر + اورلی توقف؛ ادامه → شکار جفت leopard فقط با کیبورد (Down → کارت ۵ «معنی پلنگ» → Up → Enter → ««leopard» جفت شد — درست بود! 🎉»)؛ اعلام کارت جفت‌شده هنگام پیمایش: «کارت شمارهٔ ۱ — واژه leopard — جفت شد» و «کارت شمارهٔ ۵ — معنی پلنگ — جفت شد»؛ اسکرین‌شات tool-results/g2a-memory-kb.png؛ کنسول فقط Fast Refreshهای HMR و یک خطای محیطی speak (نبود شبکهٔ بیرونی برای TTS ابری — مستقل از این تغییر)
+  2227→
+  2228→Stage Summary:
+  2229→- شکاف کیبورد memory (ردیف G2-a سند) بسته شد — گرید کارت‌ها حالا کامل با کیبورد قابل بازی است (فلش‌ها + Enter/Space) و کاربر فناوری‌های کمکی با حلقهٔ aria-live همراه می‌ماند؛ بقیهٔ سیستم بازی (صدا/لرزش/توقف/نگهبان خروج/ResultScreen/آموزش/تله‌متری) و امضاهای shared.ts یک بایت تغییر نکردند
+  2230→- تصمیم‌ها: (۱) roving cursor کامل (tabIndex=-1 روی کارت‌ها) به‌جای دو مسیر موازی — Enter/Space همیشه دقیقا کارتِ زیر ring را باز می‌کند و دو نشانگر واگرا نمی‌شوند (۲) COLS=4 ثابت طبق دستور — در نمای موبایل ۳-ستونه جابه‌جایی عمودی با سطر بصری یکی نیست (رفتار یکنواخت و بی‌خطا؛ برای QA فاز G6 یادداشت شد) (۳) نگاشت فلش‌ها فیزیکی طبق دستور (راست=+۱) — در RTL بصرت معکوس حس می‌شود؛ عمداً مطابق سند اجرا شد (۴) پیام aria-live کارت بسته فقط شماره است تا جواب لو نرود
+  2231→- ریسک/یادداشت: (۱) OOM تکرار سرور سندباکس دو بار QA را قطع کرد (الگوی شناخته‌شده؛ بین مرگ‌ها پنجرهٔ پایدار گرفته شد) (۲) حین QA یک HMR-reload کامل (به‌خاطر ویرایش موازی عوامل دیگر) صفحه را به خانه برگرداند — مسیر خروج/نگهبان در همین حالت قبلا در QA فاز G1 راستی‌آزمایی شده (۳) اشتباه ابزاری من: «agent-browser close --all» سشن موازی g2a-scramble را هم بست — بی‌داده و با یک open دوباره سازگار می‌شود (۴) گام بعد پیشنهادی: عوامل G2-b همین بلوک self-contained نشانگر سیار را برای cloze (کلیدهای ۱..۳) و sentence-builder (←→) بازاستفاده کنند
+  2232→---
+  2233→Task ID: G2-a-2
+  2234→Agent: full-stack-developer (تایم‌اوت قبل از ثبت — تغییرات کامل بود؛ QA و ثبت توسط orchestrator)
+  2235→Task: مهاجرت کامل بازی حروف‌جابه‌جا (scramble) به کیت GameKit v2 + کار اختصاصی G2-a (راهنمای هزینه‌دار −۳۰ امتیاز)
+  2236→
+  2237→Work Log:
+  2238→- مهاجرت ۵گانه (بررسی git diff توسط orchestrator): GameShell جایگزین هدر دستی (بج‌های امتیاز/حل‌شده/راهنما) · ResultScreen جایگزین نمای done (ستاره/دقت/مرور خطا/دور جدید/تنظیمات) · TutorialOverlay سه‌گامی با useAutoTutorial · GameExitGuard حین دور (abandon="exit" در تأیید) · تله‌متری sessionRef (start/end finish/abandon unmount) · useGamePause با گیت تایمر و زنجیرهٔ کیبورد روی paused
+  2239→- کار اختصاصی: راهنمای حرف دیگر رایگان نیست — هر بار −۳۰ امتیاز دور (کف صفر) + شمارندهٔ راهنما در بج‌ها + liveMsg «راهنما فعال شد — ۳۰ امتیاز کم شد» + متن دکمه «راهنما (−۳۰ امتیاز)»
+  2240→- صدا/لرزش: click/light برای حرف، correct/success برای حل، finish برای پایان
+  2241→- QA مرورگری (orchestrator با agent-browser): آموزش ۳گامی + رد کردن ✓ · شِل با ۴ کنترل استاندارد ✓ · راهنما −۳۰ با اعلام live ✓ · ۴×راهنما → کف امتیاز ۰ (منفی نشد) ✓ · توقف/ادامه (سوییچ لیبل + اورلی) ✓ · رد کردن واژه‌ها تا پایان → ResultScreen («دور تمام شد — ۰:49»، ۰٪ دقت، «مرور ۵ خطا»، دور جدید/تنظیمات) ✓ · تله‌متری dev.log: game_session_start + end(reason=finish, level=all:5) ✓ · اسکرین‌شات tool-results/g2a-scramble-result.png
+  2242→
+  2243→Stage Summary:
+  2244→- گروه G2-a کامل شد (۳/۳): memory (پایلوت G1 + کیبورد ۴-جهته G2-a-1) · scramble (مهاجرت کامل + راهنمای هزینه‌دار) · hangman (مهاجرت کامل + ترکیدن بادکنک با reduced-motion)
+  2245→- امضاهای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage همه دست‌نخورده؛ lint 0 / tsc فیلتر games/ خالی
+  2246→- قرارداد برای G2-b: همان الگوی سه فایل G2-a — عوامل فقط فایل مالکیت خود را ویرایش کنند و بعد از هر فایل lint بزنند
+  2247→
+  2248→---
+  2249→Task ID: G2-b-1
+  2250→Agent: full-stack-developer (Z.ai Code)
+  2251→Task: مهاجرت کامل بازی «جای خالی» (cloze) به کیت GameKit v2 + کار اختصاصی G2-b — کیبورد ۱..۳ برای انتخاب گزینه (فاز G2 گروه b نقشه راه بازی‌ها)
+  2252→
+  2253→Work Log:
+  2254→- قدم صفر: worklog (از خط ۱۹۰۰) + docs/games-roadmap.md (§۳-۴/§۵-G2-b) + پایلوت memory-game.tsx + دارباز مهاجرت‌شده (hangman — نزدیک‌ترین مثال) + هر ۹ فایل kit/ خوانده شد؛ سپس فقط فایل مالکیت cloze-game.tsx بازنویسی شد (۶۳۵ → ~۷۵۰ خط)
+  2255→- مهاجرت ۵گانه به کیت (عین قرارداد API، الگوی memory/hangman): (۱) GameShell جایگزین هدر دستی — title=«جای خالی»، icon=PencilLine، بج‌های آمار قبلی (پرسش i/N · زمان · N درست) در stats، liveMsg مرکزی، progress=نوار قبلی (۲) صدا/لرزش سه‌کاناله: درست=correct+success، غلط=wrong+error، کلیک (چیپ‌های درس/تعداد و شروع دور)=click+light، پایان=finish+success، رکورد=record+record، دور بی‌نقص=win (جایگزین finish — الگوی «بازکردن کل واژه» دارباز) (۳) useGamePause: اورلی «بازی متوقف شد» + بدنه blur+pointer-events-none+aria-hidden (الگوی memory)؛ تایمر گیت روی paused با secsRef برای مدت دقیق Attempt؛ auto-pause تب مخفی از خود هوک (۴) نگهبان خروج: ≥۱ پاسخ → GameExitGuard، بدون پاسخ → مستقیم به setup + abandon("exit")؛ تأیید → abandon("exit") (۵) ResultScreen جایگزین نمای done: ستاره‌بندی per-game acc≥۹۰→۳ / ≥۶۵→۲ / else ۱، stats درست/دقت/زمان، reviewItems={front:واژه, back:معنی} از wrongList، isRecord از مقایسهٔ saveBest موجود — مسیر seedReviewFromQuiz/recordSRS و touchStreak/recordStudySession/bumpPlays/saveAttempt حفظ شد
+  2256→- کار اختصاصی — کیبورد ۱..۳: نگاشت OPTION_KEYS {1/2/3 و ۱/۲/۳} → ایندکس گزینه؛ listener پایدار روی window فقط حین playing با گاردهای فاز/توقف/پنجرهٔ بازِ نگهبان (سطح effect: phase && !paused && !exitAsk) + گارد e.repeat (نگه‌داشتن کلید چند پرسش را پاسخ نمی‌دهد) + گاردهای busy/picked داخل answer؛ الگوی latest-ref (pickByKeyRef) مثل guessRef دارباز؛ روی هر گزینهٔ دکمه‌ای <kbd> مطلق کوچک با شمارهٔ فارسی + aria-keyshortcuts="N" + خط راهنما «با کلیدهای ۱ تا ۳ هم می‌توانی گزینه را انتخاب کنی»؛ liveMsg با کلید = «گزینه N — درست/غلط...»
+  2257→- آموزش: TUTORIAL_STEPS سه‌گامی (PencilLine/Keyboard/Trophy — قدم ۲ صریحاً کیبورد ۱..۳ را آموزش می‌دهد) + useAutoTutorial(GAME_KEY, phase==="setup") + TutorialOverlay در setup و playing؛ راهنمای شِل حین بازی = pausedForHelpRef (توقف هنگام باز، resume هنگام بستن)
+  2258→- تله‌متری: sessionRef الگوی memory — createGameSession({game:"cloze", level:"{lesson}:{rounds}"}) در start + .start()، .end("finish") در finish، .abandon("exit") در هر دو مسیر خروج، .abandon("unmount") در cleanup واحد (با stopSpeaking و پاک‌سازی تایمر پیشروی)
+  2259→- دو هم‌رفتار آگاهانه: (۱) muted با الگوی دارباز (useState(isSoundMuted()) + شنوندهٔ storage) نه setMuted خام در effect — rule set-state-in-effect react-hooks v6 (۲) چیپ‌های setup به min-h-11 + aria-pressed ارتقا یافتند (هدف لمسی ≥۴۴px سند) — تنها تغییر ظاهری setup
+  2260→- راستی‌آزمایی: bun run lint صفر؛ bunx tsc --noEmit فیلتر games/ خالی (۷ خطای کل، همه از پیش موجود خارج src)؛ git diff فقط cloze-game.tsx (۴۹۰+/۲۶۰−) — امضاهای saveAttempt/saveBest/bumpPlays و کلیدهای localStorage (visionone:game-best:*:cloze:*، tutorial، srs) تغییر نکرد
+  2261→- QA مرورگری کامل agent-browser (سشن پیش‌فرض + سشن ایزوله g2bqa برای تداخل‌نداشتن با عوامل موازی G2-b؛ سرور وسط کار دو بار OOM شد — dmesg: oom-kill next-server ~1.8GB، الگوی شناخته‌شده — با setsid nohup احیا شد): آموزش خودکار ۳قدمی + ذخیرهٔ visionone:game-tutorial:cloze=1 ✓ · setup (درس/تعداد با aria-pressed) → شروع: شِل با ۴ کنترل + بج‌ها + status ✓ · کلید «1» → گزینه ۱ protect = liveMsg «گزینه ۱ — درست بود! «protect» 🎉» + بج درست ✓ · کلید «1» غلط → «گزینه ۱ — غلط بود — پاسخ «simple» بود» ✓ · کلید فارسی «۳» → گزینه ۳ ✓ · aria-keyshortcuts هر ۳ دکمه با eval خوانده شد (1/2/3) ✓ · پاسخ ماوس ✓ · توقف: اورلی + سوییچ لیبل + تایمر منجمد (۰:۴۲→۰:۴۲ پس از ۳ث) + ادامه ✓ · نگهبان خروج با پیشرفت: باز شد، کلید «1» حین دیالوگ پاسخ نداد (گارد پنجرهٔ باز ✓)، «نه» ادامه داد، «آره» به setup برگرداند ✓ · خروج بدون پاسخ = مستقیم به setup بدون دیالوگ ✓ · دور کامل ۶/۱۰ پرسشی با کیبورد تا ResultScreen: ستاره ۲/۳ برای ۶۷٪ (آستانه ≥۶۵ درست)، بج رکورد + توست‌های گیمیفیکیشن موجود، stats درست/دقت/زمان ✓ · «مرور ۲ خطا» → واژهٔ hope (امیدوار بودن) و ثبت SRS: reps=2, lapses=1, lastGrade=0 (مرور صریح کیت) ✓ · «دور جدید» دور تازه شروع کرد ✓ · موبایل ۳۹۰px: بدون اسکرول افقی در setup و playing ✓ · تله‌متری dev.log: game_session_start + end(reason=finish,duration=43) + abandon(reason=exit) هر سه با game=cloze ✓
+  2262→Stage Summary:
+  2263→- جای خالی پنجمین بازی سوارشده روی GameKit v2 شد و شکاف کیبورد ردیف G2-b (کیبورد ۱..۳ انتخاب گزینه) بسته شد — aria-live محلی هم از صفر به الگوی شِل رسید
+  2264→- فایل‌ها: فقط src/components/book/games/cloze-game.tsx (مالکیت همین تسک) — هیچ فایل kit/ و shared.ts و games-hub ویرایش نشد؛ قانون حفظ‌شوندگی §۳-۴ برقرار
+  2265→- کلید/رویداد جدید: هیچ — همه از کیت (visionone:game-tutorial:cloze و game_session_*)؛ صداها/لرزش‌ها زیر کلید بی‌صدای سراسری کیت
+  2266→- تصمیم‌ها: (۱) صدای click به چیپ‌های setup و شروع دور داده شد نه به خود گزینه‌ها — هر گزینه بلافاصله بازخورد قطعی correct/wrong دارد و دابل‌صدا مزاحم می‌شد (۲) win به‌جای finish فقط در دور بی‌نقص (۳) announced «گزینه N» در همان پیام نتیجه تلفیق شد تا aria-live دو رندر پشت‌سرهم نخورد (۴) e.repeat گارد شد چون برخلاف حروف دارباز، تکرار کلید اینجا چند پرسش را پشت‌سرهم پاسخ می‌داد
+  2267→- ریسک/یادداشت: (۱) سشن مرورگر و سرور بین عوامل موازی G2-b مشترک است — QA در سشن ایزوله (--session) تکمیل شد و دو بار OOM سرور با احیا حل شد (۲) مکث پیشروی ۱ثانیه‌ای مثل قفل‌های memory/hangman روی paused گیت نمی‌شود — پنجرهٔ کوتاه self-cleaning و بی‌خطر (۳) هر ۳ بازی گروه b حالا الگوی مشترک دارند؛ word-search (drag-لمسی) و sentence-builder (کیبورد ←→) توسط عوامل موازی در جریان است
+  2268→---
+  2269→Task ID: G2-b-2
+  2270→Agent: full-stack-developer (تایم‌اوت قبل از QA — کد کامل بود؛ QA و ثبت توسط orchestrator)
+  2271→Task: مهاجرت کامل شکار کلمه (word-search) به کیت GameKit v2 + درگ لمسی Pointer Events
+  2272→
+  2273→Work Log:
+  2274→- مهاجرت ۵گانه (بررسی کد): GameShell + ResultScreen + TutorialOverlay + GameExitGuard + تله‌متری sessionRef + useGamePause با گیت تایمر + صدا/لرزش (correct/wrong/click/finish/record/win)
+  2275→- کار اختصاصی G2-b: درگ لمسی/ماوس با Pointer Events — pointerDown روی سلول شروع، حرکت با onPointerMove روی container + `document.elementFromPoint` با data-cell (مقاوم به pointer-capture ضمنی لمس)، رهاکردن (pointerUp/cancel/leave) = ثبت انتخاب؛ touch-action:none روی شبکه (اسکرول صفحه حین درگ نمی‌خورد)؛ مهار کلیک همان ژست درگ (کلیک بعد از pointerUp دوباره confirm نمی‌کند)؛ مسیر موقت هایلایت
+  2276→- QA مرورگری (orchestrator، سرور بارها OOM شد و با scripts/revive-server.sh احیا شد):
+  2277→  · setup سالم (بج‌های درس/تعداد/اندازهٔ جدول ۸×۸ و ۱۰×۱۰) → شروع شکار → ۶۴ سلول + aria-label «حرف F — ردیف ۱، ستون ۱» ✓
+  2278→  · توقف: اورلی «بازی متوقف شد» + دکمهٔ ادامه + سوییچ دکمهٔ هدر ✓ · ادامه ✓
+  2279→  · انتخاب دو-مرحله‌ای کلیکی: FREE یافت شد — liveMsg ««FREE» پیدا شد! 🎉» + پیشرفت ۱/۶ ✓
+  2280→  · درگ Pointer: N→E→X مسیر ساخته شد و رهاکردن «انتخاب: NEX — این واژه در فهرست نیست» (منطق واژهٔ غلط درست) — سلول چهارم خارج از viewport تست (۵۷۷px) بود، باگ نیست؛ touch-none = scrollY صفر حین درگ ✓
+  2281→  · نگهبان خروج با پیشرفت: دیالوگ + «نه، ادامه می‌دهم» ماند ✓ · موبایل ۳۹۰: scrollWidth=390 بدون سرریز، ۷۳ هدف لمسی ≥۴۰px ✓
+  2282→  · تله‌متری dev.log: game_session_start game=word-search level=1:6 ✓ · اسکرین‌شات‌ها tool-results/g2b-wordsearch-{drag,mobile}.png
+  2283→
+  2284→Stage Summary:
+  2285→- شکار کلمه حالا درگ لمسی واقعی دارد (موبایل‌فرست) و به کیت کامل مهاجرت کرد؛ امضاها و کلیدهای localStorage دست‌نخورده
+  2286→- یادداشت: تست درگ سینتتیک نیاز دارد سلول‌ها در viewport باشند (elementFromPoint خارج viewport = null) — QA فاز G6 موبایل واقعی این را کامل‌تر می‌کند
+  2287→- قرارداد: scripts/revive-server.sh برای احیای سرور بعد از OOM/کشتار پراسس — همهٔ عوامل بعدی اول اسکریپت را صدا کنند
+  2288→
+  2289→---
+  2290→Task ID: G2-b-3
+  2291→Agent: full-stack-developer (تایم‌اوت قبل از QA — کد کامل بود؛ QA و ثبت توسط orchestrator)
+  2292→Task: مهاجرت کامل سازندهٔ جمله (sentence-builder) به کیت GameKit v2 + کیبورد ←→ برای جابه‌جایی واژه
+  2293→
+  2294→Work Log:
+  2295→- مهاجرت ۵گانه: GameShell (بج جمله i/N + زمان + درست) + ResultScreen + TutorialOverlay سه‌گامی + GameExitGuard + تله‌متری (start/end finish/abandon exit/unmount) + useGamePause + صدا/لرزش
+  2296→- کار اختصاصی G2-b: کیبورد ردیف ساخت — wrapper تاب‌پذیر (tabIndex گیت‌شده با paused، aria-keyshortcuts، role=group) با نشانگر سیار: ←→ انتخاب/جابه‌جایی واژهٔ فعال با همسایه (همان swapAt دکمه‌ها — بدون امتیاز جدید)، Enter/Space برگرداندن به استخر، Backspace آخرین واژه (latest-ref)؛ گاردها: paused/locked/دیالوگ آموزش/نگهبان؛ گارد اسکرول scrollIntoView block:nearest؛ هینت کیبورد زیر ردیف
+  2297→- QA مرورگری (orchestrator): جملهٔ ۱ با کلیک درست چیده شد → «جمله کامل شد — درست بود! 🎉» + ۱ درست ✓ (نکته: جملهٔ هدف «Is this the road to the city centre?» ۸واژه‌ای است و استخر بدون حواس‌پرتی — ۷واژه چیدن = هیچ بررسی‌ای نمی‌زند، رفتار درست) · فلش‌ها: انتخاب «واژه The انتخاب شد — جایگاه ۱» → ArrowRight «به جایگاه ۲ منتقل شد» → ArrowLeft برگشت ✓ · Enter «واژه The به استخر برگشت» ✓ · جملهٔ ۲ کامل → ۲ درست ✓ · جملهٔ ۳ → ResultScreen «همه جمله‌ها چیده شد!» + رکورد جدید! 🏆 + آمار (۴:۲۳/۳ درست/۰ ردشده) + بدون بخش مرور چون صفر خطا ✓ · اورلی توقف + ادامه ✓ (تست دوم) · موبایل ۳۹۰ بدون سرریز ✓
+  2298→- کشف مهم QA: دیالوگ «تازه‌های ویژن‌وان» وسط تست باز شد و Radix کل ریشه را aria-hidden کرد → فلش‌ها بی‌اثر می‌شدند؛ با بستن دیالوگ همه‌چیز کار کرد — باگ بازی نیست ولی برای G6: دیالوگ What's New نباید وسط دور بازی خودش را باز کند (یادداشت بهبود)
+  2299→
+  2300→Stage Summary:
+  2301→- گروه G2-b کامل شد (۳/۳): cloze (کیبورد ۱..۳ فارسی/انگلیسی + گارد دیالوگ) · word-search (درگ Pointer + touch-none) · sentence-builder (کیبورد ←→/Enter/Backspace)
+  2302→- هر ۶ بازیِ تاکنون مهاجرت‌یافته: صدا/لرزش/توقف/نگهبان/نتیجهٔ استاندارد/آموزش/تله‌متری — lint 0 / tsc فیلتر games/ خالی در کل مسیر
+  2303→- برای G2-c: اول kit/combo-engine.ts (G1-09) را orchestrator می‌سازد، بعد speed-quiz/flappy/listening-hunt عامل می‌گیرند؛ یادداشت What's New وسط بازی را در G6 پیگیری کن
+  2304→
+  2305→---
+  2306→Task ID: G2-c-3
+  2307→Agent: full-stack-developer (Z.ai Code)
+  2308→Task: مهاجرت کامل شکار صدا (listening-hunt) به کیت GameKit v2 + کار اختصاصی G2-c — دکمهٔ «پخش دوباره» با شمارش تلاش و جریمهٔ امتیاز (فاز G2 گروه c نقشه راه بازی‌ها)
+  2309→
+
+[showing lines 2090-2309 of 3974; use offset=2310 with limit to continue reading]

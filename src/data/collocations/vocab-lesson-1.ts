@@ -1,0 +1,33 @@
+import type { VocabWord } from "../types";
+
+/** هم‌آیندهای درس ۱ (Family) از «1000 English Collocations» — عبارت بولد متن درس + توضیح ایتالیک */
+export const VOCAB_LESSON_1: VocabWord[] = [
+  { word: "immediate family", meaning: "خانوادهٔ درجه‌یک (والدین و خواهر و برادرها)", lesson: 1, pos: "phr." },
+  { word: "extended family", meaning: "خانوادهٔ گسترده (همهٔ بستگان: عمو، دایی، پسرخاله و…)", lesson: 1, pos: "phr." },
+  { word: "family tree", meaning: "شجره‌نامه (نمودار روابط میان اعضای خانواده)", lesson: 1, pos: "phr." },
+  { word: "distant relative", meaning: "خویشاوند دور (کسی که از طریق زنجیره‌ای طولانی از پیوندها به شما وصل است)", lesson: 1, pos: "phr." },
+  { word: "loving family", meaning: "خانوادهٔ پر از محبت (خانواده‌ای با روابط خوب که همه همدیگر را دوست دارند و کمک می‌کنند)", lesson: 1, pos: "phr." },
+  { word: "close-knit family", meaning: "خانوادهٔ منسجم و صمیمی (خانواده‌ای با روابط خوب و همیار)", lesson: 1, pos: "phr." },
+  { word: "carefree childhood", meaning: "کودکی بی‌دغدغه (در کودکی هیچ نگرانی نداشتن)", lesson: 1, pos: "phr." },
+  { word: "dysfunctional family", meaning: "خانوادهٔ ناکارآمد (خانواده‌ای که روابطش بد یا ناسالم است)", lesson: 1, pos: "phr." },
+  { word: "troubled childhood", meaning: "کودکی پرمشکل (کودکی همراه با آزار، فقر یا درگیری با قانون)", lesson: 1, pos: "phr." },
+  { word: "bitter divorce", meaning: "طلاق تلخ (جدایی همراه با احساسات بد و خشمگینانه میان زن و شوهر)", lesson: 1, pos: "phr." },
+  { word: "messy divorce", meaning: "طلاق آشفته (با نبرد حقوقی طولانی و کشمکش فراوان بر سر تقسیم اموال)", lesson: 1, pos: "phr." },
+  { word: "divorce settlement", meaning: "توافق‌نامهٔ طلاق (تصمیم‌های مربوط به تقسیم دارایی‌ها در آن گرفته می‌شود)", lesson: 1, pos: "phr." },
+  { word: "broken home", meaning: "خانوادهٔ ازهم‌پاشیده (خانواده‌ای که در آن طلاق یا جدایی رخ داده)", lesson: 1, pos: "phr." },
+  { word: "custody of the children", meaning: "حضانت فرزندان (مسئولیت اصلی مراقبت از بچه‌ها)", lesson: 1, pos: "phr." },
+  { word: "joint custody", meaning: "حضانت مشترک (پدر و مادرِ جدا‌شده مسئولیت را با هم تقسیم می‌کنند)", lesson: 1, pos: "phr." },
+  { word: "sole custody", meaning: "حضانت انحصاری (حضانتی که تنها به یکی از والدین داده می‌شود)", lesson: 1, pos: "phr." },
+  { word: "pay child support", meaning: "نفقهٔ فرزند پرداخت کردن (پرداخت‌های منظم برای کمک به هزینه‌های بچه‌ها)", lesson: 1, pos: "phr." },
+  { word: "mutual divorce", meaning: "طلاق توافقی (زن و شوهرِ جدا‌شده بدون دعوا بر جدایی توافق کرده‌اند)", lesson: 1, pos: "phr." },
+  { word: "stay on good terms", meaning: "روابط خوب را حفظ کردن (رابطه‌ای محترمانه و بدون درگیری داشتن)", lesson: 1, pos: "phr." },
+  { word: "get pregnant", meaning: "باردار شدن", lesson: 1, pos: "phr." },
+  { word: "single mother", meaning: "مادر مجرد (زنی که بدون ازدواج یا رابطه باردار می‌شود و کودک را تنها بزرگ می‌کند)", lesson: 1, pos: "phr." },
+  { word: "have an abortion", meaning: "سقط جنین انجام دادن", lesson: 1, pos: "phr." },
+  { word: "give the baby up for adoption", meaning: "نوزاد را برای فرزندخواندن واگذار کردن", lesson: 1, pos: "phr." },
+  { word: "due date", meaning: "موعد زایمان (زمانی که قرار است نوزاد به دنیا بیاید)", lesson: 1, pos: "phr." },
+  { word: "give birth", meaning: "نوزاد را به دنیا آوردن", lesson: 1, pos: "phr." },
+  { word: "adoptive parents", meaning: "والدین خوانده (پدر و مادری که کودک را به فرزندی می‌پذیرند)", lesson: 1, pos: "phr." },
+  { word: "raise the child", meaning: "کودک را بزرگ کردن (همانند فرزند خود بار آوردن)", lesson: 1, pos: "phr." },
+  { word: "birth mother", meaning: "مادر زادی (مادر بیولوژیک)", lesson: 1, pos: "phr." },
+];

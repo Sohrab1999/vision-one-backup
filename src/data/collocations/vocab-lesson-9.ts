@@ -1,0 +1,33 @@
+import type { VocabWord } from "../types";
+
+/** هم‌آیندهای درس ۹ از «1000 English Collocations» — عبارت بولد متن درس + توضیح ایتالیک */
+export const VOCAB_LESSON_9: VocabWord[] = [
+  { word: "musically gifted", meaning: "در موسیقی بااستعداد (استعداد ذاتی برای موسیقی داشتن)", lesson: 9, pos: "adj." },
+  { word: "sheet music", meaning: "نت‌نگاری (نت نوشته‌شده روی کاغذ)", lesson: 9, pos: "n." },
+  { word: "strumming a guitar", meaning: "نواختن گیتار (زدن سیم‌های گیتار)", lesson: 9, pos: "phr." },
+  { word: "composing music", meaning: "آهنگ‌سازی (ساختن موسیقی)", lesson: 9, pos: "phr." },
+  { word: "song lyrics", meaning: "متن ترانه (کلمات یک آهنگ)", lesson: 9, pos: "phr." },
+  { word: "formed a band", meaning: "گروه (موسیقی) تشکیل دادن", lesson: 9, pos: "phr." },
+  { word: "sizable following", meaning: "طرفداران چشمگیر (عدهٔ زیادی هوادار)", lesson: 9, pos: "phr." },
+  { word: "playing gigs", meaning: "اجرای زندهٔ کوچک (اجرای برنامه‌های کوچک و غیررسمی)", lesson: 9, pos: "phr." },
+  { word: "debut album", meaning: "نخستین آلبوم (اولین CD یک گروه یا خواننده)", lesson: 9, pos: "phr." },
+  { word: "remixed track", meaning: "ترانهٔ ریمیکس‌شده (آهنگی که به‌صورت الکترونیکی دگرگون شده)", lesson: 9, pos: "phr." },
+  { word: "massive hit", meaning: "آهنگ فوق‌محبوب (آهنگی بسیار پرطرفدار)", lesson: 9, pos: "phr." },
+  { word: "catchy tune", meaning: "ملودی گیرا (ملودی به‌یادماندنی)", lesson: 9, pos: "phr." },
+  { word: "upbeat tempo", meaning: "ضرب تند (ریتم سریع)", lesson: 9, pos: "phr." },
+  { word: "released", meaning: "منتشر شدن (در دسترس عموم قرار گرفتن)", lesson: 9, pos: "v." },
+  { word: "going on tour", meaning: "رفتن به تور (اجرای برنامه در شهرهای مختلف)", lesson: 9, pos: "phr." },
+  { word: "big break", meaning: "فرصت بزرگ (شانس بزرگ برای معروف شدن)", lesson: 9, pos: "phr." },
+  { word: "get his foot in the door", meaning: "راهش به یک صنعت باز شود (فرصت اولیه برای ورود به یک حرفه)", lesson: 9, pos: "phr." },
+  { word: "music industry", meaning: "صنعت موسیقی", lesson: 9, pos: "phr." },
+  { word: "singing along", meaning: "هم‌خوانی کردن (با آهنگ خواندن)", lesson: 9, pos: "phr." },
+  { word: "tone-deaf", meaning: "ناتوان از تشخیص درست نُت‌های موسیقی", lesson: 9, pos: "adj." },
+  { word: "sing off-key", meaning: "ناهماهنگ خواندن (خواندن با ملودی نادرست)", lesson: 9, pos: "phr." },
+  { word: "contemporary music", meaning: "موسیقی معاصر (موسیقی مدرن)", lesson: 9, pos: "phr." },
+  { word: "classical music", meaning: "موسیقی کلاسیک", lesson: 9, pos: "phr." },
+  { word: "orchestral/instrumental music", meaning: "موسیقی ارکسترال/بی‌کلام (موسیقی فقط با ساز، بدون خوانندگی)", lesson: 9, pos: "phr." },
+  { word: "rock music", meaning: "موسیقی راک", lesson: 9, pos: "phr." },
+  { word: "solo album", meaning: "آلبوم تک‌خوانی (CD با خوانندگی یک نفر به‌تنهایی، نه در گروه)", lesson: 9, pos: "phr." },
+  { word: "compilation album", meaning: "آلبوم گردآوری‌شده (CD با ترانه‌هایی از خوانندگان/گروه‌های مختلف)", lesson: 9, pos: "phr." },
+  { word: "cult following", meaning: "هواداران پرشور و وفادار (گروهی بسیار متعهد از طرفداران)", lesson: 9, pos: "phr." },
+];
