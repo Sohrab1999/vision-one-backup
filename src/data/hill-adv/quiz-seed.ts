@@ -1,8 +1,10 @@
 // سؤالات درست/نادرست درک مطلب — از خود داستان‌های Advanced Steps to Understanding
 // گزینه‌ها ۲تایی هستند (True/False) و پاسخ‌ها از متن داستان استخراج شده‌اند.
+// سؤال‌های داستان‌های ۳، ۱۴، ۱۸ و ۲۴ تا ۳۰ در quiz-seed-extra.ts هستند.
 import type { QuizQuestionSeed } from "../types";
+import { EXTRA_QUIZ } from "./quiz-seed-extra";
 
-export const QUIZ_SEED: QuizQuestionSeed[] = [
+const BASE_QUIZ: QuizQuestionSeed[] = [
   {
     "category": "grammar",
     "lesson": 1,
@@ -1499,6 +1501,8 @@ export const QUIZ_SEED: QuizQuestionSeed[] = [
     "explanation": "جان به دلیل نداشتن بلیت از بلیت‌بین می‌ترسید، نه از مرد مسلح."
   }
 ];
+
+export const QUIZ_SEED: QuizQuestionSeed[] = [...BASE_QUIZ, ...EXTRA_QUIZ];
 
 export const QUESTION_COUNTS: Record<string, number> = {
   grammar: QUIZ_SEED.filter((q) => q.category === "grammar").length,

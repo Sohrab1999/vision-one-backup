@@ -19,7 +19,7 @@ export const READINGS_PART_2: Reading[] = [
       },
       {
         "en": "'Oh, yes,' answered the fisherman. 'I know every rock on this part of the coast.' Suddenly there was a terrible tearing sound from under the ship. At once the fisherman added, 'And that's one of them.'",
-        "fa": "«آه، بله،» ماهیگیر پاسخ داد. «من هر صخره‌ای را در این قسمت از ساحل می‌شناسم.» ناگهان یک صدای ترکیدن وحشتناکی از زیر کشتی شنیده شد. بلافاصله ماهیگرد افزود: «و آن یکی از آنهاست.»"
+        "fa": "«آه، بله،» ماهیگیر پاسخ داد. «من هر صخره‌ای را در این قسمت از ساحل می‌شناسم.» ناگهان یک صدای ترکیدن وحشتناکی از زیر کشتی شنیده شد. بلافاصله ماهیگیر افزود: «و آن یکی از آنهاست.»"
       }
     ],
     "exercise": {
@@ -54,7 +54,7 @@ export const READINGS_PART_2: Reading[] = [
           "en": "Why did he ask him this?",
           "fa": "چرا این را از او پرسید؟",
           "answerEn": "Because he suspected that the fisherman did not really know what he was doing.",
-          "answerFa": "چون شک داشت که ماهیگرد واقعاً نمی‌داند چه کاری انجام می‌دهد."
+          "answerFa": "چون شک داشت که ماهیگیر واقعاً نمی‌داند چه کاری انجام می‌دهد."
         },
         {
           "en": "What did the fisherman answer?",
@@ -70,7 +70,7 @@ export const READINGS_PART_2: Reading[] = [
         },
         {
           "en": "And what did the fisherman say about it?",
-          "fa": "و ماهیگرد در مورد چه چیزی حرف زد؟",
+          "fa": "و ماهیگیر در مورد چه چیزی حرف زد؟",
           "answerEn": "He said that it was one of the rocks.",
           "answerFa": "او گفت که آن یکی از صخره‌هاست."
         }

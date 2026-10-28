@@ -184,7 +184,7 @@ export const CHAPTERS: ChapterMeta[] = [
     "id": 15,
     "number": "داستان ۱۵",
     "title": "The Admiral's Mistake",
-    "titleFa": "اشتبادmiral",
+    "titleFa": "اشتباه دریاسالار",
     "quote": {
       "en": "An old admiral was famous in the navy for his bad temper, so everyone tried hard not to annoy him.",
       "fa": "یک امیر کهنه‌کار در نیروی دریایی به خاطر خلق بدش معروف بود، پس همه سعی می‌کردند از او ناراحت نشوند.",
@@ -290,6 +290,146 @@ export const CHAPTERS: ChapterMeta[] = [
     },
     "minutes": 3,
     "color": "orange",
+    "grammarTopics": []
+  },
+  {
+    "id": 3,
+    "number": "داستان ۳",
+    "title": "The New Bath",
+    "titleFa": "حمام جدید",
+    "quote": {
+      "en": "Many years ago an English lady in Africa was invited by an important local chief to be the first person to use his new bath.",
+      "fa": "سال‌ها پیش، یک خانم انگلیسی در آفریقا از سوی یک رئیس محلیِ مهم دعوت شد تا نخستین کسی باشد که از حمام جدید او استفاده می‌کند.",
+      "source": "داستان ۳ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "rose",
+    "grammarTopics": []
+  },
+  {
+    "id": 14,
+    "number": "داستان ۱۴",
+    "title": "My Name's Stonebreaker",
+    "titleFa": "نام من «سنگ‌شکن» است",
+    "quote": {
+      "en": "A very strict officer was talking to some new soldiers whom he had to train.",
+      "fa": "افسر بسیار سخت‌گیری با چند سرباز تازه‌کار که باید آموزش‌شان می‌داد صحبت می‌کرد.",
+      "source": "داستان ۱۴ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "teal",
+    "grammarTopics": []
+  },
+  {
+    "id": 18,
+    "number": "داستان ۱۸",
+    "title": "Envy. Only Envy.",
+    "titleFa": "حسادت، فقط حسادت",
+    "quote": {
+      "en": "Mary was a university student. She did not have very much money, and her parents were not rich.",
+      "fa": "مری دانشجو بود. پول زیادی نداشت و والدینش هم ثروتمند نبودند.",
+      "source": "داستان ۱۸ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "emerald",
+    "grammarTopics": []
+  },
+  {
+    "id": 24,
+    "number": "داستان ۲۴",
+    "title": "When the Bear Shot Back",
+    "titleFa": "وقتی خرس شلیک متقابل کرد",
+    "quote": {
+      "en": "Mr Grey liked shooting very much, but he did not get much practice at shooting wild animals.",
+      "fa": "آقای گری تیراندازی را خیلی دوست داشت، اما تمرین زیادی برای شکار حیوانات وحشی نداشت.",
+      "source": "داستان ۲۴ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "amber",
+    "grammarTopics": []
+  },
+  {
+    "id": 25,
+    "number": "داستان ۲۵",
+    "title": "Halt! Who Goes There?",
+    "titleFa": "وایست! کی آنجاست؟",
+    "quote": {
+      "en": "Army camps always have to be guarded, of course, to make sure that nobody goes in or out without permission.",
+      "fa": "البته اردوگاه‌های نظامی همیشه باید نگهبانی شوند تا مطمئن شود هیچ‌کس بدون اجازه وارد یا خارج نمی‌شود.",
+      "source": "داستان ۲۵ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "violet",
+    "grammarTopics": []
+  },
+  {
+    "id": 26,
+    "number": "داستان ۲۶",
+    "title": "If You Pretend You're Asleep, He Stops!",
+    "titleFa": "اگر خودت را خواب نشان بدهی، او می‌ایستد!",
+    "quote": {
+      "en": "Joe and Helen Mills had two small children. One of them was six, and the other was four.",
+      "fa": "جو و هلن میلز دو بچهٔ کوچک داشتند؛ یکی از آن‌ها شش سال و دیگری چهار سال بود.",
+      "source": "داستان ۲۶ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "orange",
+    "grammarTopics": []
+  },
+  {
+    "id": 27,
+    "number": "داستان ۲۷",
+    "title": "First with the News",
+    "titleFa": "پیشتاز در خبر",
+    "quote": {
+      "en": "Mr Hodges was the owner and editor of a small newspaper. He always tried to bring his readers the latest news.",
+      "fa": "آقای هاجز مالک و سردبیر یک روزنامهٔ کوچک بود. او همیشه سعی می‌کرد تازه‌ترین اخبار را به خوانندگانش برساند.",
+      "source": "داستان ۲۷ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "rose",
+    "grammarTopics": []
+  },
+  {
+    "id": 28,
+    "number": "داستان ۲۸",
+    "title": "Eleven Metres and Forty-Eight Centimetres",
+    "titleFa": "یازده متر و چهل‌وهشت سانتی‌متر",
+    "quote": {
+      "en": "While Mr Green was waiting for a bus one morning, a car passed him, going very rapidly.",
+      "fa": "صبحی وقتی آقای گری منتظر اتوبوس بود، خودرویی با سرعت زیاد از کنارش رد شد.",
+      "source": "داستان ۲۸ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "teal",
+    "grammarTopics": []
+  },
+  {
+    "id": 29,
+    "number": "داستان ۲۹",
+    "title": "You Must Have Eaten Here Before!",
+    "titleFa": "حتماً قبلاً اینجا غذا خورده‌اید!",
+    "quote": {
+      "en": "Mr Jones had to drive up from London to Edinburgh in Scotland.",
+      "fa": "آقای جونز باید با خودرو از لندن به سمت ادینبرا در اسکاتلند می‌رفت.",
+      "source": "داستان ۲۹ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "emerald",
+    "grammarTopics": []
+  },
+  {
+    "id": 30,
+    "number": "داستان ۳۰",
+    "title": "The Electric Light Switch",
+    "titleFa": "کلید برق",
+    "quote": {
+      "en": "Mr Robinson won a lot of money on the football pools, but he did not know what the best thing to do with it would be.",
+      "fa": "آقای رابینسون در فوتبال پولز پول زیادی برد، اما نمی‌دانست بهترین کار با آن چیست.",
+      "source": "داستان ۳۰ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "amber",
     "grammarTopics": []
   }
 ];

@@ -1,10 +1,11 @@
 // واژگان داستان‌های Advanced Steps to Understanding — کلیدواژه‌های هر داستان با معنی فارسی
-// lesson = شمارهٔ داستان (۱ تا 20)
+// lesson = شمارهٔ داستان (۱ تا ۳۰) — ردیف‌های داستان‌های ۳، ۱۴، ۱۸ و ۲۴ تا ۳۰ در vocab-extra.ts
 import type { VocabEntry, VocabWord } from "../types";
+import { EXTRA_ROWS } from "./vocab-extra";
 
 type Row = Omit<VocabWord, "lesson"> & { lesson: number; lessonLabel: string };
 
-const ROWS: Row[] = [
+const BASE_ROWS: Row[] = [
   {
     "word": "driving examiner",
     "meaning": "کارشناس آزمون رانندگی",
@@ -1735,6 +1736,8 @@ const ROWS: Row[] = [
     "lessonLabel": "داستان ۲۳"
   }
 ];
+
+const ROWS: Row[] = [...BASE_ROWS, ...EXTRA_ROWS];
 
 export const VOCAB_ALL: VocabEntry[] = ROWS.map((r) => {
   const { lessonLabel, ...rest } = r;
