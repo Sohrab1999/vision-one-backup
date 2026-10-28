@@ -41,6 +41,24 @@ export interface ReadingParagraph {
   fa: string;
 }
 
+/** تمرین درک مطلب بعد از یک داستان (کتاب‌های داستانی مثل Steps to Understanding) */
+export interface ReadingExercise {
+  /** دستور تمرین انگلیسی مثل «Answer these questions.» */
+  instruction: string;
+  /** دستور تمرین فارسی */
+  instructionFa: string;
+  items: {
+    /** سؤال انگلیسی */
+    en: string;
+    /** ترجمه فارسی سؤال */
+    fa: string;
+    /** پاسخ نمونه انگلیسی (از خود داستان) */
+    answerEn: string;
+    /** ترجمه فارسی پاسخ نمونه */
+    answerFa: string;
+  }[];
+}
+
 export interface Reading {
   id: string;
   lesson: number;
@@ -51,6 +69,8 @@ export interface Reading {
   /** منبع، مثلاً "کتاب درسی — صفحه ۲۲" */
   source: string;
   paragraphs: ReadingParagraph[];
+  /** تمرین درک مطلب اختیاری (کتاب‌های داستانی) — با پاسخ نمونهٔ بازشونده */
+  exercise?: ReadingExercise;
 }
 
 export interface ConversationLine {

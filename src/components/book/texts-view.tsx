@@ -1,25 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { BookMarked, MessagesSquare, Languages } from "lucide-react";
+import { BookMarked, MessagesSquare, Languages, CircleHelp, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { faNum } from "@/lib/class-store";
 import { SpeakButton } from "./speak-button";
 import { ClickableEnText } from "./word-lookup";
-import { useBookData } from "@/lib/book-context";
-import type { Reading, Conversation } from "@/data/types";
+import { useBook, useBookData } from "@/lib/book-context";
+import type { Reading, ReadingExercise, Conversation } from "@/data/types";
 
 /** برچسب‌های تب درس — به‌صورت خودکار از محتوای کتاب فعال ساخته می‌شوند */
 function useLessonTabs() {
   const data = useBookData();
+  const { bookId } = useBook();
   const lessons = new Set<number>();
   data.readings.forEach((r) => lessons.add(r.lesson));
   data.conversations.forEach((c) => lessons.add(c.lesson));
-  return [...lessons].sort((a, b) => a - b).map((n) => ({ lesson: n, label: `درس ${n}` }));
+  // کتاب‌های داستانی (Steps to Understanding): تب‌ها «داستان N» هستند نه «درس N»
+  const isStoryBook = bookId?.startsWith("hill-") ?? false;
+  return [...lessons].sort((a, b) => a - b).map((n) => ({
+    lesson: n,
+    label: isStoryBook ? `داستان ${faNum(n)}` : `درس ${n}`,
+  }));
 }
 
 export function ReadingsLibrary({ lessonFilter }: { lessonFilter?: number }) {
@@ -123,8 +130,77 @@ export function ReadingCard({
             💡 روی هر واژه بزن — یا یک عبارت را نگه‌دار و انتخاب کن تا «جست‌وجو» ظاهر شود
           </p>
         </div>
+
+        {/* تمرین درک مطلب کتاب‌های داستانی — سؤال‌های بخش B با پاسخ نمونهٔ بازشونده */}
+        {reading.exercise && reading.exercise.items.length > 0 && (
+          <ReadingExerciseBlock exercise={reading.exercise} />
+        )}
       </CardContent>
     </Card>
+  );
+}
+
+/** یک آیتم تمرین با دکمهٔ باز/بستن پاسخ نمونه */
+function ExerciseItem({ index, item }: { index: number; item: ReadingExercise["items"][number] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <li className="rounded-xl border bg-muted/30 p-3.5 space-y-2">
+      <div className="flex items-start gap-2.5">
+        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-black text-primary">
+          {faNum(index + 1)}
+        </span>
+        <ClickableEnText
+          text={item.en}
+          className="font-en flex-1 text-[14.5px] leading-7 text-foreground"
+        />
+      </div>
+      {item.fa && <p className="ps-8.5 text-[12.5px] leading-6 text-muted-foreground">{item.fa}</p>}
+      <div className="ps-8.5">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className="h-8 gap-1.5 px-2.5 text-[11.5px] font-bold text-primary hover:text-primary"
+        >
+          <Eye size={13} />
+          {open ? "پنهان کردن پاسخ" : "نمایش پاسخ نمونه"}
+        </Button>
+        {open && (
+          <div className="mt-1.5 rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1">
+            <p dir="ltr" className="font-en text-[13.5px] leading-7 text-left">
+              {item.answerEn}
+            </p>
+            {item.answerFa && (
+              <p className="text-[12px] leading-6 text-muted-foreground">{item.answerFa}</p>
+            )}
+          </div>
+        )}
+      </div>
+    </li>
+  );
+}
+
+function ReadingExerciseBlock({ exercise }: { exercise: ReadingExercise }) {
+  return (
+    <section className="rounded-2xl border-2 border-dashed border-primary/25 bg-background p-4 space-y-3" aria-label="تمرین درک مطلب">
+      <div className="flex flex-wrap items-baseline justify-between gap-1">
+        <h4 className="flex items-center gap-1.5 text-[14px] font-black">
+          <CircleHelp size={16} className="text-primary" />
+          تمرین درک مطلب
+        </h4>
+        <p dir="ltr" className="font-en text-[11px] text-muted-foreground text-left">
+          {exercise.instruction}
+        </p>
+      </div>
+      <p className="text-[12px] text-muted-foreground">{exercise.instructionFa}</p>
+      <ol className="space-y-2.5">
+        {exercise.items.map((item, i) => (
+          <ExerciseItem key={i} index={i} item={item} />
+        ))}
+      </ol>
+    </section>
   );
 }
 

@@ -11,6 +11,11 @@ const BOOK_IDS: readonly string[] = [
   "grade-9",
   "grade-11",
   "grade-12",
+  "collocations",
+  "hill-intro",
+  "hill-elem",
+  "hill-inter",
+  "hill-adv",
 ];
 
 /** شناسه پیش‌فرض — کتاب فعلی که محتوا دارد */
@@ -36,6 +41,10 @@ const GRADE_LABELS: Record<Exclude<BookId, "vision-one">, string> = {
   "grade-11": "پایه یازدهم",
   "grade-12": "پایه دوازدهم",
   collocations: "۱۰۰۰ کالوکیشن کاربردی (مکالمه طبیعی)",
+  "hill-intro": "Introductory Steps to Understanding (L. A. Hill — سطح مقدماتی)",
+  "hill-elem": "Elementary Steps to Understanding (L. A. Hill — سطح متوسط)",
+  "hill-inter": "Intermediate Steps to Understanding (L. A. Hill — سطح نیمه‌پیشرفته)",
+  "hill-adv": "Advanced Steps to Understanding (L. A. Hill — سطح پیشرفته)",
 };
 
 /**

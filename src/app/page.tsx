@@ -51,8 +51,6 @@ const RewardsView = dynamic(() => import("@/components/book/rewards-view").then(
 const SpeakingView = dynamic(() => import("@/components/book/speaking-view").then((m) => m.SpeakingView), { ssr: false, loading: ViewChunkLoading });
 const ClassView = dynamic(() => import("@/components/book/class-view").then((m) => m.ClassView), { ssr: false, loading: ViewChunkLoading });
 const NotebookView = dynamic(() => import("@/components/book/notebook-view").then((m) => m.NotebookView), { ssr: false, loading: ViewChunkLoading });
-// کتاب‌خوان PDF — مجموعهٔ Steps to Understanding (L. A. Hill) — فقط برای کتاب‌های kind:"pdf"
-const PdfReaderView = dynamic(() => import("@/components/book/pdf-reader").then((m) => m.PdfReaderView), { ssr: false, loading: ViewChunkLoading });
 
 /** اسکلت بارگذاری تنبل جزوه — تا رسیدن chunk dynamic import کتاب فعال */
 function BookDataLoading() {
@@ -91,13 +89,10 @@ const NAV_SHORTCUT: ViewId[] = [
 ];
 
 function App() {
-  const { bookId, data, meta } = useBook();
+  const { bookId, data } = useBook();
   // null = هنوز کاربر ناوبری نکرده — نمای اولیه از کتاب فعال مشتق می‌شود
   const [view, setView] = useState<ViewId | null>(null);
   const [chapterId, setChapterId] = useState(1);
-
-  // کتاب‌های PDF (Steps to Understanding) به‌جای نمای‌های جزوه، کتاب‌خوان دارند
-  const isPdfBook = meta?.kind === "pdf";
 
   const effectiveView: ViewId = view ?? (bookId ? "home" : "shelf");
   // داده کتاب فعال آماده؟ (lazy-load فاز ۷ — تا رسیدن chunk اسکلت نشان داده می‌شود)
@@ -176,9 +171,7 @@ function App() {
         >
           {effectiveView === "shelf" && <BookshelfView onNavigate={navigate} />}
           {effectiveView === "compare" && <CompareView />}
-          {/* کتاب‌های PDF — کتاب‌خوان تمام‌عرض (نمای‌های جزوه برایشان معنا ندارند) */}
-          {isPdfBook && showBookViews && <PdfReaderView onNavigate={navigate} />}
-          {!isPdfBook && bookId && !data && showBookViews && <BookDataLoading />}
+          {bookId && !data && showBookViews && <BookDataLoading />}
           {effectiveView === "home" && hasData && <HomeView onNavigate={navigate} />}
           {effectiveView === "contents" && hasData && <ContentsView onOpenChapter={openChapter} />}
           {effectiveView === "chapter" && hasData && <ChapterView chapterId={chapterId} onNavigate={navigate} />}

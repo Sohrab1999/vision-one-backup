@@ -104,8 +104,6 @@ export function AppHeader({
   const dark = useIsDark();
   const { meta, bookId, books, setBook } = useBook();
   const hasBook = bookId !== null && meta !== null;
-  // کتاب‌های PDF — قرص‌های ناوبری جزوه برایشان معنا ندارد (کتاب‌خوان خودش نوار ابزار دارد)
-  const isPdfBook = meta?.kind === "pdf";
   const hasUnseenNews = useWhatsNewUnseen();
 
   function toggleTheme() {
@@ -196,7 +194,7 @@ export function AppHeader({
 
         {/* ناوبری قرصی هدر — فقط lg تا xl (1024-1279)؛ تبلت ۷۶۸-۱۰۲۳ ناوبری پایین دارد و از xl ریل کناری جانشین می‌شود
             افق‌محوی دو لبه: نشان می‌دهد نوار قابل‌اسکرول است (قبلاً سرریز نامرئی بود — فاز ۱ نقشه راه کیفیت) */}
-        {hasBook && !isPdfBook && (
+        {hasBook && (
           <div className="relative hidden min-w-0 flex-1 lg:block xl:hidden">
             <nav
               className="flex w-full min-w-0 items-center gap-1 overflow-x-auto px-2 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -229,11 +227,7 @@ export function AppHeader({
           </div>
         )}
 
-        {/* فاصله‌گذار اکشن‌ها: <lg بدون قرص (ناوبری پایین) → اکشن‌ها به لبه رانده شوند
-            کتاب‌های PDF در lg..xl هم بدون قرص‌اند → فاصله‌گذار معادل می‌گیرند */}
-        {(hasBook && isPdfBook) && (
-          <div aria-hidden className="hidden flex-1 lg:block xl:hidden" />
-        )}
+        {/* فاصله‌گذار اکشن‌ها: <lg بدون قرص (ناوبری پایین) → اکشن‌ها به لبه رانده شوند */}
         <div className="flex-1 lg:hidden" />
 
         {/* اکشن‌های ثابت — هرگز از هدر بیرون نمی‌زنند */}

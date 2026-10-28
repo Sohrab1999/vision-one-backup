@@ -102,10 +102,4 @@ export interface BookMeta {
   emoji: string;
   /** آیا محتوای کتاب بارگذاری شده و قابل ورود است؟ */
   available: boolean;
-  /**
-   * نوع کتاب — "data" (پیش‌فرض): جزوه ساختاریافته با BookData؛
-   * "pdf": فایل PDF اسکن‌شده که در کتاب‌خوان صفحه‌به‌صفحه خوانده می‌شود
-   * (پیکربندی در src/data/books/pdf-books.ts).
-   */
-  kind?: "data" | "pdf";
 }

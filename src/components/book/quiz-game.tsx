@@ -179,7 +179,8 @@ export function QuizGame({ lessonFilter }: { lessonFilter?: number }) {
       ...BASE_LESSON_OPTIONS,
       ...bookData.vocab.lessons
         .filter((l) => l.lesson > 0)
-        .map((l) => ({ value: String(l.lesson), label: `درس ${l.lesson}` })),
+        // برچسب از دادهٔ کتاب می‌آید — کتاب‌های داستانی «داستان N» می‌گیرند نه «درس N»
+        .map((l) => ({ value: String(l.lesson), label: l.label ?? `درس ${l.lesson}` })),
     ];
   }, [bookData]);
 

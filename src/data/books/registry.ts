@@ -84,44 +84,40 @@ export const BOOKS: BookMeta[] = [
     title: "Introductory Steps",
     gradeLabel: "مقدماتی — ۷۵۰ واژه",
     author: "L. A. Hill — انتشارات آکسفورد",
-    tagline: "۲۷ داستان کوتاه طنز با تمرین درک مطلب — کتاب‌خوان PDF",
+    tagline: "۲۷ داستان کوتاه طنز با متن دو زبانه، واژگان هر داستان و آزمون درست/غلط از خود کتاب",
     color: "amber",
     emoji: "🐣",
     available: true,
-    kind: "pdf",
   },
   {
     id: "hill-elem",
     title: "Elementary Steps",
     gradeLabel: "مبتدی — ۱۰۰۰ واژه",
     author: "L. A. Hill — انتشارات آکسفورد",
-    tagline: "۲۷ داستان کوتاه با تمرین درک مطلب — کتاب‌خوان PDF",
+    tagline: "۲۷ داستان کوتاه با متن دو زبانه، واژگان هر داستان و آزمون درست/غلط از خود کتاب",
     color: "teal",
     emoji: "🐥",
     available: true,
-    kind: "pdf",
   },
   {
     id: "hill-inter",
     title: "Intermediate Steps",
     gradeLabel: "متوسط — ۱۵۰۰ واژه",
     author: "L. A. Hill — انتشارات آکسفورد",
-    tagline: "۳۰ داستان + واژه‌نامهٔ ۱۵۰۰واژه‌ای — کتاب‌خوان PDF",
+    tagline: "۳۰ داستان بلندتر با متن دو زبانه، واژگان هر داستان و آزمون درست/غلط از خود کتاب",
     color: "violet",
     emoji: "🐦",
     available: true,
-    kind: "pdf",
   },
   {
     id: "hill-adv",
     title: "Advanced Steps",
     gradeLabel: "پیشرفته — ۲۰۷۵ واژه",
     author: "L. A. Hill — انتشارات آکسفورد",
-    tagline: "۳۰ داستان سطح بالا + واژه‌نامهٔ ۲۰۷۵واژه‌ای — کتاب‌خوان PDF",
+    tagline: "۳۰ داستان سطح بالا با متن دو زبانه، واژگان هر داستان و آزمون درست/غلط از خود کتاب",
     color: "rose",
     emoji: "🦅",
     available: true,
-    kind: "pdf",
   },
 ];
 
@@ -135,12 +131,11 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "grade-11": () => import("../grade-11").then((m) => m.GRADE_ELEVEN_BOOK),
   "grade-12": () => import("../grade-12").then((m) => m.GRADE_TWELVE_BOOK),
   collocations: () => import("../collocations").then((m) => m.COLLOCATIONS_BOOK),
-  // کتاب‌های PDF محتوای ساختاریافته (BookData) ندارند — در کتاب‌خوان PDF نمایش داده می‌شوند
-  // و صفحهٔ اصلی اپ برایشان PdfReaderView رندر می‌کند (نه نمای‌های جزوه).
-  "hill-intro": async () => null,
-  "hill-elem": async () => null,
-  "hill-inter": async () => null,
-  "hill-adv": async () => null,
+  // کتاب‌های داستانی Steps to Understanding — نسخهٔ متنی استخراج‌شده از اسکن PDF
+  "hill-intro": () => import("../hill-intro").then((m) => m.HILL_INTRO_BOOK),
+  "hill-elem": () => import("../hill-elem").then((m) => m.HILL_ELEMENTARY_BOOK),
+  "hill-inter": () => import("../hill-inter").then((m) => m.HILL_INTERMEDIATE_BOOK),
+  "hill-adv": () => import("../hill-adv").then((m) => m.HILL_ADVANCED_BOOK),
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {

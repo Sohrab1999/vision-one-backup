@@ -11,6 +11,10 @@ import { QUIZ_SEED as GRADE_EIGHT_QUIZ } from "../src/data/grade-8/quiz-seed";
 import { QUIZ_SEED as GRADE_NINE_QUIZ } from "../src/data/grade-9/quiz-seed";
 import { QUIZ_SEED as GRADE_ELEVEN_QUIZ } from "../src/data/grade-11/quiz-seed";
 import { QUIZ_SEED as GRADE_TWELVE_QUIZ } from "../src/data/grade-12/quiz-seed";
+import { QUIZ_SEED as HILL_INTRO_QUIZ } from "../src/data/hill-intro/quiz-seed";
+import { QUIZ_SEED as HILL_ELEM_QUIZ } from "../src/data/hill-elem/quiz-seed";
+import { QUIZ_SEED as HILL_INTER_QUIZ } from "../src/data/hill-inter/quiz-seed";
+import { QUIZ_SEED as HILL_ADV_QUIZ } from "../src/data/hill-adv/quiz-seed";
 
 const db = new PrismaClient();
 
@@ -21,6 +25,12 @@ const SOURCES: { book: string; rows: typeof VISION_ONE_QUIZ }[] = [
   { book: "grade-9", rows: GRADE_NINE_QUIZ as typeof VISION_ONE_QUIZ },
   { book: "grade-11", rows: GRADE_ELEVEN_QUIZ as typeof VISION_ONE_QUIZ },
   { book: "grade-12", rows: GRADE_TWELVE_QUIZ as typeof VISION_ONE_QUIZ },
+  // کتاب‌های داستانی Steps to Understanding — سؤال‌های درست/نادرست از خود داستان‌ها
+  // (برای اجرای امنِ فقط همین‌ها: prisma/seed-hill.ts)
+  { book: "hill-intro", rows: HILL_INTRO_QUIZ as typeof VISION_ONE_QUIZ },
+  { book: "hill-elem", rows: HILL_ELEM_QUIZ as typeof VISION_ONE_QUIZ },
+  { book: "hill-inter", rows: HILL_INTER_QUIZ as typeof VISION_ONE_QUIZ },
+  { book: "hill-adv", rows: HILL_ADV_QUIZ as typeof VISION_ONE_QUIZ },
 ];
 
 async function main() {
