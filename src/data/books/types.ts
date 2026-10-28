@@ -21,7 +21,11 @@ export type BookId =
   | "grade-9"
   | "grade-11"
   | "grade-12"
-  | "collocations"; // ۱۰۰۰ کالوکیشن کاربردی — Espresso English
+  | "collocations" // ۱۰۰۰ کالوکیشن کاربردی — Espresso English
+  | "hill-intro" // Introductory Steps to Understanding — L. A. Hill (PDF)
+  | "hill-elem" // Elementary Steps to Understanding — L. A. Hill (PDF)
+  | "hill-inter" // Intermediate Steps to Understanding — L. A. Hill (PDF)
+  | "hill-adv"; // Advanced Steps to Understanding — L. A. Hill (PDF)
 
 /** نام‌های مجاز برای بخش‌های scoped در localStorage (پیشرفت مخصوص هر کتاب) */
 export const SCOPED_STORE_NAMES = [
@@ -98,4 +102,10 @@ export interface BookMeta {
   emoji: string;
   /** آیا محتوای کتاب بارگذاری شده و قابل ورود است؟ */
   available: boolean;
+  /**
+   * نوع کتاب — "data" (پیش‌فرض): جزوه ساختاریافته با BookData؛
+   * "pdf": فایل PDF اسکن‌شده که در کتاب‌خوان صفحه‌به‌صفحه خوانده می‌شود
+   * (پیکربندی در src/data/books/pdf-books.ts).
+   */
+  kind?: "data" | "pdf";
 }

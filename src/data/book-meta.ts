@@ -1,4 +1,3 @@
-import type { Reading, Conversation, IrregularVerb } from "./types";
 import { READING_LIST } from "./readings";
 import { CONVERSATION_LIST } from "./conversations";
 import { IRREGULAR_VERBS } from "./irregular-verbs";

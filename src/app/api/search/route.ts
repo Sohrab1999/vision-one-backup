@@ -44,8 +44,8 @@ interface BookIndex {
   quiz: { text: string; scope: string }[];
 }
 
-/** کش ایندکس سراسری — یک بار برای عمر پروسه سرور ساخته می‌شود */
-let indexCache: Map<BookId, BookIndex> | null = null;
+/** کش ایندکس سراسری — یک بار برای عمر پروسه سرور ساخته می‌شود (null = کتاب بدون داده، مثل کتاب‌های PDF) */
+let indexCache: Map<BookId, BookIndex | null> | null = null;
 
 function buildIndex(data: BookData): BookIndex {
   return {
@@ -71,12 +71,13 @@ function buildIndex(data: BookData): BookIndex {
   };
 }
 
-async function getIndex(): Promise<Map<BookId, BookIndex>> {
+async function getIndex(): Promise<Map<BookId, BookIndex | null>> {
   if (indexCache) return indexCache;
   const entries = await Promise.all(
     BOOKS.map(async (b) => {
       const data = await loadBookData(b.id);
-      return [b.id, buildIndex(data!)] as const;
+      // کتاب‌های PDF (kind:"pdf") داده ساختاریافته ندارند — بدون ایندکس جست‌وجو
+      return [b.id, data ? buildIndex(data) : null] as const;
     }),
   );
   indexCache = new Map(entries);

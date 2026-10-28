@@ -79,6 +79,50 @@ export const BOOKS: BookMeta[] = [
     emoji: "💬",
     available: true,
   },
+  {
+    id: "hill-intro",
+    title: "Introductory Steps",
+    gradeLabel: "مقدماتی — ۷۵۰ واژه",
+    author: "L. A. Hill — انتشارات آکسفورد",
+    tagline: "۲۷ داستان کوتاه طنز با تمرین درک مطلب — کتاب‌خوان PDF",
+    color: "amber",
+    emoji: "🐣",
+    available: true,
+    kind: "pdf",
+  },
+  {
+    id: "hill-elem",
+    title: "Elementary Steps",
+    gradeLabel: "مبتدی — ۱۰۰۰ واژه",
+    author: "L. A. Hill — انتشارات آکسفورد",
+    tagline: "۲۷ داستان کوتاه با تمرین درک مطلب — کتاب‌خوان PDF",
+    color: "teal",
+    emoji: "🐥",
+    available: true,
+    kind: "pdf",
+  },
+  {
+    id: "hill-inter",
+    title: "Intermediate Steps",
+    gradeLabel: "متوسط — ۱۵۰۰ واژه",
+    author: "L. A. Hill — انتشارات آکسفورد",
+    tagline: "۳۰ داستان + واژه‌نامهٔ ۱۵۰۰واژه‌ای — کتاب‌خوان PDF",
+    color: "violet",
+    emoji: "🐦",
+    available: true,
+    kind: "pdf",
+  },
+  {
+    id: "hill-adv",
+    title: "Advanced Steps",
+    gradeLabel: "پیشرفته — ۲۰۷۵ واژه",
+    author: "L. A. Hill — انتشارات آکسفورد",
+    tagline: "۳۰ داستان سطح بالا + واژه‌نامهٔ ۲۰۷۵واژه‌ای — کتاب‌خوان PDF",
+    color: "rose",
+    emoji: "🦅",
+    available: true,
+    kind: "pdf",
+  },
 ];
 
 // ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
@@ -91,6 +135,12 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "grade-11": () => import("../grade-11").then((m) => m.GRADE_ELEVEN_BOOK),
   "grade-12": () => import("../grade-12").then((m) => m.GRADE_TWELVE_BOOK),
   collocations: () => import("../collocations").then((m) => m.COLLOCATIONS_BOOK),
+  // کتاب‌های PDF محتوای ساختاریافته (BookData) ندارند — در کتاب‌خوان PDF نمایش داده می‌شوند
+  // و صفحهٔ اصلی اپ برایشان PdfReaderView رندر می‌کند (نه نمای‌های جزوه).
+  "hill-intro": async () => null,
+  "hill-elem": async () => null,
+  "hill-inter": async () => null,
+  "hill-adv": async () => null,
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {

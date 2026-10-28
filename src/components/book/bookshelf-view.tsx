@@ -199,10 +199,12 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
             <span className={cn("rounded-full px-3 py-1.5 text-xs font-bold", BADGE_TEXT.emerald)}>
               {availableCount} جزوه فعال
             </span>
-            <span className="flex items-center gap-1 rounded-full bg-muted px-3 py-1.5 text-xs font-bold text-muted-foreground">
-              <Clock size={12} />
-              {books.length - availableCount} در راه
-            </span>
+            {books.length - availableCount > 0 && (
+              <span className="flex items-center gap-1 rounded-full bg-muted px-3 py-1.5 text-xs font-bold text-muted-foreground">
+                <Clock size={12} />
+                {books.length - availableCount} در راه
+              </span>
+            )}
           </div>
         </div>
         <Sparkles className="absolute -left-6 -top-6 h-40 w-40 text-primary/5" aria-hidden />
@@ -292,7 +294,7 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
       {/* نکته پیشرفت */}
       <p className="flex items-center justify-center gap-1.5 pb-2 text-center text-xs text-muted-foreground">
         <Layers size={13} className="shrink-0" aria-hidden />
-        هر ۶ جزوه (پایه هفتم تا دوازدهم + ویژن وان) فعال است — برای جزئیات هر جزوه، نقشه راه در پوشه «نقشه راه ها» را ببینید.
+        {availableCount} جزوه فعال در کتابخانه — جزوه‌های پایه هفتم تا دوازدهم، ویژن وان، کالوکیشن و مجموعه داستان Steps to Understanding (کتاب‌خوان PDF).
       </p>
     </div>
   );
