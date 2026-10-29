@@ -4195,3 +4195,25 @@ Stage Summary:
 - خروجی ممیزی: وضعیت رسمی فاز ۱ = باز؛ قوی‌ترین شواهد (lint مستقل، ۴۴/۴۴ شرط ۱۱ کتاب، سایدبار ۹/۹، DB ایزوله با عدم-تخریب پابرجا، مهاجرت localStorage) و موارد OPEN (معیار پنجم سراسری، ۱-هـ، تب ریدینگ خالی grade-9، push-content اختیاری، به‌روزرسانی «وضعیت فعلی» roadmap) + شواهد مفقود (snapshotهای کامل گام 5.2، آرتیفکت‌های فانی /tmp، بازآزمون مستقل ۱۲ نما) در گزارش ممیزی §J فهرست شد؛ پیشنهاد اولویت‌بندی‌شدهٔ P1…P7 (تکمیل معیار پنجم با توسعهٔ الگوی ایزوله، آزمون TTS/AI، اصلاح تب ریدینگ، مستندسازی roadmap، بازی‌ها/کلاس، runner آزمون خودکار، تصمیم credential) ثبت شد — بدون اجرای هیچ‌کدام در همین گام.
 - ریسک‌های محیطی در حد شواهد ثبت شد: OOM سرور (≈۲٫۱GB در محیط ۴GB؛ الگوی رسمی revive)، truncate شدن dev.log هنگام راه‌اندازی مجدد (شاهد جایگزین = SHA پایگاه)، auto-commit پلتفرمی خودمختار (مهار آثار موقت با SYNC2)، credential در remote.backup.url (باز، اولویت پایین).
 - SHA کامیت همین ورود طبق الگوی مستقر در خود ورود ثبت نمی‌شود و در گزارش گام به مالک اعلام می‌گردد؛ اعتبار انتشار فقط با `git ls-remote backup refs/heads/main` پس از push اثبات می‌شود.
+
+---
+
+Task ID: N1-5.9-isolated-attempt-reviewstate-persistence
+Agent: Z.ai Code (main agent)
+Date: ۱۴۰۵/۸/۸ (۲۰۲۶-۱۰-۳۰)
+Task: آزمون ایزولهٔ ماندگاری Attempt و ReviewState — توسعهٔ آزمون ایزولهٔ N1-5.5 (که فقط Progress را نوشت) و بستن NOT-RUN ساختاری ثبت‌شده در ممیزی N1-5.8؛ فقط دو سند جدید + الحاق همین ورود؛ بدون تغییر کد/schema/داده/پیکربندی و بدون تیک roadmap
+
+Work Log:
+- پیش‌بررسی تازه (P-0): شاخهٔ main، HEAD `7351227540ef6f6f7cc5a575cb3a6be2606131b0` = commit ممیزی مستند N1-5.8 = `backup/main` (ls-remote)، درخت پاک، بدون stash/merge؛ hook سالم (SHA-256 `ee679bc1…aed71`، ۱۳۹۱ بایت = مبنا)؛ قواعد `.gitignore:57-58` فعال؛ dev server زنده (PID ۱۱۱۸، :3000 = ۲۰۰) و در طول گام دست‌نخورده.
+- فقط‌خواندنی: مدل `Attempt` (`schema.prisma:75-98` — بدون `@@unique` به‌جز PK؛ `userId?` با `onDelete: SetNull`) و `ReviewState` (`schema.prisma:101-130` — `@@unique([userId, book, cardKey])`؛ `onDelete: Cascade`)؛ قراردادهای نوشتن از منبع استخراج شد: `attempts/route.ts:39` = create ساده بدون قرارداد dedup؛ `srs/route.ts:177` = upsert با کلید `userId_book_cardKey` (قرارداد رفتار تکرار صریح در کد).
+- ایزوله‌سازی با روش مستند N1-5.5 §B: کپی سازگار با SQLite backup API از اتصال `mode=ro` به `/tmp/n1qa59/custom-qa.db`؛ نشانگر `_qa_marker` = `run-20261029T213241Z` فقط در کپی؛ هر ۶ فرایند (snapshot + probe + W1..W4) با گارد درون‌اسکریپتی (`exit 9` اگر env ≠ مسیر کپی) + `datasourceUrl` صریح + cwd خارج از مخزن — هر پنج لاگ Node = `GUARD_PASS`؛ بدون db push/migrate/seed/backfill.
+- نتایج (همه VERIFIED-PASS): Attempt — create + بازخوانی ۱۰ فیلد `readbackMatch=true`؛ create تکراری بدون خطا → `rows=2` (مشاهدهٔ واقعیت Schema: نبود قید یکتا، منطبق بر قرارداد create ساده). ReviewState — upsert + بازخوانی ۱۳ فیلد `readbackMatch=true`؛ upsert تکراری → update نه insert (`rows=1`، `ease 2.8→3.1`، `reps 2→3` — عین قرارداد srs)؛ create مستقیم تکراری → **P2002** (مشاهدهٔ واقعی `@@unique`). پایداری با فرایند کاملاً تازه: هر دو مدل `persistedAndIdentical=true`. مشاهدهٔ FK با حذف کاربر مصنوعی: `Attempt.userId → null` (SetNull) و حذف خودکار ReviewState (Cascade) — هر دو مشاهده‌شده نه فرض‌شده.
+- پاک‌سازی و سلامت: حذف فقط ردیف‌های ساختگی همین run از کپی → شمارش‌ها دقیقاً = خط پایه (User=3 · Progress=27 · Attempt=181 · ReviewState=10)؛ `integrity_check` کپی = `ok`؛ نشانگر پابرجا.
+- عدم-تخریب: SHA-256 `db/custom.db` t0 = t2 = `0057e27c9a9d5d7d3fbf531aec22ee76c0d6654ecedf465178f7163fcd2bb097` (عین خط پایهٔ N1-5.5 → از ۲۰۲۶-۱۰-۲۸ هیچ نوشتنی به اصلی فرود نیامده)؛ حجم/mtime ثابت؛ SHA کپی پس از آزمون `7ea76b08…` (اثبات رفتاری فرود نوشتن‌ها فقط در کپی)؛ سرور پس از گام زنده؛ درخت پاک.
+- حادثهٔ ابزاری بی‌اثر: خطای سریال BigInt در نخستین probe (فقط‌خواندنی) — اصلاح و اجرای مجدد موفق؛ NOT-RUNها: APIهای زندهٔ نوشتنی (ممنوع صریح)، مسیر import، هم‌زمانی/محیط عملیاتی، مهاجرت واقعی.
+- سه فایل مجاز این گام: ① `نقشه راه ها/نقشه-راه-آزمون-ماندگاری-ایزوله-Attempt-و-ReviewState-N1-5.9.md` (جدید) ② `نقشه راه ها/گزارش-آزمون-ماندگاری-ایزوله-Attempt-و-ReviewState-N1-5.9.md` (جدید) ③ `worklog.md` (فقط همین ورود)؛ roadmap.md تیک نخورد؛ فاز ۱ بسته نشد.
+
+Stage Summary:
+- نتیجهٔ گام: **موفق** — لایهٔ دادهٔ معیار پنجم اکنون سه‌مدله آزمون ایزوله شده (Progress/Attempt/ReviewState) با مشاهدهٔ قیدهای واقعی Schema (یکتایی، upsert، SetNull، Cascade)؛ «نوشتن Attempt/ReviewState حتی روی کپی» از NOT-RUN ممیزی N1-5.8 به VERIFIED-PASS تبدیل شد.
+- معیار پنجم فاز ۱ همچنان **OPEN**: آزمون موفق روی کپی مساوی تأیید API زنده/محیط عملیاتی/مهاجرت کامل نیست؛ جمع‌بندی سراسری = تصمیم مالک. پیشنهاد بعدی (بدون اجرا): آزمون API زنده در محیط کنترل‌شدهٔ مالک یا تکمیل NOT-RUNهای ساختاری باقی‌مانده.
+- SHA کامیت این ورود طبق الگوی مستقر در خود ورود ثبت نمی‌شود و در گزارش گام به مالک اعلام می‌گردد؛ اعتبار انتشار فقط با `git ls-remote backup refs/heads/main` پس از push اثبات می‌شود.
