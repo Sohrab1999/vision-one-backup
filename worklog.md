@@ -4258,3 +4258,26 @@ Stage Summary:
 - نتیجهٔ گام: **موفق** — نخستین آزمون مسیر واقعی HTTP روی نمونهٔ مستقل: زنجیرهٔ کامل rate-limit → اعتبارسنجی → سشن (null) → Prisma create اثبات شد و «نوشتن Attempt زنده از طریق API مهمان» (NOT-RUN ساختاری ممیزی N1-5.8) در سطح کپی ایزوله VERIFIED-PASS شد؛ پوشش معیار پنجم: Progress (5.5) + Attempt/ReviewState (5.9) + POST /api/attempts کامل (5.11).
 - معیار پنجم همچنان **OPEN**: PUT /api/srs (HTTP)، مسیرهای احراز‌شده و جمع‌بندی محیط عملیاتی باقی است؛ تصمیم مالک.
 - SHA کامیت این ورود طبق الگوی مستقر در خود ورود ثبت نمی‌شود و در گزارش گام به مالک اعلام می‌گردد؛ اعتبار انتشار فقط با `git ls-remote backup refs/heads/main` پس از push اثبات می‌شود.
+
+---
+
+Task ID: N1-5.12-isolated-authenticated-srs-test
+Agent: Z.ai Code (main agent)
+Date: ۱۴۰۵/۸/۸ (۲۰۲۶-۱۰-۳۰)
+Task: آزمون کنترل‌شدهٔ مسیر واقعی احرازشدهٔ PUT /api/srs روی نمونهٔ مستقل برنامه با پایگاه ایزوله — ساخت کاربر QA فقط در کپی از endpoint واقعی register، ورود واقعی NextAuth Credentials با CSRF، رد بدون‌نشست (401)، ثبت اولیه و upsert از طریق HTTP، بازخوانی مستقل گارد‌دار، عدم-تخریب اصلی و جمع‌آوری کنترل‌شده؛ بدون افشای Secret/Cookie/JWT/PIN؛ فقط دو سند جدید + الحاق همین ورود
+
+Work Log:
+- پیش‌بررسی تازه: HEAD `4bb5a884f09fd3aee233c057d52b7f52e55b11bf` = commit N1-5.11 = `backup/main`، درخت پاک؛ hook سالم (مبنا)؛ `.gitignore:47 dev.log` و `:57-58` فعال؛ مستندات N1-5.10/N1-5.11 و روش 5.5/5.9 از مخزن خوانده شد و اسکریپت‌های واقعی N1-5.11 بازتولید شد (بدون اختراع روش)؛ منابع: available ۱۲۰۷MB، دیسک ۷٫۳GB، پورت ۳۴۵۸ آزاد.
+- قرارداد از کد: PUT /api/srs = rate 30/60s → سشن اجباری (وگرنه 401 «ابتدا وارد شو») → states آرایه (400/413) → اعتبارسنجی سخت (book whitelist skip، cardKey 1..128، clampها، lastGrade {0,1,2,null}) → upsert تراکنشی ۶۰تایی با کلید userId_book_cardKey → 200 {ok,count: تعداد اعضای مجاز}؛ auth.ts = NextAuth v4.24.11 Credentials (username+pin، scrypt salt:hash، JWT، secret env-first).
+- ایزوله‌سازی: ro-snapshot → `/tmp/n1qa512/custom-qa-srs.db` + نشانگر `run-20261029T231937Z` (integrity ok/ok)؛ کپی پروژه whitelist + node_modules کامل (۱٫۱GB) + `.env` → مسیر کپی؛ نمونهٔ مستقل `next dev -p 3458` با سقف heap env-only و NEXTAUTH_URL و NEXTAUTH_SECRET تصادفی زمان‌اجرا (هرگز چاپ نشد)؛ بدون db push/migrate/seed.
+- شواهد اتصال: environ لانچر (۱۰۴۷۴) و next-server (۱۰۴۸۸، cwd=appcopy) = مسیر کپی؛ ss شنوندهٔ ۳۴۵۸ = next-server ایزوله؛ لاگ SQL خود فرایند سروکننده = INSERT … ON CONFLICT (userId,book,cardKey) DO UPDATE؛ اتصال گارد‌دار دوم: GUARD_PASS + pragma_database_list = کپی + نشانگر؛ dev.log اصلی: صفر PUT /api/auth در ۵۰۰ خط؛ لایهٔ fd در پنجرهٔ شواهد صفر (پروب آمادگی DB-بود) → ثبت شفاف NOT-OBSERVED و انتقال بار اثبات به لایه‌های قاطع.
+- حادثهٔ فراخوانی اول: Permission denied روی لانچر (بیت +x) → GATE_FAIL تمیز (بدون سرور، بدون نوشتن)؛ chmod +x → فراخوانی دوم کامل؛ SHA t0 هر دو یکسان.
+- نتایج (HTTP کامل): ساخت کاربر QA از register واقعی = 200 {ok,id:cmvu61qs40000ot3chrwgi0bu} (pinHash با hashPin واقعی)؛ ورود واقعی CSRF→callback = 200؛ session-proof = JSON واقعی NextAuth با id منطبق؛ GET /api/srs با نشست = 200 count:0؛ **آزمون A بدون نشست = 401 دقیق بدون نوشتن**؛ **آزمون B = 200 {ok,count:1} + شمارش گارد‌دار کلید = 1**؛ **آزمون C همان کلید (ease 3.1، interval 7، streak 2، lastGrade 1) = 200 count:1 و همچنان 1 ردیف — upsert بدون تکرار، ۱۳/۱۳ بررسی فیلد true شامل userIdMatch**؛ **کنترل منفی قراردادی book نامعتبر = 200 {ok,count:0} بدون نوشتن**؛ شمارش‌های حین: User=4 · ReviewState=11 · بقیه خط پایه.
+- پاک‌سازی و عدم-تخریب: پاک‌سازی گارد‌دار فقط کاربر QA و ردیف‌هایش (DELETED_REVIEWSTATE=1، DELETED_USER=1) → دقیقاً خط پایه ۳/۲۷/۱۸۱/۱۰؛ integrity ok؛ نشانگر پابرجا؛ **SHA اصلی t0=میانه=t2 = `0057e27c…2bb097`**؛ teardown فقط cwd=appcopy (۱۰۴۷۴/۱۰۴۸۸) → isolated-stopped؛ :3000 پیش/میانه/پس = 200؛ کپی ۱٫۱GB و jarها حذف؛ شواهد ≈۱٫۳MB در /tmp/n1qa512؛ کمینهٔ available = ۹۱۷MB (بالاتر از سقف سقط ۲۰۰MB).
+- NOT-RUN: اشباع rate-limit، سقف 3000 (413)، chunk >60، هم‌زمانی، مسیر احرازشدهٔ POST /api/attempts، import/export.
+- سه فایل مجاز این گام: ① `نقشه راه ها/نقشه-راه-آزمون-ایزوله-API-srs-N1-5.12.md` (جدید) ② `نقشه راه ها/گزارش-آزمون-ایزوله-API-srs-N1-5.12.md` (جدید) ③ `worklog.md` (فقط همین ورود)؛ roadmap.md تیک نخورد؛ فاز ۱ بسته نشد.
+
+Stage Summary:
+- نتیجهٔ گام: **موفق** — نخستین آزمون HTTP احرازشده روی نمونهٔ مستقل: زنجیرهٔ کامل rate-limit → سشن (JWT واقعی از ورود واقعی Credentials) → اعتبارسنجی → upsert تراکنشی اثبات شد؛ رفتار 401 بدون نشست، insert، upsert بدون تکرار و skip عضو نامعتبر — همگی در سطح مسیر واقعی HTTP روی کپی ایزوله VERIFIED-PASS.
+- پوشش معیار پنجم: Progress (5.5) + Attempt/ReviewState (5.9) + POST attempts مهمان (5.11) + PUT srs احرازشده (5.12)؛ **معیار پنجم همچنان OPEN** (مسیر احرازشدهٔ POST، جمع‌بندی محیط عملیاتی/مهاجرت، NOT-RUNها)؛ تصمیم مالک.
+- SHA کامیت این ورود طبق الگوی مستقر در خود ورود ثبت نمی‌شود و در گزارش گام به مالک اعلام می‌گردد؛ اعتبار انتشار فقط با `git ls-remote backup refs/heads/main` پس از push اثبات می‌شود.
