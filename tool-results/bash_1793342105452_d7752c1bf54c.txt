@@ -1,0 +1,431 @@
+=== show-ref --head ===
+07c82f672ec35175d7577924a2699d0087e9dc6c HEAD
+a39d6a167f9c8119a7b2bddf2ffebba2f2c0045a refs/heads/g1b-offline-queue
+407b1bce5daad9d4380dd2cd0e7e3dedd06e9eba refs/heads/g1c-offline-tries
+07c82f672ec35175d7577924a2699d0087e9dc6c refs/heads/main
+c95db841be4fef590512bd97d8fe8e9de734229a refs/heads/recovery/rc1-g1b-docs
+48bad8c78b0745c74213bad5a29794c276cc8ab0 refs/recovery/lineage-48bad8c
+2386a92e7658bc085631d797ec0d95813e224103 refs/remotes/backup/g1a-offline-queue
+a39d6a167f9c8119a7b2bddf2ffebba2f2c0045a refs/remotes/backup/g1b-offline-queue
+407b1bce5daad9d4380dd2cd0e7e3dedd06e9eba refs/remotes/backup/g1c-offline-tries
+81454b6c38218513a0297aba8e1a76befd521f72 refs/remotes/backup/main
+48bad8c78b0745c74213bad5a29794c276cc8ab0 refs/remotes/backup/recovery/aa4-sr-lineage-48bad8c
+c95db841be4fef590512bd97d8fe8e9de734229a refs/remotes/backup/recovery/rc1-g1b-docs
+c9d1fea11d378e5bb3fdcc9f2407f850e12b5d2a refs/remotes/backup/sandbox-main
+=== for-each-ref ===
+refs/heads/g1b-offline-queue a39d6a1 2026-10-25 17:48:52 +0000 feat: pause offline queue flush after HTTP 408/429 with valid Retry-After (G1-b)
+refs/heads/g1c-offline-tries 407b1bc 2026-10-26 08:14:56 +0000 feat: stop offline queue processing when head reaches MAX_TRIES + cappedHead status field (G1-c stage 3)
+refs/heads/main 07c82f6 2026-10-30 06:27:32 +0000 761cdcdf-c32a-4136-9e85-f384ba3b968c
+refs/heads/recovery/rc1-g1b-docs c95db84 2026-10-25 19:16:16 +0000 docs(N1-2): append worklog record N1-GAME-EXEC-02 (G1-b execution) — pure addition +18, source: committed working-tree block
+refs/remotes/backup/g1a-offline-queue 2386a92 2026-10-25 15:43:24 +0000 fix: retain offline queue items on HTTP 408 and 429
+refs/remotes/backup/g1b-offline-queue a39d6a1 2026-10-25 17:48:52 +0000 feat: pause offline queue flush after HTTP 408/429 with valid Retry-After (G1-b)
+refs/remotes/backup/g1c-offline-tries 407b1bc 2026-10-26 08:14:56 +0000 feat: stop offline queue processing when head reaches MAX_TRIES + cappedHead status field (G1-c stage 3)
+refs/remotes/backup/main 81454b6 2026-10-28 20:13:42 +0000 ادغام شجرهٔ backup/main (سند ممیزی N1-2) در main — بدون از دست رفتن هیچ طرف
+refs/remotes/backup/recovery/aa4-sr-lineage-48bad8c 48bad8c 2026-10-18 19:47:35 +0000 38dd2f69-0197-43a5-8295-3eeb9994d904
+refs/remotes/backup/recovery/rc1-g1b-docs c95db84 2026-10-25 19:16:16 +0000 docs(N1-2): append worklog record N1-GAME-EXEC-02 (G1-b execution) — pure addition +18, source: committed working-tree block
+refs/remotes/backup/sandbox-main c9d1fea 2026-10-28 19:10:58 +0000 نسخهٔ متنی مجموعه Steps to Understanding — حذف کتاب‌خوان PDF سنگین
+=== tags ===
+(end tags)
+=== reflog all ===
+07c82f6 refs/heads/main@{2026-10-30 06:27:32 +0000}: commit: 761cdcdf-c32a-4136-9e85-f384ba3b968c
+07c82f6 HEAD@{2026-10-30 06:27:32 +0000}: commit: 761cdcdf-c32a-4136-9e85-f384ba3b968c
+81454b6 refs/remotes/backup/main@{2026-10-28 20:13:47 +0000}: update by push
+81454b6 refs/heads/main@{2026-10-28 20:13:42 +0000}: commit (merge): ادغام شجرهٔ backup/main (سند ممیزی N1-2) در main — بدون از دست رفتن هیچ طرف
+81454b6 HEAD@{2026-10-28 20:13:42 +0000}: commit (merge): ادغام شجرهٔ backup/main (سند ممیزی N1-2) در main — بدون از دست رفتن هیچ طرف
+e9d8ba7 refs/heads/main@{2026-10-28 20:11:36 +0000}: commit: تکمیل ۳۰ داستان Advanced Steps to Understanding — داستان‌های ۳، ۱۴، ۱۸ و ۲۴ تا ۳۰
+e9d8ba7 HEAD@{2026-10-28 20:11:36 +0000}: commit: تکمیل ۳۰ داستان Advanced Steps to Understanding — داستان‌های ۳، ۱۴، ۱۸ و ۲۴ تا ۳۰
+c9d1fea refs/remotes/backup/sandbox-main@{2026-10-28 19:11:15 +0000}: update by push
+c9d1fea refs/heads/main@{2026-10-28 19:10:58 +0000}: commit: نسخهٔ متنی مجموعه Steps to Understanding — حذف کتاب‌خوان PDF سنگین
+c9d1fea HEAD@{2026-10-28 19:10:58 +0000}: commit: نسخهٔ متنی مجموعه Steps to Understanding — حذف کتاب‌خوان PDF سنگین
+942c3d2 refs/heads/main@{2026-10-28 15:40:02 +0000}: commit: 3374b8ea-ce34-4516-9d55-fd433f043e09
+942c3d2 HEAD@{2026-10-28 15:40:02 +0000}: commit: 3374b8ea-ce34-4516-9d55-fd433f043e09
+c389cfb refs/heads/main@{2026-10-28 15:38:51 +0000}: commit: کتاب‌خوان PDF — افزودن مجموعه Steps to Understanding (L. A. Hill) به کتابخانه
+c389cfb HEAD@{2026-10-28 15:38:51 +0000}: commit: کتاب‌خوان PDF — افزودن مجموعه Steps to Understanding (L. A. Hill) به کتابخانه
+2623313 refs/heads/main@{2026-10-28 08:07:56 +0000}: commit (amend): 59ab9bf8-ff65-49d5-b682-af807b55efe2
+2623313 HEAD@{2026-10-28 08:07:56 +0000}: commit (amend): 59ab9bf8-ff65-49d5-b682-af807b55efe2
+70f0f27 refs/heads/main@{2026-10-27 18:14:27 +0000}: commit (amend): 59ab9bf8-ff65-49d5-b682-af807b55efe2
+70f0f27 HEAD@{2026-10-27 18:14:27 +0000}: commit (amend): 59ab9bf8-ff65-49d5-b682-af807b55efe2
+363b305 refs/heads/main@{2026-10-27 03:41:51 +0000}: commit: 59ab9bf8-ff65-49d5-b682-af807b55efe2
+363b305 HEAD@{2026-10-27 03:41:51 +0000}: commit: 59ab9bf8-ff65-49d5-b682-af807b55efe2
+884edd4 refs/heads/main@{2026-10-26 14:51:57 +0000}: commit: 9624acc8-2872-4bb9-9e6d-60e7ab5b414c
+884edd4 HEAD@{2026-10-26 14:51:57 +0000}: commit: 9624acc8-2872-4bb9-9e6d-60e7ab5b414c
+407b1bc worktrees/g1c-work/HEAD@{2026-10-26 13:12:49 +0000}: reset: moving to HEAD
+407b1bc worktrees/g1c-work/HEAD@{2026-10-26 13:12:47 +0000}: 
+255faae refs/heads/main@{2026-10-26 13:00:02 +0000}: commit: 8a4d990f-68f4-49ff-9f14-be1718aa29aa
+255faae HEAD@{2026-10-26 13:00:02 +0000}: commit: 8a4d990f-68f4-49ff-9f14-be1718aa29aa
+407b1bc refs/remotes/backup/g1c-offline-tries@{2026-10-26 08:15:10 +0000}: update by push
+407b1bc refs/heads/g1c-offline-tries@{2026-10-26 08:14:56 +0000}: commit: feat: stop offline queue processing when head reaches MAX_TRIES + cappedHead status field (G1-c stage 3)
+01cfc97 refs/heads/main@{2026-10-26 07:13:49 +0000}: commit: 1907ad75-2c7b-4ab9-88ca-3905f5b74c51
+01cfc97 HEAD@{2026-10-26 07:13:49 +0000}: commit: 1907ad75-2c7b-4ab9-88ca-3905f5b74c51
+dc95064 refs/remotes/backup/g1c-offline-tries@{2026-10-26 04:10:56 +0000}: update by push
+dc95064 refs/heads/g1c-offline-tries@{2026-10-26 04:10:47 +0000}: commit: feat: count tries for network/408/5xx with MAX_TRIES=10 cap (G1-c stage 2)
+054e2ac refs/heads/main@{2026-10-26 03:53:28 +0000}: commit: 0ad7b490-0005-477a-bc29-3d3b848652d9
+054e2ac HEAD@{2026-10-26 03:53:28 +0000}: commit: 0ad7b490-0005-477a-bc29-3d3b848652d9
+9230e81 refs/heads/main@{2026-10-26 03:28:47 +0000}: commit: da13c55e-d9f9-48b4-b532-06156943bbfc
+9230e81 HEAD@{2026-10-26 03:28:47 +0000}: commit: da13c55e-d9f9-48b4-b532-06156943bbfc
+96bca4c refs/remotes/backup/g1c-offline-tries@{2026-10-26 03:27:16 +0000}: update by push
+96bca4c refs/heads/g1c-offline-tries@{2026-10-26 03:27:08 +0000}: commit: feat: add optional tries counter to offline queue items (G1-c stage 1)
+a39d6a1 refs/heads/g1c-offline-tries@{2026-10-26 03:14:02 +0000}: branch: Created from a39d6a167f9c8119a7b2bddf2ffebba2f2c0045a
+fd7e2d3 refs/heads/main@{2026-10-26 02:34:34 +0000}: commit (amend): 5dfa2f1b-1560-4bca-9a5b-35ce93598165
+fd7e2d3 HEAD@{2026-10-26 02:34:34 +0000}: commit (amend): 5dfa2f1b-1560-4bca-9a5b-35ce93598165
+c95db84 refs/remotes/backup/recovery/rc1-g1b-docs@{2026-10-25 19:16:47 +0000}: update by push
+c95db84 refs/heads/recovery/rc1-g1b-docs@{2026-10-25 19:16:16 +0000}: commit: docs(N1-2): append worklog record N1-GAME-EXEC-02 (G1-b execution) — pure addition +18, source: committed working-tree block
+c0b4b09 refs/heads/recovery/rc1-g1b-docs@{2026-10-25 19:15:51 +0000}: commit: docs(N1-2): add R-C1 roadmap v1.2 (G1-b accepted, record N1-GAME-EXEC-02) — new file, byte-identical copy of snapshot sha256 793dc72809e62b6e09ce2474eaeeddd23072ae04d5d62b590c1af2265da03a00
+a39d6a1 refs/heads/recovery/rc1-g1b-docs@{2026-10-25 19:15:38 +0000}: branch: Created from a39d6a167f9c8119a7b2bddf2ffebba2f2c0045a
+fecab68 refs/heads/main@{2026-10-25 17:51:46 +0000}: commit: 5dfa2f1b-1560-4bca-9a5b-35ce93598165
+fecab68 HEAD@{2026-10-25 17:51:46 +0000}: commit: 5dfa2f1b-1560-4bca-9a5b-35ce93598165
+a39d6a1 refs/remotes/backup/g1b-offline-queue@{2026-10-25 17:49:07 +0000}: update by push
+a39d6a1 refs/heads/g1b-offline-queue@{2026-10-25 17:48:52 +0000}: commit: feat: pause offline queue flush after HTTP 408/429 with valid Retry-After (G1-b)
+2386a92 refs/heads/g1b-offline-queue@{2026-10-25 17:38:18 +0000}: branch: Created from 2386a92e
+2386a92 refs/remotes/backup/g1a-offline-queue@{2026-10-25 17:37:49 +0000}: fetch backup: storing head
+b900f01 refs/remotes/backup/main@{2026-10-25 17:37:49 +0000}: fetch backup: fast-forward
+3ca6baa refs/heads/main@{2026-10-25 16:12:58 +0000}: commit: 269dd152-9b3f-4401-b85c-6a6287dbc36e
+3ca6baa HEAD@{2026-10-25 16:12:58 +0000}: commit: 269dd152-9b3f-4401-b85c-6a6287dbc36e
+fbdc61f refs/heads/main@{2026-10-25 03:30:35 +0000}: commit: c5ba5282-b45f-4241-bdcf-effe6056061a
+fbdc61f HEAD@{2026-10-25 03:30:35 +0000}: commit: c5ba5282-b45f-4241-bdcf-effe6056061a
+5cb7c53 refs/heads/main@{2026-10-24 20:31:14 +0000}: commit: 45c20ef9-1a4e-4e78-807a-6e70e95a548a
+5cb7c53 HEAD@{2026-10-24 20:31:14 +0000}: commit: 45c20ef9-1a4e-4e78-807a-6e70e95a548a
+6ef81bd refs/heads/main@{2026-10-24 20:11:27 +0000}: commit: 2193a8ef-c8a2-4fec-b61e-8f4c41ae5c41
+6ef81bd HEAD@{2026-10-24 20:11:27 +0000}: commit: 2193a8ef-c8a2-4fec-b61e-8f4c41ae5c41
+7e80105 refs/heads/main@{2026-10-24 18:41:03 +0000}: commit: 60956452-64ed-456f-9f6e-7e6b2f4285e7
+7e80105 HEAD@{2026-10-24 18:41:03 +0000}: commit: 60956452-64ed-456f-9f6e-7e6b2f4285e7
+548ab7e refs/heads/main@{2026-10-24 18:38:23 +0000}: commit: افزودن نقشه راه تحلیل گزینه‌های بازیابی تاریخچه Git در N1-2
+548ab7e HEAD@{2026-10-24 18:38:23 +0000}: commit: افزودن نقشه راه تحلیل گزینه‌های بازیابی تاریخچه Git در N1-2
+cbdbcd1 refs/heads/main@{2026-10-24 18:30:56 +0000}: commit: ثبت تصمیم موقت مالک: گزینهٔ A — حفظ وضع موجود (N1-2)
+cbdbcd1 HEAD@{2026-10-24 18:30:56 +0000}: commit: ثبت تصمیم موقت مالک: گزینهٔ A — حفظ وضع موجود (N1-2)
+7643dbf refs/heads/main@{2026-10-24 18:08:30 +0000}: commit: افزودن نقشه راه بازنگری‌شده تعیین تکلیف فایل‌های خروجی پلتفرم N1-2
+7643dbf HEAD@{2026-10-24 18:08:30 +0000}: commit: افزودن نقشه راه بازنگری‌شده تعیین تکلیف فایل‌های خروجی پلتفرم N1-2
+d8abbb8 refs/heads/main@{2026-10-24 16:58:41 +0000}: commit: b7a60ad4-db70-4470-b390-d19d1763e5fb
+d8abbb8 HEAD@{2026-10-24 16:58:41 +0000}: commit: b7a60ad4-db70-4470-b390-d19d1763e5fb
+8fed753 refs/heads/main@{2026-10-24 16:14:33 +0000}: commit: docs(N1-2): add controlled local-environment recovery roadmap (planning-only, +162 single new file, no recovery executed)
+8fed753 HEAD@{2026-10-24 16:14:33 +0000}: commit: docs(N1-2): add controlled local-environment recovery roadmap (planning-only, +162 single new file, no recovery executed)
+b23b1c7 refs/remotes/backup/main@{2026-10-21 19:54:14 +0000}: update by push
+b23b1c7 refs/heads/main@{2026-10-21 19:54:10 +0000}: commit: N1-2 Phase 2: close browser golden-path QA criterion (one real agent-browser tutor interaction, POST 200 in 1815ms, reply rendered in UI, quota 1/30 untouched) - docs only
+b23b1c7 HEAD@{2026-10-21 19:54:10 +0000}: commit: N1-2 Phase 2: close browser golden-path QA criterion (one real agent-browser tutor interaction, POST 200 in 1815ms, reply rendered in UI, quota 1/30 untouched) - docs only
+252cdc4 refs/remotes/backup/main@{2026-10-21 19:38:18 +0000}: update by push
+252cdc4 refs/heads/main@{2026-10-21 19:38:14 +0000}: commit: N1-2 Phase 2: protect POST /api/tutor (30/min + 30/Tehran-day, daily 429 Retry-After to midnight, no refund) - owner-approved guard, docs updated
+252cdc4 HEAD@{2026-10-21 19:38:14 +0000}: commit: N1-2 Phase 2: protect POST /api/tutor (30/min + 30/Tehran-day, daily 429 Retry-After to midnight, no refund) - owner-approved guard, docs updated
+95cca89 refs/remotes/backup/main@{2026-10-21 19:05:45 +0000}: update by push
+95cca89 refs/heads/main@{2026-10-21 19:05:41 +0000}: commit: N1-2 Phase 1: record owner decisions (U1 no-refund, U3 Retry-After to Tehran midnight, tutor 30/min+30/day approved, contract approved) - docs only
+95cca89 HEAD@{2026-10-21 19:05:41 +0000}: commit: N1-2 Phase 1: record owner decisions (U1 no-refund, U3 Retry-After to Tehran midnight, tutor 30/min+30/day approved, contract approved) - docs only
+38b8667 refs/remotes/backup/main@{2026-10-21 18:27:08 +0000}: update by push
+38b8667 refs/heads/main@{2026-10-21 18:27:04 +0000}: commit: N1-2 Phase 1: document shared AI guard contract (docs only)
+38b8667 HEAD@{2026-10-21 18:27:04 +0000}: commit: N1-2 Phase 1: document shared AI guard contract (docs only)
+0e2738d refs/remotes/backup/main@{2026-10-21 17:54:43 +0000}: update by push
+0e2738d refs/heads/main@{2026-10-21 17:54:39 +0000}: commit: 49bdc0a8-af2d-448e-ad31-e45ee51cacbc
+0e2738d HEAD@{2026-10-21 17:54:39 +0000}: commit: 49bdc0a8-af2d-448e-ad31-e45ee51cacbc
+c323f17 refs/remotes/backup/main@{2026-10-21 15:54:10 +0000}: update by push
+c323f17 refs/heads/main@{2026-10-21 15:54:06 +0000}: commit: b99e3d59-2f6a-496c-a0e9-bbcc47db6cc7
+c323f17 HEAD@{2026-10-21 15:54:06 +0000}: commit: b99e3d59-2f6a-496c-a0e9-bbcc47db6cc7
+e9562c8 refs/remotes/backup/main@{2026-10-20 14:58:50 +0000}: update by push
+e9562c8 refs/heads/main@{2026-10-20 14:58:45 +0000}: commit: 8e00f4f0-7aa4-4382-a8ab-3fa1a3ed1e74
+e9562c8 HEAD@{2026-10-20 14:58:45 +0000}: commit: 8e00f4f0-7aa4-4382-a8ab-3fa1a3ed1e74
+444bfcd refs/remotes/backup/main@{2026-10-20 14:14:40 +0000}: update by push
+444bfcd refs/heads/main@{2026-10-20 14:14:35 +0000}: commit: 3943b435-3a10-4cc3-a9f8-ef7a3f28d510
+444bfcd HEAD@{2026-10-20 14:14:35 +0000}: commit: 3943b435-3a10-4cc3-a9f8-ef7a3f28d510
+bd55198 refs/remotes/backup/main@{2026-10-20 13:15:35 +0000}: update by push
+bd55198 refs/heads/main@{2026-10-20 13:15:30 +0000}: commit: cd2d35ab-b148-4eaa-90ae-21c7da337a64
+bd55198 HEAD@{2026-10-20 13:15:30 +0000}: commit: cd2d35ab-b148-4eaa-90ae-21c7da337a64
+e701ae3 refs/remotes/backup/main@{2026-10-20 12:40:58 +0000}: update by push
+e701ae3 refs/heads/main@{2026-10-20 12:40:53 +0000}: commit: 58c64cd0-e0a4-4474-bf9a-a46454924d26
+e701ae3 HEAD@{2026-10-20 12:40:53 +0000}: commit: 58c64cd0-e0a4-4474-bf9a-a46454924d26
+fc10e8b refs/remotes/backup/main@{2026-10-20 12:03:06 +0000}: update by push
+fc10e8b refs/heads/main@{2026-10-20 12:03:03 +0000}: commit: 6b286037-de2d-458a-9a71-ab3c29496e25
+fc10e8b HEAD@{2026-10-20 12:03:03 +0000}: commit: 6b286037-de2d-458a-9a71-ab3c29496e25
+9b15de3 refs/remotes/backup/main@{2026-10-20 04:59:30 +0000}: update by push
+9b15de3 refs/heads/main@{2026-10-20 04:59:25 +0000}: commit: 5d2c070c-5906-439f-ac74-8e1fd7d5e18a
+9b15de3 HEAD@{2026-10-20 04:59:25 +0000}: commit: 5d2c070c-5906-439f-ac74-8e1fd7d5e18a
+48bad8c refs/remotes/backup/recovery/aa4-sr-lineage-48bad8c@{2026-10-19 09:20:49 +0000}: update by push
+b2c68ab refs/remotes/backup/main@{2026-10-19 06:59:09 +0000}: update by push
+b2c68ab refs/heads/main@{2026-10-19 06:58:46 +0000}: commit: 797676bd-2666-4905-846f-8e416202bfaa
+b2c68ab HEAD@{2026-10-19 06:58:46 +0000}: commit: 797676bd-2666-4905-846f-8e416202bfaa
+6cd2380 refs/heads/main@{2026-10-18 22:11:44 +0000}: commit (amend): 03f84602-ecbe-4c17-95fd-90cf89d6efd2
+6cd2380 HEAD@{2026-10-18 22:11:44 +0000}: commit (amend): 03f84602-ecbe-4c17-95fd-90cf89d6efd2
+d382aeb refs/remotes/backup/main@{2026-10-18 08:41:38 +0000}: update by push
+d382aeb refs/heads/main@{2026-10-18 08:41:33 +0000}: commit: 03f84602-ecbe-4c17-95fd-90cf89d6efd2
+d382aeb HEAD@{2026-10-18 08:41:33 +0000}: commit: 03f84602-ecbe-4c17-95fd-90cf89d6efd2
+1d33d10 refs/remotes/backup/main@{2026-10-18 08:16:58 +0000}: update by push
+1d33d10 refs/heads/main@{2026-10-18 08:16:54 +0000}: commit: 97c228ee-f6c8-408e-a1c0-6c20f46fd0a8
+1d33d10 HEAD@{2026-10-18 08:16:54 +0000}: commit: 97c228ee-f6c8-408e-a1c0-6c20f46fd0a8
+0eaf925 refs/remotes/backup/main@{2026-10-18 08:09:15 +0000}: update by push
+0eaf925 refs/heads/main@{2026-10-18 08:09:11 +0000}: commit: 83d69002-63df-4978-8c22-fb224e2442e0
+0eaf925 HEAD@{2026-10-18 08:09:11 +0000}: commit: 83d69002-63df-4978-8c22-fb224e2442e0
+5229eae refs/remotes/backup/main@{2026-10-18 07:33:49 +0000}: update by push
+5229eae refs/heads/main@{2026-10-18 07:33:45 +0000}: commit: 2d9940fc-693e-4bab-8e2f-614d9ab08cec
+5229eae HEAD@{2026-10-18 07:33:45 +0000}: commit: 2d9940fc-693e-4bab-8e2f-614d9ab08cec
+68a8564 refs/remotes/backup/main@{2026-10-18 07:06:51 +0000}: update by push
+68a8564 refs/heads/main@{2026-10-18 07:06:30 +0000}: commit: 50daa6a9-94b9-4cde-b8b2-e26cf098d069
+68a8564 HEAD@{2026-10-18 07:06:30 +0000}: commit: 50daa6a9-94b9-4cde-b8b2-e26cf098d069
+0db70e9 refs/remotes/backup/main@{2026-10-17 02:24:27 +0000}: update by push
+0db70e9 refs/heads/main@{2026-10-17 02:24:06 +0000}: commit: d19585cd-77ad-4dfd-b7fc-c2770b447598
+0db70e9 HEAD@{2026-10-17 02:24:06 +0000}: commit: d19585cd-77ad-4dfd-b7fc-c2770b447598
+32a66da refs/remotes/backup/main@{2026-10-15 20:18:41 +0000}: update by push
+32a66da refs/heads/main@{2026-10-15 20:18:35 +0000}: commit: 8a991058-e589-43e9-b030-7c0e057cd87f
+32a66da HEAD@{2026-10-15 20:18:35 +0000}: commit: 8a991058-e589-43e9-b030-7c0e057cd87f
+c859e6a refs/remotes/backup/main@{2026-10-15 19:14:32 +0000}: update by push
+c859e6a refs/heads/main@{2026-10-15 19:14:26 +0000}: commit: 15353c31-5509-49b8-b104-6afb483a906f
+c859e6a HEAD@{2026-10-15 19:14:26 +0000}: commit: 15353c31-5509-49b8-b104-6afb483a906f
+e2806e3 refs/remotes/backup/main@{2026-10-15 17:31:06 +0000}: update by push
+e2806e3 refs/heads/main@{2026-10-15 17:31:00 +0000}: commit: 32f438b8-593d-4a22-b686-6032c09dc626
+e2806e3 HEAD@{2026-10-15 17:31:00 +0000}: commit: 32f438b8-593d-4a22-b686-6032c09dc626
+444ffe4 refs/remotes/backup/main@{2026-10-15 16:57:36 +0000}: update by push
+444ffe4 refs/heads/main@{2026-10-15 16:57:30 +0000}: commit: b88713c1-0600-40f8-84b0-c02c8da73684
+444ffe4 HEAD@{2026-10-15 16:57:30 +0000}: commit: b88713c1-0600-40f8-84b0-c02c8da73684
+e74a9f6 refs/remotes/backup/main@{2026-10-15 16:05:54 +0000}: update by push
+e74a9f6 refs/heads/main@{2026-10-15 16:05:50 +0000}: commit: 9b276177-8f1f-4caf-877a-c51baf8c3d75
+e74a9f6 HEAD@{2026-10-15 16:05:50 +0000}: commit: 9b276177-8f1f-4caf-877a-c51baf8c3d75
+3e076b4 refs/remotes/backup/main@{2026-10-15 07:17:41 +0000}: update by push
+3e076b4 refs/heads/main@{2026-10-15 07:17:35 +0000}: commit: 9038f0a2-9c2c-45ba-8484-35e1621babbc
+3e076b4 HEAD@{2026-10-15 07:17:35 +0000}: commit: 9038f0a2-9c2c-45ba-8484-35e1621babbc
+5a43142 refs/remotes/backup/main@{2026-10-15 03:45:19 +0000}: update by push
+5a43142 refs/heads/main@{2026-10-15 03:44:52 +0000}: commit: 12723b86-dfb8-4ec8-ab4f-eebe7fbcdc13
+5a43142 HEAD@{2026-10-15 03:44:52 +0000}: commit: 12723b86-dfb8-4ec8-ab4f-eebe7fbcdc13
+6c27673 refs/heads/main@{2026-10-15 00:50:43 +0000}: commit (amend): ff9075e1-fbe6-46cc-8758-ca4888025f95
+6c27673 HEAD@{2026-10-15 00:50:43 +0000}: commit (amend): ff9075e1-fbe6-46cc-8758-ca4888025f95
+f8c354c refs/remotes/backup/main@{2026-10-14 11:53:51 +0000}: update by push
+f8c354c refs/heads/main@{2026-10-14 11:53:47 +0000}: commit: ff9075e1-fbe6-46cc-8758-ca4888025f95
+f8c354c HEAD@{2026-10-14 11:53:47 +0000}: commit: ff9075e1-fbe6-46cc-8758-ca4888025f95
+2c7e4bf refs/remotes/backup/main@{2026-10-14 10:18:18 +0000}: update by push
+2c7e4bf refs/heads/main@{2026-10-14 10:18:14 +0000}: commit: b81631c5-3f27-46f4-bef2-afc013d41148
+2c7e4bf HEAD@{2026-10-14 10:18:14 +0000}: commit: b81631c5-3f27-46f4-bef2-afc013d41148
+7a49bd1 refs/remotes/backup/main@{2026-10-14 08:30:29 +0000}: update by push
+7a49bd1 refs/heads/main@{2026-10-14 08:30:25 +0000}: commit: 9dd88644-7dc7-481d-aaaf-59b831368caf
+7a49bd1 HEAD@{2026-10-14 08:30:25 +0000}: commit: 9dd88644-7dc7-481d-aaaf-59b831368caf
+1a37665 refs/remotes/backup/main@{2026-10-14 07:29:00 +0000}: update by push
+1a37665 refs/heads/main@{2026-10-14 07:28:55 +0000}: commit: 9ece5fc1-4201-48b2-afdb-bcf3638abe99
+1a37665 HEAD@{2026-10-14 07:28:55 +0000}: commit: 9ece5fc1-4201-48b2-afdb-bcf3638abe99
+e39cdd1 refs/remotes/backup/main@{2026-10-14 05:21:31 +0000}: update by push
+e39cdd1 refs/heads/main@{2026-10-14 05:21:11 +0000}: commit: 9e12fcb0-c6e5-41c1-8c3c-fd524d550f63
+e39cdd1 HEAD@{2026-10-14 05:21:11 +0000}: commit: 9e12fcb0-c6e5-41c1-8c3c-fd524d550f63
+378c3f3 refs/heads/main@{2026-10-13 22:48:03 +0000}: commit (amend): b7370bea-ce71-4d66-8043-f04be3437a2a
+378c3f3 HEAD@{2026-10-13 22:48:03 +0000}: commit (amend): b7370bea-ce71-4d66-8043-f04be3437a2a
+7d3f319 refs/remotes/backup/main@{2026-10-13 10:11:45 +0000}: update by push
+7d3f319 refs/heads/main@{2026-10-13 10:11:41 +0000}: commit: b7370bea-ce71-4d66-8043-f04be3437a2a
+7d3f319 HEAD@{2026-10-13 10:11:41 +0000}: commit: b7370bea-ce71-4d66-8043-f04be3437a2a
+7da810f refs/remotes/backup/main@{2026-10-13 08:31:02 +0000}: update by push
+7da810f refs/heads/main@{2026-10-13 08:30:58 +0000}: commit: 1a8c54b7-3c87-408a-97e0-d4da10b75539
+7da810f HEAD@{2026-10-13 08:30:58 +0000}: commit: 1a8c54b7-3c87-408a-97e0-d4da10b75539
+1bfeec4 refs/remotes/backup/main@{2026-10-13 07:36:50 +0000}: update by push
+1bfeec4 refs/heads/main@{2026-10-13 07:36:45 +0000}: commit: 46fb1b30-b9db-43e8-9cf5-4a9c331b8593
+1bfeec4 HEAD@{2026-10-13 07:36:45 +0000}: commit: 46fb1b30-b9db-43e8-9cf5-4a9c331b8593
+f28dcf6 refs/remotes/backup/main@{2026-10-13 07:02:56 +0000}: update by push
+f28dcf6 refs/heads/main@{2026-10-13 07:02:51 +0000}: commit: 18f0a423-e9cd-4374-8c12-f69bbf58f423
+f28dcf6 HEAD@{2026-10-13 07:02:51 +0000}: commit: 18f0a423-e9cd-4374-8c12-f69bbf58f423
+ccf1602 refs/remotes/backup/main@{2026-10-12 19:17:25 +0000}: update by push
+ccf1602 refs/heads/main@{2026-10-12 19:17:21 +0000}: commit: 4badf761-f861-4e16-8bc1-e82712456932
+ccf1602 HEAD@{2026-10-12 19:17:21 +0000}: commit: 4badf761-f861-4e16-8bc1-e82712456932
+237e256 refs/remotes/backup/main@{2026-10-12 18:56:08 +0000}: update by push
+237e256 refs/heads/main@{2026-10-12 18:56:04 +0000}: commit: 26390875-8d12-406d-97e6-b4f2102e569a
+237e256 HEAD@{2026-10-12 18:56:04 +0000}: commit: 26390875-8d12-406d-97e6-b4f2102e569a
+442bfb4 refs/remotes/backup/main@{2026-10-12 18:47:37 +0000}: update by push
+442bfb4 refs/heads/main@{2026-10-12 18:47:33 +0000}: commit: 9e1e6648-82b6-48ce-9073-338b8a64aefe
+442bfb4 HEAD@{2026-10-12 18:47:33 +0000}: commit: 9e1e6648-82b6-48ce-9073-338b8a64aefe
+40676df refs/remotes/backup/main@{2026-10-12 17:37:39 +0000}: update by push
+40676df refs/heads/main@{2026-10-12 17:37:34 +0000}: commit: a1ed8098-f736-445f-9593-b35e9a3496a9
+40676df HEAD@{2026-10-12 17:37:34 +0000}: commit: a1ed8098-f736-445f-9593-b35e9a3496a9
+364e93e refs/remotes/backup/main@{2026-10-12 16:45:56 +0000}: update by push
+364e93e refs/heads/main@{2026-10-12 16:45:52 +0000}: commit: 4a1988fb-a53f-41c6-9a57-2b9df2b0e605
+364e93e HEAD@{2026-10-12 16:45:52 +0000}: commit: 4a1988fb-a53f-41c6-9a57-2b9df2b0e605
+ab2e0d7 refs/remotes/backup/main@{2026-10-12 16:06:50 +0000}: update by push
+ab2e0d7 refs/heads/main@{2026-10-12 16:06:46 +0000}: commit: cb58e861-5432-4661-9ae2-5c1d8275d3a5
+ab2e0d7 HEAD@{2026-10-12 16:06:46 +0000}: commit: cb58e861-5432-4661-9ae2-5c1d8275d3a5
+d888583 refs/remotes/backup/main@{2026-10-12 15:51:38 +0000}: update by push
+d888583 refs/heads/main@{2026-10-12 15:51:34 +0000}: commit: 1c791b55-b5f5-4942-be4a-b2ffe6a68dd6
+d888583 HEAD@{2026-10-12 15:51:34 +0000}: commit: 1c791b55-b5f5-4942-be4a-b2ffe6a68dd6
+bad5b7e refs/remotes/backup/main@{2026-10-12 15:27:11 +0000}: update by push
+bad5b7e refs/heads/main@{2026-10-12 15:27:06 +0000}: commit: c0c7e5fc-fc0f-4fb6-a387-cc82b973f8e9
+bad5b7e HEAD@{2026-10-12 15:27:06 +0000}: commit: c0c7e5fc-fc0f-4fb6-a387-cc82b973f8e9
+9845964 refs/remotes/backup/main@{2026-10-12 13:56:25 +0000}: update by push
+9845964 refs/heads/main@{2026-10-12 13:56:20 +0000}: commit: aa4f61ea-a426-48c5-aa60-5d7c853d2c31
+9845964 HEAD@{2026-10-12 13:56:20 +0000}: commit: aa4f61ea-a426-48c5-aa60-5d7c853d2c31
+28e049a refs/remotes/backup/main@{2026-10-12 12:18:42 +0000}: update by push
+28e049a refs/heads/main@{2026-10-12 12:18:37 +0000}: commit: bd44db85-a822-4094-b179-b014b1d7022c
+28e049a HEAD@{2026-10-12 12:18:37 +0000}: commit: bd44db85-a822-4094-b179-b014b1d7022c
+512c2e8 refs/remotes/backup/main@{2026-10-12 09:25:25 +0000}: update by push
+512c2e8 refs/heads/main@{2026-10-12 09:25:19 +0000}: commit: 165d3be1-c0e2-4f2b-a10f-d65e667d20d3
+512c2e8 HEAD@{2026-10-12 09:25:19 +0000}: commit: 165d3be1-c0e2-4f2b-a10f-d65e667d20d3
+72f952c refs/remotes/backup/main@{2026-10-12 08:00:40 +0000}: update by push
+72f952c refs/heads/main@{2026-10-12 08:00:34 +0000}: commit: 8ed10c43-c1bc-4447-89a0-d2535e94936d
+72f952c HEAD@{2026-10-12 08:00:34 +0000}: commit: 8ed10c43-c1bc-4447-89a0-d2535e94936d
+7b84b8a refs/remotes/backup/main@{2026-10-12 05:48:30 +0000}: update by push
+7b84b8a refs/heads/main@{2026-10-12 05:48:24 +0000}: commit: f5727aca-4061-4a1e-b5f1-f37a8268abf6
+7b84b8a HEAD@{2026-10-12 05:48:24 +0000}: commit: f5727aca-4061-4a1e-b5f1-f37a8268abf6
+9728c41 refs/remotes/backup/main@{2026-10-12 04:25:19 +0000}: update by push
+9728c41 refs/heads/main@{2026-10-12 04:25:00 +0000}: commit: 155fcc88-e327-4d81-b0a0-8b088bf569d3
+9728c41 HEAD@{2026-10-12 04:25:00 +0000}: commit: 155fcc88-e327-4d81-b0a0-8b088bf569d3
+6175ef6 refs/heads/main@{2026-10-11 20:23:42 +0000}: commit (amend): feat(snakes): فاز SL1 — تختهٔ بصری SVG + پالس مقصد + confetti برد + مکعب تاس سه‌بعدی (نقشه راه مار و پله v1.2)
+6175ef6 HEAD@{2026-10-11 20:23:42 +0000}: commit (amend): feat(snakes): فاز SL1 — تختهٔ بصری SVG + پالس مقصد + confetti برد + مکعب تاس سه‌بعدی (نقشه راه مار و پله v1.2)
+831e108 refs/remotes/backup/main@{2026-10-11 09:31:59 +0000}: update by push
+831e108 refs/heads/main@{2026-10-11 09:31:56 +0000}: commit: feat(snakes): فاز SL1 — تختهٔ بصری SVG + پالس مقصد + confetti برد + مکعب تاس سه‌بعدی (نقشه راه مار و پله v1.2)
+831e108 HEAD@{2026-10-11 09:31:56 +0000}: commit: feat(snakes): فاز SL1 — تختهٔ بصری SVG + پالس مقصد + confetti برد + مکعب تاس سه‌بعدی (نقشه راه مار و پله v1.2)
+5b4a464 refs/remotes/backup/main@{2026-10-11 09:09:17 +0000}: update by push
+5b4a464 refs/heads/main@{2026-10-11 09:09:14 +0000}: commit: feat(snakes): فاز SL0 — حلقهٔ یادگیری SRS + مدرس LLM + کیبورد ۱..۴ (نقشه راه مار و پله v1.1)
+5b4a464 HEAD@{2026-10-11 09:09:14 +0000}: commit: feat(snakes): فاز SL0 — حلقهٔ یادگیری SRS + مدرس LLM + کیبورد ۱..۴ (نقشه راه مار و پله v1.1)
+29f9cf6 refs/remotes/backup/main@{2026-10-11 08:53:04 +0000}: update by push
+29f9cf6 refs/heads/main@{2026-10-11 08:53:00 +0000}: commit: 284479da-fe27-4625-91c3-ad95b536f5c9
+29f9cf6 HEAD@{2026-10-11 08:53:00 +0000}: commit: 284479da-fe27-4625-91c3-ad95b536f5c9
+4b97753 refs/remotes/backup/main@{2026-10-11 08:51:58 +0000}: update by push
+4b97753 refs/heads/main@{2026-10-11 08:51:56 +0000}: commit: docs(snakes): نقشه راه اختصاصی ارتقای مار و پله — v1.0 (۵ فاز SL0..SL4، ۱۷ کار)
+4b97753 HEAD@{2026-10-11 08:51:56 +0000}: commit: docs(snakes): نقشه راه اختصاصی ارتقای مار و پله — v1.0 (۵ فاز SL0..SL4، ۱۷ کار)
+ad6881f refs/remotes/backup/main@{2026-10-11 08:39:32 +0000}: update by push
+ad6881f refs/heads/main@{2026-10-11 08:39:30 +0000}: commit: chore: sync runtime db after G6 QA sessions
+ad6881f HEAD@{2026-10-11 08:39:30 +0000}: commit: chore: sync runtime db after G6 QA sessions
+e777e6a refs/remotes/backup/main@{2026-10-11 08:39:05 +0000}: update by push
+e777e6a refs/heads/main@{2026-10-11 08:39:01 +0000}: commit: feat(games): فاز G6 کامل و بستن سند — ماتریس QA ۱۵×۲ سبز، بودجهٔ INP (flappy 16ms/fps 88ms)، داشبورد ۵ KPI، What's New آزمایشگاه ۲.۰
+e777e6a HEAD@{2026-10-11 08:39:01 +0000}: commit: feat(games): فاز G6 کامل و بستن سند — ماتریس QA ۱۵×۲ سبز، بودجهٔ INP (flappy 16ms/fps 88ms)، داشبورد ۵ KPI، What's New آزمایشگاه ۲.۰
+0d020a2 refs/remotes/backup/main@{2026-10-11 08:23:38 +0000}: update by push
+0d020a2 refs/heads/main@{2026-10-11 08:23:34 +0000}: commit: 46420d8c-7779-4f4a-8290-894cf92b4ea7
+0d020a2 HEAD@{2026-10-11 08:23:34 +0000}: commit: 46420d8c-7779-4f4a-8290-894cf92b4ea7
+d068fd0 refs/remotes/backup/main@{2026-10-11 08:22:55 +0000}: update by push
+d068fd0 refs/heads/main@{2026-10-11 08:22:52 +0000}: commit: feat(games): فاز G5 کامل — مدرس بازی با LLM، سؤال دینامیک امن با پرچم source:ai، ربات تطبیقی مار‌و‌پله و دوئل
+d068fd0 HEAD@{2026-10-11 08:22:52 +0000}: commit: feat(games): فاز G5 کامل — مدرس بازی با LLM، سؤال دینامیک امن با پرچم source:ai، ربات تطبیقی مار‌و‌پله و دوئل
+2949ce8 refs/remotes/backup/main@{2026-10-11 07:23:03 +0000}: update by push
+2949ce8 refs/heads/main@{2026-10-11 07:23:00 +0000}: commit: feat(games): فاز G4 کامل — دوئل آنلاین realtime (سرویس 3003)، رده‌بندی هر بازی، چالش کلاس، اشتراک نتیجه
+2949ce8 HEAD@{2026-10-11 07:23:00 +0000}: commit: feat(games): فاز G4 کامل — دوئل آنلاین realtime (سرویس 3003)، رده‌بندی هر بازی، چالش کلاس، اشتراک نتیجه
+ce380b3 refs/remotes/backup/main@{2026-10-11 06:34:00 +0000}: update by push
+ce380b3 refs/heads/main@{2026-10-11 06:33:56 +0000}: commit: a3520c2e-3491-4f33-8d02-4f49c7abf539
+ce380b3 HEAD@{2026-10-11 06:33:56 +0000}: commit: a3520c2e-3491-4f33-8d02-4f49c7abf539
+5cd7c81 refs/remotes/backup/main@{2026-10-11 06:33:50 +0000}: update by push
+5cd7c81 refs/heads/main@{2026-10-11 06:33:47 +0000}: commit: fix(preview): replace X-Frame-Options DENY with CSP frame-ancestors * — preview panel iframe was refused to connect
+5cd7c81 HEAD@{2026-10-11 06:33:47 +0000}: commit: fix(preview): replace X-Frame-Options DENY with CSP frame-ancestors * — preview panel iframe was refused to connect
+b09a980 refs/remotes/backup/main@{2026-10-11 06:28:25 +0000}: update by push
+b09a980 refs/heads/main@{2026-10-11 06:28:23 +0000}: commit: docs: worklog — GitHub push + preview diagnosis (server healthy, cold-start LCP)
+b09a980 HEAD@{2026-10-11 06:28:23 +0000}: commit: docs: worklog — GitHub push + preview diagnosis (server healthy, cold-start LCP)
+ac2a242 refs/remotes/backup/main@{2026-10-11 06:26:55 +0000}: update by push
+ac2a242 refs/heads/main@{2026-10-11 06:26:53 +0000}: commit: chore: sync tool-results artifact
+ac2a242 HEAD@{2026-10-11 06:26:53 +0000}: commit: chore: sync tool-results artifact
+36e96ea refs/remotes/backup/main@{2026-10-11 05:11:00 +0000}: update by push
+36e96ea refs/heads/main@{2026-10-11 05:10:55 +0000}: commit: feat(games): فاز G3 کامل — دشواری ۳سطحی ۸ بازی، انتخاب هوشمند SRS، ماموریت روزانه، ۱۲ نشان، تمرین بی‌پایان، تم مهرگان
+36e96ea HEAD@{2026-10-11 05:10:55 +0000}: commit: feat(games): فاز G3 کامل — دشواری ۳سطحی ۸ بازی، انتخاب هوشمند SRS، ماموریت روزانه، ۱۲ نشان، تمرین بی‌پایان، تم مهرگان
+8183cfc refs/remotes/backup/main@{2026-10-11 04:03:44 +0000}: update by push
+8183cfc refs/heads/main@{2026-10-11 04:03:42 +0000}: commit: chore: sync dev artifacts (pid file, tool-results) before GitHub push
+8183cfc HEAD@{2026-10-11 04:03:42 +0000}: commit: chore: sync dev artifacts (pid file, tool-results) before GitHub push
+47ed226 HEAD@{2026-10-11 04:03:25 +0000}: reset: moving to HEAD
+47ed226 refs/remotes/backup/main@{2026-10-11 00:26:24 +0000}: update by push
+47ed226 refs/heads/main@{2026-10-11 00:26:17 +0000}: commit: 05ce229e-8f87-44cb-bcab-41f9ad2d0dff
+47ed226 HEAD@{2026-10-11 00:26:17 +0000}: commit: 05ce229e-8f87-44cb-bcab-41f9ad2d0dff
+724da44 refs/remotes/backup/main@{2026-10-10 20:52:08 +0000}: update by push
+724da44 refs/heads/main@{2026-10-10 20:52:03 +0000}: commit: f95c5afd-a688-495c-b65b-aacd4bfc556d
+724da44 HEAD@{2026-10-10 20:52:03 +0000}: commit: f95c5afd-a688-495c-b65b-aacd4bfc556d
+7bb0b89 refs/remotes/backup/main@{2026-10-10 20:26:53 +0000}: update by push
+7bb0b89 refs/heads/main@{2026-10-10 20:26:48 +0000}: commit: 7ab175ac-f5e6-41b2-ae07-f74059ca2ccb
+7bb0b89 HEAD@{2026-10-10 20:26:48 +0000}: commit: 7ab175ac-f5e6-41b2-ae07-f74059ca2ccb
+5f7dfdf refs/remotes/backup/main@{2026-10-10 19:24:35 +0000}: update by push
+5f7dfdf refs/heads/main@{2026-10-10 19:24:32 +0000}: commit: 03c462d7-1093-4748-9b53-4c92e6470b42
+5f7dfdf HEAD@{2026-10-10 19:24:32 +0000}: commit: 03c462d7-1093-4748-9b53-4c92e6470b42
+ab3a8f6 refs/remotes/backup/main@{2026-10-10 19:20:07 +0000}: update by push
+ab3a8f6 refs/heads/main@{2026-10-10 19:20:03 +0000}: commit: 939e6110-fdaa-4142-97f8-cdc4908f0f8d
+ab3a8f6 HEAD@{2026-10-10 19:20:03 +0000}: commit: 939e6110-fdaa-4142-97f8-cdc4908f0f8d
+6fa1af0 refs/remotes/backup/main@{2026-10-10 18:53:38 +0000}: update by push
+6fa1af0 refs/heads/main@{2026-10-10 18:53:33 +0000}: commit: فاز ۱۲ نقشه راه ۲۰۲۶ — انتشار و رشد (پایان نقشه راه): راهنمای نصب PWA دو-تبی با ۲ تصویر اختصاصی و دکمهٔ هوشمند beforeinstallprompt، لینک‌های عمیق اشتراک‌گذاری (/?book=&lesson=&view= با پاک‌سازی URL — باز کردن مستقیم درس ۲ یازدهم)، بخش «دعوت معلم‌ها» در قفسه + بروشور معرفی A4 چاپی، نظرسنجی درون‌اپ بعد از ۱۰ جلسه با cooldown ۳روزه + تخته پیشنهادها با رأی دستگاهی idempotent (۳ مدل Prisma + ۲ مسیر API با سقف‌های دقیق)، What's New با ۶ یادداشت انتشار و باز شدن خودکار — رفع باگ self-heal db.ts و tsc deep-link؛ QA مرورگری کامل، lint 0 / tsc-src 0
+6fa1af0 HEAD@{2026-10-10 18:53:33 +0000}: commit: فاز ۱۲ نقشه راه ۲۰۲۶ — انتشار و رشد (پایان نقشه راه): راهنمای نصب PWA دو-تبی با ۲ تصویر اختصاصی و دکمهٔ هوشمند beforeinstallprompt، لینک‌های عمیق اشتراک‌گذاری (/?book=&lesson=&view= با پاک‌سازی URL — باز کردن مستقیم درس ۲ یازدهم)، بخش «دعوت معلم‌ها» در قفسه + بروشور معرفی A4 چاپی، نظرسنجی درون‌اپ بعد از ۱۰ جلسه با cooldown ۳روزه + تخته پیشنهادها با رأی دستگاهی idempotent (۳ مدل Prisma + ۲ مسیر API با سقف‌های دقیق)، What's New با ۶ یادداشت انتشار و باز شدن خودکار — رفع باگ self-heal db.ts و tsc deep-link؛ QA مرورگری کامل، lint 0 / tsc-src 0
+b76e333 refs/remotes/backup/main@{2026-10-10 17:57:03 +0000}: update by push
+b76e333 refs/heads/main@{2026-10-10 17:56:58 +0000}: commit: فاز ۱۱ نقشه راه ۲۰۲۶: استانداردهای وب ۲۰۲۶ — امنیت (rate-limit پنجرهٔ لغزنده روی ۱۰ مسیر API + ۵ هدر امنیتی + لاگ ساختاریافتهٔ بدون PII)، مانیتورینگ دوطرفه (/api/client-log با redact + تله‌متری خودکار LCP/CLS/INP با بودجه)، آفلاین‌فرست (Service Worker v2 با کش سؤال‌ها و پیش‌بارگذاری ۴۶ chunk + صف همگام‌سازی آفلاین برای SRS/پیشرفت/آزمون)، دسترس‌پذیری (کیبورد آزمون ۱..۴ + aria-live و aria-label در ۵ بازی + focus-visible سراسری + reduced-motion)، SEO (metadata کامل + robots + OG Image اختصاصی 🦉)، حریم خصوصی نوجوان (حذف کامل حساب با عبارت تأیید)، تشخیص خودکار /api/health (SRS/XP/DB) — QA مرورگری کامل، lint 0 / tsc-src 0
+b76e333 HEAD@{2026-10-10 17:56:58 +0000}: commit: فاز ۱۱ نقشه راه ۲۰۲۶: استانداردهای وب ۲۰۲۶ — امنیت (rate-limit پنجرهٔ لغزنده روی ۱۰ مسیر API + ۵ هدر امنیتی + لاگ ساختاریافتهٔ بدون PII)، مانیتورینگ دوطرفه (/api/client-log با redact + تله‌متری خودکار LCP/CLS/INP با بودجه)، آفلاین‌فرست (Service Worker v2 با کش سؤال‌ها و پیش‌بارگذاری ۴۶ chunk + صف همگام‌سازی آفلاین برای SRS/پیشرفت/آزمون)، دسترس‌پذیری (کیبورد آزمون ۱..۴ + aria-live و aria-label در ۵ بازی + focus-visible سراسری + reduced-motion)، SEO (metadata کامل + robots + OG Image اختصاصی 🦉)، حریم خصوصی نوجوان (حذف کامل حساب با عبارت تأیید)، تشخیص خودکار /api/health (SRS/XP/DB) — QA مرورگری کامل، lint 0 / tsc-src 0
+48d73ca refs/remotes/backup/main@{2026-10-10 17:00:00 +0000}: update by push
+48d73ca refs/heads/main@{2026-10-10 16:59:55 +0000}: commit: فاز ۱۰ نقشه راه ۲۰۲۶: دفترچه شخصی و خروجی‌ها — دفتر خطاها کامل (رکورد تاریخ‌دار شمسی + نمای اختصاصی با تمرین ≤۱۰ سؤالی و resolve واقعی)، یادداشت شخصی روی هر واژه همگام با حساب (/api/notes با کش و حالت مهمان)، چاپ فلش‌کارت دوروی A4 (۸ کارت/صفحه + آینه‌سازی لبه‌بلند)، کارت پیشرفت اشتراکی PNG ۱۰۸۰×۱۳۵۰ با canvas فارسی (دانلود + Web Share)، اکسپورت/ایمپورت کامل v2 (دستگاه+سرور + CSV با BOM) — رفع باگ P0 احراز هویت (secret ثابت)؛ QA مرورگری کامل، lint 0 / tsc-src 0
+48d73ca HEAD@{2026-10-10 16:59:55 +0000}: commit: فاز ۱۰ نقشه راه ۲۰۲۶: دفترچه شخصی و خروجی‌ها — دفتر خطاها کامل (رکورد تاریخ‌دار شمسی + نمای اختصاصی با تمرین ≤۱۰ سؤالی و resolve واقعی)، یادداشت شخصی روی هر واژه همگام با حساب (/api/notes با کش و حالت مهمان)، چاپ فلش‌کارت دوروی A4 (۸ کارت/صفحه + آینه‌سازی لبه‌بلند)، کارت پیشرفت اشتراکی PNG ۱۰۸۰×۱۳۵۰ با canvas فارسی (دانلود + Web Share)، اکسپورت/ایمپورت کامل v2 (دستگاه+سرور + CSV با BOM) — رفع باگ P0 احراز هویت (secret ثابت)؛ QA مرورگری کامل، lint 0 / tsc-src 0
+8023ac5 refs/remotes/backup/main@{2026-10-10 15:23:46 +0000}: update by push
+8023ac5 refs/heads/main@{2026-10-10 15:23:42 +0000}: commit: فاز ۹ نقشه راه ۲۰۲۶: کلاس مجازی (معلم و دانش‌آموز) — ۷ مدل Prisma (Classroom/Member/Assignment/Done/Notification/LiveQuiz/LiveAnswer) + ۶ مسیر API با state مشترک؛ ساخت کلاس با کد ۶رقمی و پیوستن بدون ایمیل؛ داشبورد معلم (اعضا با آمار ۷روز، واژه‌های مشکل‌دار از پاسخ‌های غلط زنده، تکلیف با پیگیری، اعلان‌ساز)؛ آزمون زندهٔ هم‌زمان با polling ۲٫۵ث، جدول برنده‌های لحظه‌ای و ضدتقلب سمت سرور؛ اعلان‌های خودکار+دستی داخل اپ؛ UI لندینگ دو-نقشی + پلیر زنده؛ db.ts لودر self-healing بعد از db push؛ رفع باگ displayName (me از سرور) — QA مرورگری کامل دو-نقشی، lint 0 / tsc-src 0
+8023ac5 HEAD@{2026-10-10 15:23:42 +0000}: commit: فاز ۹ نقشه راه ۲۰۲۶: کلاس مجازی (معلم و دانش‌آموز) — ۷ مدل Prisma (Classroom/Member/Assignment/Done/Notification/LiveQuiz/LiveAnswer) + ۶ مسیر API با state مشترک؛ ساخت کلاس با کد ۶رقمی و پیوستن بدون ایمیل؛ داشبورد معلم (اعضا با آمار ۷روز، واژه‌های مشکل‌دار از پاسخ‌های غلط زنده، تکلیف با پیگیری، اعلان‌ساز)؛ آزمون زندهٔ هم‌زمان با polling ۲٫۵ث، جدول برنده‌های لحظه‌ای و ضدتقلب سمت سرور؛ اعلان‌های خودکار+دستی داخل اپ؛ UI لندینگ دو-نقشی + پلیر زنده؛ db.ts لودر self-healing بعد از db push؛ رفع باگ displayName (me از سرور) — QA مرورگری کامل دو-نقشی، lint 0 / tsc-src 0
+b8f9a1e refs/remotes/backup/main@{2026-10-10 14:26:43 +0000}: update by push
+b8f9a1e refs/heads/main@{2026-10-10 14:26:39 +0000}: commit: فاز ۸ نقشه راه ۲۰۲۶ تکمیل شد — دستیار هوشمند ۲.۰ بخش B: تصویرسازی حافظه (/api/word-image با کش دیسک و سقف روزانه + دکمه در پاپ‌آپ واژه — Dual Coding)، چت شخصیت‌ها (/api/persona-chat با سم/میا/لئو در سطوح A2/B1 و اصلاح فارسی 💡 + تب چهارم دستیار)، تحلیل هوشمند خطاها (/api/error-analysis با JSON سخت‌گیرانه + الگوی خطا و نکته طلایی و تمرین اختصاصی ۴سؤالی در نمای آزمون)، سؤال‌ساز مشابه بی‌پایان (/api/similar-question با ۳ تلاش و حذف پیشوند گزینه + کارت بونس در آزمون) — QA مرورگری کامل، رفع 502های flaky، lint 0 / tsc-src 0
+b8f9a1e HEAD@{2026-10-10 14:26:39 +0000}: commit: فاز ۸ نقشه راه ۲۰۲۶ تکمیل شد — دستیار هوشمند ۲.۰ بخش B: تصویرسازی حافظه (/api/word-image با کش دیسک و سقف روزانه + دکمه در پاپ‌آپ واژه — Dual Coding)، چت شخصیت‌ها (/api/persona-chat با سم/میا/لئو در سطوح A2/B1 و اصلاح فارسی 💡 + تب چهارم دستیار)، تحلیل هوشمند خطاها (/api/error-analysis با JSON سخت‌گیرانه + الگوی خطا و نکته طلایی و تمرین اختصاصی ۴سؤالی در نمای آزمون)، سؤال‌ساز مشابه بی‌پایان (/api/similar-question با ۳ تلاش و حذف پیشوند گزینه + کارت بونس در آزمون) — QA مرورگری کامل، رفع 502های flaky، lint 0 / tsc-src 0
+00d0756 refs/remotes/backup/main@{2026-10-10 13:33:45 +0000}: update by push
+00d0756 refs/heads/main@{2026-10-10 13:33:41 +0000}: commit: رفع لهجه چینی TTS (فیدبک کاربر) + فاز ۸ بخش A: موتور بومی مرورگر (speechSynthesis با بهترین صدای en-GB/en-US) پیش‌فرض صدا شد و سرور جایگزین شفاف/انتخابی — سوئیچ «موتور صدا» در واژگان؛ معلم خصوصی (/api/ai-teacher با مثال‌های واژه‌های خود دانش‌آموز + کش + سقف روزانه) و داستان‌ساز (/api/ai-story با JSON سخت‌گیرانه + هایلایت واژه‌ها + سؤال فهم مطلب) در تب‌های جدید دستیار + ai-guard مشترک — QA مرورگری و curl کامل
+00d0756 HEAD@{2026-10-10 13:33:41 +0000}: commit: رفع لهجه چینی TTS (فیدبک کاربر) + فاز ۸ بخش A: موتور بومی مرورگر (speechSynthesis با بهترین صدای en-GB/en-US) پیش‌فرض صدا شد و سرور جایگزین شفاف/انتخابی — سوئیچ «موتور صدا» در واژگان؛ معلم خصوصی (/api/ai-teacher با مثال‌های واژه‌های خود دانش‌آموز + کش + سقف روزانه) و داستان‌ساز (/api/ai-story با JSON سخت‌گیرانه + هایلایت واژه‌ها + سؤال فهم مطلب) در تب‌های جدید دستیار + ai-guard مشترک — QA مرورگری و curl کامل
+cae5874 refs/remotes/backup/main@{2026-10-10 12:00:47 +0000}: update by push
+cae5874 refs/heads/main@{2026-10-10 12:00:43 +0000}: commit: فاز ۷ نقشه راه ۲۰۲۶: صدا، تلفظ و مکالمه — زیرساخت ASR سراسری (/api/asr + asr-client + نمره شباهت دو-سنجه‌ای)، نمای گفتار ۳تبی: بگو ببینم (تمرین تلفظ واژه با میکروفن + جایگزین تایپی)، مکالمه نقش‌محور (TTS نقش مقابل + پاسخ گفتاری/تایپی با نمره)، شنیدار و تکرار (Shadowing خط‌به‌خط با آهسته/ترجمه/پخش خودکار)، کش آفلاین دولایه صوت (Cache Storage سقف ۴۰۰ با رفع باگ clone)، دکمه آهسته ۰٫۷× در واژگان/فلش‌کارت/دیکشنری + پیوند XP — QA مرورگری کامل با نمره ۱۰۰/۱۰۰ و موبایل ۳۹۰px
+cae5874 HEAD@{2026-10-10 12:00:43 +0000}: commit: فاز ۷ نقشه راه ۲۰۲۶: صدا، تلفظ و مکالمه — زیرساخت ASR سراسری (/api/asr + asr-client + نمره شباهت دو-سنجه‌ای)، نمای گفتار ۳تبی: بگو ببینم (تمرین تلفظ واژه با میکروفن + جایگزین تایپی)، مکالمه نقش‌محور (TTS نقش مقابل + پاسخ گفتاری/تایپی با نمره)، شنیدار و تکرار (Shadowing خط‌به‌خط با آهسته/ترجمه/پخش خودکار)، کش آفلاین دولایه صوت (Cache Storage سقف ۴۰۰ با رفع باگ clone)، دکمه آهسته ۰٫۷× در واژگان/فلش‌کارت/دیکشنری + پیوند XP — QA مرورگری کامل با نمره ۱۰۰/۱۰۰ و موبایل ۳۹۰px
+927d45c refs/remotes/backup/main@{2026-10-10 10:40:50 +0000}: update by push
+927d45c refs/heads/main@{2026-10-10 10:40:46 +0000}: commit: فاز ۶ نقشه راه ۲۰۲۶: گیمیفیکیشن و انگیزه روزانه — موتور XP/سطح با سقف روزانه ضدتقلب و پاداش سکه، زنجیره با یخ‌زننده، فروشگاه ۸ تم رنگی + ۸ آواتار پریمیوم، ۸ نشان رویدادی، ۳ ماموریت دترمینیستیک روزانه با claim، رده‌بندی هفتگی دوستانه از Attempt واقعی با نام نمایشی مهمان، کانفتی/توست سراسری رکورد و سطح‌جهش، نمای جایزه‌ها (۷۷۴خط) + ناوبری جدید — QA مرورگری کامل با رفع ۶ باگ (هیدریشن استورها، کلید memory، نام Attempt، کش SW، آلودگی HMR)
+927d45c HEAD@{2026-10-10 10:40:46 +0000}: commit: فاز ۶ نقشه راه ۲۰۲۶: گیمیفیکیشن و انگیزه روزانه — موتور XP/سطح با سقف روزانه ضدتقلب و پاداش سکه، زنجیره با یخ‌زننده، فروشگاه ۸ تم رنگی + ۸ آواتار پریمیوم، ۸ نشان رویدادی، ۳ ماموریت دترمینیستیک روزانه با claim، رده‌بندی هفتگی دوستانه از Attempt واقعی با نام نمایشی مهمان، کانفتی/توست سراسری رکورد و سطح‌جهش، نمای جایزه‌ها (۷۷۴خط) + ناوبری جدید — QA مرورگری کامل با رفع ۶ باگ (هیدریشن استورها، کلید memory، نام Attempt، کش SW، آلودگی HMR)
+6a9eb99 refs/remotes/backup/main@{2026-10-10 09:26:18 +0000}: update by push
+6a9eb99 refs/heads/main@{2026-10-10 09:26:14 +0000}: commit: فاز ۵ نقشه راه ۲۰۲۶: شوتر آموزشی اول‌شخص (Educational FPS) — میدان سه‌بعدی low-poly با three/R3F در چانک lazy، دو حالت شکار واژه/سد گرامری، Pointer Lock دسکتاپ + کنترل لمسی + حالت تپ دسترس‌پذیری، انفجار رنگین‌کمانی InstancedMesh، تشخیص دستگاه ضعیف، ثبت Attempt و پیوند SRS — آزمایشگاه ۱۵ بازیته شد
+6a9eb99 HEAD@{2026-10-10 09:26:14 +0000}: commit: فاز ۵ نقشه راه ۲۰۲۶: شوتر آموزشی اول‌شخص (Educational FPS) — میدان سه‌بعدی low-poly با three/R3F در چانک lazy، دو حالت شکار واژه/سد گرامری، Pointer Lock دسکتاپ + کنترل لمسی + حالت تپ دسترس‌پذیری، انفجار رنگین‌کمانی InstancedMesh، تشخیص دستگاه ضعیف، ثبت Attempt و پیوند SRS — آزمایشگاه ۱۵ بازیته شد
+f6b4801 refs/remotes/backup/main@{2026-10-10 08:49:12 +0000}: update by push
+f6b4801 refs/heads/main@{2026-10-10 08:49:07 +0000}: commit: فاز ۴ نقشه راه ۲۰۲۶: آزمایشگاه بازی‌های فکری ۲ — ۹ بازی جدید (فلپی گزینش، مار و پله، جدول متقاطع، وردل، دارباز، سازنده جمله، دوئل، شکار صدا، نقشه ماجراجویی) + هاب ۱۴بازیته + رفع کرش جست‌وجوی بازی فعال
+f6b4801 HEAD@{2026-10-10 08:49:07 +0000}: commit: فاز ۴ نقشه راه ۲۰۲۶: آزمایشگاه بازی‌های فکری ۲ — ۹ بازی جدید (فلپی گزینش، مار و پله، جدول متقاطع، وردل، دارباز، سازنده جمله، دوئل، شکار صدا، نقشه ماجراجویی) + هاب ۱۴بازیته + رفع کرش جست‌وجوی بازی فعال
+e85125f refs/remotes/backup/main@{2026-10-10 06:49:24 +0000}: update by push
+e85125f refs/heads/main@{2026-10-10 06:48:50 +0000}: commit: فاز ۳ نقشه راه ۲۰۲۶: آزمایشگاه بازی‌های فکری — ۵ بازی واژگانی (حافظه، اسکرمبل، جای خالی، شکار کلمه، تست برقی) + ثبت Attempt و اتصال SRS
+e85125f HEAD@{2026-10-10 06:48:50 +0000}: commit: فاز ۳ نقشه راه ۲۰۲۶: آزمایشگاه بازی‌های فکری — ۵ بازی واژگانی (حافظه، اسکرمبل، جای خالی، شکار کلمه، تست برقی) + ثبت Attempt و اتصال SRS
+dce9bd4 refs/heads/main@{2026-10-10 04:22:28 +0000}: commit (amend): فاز ۲ نقشه راه ۲۰۲۶: موتور مرور فاصله‌دار SRS (SM-2) + مرور هوشمند روزانه + فلش‌کارت ۳درجه‌ای + یکپارچگی آزمون + منحنی فراموشی
+dce9bd4 HEAD@{2026-10-10 04:22:28 +0000}: commit (amend): فاز ۲ نقشه راه ۲۰۲۶: موتور مرور فاصله‌دار SRS (SM-2) + مرور هوشمند روزانه + فلش‌کارت ۳درجه‌ای + یکپارچگی آزمون + منحنی فراموشی
+b787a53 refs/remotes/backup/main@{2026-10-10 03:33:56 +0000}: update by push
+b787a53 refs/heads/main@{2026-10-10 03:33:52 +0000}: commit: فاز ۲ نقشه راه ۲۰۲۶: موتور مرور فاصله‌دار SRS (SM-2) + مرور هوشمند روزانه + فلش‌کارت ۳درجه‌ای + یکپارچگی آزمون + منحنی فراموشی
+b787a53 HEAD@{2026-10-10 03:33:52 +0000}: commit: فاز ۲ نقشه راه ۲۰۲۶: موتور مرور فاصله‌دار SRS (SM-2) + مرور هوشمند روزانه + فلش‌کارت ۳درجه‌ای + یکپارچگی آزمون + منحنی فراموشی
+7c5960b refs/remotes/backup/main@{2026-10-10 02:16:46 +0000}: update by push
+7c5960b refs/heads/main@{2026-10-10 02:16:42 +0000}: commit: 1db07699-72b8-4c42-8c50-c13cc8cab8ff
+7c5960b HEAD@{2026-10-10 02:16:42 +0000}: commit: 1db07699-72b8-4c42-8c50-c13cc8cab8ff
+c6e6e80 refs/remotes/backup/main@{2026-10-10 01:32:13 +0000}: update by push
+c6e6e80 refs/heads/main@{2026-10-10 01:32:09 +0000}: commit: 87b956a1-1339-42fc-8852-907cc2fe4f38
+c6e6e80 HEAD@{2026-10-10 01:32:09 +0000}: commit: 87b956a1-1339-42fc-8852-907cc2fe4f38
+bd306d6 refs/remotes/backup/main@{2026-10-10 01:25:19 +0000}: update by push
+bd306d6 refs/heads/main@{2026-10-10 01:25:15 +0000}: commit: dde98b15-f266-4038-8b18-99ebd3c6c9e0
+bd306d6 HEAD@{2026-10-10 01:25:15 +0000}: commit: dde98b15-f266-4038-8b18-99ebd3c6c9e0
+346f35d refs/remotes/backup/main@{2026-10-10 01:15:42 +0000}: update by push
+346f35d refs/heads/main@{2026-10-10 01:15:39 +0000}: commit: a4fbba9b-95b4-4fe5-a635-687f97956d8e
+346f35d HEAD@{2026-10-10 01:15:39 +0000}: commit: a4fbba9b-95b4-4fe5-a635-687f97956d8e
+5e045d6 refs/remotes/backup/main@{2026-10-10 01:14:06 +0000}: update by push
+5e045d6 refs/heads/main@{2026-10-10 01:14:02 +0000}: commit: backup-system: enable auto-push hook
+5e045d6 HEAD@{2026-10-10 01:14:02 +0000}: commit: backup-system: enable auto-push hook
+70c5400 refs/remotes/backup/main@{2026-10-10 01:12:55 +0000}: update by push
+70c5400 refs/heads/main@{2026-10-10 01:12:39 +0000}: commit: backup: include remaining upload asset
+70c5400 HEAD@{2026-10-10 01:12:39 +0000}: commit: backup: include remaining upload asset
+4993a15 refs/heads/main@{2026-10-10 00:53:42 +0000}: commit: 0f584aec-3fb5-4c2a-a4b4-283c7e45d694
+4993a15 HEAD@{2026-10-10 00:53:42 +0000}: commit: 0f584aec-3fb5-4c2a-a4b4-283c7e45d694
+a357d10 refs/heads/main@{2026-10-10 00:51:48 +0000}: commit: hook-install-test-005148
+a357d10 HEAD@{2026-10-10 00:51:48 +0000}: commit: hook-install-test-005148
+e232dae refs/heads/main@{2026-10-10 00:38:48 +0000}: commit: 2a9b18e5-a17f-4d80-9bcd-d6d1967dcb3d
+e232dae HEAD@{2026-10-10 00:38:48 +0000}: commit: 2a9b18e5-a17f-4d80-9bcd-d6d1967dcb3d
+90e3970 refs/heads/main@{2026-10-10 00:31:33 +0000}: commit: da54a7fe-8ee1-4e9a-b93a-205c99f7baf5
+90e3970 HEAD@{2026-10-10 00:31:33 +0000}: commit: da54a7fe-8ee1-4e9a-b93a-205c99f7baf5
+c22fbb3 refs/heads/main@{2026-10-09 22:03:12 +0000}: commit: 342f259e-9638-46c1-97a1-d65fa0eb29fc
+c22fbb3 HEAD@{2026-10-09 22:03:12 +0000}: commit: 342f259e-9638-46c1-97a1-d65fa0eb29fc
+cf3b432 refs/heads/main@{2026-10-09 20:20:20 +0000}: commit: 4c06927f-4324-4f6f-8ca6-a67d82581458
+cf3b432 HEAD@{2026-10-09 20:20:20 +0000}: commit: 4c06927f-4324-4f6f-8ca6-a67d82581458
+4493520 refs/heads/main@{2026-10-09 19:23:38 +0000}: commit: e4c637ca-9e46-4727-81ee-72bd1eb43fd0
+4493520 HEAD@{2026-10-09 19:23:38 +0000}: commit: e4c637ca-9e46-4727-81ee-72bd1eb43fd0
+3033b3c refs/heads/main@{2026-10-09 18:18:03 +0000}: commit: cd9e125f-bb7d-4b86-9df6-1d62a7e5e029
+3033b3c HEAD@{2026-10-09 18:18:03 +0000}: commit: cd9e125f-bb7d-4b86-9df6-1d62a7e5e029
+5bfd8ff refs/heads/main@{2026-10-09 18:07:54 +0000}: commit: c491830c-dde0-4fdd-bf8a-2a4c5947a443
+5bfd8ff HEAD@{2026-10-09 18:07:54 +0000}: commit: c491830c-dde0-4fdd-bf8a-2a4c5947a443
+92679ad refs/heads/main@{2026-10-09 17:24:32 +0000}: commit: 8f036656-d075-4b4e-b39d-ef3f45583147
+92679ad HEAD@{2026-10-09 17:24:32 +0000}: commit: 8f036656-d075-4b4e-b39d-ef3f45583147
+f4330e3 refs/heads/main@{2026-10-09 16:45:34 +0000}: commit: e751f145-35f4-4ffe-a51b-74a8ce8525cc
+f4330e3 HEAD@{2026-10-09 16:45:34 +0000}: commit: e751f145-35f4-4ffe-a51b-74a8ce8525cc
+fb5b9fe HEAD@{2026-10-09 16:35:47 +0000}: reset: moving to HEAD
+fb5b9fe refs/heads/main@{2026-10-09 15:56:05 +0000}: commit: 4a532369-c5bc-4607-afc5-0debc9062ed6
+fb5b9fe HEAD@{2026-10-09 15:56:05 +0000}: commit: 4a532369-c5bc-4607-afc5-0debc9062ed6
+df76e52 refs/heads/main@{2026-10-09 15:50:14 +0000}: commit: 1d9b3ae4-b3b6-457c-813c-ed54bacbbabc
+df76e52 HEAD@{2026-10-09 15:50:14 +0000}: commit: 1d9b3ae4-b3b6-457c-813c-ed54bacbbabc
+595f15a refs/heads/main@{2026-10-09 15:43:28 +0000}: commit: 3b000cd3-69b5-4498-8692-c8b0f2b3a50a
+595f15a HEAD@{2026-10-09 15:43:28 +0000}: commit: 3b000cd3-69b5-4498-8692-c8b0f2b3a50a
+3873db5 refs/heads/main@{2026-10-09 15:28:36 +0000}: commit: c52ab97c-ffb5-4ca6-85ea-5f3b5a787859
+3873db5 HEAD@{2026-10-09 15:28:36 +0000}: commit: c52ab97c-ffb5-4ca6-85ea-5f3b5a787859
+bc2029e refs/heads/main@{2026-10-09 15:06:12 +0000}: commit: 02da1a53-56dc-40e6-9b99-c913186e5bcd
+bc2029e HEAD@{2026-10-09 15:06:12 +0000}: commit: 02da1a53-56dc-40e6-9b99-c913186e5bcd
+f4c246b refs/heads/main@{2026-10-09 14:44:00 +0000}: commit: aa6d645e-fa6a-481a-9911-06bdc235163f
+f4c246b HEAD@{2026-10-09 14:44:00 +0000}: commit: aa6d645e-fa6a-481a-9911-06bdc235163f
+baf41b0 refs/heads/main@{2026-10-09 14:28:00 +0000}: commit: 7a807fcc-5c40-47e9-921e-a10bd8c9e9d7
+baf41b0 HEAD@{2026-10-09 14:28:00 +0000}: commit: 7a807fcc-5c40-47e9-921e-a10bd8c9e9d7
+76ab36a refs/heads/main@{2026-10-09 14:13:36 +0000}: commit: 66299ba7-a452-412a-aba2-545897593baf
+76ab36a HEAD@{2026-10-09 14:13:36 +0000}: commit: 66299ba7-a452-412a-aba2-545897593baf
+4894229 refs/heads/main@{2026-10-09 13:34:41 +0000}: commit: 8e9a76e1-97c9-4df1-a5bb-73b7257309ef
+4894229 HEAD@{2026-10-09 13:34:41 +0000}: commit: 8e9a76e1-97c9-4df1-a5bb-73b7257309ef
+4623431 refs/heads/main@{2026-10-09 13:10:19 +0000}: commit: 19598f6c-b08b-4814-aa74-ca891e634758
+4623431 HEAD@{2026-10-09 13:10:19 +0000}: commit: 19598f6c-b08b-4814-aa74-ca891e634758
+90fea0f refs/heads/main@{2026-10-09 12:46:43 +0000}: commit: 99f4fe80-0484-4000-8d22-b11480eb05db
+90fea0f HEAD@{2026-10-09 12:46:43 +0000}: commit: 99f4fe80-0484-4000-8d22-b11480eb05db
+50bac77 refs/heads/main@{2026-10-09 12:10:47 +0000}: commit: 6809ddad-b16d-4a2f-a25a-a1d4d5717530
+50bac77 HEAD@{2026-10-09 12:10:47 +0000}: commit: 6809ddad-b16d-4a2f-a25a-a1d4d5717530
+8488dfb refs/heads/main@{2026-10-09 11:38:00 +0000}: commit: 98974ce0-87be-43bb-be24-2e9154ece0c3
+8488dfb HEAD@{2026-10-09 11:38:00 +0000}: commit: 98974ce0-87be-43bb-be24-2e9154ece0c3
+f9a11ab refs/heads/main@{2026-10-09 11:12:11 +0000}: commit: ef7a3cc5-7302-447d-99ec-ec7d8e3c3566
+f9a11ab HEAD@{2026-10-09 11:12:11 +0000}: commit: ef7a3cc5-7302-447d-99ec-ec7d8e3c3566
+3bcc530 refs/heads/main@{2026-10-09 08:03:36 +0000}: commit (initial): Initial commit
+3bcc530 HEAD@{2026-10-09 08:03:36 +0000}: commit (initial): Initial commit
+=== backup remote-tracking mtime ===
+2026-10-28 20:13:47.000000000 +0000 .git/refs/remotes/backup/main
+2026-10-28 20:13:47.000000000 +0000 .git/logs/refs/remotes/backup/main
+2026-10-30 06:27:32.134315749 +0000 .git/logs/refs/heads/main
