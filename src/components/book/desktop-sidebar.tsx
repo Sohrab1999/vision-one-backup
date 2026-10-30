@@ -8,7 +8,11 @@ import { NAV, type ViewId } from "./app-header";
 /**
  * سایدبار دسکتاپ (بهینه‌سازی صفحه‌نمایش بزرگ):
  * - فقط از بریک‌پوینت xl (۱۲۸۰px) ظاهر می‌شود؛ زیر آن هدرِ قرصی کار می‌کند
- * - ریل ثابت راست (RTL) با عرض ۷۲px که با hover/focus تا ۲۳۶px باز می‌شود
+ * - ریل ثابت راست (RTL) با عرض ۷۲px که با hover/focus باز می‌شود:
+ *   در باند xl تا ۲۰۰px و از 2xl (۱۵۳۶px) به بالا تا ۲۳۶px
+ *   (N1-5.7: در ۱۲۸۰ عرضِ بازِ ۲۳۶px لبهٔ چپ را به x=۱۰۴۴ می‌برد که زیر
+ *   مرکز کلیکِ کارت اولِ واژگان (x≈۱۰۵۰) می‌افتد و با حلقهٔ hover، کلیک
+ *   را می‌بلعد؛ ۲۰۰px این ناحیهٔ مرگ را حذف می‌کند و برچسب‌ها جا می‌شوند)
  * - باز/بسته شدن با state JS است نه فقط :hover CSS — چون Tailwind 4 باید /
  *   hover: را داخل @media (hover:hover) می‌گذارد و در برخی محیط‌ها از کار
  *   می‌افتد؛ این‌طرف بهتر رفتار یکنواخت دارد
@@ -28,7 +32,7 @@ export function DesktopSidebar({
     <aside
       className={cn(
         "fixed inset-y-0 right-0 z-[60] hidden flex-col border-l bg-background/95 shadow-[-8px_0_24px_-12px_rgb(0_0_0/0.12)] backdrop-blur-md transition-[width] duration-200 ease-out xl:flex",
-        open ? "w-[236px]" : "w-[72px]",
+        open ? "w-[200px] 2xl:w-[236px]" : "w-[72px]",
       )}
       aria-label="ناوبری دسکتاپ"
       onMouseEnter={() => setOpen(true)}

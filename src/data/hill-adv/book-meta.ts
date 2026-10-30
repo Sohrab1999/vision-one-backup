@@ -41,6 +41,20 @@ export const CHAPTERS: ChapterMeta[] = [
     "grammarTopics": []
   },
   {
+    "id": 3,
+    "number": "داستان ۳",
+    "title": "The New Bath",
+    "titleFa": "حمام جدید",
+    "quote": {
+      "en": "Many years ago an English lady in Africa was invited by an important local chief to be the first person to use his new bath.",
+      "fa": "سال‌ها پیش، یک خانم انگلیسی در آفریقا از سوی یک رئیس محلیِ مهم دعوت شد تا نخستین کسی باشد که از حمام جدید او استفاده می‌کند.",
+      "source": "داستان ۳ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "rose",
+    "grammarTopics": []
+  },
+  {
     "id": 4,
     "number": "داستان ۴",
     "title": "The Election Agreement",
@@ -181,6 +195,20 @@ export const CHAPTERS: ChapterMeta[] = [
     "grammarTopics": []
   },
   {
+    "id": 14,
+    "number": "داستان ۱۴",
+    "title": "My Name's Stonebreaker",
+    "titleFa": "نام من «سنگ‌شکن» است",
+    "quote": {
+      "en": "A very strict officer was talking to some new soldiers whom he had to train.",
+      "fa": "افسر بسیار سخت‌گیری با چند سرباز تازه‌کار که باید آموزش‌شان می‌داد صحبت می‌کرد.",
+      "source": "داستان ۱۴ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "teal",
+    "grammarTopics": []
+  },
+  {
     "id": 15,
     "number": "داستان ۱۵",
     "title": "The Admiral's Mistake",
@@ -220,6 +248,20 @@ export const CHAPTERS: ChapterMeta[] = [
     },
     "minutes": 3,
     "color": "orange",
+    "grammarTopics": []
+  },
+  {
+    "id": 18,
+    "number": "داستان ۱۸",
+    "title": "Envy. Only Envy.",
+    "titleFa": "حسادت، فقط حسادت",
+    "quote": {
+      "en": "Mary was a university student. She did not have very much money, and her parents were not rich.",
+      "fa": "مری دانشجو بود. پول زیادی نداشت و والدینش هم ثروتمند نبودند.",
+      "source": "داستان ۱۸ — Advanced Steps to Understanding"
+    },
+    "minutes": 3,
+    "color": "emerald",
     "grammarTopics": []
   },
   {
@@ -290,48 +332,6 @@ export const CHAPTERS: ChapterMeta[] = [
     },
     "minutes": 3,
     "color": "orange",
-    "grammarTopics": []
-  },
-  {
-    "id": 3,
-    "number": "داستان ۳",
-    "title": "The New Bath",
-    "titleFa": "حمام جدید",
-    "quote": {
-      "en": "Many years ago an English lady in Africa was invited by an important local chief to be the first person to use his new bath.",
-      "fa": "سال‌ها پیش، یک خانم انگلیسی در آفریقا از سوی یک رئیس محلیِ مهم دعوت شد تا نخستین کسی باشد که از حمام جدید او استفاده می‌کند.",
-      "source": "داستان ۳ — Advanced Steps to Understanding"
-    },
-    "minutes": 3,
-    "color": "rose",
-    "grammarTopics": []
-  },
-  {
-    "id": 14,
-    "number": "داستان ۱۴",
-    "title": "My Name's Stonebreaker",
-    "titleFa": "نام من «سنگ‌شکن» است",
-    "quote": {
-      "en": "A very strict officer was talking to some new soldiers whom he had to train.",
-      "fa": "افسر بسیار سخت‌گیری با چند سرباز تازه‌کار که باید آموزش‌شان می‌داد صحبت می‌کرد.",
-      "source": "داستان ۱۴ — Advanced Steps to Understanding"
-    },
-    "minutes": 3,
-    "color": "teal",
-    "grammarTopics": []
-  },
-  {
-    "id": 18,
-    "number": "داستان ۱۸",
-    "title": "Envy. Only Envy.",
-    "titleFa": "حسادت، فقط حسادت",
-    "quote": {
-      "en": "Mary was a university student. She did not have very much money, and her parents were not rich.",
-      "fa": "مری دانشجو بود. پول زیادی نداشت و والدینش هم ثروتمند نبودند.",
-      "source": "داستان ۱۸ — Advanced Steps to Understanding"
-    },
-    "minutes": 3,
-    "color": "emerald",
     "grammarTopics": []
   },
   {
