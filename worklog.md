@@ -4281,3 +4281,26 @@ Stage Summary:
 - نتیجهٔ گام: **موفق** — نخستین آزمون HTTP احرازشده روی نمونهٔ مستقل: زنجیرهٔ کامل rate-limit → سشن (JWT واقعی از ورود واقعی Credentials) → اعتبارسنجی → upsert تراکنشی اثبات شد؛ رفتار 401 بدون نشست، insert، upsert بدون تکرار و skip عضو نامعتبر — همگی در سطح مسیر واقعی HTTP روی کپی ایزوله VERIFIED-PASS.
 - پوشش معیار پنجم: Progress (5.5) + Attempt/ReviewState (5.9) + POST attempts مهمان (5.11) + PUT srs احرازشده (5.12)؛ **معیار پنجم همچنان OPEN** (مسیر احرازشدهٔ POST، جمع‌بندی محیط عملیاتی/مهاجرت، NOT-RUNها)؛ تصمیم مالک.
 - SHA کامیت این ورود طبق الگوی مستقر در خود ورود ثبت نمی‌شود و در گزارش گام به مالک اعلام می‌گردد؛ اعتبار انتشار فقط با `git ls-remote backup refs/heads/main` پس از push اثبات می‌شود.
+
+---
+
+Task ID: N1-5.13-isolated-authenticated-attempts-test
+Agent: Z.ai Code (main agent)
+Date: ۱۴۰۵/۸/۸ (۲۰۲۶-۱۰-۳۰)
+Task: آزمون کنترل‌شدهٔ مسیر واقعی احرازشدهٔ POST /api/attempts روی نمونهٔ مستقل با پایگاه ایزوله — مقایسهٔ خط پایهٔ مهمان با N1-5.11، انتساب Attempt به کاربر QA با نشست واقعی، کنترل منفی قراردادی، عدم-تخریب اصلی و جمع‌آوری کنترل‌شده؛ بدون JWT جعلی و بدون افشای Secret/PIN/Cookie؛ فقط دو سند جدید + الحاق همین ورود
+
+Work Log:
+- پیش‌بررسی تازه: HEAD `e551af3110e6d1cca6bc26f4ed9b1e5003dbd8be` = commit N1-5.12 = `backup/main`، درخت پاک؛ hook سالم (مبنا)؛ `.gitignore` فعال؛ سند N1-5.11 و N1-5.12 در HEAD خوانده شد؛ منابع: available ۱۲۲۸MB، دیسک ۷٫۳GB، پورت ۳۴۵۹ آزاد.
+- قرارداد از کد (تازه): POST /api/attempts = rate 30/60s → بدون گیت سشن؛ book نامعتبر→vision-one؛ **کنترل منفی صریح سطر ۳۱-۳۳: total<=0 → 400 «داده نامعتبر»**؛ سشن اختیاری سطر ۳۶-۳۷ (userId = session?.user?.id ?? null — تنها تفاوت مهمان/احرازشده)؛ db.attempt.create خالص بدون dedup؛ name برش ۴۰؛ detail JSON.stringify؛ موفق 200 {ok,id}؛ خطا 500.
+- ایزوله‌سازی: ro-snapshot → `/tmp/n1qa513/custom-qa-attempts.db` + نشانگر `run-20261030T015550Z` (integrity ok/ok)؛ کپی whitelist + node_modules کامل (۱٫۱GB) + `.env` → مسیر کپی؛ نمونهٔ مستقل `next dev -p 3459` با سقف heap env-only و NEXTAUTH_URL و NEXTAUTH_SECRET تصادفی (هرگز چاپ نشد)؛ بدون db push/migrate/seed.
+- شواهد اتصال: environ لانچر (۱۱۷۹۵) و next-server (۱۱۸۰۹، cwd=appcopy) = مسیر کپی؛ ss شنوندهٔ ۳۴۵۹ = next-server ایزوله؛ **open-db-fds=2** (پروب آمادگی DB-خور GET /api/attempts فقط‌خواندنی، طبق الگوی 5.11)؛ اتصال گارد‌دار دوم: GUARD_PASS + pragma database_list = کپی + نشانگر؛ لاگ SQL سروکننده = دو INSERT main.Attempt + بدون INSERT پس از 400؛ dev.log اصلی: صفر POST /api/attempts و /api/auth/*.
+- چرخهٔ تک‌فراخوانی در اولین تلاش موفق (درس بیت +x لانچر از 5.12 پیش‌گیرانه اعمال شد)؛ کمینهٔ available = ۹۱۵MB (بالای سقف سقط ۲۰۰MB).
+- نتایج (HTTP کامل، سه POST متمایز بدون تکرار): ساخت QA از register واقعی = 200 {ok,id:cmvubmg8v0000ot41v97h0oiz}؛ ورود واقعی csrf→callback = 200 و session JSON با id منطبق رکورد کپی؛ **آزمون A مهمان = 200 {ok,id:cmvubmgxj0002ot418brlddym} + userIdNull=true (خط پایهٔ N1-5.11 بازتولید شد؛ شمارش: کل=182، مهمان=1)**؛ **آزمون B احرازشده = 200 {ok,id:cmvubmh0u0004ot41hmhnuu4c} + AUTH_ROWS=1 + ۱۰/۱۰ فیلد شامل userIdEqualsQA=true**؛ **آزمون C با نشست و total=0 = 400 «داده نامعتبر» بدون INSERT (اعتبارسنجی حتی برای احرازشده)**؛ شمارش‌های حین: User=4 · Attempt=183 · Progress=27 · ReviewState=10.
+- پاک‌سازی و عدم-تخریب: DELETED_ATTEMPTS=2 (فقط دو ردیف نام‌دار همین run) + DELETED_USER=1 → دقیقاً خط پایه ۳/۲۷/۱۸۱/۱۰؛ integrity ok؛ نشانگر پابرجا؛ **SHA اصلی t0=میانه=t2 = `0057e27c…2bb097`**؛ teardown فقط cwd=appcopy (۱۱۷۹۵/۱۱۸۰۹) → isolated-stopped؛ :3000 پیش/میانه/پس = 200؛ کپی ۱٫۱GB و jarها حذف؛ شواهد ≈۱٫۳MB در /tmp/n1qa513.
+- NOT-RUN: اشباع rate-limit، برش name>40، پیش‌فرض‌های category/lesson/duration و detail=null و book نامعتبر، هم‌زمانی، صحت‌سنجی GET /api/attempts، رفتار idempotency عمدی (خارج از دامنه — endpoint بدون dedup).
+- سه فایل مجاز این گام: ① `نقشه راه ها/نقشه-راه-آزمون-ایزوله-API-attempts-N1-5.13.md` (جدید) ② `نقشه راه ها/گزارش-آزمون-ایزوله-API-attempts-N1-5.13.md` (جدید) ③ `worklog.md` (فقط همین ورود)؛ roadmap.md تیک نخورد؛ فاز ۱ بسته نشد.
+
+Stage Summary:
+- نتیجهٔ گام: **موفق — همهٔ مؤلفه‌ها VERIFIED-PASS، هیچ FAIL و هیچ BLOCKED** — انتساب Attempt به کاربر احرازشده با نشست واقعی، خط پایهٔ مهمان یکسان با N1-5.11 و اعتبارسنجی مستقل از نشست، همگی در سطح مسیر واقعی HTTP روی کپی ایزوله اثبات شد.
+- پوشش معیار پنجم اکنون کامل در سطح HTTP برای هر سه مسیر نوشتن: Progress (5.5) + Attempt/ReviewState (5.9) + POST attempts مهمان (5.11) + PUT srs احرازشده (5.12) + POST attempts احرازشده (5.13)؛ **معیار پنجم همچنان OPEN** (جمع‌بندی محیط عملیاتی/مهاجرت و NOT-RUNها)؛ تصمیم مالک.
+- SHA کامیت این ورود طبق الگوی مستقر در خود ورود ثبت نمی‌شود و در گزارش گام به مالک اعلام می‌گردد؛ اعتبار انتشار فقط با `git ls-remote backup refs/heads/main` پس از push اثبات می‌شود.
