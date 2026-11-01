@@ -17,6 +17,7 @@ import { useSRSData, SRS_MAX_BOX } from "@/lib/srs-store";
 import { useLearnedWords } from "@/lib/learned-store";
 import { setPracticeIntent } from "@/lib/practice-intent";
 import { requestView } from "@/lib/nav-store";
+import { CrossBookSection } from "./cross-book-section";
 
 /**
  * Word lookup — کلیک روی هر واژهٔ انگلیسی در متن‌ها، معنی و دیکشنری همان واژه را نشان می‌دهد.
@@ -516,18 +517,22 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
           >
             {memImg.loading ? <Loader2 size={15} className="animate-spin" /> : <ImagePlay size={15} />}
           </button>
-          <button
-            type="button"
-            onClick={() => toggleStar(hit.word)}
-            aria-label={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
-            title={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
-            className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-full transition-all hover:scale-110 active:scale-90",
-              isStarred ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500",
-            )}
-          >
-            <Star size={15} className={cn(isStarred && "fill-yellow-500 star-pop")} />
-          </button>
+          {/* F-CV-1 §۷: واژهٔ miss‌شده متعلق به کتاب فعال نیست — ستاره فقط با هویت کتابِ خود واژه
+              (از مسیر «رفتن به منبع») ثبت می‌شود؛ در miss کامل دکمهٔ ستارهٔ کتاب فعال پنهان می‌گردد */}
+          {(hit.vocab || hit.dict || hit.related) && (
+            <button
+              type="button"
+              onClick={() => toggleStar(hit.word)}
+              aria-label={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
+              title={isStarred ? "حذف ستاره" : "ستاره‌دار کردن"}
+              className={cn(
+                "flex h-9 w-9 items-center justify-center rounded-full transition-all hover:scale-110 active:scale-90",
+                isStarred ? "text-yellow-500" : "text-muted-foreground hover:text-yellow-500",
+              )}
+            >
+              <Star size={15} className={cn(isStarred && "fill-yellow-500 star-pop")} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -646,6 +651,9 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
               </ul>
             </div>
           )}
+          {/* F-CV-1: miss کامل (بدون vocab/dict/related) → بخش بین‌کتابی فقط‌خواندنی؛
+              یافتهٔ محلی یا related → هرگز نمایش داده نمی‌شود (تصمیم §۲-۱۲) */}
+          {!hit.related && bookId && <CrossBookSection key={hit.word} norm={hit.word} onClose={onClose} />}
         </div>
       ) : null}
 
