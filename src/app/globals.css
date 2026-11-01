@@ -29,6 +29,19 @@
   line-gap-override: 0%;
 }
 
+/* گارد CLS بوت (فاز ۱۱ — دور ۱): پرچم data-boot-book توسط اسکریپت head پیش از
+ * اولین رنگ‌آمیزی گذاشته می‌شود (فقط اگر «کتاب فعال» ذخیره‌شده باشد). تا نشستن
+ * نمای نهایی، قفسهٔ SSR و فوتر نامرئی‌اند — visibility فضای چیدمان را نگه می‌دارد
+ * و عنصر نامرئی در PerformanceObserver layout-shift اندازه‌گیری نمی‌شود؛ بنابراین
+ * تعویض قفسه→اسکلت→خانه دیگر شیفت تمام‌صفحه تولید نمی‌کند. کاربر تازه (بدون کتاب
+ * ذخیره‌شده) هرگز این پرچم را ندارد و قفسه از همان فریم اول مرئی است.
+ * برداشتن پرچم: page.tsx به‌محض آماده‌شدن داده/عدم وجود کتاب؛ فالبک اسکریپت: ۸ ثانیه.
+ */
+html[data-boot-book="1"] [data-boot-shelf],
+html[data-boot-book="1"] [data-boot-footer] {
+  visibility: hidden;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

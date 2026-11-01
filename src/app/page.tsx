@@ -11,6 +11,7 @@ import { BookshelfView } from "@/components/book/bookshelf-view";
 import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
+import { getActiveBookSnapshot } from "@/lib/book-storage";
 import { AccountProvider } from "@/components/book/account-provider";
 import { DeepLinkGate } from "@/components/book/deep-link-gate";
 import { WhatsNewDialog } from "@/components/book/whats-new";
@@ -22,6 +23,7 @@ import { PwaInstallGuide } from "@/components/book/pwa-install-guide";
 // و هر نما هنگام ناوبری به آن بارگذاری می‌شود — الگوی همان dynamic import بازی‌ها.
 const ViewChunkLoading = () => (
   <section
+    data-boot-loading
     className="flex min-h-[55vh] flex-col items-center justify-center gap-4 rounded-3xl border bg-card/60 p-12 text-center"
     role="status"
     aria-live="polite"
@@ -57,6 +59,7 @@ function BookDataLoading() {
   const { meta } = useBook();
   return (
     <section
+      data-boot-loading
       className="flex min-h-[55vh] flex-col items-center justify-center gap-4 rounded-3xl border bg-card/60 p-12 text-center"
       role="status"
       aria-live="polite"
@@ -102,6 +105,48 @@ function App() {
   // درخواست‌های ناوبری از عمق درخت (مثل پاپ‌اور واژه) — setView داخل callback رویدادی
   // اجرا می‌شود نه همزمان در effect، پس با react-hooks v6 سازگار است.
   useEffect(() => registerNavHandler((v) => setView(v)), []);
+
+  // گرم‌کردن زودهنگام chunk نمای خانه (گام LCP دور ۱): تا الان دانلود chunk «خانه»
+  // منتظر می‌ماند تا اول chunk «داده کتاب» تمام شود (گیت hasData) — دو دانلود/کامپایل
+  // پشت‌سرهم، LCP کاربر بازگشته را عقب می‌برد. اکنون هر دو موازی پیش می‌روند؛
+  // dynamic() درخواست تکراری را dedupe می‌کند پس هزینهٔ اضافی صفر است.
+  useEffect(() => {
+    if (effectiveView === "home" && !hasData) {
+      void import("@/components/book/home-view");
+    }
+  }, [effectiveView, hasData]);
+
+  // پایان پنجرهٔ بوت (گام CLS دور ۱): اسکریپت head پرچم data-boot-book را فقط وقتی
+  // می‌گذارد که «کتاب فعال» ذخیره‌شده باشد؛ اینجا پرچم فقط زمانی برداشته می‌شود که
+  // نمای نهایی «واقعاً مونت» شده باشد — نه صرفاً داده آماده باشد. فاصلهٔ بین «داده
+  // آماده» و «مونت chunk خانه» (dynamic lazy) قبلاً فوتر را در جایگاه اسکلت آشکار
+  // می‌کرد و بعداً به پایین هل می‌داد (CLS=۰٫۰۸۸ — تله‌متری ۲۰۲۶-۱۱-۰۱).
+  // خواندن مستقیم از استور (نه state) تا در اولین effect هم مقدار واقعی کلاینت دیده شود.
+  useEffect(() => {
+    if (getActiveBookSnapshot() === null) {
+      // کاربر تازه / کتاب نامعتبر — قفسه از همان ابتدا نمای نهایی است
+      document.documentElement.removeAttribute("data-boot-book");
+      return;
+    }
+    if (!hasData) return; // بوت در جریان است — فوتر/قفسه نامرئی می‌مانند
+    let cancelled = false;
+    const reveal = () => {
+      if (!cancelled) document.documentElement.removeAttribute("data-boot-book");
+    };
+    // صبر تا فریمی که هیچ نشانگر بارگذاری (اسکلت داده یا اسکلت chunk) باقی نمانده
+    const tick = () => {
+      if (cancelled) return;
+      if (!document.querySelector("[data-boot-loading]")) {
+        reveal();
+        return;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    return () => {
+      cancelled = true;
+    };
+  }, [hasData, bookId]);
 
   // میان‌برهای کیبورد دسکتاپ: Alt+1..9 → پرش مستقیم به بخش‌های پرکاربرد
   // (فقط Alt خالص — ترکیب با Ctrl/Meta یا تایپ در فیلدها هرگز مداخله نمی‌کند)
@@ -169,7 +214,13 @@ function App() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
         >
-          {effectiveView === "shelf" && <BookshelfView onNavigate={navigate} />}
+          {effectiveView === "shelf" && (
+            /* data-boot-shelf (گام CLS دور ۱): دستگیرهٔ CSS گارد بوت — display:contents
+             * تا چیدمان قفسه ذره‌ای تغییر نکند و فقط visibility کنترل شود */
+            <div data-boot-shelf className="contents">
+              <BookshelfView onNavigate={navigate} />
+            </div>
+          )}
           {effectiveView === "compare" && <CompareView />}
           {bookId && !data && showBookViews && <BookDataLoading />}
           {effectiveView === "home" && hasData && <HomeView onNavigate={navigate} />}

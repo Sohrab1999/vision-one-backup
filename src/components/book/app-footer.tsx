@@ -9,7 +9,9 @@ export function AppFooter() {
 
   return (
     <>
-      <footer className="mt-auto w-full border-t bg-card/50">
+      {/* data-boot-footer (گام CLS دور ۱): دستگیرهٔ گارد بوت — فوترِ SSR کاربر بازگشته
+          تا نشستن نمای نهایی نامرئی است تا پرش فوتر در layout-shift ثبت نشود */}
+      <footer data-boot-footer className="mt-auto w-full border-t bg-card/50">
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-right">
           {data ? (

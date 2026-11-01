@@ -92,6 +92,17 @@ export const viewport: Viewport = {
  */
 const THEME_INIT = `try{var t=localStorage.getItem("visionone:theme");var l=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;if(t==="light"||(!t&&l)){document.documentElement.classList.remove("dark")}}catch(e){}`;
 
+/**
+ * گارد CLS بوت (فاز ۱۱ — اصلاح بودجه کارایی، دور ۱):
+ * کاربر بازگشته (کتاب فعال ذخیره‌شده دارد) در SSR قفسه را می‌بیند و بعد از هیدریشن،
+ * swap کامل قفسه→اسکلت→خانه اتفاق می‌افتد — تله‌متری ۲۰۲۶-۱۱-۰۱ CLS=۰٫۳۷۵ ثبت کرد.
+ * این اسکریپت «قبل از اولین رنگ‌آمیزی» پرچم data-boot-book می‌گذارد تا CSS قفسه و
+ * فوتر SSR را نامرئی کند (visibility جای چیدمان را نگه می‌دارد؛ عنصر نامرئی در
+ * layout-shift اندازه‌گیری نمی‌شود). برداشتن پرچم: به‌محض نشستن نمای نهایی در
+ * page.tsx؛ فالبک مستقل: بعد از ۸ ثانیه حتی اگر React هرگز بالا نیاید.
+ */
+const BOOT_CLS_GUARD = `try{if(localStorage.getItem("visionone:active-book")){var d=document.documentElement;d.setAttribute("data-boot-book","1");setTimeout(function(){d.removeAttribute("data-boot-book")},8000)}}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -101,6 +112,7 @@ export default function RootLayout({
     <html lang="fa" dir="rtl" suppressHydrationWarning className="dark">
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOT_CLS_GUARD }} />
         {/*
          * گام ۷ (CLS): فونت same-origin خیلی زود preload می‌شود تا پنجرهٔ
          * fallback↔Vazirmatn (font-display: swap) به حداقل برسد — بدون درخواست شخص ثالث.
