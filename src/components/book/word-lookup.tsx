@@ -19,6 +19,7 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { setPracticeIntent } from "@/lib/practice-intent";
 import { requestView } from "@/lib/nav-store";
 import { CrossBookSection } from "./cross-book-section";
+import { WordContextSection } from "./word-context-section";
 
 /**
  * Word lookup — کلیک روی هر واژهٔ انگلیسی در متن‌ها، معنی و دیکشنری همان واژه را نشان می‌دهد.
@@ -660,11 +661,19 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
               </ul>
             </div>
           )}
+          {/* F-CV-3 (فاز ۱۴ گام ۱): جمله‌های واقعی کتاب فعال — زیر پیام miss و کالوکیشن‌ها،
+              بالای سکشن بین‌کتابی (تصمیم D4)؛ فقط‌خواندنی — بدون هرگونه نوشتن در استورها.
+              key با پیشوند ctx تا با CrossBookSection هم‌والد (key={hit.word}) تداخل کلید رخ ندهد */}
+          {bookId && <WordContextSection key={`ctx-${hit.word}`} norm={hit.word} />}
           {/* F-CV-1: miss کامل (بدون vocab/dict/related) → بخش بین‌کتابی فقط‌خواندنی؛
               یافتهٔ محلی یا related → هرگز نمایش داده نمی‌شود (تصمیم §۲-۱۲) */}
           {!hit.related && bookId && <CrossBookSection key={hit.word} norm={hit.word} onClose={onClose} />}
         </div>
       ) : null}
+
+      {/* F-CV-3 (فاز ۱۴ گام ۱): «در متن‌های واقعی» در حالت hit — زیر بلوک دیکشنری/معنی،
+          پیش از میان‌بر تمرین (تصمیم D2)؛ فقط‌خواندنی — بدون هرگونه نوشتن در استورها */}
+      {(hit.vocab || hit.dict) && bookId && <WordContextSection key={`ctx-${hit.word}`} norm={hit.word} />}
 
       {/* میان‌بر تمرین واژه‌های ستاره‌دار */}
       {starred.count > 0 && (
