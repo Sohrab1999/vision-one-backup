@@ -17,14 +17,20 @@
  *  - کلید یکتای نتیجه: (bookId, refKind, refId, sentIdx) — حذف تکرار (§۶ سند UX).
  *  - ترتیب درون کتاب (§۶): مکالمه > مثال گرامر > ریدینگ > نقل‌قول.
  *
- * دامنهٔ V1 (تصمیم D1 ✅ مالک): کتاب فعال + کتاب‌های پایه‌دار ۷→۱۲.
+ * دامنهٔ V1 (تصمیم D1 ✅ مالک + استثنای مصوب فاز ۱۴/گام ۴): کتاب فعال + کتاب‌های
+ * پایه‌دار ۷→۱۲ + منبع مکمل Collocations (تنها؛ مرحلهٔ اول ورود مرحله‌ای).
  * موج‌بندی (همان الگوی اثبات‌شدهٔ F-CV-1):
  *  - موج ۱ = کتاب فعال — در هر دو جایگاه hit و miss پاپ‌آپ (D2/D4).
- *  - موج ۲ = پایه‌دارهای ۷→۱۲ منهای فعال، فقط در جایگاه miss کامل پاپ‌آپ (D4/§۱۲ سند UX)؛
- *    ادغام §۶-۴: ① نتایج کتاب فعال ② پایه‌دارها با |Δپایه| صعودی (proximityRank سرویس
- *    بین‌کتابی — منبع یگانهٔ قاعدهٔ نزدیکی) با tie-breaker ثبت‌شده = پایهٔ صعودی ۷→۱۲
- *    (رفتار پایدار sort در F-CV-1).
+ *  - موج ۲ = پایه‌دارهای ۷→۱۲ منهای فعال + منبع مکملِ تأییدشده (WAVE2_UNGRADED_BOOKS =
+ *    فقط collocations — تصمیم مالک فاز ۱۴/گام ۴)؛ فقط در جایگاه miss کامل پاپ‌آپ
+ *    (D4/§۱۲ سند UX)؛ ادغام §۶-۴ با تعمیم مستند گزارش ارزیابی گام ۳ (§۶/§۷):
+ *    ① نتایج کتاب فعال ② پایه‌دارها با |Δپایه| صعودی (proximityRank سرویس بین‌کتابی —
+ *    منبع یگانهٔ قاعدهٔ نزدیکی) با tie-breaker ثبت‌شده = پایهٔ صعودی ۷→۱۲
+ *    ③ منابع بی‌پایه در انتها (proximityRank = ۱۰۰+ ترتیب UNGRADED_ORDER — قاعدهٔ
+ *    تعیین‌تکلیف‌شدهٔ F-CV-1).
  *  - سقف ۱۲ در سطح کل سکشن (نه هر موج/کتاب — §۶ بند ۵ سند UX و §۳-۵ مأموریت گام ۲).
+ *  - هر چهار منبع Hill خارج از دامنهٔ فعلی باقی می‌مانند (تصمیم مالک گام ۴ — ورود آنها
+ *    نیازمند ارزیابی و تصمیم مستقل بعدی است).
  */
 
 import type { BookId } from "../data/books/types";
@@ -647,10 +653,23 @@ function gradeAsc(book: BookId): number {
 const GRADED_SENTENCE_BOOKS: BookId[] = (Object.keys(SENTENCE_LOADERS) as BookId[]).filter(isGradedBookId);
 
 /**
- * ترتیب deterministic موج ۲ برای کتاب فعال: پایه‌دارهای ۷→۱۲ منهای فعال، مرتبشده با
- * |Δپایه| صعودی و tie-breaker «پایهٔ صعودی». کتاب‌های بی‌پایه (hill/collocations) هرگز
- * وارد موج ۲ نمی‌شوند (D1) — برای فعالِ بی‌پایه، ترتیب = صعودی پایه (رفتار proximityRank).
- * صادرشده برای آزمون‌پذیری مستقیم در QA.
+ * منابع مکملِ تأییدشدهٔ موج ۲ — استثنای محدود ثبت‌شدهٔ D1 (تصمیم صریح مالک محصول،
+ * فاز ۱۴/گام ۴ — گزینهٔ ۴: ورود مرحله‌ای؛ مرحلهٔ اول = فقط Collocations):
+ *  - شناسه از registry واقعی استخراج شده (src/data/books/registry.ts: id "collocations") —
+ *    همان کتابی که readingsOnlyLoader آن از قبل در SENTENCE_LOADERS حاضر است (گام ۱)؛
+ *    هیچ loader/موتور/API/معمارهٔ جدیدی لازم نیست — فقط توسعهٔ داده‌محورِ دامنهٔ موج ۲.
+ *  - هر چهار منبع Hill و هر منبع مکمل دیگری در این فهرست نیستند (غیرمجاز — مأموریت §۱/§۳).
+ *  - ترتیب نمایش نسبت به پایه‌دارها = قاعدهٔ تعیین‌تکلیف‌شدهٔ F-CV-1 (گزارش ارزیابی گام ۳ §۶-۴
+ *    و §۷): بی‌پایه‌ها همیشه پس از همهٔ پایه‌دارها (proximityRank = ۱۰۰+ index(UNGRADED_ORDER)).
+ */
+const WAVE2_UNGRADED_BOOKS: BookId[] = ["collocations"];
+
+/**
+ * ترتیب پایه‌دارهای موج ۲ برای کتاب فعال (زیرمجموعهٔ پایه‌دار — تعمیم کامل در wave2Order):
+ * پایه‌دارهای ۷→۱۲ منهای فعال، مرتبشده با |Δپایه| صعودی و tie-breaker «پایهٔ صعودی».
+ * این تابع «تنها» پایه‌دارها را برمی‌گرداند (منابع بی‌پایه در wave2Order به دنباله اضافه
+ * می‌شوند) — رفتار گام ۲ بایت‌به‌بایت حفظ شده. برای فعالِ بی‌پایه، ترتیب = صعودی پایه
+ * (رفتار proximityRank). صادرشده برای آزمون‌پذیری مستقیم در QA.
  */
 export function gradedWave2Order(activeBookId: BookId): BookId[] {
   return GRADED_SENTENCE_BOOKS.filter((id) => id !== activeBookId).sort((a, b) => {
@@ -658,6 +677,17 @@ export function gradedWave2Order(activeBookId: BookId): BookId[] {
     if (d !== 0) return d;
     return gradeAsc(a) - gradeAsc(b);
   });
+}
+
+/**
+ * ترتیب کامل موج ۲ (فاز ۱۴/گام ۴ — تعمیم محدود و داده‌محورِ ادغام §۶-۴):
+ *  ① پایه‌دارهای ۷→۱۲ منهای فعال با |Δپایه| صعودی + tie-breaker پایهٔ صعودی (بدون تغییر)
+ *  ② سپس منابع مکملِ تأییدشدهٔ بی‌پایه (امروز فقط collocations) — در انتها، مطابق
+ *     proximityRank (۱۰۰+)؛ فعالِ بی‌پایه از دنبالهٔ مکمل حذف می‌شود.
+ * صادرشده برای آزمون‌پذیری مستقیم در QA.
+ */
+export function wave2Order(activeBookId: BookId): BookId[] {
+  return [...gradedWave2Order(activeBookId), ...WAVE2_UNGRADED_BOOKS.filter((id) => id !== activeBookId)];
 }
 
 export interface WordContextLookupOptions {
@@ -668,9 +698,10 @@ export interface WordContextLookupOptions {
 /**
  * همان lookupSentencesInActiveBook با گزینهٔ موج ۲ (الگوی WithStatus در F-CV-2):
  *  - includeWave2=false → خروجی بایت‌به‌بایت همان موج ۱ (مسیر hit دست‌نخورده).
- *  - includeWave2=true (فقط جایگاه miss کامل پاپ‌آپ) → ادغام §۶-۴: ① نتایج کتاب فعال
- *    (ترتیب درون‌کتاب §۶) ② سپس پایه‌دارهای ۷→۱۲ با |Δپایه| صعودی و tie-breaker پایهٔ
- *    صعودی؛ درون هر کتاب همان ترتیب §۶. کلید یکتا با bookId؛ سقف ۱۲ در سطح کل سکشن
+ *  - includeWave2=true (فقط جایگاه miss کامل پاپ‌آپ) → ادغام §۶-۴ با تعمیم گام ۴:
+ *    ① نتایج کتاب فعال (ترتیب درون‌کتاب §۶) ② پایه‌دارهای ۷→۱۲ با |Δپایه| صعودی و
+ *    tie-breaker پایهٔ صعودی ③ منبع مکمل تأییدشده (فقط collocations — تصمیم مالک گام ۴)
+ *    در انتها؛ درون هر کتاب همان ترتیب §۶. کلید یکتا با bookId؛ سقف ۱۲ در سطح کل سکشن
  *    (نه هر موج/کتاب — §۶-۵ سند UX و §۳-۵ مأموریت گام ۲).
  *  - degraded (تمایز صادقانهٔ C-5 — دقیقاً معنای F-CV-1): فقط وقتی هیچ ایندکسی از هیچ
  *    موجی بارگذاری نشد؛ جست‌وجوی جزئی + صفر نتیجه = «خالی» نه «انجام نشد».
@@ -687,8 +718,9 @@ export async function lookupSentencesWithStatus(
   const wave1 = await lookupSentencesInActiveBook(activeBookId, rawNorm);
   if (!options?.includeWave2) return wave1;
 
-  // ② موج ۲ — پایه‌دارهای ۷→۱۲ منهای فعال (فقط جایگاه miss کامل؛ D1)
-  const ordered = gradedWave2Order(activeBookId);
+  // ② موج ۲ — پایه‌دارهای ۷→۱۲ منهای فعال + منبع مکمل تأییدشده (فقط جایگاه miss کامل؛
+  //    D1 + استثنای مصوب مالک در فاز ۱۴/گام ۴ — فقط collocations؛ hill هرگز)
+  const ordered = wave2Order(activeBookId);
   const indexes = await Promise.all(ordered.map((id) => loadSentenceIndex(id)));
   const loaded2 = indexes.filter(Boolean).length;
 

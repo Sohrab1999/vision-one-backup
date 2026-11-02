@@ -1,24 +1,30 @@
 /**
- * QA فقط‌خواندنی — F-CV-3 / Phase 14 Step 2 (موج ۲ بین‌کتابی «در متن‌های واقعی»)
+ * QA فقط‌خواندنی — F-CV-3 / Phase 14 Step 4 (موج ۲ با منبع مکمل Collocations)
  *
  * اجرا:  bun run scripts/qa/word-in-context-wave2-qa.ts
  * هیچ فایلی نوشته نمی‌شود؛ fetch عمداً منفجر می‌شود (آزمون مثبت آفلاین بودن — الگوی گام ۱).
  *
- * پوشش مأموریت §۸-۱ (تست سرویس موج دوم):
- *   - کتاب فعال از موج ۲ حذف است؛ فقط پایه‌دارهای ۷→۱۲ (hill/collocations هرگز — D1)
+ * پوشش مأموریت §۸-۱ (تست سرویس موج دوم با استثنای مصوب مالک — گام ۴):
+ *   - دامنهٔ موج ۲ = پایه‌دارهای ۷→۱۲ منهای فعال + منبع مکمل تأییدشده (فقط collocations)
+ *     — هر چهار منبع Hill هرگز (تصمیم مالک گام ۴؛ ورود hill نیازمند تصمیم مستقل بعدی)
  *   - |Δپایه| صحیح و صعودی؛ ترتیب deterministic؛ tie-breaker = پایهٔ صعودی (§۶ سند UX)
+ *   - منابع بی‌پایه همیشه پس از همهٔ پایه‌دارها (proximityRank = ۱۰۰+ — قاعدهٔ F-CV-1)
  *   - ادغام §۶-۴: ① نتایج کتاب فعال (پیشوند دست‌نخورده) ② سپس کتاب‌های دیگر —
  *     «Miss با موج اول و دوم» (§۸-۲ مأموریت)؛ سقف ۱۲ در سطح کل سکشن (§۳-۵)
  *   - مسیر hit (includeWave2=false) بایت‌به‌بایت موج ۱ — بدون نشت موج ۲
- *   - حذف تکرار با کلید ۴جزئی؛ D7 (fa خالی/چینی حذف)؛ mark درون مرزها؛ سطح سازگار
- *   - فعالِ بی‌پایه (hill) = ترتیب صعودی پایه (رفتار proximityRank)
- *   - پیش‌شرط نشان «نزدیک‌ترین پایه»: اولین آیتم کتاب خارج از فعال = نزدیک‌ترین کتابِ حاضر
+ *   - حذف تکرار با کلید ۴جزئی؛ D7 (fa خالی/چینی حذف — شامل نقل‌قول‌های نامعتبر collo)؛
+ *     mark درون مرزها؛ سطح سازگار
+ *   - فعالِ بی‌پایه (hill) = ترتیب صعودی پایه + منبع مکمل در انتها
+ *   - منبع Collocations قابل‌شناسایی (خط منبع D8: چیپ درس / source چاپی)
+ *   - پیش‌شرط نشان «نزدیک‌ترین پایه»: فقط آیتم کتاب پایه‌دار خارج از فعال —
+ *     collocations هرگز (شرط isGradedBookId — بدون تغییر منطق نشان)
  */
 
 import {
   lookupSentencesInActiveBook,
   lookupSentencesWithStatus,
   gradedWave2Order,
+  wave2Order,
   hasValidFa,
   WORD_CONTEXT_MAX_RESULTS,
   type ContextSentence,
@@ -32,6 +38,8 @@ import { READING_LIST as G9_READINGS } from "../../src/data/grade-9/readings";
 import { CONVERSATION_LIST as G9_CONVERSATIONS } from "../../src/data/grade-9/conversations";
 import { ALL_VOCAB as G8_VOCAB } from "../../src/data/grade-8/vocab";
 import { DICTIONARY as G8_DICT } from "../../src/data/grade-8/dictionary";
+import { READING_LIST as COLLO_READINGS } from "../../src/data/collocations/readings";
+import { CHAPTERS as COLLO_CHAPTERS } from "../../src/data/collocations/book-meta";
 
 let failures = 0;
 function check(name: string, cond: boolean, detail = "") {
@@ -99,10 +107,25 @@ function popupMissProxyG8(word: string): boolean {
   return true;
 }
 
+/** جمع واژه‌های یک متن انگلیسی (الگوی collectCandidateWords) */
+function addWords(out: Set<string>, en: string) {
+  for (const m of en.matchAll(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g)) {
+    const w = norm(m[0]);
+    if (w.length >= 4) out.add(w);
+  }
+}
+
+/** دامنهٔ مجاز موج ۲ (آینهٔ WAVE2_UNGRADED_BOOKS سرویس — استثنای مصوب مالک گام ۴): فقط collocations */
+const WAVE2_ALLOWED_UNGRADED = new Set<string>(["collocations"]);
+const isWave2AllowedBook = (id: string) => isGradedBookId(id as never) || WAVE2_ALLOWED_UNGRADED.has(id);
+
 /** قواعد مشترک هر نتیجهٔ موج ۲ (D7/سطح/mark/تکرار/سقف/دامنه) */
 function assertCommonRules(tag: string, active: string, result: ContextSentence[]) {
-  check(`${tag} دامنه D1: فقط پایه‌دارهای ۷→۱۲ (hill/collocations هرگز)`, result.every((s) => isGradedBookId(s.bookId)));
-  check(`${tag} ترتیب کتاب‌ها = |Δپایه| صعودی + tie پایهٔ صعودی`, bookOrderOk(active, result));
+  check(
+    `${tag} دامنهٔ موج ۲: پایه‌دارهای ۷→۱۲ + فقط collocations (hill هرگز)`,
+    result.every((s) => isWave2AllowedBook(s.bookId) && !s.bookId.startsWith("hill-")),
+  );
+  check(`${tag} ترتیب کتاب‌ها = |Δپایه| صعودی (بی‌پایه در انتها) + tie پایهٔ صعودی`, bookOrderOk(active, result));
   const keys = result.map(key4);
   check(`${tag} کلید ۴جزئی یکتا (حذف تکرار)`, new Set(keys).size === keys.length);
   check(`${tag} سقف ۱۲ سطح سکشن`, result.length <= WORD_CONTEXT_MAX_RESULTS, `=${result.length}`);
@@ -150,6 +173,41 @@ async function main() {
     check("W1 فعال بی‌پایه (hill-intro) = صعودی پایه", JSON.stringify(gradedWave2Order("hill-intro")) === JSON.stringify(["grade-7", "grade-8", "grade-9", "vision-one", "grade-11", "grade-12"]), gradedWave2Order("hill-intro").join(","));
     check("W1 سقف داخلی ۱۲ دست‌نخورده", WORD_CONTEXT_MAX_RESULTS === 12, `=${WORD_CONTEXT_MAX_RESULTS}`);
 
+    // ── W1-b — ترتیب کامل موج ۲ با منبع مکمل (گام ۴): wave2Order ──
+    for (const active of allIds) {
+      const w1 = wave2Order(active);
+      const w2 = wave2Order(active);
+      check(`W1-b ${active}: deterministic`, JSON.stringify(w1) === JSON.stringify(w2), w1.join(","));
+      check(`W1-b ${active}: فعال حذف`, !w1.includes(active));
+      check(
+        `W1-b ${active}: دامنهٔ مجاز (پایه‌دار + فقط collocations؛ hill هرگز)`,
+        w1.every(isWave2AllowedBook) && !w1.some((id) => id.startsWith("hill-")),
+        w1.join(","),
+      );
+      const expectedTail = active === "collocations" ? [] : ["collocations"];
+      check(
+        `W1-b ${active}: = پایه‌دارها (ترتیب گام ۲) + [collocations] در انتها`,
+        JSON.stringify(w1) === JSON.stringify([...gradedWave2Order(active), ...expectedTail]),
+      );
+      check(`W1-b ${active}: بی‌پایه پس از همهٔ پایه‌دارها`, w1.every((id, i) => (isGradedBookId(id as never) ? i < w1.length - expectedTail.length : i >= w1.length - expectedTail.length)));
+    }
+    check(
+      "W1-b grade-8 ترتیب دقیق (۵ پایه‌دار + collo در انتها)",
+      JSON.stringify(wave2Order("grade-8")) === JSON.stringify(["grade-7", "grade-9", "vision-one", "grade-11", "grade-12", "collocations"]),
+      wave2Order("grade-8").join(","),
+    );
+    check(
+      "W1-b فعال collocations: فقط ۶ پایه‌دار به‌ترتیب صعودی پایه (خودش حذف؛ hill هرگز)",
+      JSON.stringify(wave2Order("collocations")) === JSON.stringify(["grade-7", "grade-8", "grade-9", "vision-one", "grade-11", "grade-12"]),
+      wave2Order("collocations").join(","),
+    );
+    check(
+      "W1-b فعال hill-intro: ۶ پایه‌دار + collocations در انتها",
+      JSON.stringify(wave2Order("hill-intro")) === JSON.stringify(["grade-7", "grade-8", "grade-9", "vision-one", "grade-11", "grade-12", "collocations"]),
+      wave2Order("hill-intro").join(","),
+    );
+    check("W1-b نشان: collocations پایه‌دار نیست (شرط isGradedBookId نشان هرگز فعال نمی‌شود)", !isGradedBookId("collocations"));
+
     // ── W2 — گیت‌های اجرای موج ۲ ──
     // مسیر hit (includeWave2=false یا بدون options) ≡ موج ۱ بایت‌به‌بایت
     for (const [book, word] of [["grade-8", "went"], ["vision-one", "the"], ["hill-elem", "forest"]] as const) {
@@ -166,7 +224,7 @@ async function main() {
     const famW1 = await lookupSentencesInActiveBook("grade-7", "family");
     const famMerged = await lookupSentencesWithStatus("grade-7", "family", { includeWave2: true });
     check("W2 پیشوند موج ۱ در ادغام دست‌نخورده", JSON.stringify(famMerged.sentences.slice(0, famW1.sentences.length)) === JSON.stringify(famW1.sentences), `wave1=${famW1.sentences.length} merged=${famMerged.sentences.length}`);
-    check("W2 دنبالهٔ ادغام فقط از کتاب‌های دیگرِ پایه‌دار", famMerged.sentences.slice(famW1.sentences.length).every((s) => s.bookId !== "grade-7" && isGradedBookId(s.bookId)));
+    check("W2 دنبالهٔ ادغام فقط از کتاب‌های دیگرِ مجاز (پایه‌دار یا collocations)", famMerged.sentences.slice(famW1.sentences.length).every((s) => s.bookId !== "grade-7" && isWave2AllowedBook(s.bookId)));
     check("W2 ادغام: ترتیب |Δپایه| در دنباله", bookOrderOk("grade-7", famMerged.sentences.slice(famW1.sentences.length)));
     assertCommonRules("W2-merged(family@grade-7):", "grade-7", famMerged.sentences);
 
@@ -226,7 +284,7 @@ async function main() {
       console.log(`   واژهٔ آزمونی ادغامی: «${word}» @grade-8 → موج۱=${wave1}، کل=${result.length} از: ${[...new Set(result.map((s) => s.bookId))].join(", ")}`);
       const w1 = await lookupSentencesInActiveBook("grade-8", word);
       check("W5 پیشوند موج ۱ در سکشن ادغامی دست‌نخورده", JSON.stringify(result.slice(0, w1.sentences.length)) === JSON.stringify(w1.sentences));
-      check("W5 دنباله از کتاب‌های دیگرِ پایه‌دار", result.slice(w1.sentences.length).every((s) => s.bookId !== "grade-8" && isGradedBookId(s.bookId)));
+      check("W5 دنباله از کتاب‌های دیگرِ مجاز (پایه‌دار یا collocations؛ hill هرگز)", result.slice(w1.sentences.length).every((s) => s.bookId !== "grade-8" && isWave2AllowedBook(s.bookId) && !s.bookId.startsWith("hill-")));
       // پیش‌شرط نشان در ادغام: اولین آیتمِ کتاب خارج از فعال = نزدیک‌ترین کتابِ حاضر در دنبالهٔ بین‌کتابی
       const firstCross = result.findIndex((s) => s.bookId !== "grade-8");
       const crossBooks = [...new Set(result.filter((s) => s.bookId !== "grade-8").map((s) => s.bookId))];
@@ -251,14 +309,14 @@ async function main() {
     }
     if (hillDemo) {
       console.log(`   واژهٔ آزمونی فعال بی‌پایه: «${hillDemo.word}» @hill-intro → ${hillDemo.result.length} جمله`);
-      check("W6 hill فعال: نتیجه فقط از پایه‌دارها", hillDemo.result.every((s) => isGradedBookId(s.bookId)));
+      check("W6 hill فعال: نتیجه فقط از دامنهٔ مجاز (پایه‌دارها + collocations؛ hill دیگر هرگز)", hillDemo.result.every((s) => isWave2AllowedBook(s.bookId) && !s.bookId.startsWith("hill-")));
       check("W6 hill فعال: ترتیب صعودی پایه (۷→۱۲)", bookOrderOk("hill-intro", hillDemo.result), hillDemo.result.map((s) => s.bookId).join(","));
       check("W6 hill فعال: D7 و کلید یکتا", hillDemo.result.every((s) => hasValidFa(s.fa)) && new Set(hillDemo.result.map(key4)).size === hillDemo.result.length);
     } else {
       check("W6 واژهٔ موج ۲ برای hill-intro یافت نشد (ثبت — نه شکست قاعده)", false, "هیچ نامزدی نتیجه نداشت");
     }
 
-    // ── W7 — کارایی: موج ۲ گرم باید سریع بماند (۵ ایندکس کش‌شده + ۵ جست‌وجو) ──
+    // ── W7 — کارایی: موج ۲ گرم باید سریع بماند (۶ ایندکس پایه‌دار + ۱ مکمل کش‌شده) ──
     if (use) {
       const t0 = performance.now();
       await lookupSentencesWithStatus("grade-8", use.word, { includeWave2: true });
@@ -266,10 +324,104 @@ async function main() {
       check("W7 موج ۲ گرم < 150ms", warmMs < 150, `${warmMs.toFixed(1)}ms`);
     }
 
+    // ── W8 — گام ۴: Collocations در موج ۲ (فقط جایگاه miss کامل) ──
+    // واژه‌های نامزد از خود دادهٔ collocations — بدون حدس (داده‌محور)
+    const colloWords = new Set<string>();
+    for (const r of COLLO_READINGS) for (const p of r.paragraphs) addWords(colloWords, p.en);
+    for (const ch of COLLO_CHAPTERS) if (ch.quote) addWords(colloWords, ch.quote.en);
+    const colloCandidates = [...colloWords];
+    console.log(`   نامزدهای واژه از دادهٔ collocations: ${colloCandidates.length}`);
+
+    // (الف) «Miss کامل پاپ‌آپ با Collocations»: واژهٔ مرئی grade-8 نباشد + موج ۱ خالی + نتیجهٔ collo
+    let colloMiss: { word: string; result: ContextSentence[] } | null = null;
+    let colloOnly: { word: string; result: ContextSentence[] } | null = null;
+    let scanned3 = 0;
+    for (const w of colloCandidates) {
+      if (scanned3 >= 900) break;
+      if (!popupMissProxyG8(w)) continue;
+      const w1 = await lookupSentencesInActiveBook("grade-8", w);
+      if (w1.sentences.length > 0) continue;
+      scanned3 += 1;
+      const merged = await lookupSentencesWithStatus("grade-8", w, { includeWave2: true });
+      const colloItems = merged.sentences.filter((s) => s.bookId === "collocations");
+      if (colloItems.length === 0) continue;
+      if (!colloMiss) colloMiss = { word: w, result: merged.sentences };
+      if (!colloOnly && colloItems.length === merged.sentences.length) colloOnly = { word: w, result: merged.sentences };
+      if (colloMiss && colloOnly) break;
+    }
+    if (colloMiss) {
+      console.log(
+        `   واژهٔ آزمونی miss+collo: «${colloMiss.word}» @grade-8 → ${colloMiss.result.length} جمله از: ${[...new Set(colloMiss.result.map((s) => s.bookId))].join(", ")}`,
+      );
+      assertCommonRules("W8-miss:", "grade-8", colloMiss.result);
+      const colloItems = colloMiss.result.filter((s) => s.bookId === "collocations");
+      check("W8 نتایج collo در ادغام حاضرند", colloItems.length > 0);
+      // ترتیب: collo پس از همهٔ پایه‌دارها
+      const lastGradedIdx = colloMiss.result.reduce((acc, s, i) => (isGradedBookId(s.bookId) ? i : acc), -1);
+      const firstColloIdx = colloMiss.result.findIndex((s) => s.bookId === "collocations");
+      check("W8 collo پس از همهٔ پایه‌دارها (۱۰۰+)", firstColloIdx < 0 || firstColloIdx > lastGradedIdx, `firstCollo=${firstColloIdx} lastGraded=${lastGradedIdx}`);
+      // منبع قابل‌شناسایی (D8): چیپ درس یا source چاپی
+      check(
+        "W8 منبع collo قابل‌شناسایی (چیپ درس/source چاپی)",
+        colloItems.every((s) => s.source.lessonLabel !== null || s.source.printedSource !== null),
+      );
+      check(
+        "W8 چیپ درس collo = «درس n» (ساختار خود کتاب)",
+        colloItems.every((s) => s.source.lessonLabel === null || s.source.lessonLabel.startsWith("درس")),
+      );
+      // پیش‌شرط نشان: اگر اولین آیتم بین‌کتابی collo باشد، هیچ کتاب پایه‌داری در دنباله نیست
+      const firstCross = colloMiss.result.findIndex((s) => s.bookId !== "grade-8");
+      if (firstCross >= 0 && colloMiss.result[firstCross].bookId === "collocations") {
+        check("W8 collo-first → هیچ پایه‌داری در دنباله (نشان صادقانه حذف)", colloMiss.result.slice(firstCross).every((s) => s.bookId === "collocations"));
+      } else {
+        check("W8 اولین آیتم بین‌کتابی پایه‌دار است (نشان طبق الگوی گام ۲)", firstCross >= 0 && isGradedBookId(colloMiss.result[firstCross].bookId));
+      }
+      const again = await lookupSentencesWithStatus("grade-8", colloMiss.word, { includeWave2: true });
+      check("W8 deterministic (اجرای دوم = JSON برابر)", JSON.stringify(again.sentences) === JSON.stringify(colloMiss.result));
+      check("W8 degraded=false", again.degraded === false);
+    } else {
+      check("W8 واژهٔ miss با نتیجهٔ collo یافت نشد (ثبت — نه شکست قاعده)", false, "هیچ نامزدی نتیجهٔ collo با miss کامل نداشت");
+    }
+    if (colloOnly) {
+      console.log(`   واژهٔ فقط-collo (miss مطلق پایه‌دارها): «${colloOnly.word}» → ${colloOnly.result.length} جمله از collocations`);
+      check("W8 فقط-collo: همهٔ نتایج از collocations", colloOnly.result.every((s) => s.bookId === "collocations"));
+      assertCommonRules("W8-only:", "grade-8", colloOnly.result);
+    } else {
+      console.log("   ⚠️ W8: واژهٔ فقط-collo یافت نشد (ثبت — سناریوی miss مطلق در این نمونه مرئی نشد)");
+    }
+
+    // (ب) D7 روی نقل‌قول‌های نامعتبر مستند collo (ch24 ناقص؛ ch31/41/46 خالی) — هرگز رندر نمی‌شوند
+    const invalidQuoteIds = ["ch24", "ch31", "ch41", "ch46"];
+    for (const qid of invalidQuoteIds) {
+      const ch = COLLO_CHAPTERS.find((c) => `ch${c.id}` === qid);
+      if (!ch?.quote) continue;
+      // اولین واژهٔ ≥۲حرفی از متن نقل‌قول (واژهٔ نخستِ برخی نقل‌قول‌ها مثل «I'm» کوتاه است)
+      let first = "";
+      for (const m of ch.quote.en.matchAll(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g)) {
+        const w = norm(m[0]);
+        if (w.length >= 2) {
+          first = w;
+          break;
+        }
+      }
+      if (!first) continue;
+      const r1 = await lookupSentencesInActiveBook("collocations", first);
+      const leaked = r1.sentences.filter((s) => s.refId === qid);
+      check(`W8 D7: نقل‌قول نامعتبر ${qid} هرگز در نتایج (واژهٔ «${first}»)`, leaked.length === 0);
+    }
+
+    // (ج) Hit و Related هرگز موج ۲ ندارند — مسیر includeWave2 پیش‌فرض و false ≡ موج ۱ (مستقل از collo)
+    for (const [book, word] of [["collocations", "make"], ["hill-intro", "forest"], ["grade-9", "family"]] as const) {
+      const w1 = await lookupSentencesInActiveBook(book, word);
+      if (w1.sentences.length === 0) continue;
+      const hitPath = await lookupSentencesWithStatus(book, word);
+      check(`W8 hit-path ≡ موج ۱ (${word}@${book} — بدون نشت collo/hill)`, JSON.stringify(hitPath.sentences) === JSON.stringify(w1.sentences) && hitPath.sentences.every((s) => s.bookId === book));
+    }
+
     // جمع‌بندی
     console.log("═ جمع‌بندی ═");
     if (failures === 0) {
-      console.log("✅ همهٔ بررسی‌های موج ۲ سبز — رتبه‌بندی deterministic، دامنهٔ D1، ادغام §۶-۴، سقف سکشن و D7 برقرار است.");
+      console.log("✅ همهٔ بررسی‌های موج ۲ سبز — دامنهٔ D1+استثنای گام ۴ (فقط collo؛ hill هرگز)، رتبه‌بندی deterministic، ادغام §۶-۴، سقف سکشن، D7 و قابل‌شناسایی‌بودن منبع collo برقرار است.");
     } else {
       console.log(`❌ ${failures} بررسی قرمز — قبل از ادامه رفع شود.`);
     }

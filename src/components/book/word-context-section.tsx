@@ -19,6 +19,12 @@
  *    پایه‌دارهای ۷→۱۲ منهای فعال پس از miss موج ۱؛ مرتبشده با |Δپایه|؛ چیپ
  *    «نزدیک‌ترین پایه» + ring ظریف فقط روی اولین آیتمِ کتاب پایه‌دار خارج از فعال
  *    (بایت‌به‌بایت الگوی F-CV-2 در cross-book-section.tsx). در hit و related هرگز موج ۲ نیست.
+ *  - موج ۲ (گام ۴ — تعمیم محدود مصوب مالک): منبع مکمل Collocations پس از همهٔ
+ *    پایه‌دارها در دنبالهٔ بین‌کتابی می‌آید (قاعدهٔ F-CV-1: بی‌پایه = ۱۰۰+). نشان
+ *    «نزدیک‌ترین پایه» هرگز به منابع بی‌پایه داده نمی‌شود (شرط isGradedBookId از گام ۲
+ *    همین حالا این را تضمین می‌کند — بدون تغییر منطق نشان). زیرنویس ترتیب صادقانه است:
+ *    با حضور منبع مکمل، «منابع مکمل در پایان»؛ برای فعالِ بی‌پایه، «بر پایهٔ پایهٔ تحصیلی»
+ *    (تصمیم نگارشی بسته‌شده طبق پیشنهاد گزارش ارزیابی گام ۳ §۹ — بدون برچسب گمراه‌کننده).
  *  - حالت‌های صادقانه (§۴ سند UX): empty هرگز «واژه پیدا نشد» نمی‌گوید (C-1/C-4)؛
  *    خطا/آفلاین سرد = پیام در دسترس‌نبودن با WifiOff (C-5 — الگوی degraded در F-CV-2).
  *  - فقط‌خواندنی کامل: صفر import استورهای SRS/ستاره.
@@ -266,6 +272,19 @@ export function WordContextSection({ norm, allowWave2 = false }: { norm: string;
   const multiple = total > 1;
   // موج ۲: آیا نتیجه‌ای از کتابی غیر از فعال در نمایش هست؟ (زیرنویس و یادداشت رتبه‌بندی)
   const hasCrossBook = shown.some((s) => s.bookId !== bookId);
+  // زیرنویس صادقانهٔ ترتیب (فاز ۱۴/گام ۴ — تصمیم نگارشی بسته‌شده طبق پیشنهاد گام ۳ §۹):
+  //  ۱) منبع مکمل بی‌پایه (collocations) در دنبالهٔ بین‌کتابی → «منابع مکمل در پایان»
+  //     (قاعدهٔ F-CV-1: بی‌پایه = ۱۰۰+ پس از همهٔ پایه‌دارها؛ بدون نسبت دادن پایه)
+  //  ۲) فعالِ بی‌پایه (hill/collocations) → «بر پایهٔ پایهٔ تحصیلی (هفتم تا دوازدهم)»
+  //     (ترتیب proximityRank = ۵۰+ پایه؛ بدون ادعای نادرست «نزدیکی به پایهٔ فعال»)
+  //  ۳) بقیه (فعال و همهٔ بین‌کتابی‌ها پایه‌دار) → همان نگارش گام ۲، دست‌نخورده
+  const orderSubtitle = (() => {
+    if (!hasCrossBook || !multiple) return null;
+    const crossUngraded = shown.some((s) => s.bookId !== bookId && !isGradedBookId(s.bookId));
+    if (crossUngraded) return "مرتب‌شده بر پایهٔ نزدیکی پایهٔ تحصیلی؛ منابع مکمل در پایان";
+    if (!isGradedBookId(bookId)) return "مرتب‌شده بر پایهٔ پایهٔ تحصیلی (هفتم تا دوازدهم)";
+    return "مرتب‌شده بر پایهٔ نزدیکی پایهٔ تحصیلی به جزوهٔ فعال";
+  })();
   // نشان «نزدیک‌ترین پایه» فقط روی «اولین آیتم کتاب پایه‌دار خارج از فعال» —
   // حتی وقتی موج ۱ (کتاب فعال) جلوتر است (Wireframe 2 سند UX — الگوی F-CV-2)
   const firstCrossIdx = allowWave2 ? entry.sentences.findIndex((s) => s.bookId !== bookId) : -1;
@@ -276,10 +295,8 @@ export function WordContextSection({ norm, allowWave2 = false }: { norm: string;
         <BookOpenText size={12} aria-hidden />
         در متن‌های واقعی
       </p>
-      {hasCrossBook && multiple && (
-        <p className="mt-0.5 pr-4 text-[9.5px] font-bold text-muted-foreground/75">
-          مرتب‌شده بر پایهٔ نزدیکی پایهٔ تحصیلی به جزوهٔ فعال
-        </p>
+      {orderSubtitle && (
+        <p className="mt-0.5 pr-4 text-[9.5px] font-bold text-muted-foreground/75">{orderSubtitle}</p>
       )}
       <p className="mt-0.5 pr-4 text-[9.5px] font-bold text-muted-foreground/75">
         {hasCrossBook ? "نمونه‌ها عین متن چاپی جزوه‌ها است — فقط‌خواندنی" : "نمونه‌ها عین متن جزوهٔ فعال است — فقط‌خواندنی"}
