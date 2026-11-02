@@ -1,7 +1,9 @@
 # 📸 SNAPSHOT — وضعیت پروژه «ویژن‌وان / Vision One Webapp»
 
 > **قرارداد:** این فایل تنها مرجع بازیابی وضعیت پس از Reset سندباکس است. پس از **هر گام توسعهٔ معنادار** به‌روزرسانی می‌شود؛ یک محیط تازه باید بدون اتکا به حافظهٔ مکالمه بتواند ادامهٔ کار را از همین فایل آغاز کند.
-> آخرین به‌روزرسانی: **۱۴۰۵/۸/۱۲ — ۲۰۲۶-۱۱-۰۳ (فاز ۱۴/گام ۴ — ورود مرحله‌ای: Collocations در موج دوم «در متن‌های واقعی»: تصمیم مالک = گزینهٔ ۴ مرحلهٔ اول؛ پیاده‌سازی داده‌محور با زیرساخت موجود (WAVE2_UNGRADED_BOOKS + wave2Order — صفر loader/موتور/API جدید)؛ QA: ۱۹۰ بررسی سرویس + مرورگری کامل + آفلاین سرد واقعی؛ D1 با استثنای محدود اصلاح شد (فقط collo؛ hill خارج)؛ IMPLEMENTATION COMPLETED / STEP 4 CLOSED — HILL OUT OF SCOPE / WAITING FOR OWNER DECISION FOR NEXT STAGE)**
+> آخرین به‌روزرسانی: **۱۴۰۵/۸/۱۲ — ۲۰۲۶-۱۱-۰۳ (دو به‌روزرسانی در یک روز):**
+> ① **فاز ۱۴/گام ۴ — ورود مرحله‌ای: Collocations در موج دوم «در متن‌های واقعی»:** تصمیم مالک = گزینهٔ ۴ مرحلهٔ اول؛ پیاده‌سازی داده‌محور با زیرساخت موجود (WAVE2_UNGRADED_BOOKS + wave2Order — صفر loader/موتور/API جدید)؛ QA: ۱۹۰ بررسی سرویس + مرورگری کامل + آفلاین سرد واقعی؛ D1 با استثنای محدود اصلاح شد (فقط collo؛ hill خارج)؛ `IMPLEMENTATION COMPLETED / STEP 4 CLOSED — HILL OUT OF SCOPE / WAITING FOR OWNER DECISION FOR NEXT STAGE`
+> ② **الزام پایداری و بازیابی کامل (مصوب جدید مالک — همین گام):** پس از هر گام، علاوه بر SNAPSHOT/اسناد/worklog، وضعیت گیت با SHA دقیق + SHA تأییدشدهٔ Remote در همین سند ثبت و با `git ls-remote` اثبات می‌شود؛ معیار پذیرش = حذف کامل سندباکس ⇒ بازیابی صرفاً با Clone ریپو (فهرست اقلام داخل/خارج ریپو: §۱۱)؛ گپ واقعی کشف‌شده و بسته‌شده: هوک post-commit از قبل نسخه‌شده نبود → کپی بایت‌به‌بایتش در `scripts/git-hooks/post-commit` وارد ریپو شد.
 
 ---
 
@@ -10,13 +12,14 @@
 - مسیر: `/home/z/my-project` · Next.js 16 App Router + TS + Tailwind 4 + shadcn/ui + Prisma/SQLite · **تک‌مسیر `/`** (محدودیت محیط).
 - استک AI: z-ai-web-dev-sdk فقط سمت سرور (TTS/ASR/LLM/word-image). رنگ‌بندی emerald+amber (بدون آبی/نیلی).
 
-## ۲) وضعیت گیت (لحظهٔ اسنپ‌شات)
+## ۲) وضعیت گیت (لحظهٔ اسنپ‌شات — ثبت دقیق طبق الزام پایداری مالک)
 - **Branch:** `main` (کاری دیگر فعال نیست؛ `g1c-offline-tries` در `/home/z/g1c-work` شِک‌اوت قدیمی است)
-- **HEAD پس از این گام:** کامیت «فاز ۱۴/گام ۳ (مستندات ارزیابی)» — SHA دقیق در گزارش گفت‌وگویی گام و `git log -1` همین ریپو ثبت می‌شود؛ مبنای شروع این گام = `bef7b3d79a364ff7d5c6b3aeefbd0b0dfb5e1224` (کامیت فاز ۱۴/گام ۲) و Remote هرگز عقب‌تر از Local نبوده (۰ جلو / ۰ عقب هنگام شروع)
-- **Remote:** `backup` = `github.com/Sohrab1999/vision-one-backup` (توکن داخل URL — هرگز در گزارش/لاگ چاپ نشود) — پس از هر commit، hook خودش `git push backup main` را اجرا می‌کند؛ تطبیق نهایی با `git ls-remote backup refs/heads/main`
-- **Hook:** `.git/hooks/post-commit` = ① زنده‌نگه‌داشتن سرور :3000 ② `git push backup main` خودکار پس از هر commit (لاگ: `/tmp/devhook.log`) — بدون مجوز تغییر داده نشود (در این گام بررسی شد: سالم و بدون تغییر)
-- درخت کاری پیش از commit این گام: فقط تغییرات همین مأموریت (فهرست §۶) (+ `db/custom.db` تغییر زمان‌اجرای محیطی که در commit نیست — mtime پیش از مأموریت بود و لمس نشد) · stash: خالی · عملیات destructive/force: هیچ
-- **وظیفهٔ زمان‌بندی‌شدهٔ 496911 (گزارش‌شدهٔ گام ۱):** بررسی read-only در این گام انجام نشد (خارج از scope مأموریت گام ۳؛ هیچ اقدامی — ایجاد/حذف/ویرایش — انجام نشد)
+- **HEAD در لحظهٔ نوشتن این اسنپ‌شات:** `729944100255bb88c0f7dd39355b505ae219985a` — کامیت «فاز ۱۴/گام ۴ — ورود مرحله‌ای Collocations به موج دوم» (کامیت حامل این به‌روزرسانی پایداری یکی بعدتر از آن است؛ SHA نهایی هر کامیت در worklog همان گام ثبت و با `git ls-remote` تطبیق داده می‌شود — قاعدهٔ همیشگی §۱۰-۷)
+- **Remote تأییدشده:** `backup` = `github.com/Sohrab1999/vision-one-backup` — **SHA تأییدشدهٔ Remote (`git ls-remote backup refs/heads/main`، ۲۰۲۶-۱۱-۰۳): `729944100255bb88c0f7dd39355b505ae219985a` = HEAD محلی** (۰ جلو / ۰ عقب؛ توکن داخل URL — هرگز در گزارش/لاگ چاپ نمی‌شود)
+- **Working Tree:** پاک (۰ تغییر / ۰ untracked) · stash: خالی · عملیات destructive/force/reset/rebase: هیچ
+- **Hook:** `.git/hooks/post-commit` = ① زنده‌نگه‌داشتن سرور :3000 ② `git push backup main` خودکار پس از هر commit (لاگ: `/tmp/devhook.log`) — بدون مجوز تغییر داده نشد (hash پیش/پس از گام پایداری یکسان: SHA256 `ee679bc1b642db0f5ecc206544d1c10daf71cffe3827dad33d3b0177c58aed71`) — **نسخهٔ بایت‌به‌بایت هوک از این گام در ریپو است: `scripts/git-hooks/post-commit` (همان SHA256؛ `diff` خالی) — پس از Clone بازگردانی شود (§۱۰ و §۱۱)**
+- `db/custom.db` دست‌نخورده (mtime پیش از مأموریت؛ tracked در ریپو)
+- **وظیفهٔ زمان‌بندی‌شدهٔ 496911 (گزارش‌شدهٔ گام ۱):** سمت پلتفرم است، در ریپو قابل ثبت نیست (§۱۱-ب) — در این گام هیچ اقدامی (ایجاد/حذف/ویرایش) نشد
 
 ## ۳) آخرین گام تکمیل‌شدهٔ Roadmap
 - **فاز ۱۴/گام ۴ — ورود مرحله‌ای: Collocations در موج دوم (IMPLEMENTATION / TESTING / DOCUMENTATION / GIT):**
@@ -94,10 +97,40 @@
 - ۶ خطای tsc پیش‌موجود (فهرست §۵)؛ retry در stale shell بی‌اثر (طراحی — مستند P0-BOOK-LOADING-1).
 - **سه مجموعه آمار با تعریف مستقل:** ۷٬۴۸۹ مرجع (ب-۲)؛ ۸٬۰۵۲ تاریخی (ب-۴)؛ سرشماری گام ۳ = ۲٬۲۶۵ واحد ۵ کتاب با سمانتیک موتور (گزارش ارزیابی §۵-۱ — روش و محدودیت خودش).
 
-## ۱۰) دستورالعمل ادامهٔ کار پس از Reset سندباکس
-1. `cd /home/z/my-project && git status` — درخت باید پاک باشد؛ اگر عقب‌تر از `backup/main` بود: `git fetch backup && git merge --ff-only backup/main` (هرگز force/rebase نکن)
-2. `bash scripts/revive-server.sh` → انتظار `revived-after-*` (یا صبر برای post-commit hook/تسک ۱۵ دقیقه‌ای)
-3. وابستگی‌ها در صورت نیاز: `bun install` (bun.lock مرجع) · دیتابیس: `db/custom.db` موجود است — `db:push` فقط با تصمیم صریح اسکیما
-4. `bun run dev` (پورت ۳۰۰۰، `tee dev.log`) → سلامت: `curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/` = 200
-5. همین فایل + `worklog.md` (انتها) + گزارش گام ۴ (`docs/qa/word-in-context-phase14-step4-collocations-wave2-2026-11-03.md`) + سند مشخصات (`docs/spec/word-in-context-ux-fcv3-2026-11-02.md` — بازنگری ۴، §۶/§۸/§۱۲) را بخوان — **فاز ۱۴: گام ۱، ۲ و ۴ پیاده‌سازی‌شده و بسته‌اند (گام ۳ = ارزیابی بسته‌شده که مالک رویش گزینهٔ ۴ را تصویب کرد)؛ وضعیت فعلی دامنهٔ موج ۲: پایه‌دارهای ۷→۱۲ + Collocations (`WAVE2_UNGRADED_BOOKS`)؛ Hill خارج از دامنه است و ورودش نیازمند ارزیابی/تصمیم مستقل بعدی مالک است. گام بعدی = فقط با دستور صریح مالک. معماری: `wave2Order` (word-in-context.ts) = ترتیب کامل موج ۲؛ `gradedWave2Order` زیرمجموعهٔ پایه‌دار؛ نشان/زیرنویس در word-context-section.tsx (شرط isGradedBookId)؛ افزودن منبع مکمل جدید = عضو جدید در WAVE2_UNGRADED_BOOKS + QA.**
-6. چرخهٔ اجباری هر گام: مستندات → ثبت وضعیت اولیه/SHA → فقط یک Task → lint+tsc+QA مرورگری (اگر کد تغییر کرد) → شواهد در `docs/qa/` → آپدیت SNAPSHOT/Worklog/Roadmap → commit (هوک push می‌کند) → `git ls-remote backup refs/heads/main` = HEAD محلی → تأیید هیچ خروجیِ لازم فقط در سندباکس نمانده باشد
+## ۱۰) دستورالعمل ادامهٔ کار پس از Reset سندباکس (محیط تازه = Clone تازه)
+1. Clone از Remote + `cd my-project && git status` — درخت باید پاک باشد؛ اگر عقب‌تر از `backup/main` بود: `git fetch backup && git merge --ff-only backup/main` (هرگز force/rebase نکن)
+2. **بازگردانی هوک (گیت هوک‌ها clone نمی‌شوند):** `cp scripts/git-hooks/post-commit .git/hooks/post-commit && chmod +x .git/hooks/post-commit` — سپس `diff` با نسخهٔ ریپو باید خالی باشد
+3. **ساخت `.env` (gitignored — کلید یکتا):** `echo 'DATABASE_URL=file:<مسیر-مطلق-پروژه>/db/custom.db' > .env` — دیتابیس خودش tracked است
+4. `bash scripts/revive-server.sh` → انتظار `revived-after-*` (یا صبر برای post-commit hook/تسک ۱۵ دقیقه‌ای) · وابستگی‌ها در صورت نیاز: `bun install` (bun.lock مرجع) · `db:push` فقط با تصمیم صریح اسکیما
+5. `bun run dev` (پورت ۳۰۰۰، `tee dev.log`) → سلامت: `curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/` = 200
+6. همین فایل (به‌ویژه §۱۱ برای فهرست بازیابی) + `worklog.md` (انتها) + گزارش گام ۴ (`docs/qa/word-in-context-phase14-step4-collocations-wave2-2026-11-03.md`) + سند مشخصات (`docs/spec/word-in-context-ux-fcv3-2026-11-02.md` — بازنگری ۴، §۶/§۸/§۱۲) را بخوان — **فاز ۱۴: گام ۱، ۲ و ۴ پیاده‌سازی‌شده و بسته‌اند (گام ۳ = ارزیابی بسته‌شده که مالک رویش گزینهٔ ۴ را تصویب کرد)؛ وضعیت فعلی دامنهٔ موج ۲: پایه‌دارهای ۷→۱۲ + Collocations (`WAVE2_UNGRADED_BOOKS`)؛ Hill خارج از دامنه است و ورودش نیازمند ارزیابی/تصمیم مستقل بعدی مالک است. گام بعدی = فقط با دستور صریح مالک. معماری: `wave2Order` (word-in-context.ts) = ترتیب کامل موج ۲؛ `gradedWave2Order` زیرمجموعهٔ پایه‌دار؛ نشان/زیرنویس در word-context-section.tsx (شرط isGradedBookId)؛ افزودن منبع مکمل جدید = عضو جدید در WAVE2_UNGRADED_BOOKS + QA.**
+7. چرخهٔ اجباری هر گام (طبق الزام پایداری مالک ۲۰۲۶-۱۱-۰۳): مستندات → ثبت وضعیت اولیه/SHA دقیق → فقط یک Task → lint+tsc+QA مرورگری (اگر کد تغییر کرد) → شواهد در `docs/qa/` → آپدیت SNAPSHOT (با SHA دقیق HEAD + SHA تأییدشدهٔ Remote)/Worklog (SHA نهایی گام)/Roadmap → commit (هوک push می‌کند) → `git ls-remote backup refs/heads/main` = HEAD محلی (اثبات در worklog) → بررسی نهایی: همهٔ فایل‌های ضروری tracked و هیچ خروجیِ لازم فقط در سندباکس نمانده باشد (`git status --porcelain` خالی + `git ls-files` اقلام حیاتی §۱۱-الف)
+
+---
+
+## ۱۱) پایداری و بازیابی کامل پس از Reset/حذف سندباکس (الزام مالک ۲۰۲۶-۱۱-۰۳)
+
+> **معیار پذیرش (ادعای مالک):** اگر سندباکس همین لحظه کاملاً حذف شود، پروژه باید با Clone کردن Remote و مطالعهٔ Repository و اسناد پایدار، بدون از دست رفتن هیچ پیشرفت تأییدشده‌ای قابل بازیابی باشد. **اثبات:** SHA محلی = SHA Remote (`git ls-remote backup refs/heads/main` — آخرین اثبات: ۲۰۲۶-۱۱-۰۳، §۲).
+
+### الف) اقلام داخل ریپو (Clone = بازیابی کامل)
+- **کد کامل:** `src/**` (سرویس‌ها/کامپوننت‌ها/بازی‌ها/APIها)، `scripts/**` (شامل `scripts/git-hooks/post-commit` = نسخهٔ بایت‌به‌بایت هوک فعال — SHA256 `ee679bc1b642db0f5ecc206544d1c10daf71cffe3827dad33d3b0177c58aed71`)، `prisma/schema.prisma`
+- **دادهٔ جزوه‌ها:** `src/data/**` (۱۱ کتاب + hill/collocations — هرگز تغییر نکرده؛ اثبات git log)
+- **دیتابیس:** `db/custom.db` **tracked است** (حالت برنامه در خود ریپو سوار است)
+- **اسناد پایدار:** `docs/SNAPSHOT.md` (این فایل)، `docs/qa/**` (همهٔ گزارش‌های QA)، `docs/spec/**` (سند UX + D1-D8)، `نقشه راه ها/نقشه-راه-جامع-توسعه-۲۰۲۶.md` (الزام پایداری در سربرگ قرارداد ثبت شد)، `worklog.md` (تمام گام‌ها با SHA نهایی هر کدام)
+- **شواهد تصویری:** `qa-shots/**` (۵۹۰ فایل tracked)
+- **وابستگی‌ها:** `package.json` + `bun.lock` → `bun install`
+
+### ب) اقلام خارج از ریپو — دلیل و روش بازیابی (بدون ادعای بازیابی کامل بی‌قید)
+| قلم | وضعیت | دلیل | روش بازیابی |
+|---|---|---|---|
+| `.env` | gitignored | قرارداد `.env*` | یک کلید و مسیر فایل است (راز نیست): `echo 'DATABASE_URL=file:<مسیر-مطلق-پروژه>/db/custom.db' > .env` — دیتابیس tracked است |
+| `.git/hooks/post-commit` | clone نمی‌شود | گیت هوک‌ها را نسخه‌پرستی نمی‌کند | `cp scripts/git-hooks/post-commit .git/hooks/post-commit && chmod +x` (نسخهٔ tracked = بایت‌به‌بایت) |
+| `node_modules` / `.next` | gitignored | خروجی نصب/ساخت | `bun install` + اجرای dev |
+| توکن Remote داخل URL | هرگز در ریپو نیست | راز — چاپ در لاگ/گزارش ممنوع | مالک/پلتفرم: `git remote add backup https://<user>:<token>@github.com/Sohrab1999/vision-one-backup.git` |
+| لاگ‌های زمان‌اجرا (`dev.log`، `/tmp/devhook.log`) | gitignored/موقت | تشخیصی‌اند، نه پیشرفت | نیازی به بازیابی نیست — تاریخچهٔ گام‌ها در worklog/SNAPSHOT/اسناد QA است |
+| تسک زمان‌بندی‌شدهٔ پلتفرمی 496911 (خودترمیم ۱۵ دقیقه‌ای) | سمت پلتفرم | در ریپو قابل ثبت نیست (مربوط به سشن/زیرساخت میزبانی) | بازسازی از پنل پلتفرم؛ جایگزین معادل داخل ریپو: هوک بازگردانی‌شده + `scripts/revive-server.sh` |
+| حافظهٔ مکالمهٔ چت | همیشه خارج ریپو | طراحی | عمداً هیچ چیز به آن وابسته نیست — همهٔ تصمیم‌ها/نتایج در SNAPSHOT/worklog/اسناد qa/spec/roadmap |
+
+### ج) نتیجهٔ ممیزی این گام
+- **گپ واقعی کشف و بسته شد:** هوک post-commit (زنده‌نگه‌دارندهٔ سرور + push خودکار) از قبل نسخه‌شده نبود و پس از Clone از دست می‌رفت → کپی بایت‌به‌بایت در `scripts/git-hooks/post-commit` وارد ریپو شد (diff خالی؛ SHA256 برابر).
+- **قاعدهٔ دائمی:** هر گام آینده SHA دقیق HEAD + SHA تأییدشدهٔ Remote را در SNAPSHOT §۲ و SHA نهایی را در worklog ثبت می‌کند؛ پیش از commit، `git status --porcelain` + `git ls-files` اقلام حیاتی بررسی می‌شود؛ پس از commit، `git ls-remote` اثبات برابری می‌شود. تفسیر گسترده از این الزام (مثل commit کردن `.env` یا توکن) ممنوع است.

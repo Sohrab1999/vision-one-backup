@@ -1,0 +1,37 @@
+#!/bin/bash
+# post-commit hook: (1) keep Next.js dev server alive on :3000
+#                   (2) auto-push every commit to GitHub backup
+# Fired by the platform runtime's auto-commits (persistent process tree).
+
+LOG=/tmp/devhook.log
+echo "[$(date '+%m-%d %H:%M:%S')] post-commit fired (uid=$(id -u))" >> "$LOG" 2>/dev/null
+
+export HOME=/home/z
+export PATH="/home/z/.bun/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+cd /home/z/my-project || exit 0
+
+# ---- (1) dev server guard: start if nothing serves :3000 ----
+if curl -s --max-time 2 -o /dev/null "http://127.0.0.1:3000/" ; then
+  echo "[$(date '+%m-%d %H:%M:%S')] port 3000 already served, skip" >> "$LOG" 2>/dev/null
+else
+  echo "[$(date '+%m-%d %H:%M:%S')] starting dev server..." >> "$LOG" 2>/dev/null
+  if [ "$(id -u)" = "0" ]; then
+    su z -c "setsid nohup bun run dev > /dev/null 2>&1 < /dev/null &" >> "$LOG" 2>&1
+  else
+    setsid nohup bun run dev > /dev/null 2>&1 < /dev/null &
+  fi
+  echo "[$(date '+%m-%d %H:%M:%S')] spawn done" >> "$LOG" 2>/dev/null
+fi
+
+# ---- (2) auto-push to GitHub backup (background, detached subshell) ----
+(
+  sleep 2
+  cd /home/z/my-project || exit 0
+  if git push backup main >> "$LOG" 2>&1; then
+    echo "[$(date '+%m-%d %H:%M:%S')] auto-push OK" >> "$LOG" 2>/dev/null
+  else
+    echo "[$(date '+%m-%d %H:%M:%S')] auto-push FAILED" >> "$LOG" 2>/dev/null
+  fi
+) > /dev/null 2>&1 < /dev/null &
+
+exit 0
