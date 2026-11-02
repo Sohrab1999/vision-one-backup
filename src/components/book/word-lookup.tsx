@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useBook, useBookData } from "@/lib/book-context";
 import type { DictEntry, VocabEntry, VocabWord } from "@/data/types";
+import { getBookMeta } from "@/data/books/registry";
 import { SpeakButton } from "./speak-button";
 import { useStarredWords, toggleStar } from "@/lib/star-store";
 import { useSRSData, SRS_MAX_BOX } from "@/lib/srs-store";
@@ -431,6 +432,16 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
   const srsBox = srsItem?.box ?? 0;
   const isLearned = learned.has(hit.word);
 
+  // F-CV-2: پیام miss نام جزوهٔ فعال را می‌آورد — دانش‌آموز می‌فهمد اول «همین جزوه» گشته (شفافیت cascade)
+  const activeBookTitle = bookId ? getBookMeta(bookId)?.title : undefined;
+  const missMessage = hit.word.includes(" ")
+    ? activeBookTitle
+      ? `این عبارت در دیکشنری و واژگان «${activeBookTitle}» پیدا نشد.`
+      : "این عبارت در دیکشنری و واژگان جزوه پیدا نشد."
+    : activeBookTitle
+      ? `این شکل واژه در دیکشنری و واژگان «${activeBookTitle}» پیدا نشد.`
+      : "این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد.";
+
   // تولید تصویر حافظه برای واژه — ابتدا کش ماژولی، سپس POST به /api/word-image
   async function loadMemoryImage() {
     const word = hit.word;
@@ -629,9 +640,7 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
         <div className="mt-2 space-y-2">
           <p className="flex items-center gap-1.5 text-[11px] leading-5 text-muted-foreground">
             <SearchX size={12} />
-            {hit.word.includes(" ")
-              ? "این عبارت در دیکشنری و واژگان جزوه پیدا نشد."
-              : "این شکل واژه در دیکشنری و واژگان جزوه پیدا نشد."}
+            {missMessage}
           </p>
           {hit.related && hit.related.length > 0 && (
             <div className="rounded-xl border bg-muted/40 p-2.5">

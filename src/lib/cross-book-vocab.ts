@@ -74,6 +74,11 @@ export function proximityRank(active: BookId, other: BookId): number {
   return 50 + b;
 }
 
+/** آیا کتاب پایهٔ تحصیلی دارد؟ (F-CV-2: برای چیپ «نزدیک‌ترین پایه» در UI — فقط کتاب‌های مدرسه‌ای) */
+export function isGradedBookId(id: BookId): boolean {
+  return GRADE_RANK[id] !== undefined;
+}
+
 // ─── نرمال‌سازی و قواعد صرفی — آینهٔ word-lookup.tsx (کتاب فعال) ───
 
 function normalize(raw: string): string {
@@ -355,21 +360,35 @@ const GRADED_IDS: BookId[] = ["grade-7", "grade-8", "grade-9", "vision-one", "gr
  * خروجی مرتب بر اساس نزدیکی پایه؛ در نبود شبکه/چانک، آرایهٔ خالی (رفتار فعلی پاپ‌آپ حفظ).
  */
 export async function lookupCrossBook(activeBookId: BookId, rawNorm: string): Promise<CrossBookHit[]> {
+  return (await lookupCrossBookWithStatus(activeBookId, rawNorm)).hits;
+}
+
+export interface CrossBookLookupResult {
+  hits: CrossBookHit[];
+  /** true = هیچ ایندکسی بارگذاری نشد و جست‌وجو واقعاً انجام نشد (آفلاین/چانک در دسترس نبود) —
+   *  برای تمایز صادقانهٔ «یافت نشد» از «نتوانستیم جست‌وجو کنیم» (F-CV-2 §۶-د) */
+  degraded: boolean;
+}
+
+/** همان lookupCrossBook با گزارش وضعیت — مصرف‌کننده: cross-book-section.tsx */
+export async function lookupCrossBookWithStatus(activeBookId: BookId, rawNorm: string): Promise<CrossBookLookupResult> {
   const norm = normalize(rawNorm);
-  if (!norm || norm.length < 2) return [];
+  if (!norm || norm.length < 2) return { hits: [], degraded: false };
 
   // موج ۱ — کتاب‌های مدرسه‌ای به‌ترتیب نزدیکی پایه
   const wave1 = GRADED_IDS.filter((id) => id !== activeBookId).sort(
     (x, y) => proximityRank(activeBookId, x) - proximityRank(activeBookId, y),
   );
-  await Promise.all(wave1.map(loadIndex));
+  const loaded1 = (await Promise.all(wave1.map(loadIndex))).filter(Boolean).length;
   const wave1Hits = collectHits(norm, wave1);
-  if (wave1Hits.length > 0) return wave1Hits;
+  if (wave1Hits.length > 0) return { hits: wave1Hits, degraded: false };
 
   // موج ۲ — کالوکیشن‌ها و کتاب‌های داستانی؛ فقط وقتی مدرسه‌ای‌ها نتیجه‌ای نداشتند
   const wave2 = UNGRADED_ORDER.filter((id) => id !== activeBookId);
-  await Promise.all(wave2.map(loadIndex));
-  return collectHits(norm, wave2);
+  const loaded2 = (await Promise.all(wave2.map(loadIndex))).filter(Boolean).length;
+  const hits2 = collectHits(norm, wave2);
+  // degraded = هیچ ایندکسی از هیچ موجی بارگذاری نشد → «جست‌وجو انجام نشد»، نه «یافت نشد»
+  return { hits: hits2, degraded: loaded1 + loaded2 === 0 };
 }
 
 /** شمارش ایندکس‌های آماده (تشخیصی/QA — وضعیت بارگذاری تدریجی را نشان می‌دهد) */
