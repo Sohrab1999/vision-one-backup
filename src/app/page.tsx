@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 import { AppHeader, type ViewId } from "@/components/book/app-header";
 import { DesktopSidebar } from "@/components/book/desktop-sidebar";
 import { MobileNav } from "@/components/book/mobile-nav";
@@ -12,6 +13,12 @@ import { GamificationToasts, ConfettiCanvas } from "@/components/book/confetti";
 import { registerNavHandler } from "@/lib/nav-store";
 import { BookProvider, useBook } from "@/lib/book-context";
 import { getActiveBookSnapshot } from "@/lib/book-storage";
+import {
+  getBookDataError,
+  getServerBookDataError,
+  retryBookData,
+  subscribeBookData,
+} from "@/lib/book-data-store";
 import { AccountProvider } from "@/components/book/account-provider";
 import { DeepLinkGate } from "@/components/book/deep-link-gate";
 import { WhatsNewDialog } from "@/components/book/whats-new";
@@ -54,9 +61,61 @@ const SpeakingView = dynamic(() => import("@/components/book/speaking-view").the
 const ClassView = dynamic(() => import("@/components/book/class-view").then((m) => m.ClassView), { ssr: false, loading: ViewChunkLoading });
 const NotebookView = dynamic(() => import("@/components/book/notebook-view").then((m) => m.NotebookView), { ssr: false, loading: ViewChunkLoading });
 
-/** اسکلت بارگذاری تنبل جزوه — تا رسیدن chunk dynamic import کتاب فعال */
+/**
+ * اسکلت بارگذاری تنبل جزوه — تا رسیدن chunk dynamic import کتاب فعال.
+ * P0-BOOK-LOADING-1: شکست واقعی (ChunkLoadError/شبکه/timeout) دیگر اسکلت بی‌پایان نیست —
+ * پیام صادقانهٔ خطا + «تلاش دوباره» (retryBookData امن است: خطا پاک و درخواست تازه زده
+ * می‌شود) + گزینهٔ بارگذاری دوبارهٔ صفحه (وقتی خود پوستهٔ HTML از نسخهٔ قدیمی کش است).
+ * اسکلت هنوز data-boot-loading دارد (گارد CLS منتظرش می‌ماند)؛ حالت خطا ندارد —
+ * تا گارد بوت در نبودِ نشانگر بارگذاری، پرچم را بردارد.
+ */
 function BookDataLoading() {
-  const { meta } = useBook();
+  const { meta, bookId } = useBook();
+  const error = useSyncExternalStore(
+    subscribeBookData,
+    () => (bookId ? getBookDataError(bookId) : null),
+    getServerBookDataError,
+  );
+
+  if (error) {
+    return (
+      <section
+        className="flex min-h-[55vh] flex-col items-center justify-center gap-4 rounded-3xl border border-amber-500/40 bg-amber-500/5 p-8 text-center sm:p-12"
+        role="alert"
+      >
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/15" aria-hidden>
+          <AlertTriangle className="h-7 w-7 text-amber-600 dark:text-amber-400" />
+        </span>
+        <div className="space-y-1.5">
+          <p className="text-base font-black text-foreground">
+            بارگذاری {meta?.title ?? "جزوه"} ناموفق بود
+          </p>
+          <p className="mx-auto max-w-sm text-[12.5px] leading-6 text-muted-foreground">
+            اتصال برقرار نشد یا پاسخی دریافت نشد؛ پیشرفت و داده‌های شما سالم است. اگر مشکل ادامه یافت،
+            چند لحظه بعد دوباره تلاش کنید یا صفحه را دوباره بارگذاری کنید.
+          </p>
+        </div>
+        <div className="mt-1 flex flex-wrap items-center justify-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => bookId && retryBookData(bookId)}
+            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[13px] font-black text-primary-foreground shadow-sm transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <RefreshCw size={15} aria-hidden />
+            تلاش دوباره
+          </button>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-card px-4 py-2.5 text-[12.5px] font-bold text-foreground/80 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            بارگذاری دوبارهٔ صفحه
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       data-boot-loading
@@ -112,7 +171,9 @@ function App() {
   // dynamic() درخواست تکراری را dedupe می‌کند پس هزینهٔ اضافی صفر است.
   useEffect(() => {
     if (effectiveView === "home" && !hasData) {
-      void import("@/components/book/home-view");
+      // P0-BOOK-LOADING-1: گرم‌کردن فقط بهینه‌سازی است — reject شدنش (آفلاین/سرور مرده)
+      // نباید unhandled rejection بدهد؛ مسیر اصلی همان dynamic() با خطای own دار است.
+      import("@/components/book/home-view").catch(() => {});
     }
   }, [effectiveView, hasData]);
 
