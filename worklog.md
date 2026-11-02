@@ -4646,5 +4646,5 @@ Stage Summary:
 **Stage Summary:**
 - **PERSISTENCE HARDENING COMPLETED** — گپ هوک بسته شد؛ SNAPSHOT §۲ (SHA دقیق) و §۱۱ (فهرست بازیابی داخل/خارج ریپو) اضافه/بازنویسی شد؛ نقشهٔ جامع و همین worklog به‌روز شدند.
 - **اثبات گیت:** پیش از commit: درخت پاک به‌جز ۳ فایل این گام (`docs/SNAPSHOT.md`، `worklog.md`، `نقشه راه ها/نقشه-راه-جامع-توسعه-۲۰۲۶.md`) + فایل جدید `scripts/git-hooks/post-commit`؛ پس از commit و push: `git ls-remote backup refs/heads/main` = SHA محلی نهایی این کامیت (پس از اجرا ثبت/تأیید شد — بخش ⑦ پایین).
-- **SHA نهایی این گام:** در کامیتِ ثبت اثبات (بلافاصله بعدی) با مقدار واقعی جایگزین می‌شود — الگو: SHA کامیت محتوایی + SHA تأییدشدهٔ Remote پس از push (اثبات `git ls-remote`)
+- **SHA نهایی این گام:** کامیت محتوایی `12788dfe79d8669b71d6f27db3b88fd650a2a02b` — **SHA تأییدشدهٔ Remote پس از push: `12788dfe79d8669b71d6f27db3b88fd650a2a02b`** (اثبات `git ls-remote backup refs/heads/main` — ۲۰۲۶-۱۱-۰۳، برابرِ بی‌تردید با HEAD محلی؛ کامیت ثبت اثبات = همین ورود؛ SHA نهایی آن در SNAPSHOT §۲ گام بعدی به‌عنوان HEAD مبنا ثبت می‌شود)
 - وضعیت مأموریت قبلی دست‌نخورده: `STEP 4 CLOSED — HILL OUT OF SCOPE / WAITING FOR OWNER DECISION FOR NEXT STAGE` — توقف اجباری برای گام محصولی بعدی پابرجاست.
