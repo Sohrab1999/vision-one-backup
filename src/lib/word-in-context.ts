@@ -18,12 +18,18 @@
  *  - ترتیب درون کتاب (§۶): مکالمه > مثال گرامر > ریدینگ > نقل‌قول.
  *
  * دامنهٔ V1 (تصمیم D1 ✅ مالک): کتاب فعال + کتاب‌های پایه‌دار ۷→۱۲.
- * این گام (Phase 14 / Step 1 — slice عمودی اول): فقط «موج ۱» یعنی کتاب فعال.
- * موج ۲ (پایه‌دارهای ۷→۱۲ با نزدیکی |Δپایه|) = کار باقی‌ماندهٔ گام بعد.
+ * موج‌بندی (همان الگوی اثبات‌شدهٔ F-CV-1):
+ *  - موج ۱ = کتاب فعال — در هر دو جایگاه hit و miss پاپ‌آپ (D2/D4).
+ *  - موج ۲ = پایه‌دارهای ۷→۱۲ منهای فعال، فقط در جایگاه miss کامل پاپ‌آپ (D4/§۱۲ سند UX)؛
+ *    ادغام §۶-۴: ① نتایج کتاب فعال ② پایه‌دارها با |Δپایه| صعودی (proximityRank سرویس
+ *    بین‌کتابی — منبع یگانهٔ قاعدهٔ نزدیکی) با tie-breaker ثبت‌شده = پایهٔ صعودی ۷→۱۲
+ *    (رفتار پایدار sort در F-CV-1).
+ *  - سقف ۱۲ در سطح کل سکشن (نه هر موج/کتاب — §۶ بند ۵ سند UX و §۳-۵ مأموریت گام ۲).
  */
 
 import type { BookId } from "../data/books/types";
 import type { ChapterMeta, Conversation, GrammarLesson, Reading } from "../data/types";
+import { isGradedBookId, proximityRank } from "./cross-book-vocab";
 
 // ─── انواع عمومی ───
 
@@ -571,7 +577,7 @@ function phraseSpan(tokens: Token[], en: string, sets: Set<string>[]): { start: 
 }
 
 /**
- * جست‌وجوی جمله‌های واقعی یک واژه/عبارت در «کتاب فعال» — موج ۱ (slice اول Phase 14).
+ * جست‌وجوی جمله‌های واقعی یک واژه/عبارت در «کتاب فعال» — موج ۱ (رفتار گام ۱ دست‌نخورده).
  * خروجی: حذف‌تکرارشده، مرتب‌شده (مکالمه > گرامر > ریدینگ > نقل‌قول)، سقف ۱۲ داخلی.
  */
 export async function lookupSentencesInActiveBook(bookId: BookId, rawNorm: string): Promise<WordContextResult> {
@@ -581,6 +587,15 @@ export async function lookupSentencesInActiveBook(bookId: BookId, rawNorm: strin
   const idx = await loadSentenceIndex(bookId);
   if (!idx) return { sentences: [], degraded: true };
 
+  return { sentences: searchIndex(idx, norm).slice(0, WORD_CONTEXT_MAX_RESULTS), degraded: false };
+}
+
+/**
+ * موتور تطبیق واحد — «تنها» مسیر جست‌وجوی جمله (موج ۱ و موج ۲ هر دو همین را صدا می‌زنند؛
+ * بدون موتور موازی یا تکرار منطق — §۶ مأموریت گام ۲). منطق دقیقاً همان بدنهٔ پیشین
+ * lookupSentencesInActiveBook است (استخراج بدون تغییر رفتار).
+ */
+function searchIndex(idx: SentenceIndex, norm: string): ContextSentence[] {
   const words = norm.split(/\s+/).filter((w) => w.length > 0).slice(0, 4); // n-gram حداکثر ۴واژه‌ای (§۶)
   const sets = words.map((w) => buildFormSet(w, idx.verbReverse, idx.verbForward));
 
@@ -611,8 +626,93 @@ export async function lookupSentencesInActiveBook(bookId: BookId, rawNorm: strin
     if (a.refId !== b.refId) return a.refId < b.refId ? -1 : 1;
     return a.sentIdx - b.sentIdx;
   });
+  return hits;
+}
 
-  return { sentences: hits.slice(0, WORD_CONTEXT_MAX_RESULTS), degraded: false };
+// ─── موج ۲ — بین‌کتابی پایه‌دار ۷→۱۲ (Phase 14 / Step 2) ───
+
+/** لنگر بی‌پایه برای مشتق‌کردن «پایهٔ مطلق» از proximityRank — بدون hardcode پراکنده:
+ *  proximityRank(کتاب بی‌پایه, کتاب پایه‌دار) = 50 + پایه ⇒ اختلافش = اختلاف پایه.
+ *  منبع یگانهٔ اعداد پایه همان GRADE_RANK سرویس بین‌کتابی F-CV-1 می‌ماند. */
+const GRADE_ANCHOR: BookId = "collocations";
+
+/** کلید tie-breaker ثبت‌شده (§۶ سند UX): فاصلهٔ برابر → پایهٔ صعودی ۷→۱۲
+ *  (دقیقاً رفتار sort پایدار F-CV-1 روی آرایهٔ صعودی GRADED_IDS). */
+function gradeAsc(book: BookId): number {
+  return proximityRank(GRADE_ANCHOR, book);
+}
+
+/** کتاب‌های پایه‌دارِ دارای ایندکس جمله (۷→۱۲) — مشتق از SENTENCE_LOADERS + تعریف
+ *  پایه‌دار در F-CV-1 (isGradedBookId) — بدون فهرست hardcode پراکنده (§۳-۱ مأموریت گام ۲). */
+const GRADED_SENTENCE_BOOKS: BookId[] = (Object.keys(SENTENCE_LOADERS) as BookId[]).filter(isGradedBookId);
+
+/**
+ * ترتیب deterministic موج ۲ برای کتاب فعال: پایه‌دارهای ۷→۱۲ منهای فعال، مرتبشده با
+ * |Δپایه| صعودی و tie-breaker «پایهٔ صعودی». کتاب‌های بی‌پایه (hill/collocations) هرگز
+ * وارد موج ۲ نمی‌شوند (D1) — برای فعالِ بی‌پایه، ترتیب = صعودی پایه (رفتار proximityRank).
+ * صادرشده برای آزمون‌پذیری مستقیم در QA.
+ */
+export function gradedWave2Order(activeBookId: BookId): BookId[] {
+  return GRADED_SENTENCE_BOOKS.filter((id) => id !== activeBookId).sort((a, b) => {
+    const d = proximityRank(activeBookId, a) - proximityRank(activeBookId, b);
+    if (d !== 0) return d;
+    return gradeAsc(a) - gradeAsc(b);
+  });
+}
+
+export interface WordContextLookupOptions {
+  /** موج ۲ بین‌کتابی — فقط برای جایگاه miss کامل پاپ‌آپ (D4/§۱۲)؛ در hit هرگز فعال نمی‌شود */
+  includeWave2?: boolean;
+}
+
+/**
+ * همان lookupSentencesInActiveBook با گزینهٔ موج ۲ (الگوی WithStatus در F-CV-2):
+ *  - includeWave2=false → خروجی بایت‌به‌بایت همان موج ۱ (مسیر hit دست‌نخورده).
+ *  - includeWave2=true (فقط جایگاه miss کامل پاپ‌آپ) → ادغام §۶-۴: ① نتایج کتاب فعال
+ *    (ترتیب درون‌کتاب §۶) ② سپس پایه‌دارهای ۷→۱۲ با |Δپایه| صعودی و tie-breaker پایهٔ
+ *    صعودی؛ درون هر کتاب همان ترتیب §۶. کلید یکتا با bookId؛ سقف ۱۲ در سطح کل سکشن
+ *    (نه هر موج/کتاب — §۶-۵ سند UX و §۳-۵ مأموریت گام ۲).
+ *  - degraded (تمایز صادقانهٔ C-5 — دقیقاً معنای F-CV-1): فقط وقتی هیچ ایندکسی از هیچ
+ *    موجی بارگذاری نشد؛ جست‌وجوی جزئی + صفر نتیجه = «خالی» نه «انجام نشد».
+ */
+export async function lookupSentencesWithStatus(
+  activeBookId: BookId,
+  rawNorm: string,
+  options?: WordContextLookupOptions,
+): Promise<WordContextResult> {
+  const norm = normalize(rawNorm);
+  if (!norm || norm.length < 2) return { sentences: [], degraded: false };
+
+  // ① موج ۱ — کتاب فعال (رفتار گام ۱ دست‌نخورده؛ در hit هم همین مسیر است)
+  const wave1 = await lookupSentencesInActiveBook(activeBookId, rawNorm);
+  if (!options?.includeWave2) return wave1;
+
+  // ② موج ۲ — پایه‌دارهای ۷→۱۲ منهای فعال (فقط جایگاه miss کامل؛ D1)
+  const ordered = gradedWave2Order(activeBookId);
+  const indexes = await Promise.all(ordered.map((id) => loadSentenceIndex(id)));
+  const loaded2 = indexes.filter(Boolean).length;
+
+  const seen = new Set<string>();
+  const merged: ContextSentence[] = [];
+  for (const s of wave1.sentences) {
+    const key = `${s.bookId}::${s.refKind}::${s.refId}::${s.sentIdx}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(s);
+    }
+  }
+  for (let i = 0; i < ordered.length; i++) {
+    const idx = indexes[i];
+    if (!idx) continue;
+    for (const s of searchIndex(idx, norm)) {
+      // کلید یکتای §۶ با bookId — حذف تکرار در سطح سکشن (درون هر کتاب در searchIndex یکتاست)
+      const key = `${s.bookId}::${s.refKind}::${s.refId}::${s.sentIdx}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      merged.push(s);
+    }
+  }
+  return { sentences: merged.slice(0, WORD_CONTEXT_MAX_RESULTS), degraded: wave1.degraded && loaded2 === 0 };
 }
 
 /** شمارش ایندکس‌های آماده (تشخیصی/QA) */

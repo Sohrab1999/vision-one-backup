@@ -10,21 +10,26 @@
  *  - فقط‌خواندنی کامل: هیچ نوشتنی در SRS/ستاره/یاد گرفتم (حفاظت هویت §۷ مأموریت).
  *  - داده کاملاً سمت کلاینت و بدون درخواست /api — dynamic import زیرماژول‌های متنی
  *    (سرویس word-in-context.ts)؛ کش ماژولی نتیجه‌ها (الگوی cross-book-section).
- *  - تعداد اولیه ۲ + «نمایش بیشتر (+۲)» تا سقف ۶ + خط شمارش (تصمیم D5).
+ *  - تعداد اولیه ۲ + «نمایش بیشتر (+۲)» تا سقف ۶ + خط شمارش (تصمیم D5) — سقف در سطح کل سکشن.
  *  - سه سطح ترجمهٔ صادقانه (§۷): جمله‌به‌جمله بدون برچسب؛ پاراگراف‌محور با برچسب
  *    «ترجمهٔ پاراگراف از جزوه» + جمع‌شوندهٔ «نمایش پاراگراف کامل» (تصمیم D3).
  *  - خط منبع ۵جزئی (تصمیم D8): ایموجی + عنوان کتاب + چیپ درس/فصل + نوع محتوا +
  *    رشتهٔ source چاپی (کم‌رنگ). مختصات داده (refKind/refId/sentIdx) در title خط منبع.
+ *  - موج ۲ (گام ۲ — فقط جایگاه miss کامل، prop allowWave2): نمونه‌های بین‌کتابی
+ *    پایه‌دارهای ۷→۱۲ منهای فعال پس از miss موج ۱؛ مرتبشده با |Δپایه|؛ چیپ
+ *    «نزدیک‌ترین پایه» + ring ظریف فقط روی اولین آیتمِ کتاب پایه‌دار خارج از فعال
+ *    (بایت‌به‌بایت الگوی F-CV-2 در cross-book-section.tsx). در hit و related هرگز موج ۲ نیست.
  *  - حالت‌های صادقانه (§۴ سند UX): empty هرگز «واژه پیدا نشد» نمی‌گوید (C-1/C-4)؛
  *    خطا/آفلاین سرد = پیام در دسترس‌نبودن با WifiOff (C-5 — الگوی degraded در F-CV-2).
- *  - این slice (گام ۱): فقط موج ۱ = کتاب فعال. موج ۲ (پایه‌دارهای ۷→۱۲) = گام بعد.
+ *  - فقط‌خواندنی کامل: صفر import استورهای SRS/ستاره.
  */
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { BookOpenText, ChevronDown, Loader2, WifiOff } from "lucide-react";
 import type { BookId } from "@/data/books/types";
 import { getBookMeta } from "@/data/books/registry";
-import { lookupSentencesInActiveBook, type ContextSentence } from "@/lib/word-in-context";
+import { lookupSentencesWithStatus, type ContextSentence } from "@/lib/word-in-context";
+import { isGradedBookId } from "@/lib/cross-book-vocab";
 import { useBook } from "@/lib/book-context";
 import { cn } from "@/lib/utils";
 
@@ -58,18 +63,19 @@ function getVersion() {
   return version;
 }
 
-function entryKey(bookId: string, norm: string) {
-  return `${bookId}::${norm}`;
+function entryKey(bookId: string, norm: string, allowWave2: boolean) {
+  // پرچم موج در کلید — دفاعی: مسیر hit (موج ۱) و miss کامل (موج ۱+۲) هرگز یک کلید را به اشتراک نگذارند
+  return `${bookId}::${norm}::${allowWave2 ? "w2" : "w1"}`;
 }
 
-/** شروع جست‌وجو فقط برای اولین باز شدن هر (کتاب, واژه) — سپس از کش */
-function ensureLookup(bookId: BookId, norm: string) {
-  const key = entryKey(bookId, norm);
+/** شروع جست‌وجو فقط برای اولین باز شدن هر (کتاب, واژه, موج) — سپس از کش */
+function ensureLookup(bookId: BookId, norm: string, allowWave2: boolean) {
+  const key = entryKey(bookId, norm, allowWave2);
   const st = cache.get(key);
   if (st) return; // در حال بارگذاری یا آماده — هیچ import تکراری
   cache.set(key, { status: "loading", sentences: [], at: Date.now() });
   bump();
-  lookupSentencesInActiveBook(bookId, norm)
+  lookupSentencesWithStatus(bookId, norm, { includeWave2: allowWave2 })
     .then((r) => {
       // تمایز صادقانه (C-5): «یافت نشد» فقط وقتی جست‌وجو واقعاً انجام شد
       const status: SectionStatus = r.sentences.length > 0 ? "ready" : r.degraded ? "unavailable" : "empty";
@@ -103,14 +109,20 @@ function EnWithMark({ en, start, end, className }: { en: string; start: number; 
   );
 }
 
-/** یک آیتم جمله: EN + ترجمهٔ سطح‌دار (§۷) + خط منبع ۵جزئی (D8) */
-function ContextItem({ s }: { s: ContextSentence }) {
+/** یک آیتم جمله: EN + ترجمهٔ سطح‌دار (§۷) + خط منبع ۵جزئی (D8)؛
+ *  closest = چیپ «نزدیک‌ترین پایه» + ring — فقط اولین نتیجهٔ کتاب پایه‌دار خارج از فعال در موج ۲ (الگوی F-CV-2) */
+function ContextItem({ s, closest = false }: { s: ContextSentence; closest?: boolean }) {
   const [paraOpen, setParaOpen] = useState(false);
   const meta = getBookMeta(s.bookId);
   const isPara = s.level === "paragraph" && s.paraEn !== undefined && s.paraFa !== undefined;
 
   return (
-    <li className="rounded-lg border border-border/70 bg-card p-2.5 shadow-sm">
+    <li
+      className={cn(
+        "rounded-lg border border-border/70 bg-card p-2.5 shadow-sm",
+        closest && "border-primary/40 ring-1 ring-primary/30",
+      )}
+    >
       <EnWithMark en={s.en} start={s.spanStart} end={s.spanEnd} className="text-[12.5px] leading-5 text-foreground" />
 
       {/* ترجمه — سطح‌دار و صادقانه (§۷ سند UX) */}
@@ -168,6 +180,11 @@ function ContextItem({ s }: { s: ContextSentence }) {
         <span className="max-w-[110px] truncate" title={meta?.title}>
           {meta?.title ?? s.bookId}
         </span>
+        {closest && (
+          <span className="shrink-0 rounded-full bg-primary px-1.5 py-px text-[8.5px] font-black text-primary-foreground">
+            نزدیک‌ترین پایه
+          </span>
+        )}
         {s.source.lessonLabel && (
           <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-px text-[9px] font-black text-primary">
             {s.source.lessonLabel}
@@ -182,13 +199,13 @@ function ContextItem({ s }: { s: ContextSentence }) {
 
 // ─── کامپوننت ───
 
-export function WordContextSection({ norm }: { norm: string }) {
+export function WordContextSection({ norm, allowWave2 = false }: { norm: string; allowWave2?: boolean }) {
   const { bookId } = useBook();
   useSyncExternalStore(subscribe, getVersion, getVersion);
   const mountedRef = useRef(false);
   const [visible, setVisible] = useState(INITIAL_COUNT);
 
-  const key = bookId ? entryKey(bookId, norm) : null;
+  const key = bookId ? entryKey(bookId, norm, allowWave2) : null;
   const entry = key ? cache.get(key) : undefined;
 
   useEffect(() => {
@@ -196,8 +213,8 @@ export function WordContextSection({ norm }: { norm: string }) {
     // در چرخهٔ StrictMode/HMR فقط اولین درخواست واقعی کار می‌کند (کش loading/ready)
     if (mountedRef.current) return;
     mountedRef.current = true;
-    ensureLookup(bookId, norm);
-  }, [bookId, norm]);
+    ensureLookup(bookId, norm, allowWave2);
+  }, [bookId, norm, allowWave2]);
 
   if (!bookId || !entry) return null;
 
@@ -246,6 +263,12 @@ export function WordContextSection({ norm }: { norm: string }) {
   const shown = entry.sentences.slice(0, Math.min(visible, UI_CAP));
   const canExpand = visible < total && visible < UI_CAP;
   const atUiCap = visible >= UI_CAP && total > UI_CAP;
+  const multiple = total > 1;
+  // موج ۲: آیا نتیجه‌ای از کتابی غیر از فعال در نمایش هست؟ (زیرنویس و یادداشت رتبه‌بندی)
+  const hasCrossBook = shown.some((s) => s.bookId !== bookId);
+  // نشان «نزدیک‌ترین پایه» فقط روی «اولین آیتم کتاب پایه‌دار خارج از فعال» —
+  // حتی وقتی موج ۱ (کتاب فعال) جلوتر است (Wireframe 2 سند UX — الگوی F-CV-2)
+  const firstCrossIdx = allowWave2 ? entry.sentences.findIndex((s) => s.bookId !== bookId) : -1;
 
   return (
     <div className="mt-2.5 rounded-xl border border-primary/25 bg-primary/5 p-2.5" aria-label="جمله‌های واقعی از کتاب‌ها">
@@ -253,13 +276,22 @@ export function WordContextSection({ norm }: { norm: string }) {
         <BookOpenText size={12} aria-hidden />
         در متن‌های واقعی
       </p>
+      {hasCrossBook && multiple && (
+        <p className="mt-0.5 pr-4 text-[9.5px] font-bold text-muted-foreground/75">
+          مرتب‌شده بر پایهٔ نزدیکی پایهٔ تحصیلی به جزوهٔ فعال
+        </p>
+      )}
       <p className="mt-0.5 pr-4 text-[9.5px] font-bold text-muted-foreground/75">
-        نمونه‌ها عین متن جزوهٔ فعال است — فقط‌خواندنی
+        {hasCrossBook ? "نمونه‌ها عین متن چاپی جزوه‌ها است — فقط‌خواندنی" : "نمونه‌ها عین متن جزوهٔ فعال است — فقط‌خواندنی"}
       </p>
 
       <ul className="mt-2 space-y-2">
-        {shown.map((s) => (
-          <ContextItem key={`${s.refKind}-${s.refId}-${s.sentIdx}`} s={s} />
+        {shown.map((s, i) => (
+          <ContextItem
+            key={`${s.bookId}-${s.refKind}-${s.refId}-${s.sentIdx}`}
+            s={s}
+            closest={allowWave2 && multiple && i === firstCrossIdx && isGradedBookId(s.bookId) && s.bookId !== bookId}
+          />
         ))}
       </ul>
 

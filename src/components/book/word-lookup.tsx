@@ -661,10 +661,13 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
               </ul>
             </div>
           )}
-          {/* F-CV-3 (فاز ۱۴ گام ۱): جمله‌های واقعی کتاب فعال — زیر پیام miss و کالوکیشن‌ها،
-              بالای سکشن بین‌کتابی (تصمیم D4)؛ فقط‌خواندنی — بدون هرگونه نوشتن در استورها.
+          {/* F-CV-3 (فاز ۱۴ گام ۲): جمله‌های واقعی — موج ۱ (کتاب فعال) زیر پیام miss و
+              کالوکیشن‌ها، بالای سکشن بین‌کتابی (تصمیم D4)؛ موج ۲ بین‌کتابی فقط در جایگاه miss
+              کامل (بدون related — الگوی §۲-۱۲ F-CV-1؛ در related یافتهٔ محلی کافی است) با
+              ادغام §۶-۴: ① فعال ② پایه‌دارهای ۷→۱۲ با |Δپایه|؛ سقف در سطح کل سکشن.
+              فقط‌خواندنی — بدون هرگونه نوشتن در استورها.
               key با پیشوند ctx تا با CrossBookSection هم‌والد (key={hit.word}) تداخل کلید رخ ندهد */}
-          {bookId && <WordContextSection key={`ctx-${hit.word}`} norm={hit.word} />}
+          {bookId && <WordContextSection key={`ctx-${hit.word}`} norm={hit.word} allowWave2={!hit.related} />}
           {/* F-CV-1: miss کامل (بدون vocab/dict/related) → بخش بین‌کتابی فقط‌خواندنی؛
               یافتهٔ محلی یا related → هرگز نمایش داده نمی‌شود (تصمیم §۲-۱۲) */}
           {!hit.related && bookId && <CrossBookSection key={hit.word} norm={hit.word} onClose={onClose} />}
