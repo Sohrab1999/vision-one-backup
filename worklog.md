@@ -4919,5 +4919,5 @@ Stage Summary:
 
 **Stage Summary:**
 - **ثبت تصمیم مالک تکمیل شد:** وضعیت رسمی = **`OPTION B APPROVED — HILL ENTRY NOT YET AUTHORIZED — FINAL OWNER APPROVAL REQUIRED — DECISION 6 PENDING`** — مسیر توسعهٔ تأییدشده = گزینهٔ B (ورود مشروط و مرحله‌ای)؛ Hill خارج از Wave 2؛ ورود واقعی = تکمیل اعتبارسنجی محتوایی + تأیید نهایی صریح مالک؛ انتخاب B مجوز پیاده‌سازی/تغییر داده/فعال‌سازی نیست؛ تصمیم ۶ پابرجا؛ D1-D8 و `WAVE2_UNGRADED_BOOKS` بایت‌به‌بایت.
-- **SHA نهایی این گام:** SHA کامیت محتوایی مستندات در کامیت ثبت اثبات همین ورود با `git ls-remote backup refs/heads/main` اثبات می‌شود (قاعدهٔ §۱۰-۷ SNAPSHOT).
+- **SHA نهایی این گام:** SHA کامیت محتوایی مستندات = `a9b7e30e9ef3155fa51be360d61053bfdee6e266` — **= SHA تأییدشدهٔ Remote با `git ls-remote backup refs/heads/main` (۲۰۲۶-۱۱-۰۳؛ ۰ جلو / ۰ عقب؛ push خودکار هوک: `ce88749..a9b7e30 main -> main` + «auto-push OK»)** (قاعدهٔ §۱۰-۷ SNAPSHOT).
 - **توقف اجباری** — پس از Commit و تأیید Remote، این مأموریت (ثبت و تثبیت تصمیم مالک) بسته می‌شود؛ هیچ گام/مأموریت بعدی بدون دستور صریح مالک شروع نمی‌شود.
