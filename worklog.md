@@ -4806,5 +4806,5 @@ Stage Summary:
 
 **Stage Summary:**
 - **گام ۹ بسته شد:** ۱۲/۱۲ بررسی شد؛ ۶ رکورد اصلاح (A) / ۶ رکورد بدون تغییر (۵ B + ۱ C) / ۳ زیرمورد B+C بدون تغییر؛ وضعیت = **`TARGETED TRANSLATION FIXES APPLIED — HILL IMPLEMENTATION & WAVE-2 ENTRY STILL OWNER DECISION PENDING`**.
-- **SHA نهایی این گام:** کامیت محتوایی = (در کامیت ثبت اثبات همین ورود تکمیل و با `git ls-remote backup refs/heads/main` اثبات می‌شود — قاعدهٔ §۱۰-۷ SNAPSHOT).
+- **SHA نهایی این گام:** کامیت محتوایی = `86752ec7f4fb3578ab543512feace6e13f956f17` — **SHA تأییدشدهٔ Remote پس از push: `86752ec7f4fb3578ab543512feace6e13f956f17`** (اثبات: hook log `ccfdcc2..86752ec main -> main — auto-push OK` + `git ls-remote backup refs/heads/main` = همین SHA = HEAD محلی؛ درخت پاک). کامیت ثبت اثبات = همین ورود؛ SHA نهایی آن در SNAPSHOT §۲ گام بعدی به‌عنوان HEAD مبنا ثبت می‌شود.
 - **توقف اجباری** — هیچ گام بعدی، بازبینی گستردهٔ ۶۴۴/۱٬۲۹۴ واحد، اصلاح موارد B/C، اصلاح یافته‌های خارج از دامنه و ورود Hill به Wave 2 شروع نمی‌شود؛ همه منحصراً با دستور صریح مالک.
