@@ -4898,5 +4898,5 @@ Stage Summary:
 
 **Stage Summary:**
 - **گام ۱۱ بسته شد:** بستهٔ تصمیم‌گیری مالک کامل و تثبیت شد — هفت تصمیم §۱۱ سند گام ۵ عیناً بازسازی؛ گزینه‌های A/B/C + ماتریس ۸معیاره + ریسک‌ها + پیشنهاد کارشناسی جدا از تصمیم + جدول «الان/بعد» + پیش‌نیازها + موارد تأییدنشده؛ **وضعیت نهایی مجوز ورود Hill = `NOT GRANTED — OWNER DECISION PENDING`** — وضعیت: **`DECISION PACKAGE COMPLETED / HILL WAVE-2 ENTRY NOT GRANTED — OWNER DECISION PENDING`**.
-- **SHA نهایی این گام:** SHA کامیت محتوایی مستندات در کامیت ثبت اثبات همین ورود با `git ls-remote backup refs/heads/main` اثبات می‌شود (قاعدهٔ §۱۰-۷ SNAPSHOT).
+- **SHA نهایی این گام:** SHA کامیت محتوایی مستندات گام ۱۱ = `3c27da426085cd83c53770a113d6edb7b9b87c2b` — **= SHA تأییدشدهٔ Remote با `git ls-remote backup refs/heads/main` (۲۰۲۶-۱۱-۰۳؛ ۰ جلو / ۰ عقب؛ push خودکار هوک: `b328435..3c27da4 main -> main` + «auto-push OK»)** (قاعدهٔ §۱۰-۷ SNAPSHOT).
 - **توقف اجباری** — بسته آمادهٔ مطالعهٔ مالک است؛ هیچ تصمیمی دربارهٔ ورود Hill به Wave 2 توسط عامل هوشمند نهایی نمی‌شود؛ گام ۱۲ یا هر اقدام بعدی منحصراً با دستور صریح مالک.
