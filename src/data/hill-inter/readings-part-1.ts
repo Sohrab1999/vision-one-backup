@@ -444,7 +444,7 @@ export const READINGS_PART_1: Reading[] = [
     "paragraphs": [
       {
         "en": "Mr Richards worked in a small seaside town, and he and his wife had a comfortable house near the sea. During the winter they were quite happy there, but every summer a lot of their relatives used to want to come and stay with them, because it was a nice place for a holiday, and it was much cheaper than staying in a hotel.",
-        "fa": "آقای ریچاردز در یک شهر کوچک ساحلی کار می‌کرد و او و همسرش خانه‌ای راحت نزد دریا داشتند. در زمستان آن‌ها آنجا راضی بودند، اما هر تابستان بسیاری از فامیل‌هایشان تمایل داشتند پیش آن‌ها بمانند، زیرا این مکان خوبی برای تعطیلات بود و بسیار ارزان‌تر از اقامت در هتل بود."
+        "fa": "آقای ریچاردز در یک شهر کوچک ساحلی کار می‌کرد و او و همسرش خانه‌ای راحت نزد دریا داشتند. در زمستان آن‌ها آنجا راضی بودند، اما هر تابستان بسیاری از فامیل‌هایشان تمایل داشتند بیایند و پیش آن‌ها بمانند، زیرا این مکان خوبی برای تعطیلات بود و بسیار ارزان‌تر از اقامت در هتل بود."
       },
       {
         "en": "Finally one June Mr Richards complained to an intelligent friend of his who lived in the same place. 'One of my wife's cousins intends to bring her husband and children and spend ten days with us next month again. How do you prevent all your relatives coming to live with you in the summer?'",

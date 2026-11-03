@@ -118,7 +118,7 @@ export const READINGS_PART_2: Reading[] = [
       },
       {
         "en": "Outside the 750 headwords: inspect, sad",
-        "fa": "بیرور از 750 واژهٔ کلیدی: بازرسی (inspect)، ناراحت (sad)"
+        "fa": "بیرون از 750 واژهٔ کلیدی: بازرسی (inspect)، ناراحت (sad)"
       }
     ],
     "exercise": {
@@ -434,7 +434,7 @@ export const READINGS_PART_2: Reading[] = [
     "paragraphs": [
       {
         "en": "Peter was eight and a half years old, and he went to a school near his house. He always went there and came home on foot, and he usually got back on time, but last Friday he came home from school late. His mother was in the kitchen, and she saw him and said to him, 'Why are you late today, Peter?'",
-        "fa": "پیتر هشت و نیم ساله بود و به مدرسه‌ای نزدیک خانه‌اش می‌رفت. او همیشه پیاده به مدرسه می‌رفت و برمی‌گشت و معمولاً به موقع به خانه می‌رسید، اما در جمعه گذشته دیرتر از همیشه به خانه آمد. مادرش در آشپزخانه بود و وقتی او را دید، گفت: «پیتر، امروز چرا دیر آمدی؟»"
+        "fa": "پیتر هشت و نیم ساله بود و به مدرسه‌ای نزدیک خانه‌اش می‌رفت. او همیشه پیاده به مدرسه می‌رفت و برمی‌گشت و معمولاً به موقع به خانه می‌رسید، اما در جمعه گذشته دیر به خانه آمد. مادرش در آشپزخانه بود و وقتی او را دید، گفت: «پیتر، امروز چرا دیر آمدی؟»"
       },
       {
         "en": "'My teacher was angry and sent me to the headmaster after our lessons,' Peter answered.",

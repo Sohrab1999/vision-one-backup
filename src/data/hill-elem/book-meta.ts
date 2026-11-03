@@ -187,7 +187,7 @@ export const CHAPTERS: ChapterMeta[] = [
     "titleFa": "آقای هرمان و خرید",
     "quote": {
       "en": "It was winter, and Mrs Hermann wanted to do a lot of shopping, so she waited until it was Saturday, when her husband was free, and she took him to the shops with her to…",
-      "fa": "زمستان بود و خانم هرمان می‌خواست خریدهای زیادی انجام دهد.",
+      "fa": "زمستان بود و خانم هرمان می‌خواست خریدهای زیادی انجام دهد، بنابراین صبر کرد تا شنبه شد، وقتی که شوهرش فرصت داشت، و او را با خودش به فروشگاه‌ها برد تا…",
       "source": "داستان ۱۳ — Elementary Steps to Understanding"
     },
     "minutes": 3,

@@ -248,7 +248,7 @@ export const READINGS_PART_3: Reading[] = [
       },
       {
         "en": "Mrs Watson ran out into the crowded waiting-room just in time to catch Mrs Potts. She shouted, 'Here's your kidney!' and ran and gave her the parcel.",
-        "fa": "خانم واتس به سرعت به اتاق انتظار شلوغ دوید و خانم پاتس را درست در لحظه‌ای که داشت می‌رفت، گرفت. او فریاد زد: «اینم کلیه‌ات!» و دوید و بسته را به او داد."
+        "fa": "خانم واتسون به سرعت به اتاق انتظار شلوغ دوید و خانم پاتس را درست در لحظه‌ای که داشت می‌رفت، گرفت. او فریاد زد: «اینم کلیه‌ات!» و دوید و بسته را به او داد."
       }
     ],
     "exercise": {

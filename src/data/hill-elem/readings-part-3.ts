@@ -272,7 +272,7 @@ export const READINGS_PART_3: Reading[] = [
     "paragraphs": [
       {
         "en": "Joe and Fred were helping to build a house in a village. The weather was very warm, there was a lot of dust everywhere, and by half past twelve, they were very thirsty, so they stopped work to have their lunch. They found the nearest small bar, went in and sat down with their sandwiches.",
-        "fa": "جو و فرد در حال ساخت یک خانه در یک روستا بودند. هوا بسیار گرم بود، گرد و غبار همه جا را پوشانده بود و تا ساعت نصفه بعد از ظهر، آن‌ها بسیار تشنه شده بودند. بنابراین کار را متوقف کردند تا ناهار بخورند. آن‌ها به نزدیک‌ترین کافه کوچک رفتند، داخل شدند و با ساندویچ‌هایشان نشستند."
+        "fa": "جو و فرد در حال ساخت یک خانه در یک روستا بودند. هوا بسیار گرم بود، گرد و غبار همه جا را پوشانده بود و تا ساعت دوازده و نیم، آن‌ها بسیار تشنه شده بودند. بنابراین کار را متوقف کردند تا ناهار بخورند. آن‌ها به نزدیک‌ترین کافه کوچک رفتند، داخل شدند و با ساندویچ‌هایشان نشستند."
       },
       {
         "en": "'Good afternoon, gentlemen. What can I get you?' the man behind the bar asked.",
