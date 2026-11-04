@@ -5044,3 +5044,5 @@ Stage Summary:
 - **STEP 16 بسته شد:** وضعیت: **`FINAL OWNER SAMPLING DECISION PACKAGE READY — ALL SAMPLING PARAMETERS STILL PENDING OWNER DECISION — NO SAMPLING EXECUTED — HILL ENTRY NOT AUTHORIZED`**.
 - **SHA نهایی این گام:** SHA کامیت محتوایی مستندات STEP 16 در کامیت ثبت اثبات همین ورود با `git ls-remote backup refs/heads/main` اثبات می‌شود (قاعدهٔ §۱۰-۷ SNAPSHOT + الزام ۶ مالک).
 - **توقف اجباری** — پس از این گام هیچ نمونه‌گیری، برچسب‌گذاری، اصلاح محتوا، اجرای سیاست در محصول یا ورود Hill به Wave 2 انجام نمی‌شود؛ اجرای STEP 17 یا هر گام از توالی بخش I فقط با نوبت/دستور جداگانهٔ مالک.
+
+> **ثبت اثبات STEP 16 (۱۴۰۵/۸/۱۳ — ۲۰۲۶-۱۱-۰۴):** SHA کامیت محتوایی مستندات STEP 16 = `29d7a5f36082ba978d55abc8bc17b5f9a0953a69` — **= SHA تأییدشدهٔ Remote با `git ls-remote backup refs/heads/main` (۰ جلو / ۰ عقب؛ push خودکار هوک موفق: `64103c0..29d7a5f main -> main`؛ توکن هرگز چاپ نشد)** — مطابق قاعدهٔ §۱۰-۷ SNAPSHOT و الزام ۶ مالک. کامیت حامل این اثبات یکی بعدتر است (delta فقط worklog).
