@@ -4992,3 +4992,5 @@ Stage Summary:
 - **گام ۱۴ بسته شد:** طرح پیشنهادی نمونه‌گیری طبقه‌بندی‌شدهٔ چهاربُعدی با دو مسیر جدا (برآورد آماری + سرشماری پرریسک‌ها) و ۹ پرسش تصویب آمادهٔ مالک است — وضعیت: **`STRATIFIED SAMPLING PLAN PROPOSAL READY — OWNER APPROVAL REQUIRED — NO SAMPLING EXECUTED — HILL ENTRY NOT AUTHORIZED`**.
 - **SHA نهایی این گام:** SHA کامیت محتوایی مستندات گام ۱۴ در کامیت ثبت اثبات همین ورود با `git ls-remote backup refs/heads/main` اثبات می‌شود (قاعدهٔ §۱۰-۷ SNAPSHOT).
 - **توقف اجباری** — هیچ نمونه‌گیری، اصلاح محتوا، اجرای سیاست در محصول یا ورود Hill به Wave 2 انجام نمی‌شود؛ گام بعدی فقط با مأموریت/تصمیم صریح مالک.
+
+> **ثبت اثبات گام ۱۴ (۱۴۰۵/۸/۱۳ — ۲۰۲۶-۱۱-۰۴):** SHA کامیت محتوایی مستندات گام ۱۴ = `694c8a716bded7ef5ad94a11088eb2c9c5e5044a` — **= SHA تأییدشدهٔ Remote با `git ls-remote backup refs/heads/main` (۰ جلو / ۰ عقب؛ push خودکار هوک: `8f73013..694c8a7 main -> main` + «auto-push OK»؛ توکن هرگز چاپ نشد)** — مطابق قاعدهٔ §۱۰-۷ SNAPSHOT.
