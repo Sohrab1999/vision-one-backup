@@ -5006,3 +5006,5 @@ Stage Summary:
 - **گام ۱۴-اصلاح بسته شد:** طرح گام ۱۴ با شفاف‌سازی آماری پابرجاست — وضعیت: **`SAMPLING PLAN STATISTICAL PRECISION CLARIFIED — SRS REFERENCE MARGINS ONLY — OWNER APPROVAL STILL REQUIRED — NO SAMPLING EXECUTED — HILL ENTRY NOT AUTHORIZED`**.
 - **SHA نهایی این گام:** SHA کامیت محتوایی مستندات گام ۱۴-اصلاح در کامیت ثبت اثبات همین ورود با `git ls-remote backup refs/heads/main` اثبات می‌شود (قاعدهٔ §۱۰-۷ SNAPSHOT).
 - **توقف اجباری** — پس از این گام هیچ نمونه‌گیری، اصلاح محتوا، اجرای سیاست در محصول یا ورود Hill به Wave 2 انجام نمی‌شود؛ گام بعدی فقط با مأموریت/تصمیم صریح مالک.
+
+> **ثبت اثبات گام ۱۴-اصلاح (۱۴۰۵/۸/۱۳ — ۲۰۲۶-۱۱-۰۴):** SHA کامیت محتوایی مستندات گام ۱۴-اصلاح = `a321a9b61002678902cfeb9bdc62172ef3ffef10` — **= SHA تأییدشدهٔ Remote با `git ls-remote backup refs/heads/main` (۰ جلو / ۰ عقب؛ push خودکار هوک: `4447719..a321a9b main -> main` + «auto-push OK»؛ توکن هرگز چاپ نشد)** — مطابق قاعدهٔ §۱۰-۷ SNAPSHOT.
