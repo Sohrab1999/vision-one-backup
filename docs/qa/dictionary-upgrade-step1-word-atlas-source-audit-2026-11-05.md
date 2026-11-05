@@ -389,10 +389,10 @@ word-lookup (پاپ‌آپ واژه) — اولویت نمایش تصویر:
 
 | مورد | مقدار (پرشده در کامیت ثبت اثبات) |
 |---|---|
-| Commit محتوایی این ممیزی | ⏳ ثبت پس از commit |
-| Commit ثبت اثبات | ⏳ |
-| اثبات Remote (`git ls-remote backup refs/heads/main`) | ⏳ |
-| Working Tree پایان | ⏳ انتظار: تمیز ۰/۰ |
+| Commit محتوایی این ممیزی | **`2b9f572ddc6dabfdec6c85abf9931d249ffe07b7`** (۴ فایل مستنداتی — ۴۶۲ افزودن/۶ حذف؛ والد `3087f8c11e15d0410cc705d7aedb042743328595`) |
+| اثبات Remote پس از کامیت محتوایی | `git ls-remote backup refs/heads/main` = **`2b9f572ddc6dabfdec6c85abf9931d249ffe07b7`** = HEAD (push خودکار هوک — `rev-list --left-right --count main...backup/main` = **۰/۰**؛ درخت پاک) |
+| Commit ثبت اثبات (همین کامیت) | SHA این کامیت پس از ثبت در SNAPSHOT §۲ و worklog ثبت می‌شود؛ اثبات مجدد ls-remote در همان کامیت |
+| Working Tree پایان | ⏳ انتظار: تمیز ۰/۰ پس از push کامیت ثبت اثبات |
 
 ## §P — وضعیت نهایی
 
