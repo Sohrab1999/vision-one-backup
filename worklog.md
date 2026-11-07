@@ -5445,3 +5445,9 @@ Stage Summary:
   STEP 6 — NOT AUTHORIZED
   ```
   **— توقف اجباری؛ دربارهٔ O2..O10 هیچ تصمیمی گرفته نشد و هیچ مرحلهٔ بعدی آغاز نمی‌شود**
+
+## ۱۴۰۵/۸/۱۶ — ۲۰۲۶-۱۱-۰۷ — ثبت اثبات Dictionary Upgrade / ثبت تصمیم مالک O1 (قاعدهٔ §۱۰-۷ — صفر تغییر دیگر)
+- **SHA کامیت محتوایی ثبت تصمیم O1 = `5f54c77290841f018b56ab8137628b63d2fbf59d`** (۴ فایل مستنداتی — ۲۰۴ افزودن/۷ حذف؛ والد `81e46d6`) — **اثبات Remote: `git ls-remote backup refs/heads/main` = `5f54c77290841f018b56ab8137628b63d2fbf59d` = HEAD محلی · `git rev-list --left-right --count main...backup/main` = ۰/۰ · push خودکار هوک تأیید شد (`81e46d6..5f54c77 main -> main` — لاگ `/tmp/devhook.log` «auto-push OK») · درخت پاک (۰ tracked/۰ untracked)**
+- کنترل‌های پس از کامیت: `db/custom.db` SHA256 `20df56a5…`/1,236,992B آغاز=پایان (دست‌نخورده) · هوک post-commit = `ee679bc1…` (دست‌نخورده) · `WAVE2_UNGRADED_BOOKS` بایت‌به‌بیت (خط ۶۶۵؛ فایل `a02945d6…`)
+- دلتای همین کامیت ثبت-اثبات: فقط یک جملهٔ §۲ SNAPSHOT (ثبت SHA واقعی کامیت محتوایی 5f54c77 و اثبات ls-remote ۰/۰ و push هوک) + همین ورود worklog — عین الگوی چرخه‌های قبلی (§۱۰-۷)
+- **وضعیت: `O1 — APPROVED · O1 — DOCUMENTED · STEP 5 — CLOSED (2026-11-07) · STEP 6 — NOT AUTHORIZED — NO IMPLEMENTATION — توقف اجباری؛ دربارهٔ O2..O10 هیچ تصمیمی گرفته نشد و هیچ مرحلهٔ بعدی آغاز نمی‌شود`**
