@@ -5451,3 +5451,20 @@ Stage Summary:
 - کنترل‌های پس از کامیت: `db/custom.db` SHA256 `20df56a5…`/1,236,992B آغاز=پایان (دست‌نخورده) · هوک post-commit = `ee679bc1…` (دست‌نخورده) · `WAVE2_UNGRADED_BOOKS` بایت‌به‌بیت (خط ۶۶۵؛ فایل `a02945d6…`)
 - دلتای همین کامیت ثبت-اثبات: فقط یک جملهٔ §۲ SNAPSHOT (ثبت SHA واقعی کامیت محتوایی 5f54c77 و اثبات ls-remote ۰/۰ و push هوک) + همین ورود worklog — عین الگوی چرخه‌های قبلی (§۱۰-۷)
 - **وضعیت: `O1 — APPROVED · O1 — DOCUMENTED · STEP 5 — CLOSED (2026-11-07) · STEP 6 — NOT AUTHORIZED — NO IMPLEMENTATION — توقف اجباری؛ دربارهٔ O2..O10 هیچ تصمیمی گرفته نشد و هیچ مرحلهٔ بعدی آغاز نمی‌شود`**
+
+## ۱۴۰۵/۸/۱۷ — ۲۰۲۶-۱۱-۰۸ — الزام پایداری مالک — ابلاغ مجدد و ممیزی کامل بازیابی‌پذیری (OWNER PERSISTENCE MANDATE RE-ASSERTED — مأموریت مالک — فقط مستندات — صفر تغییر کد/API/UI/Runtime/Schema/db/دارایی/WAVE2/Hook — صفر تغییر وضعیت گام‌ها)
+- **ابلاغ مجدد:** مالک متن عین همان الزام ۱۰بندی + معیار پذیرش (۲۰۲۶-۱۱-۰۴) را بایت‌به‌بیت مجدداً ابلاغ کرد — تطبیق با §۱ `docs/owner-persistence-mandate-2026-11-04.md`: صفر تغییر متن ⇒ سند موجود مرجع می‌ماند و ابلاغ مجدد در §۶ همان سند ثبت شد؛ الزام همچنان `STANDING`.
+- **پیش‌بررسی (همه اثبات‌شده):** HEAD آغاز `a1248aea50a6db607cf1644acce688823cf1480d` (ثبت اثبات O1) = Remote (`git ls-remote backup refs/heads/main` = عین SHA · `git rev-list --left-right --count main...backup/main` = **۰/۰** — صفر بازیابی؛ صفر reset/rebase/force) · درخت پاک ۰ tracked/۰ untracked · db `20df56a5…`/1,236,992B و هوک زنده `ee679bc1…` = نسخهٔ tracked (diff خالی) آغاز=پایان · WAVE2 بایت‌به‌بیت (خط ۶۶۵ `src/lib/word-in-context.ts` SHA256 `a02945d6…`)
+- **ممیزی پوشش (`git ls-files`):** `db/custom.db` ✓ · `upload/` ۲۴ فایل ✓ · `scripts/git-hooks/post-commit` ✓ · `worklog.md`/`roadmap.md`/`docs/SNAPSHOT.md` ✓ · `docs/` ۵۶ فایل ✓ (شامل `docs/decisions/**` و `docs/architecture/**` و سند الزام) · `src/` ۵۸۷ فایل ✓ — کل ۲,۵۱۴ فایل tracked
+- **کشف و اصلاح صادقانه (الزام بند ۸):** `.env` واقعاً **tracked** است (نه gitignored-اثرپذیر — الگوی `.env*` در `.gitignore` برای فایلِ از-قبل-tracked بی‌اثر است؛ محتوا = تک‌خط `DATABASE_URL=file:/home/z/my-project/db/custom.db` — غیرراز عین مستندات) ⇒ §۱۱-ب و §۱۰-۳ SNAPSHOT اصلاح شد: در کلون تازه `.env` حاضر است؛ فقط اگر مسیر پروژه متفاوت باشد باید بازسازی شود (دستور همان بخش‌ها). ادعای قبلی «gitignored» تصحیح شد و سابقه در §۶ سند الزام حفظ شد.
+- **اصلاحات دقت SNAPSHOT:** زنجیرهٔ تاریخچهٔ §۲ (حلقه‌های گم‌شدهٔ STEP 3/4/5/O1: `ef5aae1`/`cadb419`/`491dbe6`/`24917eb`/`39db126`/`81e46d6`/`5f54c77`/`a1248ae` افزوده شدند) · «آخرین اثبات» §۱۱ (۲۰۲۶-۱۱-۰۴ → ۲۰۲۶-۱۱-۰۸) · سربرگ ۴۰مین ㊵ + §۴ + §۶ + §۸ + §۱۱-ج
+- **کنترل‌ها:** `bun run lint` = ۰ (exit 0) · `git diff --check` پاک · دلتا فقط ۳ فایل مستنداتی (SNAPSHOT + worklog + سند الزام — Roadmap جامع نیازی به تغییر نداشت؛ چک‌باکس O1 از گام قبل به‌روز است) · db/هوک/WAVE2 آغاز=پایان · عدم‌تعادل تگ details سربرگ ۲۹/۲۸ موروثی → ۳۰/۲۹ (دلتا +۱/+۱ — همان الگو) · توکن هرگز در لاگ/گزارش چاپ نشد
+- **وضعیت:**
+  ```text
+  O1 — APPROVED
+  O1 — DOCUMENTED
+  STEP 5 — CLOSED (2026-11-07)
+  STEP 6 — NOT AUTHORIZED — NO IMPLEMENTATION
+  MANDATE — STANDING (RE-ASSERTED 2026-11-08) — RECOVERY AUDIT PASSED
+  ```
+  **— توقف اجباری؛ دربارهٔ O2..O10 هیچ تصمیمی گرفته نشد و هیچ مرحلهٔ بعدی آغاز نمی‌شود**
