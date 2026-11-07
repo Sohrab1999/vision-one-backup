@@ -5399,3 +5399,9 @@ Stage Summary:
   NO IMPLEMENTATION — NO PRODUCT INTEGRATION AUTHORIZED — NO MANIFEST — NO IMAGE IMPORT — NO CODE/API/UI/SCHEMA/DB/QUOTA/WAVE2 CHANGE — DB/HOOK UNTOUCHED
   STOP — STEP 5 ONLY WITH EXPLICIT INDEPENDENT OWNER MISSION
   ```
+
+## ۱۴۰۵/۸/۱۶ — ۲۰۲۶-۱۱-۰۷ — ثبت اثبات Dictionary Upgrade / STEP 4 (قاعدهٔ §۱۰-۷ — صفر تغییر دیگر)
+- **SHA کامیت محتوایی ثبت تصمیم‌های مالک STEP 4 = `491dbe65cffa282103f130ff5ddb9b85f4fbfa9e`** (۴ فایل مستنداتی — ۳۷۶ افزودن/۶ حذف؛ والد `cadb419`) — **اثبات Remote: `git ls-remote backup refs/heads/main` = `491dbe65cffa282103f130ff5ddb9b85f4fbfa9e` = HEAD محلی · `git rev-list --left-right --count main...backup/main` = ۰/۰ · push خودکار هوک تأیید شد (`cadb419..491dbe6 main -> main` — لاگ `/tmp/devhook.log` «auto-push OK») · درخت پاک (۰ tracked/۰ untracked)**
+- کنترل‌های پس از کامیت: `db/custom.db` SHA256 `20df56a5…`/1,236,992B آغاز=پایان (دست‌نخورده) · هوک post-commit = `ee679bc1…` (دست‌نخورده) · `WAVE2_UNGRADED_BOOKS` بایت‌به‌بیت
+- دلتای همین کامیت ثبت-اثبات: فقط یک جملهٔ §۲ SNAPSHOT (ثبت SHA واقعی کامیت محتوایی 491dbe6 و اثبات ls-remote ۰/۰ و push هوک) + همین ورود worklog — عین الگوی چرخه‌های قبلی (§۱۰-۷)
+- **وضعیت: `STEP 4 — OWNER HUMAN-REVIEW DECISIONS REGISTERED (2026-11-07) — CONTENT COMMIT 491dbe6 REMOTE-VERIFIED (0/0) — NO IMPLEMENTATION — NO PRODUCT INTEGRATION AUTHORIZED — STEP 5 ONLY WITH EXPLICIT INDEPENDENT OWNER MISSION` — توقف اجباری**
