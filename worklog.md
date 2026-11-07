@@ -5468,3 +5468,9 @@ Stage Summary:
   MANDATE — STANDING (RE-ASSERTED 2026-11-08) — RECOVERY AUDIT PASSED
   ```
   **— توقف اجباری؛ دربارهٔ O2..O10 هیچ تصمیمی گرفته نشد و هیچ مرحلهٔ بعدی آغاز نمی‌شود**
+
+## ۱۴۰۵/۸/۱۷ — ۲۰۲۶-۱۱-۰۸ — ثبت اثبات الزام پایداری — ابلاغ مجدد و ممیزی بازیابی‌پذیری (قاعدهٔ §۱۰-۷ — صفر تغییر دیگر)
+- **SHA کامیت محتوایی ممیزی = `7b3d557982ddb6cea2779b23e5921c36235d5ef9`** (۳ فایل مستنداتی — ۴۶ افزودن/۹ حذف؛ والد `a1248ae`) — **اثبات Remote: `git ls-remote backup refs/heads/main` = `7b3d557982ddb6cea2779b23e5921c36235d5ef9` = HEAD محلی · `git rev-list --left-right --count main...backup/main` = ۰/۰ · push خودکار هوک تأیید شد (`a1248ae..7b3d557 main -> main` — لاگ `/tmp/devhook.log` «auto-push OK») · درخت پاک (۰ tracked/۰ untracked)**
+- کنترل‌های پس از کامیت: `db/custom.db` SHA256 `20df56a5…`/1,236,992B آغاز=پایان (دست‌نخورده) · هوک post-commit = `ee679bc1…` (دست‌نخورده) · `WAVE2_UNGRADED_BOOKS` بایت‌به‌بیت (خط ۶۶۵؛ فایل `a02945d6…`) · `bun run lint` = ۰ · `git diff --check` پاک
+- دلتای همین کامیت ثبت-اثبات: فقط یک جملهٔ §۲ SNAPSHOT (ثبت SHA واقعی کامیت محتوایی 7b3d557 و اثبات ls-remote ۰/۰ و push هوک) + همین ورود worklog — عین الگوی چرخه‌های قبلی (§۱۰-۷)
+- **وضعیت: `O1 — APPROVED · O1 — DOCUMENTED · STEP 5 — CLOSED (2026-11-07) · STEP 6 — NOT AUTHORIZED — NO IMPLEMENTATION — MANDATE — STANDING (RE-ASSERTED 2026-11-08) — RECOVERY AUDIT PASSED — توقف اجباری؛ دربارهٔ O2..O10 هیچ تصمیمی گرفته نشد و هیچ مرحلهٔ بعدی آغاز نمی‌شود`**
