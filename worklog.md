@@ -5491,3 +5491,9 @@ Stage Summary:
   STEP 6 — NOT AUTHORIZED
   ```
   **— توقف اجباری؛ دربارهٔ O3..O10 هیچ بررسی/تصمیمی انجام نشد و هیچ کارزار وندور یا مرحلهٔ بعدی آغاز نمی‌شود**
+
+## ۱۴۰۵/۸/۱۷ — ۲۰۲۶-۱۱-۰۸ — ثبت اثبات Dictionary Upgrade / ثبت تصمیم مالک O2 (قاعدهٔ §۱۰-۷ — صفر تغییر دیگر)
+- **SHA کامیت محتوایی ثبت O2 = `c7e13bdf0b503f32c16ceb9abce15f1875c90a10`** (۴ فایل مستنداتی — ۲۱۶ افزودن/۶ حذف + سند جدید `docs/decisions/owner-decision-o2-word-atlas-vendoring-permission-2026-11-08.md`؛ والد `82061b9`) — **اثبات Remote: `git ls-remote backup refs/heads/main` = `c7e13bdf0b503f32c16ceb9abce15f1875c90a10` = HEAD محلی · `git rev-list --left-right --count main...backup/main` = ۰/۰ · push خودکار هوک تأیید شد (`82061b9..c7e13bd main -> main` — لاگ `/tmp/devhook.log` «auto-push OK») · درخت پاک (۰ tracked/۰ untracked)**
+- کنترل‌های پس از کامیت: `db/custom.db` SHA256 `20df56a5…`/1,236,992B آغاز=پایان (دست‌نخورده) · هوک post-commit = `ee679bc1…` (دست‌نخورده) · `WAVE2_UNGRADED_BOOKS` بایت‌به‌بیت (خط ۶۶۵؛ فایل `a02945d6…`) · `bun run lint` = ۰ · `git diff --check` پاک · صفر فایل تصویری/اجرایی در کل دلتا
+- دلتای همین کامیت ثبت-اثبات: فقط یک جملهٔ §۲ SNAPSHOT (ثبت SHA واقعی کامیت محتوایی c7e13bd و اثبات ls-remote ۰/۰ و push هوک) + همین ورود worklog — عین الگوی چرخه‌های قبلی (§۱۰-۷)
+- **وضعیت: `O2 — APPROVED · O2 — DOCUMENTED · STEP 5 — CLOSED (2026-11-07) · STEP 6 — NOT AUTHORIZED — NO IMPLEMENTATION — NO IMAGE IMPORT — توقف اجباری؛ دربارهٔ O3..O10 هیچ بررسی/تصمیمی انجام نشد و هیچ کارزار وندور یا مرحلهٔ بعدی آغاز نمی‌شود`**
