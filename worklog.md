@@ -5518,3 +5518,9 @@ Stage Summary:
   STEP 6 — NOT AUTHORIZED
   ```
   **— توقف اجباری؛ انتخاب نهایی S1/S2/S3 (یا هر متن مستقل دیگر) منحصراً با مالک است؛ دربارهٔ O4..O10 هیچ بررسی/تصمیمی انجام نشد و هیچ کارزار پیاده‌سازی/وندور یا مرحلهٔ بعدی آغاز نمی‌شود**
+
+## ۱۴۰۵/۸/۱۷ — ۲۰۲۶-۱۱-۰۸ — ثبت اثبات Dictionary Upgrade / آماده‌سازی تصمیم مالک O3 (قاعدهٔ §۱۰-۷ — صفر تغییر دیگر)
+- **SHA کامیت محتوایی آماده‌سازی O3 = `14103a46a509c11ddb3b8263f65c380f70e191e9`** (۴ فایل مستنداتی — ۳۲۷ افزودن/۷ حذف + سند جدید `docs/decisions/owner-decision-o3-intra-entry-sense-policy-proposal-2026-11-08.md`؛ والد `84901ca`) — **اثبات Remote: `git ls-remote backup refs/heads/main` = `14103a46a509c11ddb3b8263f65c380f70e191e9` = HEAD محلی · `git rev-list --left-right --count main...backup/main` = ۰/۰ · push خودکار هوک تأیید شد (`84901ca..14103a4 main -> main` — لاگ `/tmp/devhook.log` «auto-push OK») · درخت پاک (۰ tracked/۰ untracked)**
+- کنترل‌های پس از کامیت: `db/custom.db` SHA256 `20df56a5…`/1,236,992B آغاز=پایان (دست‌نخورده) · هوک post-commit = `ee679bc1…` (دست‌نخورده) · `WAVE2_UNGRADED_BOOKS` بایت‌به‌بیت (خط ۶۶۵؛ فایل `a02945d6…`) · `bun run lint` = ۰ · `git diff --check` پاک · صفر فایل تصویری/اجرایی در کل دلتا
+- دلتای همین کامیت ثبت-اثبات: فقط یک جملهٔ §۲ SNAPSHOT (ثبت SHA واقعی کامیت محتوایی 14103a4 و اثبات ls-remote ۰/۰ و push هوک) + همین ورود worklog — عین الگوی چرخه‌های قبلی (§۱۰-۷)
+- **وضعیت: `O3 — NOT APPROVED (DECISION MATERIAL PREPARED — AWAITING OWNER DECISION) · O1 — APPROVED · O2 — APPROVED · STEP 5 — CLOSED (2026-11-07) · STEP 6 — NOT AUTHORIZED — NO IMPLEMENTATION — توقف اجباری؛ انتخاب نهایی S1/S2/S3 فقط با مالک؛ هیچ کارزار پیاده‌سازی/وندور یا مرحلهٔ بعدی آغاز نمی‌شود`**
