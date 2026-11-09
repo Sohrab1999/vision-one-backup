@@ -119,6 +119,16 @@ export const BOOKS: BookMeta[] = [
     emoji: "🦅",
     available: true,
   },
+  {
+    id: "viu-elem",
+    title: "Vocabulary in Use — Elementary",
+    gradeLabel: "مقدماتی — Cambridge",
+    author: "Michael McCarthy & Felicity O'Dell",
+    tagline: "۶۰ درس واژگان پایه — متن دو زبانه، واژگان هر درس و آزمون چهارگزینه‌ای از خود کتاب",
+    color: "amber",
+    emoji: "🌱",
+    available: true,
+  },
 ];
 
 // ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
@@ -136,6 +146,7 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "hill-elem": () => import("../hill-elem").then((m) => m.HILL_ELEMENTARY_BOOK),
   "hill-inter": () => import("../hill-inter").then((m) => m.HILL_INTERMEDIATE_BOOK),
   "hill-adv": () => import("../hill-adv").then((m) => m.HILL_ADVANCED_BOOK),
+  "viu-elem": () => import("../viu-elem").then((m) => m.VIU_ELEMENTARY_BOOK),
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {

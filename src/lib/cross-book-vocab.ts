@@ -62,7 +62,7 @@ const GRADE_RANK: Partial<Record<BookId, number>> = {
 };
 
 /** ترتیب پایدار کتاب‌های بی‌پایه — همیشه بعد از کتاب‌های مدرسه‌ای */
-const UNGRADED_ORDER: BookId[] = ["collocations", "hill-intro", "hill-elem", "hill-inter", "hill-adv"];
+const UNGRADED_ORDER: BookId[] = ["collocations", "hill-intro", "hill-elem", "hill-inter", "hill-adv", "viu-elem"];
 
 /** رتبهٔ نزدیکی: هرچه کمتر، نزدیک‌تر. کتاب‌های بی‌پایه همیشه بعد از مدرسه‌ای‌ها (۱۰۰+) */
 export function proximityRank(active: BookId, other: BookId): number {
@@ -205,6 +205,11 @@ const LIGHT_LOADERS: Partial<Record<BookId, () => Promise<BookLightIndex>>> = {
   },
   "hill-adv": async () => {
     const v = await import("../data/hill-adv/vocab");
+    return buildIndex(v.VOCAB_ALL, [], [], v.VOCAB_LESSONS);
+  },
+  // VIU Elementary (فاز ۳) — فقط ماژول‌های سبک واژگان (عین الگوی کتاب‌های hill)
+  "viu-elem": async () => {
+    const v = await import("../data/viu-elem/vocab");
     return buildIndex(v.VOCAB_ALL, [], [], v.VOCAB_LESSONS);
   },
 };

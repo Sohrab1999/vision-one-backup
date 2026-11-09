@@ -25,7 +25,8 @@ export type BookId =
   | "hill-intro" // Introductory Steps to Understanding — L. A. Hill (PDF)
   | "hill-elem" // Elementary Steps to Understanding — L. A. Hill (PDF)
   | "hill-inter" // Intermediate Steps to Understanding — L. A. Hill (PDF)
-  | "hill-adv"; // Advanced Steps to Understanding — L. A. Hill (PDF)
+  | "hill-adv" // Advanced Steps to Understanding — L. A. Hill (PDF)
+  | "viu-elem"; // English Vocabulary in Use — Elementary — McCarthy & O'Dell (فاز ۳ استخراج از اسکن PDF)
 
 /** نام‌های مجاز برای بخش‌های scoped در localStorage (پیشرفت مخصوص هر کتاب) */
 export const SCOPED_STORE_NAMES = [

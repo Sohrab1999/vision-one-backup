@@ -195,18 +195,26 @@ function normalize(s) {
 }
 
 function parseNumberedAnswers(keyText, expectedCount) {
-  // "1 went 2 made 3 did" / "1 T 2 F" / "2 a" → map {1:"went",…}
+  // "1 went 2 made 3 did" / "1 T 2 F" / "1 coffee… | 2 an appointment | 3 swim…" → map {1:"…"}
+  // each value ends where the NEXT number match begins (m.index — before the " 10"),
+  // otherwise a " | " separator makes the value swallow the next number ("swim | 10")
   const text = String(keyText ?? "").trim();
   if (!text) return null;
-  const tokens = [];
   const re = /(?:^|\s)(\d{1,2})[.):]?\s+/g;
   let m;
   const positions = [];
-  while ((m = re.exec(text)) !== null) positions.push({ num: Number(m[1]), start: m.index + m[0].length, numStart: m.index + m[1].length });
+  while ((m = re.exec(text)) !== null)
+    positions.push({ num: Number(m[1]), valStart: m.index + m[0].length, matchStart: m.index });
   if (positions.length === 0) return null;
+  const tokens = [];
   for (let i = 0; i < positions.length; i++) {
-    const end = i + 1 < positions.length ? positions[i + 1].numStart : text.length;
-    const val = text.slice(positions[i].start, end).trim();
+    const end = i + 1 < positions.length ? positions[i + 1].matchStart : text.length;
+    // strip a trailing " | " (the multi-part separator the key prompt joins with) — never leak into data
+    const val = text
+      .slice(positions[i].valStart, end)
+      .trim()
+      .replace(/\s*\|\s*$/, "")
+      .trim();
     if (val) tokens.push({ num: positions[i].num, val });
   }
   if (tokens.length !== expectedCount) return null;
@@ -220,6 +228,7 @@ function parseNumberedAnswers(keyText, expectedCount) {
 function firstAlternate(ans) {
   return String(ans ?? "")
     .split("/")[0]
+    .replace(/\s*\|\s*$/, "")
     .trim();
 }
 
@@ -466,7 +475,7 @@ export const CHAPTERS: ChapterMeta[] = ${tsList(chapters)};`;
     emit(
       `${OUT_DIR}/vocab-part-${p}.ts`,
       vocabHeader(p),
-      `import type { VocabEntry, VocabWord } from "../types";
+      `import type { VocabWord } from "../types";
 
 type Row = Omit<VocabWord, "lesson"> & { lesson: number; lessonLabel: string };
 

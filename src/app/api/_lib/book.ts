@@ -16,6 +16,7 @@ const BOOK_IDS: readonly string[] = [
   "hill-elem",
   "hill-inter",
   "hill-adv",
+  "viu-elem",
 ];
 
 /** شناسه پیش‌فرض — کتاب فعلی که محتوا دارد */
@@ -45,6 +46,7 @@ const GRADE_LABELS: Record<Exclude<BookId, "vision-one">, string> = {
   "hill-elem": "Elementary Steps to Understanding (L. A. Hill — سطح متوسط)",
   "hill-inter": "Intermediate Steps to Understanding (L. A. Hill — سطح نیمه‌پیشرفته)",
   "hill-adv": "Advanced Steps to Understanding (L. A. Hill — سطح پیشرفته)",
+  "viu-elem": "English Vocabulary in Use — Elementary (McCarthy & O'Dell — Cambridge — سطح مقدماتی)",
 };
 
 /**
