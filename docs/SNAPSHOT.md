@@ -85,10 +85,10 @@
 | Working Tree این لحظه | دقیقاً فایل‌های §۶ همین مأموریت (سند طراحی + نقشه راه VIU + Roadmap جامع + SNAPSHOT + worklog — فقط ۵ فایل `.md`) — آمادهٔ پروتکل دو-کامیتی §۱۰-۷ |
 | Baseline پابرجا | `db/custom.db` = `20df56a5…`/1,236,992B · Hook هر دو کپی = `ee679bc1…` · WAVE2 `src/lib/word-in-context.ts` = `a02945d6…` — آغاز=پایان (اثبات §۸) |
 | SHA256 سه PDF منبع | ELEM `35ea1b5b…` · PREINT `0dfdab2e…` · UPPER `415fc985…` — هر سه MATCH با §A نقشه راه VIU (بازتأیید آغاز مأموریت؛ دست‌نخورده) |
-| ثبت پس از commit | SHA کامیت محتوایی + اثبات `git ls-remote` در ورود ثبت-اثبات worklog (قاعدهٔ §۱۰-۷) و کامیت ثبت-اثبات ثبت می‌شود |
+| ثبت پس از دو-کامیتی همین مأموریت (۱۴۰۵/۸/۱۹ — ۲۰۲۶-۱۱-۱۰) | **SHA کامیت محتوایی = `002aeeca7faf70aab3d7eeb925d325af68e32efa`** — push خودکار هوک اثبات‌شده (`f1b2da9..002aeec main -> main` — لاگ `/tmp/devhook.log` «auto-push OK») · `git ls-remote backup refs/heads/main` = `002aeeca…` = HEAD محلی · `git rev-list --left-right --count main...backup/main` = **۰/۰** · درخت پاک (۰ tracked/۰ untracked) |
 
 - **ثبت پس از دو-کامیتی همین مأموریت (۱۴۰۵/۸/۱۸ — ۲۰۲۶-۱۱-۰۹):** SHA کامیت محتوایی = `af330d07444aa407391b900944d1d39a81f24522` — push خودکار هوک اثبات‌شده (`aad0bbc..af330d0 main -> main` — لاگ `/tmp/devhook.log` «auto-push OK») + `git ls-remote backup refs/heads/main` = `af330d0…` (divergence ۰/۰) · کامیت ثبت-اثبات = ورود ثبت-اثبات worklog (قاعدهٔ §۱۰-۷ — SHA آن در git log و پیام خودش ثبت است)
-- زنجیرهٔ تاریخچهٔ اخیر: `aad0bbc` (اثبات اصلاحی VIU) ← `5304da1` (اصلاحی VIU — سربرگ ㊿) ← `5a02fa8` (ثبت نقشه راه VIU — جلسهٔ موازی + ورود سه PDF) ← `193269b`/`e42b290` (ثبت اثبات/محتوایی O6) ← … (ادامه در git log)
+- زنجیرهٔ تاریخچهٔ اخیر: `002aeec` (محتوایی فاز ۲ VIU — سربرگ ۵۲مین) ← `f1b2da9` (اثبات فاز ۰+۱ VIU) ← `af330d0` (فاز ۰+۱ VIU) ← `aad0bbc` (اثبات اصلاحی VIU) ← `5304da1` (اصلاحی VIU — سربرگ ㊿) ← `5a02fa8` (ثبت نقشه راه VIU — جلسهٔ موازی + ورود سه PDF) ← `193269b`/`e42b290` (ثبت اثبات/محتوایی O6) ← … (ادامه در git log)
 ## ۳) آخرین گام تکمیل‌شدهٔ Roadmap
 **گام تکمیل‌شده: VIU — فاز ۲ (طراحی مدل داده و تصمیم‌های مالک — فقط مستندات + پیشنهاد GLM) — ۱۴۰۵/۸/۱۹ — ۲۰۲۶-۱۱-۱۰**
 
