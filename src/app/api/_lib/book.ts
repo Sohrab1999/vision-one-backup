@@ -17,6 +17,7 @@ const BOOK_IDS: readonly string[] = [
   "hill-inter",
   "hill-adv",
   "viu-elem",
+  "viu-preint",
 ];
 
 /** شناسه پیش‌فرض — کتاب فعلی که محتوا دارد */
@@ -47,6 +48,7 @@ const GRADE_LABELS: Record<Exclude<BookId, "vision-one">, string> = {
   "hill-inter": "Intermediate Steps to Understanding (L. A. Hill — سطح نیمه‌پیشرفته)",
   "hill-adv": "Advanced Steps to Understanding (L. A. Hill — سطح پیشرفته)",
   "viu-elem": "English Vocabulary in Use — Elementary (McCarthy & O'Dell — Cambridge — سطح مقدماتی)",
+  "viu-preint": "English Vocabulary in Use — Pre-intermediate & intermediate (Stuart Redman — Cambridge — سطح نیمه‌متوسط و متوسط)",
 };
 
 /**

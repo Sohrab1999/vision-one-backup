@@ -129,6 +129,16 @@ export const BOOKS: BookMeta[] = [
     emoji: "🌱",
     available: true,
   },
+  {
+    id: "viu-preint",
+    title: "Vocabulary in Use — Pre-int & Int",
+    gradeLabel: "نیمه‌متوسط و متوسط — Cambridge",
+    author: "Stuart Redman",
+    tagline: "۱۰۰ درس واژگان متوسط — متن دو زبانه، واژگان هر درس و آزمون چهارگزینه‌ای از خود کتاب",
+    color: "teal",
+    emoji: "🌿",
+    available: true,
+  },
 ];
 
 // ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
@@ -147,6 +157,7 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "hill-inter": () => import("../hill-inter").then((m) => m.HILL_INTERMEDIATE_BOOK),
   "hill-adv": () => import("../hill-adv").then((m) => m.HILL_ADVANCED_BOOK),
   "viu-elem": () => import("../viu-elem").then((m) => m.VIU_ELEMENTARY_BOOK),
+  "viu-preint": () => import("../viu-preint").then((m) => m.VIU_PREINT_BOOK),
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {

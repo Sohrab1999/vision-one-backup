@@ -551,7 +551,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
         <button
           type="button"
           onClick={() => onNavigate("quiz")}
-          className="rise-in group flex w-full flex-wrap items-center gap-3 rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4 text-right transition-all hover:border-amber-500/70 hover:shadow-lg hover:shadow-amber-500/10 active:scale-[0.99] active:shadow-md"
+          className="rise-in group flex w-full min-w-0 max-w-full flex-wrap items-center gap-3 overflow-hidden rounded-2xl border border-amber-500/40 bg-gradient-to-l from-amber-500/12 via-amber-500/5 to-transparent p-4 text-right transition-all hover:border-amber-500/70 hover:shadow-lg hover:shadow-amber-500/10 active:scale-[0.99] active:shadow-md"
         >
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 transition-transform group-hover:scale-105 dark:text-amber-400">
             <NotebookPen size={20} />
@@ -576,7 +576,7 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
         <button
           type="button"
           onClick={() => onNavigate("quiz")}
-          className="rise-in group flex w-full flex-wrap items-center gap-3 rounded-2xl border border-yellow-500/40 bg-gradient-to-l from-yellow-500/12 via-yellow-500/5 to-transparent p-4 text-right transition-all hover:border-yellow-500/70 hover:shadow-lg hover:shadow-yellow-500/10 active:scale-[0.99] active:shadow-md"
+          className="rise-in group flex w-full min-w-0 max-w-full flex-wrap items-center gap-3 overflow-hidden rounded-2xl border border-yellow-500/40 bg-gradient-to-l from-yellow-500/12 via-yellow-500/5 to-transparent p-4 text-right transition-all hover:border-yellow-500/70 hover:shadow-lg hover:shadow-yellow-500/10 active:scale-[0.99] active:shadow-md"
         >
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-yellow-500/15 text-yellow-600 transition-transform group-hover:scale-105 dark:text-yellow-400">
             <Star size={20} />

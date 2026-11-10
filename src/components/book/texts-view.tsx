@@ -40,7 +40,8 @@ export function ReadingsLibrary({ lessonFilter }: { lessonFilter?: number }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex gap-1.5">
+        {/* ردیف چیپ‌های درس — اسکرول افقی داخلی (کتاب‌های ۱۰۰درسی صفحه را عریض نمی‌کنند — اصلاح QA فاز ۴) */}
+        <div className="flex gap-1.5 overflow-x-auto pb-1">
           {lessonTabs.map((t) => (
             <button
               key={t.lesson}
