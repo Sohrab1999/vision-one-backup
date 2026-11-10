@@ -9,8 +9,10 @@ fi
 pkill -f chrome 2>/dev/null
 sleep 1
 cd /home/z/my-project
-setsid nohup bunx next dev -p 3000 >> dev.log 2>&1 &
-disown
+# الگوی دیمن واقعی (spawn+detached+unref+خروج فوری والد) — تنها الگویی که از
+# جمع‌شدن فرایندهای پس‌زمینه بین فراخوانی‌ها جان سالم به‌در می‌برد (اثبات ۲۰۲۶-۱۱-۱۰
+# در SNAPSHOT سربرگ ۵۴مین: setsid/nohup/disown ~۳۰ثانیه‌ای مُرد؛ دیمن زنده ماند).
+bun scripts/dev-server-daemon.mjs bunx next dev -p 3000
 for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
   sleep 5
   CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/ --max-time 8)
