@@ -5720,3 +5720,8 @@ Stage Summary:
 - کنترل‌های پس از کامیت: `src/lib/word-in-context.ts` SHA256 `a02945d6…` آغاز=پایان (WAVE2 دست‌نخورده) · هوک `ee679bc1…` هر دو کپی · سه PDF منبع (`c4f9452`/`fcb1638`/`81d68be`) دست‌نخورده · `db/custom.db` = seed ۶۸۴ سؤال viu-preint (تغییر مجاز سندشده — `prisma/seed-viu-preint.ts`؛ صفر تغییر سؤال/Attempt سایر کتاب‌ها) · صفر تغییر فایل دادهٔ کتاب‌های موجود · `bun run lint` = ۰ · `git diff --check` پاک · توکن هرگز چاپ نشد
 - دلتای همین کامیت ثبت-اثبات: فقط یک سطر §۲ SNAPSHOT (ثبت SHA کامیت محتوایی + اثبات push) + بروز سطر زنجیرهٔ تاریخچهٔ §۲ + همین ورود worklog — عین الگوی چرخه‌های قبلی (§۱۰-۷)
 - **وضعیت: `VIU PHASE 4 (Pre-int & Int — ۱۰۰ درس) — DONE · VIU PHASE 5 (Upper — ۱۰۰ درس) — NOT AUTHORIZED · O1..O6 — APPROVED & DOCUMENTED · O7..O10 — OPEN · STEP 5 — CLOSED (2026-11-07) · STEP 6 — NOT AUTHORIZED — توقف اجباری؛ هیچ گام بعدی آغاز نمی‌شود — گام بعدی = فقط با فرمان صریح مالک (فاز ۵ یا WAVE2 یا فاز ۶)`**
+
+## ۱۴۰۵/۸/۲۱ — ۲۰۲۶-۱۱-۱۱ — اصلاحیهٔ تاریخ‌دار سطر تسک‌های پلتفرمی §۱۱-ب SNAPSHOT (صفر تغییر دیگر)
+- شناسهٔ cron فعال webDevReview = **id 523336** (fixed_rate ۹۰۰ثانیه — ثبت ۲۰۲۶-۱۱-۱۱ — پس از اتمام مأموریت فاز ۴) به‌جای id 520432 منقضی (ثبت ۲۰۲۶-۱۱-۱۰) — تسک‌های پلتفرمی سشن‌محورند؛ روش بازسازی (kind=webDevReview · fixed_rate=900s · توضیح الزامی) و جایگزین داخل ریپو (هوک + revive-server.sh الگوی دیمن) پابرجا و ثبت‌شده است.
+- دلتا: فقط یک سطر §۱۱-ب SNAPSHOT + همین ورود worklog — عین الگوی اصلاحیهٔ تاریخ‌دار ۲۰۲۶-۱۱-۱۰ (`d33192b`).
+- **وضعیت بدون تغییر: `VIU PHASE 4 — DONE · VIU PHASE 5 — NOT AUTHORIZED · O1..O6 — APPROVED & DOCUMENTED · O7..O10 — OPEN · STEP 5 — CLOSED · STEP 6 — NOT AUTHORIZED`**
