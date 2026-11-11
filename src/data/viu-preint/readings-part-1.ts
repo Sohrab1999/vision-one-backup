@@ -1744,8 +1744,8 @@ export const READINGS_PART_1: Reading[] = [
     source: "VIU Pre-int & Int 2nd ed — درس 10 (کتاب ص22-23)",
     paragraphs: [],
     exercise: {
-      instruction: "10.1 Find compound nouns on the opposite page connected with each of these topics. — 10.2 Complete each sentence with a suitable compound noun from the opposite page.",
-      instructionFa: "اسم‌های مرکب را در صفحهٔ مقابل که با هر یک از این موضوع‌ها مرتبط‌اند پیدا کنید. — هر جمله را با یک اسم مرکب مناسب از صفحهٔ مقابل کامل کنید.",
+      instruction: "10.1 Find compound nouns on the opposite page connected with each of these topics. — 10.2 Complete each sentence with a suitable compound noun from the opposite page. — 10.3 Take one word (the first part or the second part) from each compound and create a new compound. Use a dictionary to help you if necessary. Now mark the main stress on each of the compound nouns you have created.",
+      instructionFa: "اسم‌های مرکب را در صفحهٔ مقابل که با هر یک از این موضوع‌ها مرتبط‌اند پیدا کنید. — هر جمله را با یک اسم مرکب مناسب از صفحهٔ مقابل کامل کنید. — از هر اسم مرکب یک واژه (بخش اول یا دوم) را بردارید و یک مرکب جدید بسازید. در صورت نیاز از فرهنگ لغت کمک بگیرید. حالا تکیهٔ اصلی هر یک از اسم‌های مرکبی که ساخته‌اید را علامت بزنید.",
       items: [
         {
           en: "MONEY",
@@ -1848,6 +1848,54 @@ export const READINGS_PART_1: Reading[] = [
           fa: "شلوار جین تو کثیف بود، پس آن را با مال من در ماشین لباسشویی گذاشتم.",
           answerEn: "2 traffic jam | 3 film star | 4 traffic lights | 5 waiting room | 6 babysitter | 7 sunglasses | 8 income tax | 9 hair dryer | 10 bus stop | 11 science fiction | 12 washing machine",
           answerFa: "۲ ترافیک سنگین | ۳ ستاره فیلم | ۴ چراغ راهنمایی | ۵ اتاق انتظار | ۶ نگهدار کودک | ۷ عینک آفتابی | ۸ مالیات بر درآمد | ۹ خشک کن مو | ۱۰ ایستگاه اتوبوس | ۱۱ علمی-تخیلی | ۱۲ ماشین لباسشویی"
+        },
+        {
+          en: "1 dining room ________________",
+          fa: "اتاق ناهارخوری",
+          answerEn: "living room, waiting room, chat room, bedroom, bathroom, classroom",
+          answerFa: "اتاق نشیمن، اتاق انتظار، اتاق گفتگو، اتاق خواب، حمام، کلاس درس"
+        },
+        {
+          en: "2 film star ________________",
+          fa: "ستارهٔ فیلم",
+          answerEn: "pop star, rock star, film actor, film director",
+          answerFa: "ستاره پاپ، ستاره راک، بازیگر فیلم، کارگردان فیلم"
+        },
+        {
+          en: "3 credit card ________________",
+          fa: "کارت اعتباری",
+          answerEn: "birthday card, postcard, Christmas card, phone card, credit limit",
+          answerFa: "کارت تولد، پستال، کارت کریسمس، کارت تلفن، سقف اعتبار"
+        },
+        {
+          en: "4 toothpaste ________________",
+          fa: "خمیردندان",
+          answerEn: "toothbrush, toothache, toothpick",
+          answerFa: "مسواک، دندان درد، خلال دندان"
+        },
+        {
+          en: "5 traffic lights ________________",
+          fa: "چراغ راهنمایی",
+          answerEn: "traffic jam, traffic warden, street lights",
+          answerFa: "ترافیک سنگین، مأمور راهنمایی و رانندگی، چراغ‌های خیابان"
+        },
+        {
+          en: "6 sunglasses ________________",
+          fa: "عینک آفتابی",
+          answerEn: "sunshine, suntan, sunshade, sunburn",
+          answerFa: "آفتاب، برنزه شدن، سایه بان، آفتاب‌سوختگی"
+        },
+        {
+          en: "7 hair dryer ________________",
+          fa: "سشوار",
+          answerEn: "haircut, hairdresser, hairstyle, tumble dryer",
+          answerFa: "کوتاهی مو، آرایشگر، مدل مو، خشک‌کن لباس"
+        },
+        {
+          en: "8 boyfriend ________________",
+          fa: "دوست‌پسر",
+          answerEn: "girlfriend, pen friend, school friend",
+          answerFa: "دختر دوست، دوست نامه‌ای، دوست مدرسه‌ای"
         }
       ]
     }
@@ -1905,9 +1953,34 @@ export const READINGS_PART_1: Reading[] = [
       }
     ],
     exercise: {
-      instruction: "11.1 Match words from the left-hand box with words from the right to form ten compounds. Example first-class — 11.5 Write about yourself using ten different compound adjectives from the opposite page. You can describe yourself, your personality, your family, your clothes, the place where you live, the journeys you make, etc. Compare your answers with someone else, if possible.",
-      instructionFa: "کلمات کادر سمت چپ را با کلمات سمت راست ترکیب کنید تا ده ترکیب ساخته شود. — درباره خودتان با استفاده از ده صفت ترکیبی متفاوت از صفحه مقابل بنویسید. می‌توانید خودتان، شخصیت‌تان، خانواده، لباس‌ها، مکان زندگی و سفرهایتان را توصیف کنید. در صورت امکان پاسخ‌هایتان را با دیگری مقایسه کنید.",
-      items: []
+      instruction: "11.1 Match words from the left-hand box with words from the right to form ten compounds. Example first-class — 11.3 Find two examples to complete these compound adjectives. — 11.5 Write about yourself using ten different compound adjectives from the opposite page. You can describe yourself, your personality, your family, your clothes, the place where you live, the journeys you make, etc. Compare your answers with someone else, if possible.",
+      instructionFa: "کلمات کادر سمت چپ را با کلمات سمت راست ترکیب کنید تا ده ترکیب ساخته شود. — دو مثال پیدا کنید تا این صفات ترکیبی کامل شوند. — درباره خودتان با استفاده از ده صفت ترکیبی متفاوت از صفحه مقابل بنویسید. می‌توانید خودتان، شخصیت‌تان، خانواده، لباس‌ها، مکان زندگی و سفرهایتان را توصیف کنید. در صورت امکان پاسخ‌هایتان را با دیگری مقایسه کنید.",
+      items: [
+        {
+          en: "well- ________ ________",
+          fa: "well- ...",
+          answerEn: "well-paid; well-organised; well-written, well-equipped, etc.",
+          answerFa: "پردرآمد؛ منظم نوشته شده؛ خوب نوشته شده، مجهز، و غیره."
+        },
+        {
+          en: "________ ________ -time",
+          fa: "... -time",
+          answerEn: "part-time; full-time",
+          answerFa: "پاره وقت؛ تمام وقت"
+        },
+        {
+          en: "badly- ________ ________",
+          fa: "badly- ...",
+          answerEn: "badly-written; badly-dressed; badly-behaved; badly-organised, etc.",
+          answerFa: "بد نوشته شده؛ بد پوشیده؛ بد اخلاق؛ بی‌نظم، و غیره."
+        },
+        {
+          en: "________ ________ -handed",
+          fa: "... -handed",
+          answerEn: "right-handed; left-handed",
+          answerFa: "دست راست؛ دست چپ"
+        }
+      ]
     }
   },
   {

@@ -360,13 +360,28 @@ function convertUnit(n, rec) {
             // natural choice set for "Are these phrases, sentences or questions?" exercises)
             // > unit vocabulary of the same lesson.
             const correctNorm = normalize(correct);
+            // QA فاز ۴ (راستی‌آزمایی مرورگری): پاسخِ چاپیِ «ردیف چندواژه‌ای» (مثل ردیف‌های
+            // compound nouns تمرین 10.3) یا ردیفِ bank شروع‌شده با «Examples» گزینهٔ آزمون
+            // معتبری نمی‌سازد — چنین تمرینی عین قاعدهٔ طلایی به ReadingExercise برمی‌گردد.
+            const rowArtifact = (s) => {
+              const t = String(s ?? "").trim();
+              if (/^examples?\b/i.test(t)) return true; // ردیف بانک «Examples …»
+              if ((t.match(/,/g) || []).length >= 2) return true; // ردیف چاپی چندواژه‌ای (مثل compound nouns 10.3)
+              // پاسخ‌های چندواریانته با «؛» الگوی پذیرفته‌شدهٔ فاز ۳ می‌مانند (در فاز ۳ با همین شکل QA و تأیید شدند)
+              return false;
+            };
+            if (rowArtifact(correct)) {
+              allOk = false;
+              return;
+            }
             const distinctAnswers = [...new Set(
               Object.values(parsed)
                 .map((a) => firstAlternate(a))
                 .filter((a) => a && normalize(a) !== correctNorm),
             )];
-            const pool =
+            const poolRaw =
               bank.length > 0 ? bank : distinctAnswers.length >= 2 ? distinctAnswers : vocabRows.map((v) => v.word);
+            const pool = poolRaw.filter((w) => !rowArtifact(w));
             const distractors = pool.filter((w) => typeof w === "string" && w.trim() && normalize(w) !== correctNorm);
             const uniq = [...new Set(distractors.map((w) => w.trim()))];
             if (uniq.length >= 1) {
