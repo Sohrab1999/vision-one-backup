@@ -433,6 +433,15 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
   const srsBox = srsItem?.box ?? 0;
   const isLearned = learned.has(hit.word);
 
+  // O6 — قاعدهٔ عمومی «مدخل بدون تصویر» (تصمیم مصوب مالک ۲۰۲۶-۱۱-۰۸ — گزینهٔ B):
+  // در مدخل‌های سه کتاب جدید VIU، جایگاه تصویر حفظ می‌شود و پیام کوتاه «تصویری موجود نیست» نمایش داده می‌شود؛
+  // نبودِ تصویر هرگز به‌عنوان خطا/خرابی/تصویرِ ردشده معرفی نمی‌شود (تفکیک NO IMAGE از REJECT) و هیچ اعتباری القا نمی‌کند.
+  // دامنه: فقط مدخل‌های واقعی (واژگان/دیکشنری) کتاب‌های VIU — رفتار ۱۱ کتاب موجود بایت‌به‌بیت بدون تغییر می‌ماند.
+  const isViuEntry =
+    (bookId === "viu-elem" || bookId === "viu-preint" || bookId === "viu-upper") &&
+    Boolean(hit.vocab || hit.dict);
+  const viuNoImage = isViuEntry && memImg.word !== hit.word;
+
   // F-CV-2: پیام miss نام جزوهٔ فعال را می‌آورد — دانش‌آموز می‌فهمد اول «همین جزوه» گشته (شفافیت cascade)
   const activeBookTitle = bookId ? getBookMeta(bookId)?.title : undefined;
   const missMessage = hit.word.includes(" ")
@@ -552,6 +561,14 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
         <p className="mt-2 rounded-lg bg-primary/10 px-2.5 py-1.5 text-[13px] font-bold leading-6">
           {hit.vocab.meaning}
         </p>
+      )}
+
+      {/* O6 — جایگاه تصویرِ حفظ‌شده برای مدخل بدون تصویر: پیام کوتاه و شفاف — نه خطا، نه تصویر ردشده (فقط کتاب‌های VIU) */}
+      {viuNoImage && (
+        <div role="status" className="mt-2.5 flex flex-col items-center justify-center gap-1 rounded-xl border bg-muted/30 px-3 py-6">
+          <span aria-hidden className="text-lg leading-none text-muted-foreground/40">◌</span>
+          <p className="text-[11.5px] font-bold text-muted-foreground">تصویری موجود نیست</p>
+        </div>
       )}
 
       {/* تصویر حافظه (Dual Coding) — فقط برای واژهِ فعلی رندر می‌شود */}
