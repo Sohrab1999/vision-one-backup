@@ -1,10 +1,11 @@
 // Phase-5 independent accounting: raw evidence → built data (like Phase-4 §B-۴)
-const fs = require("fs");
+import { readFileSync } from "node:fs";
+
 const pad = (n) => String(n).padStart(3, "0");
 
 let rawVocab = 0, rawLines = 0, rawEx = 0, rawItems = 0, emptyFiltered = 0, dupes = 0;
 for (let n = 1; n <= 100; n++) {
-  const r = JSON.parse(fs.readFileSync("docs/qa/viu-phase5-upper/unit-" + pad(n) + ".json", "utf8"));
+  const r = JSON.parse(readFileSync(new URL(`./unit-${pad(n)}.json`, import.meta.url), "utf8"));
   if (r.missingInScan) continue;
   const local = new Set();
   for (const v of r.vocab || []) {

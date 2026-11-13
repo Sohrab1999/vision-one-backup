@@ -139,6 +139,16 @@ export const BOOKS: BookMeta[] = [
     emoji: "🌿",
     available: true,
   },
+  {
+    id: "viu-upper",
+    title: "Vocabulary in Use — Upper-int",
+    gradeLabel: "فوق‌متوسط — Cambridge",
+    author: "Michael McCarthy & Felicity O'Dell",
+    tagline: "۱۰۰ درس واژگان فوق‌متوسط — متن دو زبانه، واژگان هر درس و آزمون چهارگزینه‌ای از خود کتاب",
+    color: "violet",
+    emoji: "🌳",
+    available: true,
+  },
 ];
 
 // ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
@@ -158,6 +168,7 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "hill-adv": () => import("../hill-adv").then((m) => m.HILL_ADVANCED_BOOK),
   "viu-elem": () => import("../viu-elem").then((m) => m.VIU_ELEMENTARY_BOOK),
   "viu-preint": () => import("../viu-preint").then((m) => m.VIU_PREINT_BOOK),
+  "viu-upper": () => import("../viu-upper").then((m) => m.VIU_UPPER_BOOK),
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {
