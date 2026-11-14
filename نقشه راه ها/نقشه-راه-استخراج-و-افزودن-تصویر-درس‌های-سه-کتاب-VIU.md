@@ -105,7 +105,7 @@ RECOVERY EVENT 8 — HANDLED · VIU ROADMAP — CLOSED · O1..O6 — APPROVED & 
 
 | قلم | ثبت |
 |---|---|
-| تاریخ | ۱۴۰۵/۸/۲۴ — ۲۰۲۶-۱۱-۱۴ |
+| تاریخ | ۱۴۰۵/۸/۲۳ — ۲۰۲۶-۱۱-۱۴ |
 | فرمان مالک فاز ۰ | پیام IM channel `zai-web` — trace `1a1db7d0c12485d1` — session `web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574` — متن دو چک‌باکس فاز ۰/۱ + «شروع کن:» + ده‌بندی الزام پایداری |
 | اجرا | فاز ۱ کامل (سرشماری VLM توأم + متریک متقاطع + ۲۵ پروب تأکیدی + برآورد حجم واقعی) — گزارش `docs/qa/viu-images-phase1-census-report-2026-11-14.md` |
 | دلتای مخزن | ۴ اسکریپت `scripts/viu-image-*` + ۴ سند/دادهٔ `docs/qa/viu-images-phase1-*` + همین سند + SNAPSHOT/worklog — صفر فایل کد/دادهٔ محصول/تصویر/db/WAVE2/هوک |
