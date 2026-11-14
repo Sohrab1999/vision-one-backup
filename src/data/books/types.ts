@@ -43,6 +43,7 @@ export const SCOPED_STORE_NAMES = [
   "rounds",
   "srs-settings",
   "srs-daily",
+  "lesson-progress", // گزینهٔ ① آموزش درس‌محور — مصوب مالک ۲۰۲۶-۱۱-۱۴
 ] as const;
 
 export type ScopedStoreName = (typeof SCOPED_STORE_NAMES)[number];

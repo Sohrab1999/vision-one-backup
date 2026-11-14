@@ -458,6 +458,26 @@ function readingsOnlyLoader(
 }
 
 /**
+ * VIU (واژه‌محور): readings + chapters + verbs — بدون مکالمه/گرامر
+ * (ساختار مستند سند پیشنهاد آموزش §B: dictionary=0 و grammarLessons=0 برای VIU —
+ * کتاب واژه‌محور است؛ متون درس + نقل‌قول فصل + جدول فعل بی‌قاعده).
+ * گزینهٔ ② آموزش (مصوب مالک ۲۰۲۶-۱۱-۱۴): «مثال‌های همین درس» — موج ۱ برای کتاب‌های VIU.
+ */
+function viuLoader(
+  bookId: BookId,
+  mods: {
+    readings: () => Promise<{ READING_LIST: Reading[] }>;
+    meta: () => Promise<{ CHAPTERS: ChapterMeta[] }>;
+    verbs: () => Promise<{ VERBS: { base: string; past: string; participle: string }[] }>;
+  },
+): SentenceLoader {
+  return async () => {
+    const [r, m, v] = await Promise.all([mods.readings(), mods.meta(), mods.verbs()]);
+    return buildSentenceIndex(bookId, r.READING_LIST, [], [], m.CHAPTERS, v.VERBS);
+  };
+}
+
+/**
  * جدول SENTENCE_LOADERS (الگوی سند UX §۳): هر ۱۱ کتاب به‌عنوان «کتاب فعال»
  * قابل جست‌وجو هستند (D1) — کتاب‌های پایه‌دار مکالمه/گرامر/جدول فعل هم دارند؛
  * hill/collocations فقط ریدینگ + نقل‌قول. dynamic import فقط زیرماژول‌های متنی.
@@ -524,6 +544,21 @@ export const SENTENCE_LOADERS: Record<BookId, SentenceLoader> = {
   "hill-adv": readingsOnlyLoader("hill-adv", {
     readings: () => import("../data/hill-adv/readings"),
     meta: () => import("../data/hill-adv/book-meta"),
+  }),
+  "viu-elem": viuLoader("viu-elem", {
+    readings: () => import("../data/viu-elem/readings"),
+    meta: () => import("../data/viu-elem/book-meta"),
+    verbs: () => import("../data/viu-elem/verbs"),
+  }),
+  "viu-preint": viuLoader("viu-preint", {
+    readings: () => import("../data/viu-preint/readings"),
+    meta: () => import("../data/viu-preint/book-meta"),
+    verbs: () => import("../data/viu-preint/verbs"),
+  }),
+  "viu-upper": viuLoader("viu-upper", {
+    readings: () => import("../data/viu-upper/readings"),
+    meta: () => import("../data/viu-upper/book-meta"),
+    verbs: () => import("../data/viu-upper/verbs"),
   }),
 };
 

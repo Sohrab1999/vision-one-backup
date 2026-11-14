@@ -19,7 +19,7 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { setPracticeIntent } from "@/lib/practice-intent";
 import { requestView } from "@/lib/nav-store";
 import { CrossBookSection } from "./cross-book-section";
-import { WordContextSection } from "./word-context-section";
+import { WordContextSection, LessonExamplesSection } from "./word-context-section";
 
 /**
  * Word lookup — کلیک روی هر واژهٔ انگلیسی در متن‌ها، معنی و دیکشنری همان واژه را نشان می‌دهد.
@@ -375,12 +375,27 @@ export function ClickableEnText({ text, className }: { text: string; className?:
           <span className="truncate">جست‌وجوی «{selSearch.raw}»</span>
         </button>
       )}
-      {sel && <LookupPopover sel={sel} onClose={() => setSel(null)} />}
+      {sel && (
+        <LookupPopover
+          sel={sel}
+          onClose={() => setSel(null)}
+          onSelectWord={(h) => setSel((s) => (s ? { hit: h, x: s.x, y: s.y } : s))}
+        />
+      )}
     </>
   );
 }
 
-function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: number }; onClose: () => void }) {
+function LookupPopover({
+  sel,
+  onClose,
+  onSelectWord,
+}: {
+  sel: { hit: LookupHit; x: number; y: number };
+  onClose: () => void;
+  /** گزینهٔ ۲ آموزش — چیپ «واژه‌های هم‌درس» با این callback در همان پاپ‌آپ به واژهٔ دیگر می‌پرد */
+  onSelectWord?: (h: LookupHit) => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { bookId } = useBook();
   const starred = useStarredWords();
@@ -441,6 +456,11 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
     (bookId === "viu-elem" || bookId === "viu-preint" || bookId === "viu-upper") &&
     Boolean(hit.vocab || hit.dict);
   const viuNoImage = isViuEntry && memImg.word !== hit.word;
+
+  // گزینهٔ ۲ سند آموزش (مصوب مالک ۲۰۲۶-۱۱-۱۴): کارت واژهٔ غنی — فقط مدخل‌های واژگانی VIU
+  // که شمارهٔ درس دارند: «مثال‌های همین درس» (از word-in-context موج ۱) + چیپ «واژه‌های هم‌درس».
+  // دکمهٔ تلفظ از قبل بالای پاپ‌آپ هست (SpeakButton — بدون تغییر).
+  const viuLesson = isViuEntry && hit.vocab ? hit.vocab.lesson : null;
 
   // F-CV-2: پیام miss نام جزوهٔ فعال را می‌آورد — دانش‌آموز می‌فهمد اول «همین جزوه» گشته (شفافیت cascade)
   const activeBookTitle = bookId ? getBookMeta(bookId)?.title : undefined;
@@ -636,6 +656,16 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
             </span>
           </span>
         </div>
+      )}
+
+      {/* گزینهٔ ۲ آموزش (مصوب مالک ۲۰۲۶-۱۱-۱۴) — زیر ردیف SRS، پیش از بلوک دیکشنری؛
+          جایگاه O6 تصویر (بالا، زیر معنی) بایت‌به‌بایت دست‌نخورده می‌ماند؛
+          فقط‌خواندنی — هر دو بلوک هیچ نوشتنی در استورها انجام نمی‌دهند */}
+      {viuLesson !== null && (
+        <>
+          <LessonExamplesSection key={`les-${hit.word}`} lesson={viuLesson} norm={hit.word} />
+          <SameLessonChips key={`chips-${hit.word}`} lesson={viuLesson} currentWord={hit.word} onSelect={onSelectWord} />
+        </>
       )}
 
       {hit.dict ? (
@@ -870,6 +900,48 @@ function WordNoteSection({ bookId, word }: { bookId: string; word: string }) {
             حذف
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ── چیپ «واژه‌های هم‌درس» (گزینهٔ ۲ سند آموزش — مصوب مالک ۲۰۲۶-۱۱-۱۴) ──
+// فقط برای مدخل‌های واژگانی VIU؛ کلیک روی چیپ = پرش به همان واژه در همان پاپ‌آپ
+// (بدون بستن پاپ‌آپ — onSelectWord جای sel.parent را عوض می‌کند). فقط‌خواندنی.
+
+function SameLessonChips({
+  lesson,
+  currentWord,
+  onSelect,
+}: {
+  lesson: number;
+  currentWord: string;
+  onSelect?: (h: LookupHit) => void;
+}) {
+  const data = useBookData();
+  const chips = data.vocab.ofLesson(lesson).filter((v) => v.word !== currentWord).slice(0, 8);
+  if (chips.length === 0) return null;
+  const label = data.vocab.lessons.find((l) => l.lesson === lesson)?.label ?? `درس ${lesson}`;
+  return (
+    <div className="mt-2.5 rounded-xl border bg-muted/40 p-2.5">
+      <p className="mb-1.5 flex items-center gap-1 text-[11px] font-black text-primary">
+        <BookOpen size={11} />
+        واژه‌های هم‌درس ({label})
+      </p>
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label={`پرش سریع به واژه‌های ${label}`}>
+        {chips.map((v) => (
+          <button
+            key={v.word}
+            type="button"
+            onClick={() => onSelect?.({ word: v.word, vocab: v })}
+            title={`${v.word} — ${v.meaning}`}
+            className="flex min-h-8 items-center rounded-full border border-border bg-card px-2.5 transition-all hover:border-primary/50 hover:bg-primary/10 active:scale-95"
+          >
+            <span dir="ltr" className="font-en max-w-[120px] truncate text-[11px] font-bold text-foreground/85">
+              {v.word}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   );

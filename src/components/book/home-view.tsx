@@ -52,6 +52,7 @@ import { useWeeklyInfo } from "@/lib/weekly-store";
 import { usePulses } from "@/lib/use-daily-pulse";
 import type { ViewId } from "./app-header";
 import { SpeakButton } from "./speak-button";
+import { ViuTeachingSection, isViuTeachingPilotBook } from "./viu-teaching-section";
 
 interface AttemptStats {
   attempts: number;
@@ -201,6 +202,13 @@ export function HomeView({ onNavigate }: { onNavigate: (v: ViewId) => void }) {
           </div>
         </div>
       </section>
+
+      {/* ── آموزش درس‌محور (پایلوت مصوب مالک ۲۰۲۶-۱۱-۱۴ — فقط viu-elem) ── */}
+      {isViuTeachingPilotBook(bookId) && (
+        <section>
+          <ViuTeachingSection />
+        </section>
+      )}
 
       {/* ── هدف روزانه ─────────────────────────────── */}
       <section>
