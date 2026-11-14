@@ -5929,3 +5929,10 @@ Stage Summary:
 - **مرز صادقانه:** این سند پیشنهاد است نه اجرا — GLM هیچ گزینه‌ای را تصویب نکرد؛ مادهٔ O2-V فقط پیشنهاد متن برای رأی مالک در فرمان فاز ۳؛ فاز ۳ آغاز نشد.
 - **باطری:** lint=۰ (پیش از کامیت اجرا می‌شود) · `GET /` = 200 · ثبات‌ها آغاز=پایان · **صفر تغییر کد/دادهٔ محصول/db/UI/WAVE2/هوک/PDF — صفر بایت تصویر استخراج/رندر/وارد شد (حتی رندر /tmp در فاز ۲ انجام نشد)**.
 - **وضعیت:** `VIU IMAGE ROADMAP — PHASE 0 CLEARED · PHASE 1 EXECUTED · PHASE 2 EXECUTED (سند ثبت شد) · PHASE 3 PENDING OWNER MANDATE` · `O2 — بدون تغییر (Word Atlas) · O2-V — PROPOSED (رأی مالک)` · `VIU ROADMAP — CLOSED (بدون تغییر)` · `O1..O6 — APPROVED & DOCUMENTED (بدون تغییر)` · `O7..O10 — OPEN` · `STEP 6 — NOT AUTHORIZED — توقف اجباری؛ هیچ گام بعدی بدون فرمان صریح مالک`.
+
+## ۱۴۰۵/۸/۲۳ — ۲۰۲۶-۱۱-۱۴ — ثبت اثبات فاز ۲ نقشه راه تصویر VIU (قاعدهٔ §۱۰-۷ — صفر تغییر دیگر)
+
+- **کامیت محتوایی:** `31a8171aeb9e988be113659d63ab6f9a089b511a` (۳ فایل — +۲۱۷/۷- — والد `5b64db3`: سند تصمیم فاز ۲ `docs/decisions/viu-image-phase2-owner-decision-proposal-2026-11-14.md` (جدید) + نقشه راه تصاویر (چک‌باکس فاز ۲-۱ [x] + سربرگ وضعیت + §F + بلوک §H) + worklog ورود کامل) — push خودکار هوک اثبات‌شده (`5b64db3..31a8171 main -> main` — لاگ `/tmp/devhook.log` «auto-push OK» ۲۰۲۶-۱۱-۱۴ ۲۰:۱۴) · `git ls-remote backup refs/heads/main` = `31a8171…` = HEAD · divergence **۰/۰**.
+- **کامیت ثبت-اثبات (این کامیت):** SNAPSHOT (سربرگ ۶۸مین + §۲ لحظهٔ اسنپ‌شات فاز ۲ + §۳ + §۴ + §۵ + §۱۱-ج ممیزی جدید) + worklog (این بلوک) — صفر تغییر دیگر — push خودکار هوک + اثبات `git ls-remote`.
+- **باطری:** lint=۰ · GET / = 200 · ثبات‌ها آغاز=پایان — صفر فایل کد/داده/db/تصویری/اجرایی در کل دلتا.
+- **وضعیت پایانی:** `VIU IMAGE ROADMAP — PHASE 0 CLEARED · PHASE 1 EXECUTED · PHASE 2 EXECUTED (سند ثبت شد) · PHASE 3 PENDING OWNER MANDATE (رأی مالک: پاسخ پ۱..پ۶ §G سند فاز ۲ + فرمان شروع)` · `O2 — بدون تغییر (Word Atlas) · O2-V — PROPOSED (رأی مالک در فرمان فاز ۳)` · `VIU ROADMAP — CLOSED (بدون تغییر)` · `RECOVERY EVENT 8 — HANDLED` · `O1..O6 — APPROVED & DOCUMENTED (بدون تغییر)` · `O7..O10 — OPEN` · `STEP 6 — NOT AUTHORIZED — توقف اجباری؛ هیچ گام بعدی بدون فرمان صریح مالک`.
