@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BookMarked, MessagesSquare, Languages, CircleHelp, Eye } from "lucide-react";
+import { BookMarked, MessagesSquare, Languages, CircleHelp, Eye, ImagePlay } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { faNum } from "@/lib/class-store";
 import { SpeakButton } from "./speak-button";
 import { ClickableEnText } from "./word-lookup";
 import { useBook, useBookData } from "@/lib/book-context";
+import { viuLessonImages } from "@/data/viu-images/manifest";
 import type { Reading, ReadingExercise, Conversation } from "@/data/types";
 
 /** برچسب‌های تب درس — به‌صورت خودکار از محتوای کتاب فعال ساخته می‌شوند */
@@ -81,6 +82,11 @@ export function ReadingCard({
   reading: Reading;
   showFa?: boolean;
 }) {
+  const { bookId } = useBook();
+  // O2-V فاز ۳ پایلوت — تصویر ارائهٔ درس VIU بالای متن (اتصال فقط افزودنی — صفر تغییر متن موجود)
+  // فقط کتاب‌های VIU و فقط درس‌های مانیفست مصوب (۶ درس پایلوت) — lazy-load — attribution فقط «منابع» فوتر (O4)
+  const lessonImages = viuLessonImages(bookId, reading.lesson);
+
   return (
     <Card className="mx-auto w-full max-w-3xl lg:max-w-5xl">
       <CardContent className="p-5 space-y-4">
@@ -103,6 +109,25 @@ export function ReadingCard({
             />
           </div>
         </div>
+
+        {/* O2-V فاز ۳ پایلوت — تصاویر ارائهٔ درس (صفحه‌به‌صفحه به ترتیب PDF) — بالای متن درس */}
+        {lessonImages.map((img) => (
+          <figure key={img.src} className="overflow-hidden rounded-xl border bg-muted/20 shadow-sm">
+            <img
+              src={img.src}
+              alt={img.alt}
+              loading="lazy"
+              decoding="async"
+              className="block w-full"
+            />
+            <figcaption className="flex items-center justify-center gap-1.5 bg-muted/40 px-3 py-1.5">
+              <ImagePlay size={12} className="shrink-0 text-muted-foreground" />
+              <span className="text-[11px] font-bold text-muted-foreground">
+                تصویر ارائهٔ درس {faNum(reading.lesson)}
+              </span>
+            </figcaption>
+          </figure>
+        ))}
 
         <div className="space-y-3">
           {reading.paragraphs.map((p, i) => (
