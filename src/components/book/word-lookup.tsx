@@ -10,8 +10,6 @@ import { readUserName } from "@/lib/name-store";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useBook, useBookData } from "@/lib/book-context";
-import { faNum } from "@/lib/class-store";
-import { viuLessonCover } from "@/data/viu-images/manifest";
 import type { DictEntry, VocabEntry, VocabWord } from "@/data/types";
 import { getBookMeta } from "@/data/books/registry";
 import { SpeakButton } from "./speak-button";
@@ -442,14 +440,7 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
   const isViuEntry =
     (bookId === "viu-elem" || bookId === "viu-preint" || bookId === "viu-upper") &&
     Boolean(hit.vocab || hit.dict);
-
-  // O2-V فاز ۳ پایلوت (مصوب فرمان مالک trace 1a1dbbb24436f159): «تصویر ارائهٔ درس VIU» —
-  // درس‌محور: هر مدخل واقعیِ درس‌های مانیفست مصوب (۶ درس پایلوت) تصویر صفحهٔ ارائهٔ همان درس را
-  // از اسکن مالک می‌گیرد (WebP ≤۱۲۰KB · lazy-load) — بقیهٔ مدخل‌ها عین O6 با پیام «تصویری موجود نیست».
-  // attribution فقط بخش «منابع» فوتر (O4) — صفر attribution کنار تصویر.
-  const entryLesson = hit.vocab?.lesson ?? hit.dict?.lesson;
-  const lessonCover = isViuEntry ? viuLessonCover(bookId, entryLesson) : null;
-  const viuNoImage = isViuEntry && !lessonCover && memImg.word !== hit.word;
+  const viuNoImage = isViuEntry && memImg.word !== hit.word;
 
   // F-CV-2: پیام miss نام جزوهٔ فعال را می‌آورد — دانش‌آموز می‌فهمد اول «همین جزوه» گشته (شفافیت cascade)
   const activeBookTitle = bookId ? getBookMeta(bookId)?.title : undefined;
@@ -570,26 +561,6 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
         <p className="mt-2 rounded-lg bg-primary/10 px-2.5 py-1.5 text-[13px] font-bold leading-6">
           {hit.vocab.meaning}
         </p>
-      )}
-
-      {/* O2-V فاز ۳ پایلوت — تصویر ارائهٔ درس VIU در جایگاه تصویر پاپ‌آپ (درس‌محور — فقط مانیفست مصوب):
-          هنگام نمایش تصویر حافظهٔ تولیدی پنهان می‌شود تا دو تصویر هم‌زمان انباشته نشوند */}
-      {lessonCover && memImg.word !== hit.word && (
-        <figure className="mt-2.5 overflow-hidden rounded-xl border shadow-sm">
-          <img
-            src={lessonCover.src}
-            alt={lessonCover.alt}
-            loading="lazy"
-            decoding="async"
-            className="block w-full bg-muted"
-          />
-          <figcaption className="flex items-center justify-center gap-1.5 bg-muted/40 px-2 py-1.5">
-            <ImagePlay size={12} className="shrink-0 text-muted-foreground" />
-            <span className="text-[10.5px] font-bold text-muted-foreground">
-              تصویر ارائهٔ درس {faNum(lessonCover.lesson)}
-            </span>
-          </figcaption>
-        </figure>
       )}
 
       {/* O6 — جایگاه تصویرِ حفظ‌شده برای مدخل بدون تصویر: پیام کوتاه و شفاف — نه خطا، نه تصویر ردشده (فقط کتاب‌های VIU) */}
