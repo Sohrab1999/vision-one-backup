@@ -5628,3 +5628,9 @@ Stage Summary:
 - **مستندات = ۵ فایل:** سند ثبت جدید + دفتر مصنوعات مفقود + SNAPSHOT (سربرگ ۴۹مین ㊾ + §۲ + §۳ + §۴ + §۵ + §۶ (بازسازی با بستن گام پیشین در details — دلتا +۱/+۱) + §۷ + §۸ + §۹ + §۱۱-ج) + worklog (این ورود) + Roadmap جامع (یادداشت 📅 پس از ردیف ثبت O6).
 - **کنترل‌ها:** `bun run lint` = ۰ (exit 0) · `git diff --check` پاک · بازبینی کامل diff = فقط ۵ فایل مستنداتی (۱ جدید + ۴ به‌روزرسانی) · صفر فایل تصویری/اجرایی · db/هوک/WAVE2 بایت‌به‌بیت · توکن هرگز چاپ نشد · هیچ آرتیفت موقتی باقی نماند · commit ثبت اثبات طبق قاعدهٔ §۱۰-۷ بعداً.
 - **وضعیت: `OWNER RULINGS REGISTERED — IMPLEMENTATION NOT AUTHORIZED — PROPOSAL TEXT LOST (CHAT-ONLY) · FULL-PAGE-SCAN — REJECTED BY OWNER · O1..O6 — APPROVED & DOCUMENTED (UNCHANGED) · O7..O10 — OPEN · STEP 5 — CLOSED · STEP 6 — NOT AUTHORIZED · OWNER MANDATE — STANDING (RE-ASSERTED #7 — 2026-11-15) — توقف اجباری`**
+
+## ۱۴۰۵/۸/۲۴ — ۲۰۲۶-۱۱-۱۵ — ثبت اثبات دو رأی مالک — رد تصویر کل‌صفحه و جهت‌گیری ارائهٔ محتوای کتاب‌ها
+- **SHA کامیت محتوایی = `675b5b83b5384804a408dc5948c7162a08ac70c4`** (۵ فایل مستنداتی — ۱۱۴ افزودن/۳ حذف؛ والد `193269b`) — **اثبات: `git ls-remote backup refs/heads/main` = همین SHA (۰/۰ — صفر بازیابی؛ صفر reset/rebase/force) — push خودکار هوک post-commit.**
+- کنترل‌های پس از کامیت: `db/custom.db` SHA256 `20df56a5…`/1,236,992B آغاز=پایان (دست‌نخورده) · هوک post-commit `ee679bc1…` (هر دو کپی زنده/tracked برابر) آغاز=پایان · WAVE2 بایت‌به‌بیت خط ۶۶۵ (`a02945d6…`) · صفر فایل تصویری/اجرایی در diff.
+- دلتای همین کامیت ثبت-اثبات: فقط یک جملهٔ §۲ SNAPSHOT (ثبت SHA واقعی کامیت محتوایی 675b5b8 و اثبات ls-remote ۰/۰ و push خودکار هوک) + این بلوک worklog.
+- **وضعیت: `OWNER RULINGS REGISTERED — IMPLEMENTATION NOT AUTHORIZED — PROPOSAL TEXT LOST (CHAT-ONLY) · FULL-PAGE-SCAN — REJECTED BY OWNER · O1..O6 — APPROVED & DOCUMENTED (UNCHANGED) · O7..O10 — OPEN · STEP 5 — CLOSED · STEP 6 — NOT AUTHORIZED · OWNER MANDATE — STANDING (RE-ASSERTED #7 — 2026-11-15) — توقف اجباری`**
