@@ -5995,3 +5995,9 @@ Stage Summary:
 - **درس استخراجی (الزام ۸):** ریشهٔ این واگرایی = آغاز نشست از خلاصهٔ کهنه بدون پیش‌بررسی `git ls-remote` در نخستین گام؛ پروتکل §۱۰-۱ (fetch/ls-remote قبل از هر اقدام) باید همیشه قبل از هر نوشتن اجرا شود — SNAPSHOT §۲ جدول این مأموریت + این ورود، هر دو تاریخ‌دار ثبت شدند.
 - **مستندات:** SNAPSHOT (سربرگ ۷۲مین + §۲ جدول جدید + §۱۱-ج ردیف ممیزی) + worklog (این ورود + بلوک ثبت-اثبات در کامیت بعد) — صفر تغییر کد/داده/db/تصویری.
 - **وضعیت: `OWNER MANDATE — STANDING (RE-ASSERTED #11 — 2026-11-15) · main = backup/main = 090bfde9 (۰/۰) · ARCHIVE REF PRESERVED · VIU TEACHING PILOT ①②④⑤ — AWAITING OWNER EVALUATION · VIU IMAGE ROADMAP — CLOSED BY OWNER VERDICT · O1..O6 — APPROVED & DOCUMENTED · O7..O10 — OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
+
+## ۱۴۰۵/۸/۲۴ — ۲۰۲۶-۱۱-۱۵ — ثبت اثبات ابلاغ مجدد یازدهم + رویداد بازیابی دهم (قاعدهٔ §۱۰-۷)
+- **SHA کامیت محتوایی ثبت رویداد = `dd528afc4c7abb011878477ed49c3711ade95eb3`** (۲ فایل مستنداتی — SNAPSHOT سربرگ ۷۲مین + §۲ + §۱۱-ج · worklog ورود کامل — والد `090bfde9`) — **اثبات: `git ls-remote backup refs/heads/main` = همین SHA · divergence ۰/۰ · push خودکار هوک.**
+- push رفرش آرشیو `archive/parallel-session-2026-11-15-presentation-registration` (d2c5a41) به Remote برای حفظ شواهد ممیزی (بدون force — رفرش جدا از main).
+- دلتای همین کامیت ثبت-اثبات: فقط یک سطر §۲ SNAPSHOT + این بلوک worklog.
+- **وضعیت: `OWNER MANDATE — STANDING (RE-ASSERTED #11 — 2026-11-15) · main = backup/main (۰/۰) · ARCHIVE REF PRESERVED ON REMOTE · VIU TEACHING PILOT ①②④⑤ — AWAITING OWNER EVALUATION · O7..O10 — OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
