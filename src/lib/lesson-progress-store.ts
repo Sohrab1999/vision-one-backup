@@ -20,6 +20,16 @@ import { readScoped, writeScoped, registerScopedReset } from "./book-storage";
 
 const STORE_NAME = "lesson-progress";
 
+/**
+ * شناسهٔ مراحل الگوی آموزشی مشترک (مأموریت مالک VIU-LEARNING-EXPERIENCE-UPGRADE-01 —
+ * ساختار ۶-مرحله‌ای Discover/Learn/Context/Practice/Use/Review) — افزودنی صرف؛
+ * قرارداد قدیمی (words/quizDone) بایت‌به‌بیت پابرجا می‌ماند و سازگاری عقب حفظ می‌شود.
+ */
+export const LESSON_STAGES = ["discover", "learn", "context", "practice", "use", "review"] as const;
+export type LessonStageId = (typeof LESSON_STAGES)[number];
+
+const MAX_WORD_LIST = 120;
+
 /** وضعیت پیشرفت یک درس */
 export interface LessonProgressEntry {
   /** گام ۱ (معرفی واژه‌ها) کامل شده */
@@ -32,6 +42,14 @@ export interface LessonProgressEntry {
   total: number;
   /** آخرین به‌روزرسانی (epoch ms) */
   at: number;
+  /** [افزودنی v2] زمان تکمیل هر مرحله (epoch ms) — کلیدها فقط از LESSON_STAGES */
+  stages?: Partial<Record<LessonStageId, number>>;
+  /** [افزودنی v2] واژه‌های دیده‌شده در مرحلهٔ یادگیری (مشاهده) */
+  seen?: string[];
+  /** [افزودنی v2] واژه‌های با پاسخ درست در تمرین */
+  correctWords?: string[];
+  /** [افزودنی v2] واژه‌های به‌کار‌رفته در ساخت جمله (مرحلهٔ کاربرد) */
+  usedWords?: string[];
 }
 
 type LessonProgressData = Record<string, LessonProgressEntry>;
@@ -57,13 +75,23 @@ function read(): LessonProgressData {
       if (!value || typeof value !== "object") continue;
       const words = value.words === true;
       const quizDone = value.quizDone === true;
-      if (!words && !quizDone) continue; // رکورد بی‌معنا هرگز نگه داشته نمی‌شود
+      // فیلدهای افزودنی v2 — هرگز رکورد دارای v2 را دور نمی‌ریزیم
+      const stagesRaw = (value.stages ?? null) as Record<string, unknown> | null;
+      const stages = sanitizeStages(stagesRaw);
+      const seen = sanitizeWordList(value.seen);
+      const correctWords = sanitizeWordList(value.correctWords);
+      const usedWords = sanitizeWordList(value.usedWords);
+      if (!words && !quizDone && !stages && !seen && !correctWords && !usedWords) continue; // رکورد بی‌معنا هرگز نگه داشته نمی‌شود
       out[key] = {
         words,
         quizDone,
         correct: Math.max(0, Math.floor(Number(value.correct ?? 0)) || 0),
         total: Math.max(0, Math.floor(Number(value.total ?? 0)) || 0),
         at: Math.max(0, Math.floor(Number(value.at ?? 0)) || 0),
+        ...(stages ? { stages } : {}),
+        ...(seen ? { seen } : {}),
+        ...(correctWords ? { correctWords } : {}),
+        ...(usedWords ? { usedWords } : {}),
       };
     }
     cache = out;
@@ -71,6 +99,35 @@ function read(): LessonProgressData {
     cache = {};
   }
   return cache;
+}
+
+function sanitizeStages(raw: Record<string, unknown> | null): Partial<Record<LessonStageId, number>> | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const out: Partial<Record<LessonStageId, number>> = {};
+  let any = false;
+  for (const stage of LESSON_STAGES) {
+    const v = raw[stage];
+    if (typeof v === "number" && Number.isFinite(v) && v > 0) {
+      out[stage] = Math.floor(v);
+      any = true;
+    }
+  }
+  return any ? out : undefined;
+}
+
+function sanitizeWordList(raw: unknown): string[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const item of raw) {
+    if (typeof item !== "string") continue;
+    const t = item.trim();
+    if (!t || seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+    if (out.length >= MAX_WORD_LIST) break;
+  }
+  return out.length > 0 ? out : undefined;
 }
 
 function subscribe(cb: () => void) {
@@ -96,16 +153,29 @@ function persist(next: LessonProgressData) {
   listeners.forEach((l) => l());
 }
 
-/** ثبت اتمام گام ۱ (معرفی واژه‌ها) — idempotent */
+/** ثبت اتمام گام ۱ (معرفی واژه‌ها) — idempotent — فیلدهای v2 حفظ می‌شوند */
 export function markLessonWords(lesson: number) {
   const key = String(lesson);
   const data = read();
   const cur = data[key];
   if (cur?.words) return;
-  persist({ ...data, [key]: { words: true, quizDone: cur?.quizDone ?? false, correct: cur?.correct ?? 0, total: cur?.total ?? 0, at: Date.now() } });
+  persist({
+    ...data,
+    [key]: {
+      words: true,
+      quizDone: cur?.quizDone ?? false,
+      correct: cur?.correct ?? 0,
+      total: cur?.total ?? 0,
+      at: Date.now(),
+      ...(cur?.stages ? { stages: cur.stages } : {}),
+      ...(cur?.seen ? { seen: cur.seen } : {}),
+      ...(cur?.correctWords ? { correctWords: cur.correctWords } : {}),
+      ...(cur?.usedWords ? { usedWords: cur.usedWords } : {}),
+    },
+  });
 }
 
-/** ثبت اتمام گام ۳ (تمرین همان درس) — total=0 یعنی «بدون تمرین بانکی» */
+/** ثبت اتمام گام تمرین — total=0 یعنی «بدون تمرین» — فیلدهای v2 حفظ می‌شوند */
 export function markLessonQuiz(lesson: number, correct: number, total: number) {
   const key = String(lesson);
   const data = read();
@@ -118,11 +188,74 @@ export function markLessonQuiz(lesson: number, correct: number, total: number) {
       correct: Math.max(0, Math.floor(correct) || 0),
       total: Math.max(0, Math.floor(total) || 0),
       at: Date.now(),
+      ...(cur?.stages ? { stages: cur.stages } : {}),
+      ...(cur?.seen ? { seen: cur.seen } : {}),
+      ...(cur?.correctWords ? { correctWords: cur.correctWords } : {}),
+      ...(cur?.usedWords ? { usedWords: cur.usedWords } : {}),
     },
   });
 }
 
-/** وضعیت هر درس — قرارداد گزینهٔ ⑤: نه‌شروع / در جریان / تکمیل */
+/** [v2] ثبت تکمیل یک مرحله از الگوی مشترک — idempotent */
+export function markLessonStage(lesson: number, stage: LessonStageId) {
+  const key = String(lesson);
+  const data = read();
+  const cur = data[key];
+  if (cur?.stages?.[stage]) return;
+  persist({
+    ...data,
+    [key]: {
+      words: cur?.words ?? false,
+      quizDone: cur?.quizDone ?? false,
+      correct: cur?.correct ?? 0,
+      total: cur?.total ?? 0,
+      at: Date.now(),
+      stages: { ...(cur?.stages ?? {}), [stage]: Date.now() },
+      ...(cur?.seen ? { seen: cur.seen } : {}),
+      ...(cur?.correctWords ? { correctWords: cur.correctWords } : {}),
+      ...(cur?.usedWords ? { usedWords: cur.usedWords } : {}),
+    },
+  });
+}
+
+/** [v2] ثبت وضعیت واژه‌های درس (مشاهده/پاسخ‌درست/به‌کار‌رفته) — ادغام یکتا با سقف */
+export function recordLessonWordStates(
+  lesson: number,
+  patch: { seen?: string[]; correct?: string[]; used?: string[] },
+) {
+  const key = String(lesson);
+  const data = read();
+  const cur = data[key];
+  const merge = (base: string[] | undefined, add: string[] | undefined) => {
+    if (!add || add.length === 0) return base;
+    const set = new Set(base ?? []);
+    for (const w of add) {
+      const t = w.trim();
+      if (t) set.add(t);
+    }
+    return [...set].slice(0, MAX_WORD_LIST);
+  };
+  const seen = merge(cur?.seen, patch.seen);
+  const correctWords = merge(cur?.correctWords, patch.correct);
+  const usedWords = merge(cur?.usedWords, patch.used);
+  if (seen === cur?.seen && correctWords === cur?.correctWords && usedWords === cur?.usedWords) return;
+  persist({
+    ...data,
+    [key]: {
+      words: cur?.words ?? false,
+      quizDone: cur?.quizDone ?? false,
+      correct: cur?.correct ?? 0,
+      total: cur?.total ?? 0,
+      at: Date.now(),
+      ...(cur?.stages ? { stages: cur.stages } : {}),
+      ...(seen ? { seen } : {}),
+      ...(correctWords ? { correctWords } : {}),
+      ...(usedWords ? { usedWords } : {}),
+    },
+  });
+}
+
+/** وضعیت هر درس — قرارداد گزینهٔ ⑤: نه‌شروع / در جریان / تکمیل (سازگار با عقب) */
 export type LessonStatus = "none" | "ongoing" | "done";
 
 export function lessonStatusOf(entry: LessonProgressEntry | undefined): LessonStatus {
@@ -130,6 +263,36 @@ export function lessonStatusOf(entry: LessonProgressEntry | undefined): LessonSt
   if (entry.words && entry.quizDone) return "done";
   if (entry.words || entry.quizDone) return "ongoing";
   return "none";
+}
+
+/**
+ * [v2] تکمیل صادقانهٔ درس با توجه به محتوای واقعی آن — مأموریت مالک: «نباید وضعیت
+ * درس‌های فاقد محتوای آموزشی را به‌اشتباه Completed نشان بدهی».
+ *  - درس با واژه (مسیر عادی): words && quizDone — قرارداد قدیمی بایت‌به‌بیت.
+ *  - درس بی‌واژه اما دارای متن/تمرین (مثل درس ۲۰ viu-elem): quizDone + انجام واقعی
+ *    بافت و تمرین — هرگز صرفِ کلیک، درس بی‌محتوا را «تکمیل» نمی‌کند.
+ */
+export function lessonCompletionOf(
+  entry: LessonProgressEntry | undefined,
+  content: { hasVocab: boolean },
+): LessonStatus {
+  if (!entry) return "none";
+  if (content.hasVocab) return lessonStatusOf(entry);
+  const contextDone = Boolean(entry.stages?.context);
+  const practiceDone = Boolean(entry.stages?.practice);
+  if (entry.quizDone && contextDone && practiceDone) return "done";
+  if (entry.quizDone || contextDone || practiceDone) return "ongoing";
+  return "none";
+}
+
+/** [v2] شمار مراحل تکمیل‌شده (برای نوار پیشرفت مرحله‌ای نقشهٔ کتاب) */
+export function completedStageCount(entry: LessonProgressEntry | undefined): number {
+  if (!entry?.stages) return 0;
+  let n = 0;
+  for (const stage of LESSON_STAGES) {
+    if (entry.stages[stage]) n++;
+  }
+  return n;
 }
 
 export function useLessonProgress(): LessonProgressData {
