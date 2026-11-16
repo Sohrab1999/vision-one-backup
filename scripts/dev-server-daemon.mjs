@@ -14,10 +14,15 @@
 //   # یا هر فرمان دیگری:
 //   bun scripts/dev-server-daemon.mjs <cmd> [args...]
 //
+// سدّ ضدحذف (فرمان مالک ۲۰۲۶-۱۱-۱۵ — «دیگه حذف نشن»): پیش از هر راه‌اندازی،
+//   scripts/sync-guard.mjs اجرا می‌شود تا اگر Sandbox عقب از Remote بود، با همان
+//   الگوی ff-only اثبات‌شدهٔ رویدادهای بازیابی ۶..۱۰ خودکار ترمیم شود (بدون
+//   reset/rebase/force — جزئیات و مرزهای ایمنی در سربرگ آن اسکریپت).
+//
 // نشانهٔ مشکل معروف: `GET /api/questions?meta=1&book=viu-elem` = {total:0}
 //   در حالی که db (hash `d34dc416…`) ۲۳۶ سؤال دارد ⇒ سرور dev قدیمی است ⇒ restart.
 // ─────────────────────────────────────────────────────────────────────────────
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { openSync } from "node:fs";
 import path from "node:path";
 
@@ -29,6 +34,23 @@ if (!cmd) {
 const args = process.argv.slice(3);
 const cwd = path.resolve(import.meta.dir, "..");
 const out = openSync(path.join(cwd, "dev.log"), "a");
+
+// سدّ ضدحذف — پیش از هر راه‌اندازی سرور، همگامی با Remote راستی‌آزمایی و ترمیم می‌شود
+const guard = spawnSync("bun", [path.join(import.meta.dir, "sync-guard.mjs")], {
+  cwd,
+  encoding: "utf8",
+  stdio: ["ignore", "pipe", "pipe"],
+  timeout: 180000,
+});
+const guardOut = (guard.stdout || "") + (guard.stderr || "");
+if (guardOut.trim()) console.log(guardOut.trim());
+if (guard.status !== 0 && guard.status !== null) {
+  console.error(
+    `[dev-server-daemon] sync-guard exit=${guard.status} — راه‌اندازی ادامه می‌یابد ولی همگامی راستی‌آزمایی نشد؛ خروجی کامل در dev.log`
+  );
+  out.write(`[dev-server-daemon] sync-guard exit=${guard.status}\n${guardOut}\n`);
+}
+
 const child = spawn(cmd, args, {
   cwd,
   detached: true,
