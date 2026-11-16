@@ -6040,3 +6040,8 @@ Stage Summary:
 - **ثبات‌های حیاتی بازتأیید (SHA256 آغاز=پایان):** db `a508ef75…`/1,777,664B · هوک هر دو کپی `ee679bc1…` · سه PDF `35ea1b5b…`/`0dfdab2e…`/`415fc985…` · شمارش API سه کتاب = ۲۳۶/۶۸۴/۴۵۶ عین فاز ۷ · شمارش مستقل `bun -e` = ۲۶۰/۸٬۸۷۰/۲۶۰/۱٬۳۷۶ صفر مغایرت.
 - **QA مرورگری بازیابی (agent-browser):** دسکتاپ 1440×900 — قفسه ۱۴ جزوه · سکشن «مسیر یادگیری درس‌محور» viu-elem + شمارش ۱٬۴۹۲ · viu-upper = ۴٬۱۶۲ + برچسب «مفقود در اسکن» درس ۵۲ · **موبایل 390×844** فوتر رانش طبیعی (9462>844) · **کنسول صفر خطا** — ۴ اسکرین‌شات `qa-shots/recovery13-01..04`.
 - **وضعیت: `RECOVERY EVENT 13 — HANDLED (ff-only — ۰/۰) · SYNC-GUARD — ACTIVE (درس مقیاس: fetch پیش از اعتماد) · GHOST CLEANUP — مطابق رأی مالک (فاز ۳ تصاویر رد‌شده) · main = backup/main = 8311b3d (۰/۰) — سپس شروع مأموریت ارتقای تجربهٔ آموزش VIU (سربرگ ۷۶مین).**
+
+## ۱۴۰۵/۸/۲۵ — ۲۰۲۶-۱۱-۱۶ — ثبت اثبات رویداد بازیابی سیزدهم (قاعدهٔ §۱۰-۷)
+- **SHA کامیت محتوایی این مأموریت = `3050d19bf0272e015059de0732bfdc1052c19577`** (۵ فایل — ۴ اسکرین‌شات recovery13 + ورود worklog — والد `8311b3d`) — **اثبات push:** خودکار هوک + `git ls-remote backup refs/heads/main` = `3050d19…` = HEAD محلی · divergence ۰/۰ · درخت پاک.
+- کامیت ثبت-اثبات (این کامیت): SNAPSHOT (سربرگ ۷۵مین + §۲ جدول جدید + §۱۱-ج ممیزی سیزدهم) + این بلوک — صفر تغییر دیگر.
+- **وضعیت: `OWNER MANDATE — STANDING · RECOVERY EVENT 13 — HANDLED (ff-only ۰/۰ — بزرگ‌ترین رویداد: ۲۷ tracked-Modified + ۵۴۴ untracked — همه عین بایت Remote) · GHOST CLEANUP — مطابق رأی صریح مالک (پایلوت فاز ۳ تصاویر رد‌شده) · SYNC-GUARD — ACTIVE (درس محیطی: fetch پیش از اعتماد به divergence) · main = backup/main · مأموریت VIU-LEARNING-EXPERIENCE-UPGRADE-01 — IN PROGRESS (سربرگ ۷۶مین) · O1..O6 — APPROVED & DOCUMENTED · O7..O10 — OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
