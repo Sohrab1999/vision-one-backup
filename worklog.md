@@ -6092,3 +6092,8 @@ Stage Summary:
 - **بازآوری dev server (الگوی §۱۰-۵):** سرور قدیمی (کد پیشا-بازیابی) کشته شد و با `bun scripts/dev-server-daemon.mjs bun run dev` دوباره بالا آمد ⇒ GET / = 200 · API متا زنده سه کتاب عین فاز ۷: viu-elem ۲۳۶ · viu-preint ۶۸۴ · viu-upper ۴۵۶
 - **ثبات‌های حیاتی (آغاز=پایان):** db `a508ef75…`/1,777,664B (پس از ff به وضعیت Remote — صفر seed جدید) · هوک هر دو کپی `ee679bc1…` · سه PDF `c4f9452`/`fcb1638`/`81d68be` · WAVE2 باند سالم — صفر تغییر محصولی/داده/db/hook
 - **کامیت محتوایی این مأموریت:** SNAPSHOT (سربرگ ۷۸مین + §۱۱-ج ممیزی بازیابی چهاردهم) + این بلوک — صفر تغییر دیگر · **ثبت SHA واقعی کامیت محتوایی طبق قاعدهٔ §۱۰-۷ در کامیت ثبت-اثبات بعدی.**
+
+## ۱۴۰۵/۸/۲۶ — ۲۰۲۶-۱۱-۱۷ — ثبت اثبات رویداد بازیابی چهاردهم (قاعدهٔ §۱۰-۷)
+- **SHA کامیت محتوایی این مأموریت = `a1addf75d6e882b8747bc8a5b8f81bbadb5617e1`** (۲ فایل — SNAPSHOT سربرگ ۷۸مین + §۱۱-ج · worklog بلوک بازیابی چهاردهم)
+- کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر
+- **وضعیت: `RECOVERY EVENT 14 — HANDLED (ff-only ۰/۰) · main = backup/main (۰/۰) · VIU EXTRACTION QUALITY AUDIT — DONE · ROADMAP R0..R5 — AWAITING OWNER GATES · O7..O10 OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
