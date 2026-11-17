@@ -13,10 +13,12 @@ const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
 const blank = (s: unknown) => typeof s !== "string" || s.trim().length === 0;
 
 type Book = typeof VIU_ELEMENTARY_BOOK;
+// claimed.quiz = بانک پایهٔ فازهای ۳-۵ (۲۳۶/۶۸۴/۴۵۶) + موج R1 (۴۳۳/۴۹۲/۵۷۱ — جمع ۱٬۴۹۶) — ۲۰۲۶-۱۱-۱۷
+// شمارش کلان پایه پیش از R1 برای مرجع تاریخی: elem 236 · preint 684 · upper 456 (جمع ۱٬۳۷۶)
 const BOOKS: { id: string; label: string; book: Book; claimed: Record<string, number> }[] = [
-  { id: "viu-elem", label: "Elementary", book: VIU_ELEMENTARY_BOOK, claimed: { words: 1492, readings: 60, quiz: 236, verbs: 65, lessons: 60 } },
-  { id: "viu-preint", label: "Pre-int&Int", book: VIU_PREINT_BOOK, claimed: { words: 3216, readings: 100, quiz: 684, verbs: 0, lessons: 100 } },
-  { id: "viu-upper", label: "Upper-int", book: VIU_UPPER_BOOK, claimed: { words: 4162, readings: 100, quiz: 456, verbs: 0, lessons: 100 } },
+  { id: "viu-elem", label: "Elementary", book: VIU_ELEMENTARY_BOOK, claimed: { words: 1492, readings: 60, quiz: 669, verbs: 65, lessons: 60 } },
+  { id: "viu-preint", label: "Pre-int&Int", book: VIU_PREINT_BOOK, claimed: { words: 3216, readings: 100, quiz: 1176, verbs: 0, lessons: 100 } },
+  { id: "viu-upper", label: "Upper-int", book: VIU_UPPER_BOOK, claimed: { words: 4162, readings: 100, quiz: 1027, verbs: 0, lessons: 100 } },
 ];
 
 function auditBook(id: string, book: Book, claimed: Record<string, number>) {

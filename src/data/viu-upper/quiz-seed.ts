@@ -5,6 +5,7 @@ import { QUIZ_PART_2 } from "./quiz-part-2";
 import { QUIZ_PART_3 } from "./quiz-part-3";
 import { QUIZ_PART_4 } from "./quiz-part-4";
 import { QUIZ_PART_5 } from "./quiz-part-5";
+import { QUIZ_R1 } from "./quiz-r1";
 
 export const QUIZ_SEED: QuizQuestionSeed[] = [
   ...QUIZ_PART_1,
@@ -12,6 +13,7 @@ export const QUIZ_SEED: QuizQuestionSeed[] = [
   ...QUIZ_PART_3,
   ...QUIZ_PART_4,
   ...QUIZ_PART_5,
+  ...QUIZ_R1,
 ];
 
 export const QUESTION_COUNTS: Record<string, number> = {
