@@ -6178,3 +6178,9 @@ Stage Summary:
 - **ثبات‌های حیاتی (آغاز=پایان):** db دست‌نخورده (readings فقط src/data) · هوک هر دو کپی `ee679bc1…` · سه PDF `c4f9452`/`fcb1638`/`81d68be` · WAVE2 باند سالم · vocab/quiz/ReadingExercise بایت‌به‌بیت (۸٬۸۷۰/۲٬۸۷۲/۵٬۱۷۹).
 - **کامیت محتوایی این مأموریت:** NEW مبدل سرشماری + NEW build + ۱۳ readings-part + کپچر خام ۱۰۵فایلی + سرشماری JSON + گاردها JSON + ممیزی به‌روز + ۴ اسکرین‌شات + SNAPSHOT (سربرگ ۸۲مین + §۲/§۳/§۱۱-ج) + پیوست نقشه راه (R2 ✅) + این بلوک — **ثبت SHA واقعی کامیت محتوایی طبق قاعدهٔ §۱۰-۷ در کامیت ثبت-اثبات بعدی.**
 - **وضعیت: `ROADMAP R2 — DONE (پوشش نثر ۸۰٪ → ۹۷٫۷٪ — صفر ساختگی) · R3..R5 — AWAITING OWNER GATES · O1..O6 APPROVED & DOCUMENTED · O7..O10 OPEN · STEP 6 NOT AUTHORIZED — توقف اجباری؛ فاز بعدی (R3 کارت واژه یا R4 تضمین کیفیت ترجمه) فقط با فرمان صریح مالک`**
+
+## ۱۴۰۵/۸/۲۶ — ۲۰۲۶-۱۱-۱۷ — ثبت اثبات مأموریت اجرای فاز R2 نقشه راه VIU (قاعدهٔ §۱۰-۷)
+- **SHA کامیت محتوایی این مأموریت = `c3cdc931bf8fd576b431c08f102a5cbc7e926f31`** (۲۵ مسیر — والد `6458454` · NEW مبدل سرشماری/build + ۱۳ readings-part (۴۶ درس · ۶۹۸ پاراگراف) + کپچر خام ۱۰۵فایلی `docs/qa/viu-r2-capture-{elem,preint,upper}/` + سرشماری/گاردها JSON + ممیزی به‌روز + ۴ اسکرین‌شات `qa-shots/r2-qa-01..04` + SNAPSHOT سربرگ ۸۲مین + پیوست نقشه راه R2 ✅ + worklog)
+- **اثبات Remote:** push اول transient rejected شد؛ push دوم اثبات‌شده (`6458454..c3cdc93 main -> main`) + **`git ls-remote backup refs/heads/main` = `c3cdc931bf8fd576b431c08f102a5cbc7e926f31` (۰/۰ — عین HEAD محلی)** — درخت پاک
+- کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر
+- **وضعیت: `ROADMAP R2 — DONE (پوشش نثر ۸۰٪ → ۹۷٫۷٪ — صفر ساختگی) · main = backup/main (۰/۰) · R3..R5 — AWAITING OWNER GATES · O1..O6 APPROVED & DOCUMENTED · O7..O10 OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
