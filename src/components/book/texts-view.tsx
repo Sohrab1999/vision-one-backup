@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { faNum } from "@/lib/class-store";
+import { stripPrintedExerciseNumber } from "@/lib/display-text";
 import { SpeakButton } from "./speak-button";
 import { ClickableEnText } from "./word-lookup";
 import { useBook, useBookData } from "@/lib/book-context";
@@ -144,6 +145,7 @@ export function ReadingCard({
 /** یک آیتم تمرین با دکمهٔ باز/بستن پاسخ نمونه */
 function ExerciseItem({ index, item }: { index: number; item: ReadingExercise["items"][number] }) {
   const [open, setOpen] = useState(false);
+  const { bookId } = useBook();
   return (
     <li className="rounded-xl border bg-muted/30 p-3.5 space-y-2">
       <div className="flex items-start gap-2.5">
@@ -151,7 +153,7 @@ function ExerciseItem({ index, item }: { index: number; item: ReadingExercise["i
           {faNum(index + 1)}
         </span>
         <ClickableEnText
-          text={item.en}
+          text={stripPrintedExerciseNumber(item.en, bookId)}
           className="font-en flex-1 text-[14.5px] leading-7 text-foreground"
         />
       </div>

@@ -1129,126 +1129,126 @@ const ROWS: Row[] = [
   },
   {
     word: "get",
-    meaning: "",
+    meaning: "گرفتن / به دست آوردن",
     lesson: 10,
     pos: "v.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get dark",
-    meaning: "",
+    meaning: "تاریک شدن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get better",
-    meaning: "",
+    meaning: "بهتر شدن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get well",
-    meaning: "",
+    meaning: "بهبود پیدا کردن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get tired",
-    meaning: "",
+    meaning: "خسته شدن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get wet",
-    meaning: "",
+    meaning: "خیس شدن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get a stamp",
-    meaning: "",
+    meaning: "تمبر گرفتن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get a job",
-    meaning: "",
+    meaning: "کار گرفتن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get a doctor",
-    meaning: "",
+    meaning: "دکتر آوردن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get some coffee",
-    meaning: "",
+    meaning: "قهوه گرفتن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get a newspaper",
-    meaning: "",
+    meaning: "روزنامه گرفتن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get a taxi",
-    meaning: "",
+    meaning: "تاکسی گرفتن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get to",
-    meaning: "",
+    meaning: "رسیدن به",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get married",
-    meaning: "",
+    meaning: "ازدواج کردن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get back",
-    meaning: "",
+    meaning: "برگشتن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get up",
-    meaning: "",
+    meaning: "بیدار شدن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get home",
-    meaning: "",
+    meaning: "به خانه رسیدن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"
   },
   {
     word: "get there",
-    meaning: "",
+    meaning: "به آنجا رسیدن",
     lesson: 10,
     pos: "phr.",
     lessonLabel: "درس 10 — get و got (کار گرفتن، خسته شدن)"

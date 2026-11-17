@@ -132,12 +132,11 @@ export const QUIZ_PART_3: QuizQuestionSeed[] = [
     options: [
       "as long as",
       "unless",
-      "otherwise",
-      "Unless"
+      "otherwise"
     ],
     answer: 2,
     level: "متوسط",
-    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3."
+    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3 (مخزن تمرین: as long as / unless / otherwise)."
   },
   {
     category: "vocabulary",
@@ -161,12 +160,11 @@ export const QUIZ_PART_3: QuizQuestionSeed[] = [
     options: [
       "as long as",
       "otherwise",
-      "unless",
-      "Unless"
+      "unless"
     ],
     answer: 0,
     level: "متوسط",
-    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3."
+    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3 (مخزن تمرین: as long as / unless / otherwise)."
   },
   {
     category: "vocabulary",
@@ -190,12 +188,11 @@ export const QUIZ_PART_3: QuizQuestionSeed[] = [
     options: [
       "unless",
       "otherwise",
-      "as long as",
-      "Unless"
+      "as long as"
     ],
     answer: 2,
     level: "متوسط",
-    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3."
+    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3 (مخزن تمرین: as long as / unless / otherwise)."
   },
   {
     category: "vocabulary",
@@ -203,14 +200,13 @@ export const QUIZ_PART_3: QuizQuestionSeed[] = [
     scope: "درس 42 — تمرین 42.3",
     text: "6 You'd better tidy your room, ________ your mother will get very angry.",
     options: [
-      "Unless",
       "unless",
       "as long as",
       "otherwise"
     ],
-    answer: 3,
+    answer: 2,
     level: "متوسط",
-    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3."
+    explanation: "پاسخ عین Answer key کتاب — واحد 42، تمرین 42.3 (مخزن تمرین: as long as / unless / otherwise)."
   },
   {
     category: "vocabulary",
