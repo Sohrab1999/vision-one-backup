@@ -6140,3 +6140,9 @@ Stage Summary:
 - **ثبات‌های حیاتی (آغاز=پایان):** هوک هر دو کپی `ee679bc1…` · سه PDF `c4f9452`/`fcb1638`/`81d68be` · WAVE2 باند سالم · readings/vocab بایت‌به‌بیت (۸٬۸۷۰ واژه/۲٬۶۵۶ پاراگراف/۵٬۱۷۹ آیتم) — db فقط +۱٬۴۹۶ رکورد سؤال جدید (صفر حذف/بازنویسی).
 - **کامیت محتوایی این مأموریت:** NEW مبدل + NEW راستی‌آزمایی + سه quiz-r1.ts + سه quiz-seed.ts + NEW seed افزودنی + سه JSON (census/conversion/verification) + به‌روزرسانی ممیزی claimed + ۴ اسکرین‌شات + SNAPSHOT (سربرگ ۸۱مین + §۲/§۳/§۱۱-ج) + پیوست نقشه راه (R1 ✅) + این بلوک — **ثبت SHA واقعی کامیت محتوایی طبق قاعدهٔ §۱۰-۷ در کامیت ثبت-اثبات بعدی.**
 - **وضعیت: `ROADMAP R1 — DONE (پوشش ۵۹٫۶٪ → ۹۷٫۳٪ — صفر ساختگی) · R2..R5 — AWAITING OWNER GATES · VIU LEARNING MODEL SHARED 6-STAGE — EXECUTED ON PILOT (viu-elem ۱-۵) — AWAITING OWNER EVALUATION · O1..O6 — APPROVED & DOCUMENTED (بدون تغییر) · O7..O10 — OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری؛ فاز بعدی (R2 نثر یا R3 کارت واژه) فقط با فرمان صریح مالک`**
+
+## ۱۴۰۵/۸/۲۶ — ۲۰۲۶-۱۱-۱۷ — ثبت اثبات مأموریت اجرای فاز R1 نقشه راه VIU (قاعدهٔ §۱۰-۷)
+- **SHA کامیت محتوایی این مأموریت = `49e247bd5626f8b3809fc41173c299814fa8065d`** (۲۴ مسیر — والد `d0351cc` · NEW مبدل/راستی‌آزمایی/seed افزودنی + سه quiz-r1.ts + سه quiz-seed.ts + سه JSON ممیزی/پروونانس/راستی‌آزمایی + ممیزی claimed + ۴ اسکرین‌شات + SNAPSHOT سربرگ ۸۱مین + پیوست نقشه راه + فهرست پوشه + worklog)
+- **اثبات Remote:** push خودکار هوک اثبات‌شده (`d0351cc..49e247b main -> main` — لاگ `/tmp/devhook.log` «auto-push OK» ۰۹:۲۹) + **`git ls-remote backup refs/heads/main` = `49e247bd5626f8b3809fc41173c299814fa8065d` (۰/۰ — عین HEAD محلی)**
+- کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر
+- **وضعیت: `ROADMAP R1 — DONE (پوشش ۵۹٫۶٪ → ۹۷٫۳٪ — صفر ساختگی) · main = backup/main (۰/۰) · R2..R5 — AWAITING OWNER GATES · O1..O6 APPROVED & DOCUMENTED · O7..O10 OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
