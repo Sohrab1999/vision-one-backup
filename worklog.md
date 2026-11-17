@@ -6111,3 +6111,8 @@ Stage Summary:
 - **ثبات‌های حیاتی (آغاز=پایان):** هوک هر دو کپی `ee679bc1…` · سه PDF `c4f9452`/`fcb1638`/`81d68be` · WAVE2 باند سالم · صفر POST /api/attempts — db فقط در ۴ رکورد سؤال درس ۴۲ PREINT تغییر (id ثابت).
 - **کامیت محتوایی این مأموریت:** SNAPSHOT (سربرگ ۷۹مین + §۲/§۳/§۴/§۵/§۱۱-ج) + ۶ فایل کد/داده + اسکریپت جراحی NEW + display-text NEW + JSON ممیزی + انتقال نقشه راه + فهرست + این بلوک — **ثبت SHA واقعی کامیت محتوایی طبق قاعدهٔ §۱۰-۷ در کامیت ثبت-اثبات بعدی.**
 - **وضعیت: `ROADMAP R0 — DONE · R1..R5 — AWAITING OWNER GATES · VIU LEARNING MODEL SHARED 6-STAGE — EXECUTED ON PILOT (viu-elem ۱-۵) — AWAITING OWNER EVALUATION · O1..O6 — APPROVED & DOCUMENTED (بدون تغییر) · O7..O10 — OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری؛ فاز بعدی فقط با فرمان صریح مالک`**
+
+## ۱۴۰۵/۸/۲۶ — ۲۰۲۶-۱۱-۱۷ — ثبت اثبات مأموریت اجرای فاز R0 (قاعدهٔ §۱۰-۷)
+- **SHA کامیت محتوایی این مأموریت = `dab3f5a3730498c7afe91bddd2b12c889717c2c4`** (۱۶ فایل — والد `600f2c0` · NEW display-text.ts + اسکریپت جراحی + ۳ اسکرین‌شات · rename نقشه راه ۸۹٪)
+- کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر
+- **وضعیت: `ROADMAP R0 — DONE · R1..R5 — AWAITING OWNER GATES · main = backup/main (۰/۰) · O7..O10 OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
