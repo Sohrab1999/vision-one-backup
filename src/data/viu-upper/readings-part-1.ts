@@ -230,7 +230,48 @@ export const READINGS_PART_1: Reading[] = [
     title: "Learning vocabulary – aids to learning",
     titleFa: "یادگیری واژگان — ابزارهای یادگیری",
     source: "VIU Upper-intermediate 2nd ed — درس 2 (کتاب ص6-7)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Learn words with associated meanings together.",
+        fa: "کلماتی با معانی مرتبط را با هم یاد بگیرید."
+      },
+      {
+        en: "Learning words together that are associated in meaning is a popular and useful way of organising your vocabulary study.",
+        fa: "یادگیری کلماتی که از نظر معانی با هم مرتبط‌اند، یک روش محبوب و مفید برای سازماندهی مطالعه واژگان شماست."
+      },
+      {
+        en: "Learn words with a grammatical association together.",
+        fa: "کلماتی با یک ارتباط دستوری را با هم یاد بگیرید."
+      },
+      {
+        en: "Learn together words based on the same root.",
+        fa: "کلماتی را که از یک ریشه یکسان هستند با هم یاد بگیرید."
+      },
+      {
+        en: "Pictures might help you to remember vocabulary.",
+        fa: "تصاویر ممکن است به شما برای به خاطر سپردن واژگان کمک کنند."
+      },
+      {
+        en: "Word trees can be useful.",
+        fa: "درخت واژگان می‌تواند مفید باشد."
+      },
+      {
+        en: "Word forks are good ways of learning adjectives and verbs.",
+        fa: "شاخه‌های واژگان روش‌های خوبی برای یادگیری صفت‌ها و افعال هستند."
+      },
+      {
+        en: "Bubble networks can be a useful way of writing down phrasal verbs.",
+        fa: "شبکه‌های حبابی می‌توانند روشی مفید برای یادداشت افعال عبارتی باشند."
+      },
+      {
+        en: "Look at the example. The base verb goes at the centre of the network and is surrounded by the different prepositions which can be added to the base verb to make a phrasal verb. The final bubble contains an appropriate object or phrase to complete the relevant phrasal verb.",
+        fa: "مثال را ببینید. فعل پایه در مرکز شبکه قرار می‌گیرد و توسط حروف اضافه‌ی مختلفی که می‌توان به فعل پایه افزود تا یک فعل عبارتی بسازد، احاطه شده است. حباب نهایی شامل یک مفعول یا عبارت مناسب برای تکمیل فعل عبارتی مربوطه است."
+      },
+      {
+        en: "Tables can also help clarify collocations (words that are often associated).",
+        fa: "جدول‌ها همچنین می‌توانند در روشن کردن هم‌رفتاری‌ها (کلماتی که اغلب با هم همراه هستند) کمک کنند."
+      }
+    ],
     exercise: {
       instruction: "2 Look at the word tree for holiday. Now complete a tree for school. — 3 Look at complete word forks below. Finish the others. — 4 Look at the example. The base verb goes at the centre of the network and is surrounded by the different prepositions which can be added to the base verb to make a phrasal verb. The final bubble contains an appropriate object or phrase to complete the relevant phrasal verb. Write your own bubble network for make. Use a dictionary and look at Unit 89. — 5 Look at the following example of a table: Now complete the following sentences.",
       instructionFa: "به درخت واژه‌ای واژهٔ holiday نگاه کنید. اکنون یک درخت برای school کامل کنید. — به چنگال‌واژه‌های کامل زیر نگاه کنید. بقیه را کامل کنید. — به مثال نگاه کنید. فعل پایه در مرکز شبکه قرار می‌گیرد و با حروف اضافهٔ مختلفی که می‌توان به فعل پایه اضافه کرد تا فعل عبارتی بسازد، احاطه می‌شود. حباب آخر متمم یا عبارت مناسب برای کامل کردن فعل عبارتی مربوطه را در بر دارد. شبکهٔ حبابی خودتان را برای make بنویسید. از فرهنگ لغت استفاده کنید و به واحد ۸۹ نگاه کنید. — به نمونهٔ جدول زیر نگاه کنید: اکنون جمله‌های زیر را کامل کنید.",
@@ -298,7 +339,40 @@ export const READINGS_PART_1: Reading[] = [
     title: "Organising a vocabulary notebook",
     titleFa: "سازمان‌دهی دفترچهٔ واژگان",
     source: "VIU Upper-intermediate 2nd ed — درس 3 (کتاب ص8-9)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "All the time that you use this book, we advise you to keep a personal vocabulary notebook. There is no one correct way to organise a vocabulary notebook, but it is a good idea to think about possible ways of doing so. This unit gives some possibilities and examples.",
+        fa: "همان‌طور که از این کتاب استفاده می‌کنید، ما به شما توصیه می‌کنیم یک دفتر واژگان شخصی داشته باشید. راه درستی برای سازماندهی دفتر واژگان وجود ندارد، اما فکر کردن به راه‌های ممکن برای انجام این کار، ایده‌ی خوبی است. این واحد، برخی از امکانات و مثال‌ها را ارائه می‌دهد."
+      },
+      {
+        en: "Try dividing your notebook into different broad sections, with sections for words for feelings, words to describe places, words for movement, words for thinking, etc. In each section you can build families of words related in meaning, using some of the ways suggested in this unit.",
+        fa: "سعی کنید دفتر خود را به بخش‌های مختلف و گسترده تقسیم کنید، بخش‌هایی برای واژگان احساسات، واژگان برای توصیف مکان‌ها، واژگان برای حرکت، واژگان برای فکر کردن و غیره. در هر بخش می‌توانید خانواده‌هایی از واژگان مرتبط از نظر معانی بسازید، از برخی از روش‌های پیشنهادی در این واحد استفاده کنید."
+      },
+      {
+        en: "Words that can be grouped under a heading or a more general word can be drawn as a tree-diagram. (See also Unit 2.)",
+        fa: "کلماتی که می‌توانند زیر یک عنوان یا یک کلمه‌ی عمومی‌تر گروه‌بندی شوند، را می‌توان به صورت یک درخت-نمودار کشید. (همچنین به واحد ۲ مراجعه کنید.)"
+      },
+      {
+        en: "The dotted lines mean that you can add more words to the tree as you meet them. A bubble network is also useful, since you can make it grow in whatever direction you want it to. (See Unit 2.)",
+        fa: "خطوط نقطه‌ای به این معناست که می‌توانید کلمات بیشتری را به درخت اضافه کنید هر زمان که با آن‌ها مواجه شدید. شبکه‌ی حبابی نیز مفید است، زیرا می‌توانید آن را در هر جهت‌ای که می‌خواهید رشد دهید. (واحد ۲ را ببینید.)"
+      },
+      {
+        en: "A Spanish learner of English, Angeles, gave us an interview on how she marks word-class in her personal notebook. This is what she said:",
+        fa: "آنگلس، یک زبان‌آموز اسپانیایی زبان انگلیسی، با ما مصاحبه‌ای درباره اینکه چگونه در دفتر شخصی خود کلاس کلمات را مشخص می‌کند، انجام داد. این گفته‌های اوست:"
+      },
+      {
+        en: "'What I have just started doing is to write them depending on if they are verbs or nouns or adjectives or phrases. If they are phrases I write them in red and also the definition. If they are verbs, in black, and blue if they are nouns ... And if I write the Spanish translation I write it in another colour, so it's easy to see ... I draw some pictures too.'",
+        fa: "کاری که همین شروع کرده‌ام این است که آنها را بر اساس این که افعال یا اسم‌ها یا صفت‌ها یا عبارات هستند، می‌نویسم. اگر عبارت باشند، آنها را به رنگ قرمز و همچنین تعریفشان را می‌نویسم. اگر افعال باشند، به رنگ سیاه، و اگر اسم‌ها باشند، به رنگ آبی... و اگر ترجمه اسپانیایی آنها را بنویسم، آن را در رنگ دیگری می‌نویسم، تا به راحتی قابل دیدن باشد... من همچنین برخی تصاویر می‌کشم."
+      },
+      {
+        en: "When you find a synonym or an antonym of a word you already have in your book, enter it next to that word.",
+        fa: "وقتی مترادف یا متضادی برای کلمه‌ای که قبلاً در کتاب خود دارید پیدا می‌کنید، آن را کنار آن کلمه وارد کنید."
+      },
+      {
+        en: "stop = cease ('cease' is more formal than 'stop')    urban ≠ rural",
+        fa: "توقف = متوقف کردن ('متوقف کردن' رسمی‌تر از 'توقف' است)    شهری ≠ روستایی"
+      }
+    ],
     exercise: {
       instruction: "3.1 Here is a list of words a Spanish learner of English has made in her vocabulary notebook. How could she improve them and organise them better? — 3.2 Here is a word-map, a variation on the bubble network. What word do you think should go in the middle? — 3.3 One learner tested himself regularly with his notebook, covering up the word and trying to guess it from the translation he had written or from any other notes he had made. Here is his system. — 3.4 Making tables for word-classes is a good idea, since you can fill in the gaps over time. What would you put in the remaining gaps in the table?",
       instructionFa: "فهرستی از واژه‌هایی که یک زبان‌آموز اسپانیایی در دفترچه واژگانش یادداشت کرده است آمده است. او چگونه می‌تواند آن‌ها را بهبود بخشیده و بهتر سازماندهی کند؟ — یک نقشهٔ واژگان (گونه‌ای متفاوت از شبکهٔ حبابی) آمده است. به نظر شما چه واژه‌ای باید در وسط قرار گیرد؟ — یک زبان‌آموز مرتباً با دفترچهٔ خود خودآزمایی می‌کرد؛ واژه را می‌پوشاند و سعی می‌کرد آن را از ترجمهٔ نوشته‌شده یا یادداشت‌های دیگرش حدس بزند. سیستم او این است. — ساختن جدول برای طبقات واژگانی ایدهٔ خوبی است، چون می‌توانید جاهای خالی را به‌مرور پر کنید. چه چیزهایی در جاهای خالی باقی‌ماندهٔ جدول می‌گذارید؟",
@@ -414,7 +488,28 @@ export const READINGS_PART_1: Reading[] = [
     title: "The names of English language words",
     titleFa: "نام واژه‌های زبان انگلیسی",
     source: "VIU Upper-intermediate 2nd ed — درس 4 (کتاب ص10-11)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Look at the sentence An artist loves beauty. The word artist is countable, i.e. it has a plural form (artists), but beauty is uncountable. Artist is the subject of the verb as it describes who does the verb; beauty is the object, i.e. what is affected by the verb.",
+        fa: "جمله «یک هنرمند زیبایی را دوست دارد» را ببینید. کلمه هنرمند شمارش‌پذیر است، یعنی دارای فر جمع (هنرمندان) است، اما زیبایی شمارش‌ناپذیر است. هنرمند فاعل فعل است زیرا توصیف می‌کند چه کسی فعل را انجام می‌دهد؛ زیبایی مفعول است، یعنی چیزی که تحت تأثیر فعل قرار می‌گیرد."
+      },
+      {
+        en: "Go (go, gone, went) is an irregular verb whereas live (live, lived, lived) is regular. Go is also intransitive because it does not need an object, e.g. Has Luis gone? Make is transitive because it is followed by an object – you make something.",
+        fa: "رفتن (رفت، رفته، رفت) یک فعل نا_regular است در حالی که زندگی کردن (زندگی کردن، زندگی کرده، زندگی کرده) فعل _regular است. رفتن همچنین لازم است زیرا به مفعول نیاز ندارد، مثلاً «لوئیس رفته است؟» ساختن متعدی است زیرا توسط مفعولی دنبال می‌شود – شما چیزی را می‌سازید."
+      },
+      {
+        en: "In the word, irregularity, ir- is a prefix, regular is a root and -ity is a suffix. Thin is the opposite or antonym of fat and slim is a synonym of thin. A word family is a set of words based on one root, e.g. word, wordy, to reword. A phrase does not include a main verb – 'in a word' is an example of a phrase. A sentence has a main verb; it begins with a capital letter and ends with a full stop (or a question mark or an exclamation mark).",
+        fa: "در کلمه irregularity، ir- یک پیشوند، regular یک ریشه و -ity یک پسوند است. Thin مخالف یا آنتونیم fat و مرادف thin است. یک خانواده واژهای مجموعهای از واژهها بر اساس یک ریشه است، مانند word، wordy، to reword. یک عبارت شامل یک فعل اصلی نیست؛ «in a word» مثالی از یک عبارت است. یک جمله دارای فعل اصلی است؛ با حرف بزرگ شروع شده و با نقطه کامل (یا علامت سوال یا تعجب) تمام میشود."
+      },
+      {
+        en: "A syllable /ˈsɪləbl̩/ is the minimum sound unit of a word consisting of one vowel and any consonants on either side. There are five syllables in the word 'monosyllabic' and the stress is on the fourth syllable.",
+        fa: "یک هجا /ˈsɪləbl̩/ کمترین واحد صوتی یک کلمه است که از یک صدای صدادار و هرگونه همخوان در دو طرف آن تشکیل شده است. کلمه «monosyllabic» پنج هجا دارد و تأکید بر هجای چهارم است."
+      },
+      {
+        en: "There are different styles of speaking and writing appropriate to different situations. Slang is an extremely informal style; a colloquial style is suitable mainly for conversations, e.g. He's a nice guy. Pejorative words have a negative association. Pig-headed is pejorative whereas determined, which is very close in meaning, is not. Collocation refers to words which frequently occur together, e.g. heavy rain, ginger hair.",
+        fa: "سبکهای مختلفی برای صحبت کردن و نوشتن وجود دارد که برای موقعیتهای مختلف مناسب هستند. Slang یک سبک بسیار غیررسمی است؛ سبک محاورهای عمدتاً برای مکالمات مناسب است، مثلاً He's a nice guy. واژههای توهینآمرا دارای یک پیوند منفی هستند. Pig-headed توهینآمرا است در حالی که determined که معنای بسیار نزدیکی دارد، نیست. Collocation به واژههایی اشاره دارد که به طور مکرر با هم به کار میروند، مثلاً heavy rain، ginger hair."
+      }
+    ],
     exercise: {
       instruction: "4.1 Look at the paragraph about words and their associations in F opposite. Find at least three examples of each of the following: Now mark the nouns you've written with a C (countable) or UC (uncountable). Mark the verbs R (regular) or IR (irregular) and T (transitive) or IT intransitive. — 4.2 Complete the following table. — 4.3 Think about the word informal. — 4.4 Look at all the words in bold (with more than one syllable) in sections E, F and G opposite. In each case mark which syllable is stressed. — 4.5 Match the following colloquial words with their more formal equivalents in the box. — 4.7 The words in the box each collocate with one of the following words: noun, verb and colloquial. What are the collocations? — 4.8 Cover the left-hand page and write the names of the following punctuation marks.",
       instructionFa: "به پاراگراف مربوط به کلمات و ارتباطات آن‌ها در بخش F روبه‌رو نگاه کنید. حداقل سه مثال برای هر یک از موارد زیر پیدا کنید. سپس اسم‌ها را با C (قابل‌شمارش) یا UC (غیرقابل‌شمارش) مشخص کنید. فعل‌ها را R (با قاعده) یا IR (بی‌قاعده) و T (گذرا) یا IT (نگذرا) علامت بزنید. — جدول زیر را کامل کنید. — به کلمهٔ informal فکر کنید. — به همهٔ کلمات پررنگ (چند بخشی) در بخش‌های E، F و G روبه‌رو نگاه کنید. در هر مورد مشخص کنید کدام هجا تأکید دارد. — کلمات محاوره‌ای زیر را با معادل‌های رسمی‌تر آن‌ها در کادر مطابقت دهید. — هر یک از کلمات کادر با یکی از کلمات زیر هم‌آیندگی دارد: noun، verb و colloquial. این هم‌آیندها چیستند؟ — صفحهٔ سمت چپ را بپوشانید و نام علائم نگارشی زیر را بنویسید.",
@@ -595,7 +690,84 @@ export const READINGS_PART_1: Reading[] = [
     title: "Revising vocabulary",
     titleFa: "مرور واژگان",
     source: "VIU Upper-intermediate 2nd ed — درس 6 (کتاب ص14-15)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Here is an extract from a book about language learning strategies on the importance of revising in an active way.",
+        fa: "در اینجا یک استخراج از کتابی درباره استراتژیهای یادگیری زبان درباره اهمیت مرور به شیوه فعال ارائه شده است."
+      },
+      {
+        en: "Revising ... is especially useful for remembering new material in the target language. It involves looking back at what has been studied at different intervals, at first close together and then increasingly far apart. For example, Misha is learning a set of vocabulary words in English. He practises them immediately, waits 15 minutes before practising them again, and practises them an hour later, three hours later, the next day, two days later, four days later, the following week, two weeks later, and so on until the material becomes more or less automatic. In this way he keeps returning to these particular vocabulary words, even though he might be meeting more material in class. Each time he practises these vocabulary words, Misha does it in a meaningful way, like putting them into a context or recombining them to make new sentences. Naturally, the amount of time needed to make new material automatic depends on the kind of material involved.",
+        fa: "مرور ... برای به خاطر سپردن مطالب جدید در زبان هدف بهویژه مفید است. این شامل بازنگری آنچه در فواصل مختلفی مطالعه شده است، در ابتدا به فاصله نزدیک و سپس به فاصله در حال افزایش است. برای مثال، میشا در حال یادگیری مجموعهای از واژگان انگلیسی است. او بلافاصله آن را تمرین میکند، ۱۵ دقیقه صبر میکند و دوباره تمرین میکند، یک ساعت بعد، سه ساعت بعد، روز بعد، دو روز بعد، چهار روز بعد، هفته بعد، دو هفته بعد و به همین ترتیب تا زمانی که مطالب به طور خودکار در ذهن حک میشود. به این ترتیب او به طور مداوم به این واژگان خاص بازمیگردد، حتی اگر ممکن است مطالب بیشتری را در کلاس ببیند. هر زمان که میشا این واژگان را تمرین میکند، به شیوه معناداری انجام میدهد، مانند قرار دادن آن‌ها در یک زمینه یا ترکیب مجدد آنها برای ساختن جملات جدید. به طور طبیعی، مقدار زمان لازم برای خودکار کردن مطالب جدید به نوع آن بستگی دارد."
+      },
+      {
+        en: "When you revise a unit, first read it through. Then look at anything you wrote in your vocabulary notebook, connected with the unit. Then, and most importantly, try to do something different with the new words and expressions in that unit in order to help fix them in your memory. Here are some suggestions:",
+        fa: "وقتی یک واحد را مرور میکنید، ابتدا آن را به طور کامل بخوانید. سپس به هر چیزی که در دفتر واژگان خود در مورد این واحد نوشتهاید، نگاه کنید. سپس، و مهمتر از همه، سعی کنید با واژگان و عبارات جدید در آن واحد کار متفاوتی انجام دهید تا به به خاطر سپردن آنها در حافظه کمک کنید. در اینجا چند پیشنهاد وجود دارد:"
+      },
+      {
+        en: "Highlight any words and expressions that you had forgotten or were not sure about.",
+        fa: "هر واژه و عبارتی که فراموش کردهاید یا مطمئن نیستید، هایلایت کنید."
+      },
+      {
+        en: "Look at the unit and choose six words and expressions that you particularly want or need to learn. Write them down.",
+        fa: "واحد را نگاه کنید و شش واژه و عبارتی که به طور خاص میخواهید یا نیاز دارید یاد بگیرید، انتخاب کنید. آنها را بنویسید."
+      },
+      {
+        en: "Look up any words that you selected in an English–English dictionary. Do these words have any other uses or associations that might help you learn them? Looking up the word, heart, for example, might lead you to heart-broken or to have your heart in your mouth. Write anything that appeals to you in an appropriate phrase or sentence.",
+        fa: "واژگان انتخابی خود را در یک واژهنامه انگلیسی-انگلیسی جستجو کنید. آیا این واژگان کاربرد یا پیوند دیگری دارند که ممکن است به یادگیری آنها کمک کند؟ جستجوی واژه heart، برای مثال، شما را به heart-broken یا به have your heart in your mouth میرساند. هر چیزی که برای شما جذاب است را در یک عبارت یا جمله مناسب بنویسید."
+      },
+      {
+        en: "The dictionary can also help you find some other words based on the same root. Looking up the noun, employment, leads you to the verb, employ, to the nouns, employer and employee, and to the adjectives employable, unemployed and self-employed.",
+        fa: "واژهنامه همچنین میتواند به شما در پیدا کردن برخی واژههای دیگر بر اساس همان ریشه کمک کند. جستجوی اسم employment شما را به فعل employ، به اسما employer و employee، و به صفتهای employable، unemployed و self-employed میرساند."
+      },
+      {
+        en: "Note the pronunciation of the words and expressions you wish to learn. Try to write them down in phonetic script. Use a dictionary to help you.",
+        fa: "تلفظ واژگان و عباراتی که میخواهید یاد بگیرید را یادداشت کنید. سعی کنید آنها را با الفبای آوانویسی بنویسید. از یک واژهنامه برای کمک به خود استفاده کنید."
+      },
+      {
+        en: "In your notebook, write down the words and phrases from a unit in a different way – put them into a network or a table, perhaps.",
+        fa: "در دفتر خود، واژگان و عبارات را از یک واحد به شیوه متفاوتی بنویسید – آنها را در یک شبکه یا جدول قرار دهید، شاید."
+      },
+      {
+        en: "The next day, ask yourself: How much can I remember?",
+        fa: "روز بعد، از خود بپرسید: چقدر میتوانم به خاطر بیاورم؟"
+      },
+      {
+        en: "Test yourself, cover part of a word or phrase. Can you complete the word or phrase?",
+        fa: "خود را امتحان کنید، بخشی از یک واژه یا عبارت را بپوشانید. آیا میتوانید واژه یا عبارت را کامل کنید؟"
+      },
+      {
+        en: "When you have done all the steps above that you feel will be useful to you, close your book and notebook and remind yourself of what you have been studying. How much can you remember?",
+        fa: "وقتی تمام مراحل بالا را که مفید میدانید انجام دادید، کتاب و دفتر خود را ببندید و از خود بپرسید چه چیزی را مطالعه کردهاید. چقدر میتوانید به خاطر بیاورید؟"
+      },
+      {
+        en: "One of the great advantages of revising vocabulary is that it should help you to make the step from having something in your receptive vocabulary to having it in your active vocabulary. Encourage this process by:",
+        fa: "یکی از مزایای بزرگ مرور واژگان این است که باید به شما کمک کند قدم از داشتن آن در واژگان دریافتکننده به داشتن آن در واژگان فعال بردارید. این فرآیند را با:"
+      },
+      {
+        en: "writing the words and expressions you are trying to learn in a sentence relating to your life and interests at the moment.",
+        fa: "نوشتن واژگان و عباراتی که در حال تلاش برای یادگیری آنها هستید در یک جمله مرتبط با زندگی و علایق فعلی خود."
+      },
+      {
+        en: "making a point of using the new words and expressions in your next class or homework or in some other way.",
+        fa: "تلاش کردن برای استفاده از واژگان و عبارات جدید در کلاس یا تکلیف بعدی یا به هر دیگری شکل ممکن دیگر."
+      },
+      {
+        en: "keeping a learning diary in which you note down things that particularly interest you about the words you have learnt.",
+        fa: "نگه داشتن یک یادداشت یادگیری در که چیزهایی که به طور خاص برایتان در مورد واژگانی که یاد گرفتهاید جالب هستند را یادداشت میکنید."
+      },
+      {
+        en: "watching out for the words and expressions you are trying to learn in your general reading of English. If you come across any of them in use, write them down in their context in your diary or notebook.",
+        fa: "توجه به واژگان و عباراتی که در حال تلاش برای یادگیری آنها هستید در مطالعه عمومی انگلیسی. اگر با هر یک از آنها در استفاده مواجه شدید، آنها را در زمینه خود در دفتر یادداشت یا دفتر خود بنویسید."
+      },
+      {
+        en: "writing a paragraph or story linking the words and expressions you want to learn.",
+        fa: "نوشتن یک پاراگراف یا داستان که کلمات و عباراتی که می‌خواهید یاد بگیرید را به هم پیوند می‌دهد."
+      },
+      {
+        en: "Now write yourself some notes to remind yourself of when you are going to revise. You might like, for instance, to write revise vocabulary in your diary for the next eight Fridays, if you decided to revise every week. Alternatively you could write REVISE in capital letters, after, say, every five units in the book.",
+        fa: "حالا خودتان یادداشتی برای یادآوری زمان مرور بنویسید. برای مثال، ممکن است بخواهید در دفترچه‌تان برای هشت جمعه آینده 'مروری بر واژگان' بنویسید، اگر تصمیم گرفته‌اید هر هفته مرور کنید. به جای آن می‌توانید 'مرور' را با حروف بزرگ بنویسید، برای مثال، پس از هر پنج واحد در کتاب."
+      }
+    ],
     exercise: {
       instruction: "D What can you remember? — E Some plans for your work with this book",
       instructionFa: "چه چیزهایی را به یاد می‌آوری؟ — چند برنامه برای کار با این کتاب",
@@ -651,7 +823,84 @@ export const READINGS_PART_1: Reading[] = [
     title: "Guessing and explaining meaning",
     titleFa: "حدس زدن و توضیح معنا",
     source: "VIU Upper-intermediate 2nd ed — درس 7 (کتاب ص16-17)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Inferring meaning from context",
+        fa: "استنتاج معنا از روی زمینه"
+      },
+      {
+        en: "There are a number of clues which you may be able to use to help you work out the meaning of an unfamiliar word:",
+        fa: "چندین سرنخ وجود دارد که ممکن است بتوانید برای کمک به شما در معنای یک کلمه ناآشنا استفاده کنید:"
+      },
+      {
+        en: "The context in which it is used",
+        fa: "زمینه‌ای که در آن استفاده می‌شود"
+      },
+      {
+        en: "Visual clues: a picture in a book or film footage in a TV news broadcast may help you.",
+        fa: "سرنخ‌های بصری: یک تصویر در کتاب یا تصاویر فیلم در یک خبر تلویزیونی ممکن است به شما کمک کند."
+      },
+      {
+        en: "Your own background knowledge about a situation: for example, if you already know that there has just been an earthquake in Los Angeles, then you will find it easy to understand the word 'earthquake' when you hear a news broadcast about it.",
+        fa: "دانش پیشینی خودتان درباره یک موقعیت: برای مثال، اگر از قبل می‌دانید که اخیراً زلزله‌ای در لس آنجلس رخ داده است، سپس وقتی خبری درباره آن را می‌شنوید، کلمه 'زلزله' را به راحتی درک خواهید کرد."
+      },
+      {
+        en: "The immediate context (other words around the unfamiliar word): these may make the meaning absolutely clear: 'Suzanna picked one tall yellow gladiolus to put in her new crystal vase.' Even if you have never seen or heard the word 'gladiolus', it will probably be obvious to you from the context that it is a type of flower.",
+        fa: "زمینهٔ بلافاصله (کلمات دیگر اطراف کلمهٔ ناآشنا): این‌ها ممکن است معنا را کاملاً روشن کنند: 'سوزانا یک گل لاله‌ای بلند و زرد برای گذاشتن در گلدان بلور جدیدش چید.' حتی اگر تا به حال کلمه 'لاله' را ندیده یا نشنیده‌اید، احتمالاً از روی زمینه برایتان مشخص خواهد بود که نوعی گل است."
+      },
+      {
+        en: "Grammatical clues in the context: it is not difficult to understand that 'superstitious' must be an adjective in the sentence 'Marsha is very superstitious.' or that 'gingerly' is an adverb in 'Jackie tiptoed gingerly down the stairs.'",
+        fa: "سرنخ‌های دستوری در زمینه: درک کردن که 'عقیده‌مند' (superstitious) حتماً یک صفت در جمله 'مارشا بسیار عقیده‌مند است.' است، یا اینکه 'با احتیاط' (gingerly) یک قید در جمله 'جکی با احتیاط پله‌ها را به پایین رفت.'، دشوار نیست."
+      },
+      {
+        en: "Similarity to other words you already know in English",
+        fa: "تشابه به کلمات دیگر که قبلاً می‌شناسید"
+      },
+      {
+        en: "A large number of words in English are made up of combinations of other words. You may never have seen the word 'headscarf', for example, but the meaning is easy to work out from its two components. Units 12–14 will help you improve your skills in understanding how English uses everyday words to build up new concepts.",
+        fa: "تعداد زیادی از کلمات در انگلیسی از ترکیب کلمات دیگر ساخته شده‌اند. ممکن است تا به حال کلمه 'روبنده سر' (headscarf) را ندیده باشید، اما معنای آن به راحتی از دو جزء آن قابل استنتاج است. واحدهای ۱۲ تا ۱۴ به شما در بهبود مهارت‌هایتان در درک اینکه انگلیسی چگونه از کلمات روزمره برای ساختن مفاهیم جدید استفاده می‌کند، کمک خواهند کرد."
+      },
+      {
+        en: "Structure",
+        fa: "ساختار"
+      },
+      {
+        en: "A prefix or suffix may give you a clue, for example. Units 8–11 focus on different aspects of word formation in English and should help you exploit those clues in making sense of unfamiliar words.",
+        fa: "یک پیشوند یا پسوند ممکن است به شما سرنخی بدهد، برای مثال. واحدهای ۸ تا ۱۱ بر جنبه‌های مختلف تشکیل کلمه در انگلیسی تمرکز دارند و باید به شما در استفاده از آن سرنخ‌ها برای درک کلمات ناآشنا کمک کنند."
+      },
+      {
+        en: "Similarity to a word you know in your own (or some other) language",
+        fa: "تشابه به کلمه‌ای که در زبان خودتان (یا زبان دیگری) می‌شناسید"
+      },
+      {
+        en: "If your first language is of Latin or of Germanic origin, you will come across many words in English that resemble words in your own language. However, English has taken many words from many other languages too (see Unit 15). So make use of any other languages you know. But remember that some words are false friends – they sound as if they mean the same but in fact they have a different meaning. (A good dictionary will give lists of false friends for a lot of European languages.)",
+        fa: "اگر زبان اول شما لاتین یا ژرمنی باشد، با بسیاری از کلمات انگلیسی روبرو خواهید شد که به کلمات زبان خودتان شبیه هستند. با این حال، انگلیسی کلمات زیادی را از بسیاری از زبان‌های دیگر نیز گرفته است (واحدهای ۱۵ را ببینید). بنابراین از هر زبان دیگری که می‌شناسید استفاده کنید. اما به یاد داشته باشید که برخی کلمه‌ها 'دوستان نابجای' هستند – آنها به نظر می‌رسند که به همان معنی هستند اما در واقع معنی متفاوتی دارند. (یک دیکتونای خوب فهرست‌هایی از دوستان نابجا برای بسیاری از زبان‌های اروپایی ارائه می‌دهد.)"
+      },
+      {
+        en: "Explaining unknown words",
+        fa: "توضیح کلمات ناآشنا"
+      },
+      {
+        en: "The following expressions can be useful when you are trying to explain what a word or expression means:",
+        fa: "عبارات زیر هنگام تلاش برای توضیح معنای یک کلمه یا عباره می‌توانند مفید باشند:"
+      },
+      {
+        en: "It's (a bit) like (a chair) ...",
+        fa: "این (کمی) شبیه (یک صندلی) است ..."
+      },
+      {
+        en: "It's something you use for (painting pictures / cleaning the kitchen floor ...)",
+        fa: "این چیزی است که برای (رنگ‌آمیزی نقاشی‌ها / تمیز کردن کف آشپزخانه ...) استفاده می‌شود."
+      },
+      {
+        en: "It's a kind of (bird / musical instrument / building ...)     It must / could be ...",
+        fa: "این نوعی (پرنده / ساز موسیقی / ساختمان ...) است. حتماً / می‌تواند ... باشد."
+      },
+      {
+        en: "It will not be possible to work out the meanings of all the unfamiliar words that you come across but remember that you do not need to understand every word in a text in order to understand the whole text. When it is crucial to know a meaning, use the clues suggested in this unit and make a guess before checking the dictionary.",
+        fa: "پیدا کردن معانی تمام کلمات ناآشنا که با آن‌ها روبرو می‌شوید ممکن نخواهد بود، اما به یاد داشته باشید که برای درک کل متن نیازی به درک هر کلمه آن ندارید. وقتی دانستن معانی یک کلمه حیاتی است، از سرنخ‌های پیشنهادی در این واحد استفاده کرده و قبل از بررسی در دیکشنری، حدس بزنید."
+      }
+    ],
     exercise: {
       instruction: "7.1 Look at the following text. Before you read it, see if you know what the underlined words mean. — 7.2 Use the context to work out what the underlined words mean. Explain them using one or other of the expressions in B on the opposite page. — 7.3 Use your knowledge of other basic English words to help you work out the meanings of the underlined words and expressions. Rewrite them using simpler words or explanations for the underlined words and phrases. — 7.4 Use your knowledge of prefixes and suffixes to suggest what these phrases mean.",
       instructionFa: "به متن زیر نگاه کنید. قبل از خواندن، ببینید آیا معنای واژه‌های زیرخط‌دار را می‌دانید. — از بافت متن استفاده کنید تا معنای واژه‌های زیرخط‌دار را بفهمید. آن‌ها را با یکی از عبارت‌های بخش B در صفحهٔ مقابل توضیح دهید. — از دانش واژه‌های سادهٔ دیگر انگلیسی استفاده کنید تا معنای واژه‌ها و عبارت‌های زیرخط‌دار را بفهمید. آن‌ها را با واژه‌های ساده‌تر یا توضیحاتی برای واژه‌ها و عبارت‌های زیرخط‌دار بازنویسی کنید. — از دانش خود دربارهٔ پیشوندها و پسوندها استفاده کنید تا حدس بزنید این عبارت‌ها چه معنایی دارند.",
@@ -797,7 +1046,60 @@ export const READINGS_PART_1: Reading[] = [
     title: "Suffixes",
     titleFa: "پسوندها",
     source: "VIU Upper-intermediate 2nd ed — درس 8 (کتاب ص18-19)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "-er /ə/ is used for the person who does an activity, e.g. writer, painter, worker, shopper, teacher.",
+        fa: "پیشوند -er /ə/ برای شخصی که فعالیتی را انجام می‌دهد، به کار می‌رود، مثلاً writer (نویسنده)، painter (نقاش)، worker (کارگر)، shopper (خریدار)، teacher (معلم)."
+      },
+      {
+        en: "You can use -er with a wide range of verbs to make them into nouns. Sometimes the -er suffix is written as -or (it is still pronounced /ə/). It is worth making a special list of these as you meet them, e.g. actor, operator, sailor, supervisor.",
+        fa: "می‌توانید از -er با طیف وسیعی از افعال برای تبدیل آن‌ها به اسم استفاده کنید. گاهی پسوند -er به صورت -or نوشته می‌شود (که همچنان /ə/ تلفظ می‌شود). ارزش آن را دارد که هنگام مواجهه با این موارد، فهرست ویژه‌ای از آن‌ها تهیه کنید، مثلاً actor (بازیگر)، operator (اپراتور)، sailor (دریانورد)، supervisor (ناظر)."
+      },
+      {
+        en: "-er/-or are also used for things which do a particular job, e.g. pencil-sharpener, bottle-opener, grater, projector.",
+        fa: "-er و -or همچنین برای اشیایی که وظیفه خاصی دارند، به کار می‌روند، مثلاً pencil-sharpener (مدادتراش)، bottle-opener (در‌ب‌گشا)، grater (پارچین‌کن)، projector (پروژکتور)."
+      },
+      {
+        en: "-er and -ee (pronounced /i:/) can contrast with each other meaning 'person who does something' (-er) and 'person who receives or experiences the action' (-ee) employer/employee /emplɔi'i:/, sender/addressee, payee (e.g. of a cheque).",
+        fa: "-er و -ee (با تلفظ /i:/) می‌توانند در مقابل یکدیگر به معنای «شخصی که کاری را انجام می‌دهد» (-er) و «شخصی که عمل را دریافت می‌کند یا تجربه می‌کند» (-ee) باشند، مثلاً employer/employee /emplɔ'i:/ (کارفرما/کارمند)، sender/addressee (فرستنده/گیرنده)، payee (گیرنده، مثلاً چک)."
+      },
+      {
+        en: "-(t)ion/-sion/-ion are used to form nouns from verbs, e.g. complication pollution reduction alteration donation promotion admission",
+        fa: "-(t)ion/-sion/-ion برای ساختن اسم از افعال به کار می‌روند، مثلاً complication (پیچیدگی)، pollution (آلودگی)، reduction (کاهش)، alteration (تغییر)، donation (اهداء)، promotion (ترفیع)، admission (پذیرش)."
+      },
+      {
+        en: "-ist [a person] and -ism [an activity or ideology]: used for people's politics, beliefs and ideologies, and sometimes their profession (compare with -er/-or professions above). e.g. Buddhism, journalism, Marxist, typist, physicist, terrorist.",
+        fa: "-ist [یک شخص] و -ism [یک فعالیت یا ایدئولوژی]: برای سیاست، باورها و ایدئولوژی‌های افراد و گاهی حرفه آن‌ها به کار می‌روند (با حرفه‌های -er/-or بالا مقایسه کنید). مثلاً Buddhism (بودیسم)، journalism (روزنامه‌نگاری)، Marxist (مارکسیست)، typist (دقیّر)، physicist (فیزیکدان)، terrorist (تروریست)."
+      },
+      {
+        en: "-ist is also often used for people who play musical instruments, e.g. pianist, violinist, cellist",
+        fa: "-ist همچنین اغلب برای نوازندگان سازهای موسیقی به کار می‌رود، مثلاً pianist (پیانیست)، violinist (ویولن‌نواز)، cellist (ویولنسل‌نواز)."
+      },
+      {
+        en: "-ness is used to make nouns from adjectives: goodness, readiness, forgetfulness, happiness, sadness, weakness. Note what happens to adjectives that end in -y.",
+        fa: "-ness برای ساختن اسم از صفت‌ها به کار می‌رود: goodness (خوبی)، readiness (آمادگی)، forgetfulness (فراموشی)، happiness (شادی)، sadness (غم)، weakness (ضعف). به تغییراتی که در صفت‌های پایانی با -y رخ می‌دهد، توجه کنید."
+      },
+      {
+        en: "-able/-ible /əbl/ with verbs, means 'can be done': drinkable washable readable forgivable edible [can be eaten] flexible [can be bent]",
+        fa: "-able/-ible /əbl/ با افعال به معنای «قابل انجام است» است: drinkable (نوشیدنی)، washable (شستنی)، readable (قابل خواندن)، forgivable (بخشودنی)، edible (قابل خوردن)، flexible (انعطاف‌پذیر)."
+      },
+      {
+        en: "-ise (or -ize) forms verbs from adjectives, e.g. modernise [make modern], commercialise, industrialise.",
+        fa: "-ise (یا -ize) افعال را از صفت‌ها می‌سازد، مثلاً modernise (مدرن کردن)، commercialise (تجاری کردن)، industrialise (صنعتی کردن)."
+      },
+      {
+        en: "-ment: (nouns) excitement enjoyment replacement -ity: (nouns) flexibility productivity scarcity -hood: (abstract nouns especially family terms) childhood motherhood -ship: (abstract nouns especially status) friendship partnership membership -ive: (adjectives) passive productive active -al: (adjectives) brutal legal (nouns) refusal arrival -ous: (adjectives) delicious outrageous furious -ful: (adjectives) forgetful hopeful useful -less: (adjectives) useless harmless homeless -ify: (verbs) beautify purify terrify",
+        fa: "-ment: (اسم‌ها) excitement (شور)، enjoyment (لذت)، replacement (جایگزینی) -ity: (اسم‌ها) flexibility (انعطاف‌پذیری)، productivity (بهره‌وری)، scarcity (کمبود) -hood: (اسم‌های انتزاعی به‌ویژه اصطلاحات خانوادگی) childhood (کودکی)، motherhood (مادری) -ship: (اسم‌های انتزاعی به‌ویژه جایگاه) friendship (دوستی)، partnership (شراکت)، membership (عضویت) -ive: (صفت‌ها) passive (منفعل)، productive (مولد)، active (فعال) -al: (صفت‌ها) brutal (ظالم)، legal (قانونی) (اسم‌ها) refusal (رد کردن)، arrival (رسیدن) -ous: (صفت‌ها) delicious (خوشمزه)، outrageous (فجیع)، furious (عصبانی) -ful: (صفت‌ها) forgetful (فراموش‌کار)، hopeful (امیدوار)، useful (مفید) -less: (صفت‌ها) useless (بی‌فایده)، harmless (بی‌خطر)، homeless (بدون سر) -ify: (افعال) beautify (زیبا کردن)، purify (پاک کردن)، terrify (ترساندن)."
+      },
+      {
+        en: "NOTE The informal suffix -ish can be added to most common adjectives, ages and times to make them less precise, e.g. She's thirtyish. He has reddish hair. Come about eightish.",
+        fa: "توجه: پسوند غیررسمی -ish را می‌توان به اکثر صفت‌های رایج، سنین و زمان‌ها افزود تا آن‌ها را کم‌دقت‌تر کنیم، مثلاً She's thirtyish. (او سی و چند ساله است.) He has reddish hair. (موهای قرمزگون/قرمز مایل به دارد.) Come about eightish. (حدود ساعت هشت بیا.)"
+      },
+      {
+        en: "When you are recording a new word in your vocabulary notebook, write any suffixes that go with it (e.g. refuse — refusal).",
+        fa: "وقتی کلمه جدیدی را در دفتر واژگان خود یادداشت می‌کنید، هر پسوندی که با آن می‌آید را بنویسید (مثلاً refuse — refusal)."
+      }
+    ],
     exercise: {
       instruction: "8.2 Each picture is of an object ending in -er. Can you name them? — 8.3 List six jobs you would like to have in order of preference. How many different suffixes are there in your list? Do any of the job names not have a suffix? (e.g. pilot, film star) — 8.4 Do these words mean a thing, a person, or both? — 8.6 Can you think of anything in your country which should be nationalised (e.g. airlines), privatised, standardised, modernised, computerised or centralised? — 8.7 Which word is the odd one out in each group and why?",
       instructionFa: "هر تصویر شیئی است که به er ختم می‌شود. می‌توانید نامشان را بگویید؟ — شش شغلی را که دوست دارید به ترتیب اولویت فهرست کنید. چند پسوند مختلف در فهرست شما وجود دارد؟ آیا نام هیچ شغلی بدون پسوند است؟ (مثلاً خلبان، ستاره سینما) — آیا این واژه‌ها معنای شیء، شخص یا هر دو را دارند؟ — آیا چیز در کشور شما به ذهن می‌رسد که باید ملی شود (مثلاً خطوط هوایی)، خصوصی شود، استاندارد شود، مدرن شود، رایانه‌ای شود یا متمرکز شود؟ — در هر گروه کدام واژه با بقیه متفاوت است و چرا؟",
@@ -913,7 +1215,36 @@ export const READINGS_PART_1: Reading[] = [
     title: "Prefixes",
     titleFa: "پیشوندها",
     source: "VIU Upper-intermediate 2nd ed — درس 9 (کتاب ص20-21)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Prefixes are often used to give adjectives a negative or an opposite meaning. For example, comfortable/uncomfortable, convenient/inconvenient and similar/dissimilar are opposites. Other examples are 'unjust', 'inedible', 'disloyal'. Unfortunately, there is no easy way of knowing which prefix any adjective will use to form its opposite.",
+        fa: "پیشوندها اغلب برای معنای منفی یا متضاد به صفت‌ها داده می‌شوند. برای مثال، comfortable/uncomfortable (راحت/ناراحت)، convenient/inconvenient (مورد استفاده/غیرمورد استفاده) و similar/dissimilar (مشابه/نامشابه) متضاد هستند. مثال‌های دیگر عبارتند از 'unjust' (ناعادلانه)، 'inedible' (غذاپزی)، 'disloyal' (نافرمان).不幸的是، هیچ راه آسانی برای دانستن اینکه هر صفت از کدام پیشوند برای ساختن متضاد خود استفاده می‌کند، وجود ندارد."
+      },
+      {
+        en: "TIP: When you learn a new adjective note down whether it has an opposite formed with a prefix and, if so, what it is.",
+        fa: "نکته: وقتی صفت جدیدی را می‌آموزید، یادداشت کنید که آیا متضادی با پیشوند دارد و اگر دارد، آن چیست."
+      },
+      {
+        en: "in- becomes im- before a root beginning with 'm' or 'p', e.g. immature, impatient, impartial, improbable. Similarly in- becomes ir- before a word beginning with 'r', and il- before a word beginning with 'l', e.g. irreplaceable, irreversible, illegal, illegible, illiterate.",
+        fa: "in- قبل از ریشه‌ای که با 'm' یا 'p' شروع می‌شود، به im- تبدیل می‌شود، مثلاً immature (ناکامل)، impatient (ناصبور)، impartial (بی‌طرف)، improbable (غیرمحتمل). به طور مشابه، in- قبل از کلمه‌ای که با 'r' شروع می‌شود، به ir- و قبل از کلمه‌ای که با 'l' شروع می‌شود، به il- تبدیل می‌شود، مثلاً irreplaceable (جایگزین‌ناپذیر)، irreversible (برگشت‌ناپذیر)، illegal (غیرقانونی)، illegible (خواندنی‌ناپذیر)، illiterate (بی‌سواد)."
+      },
+      {
+        en: "The prefix in- (and its variations) does not always have a negative meaning – often it gives the idea of inside or into, e.g. internal, import, insert, income.",
+        fa: "پیشوند in- (و تغییرات آن) همیشه معنای منفی ندارد - اغلب به معنای «درون» یا «به داخل» است، مثلاً internal (داخلی)، import (وارد کردن)، insert (جاسازی کردن)، income (درآمد)."
+      },
+      {
+        en: "The prefixes un- and dis- can also form the opposites of verbs, e.g. tie/untie, appear/disappear. These prefixes are used to reverse the action of the verb. Here are some more examples: disagree, disapprove, disbelieve, disconnect, discredit, dislike, dismount, disprove, disqualify, unbend, undo, undress, unfold, unload, unlock, unveil, unwrap, unzip.",
+        fa: "پیشوندهای un- و dis- همچنین می‌توانند متضاد افعال را بسازند، مثلاً tie/untie (بست/گشودن)، appear/disappear (ظاهر شدن/ناپدید شدن). این پیشوندها برای معکوس کردن فعل استفاده می‌شوند. در اینجا چند مثال دیگر وجود دارد: disagree (موافق نبودن)، disapprove (موافق نبودن)، disbelieve (باور نداشتن)، disconnect (قطع کردن)، discredit (بی‌اعتبار کردن)، dislike (نپسندیدن)، dismount (از پایین آمدن)، disprove (اثبات نکردن)، disqualify (غیرصلاح کردن)، unbend (رها کردن)، undo (باز کردن)، undress (درآوردن لباس)، unfold (گشودن)، unload (خالی کردن)، unlock (باز کردن قفل)، unveil (روشن کردن)، unwrap (باز کردن بسته)، unzip (باز کردن زیپ)."
+      },
+      {
+        en: "Here are examples of other prefixes in English. Some of these words are used with a hyphen. Check in a dictionary if you're not sure.",
+        fa: "در اینجا مثال‌هایی از سایر پیشوندها در انگلیسی آورده شده است. برخی از این کلمات با خط تیره (-) استفاده می‌شوند. در صورت عدم اطمینان، در دیکشنری بررسی کنید."
+      },
+      {
+        en: "TIP: Knowing about English prefixes can help you to understand the meaning of unfamiliar words.",
+        fa: "نکته: آگاهی از پیشوندهای انگلیسی می‌تواند به شما در درک معنای واژه‌های ناآشنا کمک کند."
+      }
+    ],
     exercise: {
       instruction: "9.1 Write the opposites of the words underlined. Not all the words you need are on the left-hand page. — 9.3 Use the word in brackets to complete the sentences. Add the necessary prefix and put the word in the correct form. — 9.4 Answer the following questions. The answers are all in the table opposite. — 9.5 Using the table opposite construct words or phrases to replace the underlined words. — Follow-up Find two more examples for each prefix in C opposite. Use a dictionary if necessary.",
       instructionFa: "متضاد کلمات زیرخط‌دارشده را بنویسید. همهٔ کلمات لازم در صفحهٔ چپ نیستند. — جمله‌ها را با کلمهٔ داخل پرانتز کامل کنید. پیشوند لازم را اضافه کنید و کلمه را در شکل درست به کار ببرید. — به سؤال‌های زیر پاسخ دهید. همهٔ پاسخ‌ها در جدول مقابل هستند. — با استفاده از جدول مقابل، کلمه یا عبارتی بسازید که جایگزین کلمات زیرخط‌دار شود. — برای هر پیشوند در بخش C مقابل دو مثال دیگر پیدا کنید. در صورت لزوم از فرهنگ لغت استفاده کنید.",
@@ -1623,7 +1954,36 @@ export const READINGS_PART_1: Reading[] = [
     title: "Compound nouns (I) noun + noun",
     titleFa: "اسم‌های مرکب (۱): اسم + اسم",
     source: "VIU Upper-intermediate 2nd ed — درس 13 (کتاب ص28-29)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A compound noun is a fixed expression which is made up of more than one word and functions as a noun. Such expressions are frequently combinations of two nouns, e.g. address book, human being [person], science fiction [fiction based on some kind of scientific fantasy]. A number of compound nouns are related to phrasal verbs and these are dealt with in Unit 14.",
+        fa: "اسم مرکب، یک عبارت ثابت است که از بیش از یک واژه تشکیل شده و به عنوان یک اسم عمل می‌کند. چنین عباراتی اغلب ترکیبی از دو اسم هستند، مثلاً آدرس‌کتاب، انسان [شخص]، علمی-تخیلی [داستان مبتنی بر نوعی فانتزی علمی]. تعدادی از اسام مرکب با افعال عبارتی مرتبط هستند و این موارد در درس ۱۴ بررسی می‌شوند."
+      },
+      {
+        en: "If you understand both parts of the compound noun, the meaning will usually be clear. Compound nouns are usually written as two words, e.g. tin opener [an opener for tins], bank account [an account in a bank], pedestrian crossing [a place for people to cross a road], but sometimes they are written with a hyphen instead of a space between the words, e.g. pen-name [a false name used by a writer, a pseudonym], baby-sitter [someone who sits with a baby/child while parents are out]. Sometimes they may be written as one word, e.g. earring, trademark [the symbol of a product].",
+        fa: "اگر هر دو بخش از اسم مرکب را درک کنید، معنای آن معمولاً روشن خواهد بود. اسام مرکب معمولاً با دو نوشته می‌شوند، مثلاً بازکن کنسرو [بازکنی برای کنسروها]，حساب بانکی [حسابی در یک بانک]，گذرگاه عابران [محلی برای عبور مردم از یک خیابان]，اما گاهی با خط تیره به جای فاصله بین واژه‌ها نوشته می‌شوند، مثلاً نام مستعار [نامی نادرست که یک نویسنده از آن استفاده می‌کند، نام مستعار]，مراقب کودک [کسی که با کودک/بچه می‌نشیند در حالی که والدین بیرون هستند]. گاهی ممکن است به صورت یک واژه نوشته شوند، مثلاً گوشواره، نشان تجاری [نمادی برای یک محصول]."
+      },
+      {
+        en: "Usually the main stress is on the first part of the compound but sometimes it is on the second part. In the common compound nouns below, the word which contains the main stress is underlined.",
+        fa: "معمولاً وزن اصلی بر روی اولین بخش اسم مرکب قرار می‌گیرد، اما گاهی بر روی بخش دوم است. در اسام مرکب متداول زیر، واژه‌ای که وزن اصلی را در خود دارد، خط‌گذاری شده است."
+      },
+      {
+        en: "Compound nouns may be countable, uncountable or only used in either the singular or the plural. The examples given in C are all countable compound nouns. Here are some examples of common uncountable compound nouns.",
+        fa: "اسام مرکب ممکن است قابل شمارش، غیرقابل شمارش یا فقط در حالت مفرد یا جمع استفاده شوند. مثال‌های داده شده در بخش C همگی اسام مرکب قابل شمارش هستند. در اینجا چند مثال از اسام مرکب غیرقابل شمارش متداول آورده شده است."
+      },
+      {
+        en: "Here are some examples of common compound nouns used only in the singular.",
+        fa: "در اینجا چند مثال از اسام مرکب متداولی که فقط در حالت مفرد استفاده می‌شوند، آورده شده است."
+      },
+      {
+        en: "Here are some examples of common compound nouns used only in the plural.",
+        fa: "در اینجا چند مثال از اسام مرکب متداولی که فقط در حالت جمع استفاده می‌شوند، آورده شده است."
+      },
+      {
+        en: "Compound nouns are particularly common when talking about new inventions or aspects of society in the modern world. Keep an eye open for more examples when you are reading a newspaper or magazine and note them down in a special section of your vocabulary notebook.",
+        fa: "اسام مرکب زمانی که درباره اختراعات جدید یا جنبه‌های جامعه در دنیای مدرن صحبت می‌کنیم، به خصوص رایج هستند. هنگام خواندن روزنامه یا مجله، چشم برای یافتن مثال‌های بیشتر باز بگذارید و آن‌ها را در بخش ویژایی از دفتر واژگان خود یادداشت کنید."
+      }
+    ],
     exercise: {
       instruction: "13.1 Complete these bubble networks with any appropriate expressions from the opposite page. Add extra bubbles if you need them. — 13.3 What are they talking about? In each case the answer is a compound noun opposite. — 13.4 Now make up some sentences like those in exercise 13.3 relating to some of the new expressions you made in exercise 13.2. — 13.5 Here are some compound expressions you have worked with in this unit. Explain what the significance of the nouns used in the compound are.",
       instructionFa: "این شبکه‌های حبابی را با هر عبارت مناسب از صفحه مقابل کامل کنید و در صورت نیاز حباب‌های بیشتری اضافه کنید. — از چه چیزی حرف می‌زنند؟ در هر مورد پاسخ یک اسم مرکب از صفحه مقابل است. — اکنون چند جمله مثل جملات تمرین ۱۳.۳ درباره بعضی از عبارت‌های جدیدی که در تمرین ۱۳.۲ ساخته‌اید بسازید. — در اینجا بعضی عبارت‌های مرکبی که در این واحد با آن‌ها کار کرده‌اید آمده است. توضیح دهید که معنای اسم‌های به‌کاررفته در این ترکیب‌ها چیست.",
@@ -1998,7 +2358,24 @@ export const READINGS_PART_1: Reading[] = [
     title: "Words from other languages",
     titleFa: "واژه‌هایی از زبان‌های دیگر",
     source: "VIU Upper-intermediate 2nd ed — درس 15 (کتاب ص32-33)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "English has borrowed words from most of the other languages with which it has had contact. It has taken many expressions from the ancient languages, Latin and Greek, and these borrowings often have academic or literary associations. From French, English has taken lots of words to do with cooking, the arts, and a more sophisticated lifestyle in general. From Italian come words connected with music and the plastic arts. German expressions in English have been coined either by tourists bringing back words for new things they saw or by philosophers or historians describing German concepts or experiences. Words borrowed from other languages often relate to things which English speakers experienced from the first time abroad.",
+        fa: "انگلیسی واژه‌هایی را از اکثر زبان‌های دیگر با که در تماس بوده، قرض گرفته است. این زبان بسیاری از عبارات را از زبان‌های باستانی لاتین و یونانی گرفته است و این قرض‌گیری‌ها اغلب پیوندهای آکادمیک یا ادبی دارند. از فرانسوی، انگلیسی تعداد زیادی واژه مربوط به آشپزی، هنر و سبک زندگی پیچیده‌تر را به طور کلی گرفته است. از ایتالیایی، واژه‌های مرتبط با موسیقی و هنرهای پلاستیکی آمده‌اند. عبارات آلمانی در انگلیسی یا توسط توریست‌هایی که واژه‌هایی برای چیزهای جدیدی که دیده‌اند با خود آورده‌اند، یا توسط فیلسوفان یا مورخانی که مفاهیم یا تجربیات آلمانی را توصیف می‌کنند، ابداع شده‌اند. واژه‌های قرض گرفته شده از دیگر زبان‌ها اغلب به چیزهایی مربوط می‌شوند که گویندگان انگلیسی برای اولین بار آن‌ها را در خارج از کشور تجربه کرده‌اند."
+      },
+      {
+        en: "There are borrowings from a wide range of languages. For example, from Japanese, tycoon, karate, origami, judo, futon and bonsai. From Arabic, mattress, cipher, alcove, carafe, algebra, harem and yashmak. From Turkish, yoghurt, jackal, kiosk, tulip and caftan; from Farsi, caravan, shawl, bazaar and sherbet, and from Eskimo, kayak, igloo and anorak.",
+        fa: "واژه‌های قرض گرفته شده از طیف گسترده‌ای از زبان‌ها وجود دارد. برای مثال، از ژاپنی، تیکون، کاراته، اوریگامی، جودو، فوتون و بونسای. از عربی، مترس، سیفر، ایکوو، کارافه، جبر، حرمیم و یشماک. از ترکی، ماست، جکال، کیوسک، لاله و کفتان؛ از فارسی، کاروان، شال، بازار و شربت، و از اسکیمو، کایاک، ایگلو و آنوراک."
+      },
+      {
+        en: "The map of Europe below shows the places of origin of some English words and expressions borrowed from some other European languages. Use a dictionary to check the meanings of any words you are not sure about.",
+        fa: "نقشه اروپای زیر، مکان‌های منشأ برخی از واژه‌ها و عبارات انگلیسی که از برخی زبان‌های اروپایی دیگر قرض گرفته شده‌اند را نشان می‌دهد. از یک دیکشنری برای بررسی معنای واژه‌هایی که مطمئن نیستید استفاده کنید."
+      },
+      {
+        en: "English has borrowed very freely from other languages and you may well come across English words that you are familiar with from your own language. Note, however, that the pronunciation is often anglicised, so check in a dictionary.",
+        fa: "انگلیسی به راحتی از دیگر زبان‌ها واژه قرض می‌گیرد و شما ممکن است با واژه‌های انگلیسی مواجه شوید که از زبان خودتان با آن‌ها آشنا هستید. توجه داشته باشید، اما که تلفظ اغلب به انگلیسی تغییر می‌کند، بنابراین در دیکشنری بررسی کنید."
+      }
+    ],
     exercise: {
       instruction: "15.1 Which of the words listed opposite are also used in your language? — 15.2 Is your own language represented on the opposite page? If so, can you add any words to the lists opposite? If not, do you know of any words English has borrowed from your language? (There are almost sure to be some.) Do the words mean exactly the same in English as in your language? Are they pronounced in the same way? — 15.3 Look at all the words opposite and complete the following networks. — 15.4 Make two or three other networks to help you to learn the words on the opposite page. — 15.5 Match the adjectives on the left with the noun they are most likely to be associated with, on the right. — 15.6 What verbs collocate, in other words, are frequently used with the following nouns? — 15.7 Give three nouns likely to follow macho and avant-garde. — 15.8 Have some words or expressions been borrowed from English into your own language? Give some examples. Have they kept exactly the same meaning as they have in English?",
       instructionFa: "کدام‌یک از واژه‌های صفحه مقابل در زبان شما هم به کار می‌روند؟ — آیا زبان شما در صفحه مقابل آمده است؟ اگر بله، می‌توانید واژه‌هایی به فهرست‌ها اضافه کنید؟ اگر نه، آیا واژه‌هایی می‌شناسید که انگلیسی از زبان شما وام گرفته باشد؟ آیا معنی و تلفظ آن‌ها یکسان است؟ — به همه واژه‌های صفحه مقابل نگاه کنید و شبکه‌های زیر را کامل کنید. — دو یا سه شبکه دیگر برای یادگیری واژه‌های صفحه مقابل بسازید. — صفت‌های سمت چپ را به اسمی که بیشترین احتمال ارتباط با آن را دارد در سمت راست وصل کنید. — چه فعل‌هایی با اسم‌های زیر به کار می‌روند (هم‌آیند دارند)؟ — سه اسم که احتمالاً بعد از macho و avant-garde می‌آیند بنویسید. — آیا واژه‌هایی از انگلیسی به زبان شما وام گرفته شده‌اند؟ چند مثال بزنید. آیا معنی آن‌ها دقیقاً همان معنی در انگلیسی است؟",
@@ -2223,7 +2600,120 @@ export const READINGS_PART_1: Reading[] = [
     title: "New words in English",
     titleFa: "واژه‌های تازه در انگلیسی",
     source: "VIU Upper-intermediate 2nd ed — درس 17 (کتاب ص36-37)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "No language stands still. New words and expressions are always being created, sometimes just for fun or usually because something new is invented. Below are some relatively new words and expressions and new uses of old words. Note that all these new words had been in use for at least a few years before the publication of this book.",
+        fa: "هیچ زبانی ثابت نمی‌ماند. واژه‌ها و عبارات جدید همیشه در حال ساخته شدن هستند، گاهی فقط برای تفریح یا معمولاً چون چیزی جدید اختراع می‌شود. در زیر برخی از واژه‌ها و عبارات نسبتاً جدید و کاربردهای جدید واژه‌های قدیمی آورده شده‌اند. توجه داشته باشید که تمام این واژه‌های جدید حداقل چند سال قبل از انتشار این کتاب در حال استفاده بوده‌اند."
+      },
+      {
+        en: "cyberspace: the realm where electronic data are sorted or transmitted by computers",
+        fa: "فضای سایبری: قلمرویی که داده‌های الکترونیکی در آن توسط کامپیوترها مرتب یا منتقل می‌شوند"
+      },
+      {
+        en: "junk e-mail: unsolicited material, such as adverts, sent by e-mail",
+        fa: "ایمیل زباله: محتوای غیردعوت‌شده، مانند تبلیغات، که از طریق ایمیل ارسال می‌شود"
+      },
+      {
+        en: "keypal: a kind of penfriend that you exchange e-mails with rather than letters",
+        fa: "کلیدپال: نوعی دوست نامه‌ای که با آن ایمیل به جای نامه مبادله می‌کنید"
+      },
+      {
+        en: "surfing the net: exploring the world-wide web",
+        fa: "_surfing the net_: گشت و گذار در وب جهانی"
+      },
+      {
+        en: "e-commerce: business based on the Internet",
+        fa: "_e-commerce_: کسب‌وکار مبتنی بر اینترنت"
+      },
+      {
+        en: "mouse potato: someone who spends a lot of time in front of a computer, especially on-line",
+        fa: "موشی پاتاتو: کسی که وقت زیادی را جلوی کامپیوتر، به‌ویژه به صورت آنلاین، سپری می‌کند"
+      },
+      {
+        en: "information fatigue syndrome: a condition of psychological stress induced by trying to cope with too much information",
+        fa: "سندرم خستگی اطلاعاتی: یک حالت استرس روانی ناشی از تلاش برای مقابله با حجم زیادی اطلاعات"
+      },
+      {
+        en: "eating disorder: a serious disturbance in eating habits often caused by emotional problems",
+        fa: "اختلال خوردن: اختلال جدی در عادات غذایی که اغلب ناشی از مشکلات عاطفی است"
+      },
+      {
+        en: "GM foods: genetically-modified food, i.e. food adapted by use of biotechnology",
+        fa: "مواد غذایی GM: مواد غذایی ژنتیکی-تغییر یافته، یعنی غذایی که با استفاده از بیوتکنولوژی تطبیق داده شده است"
+      },
+      {
+        en: "snowboarding: gliding on snow, upright on a large single ski",
+        fa: "اسنوبردینگ: اسکی کردن روی برف، ایستاده روی یک اسکی بزرگ تک"
+      },
+      {
+        en: "in-line skating: roller-skating or roller-blading with rubber wheels in a straight line",
+        fa: "اسکیت خطی: اسکیت یا رولربلیدینگ با چرخ‌های لاستیکی در یک خط مستقیم"
+      },
+      {
+        en: "video jockey (VJ): a TV presenter of music videos",
+        fa: "وی‌جی (مجری ویدیو): مجری تلویزیون که ویدیوهای موزیک را پخش می‌کند"
+      },
+      {
+        en: "audio book: an audio recording of a book read aloud – sometimes in shortened form",
+        fa: "کتاب صوتی: ضبط صدا از یک کتاب که به صورت بلند خوانده شده است – گاهی در نسخه‌ی خلاصه شده"
+      },
+      {
+        en: "drop-dead gorgeous: inspiring admiration for someone's attractiveness",
+        fa: "خوش‌تیپ مرگ‌آور: الهام‌بخش تحسین برای جذابیت کسی"
+      },
+      {
+        en: "bad hair day: a day when everything goes wrong and you feel unattractive",
+        fa: "روز موهای بد: روزی که همه چیز بد پیش می‌رود و خود را جذاب نمی‌بینید"
+      },
+      {
+        en: "docusoap: a television genre showing people going about their ordinary lives",
+        fa: "داکوسوپ: ژانر تلویزیونی که زندگی عادی افراد را نشان می‌دهد"
+      },
+      {
+        en: "cybercafé: café where customers can eat and drink and also use the Internet",
+        fa: "کافه اینترنتی: کافه‌ای که مشتریان در آن می‌توانند غذا و نوشیدنی بخورند و همچنین از اینترنت استفاده کنند"
+      },
+      {
+        en: "road rage: extreme anger experienced by drivers in stressful conditions, resulting in dangerous driving or attacks on other drivers",
+        fa: "خشم رانندگی: خشم شدیدی که رانندگان در شرایط استرس‌زا تجربه می‌کنند و منجر به رانندگی خطرناک یا حمله به رانندگان دیگر می‌شود"
+      },
+      {
+        en: "singleton: an unmarried man or woman",
+        fa: "فرد تنها: مرد یا زن متأهل"
+      },
+      {
+        en: "spin doctor: someone whose job it is to manipulate popular opinion in favour of politicians or other public figures",
+        fa: "پزشک رسانه‌ای: کسی که شغلش این است که نظر عمومی را به نفع سیاستمداران یا سایر شخصیت‌های عمومی دستکاری کند"
+      },
+      {
+        en: "decluttering: the art of discarding unnecessary items",
+        fa: "پاک‌سازی: هنر دور ریختن وسایل غیرضروری"
+      },
+      {
+        en: "off-message: departing from the official party line",
+        fa: "خارج از پیام: انحراف از خط حزبی رسمی"
+      },
+      {
+        en: "grey vote, grey pound: the voting or purchasing power of older people",
+        fa: "رأی و قدرت خرید سالمندان: قدرت رأی یا خرید افراد مسن"
+      },
+      {
+        en: "down-sizing: reducing the size of a company or organisation, usually by sacking people",
+        fa: "کوچک‌سازی: کاهش اندازه یک شرکت یا سازمان، معمولاً با اخراج افراد"
+      },
+      {
+        en: "outsourcing: employing outside workers to do work away from the company site",
+        fa: "فراسپاری: استخدام کارگران خارجی برای انجام کار خارج از محل شرکت"
+      },
+      {
+        en: "hot-desking: the practice of sharing desks or workstations between workers (rather than individuals having their own desks)",
+        fa: "استفاده از میز اشتراکی: عمل به اشتراک گذاشتن میزها یا ایستگاه‌های کاری بین کارمندان (به جای اینکه هر فرد میز خود را داشته باشد)"
+      },
+      {
+        en: "waitperson: waiter or waitress",
+        fa: "خدمتکار: گارسون یا گارسون"
+      }
+    ],
     exercise: {
       instruction: "17.1 Here are some more new words and expressions. Match them with their definitions. — 17.3 If you meet a new word it is often possible to work out its meaning from its context. Try and explain what the underlined words must mean.",
       instructionFa: "در ادامه چند واژه و اصطلاح جدید دیگر آمده است. آن‌ها را با تعاریفشان تطبیق دهید. — اگر به واژه جدیدی برخوردید، اغلب می‌توان معنای آن را از بافت جمله دریافت. سعی کنید معنای واژه‌های زیرخط‌دار را توضیح دهید.",
@@ -2719,7 +3209,284 @@ export const READINGS_PART_1: Reading[] = [
     title: "Homonyms",
     titleFa: "هم‌نام‌ها",
     source: "VIU Upper-intermediate 2nd ed — درس 20 (کتاب ص42-43)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Homonyms can be subdivided into homographs and homophones. Homographs are words which are written in the same way but have different meanings and may be pronounced differently. Compare bow in ‘he took a bow /baʊ/ at the end of the concert’ and ‘he was wearing a bow /bəʊ/ tie’. Homophones are words with different meanings which are pronounced in the same way but are spelt differently, e.g. bow as in ‘he took a bow’ and bough, ‘the bough of a tree’.",
+        fa: "همخوانی‌ها را می‌توان به هم‌نویسا و هم‌آواها تقسیم کرد. هم‌نویسا کلماتی هستند که به یک شکل نوشته می‌شوند اما معانی متفاوتی دارند و ممکن است تلفظ متفاوتی نیز داشته باشند. bow در «او در پایان کنسرت یک تعظیم /baʊ/ کرد» و bow در «او یک گالستربند /bəʊ/ به تن داشت» را مقایسه کنید. هم‌آواها کلماتی با معانی متفاوت هستند که به یک شکل تلفظ می‌شوند اما به شکل‌های متفاوتی نوشته می‌شوند، مثلاً bow در «او یک تعظیم کرد» و bough، «شاخه‌ی یک درخت»."
+      },
+      {
+        en: "Here are some more examples of homographs with differing pronunciations.",
+        fa: "در اینجا چند مثال دیگر از هم‌نویسا با تلفظ‌های متفاوت آورده شده است."
+      },
+      {
+        en: "I live in the north of England. /lɪv/",
+        fa: "من در شمال انگلستان زندگی می‌کنم. /lɪv/"
+      },
+      {
+        en: "Your favourite rock group is singing live on TV tonight. /laɪv/",
+        fa: "گروه راک مورد علاقه‌تان امشب زنده روی تلویزیون اجرا می‌کند. /laɪv/"
+      },
+      {
+        en: "I read in bed each night. /riːd/",
+        fa: "هر شب در رختخوان می‌خوانم. /riːd/"
+      },
+      {
+        en: "I read War and Peace last year. /red/",
+        fa: "سال گذشته «جنگ و صلح» را خواندم. /red/"
+      },
+      {
+        en: "The lead singer in the group is great. /liːd/",
+        fa: "خواننده‌ی اصلی گروه عالی است. /liːd/"
+      },
+      {
+        en: "Lead pipes are dangerous. /led/",
+        fa: "لوله‌های سربی خطرناک هستند. /led/"
+      },
+      {
+        en: "The wind blew the tree down. /wɪnd/",
+        fa: "باد درخت را زمین زد. /wɪnd/"
+      },
+      {
+        en: "Wind the rope round this tree. /waɪnd/",
+        fa: "این طناب را دور این درخت بپیچان. /waɪnd/"
+      },
+      {
+        en: "I wound my watch last night. /waʊnd/",
+        fa: "امشب ساعت را پر کردم. /waʊnd/"
+      },
+      {
+        en: "He suffered a terrible wound in the war. /wuːnd/",
+        fa: "او در جنگ یک زخم terrible برداشت. /wuːnd/"
+      },
+      {
+        en: "Some students at Oxford spend more time learning to row well than studying. /rəʊ/",
+        fa: "برخی از دانشجویان آکسفورد بیشتر وقت خود را صرف یادگیری قایقرانی خوب به مطالعه می‌کنند. /rəʊ/"
+      },
+      {
+        en: "They shared a flat for ages until they had a row over money and split up. /raʊ/",
+        fa: "آن‌ها برای مدتی یک آپارتمان مشترک داشتند تا اینکه بر سر پول با هم دعوا کردند و از هم جدا شدند. /raʊ/"
+      },
+      {
+        en: "They stood in a row and had their photo taken. /rəʊ/",
+        fa: "آن‌ها در یک ردیف ایستادند و عکسشان گرفته شد. /rəʊ/"
+      },
+      {
+        en: "This book is called English Vocabulary in Use. /juːs/",
+        fa: "این کتاب «واژگان انگلیسی در کاربرد» نام دارد. /juːs/"
+      },
+      {
+        en: "You must know how to use words as well as their meaning. /juːz/",
+        fa: "شما باید معنی کلمات را به خوبی می‌دانست و بدانید که چگونه از آن‌ها استفاده کنید. /juːz/"
+      },
+      {
+        en: "They lived in a large old house. /haʊs/",
+        fa: "آن‌ها در یک خانه‌ی بزرگ و قدیمی زندگی می‌کردند. /haʊs/"
+      },
+      {
+        en: "The buildings house a library and two concert halls as well as a theatre. /haʊz/",
+        fa: "این ساختمان‌ها یک کتابخانه، دو سالن کنسرت و یک تئاتر را در خود جای داده‌اند. /haʊz/"
+      },
+      {
+        en: "The sow has five piglets. /saʊ/",
+        fa: "خوک ماده پنج بچه‌خوک دارد. /saʊ/"
+      },
+      {
+        en: "The farmers sow the seeds in the spring. /səʊ/",
+        fa: "کشاورزان در بهار بذر می‌پاشند. /səʊ/"
+      },
+      {
+        en: "Bathing the baby at night may help it to fall asleep. /bɑːθɪŋ/",
+        fa: "شامگاهانه شستن شاید به کودک کمک کند تا به خواب برود. /bɑːθɪŋ/"
+      },
+      {
+        en: "(On a sign at a beach) No bathing /beɪðɪŋ/",
+        fa: "(بر روی تابلوی ساحل) شنا ممنوع /beɪðɪŋ/"
+      },
+      {
+        en: "A very large number of words in English are homographs or homophones. If a word that you read or hear in English seems strange in its context, it may well be because it is not being used in the sense that you are familiar with. Use your dictionary carefully to check for extra meanings.",
+        fa: "تعداد زیادی از کلمات در انگلیسی هم‌نویس (homograph) یا هم‌آوا (homophone) هستند. اگر کلمه‌ای که می‌خوانید یا می‌شنوید در متنش عجیب به نظر می‌رسد، احتمالاً به این دلیل است که به معنایی که با آن آشنا هستید استفاده نشده است. با دقت از دیکشنری خود برای بررسی معانی اضافی استفاده کنید."
+      },
+      {
+        en: "Here are some of the many examples of homophones in English.",
+        fa: "در اینجا برخی از مثال‌های بسیار هم‌آوا در انگلیسی آورده شده است."
+      },
+      {
+        en: "air/heir",
+        fa: "هوا/وارث"
+      },
+      {
+        en: "faze/phase",
+        fa: "آشفتگی/مرحله"
+      },
+      {
+        en: "hoarse/horse",
+        fa: "خشک/اسب"
+      },
+      {
+        en: "meat/meet",
+        fa: "گوشت/دیدن"
+      },
+      {
+        en: "pane/pain",
+        fa: "شیشه/درد"
+      },
+      {
+        en: "practise/practice",
+        fa: "تمرین/عمل"
+      },
+      {
+        en: "rein/rain",
+        fa: "لگام/باران"
+      },
+      {
+        en: "sight/site",
+        fa: "دید/مکان"
+      },
+      {
+        en: "steak/stake",
+        fa: "استیک/پیش‌بینی"
+      },
+      {
+        en: "tire/tyre",
+        fa: "تایر/خسته"
+      },
+      {
+        en: "weak/week",
+        fa: "ضعیف/هفته"
+      },
+      {
+        en: "aloud/allowed",
+        fa: "بلند/اجازه داده شده"
+      },
+      {
+        en: "flu/flew",
+        fa: "آنفولانزا/پرواز کرد"
+      },
+      {
+        en: "its/it’s",
+        fa: "متعلق به آن/آن است"
+      },
+      {
+        en: "mown/moan",
+        fa: "کاشته شده/زاری زدن"
+      },
+      {
+        en: "pair/pear/pare",
+        fa: "پیر/پره/پر"
+      },
+      {
+        en: "pray/prey",
+        fa: "دعا کردن/شکار"
+      },
+      {
+        en: "right/rite/write",
+        fa: "راست/آیین/نوشتن"
+      },
+      {
+        en: "so/sew",
+        fa: "پس/دوختن"
+      },
+      {
+        en: "tea/tee",
+        fa: "چای/تی"
+      },
+      {
+        en: "toe/tow",
+        fa: "انگشت پا/کشیدن"
+      },
+      {
+        en: "weather/whether",
+        fa: "آب و هوا/آیا"
+      },
+      {
+        en: "break/brake",
+        fa: "شکستن/ترمز"
+      },
+      {
+        en: "grate/great",
+        fa: "خراشیدن/بزرگ"
+      },
+      {
+        en: "lays/laze",
+        fa: "گذاشتن/آرام"
+      },
+      {
+        en: "our/hour",
+        fa: "ما/ساعت"
+      },
+      {
+        en: "peal/peel",
+        fa: "صدای زنگ/پوست کندن"
+      },
+      {
+        en: "raise/rays",
+        fa: "افزایش دادن/شعاع"
+      },
+      {
+        en: "sale/sail",
+        fa: "فروش/قایق بادبانی"
+      },
+      {
+        en: "sole/soul",
+        fa: "فقط/روح"
+      },
+      {
+        en: "there/their/they’re",
+        fa: "آنجا/آنها/آنها هستند"
+      },
+      {
+        en: "waist/waste",
+        fa: "کمر/هدر دادن"
+      },
+      {
+        en: "whine/wine",
+        fa: "خرناس زدن/شراب"
+      },
+      {
+        en: "fare/fair",
+        fa: "کرایه/منصف"
+      },
+      {
+        en: "groan/grown",
+        fa: "زاری/رشد کرده"
+      },
+      {
+        en: "mail/male",
+        fa: "پست/مرد"
+      },
+      {
+        en: "pale/pail",
+        fa: "بسیار کم‌رنگ/ ведро"
+      },
+      {
+        en: "place/plaice",
+        fa: "مکان/ماهی کاد"
+      },
+      {
+        en: "read/reed",
+        fa: "خواندن/گیاه نی"
+      },
+      {
+        en: "scene/seen",
+        fa: "صحنه/دیده شده"
+      },
+      {
+        en: "some/sum",
+        fa: "برخی/مجموع"
+      },
+      {
+        en: "through/threw",
+        fa: "از طریق/انداخت"
+      },
+      {
+        en: "wait/weight",
+        fa: "صبر کردن/وزن"
+      },
+      {
+        en: "would/wood",
+        fa: "می‌کرد/چوب"
+      }
+    ],
     exercise: {
       instruction: "20.1 Each underlined word rhymes with, or sounds similar to, one of the words in brackets; choose the matching word. — 20.2 Write the word in phonetic script in the correct spelling for the context. — 20.3 Write one sentence using both of the words corresponding to the phonetic script. — 20.4 Homophones and homographs are at the root of many jokes in English. Match the first part of each of these children’s jokes with the second part and then explain the play on words involved in each. — 20.5 Choose pairs of words from C opposite to describe the pictures below.",
       instructionFa: "هر واژهٔ زیرخط‌دار با یکی از واژه‌های داخل پرانتز قافیه دارد یا آهنگین است؛ واژهٔ هماهنگ را انتخاب کنید. — واژهٔ نوشته‌شده با خط آوانگاری را با املای درست متن بنویسید. — یک جمله بنویسید که هر دو واژهٔ متناظر با خط آوانگاری در آن باشد. — هم‌آواها و هم‌نگاره‌ها ریشهٔ بسیاری از شوخی‌های انگلیسی‌اند. بخش نخست هر شوخی را با بخش دوم مطابقت دهید و سپس بازی با واژه‌های هر کدام را توضیح دهید. — جفت واژه‌ها را از بخش C انتخاب کنید تا تصاویر زیر را توصیف کنید.",

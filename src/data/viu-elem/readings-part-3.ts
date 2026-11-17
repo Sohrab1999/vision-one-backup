@@ -860,7 +860,36 @@ export const READINGS_PART_3: Reading[] = [
     title: "Countries, languages and people",
     titleFa: "کشورها، زبان‌ها و مردم",
     source: "VIU Elementary 2nd ed — درس 36 (کتاب ص76-77)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "All the nouns and adjectives in this unit always begin with a capital letter, for example Africa [NOT africa].",
+        fa: "تمام اسم‌ها و صفت‌های این واحد همیشه با حروف بزرگ شروع می‌شوند، برای مثال آفریقا [نه africa]."
+      },
+      {
+        en: "It is not possible to show all the countries of the world on a small page. If your country is not included, check its English name with your teacher.",
+        fa: "نمایش تمام کشورهای جهان در یک صفحه کوچک ممکن نیست. اگر کشور شما در این لیست نیست، نام انگلیسی آن را از معلم خود بپرسید."
+      },
+      {
+        en: "Most country adjectives end in (i)an.",
+        fa: "اکثر صفات کشورها با پسوند (i)an تمام می‌شوند."
+      },
+      {
+        en: "Many country adjectives end in ish.",
+        fa: "بسیاری از صفات کشورها با پسوند ish تمام می‌شوند."
+      },
+      {
+        en: "A few country adjectives end in ese.",
+        fa: "چند صفت کشور با پسوندese تمام می‌شوند."
+      },
+      {
+        en: "Exceptions: French (from France), Dutch (from Holland), Swiss (from Switzerland), Greek, Iraqi, Thai, Icelandic, Arab, Israeli",
+        fa: "استثناها: فرانسوی (از فرانسه)، هلندی (از هلند)، سوئیسی (از سوئیس)، یونانی، عراقی، تایلندی، ایسلندی، عربی، اسرائیلی"
+      },
+      {
+        en: "Words for languages are usually the same as the 'people' adjective: English, French, Japanese, Thai, Spanish, Chinese, Norwegian (from Norway), etc. There is one exception: Arabic.",
+        fa: "واژه‌های زبان‌ها معمولاً همانند صفت «ملیت» هستند: انگلیسی، فرانسوی، ژاپنی، تایلندی، اسپانیایی، چینی، نروژی (از نروژ) و غیره. یک استثنا وجود دارد: عربی."
+      }
+    ],
     exercise: {
       instruction: "36.1 In which continents are these places? — 36.2 Which countries are these ? Write their names on them. — 36.3 Where are these capital cities? Write sentences. — 36.4 Write down in English: — 36.5 Which country is different? (Think of the languages they speak there.) Write sentences. — 36.6 What is the adjective for these countries?",
       instructionFa: "این مکان‌ها در کدام قاره‌ها هستند؟ — این‌ها کدام کشورها هستند؟ نامشان را روی آن‌ها بنویسید. — این پایتخت‌ها کجا هستند؟ جمله بنویسید. — به انگلیسی بنویسید: — کدام کشور متفاوت است؟ (به زبان‌هایی که آنجا صحبت می‌کنند فکر کنید.) جمله بنویسید. — صفت این کشورها چیست؟",

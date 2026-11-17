@@ -2335,7 +2335,28 @@ export const READINGS_PART_4: Reading[] = [
     title: "Cinema and theatre",
     titleFa: "سینما و تئاتر",
     source: "VIU Pre-int & Int 2nd ed — درس 76 (کتاب ص154-155)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "NOTE The people in the theatre are called the audience.",
+        fa: "توجه: افرادی که در تئاتر هستند، مخاطبان نامیده می‌شوند."
+      },
+      {
+        en: "B Plays and musicals — At the theatre you can see plays, e.g. Hamlet, written by Shakespeare; or musicals, e.g. Phantom of the Opera, written by Andrew Lloyd Webber. You usually book (= reserve) tickets in advance (= some time before you see the play). When you see the play (or film), it is called a performance, e.g. The evening performance usually starts at 8 pm.",
+        fa: "ب تئاتر و موزیکال‌ها — در تئاتر می‌توانید تئاترها را، مثلاً 'هملت' اثر شکسپیر؛ یا موزیکال‌ها را، مثلاً 'فانتوم اپرا' اثر اندرو لوید وببر، ببینید. معمولاً بلیط‌ها را از پیش (= مدتی قبل از اینکه نمایش را ببینید) رزرو می‌کنید. وقتی تئاتر (یا فیلم) را می‌بینید، آن یک اجرا نامیده می‌شود، مثلاً 'اجرای شبانه' معمولاً ساعت ۸ شب شروع می‌شود."
+      },
+      {
+        en: "C Cinema — Films are shown on a screen. In your country, films made in English may have subtitles (= a written translation at the bottom of the screen), or they are dubbed. (= the English is replaced by actors speaking the words in your own language) The person who makes the film is the director, e.g. Steven Spielberg, and the people in the film are actors. Famous actors are often called film stars (or stars), e.g. Julia Roberts.",
+        fa: "س سینما — فیلم‌ها روی یک پرده نمایش داده می‌شوند. در کشور شما، فیلم‌های ساخته شده به زبان انگلیسی ممکن است زیرنویت (= ترجمه نوشته شده در پایین صفحه) داشته باشند، یا دوبله شده باشند (= انگلیسی با بازیگرانی که کلمات را به زبان خود شما می‌گویند، جایگزین شده است). شخصی که فیلم را می‌سازد، کارگردان است، مثلاً استیون اسپیلبرگ، و افرادی که در فیلم هستند، بازیگران هستند. بازیگران معروف اغلب به ستاره‌های فیلم (یا ستاره‌ها) نامیده می‌شوند، مثلاً جولیا رابرتز."
+      },
+      {
+        en: "E Describing plays and films — Journalists who write about films and plays are called critics, and their articles are called reviews. These are some common words they use.",
+        fa: "ه توصیف تئاترها و فیلم‌ها — خبرنگارانی که در مورد فیلم‌ها و تئاترها می‌نویسند، منتقدان نامیده می‌شوند، و مقالاتشان را نقد می‌گویند. این‌ها برخی از کلمات رایجی هستند که آن‌ها استفاده می‌کنند."
+      },
+      {
+        en: "F Telling the story — The film is set (= happens) in the 1920s. It's about (= the subject/story is) a young man from a poor background (= family history and situation), who meets a girl and they fall in love. But her family don't accept him, so they run away (= go to another place to be away from the parents). At first (= in the beginning) everything is fine, but then things go wrong (= problems appear in their situation) and she has to leave him or they will be unhappy.",
+        fa: "و تعریف داستان — فیلم در دهه ۱۹۲۰ اتفاق می‌افتد. درباره (= موضوع/داستان) جوانی از خانواده‌ای فقیر (= پیشینه خانوادگی و وضعیت)، که با دختری آشنا می‌شود و عاشق می‌شود. اما خانواده‌اش او را نمی‌پذیرند، بنابراین فرار می‌کنند (= به جای دیگری می‌روند تا از والدین دور باشند). در ابتدا (= در شروع) همه چیز خوب است، اما بعداً اوضاع بد می‌شود (= مشکلات در وضعیتشان ظاهر می‌شود) و او مجبور است او را ترک کند یا ناراحت خواهند بود."
+      }
+    ],
     exercise: {
       instruction: "76.1 Look at the picture and answer the questions. — 76.2 Match the words on the left with the best definition on the right. — 76.3 What word or phrase is being defined? — 76.5 Test your general knowledge of cinema. What kinds of films are these?",
       instructionFa: "به تصویر نگاه کنید و به سؤال‌ها پاسخ دهید. — کلمات سمت چپ را با بهترین تعریف سمت راست تطبیق دهید. — چه کلمه یا عبارتی در حال تعریف شدن است؟ — دانش عمومی سینمایی خود را آزمایش کنید. این‌ها چه نوع فیلم‌هایی هستند؟",
@@ -2779,7 +2800,40 @@ export const READINGS_PART_4: Reading[] = [
     title: "Television",
     titleFa: "تلویزیون",
     source: "VIU Pre-int & Int 2nd ed — درس 79 (کتاب ص160-161)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Using a television/telly/TV",
+        fa: "الف استفاده از تلویزیون/telly/TV"
+      },
+      {
+        en: "You can also turn it up (= increase the volume; opp turn it down) and turn over (= change to a different channel; e.g. from 1 to 3). You can use switch on, switch off, or switch over in place of turn. (NOT switch it up/down)",
+        fa: "همچنین می‌توانید صدایش را بلند کنید (= حجم صدا را افزایش دهید؛ برعکس کم کنید) و کانال را عوض کنید (= به یک کانال متفاوت تغییر دهید؛ مثلاً از ۱ به ۳). می‌توانید به جای turn، از switch on، switch off، یا switch over استفاده کنید. (نه switch it up/down)"
+      },
+      {
+        en: "B Types of programme",
+        fa: "ب انواع برنامه"
+      },
+      {
+        en: "Soap opera: a programme often on two or three times a week, which follows the lives of a group/community of people. The stories are often exciting, dramatic and hard to believe. Quiz show or Game show: individuals or teams (called contestants) answer questions or play different games against each other. The winner gets a prize, e.g. money or a holiday. Chat show: a programme where a presenter talks to famous people about their lives. Documentary: a film with factual information, often about a problem in society. Series: a number of programmes about the same situation or the same characters in different situations. This may be a comedy series (= programmes that try to be funny), or a drama series. (= programmes with interesting characters and exciting situations) Current affairs: programmes about a social or political problem. Current means happening 'now/at the present time'.",
+        fa: "اپیزودهای سریالی: برنامه‌ای که اغلب دو یا سه بار در هفته پخش می‌شود و زندگی یک گروه/جامعه افراد را دنبال می‌کند. داستان‌ها اغلب هیجان‌انگیز، دراماتیک و باورنکردنی هستند. برنامه‌های مسابقه یا بازی: افراد یا تیم‌ها (به نام شرکت‌کنندگان) به سوالات پاسخ می‌دهند یا در برابر یکدیگر بازی‌های مختلفی را انجام می‌دهند. برنده جایزه‌ای مانند پول یا تعطیلات برنده می‌شود. برنامه‌های گفتگو: برنامه‌ای که در آن مجری با افراد مشهور در مورد زندگی‌شان صحبت می‌کند. مستند: فیلمی با اطلاعات واقعی، اغلب در مورد مشکلی در جامعه. سریال: مجموعه‌ای از برنامه‌ها در مورد همان موقعیت یا همان شخصیت‌ها در موقعیت‌های مختلف. این ممکن است یک سریال کمدی (= برنامه‌هایی که سعی می‌کنند خنده‌دار باشند)، یا یک سریال دراماتیک باشد. (= برنامه‌هایی با شخصیت‌های جالب و موقعیت‌های هیجان‌انگیز) اخبار روز: برنامه‌هایی در مورد یک مشکل اجتماعی یا سیاسی. 'Current' به معنی 'اکنون/در زمان حال' است."
+      },
+      {
+        en: "C TV in Great Britain",
+        fa: "ج تلویزیون در بریتانیا"
+      },
+      {
+        en: "At the moment there are five 'terrestrial' channels (or stations) on TV (BBC 1, BBC 2, ITV1, Channel 4 and Channel 5). If you pay extra, you can have a satellite dish and receive satellite TV; or pay to have cable TV (TV sent through wire cables underground). There are many channels available.",
+        fa: "در حال حاضر پنج 'ارضی' کانال (ایستگاه) در تلویزیون وجود دارد (BBC 1، BBC 2، ITV1، Channel 4 و Channel 5). اگر هزینه بیشتری بپردازید، می‌توانید یک بشقاب ماهواره داشته باشید و تلویزیون ماهواره دریافت کنید؛ یا برای داشتن تلویزیون کابلی (تلویزیون که از طریق کابل‌های زیرزمینی ارسال می‌شود) هزینه بپردازید. کانال‌های زیادی در دسترس است."
+      },
+      {
+        en: "D Talking TV",
+        fa: "د صحبت در مورد تلویزیون"
+      },
+      {
+        en: "What's on TV tonight? (= what programmes are showing on TV tonight?) Is there anything on TV tonight? What time's the film on? (= what time is the film showing?) I quite like television commercials. (= the advertisements between programmes) Are they showing the game live (= as it happens) or just recorded highlights? (= parts of the game after it has been played, e.g. later in the day/evening) 'Friends' is on tonight, but it's a repeat (= the programme has been on TV before). I've seen it. What's your favourite programme? (= the programme you like most/best)",
+        fa: "امشب چه در تلویزیون پخش می‌شود؟ (= چه برنامه‌هایی امشب در تلویزیون پخش می‌شوند؟) امشب چیزی در تلویزیون هست؟ فیلم چه زمانی پخش می‌شود؟ (= فیلم چه زمانی پخش می‌شود؟) من تبلیغات تلویزیونی را خیلی دوست دارم. (= تبلیغات بین برنامه‌ها) بازی را زنده (= همانطور که در حال وقوع است) پخش می‌کنند یا فقط highlights ضبط شده؟ (= بخش‌هایی از بازی پس از اینکه انجام شده، مثلاً بعد از ظهر/شب) 'فرندز' امشب پخش می‌شود، اما یک تکرار است (= این برنامه قبلاً در تلویزیون پخش شده). من آن را دیده‌ام. محبوب‌ترین برنامه شما چیست؟ (= برنامه‌ای که بیشتر از همه دوست دارید)"
+      }
+    ],
     exercise: {
       instruction: "79.1 You are watching TV with a friend. What could you say in each of the situations below? — 79.2 Here are the evening programmes on three British TV channels. Find one example of: a documentary; a quiz show; a game show; a drama series; a current affairs programme. There is also one comedy series, and two soap operas. Can you guess what they are? — 79.4 Answer these questions about TV in your own country.",
       instructionFa: "با دوستت تلویزیون تماشا می‌کنی. در هر موقعیت زیر چه می‌گویی؟ — این برنامه‌های شبانه سه شبکه تلویزیونی بریتانیاست. یک نمونه از هر کدام پیدا کن. — به این سؤالات درباره تلویزیون در کشور خودت پاسخ بده.",

@@ -1801,7 +1801,132 @@ export const READINGS_PART_4: Reading[] = [
     title: "Leisure at home",
     titleFa: "تفریح در خانه",
     source: "VIU Elementary 2nd ed — درس 56 (کتاب ص116-117)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A TV, radio, music, video",
+        fa: "تلویزیون، رادیو، موسیقی، ویدیو"
+      },
+      {
+        en: "I watch TV every evening. [NOT I see TV.]",
+        fa: "من هر شب تلویزیون تماشا می‌کنم. [نه من تلویزیون می‌بینم.]"
+      },
+      {
+        en: "Did you watch/see the film about President Kennedy?",
+        fa: "آیا فیلمی درباره رئیس‌جم کندی را تماشا/دیدی؟"
+      },
+      {
+        en: "I listen to the radio every morning. [NOT I hear the radio.]",
+        fa: "من هر صبح رادیو گوش می‌دهم. [نه من رادیو را می‌شنوم.]"
+      },
+      {
+        en: "What programmes do you like best on TV and radio?",
+        fa: "کدام برنامه‌ها را در تلویزیون و رادیو بیشتر دوست دارید؟"
+      },
+      {
+        en: "I like watching films on TV. (or I like to watch ...)",
+        fa: "من دوست دارم فیلم در تلویزیون تماشا کنم. (یا من دوست دارم تماشا کنم ...)"
+      },
+      {
+        en: "I like listening to music on the radio. (or I like to listen ...)",
+        fa: "من دوست دارم موسیقی در رادیو گوش دهم. (یا من دوست دارم گوش دهم ...)"
+      },
+      {
+        en: "I often listen to CDs or tapes when I am relaxing.",
+        fa: "وقتی استراحت می‌کنم، اغلب به سی‌دی‌ها یا نوارهای کaset گوش می‌دهم."
+      },
+      {
+        en: "At the weekend, we usually watch a video.",
+        fa: "در آخر هفته، معمولاً یک ویدیو تماشا می‌کنیم."
+      },
+      {
+        en: "B Hobbies/activities at home",
+        fa: "ب. سرگرمی‌ها/فعالیت‌های در خانه"
+      },
+      {
+        en: "A lot of young people play computer games every day.",
+        fa: "بسیاری از جوانان هر روز بازی کامپیوتری انجام می‌دهند."
+      },
+      {
+        en: "Do you use the Internet?",
+        fa: "از اینترنت استفاده می‌کنی؟"
+      },
+      {
+        en: "I really like cooking.",
+        fa: "من واقعاً آشپزی دوست دارم."
+      },
+      {
+        en: "Do you like gardening?",
+        fa: "آیا باغبانی دوست داری؟"
+      },
+      {
+        en: "We grow flowers and vegetables in our garden.",
+        fa: "ما در باغمان گل و سبزیجات می‌کاریم."
+      },
+      {
+        en: "I live in a flat. I don't have a garden, but I have a lot of house plants.",
+        fa: "من در آپارتمان زندگی می‌کنم. باغ ندارم، اما گیاهان آپارتمانی زیادی دارم."
+      },
+      {
+        en: "C Reading",
+        fa: "ج. خواندن"
+      },
+      {
+        en: "I read a lot at home.",
+        fa: "من زیاد در خانه کتاب می‌خوانم."
+      },
+      {
+        en: "What do you read?",
+        fa: "چه چیزی می‌خوانی؟"
+      },
+      {
+        en: "I read novels. (= long stories)",
+        fa: "من رمان می‌خوانم. (= داستان‌های بلند)"
+      },
+      {
+        en: "I like books about nature/different countries, etc.",
+        fa: "من کتاب‌هایی درباره طبیعت/کشورهای مختلف و غیره را دوست دارم."
+      },
+      {
+        en: "I like magazines about rock music and sport.",
+        fa: "من مجلاتی را درباره موسیقی راک و ورزش دوست دارم."
+      },
+      {
+        en: "Do you read a newspaper every day?",
+        fa: "تو هر روز روزنامه می‌خوانی؟"
+      },
+      {
+        en: "D Time with other people",
+        fa: "D وقت با دیگران"
+      },
+      {
+        en: "Sometimes we invite friends around/have friends around. (= we ask them to come to our house/flat)",
+        fa: "گاهی اوقات دوستان را به خانه دعوت می‌کنیم. (= ما از آن‌ها می‌خواهیم به خانه/آپارتمان ما بیایند)"
+      },
+      {
+        en: "I often have people/have friends to dinner.",
+        fa: "من اغلب مهمان/دوستان را برای شام دعوت می‌کنم."
+      },
+      {
+        en: "My best friend comes to stay sometimes. (= sleeps in my house/flat)",
+        fa: "بهترین دوستم گاهی برای ماندن می‌آید. (= شب‌ها در خانه/آپارتمان من می‌ماند)"
+      },
+      {
+        en: "I talk to my friends on the phone every evening. or I ring my friends every evening.",
+        fa: "من هر شب با دوستانم روی تلفن صحبت می‌کنم. یا هر شب به دوستانم زنگ می‌زنم."
+      },
+      {
+        en: "E Just relaxing",
+        fa: "E استراحت کردن"
+      },
+      {
+        en: "Sometimes, I just do nothing.",
+        fa: "گاهی اوقات، من فقط هیچ کاری نمی‌کنم."
+      },
+      {
+        en: "I like to have a sleep after lunch.",
+        fa: "من دوست دارم بعد از ناهار کمی بخوابم."
+      }
+    ],
     exercise: {
       instruction: "56.2 Fill in the missing verbs. — 56.3 Answer for yourself. — 56.4 Interesting or boring? Put these leisure activities in order, from most interesting to most boring, in your opinion.",
       instructionFa: "افعال جاافتاده را پر کنید. — درباره خودتان پاسخ دهید. — جالب یا خسته‌کننده؟ این فعالیت‌های فراغتی را به نظر خودتان از جالب‌ترین تا خسته‌کننده‌ترین مرتب کنید.",
@@ -2110,7 +2235,100 @@ export const READINGS_PART_4: Reading[] = [
     title: "The media",
     titleFa: "رسانه‌ها",
     source: "VIU Elementary 2nd ed — درس 58 (کتاب ص120-121)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Radio and TV programmes",
+        fa: "A برنامه‌های رادیو و تلویزیون"
+      },
+      {
+        en: "The news is on TV at 6 o'clock every night. (= important things that happen) [NOT The news are on TV.]",
+        fa: "خبرها هر شب ساعت ۶ در تلویزیون پخش می‌شوند. (= اتفاقات مهمی که می‌افتند) [نه خبرها پخش می‌شوند.]"
+      },
+      {
+        en: "Do you watch soaps / soap operas? Home and Away is my favourite. (Soap operas are stories about people's lives. They are often on TV every day.)",
+        fa: "تو سریال‌ها را می‌بینی؟ هوم اند آوید مورد علاقه من است. (سریال‌ها داستان‌هایی درباره زندگی مردم هستند. اغلب هر روز در تلویزیون پخش می‌شوند.)"
+      },
+      {
+        en: "I like nature programmes best. (= programmes about animals, birds, etc.)",
+        fa: "من برنامه‌های طبیعت را بیشتر دوست دارم. (= برنامه‌هایی درباره حیوانات، پرندگان و غیره)"
+      },
+      {
+        en: "I watched a documentary last night about drugs and young people. (= programme looking at a social problem or question)",
+        fa: "شب گذشته یک مستند درباره مواد مخدر و جوانان دیدم. (= برنامه‌ای که به یک مشکل یا سوال اجتماعی می‌پردازد)"
+      },
+      {
+        en: "In talk shows, people talk about very personal and private things in their lives.",
+        fa: "در برنامه‌های گفتگو محور، افراد درباره چیزهای بسیار شخصی و خصوصی زندگی خود صحبت می‌کنند."
+      },
+      {
+        en: "The children watch cartoons on Saturday mornings. (For example, Disney films with animals that talk.) (See Unit 55.)",
+        fa: "کودکان صبح‌های شنبه کارتون می‌بینند. (مثلاً فیلم‌های دیزنی با حیواناتی که حرف می‌زنند.) (واحد 55 را ببینید.)"
+      },
+      {
+        en: "I always watch sport programmes and films.",
+        fa: "من همیشه برنامه‌های ورزشی و فیلم را می‌بینم."
+      },
+      {
+        en: "B Newspapers and magazines",
+        fa: "B روزنامه و مجله"
+      },
+      {
+        en: "In most countries there are morning newspapers and evening newspapers.",
+        fa: "در بیشتر کشورها روزنامه‌های صبح و عصر وجود دارد."
+      },
+      {
+        en: "Every month, I buy a magazine.",
+        fa: "هر ماه، یک مجله می‌خرم."
+      },
+      {
+        en: "My mother buys women's magazines.",
+        fa: "مادرم مجلات زنانه می‌خرد."
+      },
+      {
+        en: "I like news magazines like Newsweek and Time.",
+        fa: "من مجلات خبری مثل نیوزویک و تایم را دوست دارم."
+      },
+      {
+        en: "My little brother buys comics.",
+        fa: "برادرم کوچک کمیک می‌خرد."
+      },
+      {
+        en: "Other types of magazines: sports magazines / computer magazines / teenage magazines (See Unit 56.)",
+        fa: "انواع دیگر مجلات: مجلات ورزشی / مجلات کامپیوتری / مجلات نوجوانان (واحد 56 را ببینید.)"
+      },
+      {
+        en: "C Media and technology",
+        fa: "C رسانه و فناوری"
+      },
+      {
+        en: "Do you have satellite TV?",
+        fa: "تو تلویزیون ماهواره‌ای داری؟"
+      },
+      {
+        en: "How many channels do you have? We have 25.",
+        fa: "چند کانال داری؟ ما ۲۵ تا داریم."
+      },
+      {
+        en: "You can read some newspapers on the Internet.",
+        fa: "شما می‌توانید برخی روزنامه‌ها را در اینترنت بخوانید."
+      },
+      {
+        en: "D People and the media",
+        fa: "D مردم و رسانه‌ها"
+      },
+      {
+        en: "There was an interview with the US President on TV last night.",
+        fa: "امشب مصاحبه‌ای با رئیس‌جمهور آمریکا در تلویزیون پخش شد."
+      },
+      {
+        en: "The reporters are outside Zelda Glitzberg's house. (= People who go out and get the news stories where they happen.)",
+        fa: "روزنامه‌نگاران در خارج از خانه زلدا گلیتزبرگ هستند. (= افرادی که بیرون می‌روند و داستان‌های خبری را از جایی که اتفاق می‌افتد جمع‌آوری می‌کنند.)"
+      },
+      {
+        en: "My sister is a journalist; she writes for The Oxford Times newspaper. (= Person who writes articles.)",
+        fa: "خواهر من روزنامه‌نگار است؛ برای روزنامه آکسفورد تایمز می‌نویسد. (= شخصی که مقاله می‌نویسد.)"
+      }
+    ],
     exercise: {
       instruction: "58.1 Fill the gaps in these sentences. — 58.2 Match the left-hand column with the right-hand column. Draw lines. — 58.3 What can we find in these magazines? Match the left-hand column with the right-hand column. Draw lines. — 58.4 What do you call ... — 58.5 Answer these questions for yourself. — 58.6 Write a paragraph about the media in your country. Use words from the opposite page.",
       instructionFa: "جاهای خالی این جمله‌ها را پر کنید. — ستون سمت چپ را با ستون سمت راست مطابقت دهید. خط بکشید. — در این مجله‌ها چه چیزهایی می‌توانیم پیدا کنیم؟ ستون سمت چپ را با ستون سمت راست مطابقت دهید. خط بکشید. — چه می‌نامید... (این‌ها را چه می‌گویید؟) — به این سؤال‌ها برای خودتان پاسخ دهید. — یک پاراگراف درباره رسانه‌ها در کشور خود بنویسید. از واژه‌های صفحه مقابل استفاده کنید.",

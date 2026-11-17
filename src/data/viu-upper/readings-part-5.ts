@@ -112,7 +112,92 @@ export const READINGS_PART_5: Reading[] = [
     title: "Idioms describing people",
     titleFa: "اصطلاح‌های وصف آدم‌ها",
     source: "VIU Upper-intermediate 2nd ed — درس 82 (کتاب ص166-167)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Positive and negative qualities",
+        fa: "A ویژگی‌های مثبت و منفی"
+      },
+      {
+        en: "positive / negative",
+        fa: "مثبت / منفی"
+      },
+      {
+        en: "She has a heart of gold. [very kind, generous]",
+        fa: "قلب طلا دارد. [خیلی مهربان، بخشنده]"
+      },
+      {
+        en: "She's as hard as nails. [no sympathy for others]",
+        fa: "سخت مانند ناخن است. [همدردی با دیگران ندارد]"
+      },
+      {
+        en: "He's as good as gold. [generous, helpful, well-behaved used generally for children]",
+        fa: "خوب مانند طلا است. [بخشنده، مفید، با ادب، معمولاً برای کودکان استفاده می‌شود]"
+      },
+      {
+        en: "He's rather a cold fish. [distant, unfriendly]",
+        fa: "تا حدی یک ماهی سرد است. [دور، غیردوستانه]"
+      },
+      {
+        en: "Note also:",
+        fa: "توجه داشته باشید:"
+      },
+      {
+        en: "He's such an awkward customer. [difficult person to deal with]",
+        fa: "او مشتری بسیار دست‌وپاگیر است. [شخصی که با او کار کردن سخت است]"
+      },
+      {
+        en: "She's a pain in the neck. Nobody likes her. [nuisance, difficult]",
+        fa: "او آدم مزاحمی است. کسی دوستش ندارد. [آزاردهنده، مشکل‌ساز]"
+      },
+      {
+        en: "He gets on everyone's nerves. [irritates everybody]",
+        fa: "او همه را آزار می‌دهد. [همه را کلافه می‌کند]"
+      },
+      {
+        en: "B People's 'fast' and 'slow' qualities",
+        fa: "ب) ویژگی‌های 'سریع' و 'آهسته' افراد"
+      },
+      {
+        en: "fast: He's very quick off the mark; he always gets things before everybody else. You've asked him to marry you! You're a fast worker! You only met him three weeks ago!",
+        fa: "سریع: او خیلی زود شروع می‌کند؛ همیشه زودتر از همه کارها را تمام می‌کند. تو ازدواج با او را پیشنهاد داده‌ای! تو خیلی زود پیش می‌روی! او را فقط سه هفته پیش دیدی!"
+      },
+      {
+        en: "slow: I was a bit slow off the mark; the job had been filled by the time I got the forms. Come on! Hurry up! You're such a slowcoach!",
+        fa: "آهسته: من کمی دیر شروع کردم؛ وقتی فرم‌ها را گرفتم، شغل پر شده بود. برو! عجله کن! تو آدم آهسته‌ای!"
+      },
+      {
+        en: "C How people relate to the social norm",
+        fa: "ج) نحوه ارتباط افراد با هنجارهای اجتماعی"
+      },
+      {
+        en: "She's a bit of an odd-ball; very strange. [peculiar, strange]",
+        fa: "او کمی آدم عجیبی است؛ خیلی عجیب. [غیرعادی، عجیب]"
+      },
+      {
+        en: "He's really over the top. [very exaggerated in behaviour]",
+        fa: "او واقعاً افراطی است. [رفتارش بسیار اغراق‌آمیز است]"
+      },
+      {
+        en: "He's (gone) round the bend, if you ask me. [absolutely crazy/mad]",
+        fa: "به نظر من دیوانه است. [کاملاً دیوانه/مجنون]"
+      },
+      {
+        en: "My politics are very middle-of-the-road. [very normal; no radical ideas; neither left- nor right-wing]",
+        fa: "سیاست‌هایم خیلی میانه‌رو است. [خیلی طبیعی؛ ایده‌های تند نداشتن؛ نه چپ‌گرا و راست‌گرا]"
+      },
+      {
+        en: "D Who's who in the class? Idioms for 'people in the classroom'",
+        fa: "د) چه کیست در کلاس؟ اصطلاحات برای 'افراد در کلاس'"
+      },
+      {
+        en: "[illustrations labelled: teacher's pet; Mary's top of the class; a real know-all; a bit of a big-head; a lazy-bones]",
+        fa: "[تصاویر برچسب‌گذاری شده: عشق معلم؛ مری اول کلاس؛ یک آدم دانا؛ کمی خودبین؛ یک تنبل]"
+      },
+      {
+        en: "The last three idioms are used of people outside the classroom situation, too.",
+        fa: "سه اصطلاح آخر فقط در مورد افراد خارج از موقعیت کلاس نیز استفاده می‌شوند."
+      }
+    ],
     exercise: {
       instruction: "82.1 Try to complete these idioms from memory if possible. — 82.2 What do we call ... — 82.3 You can also learn idioms by associating them with a key word or words. For example, two idioms on the left-hand page have gold in them and two have mark. Which are they? Here is a word-fork based on to have + head. Use the expressions to finish the sentences below. — 82.4 Mini-quiz. Which part of the body might a difficult person (a) get on (b) be a pain in? — 82.5 Which idioms do you think these drawings represent? — 82.6 Try guessing from the context what the underlined idioms mean.",
       instructionFa: "سعی کنید در صورت امکان این اصطلاحات را از حفظ کامل کنید. — چه می‌نامیم... — همچنین می‌توانید اصطلاحات را با关联 کردن با یک یا چند کلمهٔ کلیدی بیاموزید. مثلاً دو اصطلاح در صفحهٔ چپ با gold و دو اصطلاح با mark هستند. کدام‌اند؟ این شاخهٔ کلمه‌ای بر پایهٔ to have + head است. از عبارات برای کامل کردن جملات زیر استفاده کنید. — آزمون کوچک. یک فرد دشوار ممکن است کدام قسمت بدن را (الف) get on و (ب) be a pain in باشد؟ — به نظر شما این تصاویر نشان‌دهندهٔ کدام اصطلاحات هستند؟ — سعی کنید از روی بافت حدس بزنید اصطلاحات زیرخط‌دار چه معنایی دارند.",
@@ -1183,7 +1268,56 @@ export const READINGS_PART_5: Reading[] = [
     title: "Proverbs",
     titleFa: "ضرب‌المثل‌ها",
     source: "VIU Upper-intermediate 2nd ed — درس 88 (کتاب ص178-179)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Speakers tend to use proverbs to comment on a situation, often at the end of a true story someone has told, or in response to some event. Like all idiomatic expressions, they are useful and enjoyable to know and understand, but should be used with care.",
+        fa: "افراد تمایل دارند تا با استفاده از ضرب‌المثل‌ها در مورد موقعیتی اظهار نظر کنند، اغلب در پایان داستانی واقعی که کسی تعریف کرده، یا در واکنش به برخی رویدادها. مانند همه اصطلاحات، ضرب‌المثل‌ها برای دانستن و درک مفید و لذت‌بخش هستند، اما باید با احتیاط استفاده شوند."
+      },
+      {
+        en: "B Key elements",
+        fa: "ب) عناصر کلیدی"
+      },
+      {
+        en: "Proverbs can be grouped by key elements, for example, animals and birds.",
+        fa: "ضرب‌المثل‌ها را می‌توان بر اساس عناصر کلیدی گروه‌بندی کرد، برای مثال، حیوانات و پرندگان."
+      },
+      {
+        en: "When the cat’s away, the mice will play. [people will take advantage of someone else’s absence to behave more freely]",
+        fa: "وقتی گربه نیست، موش‌ها بازی می‌کنند. [افراد از غیبت دیگران سوءاستفاده کرده و آزادتر رفتار می‌کنند]"
+      },
+      {
+        en: "You can lead a horse to water but you can’t make it drink. [you can try to persuade someone, but you can’t force them]",
+        fa: "می‌توانی اسب را به آب ببری، ولی نمی‌توانی او را وادار به نوشیدن کنی. [می‌توانی سعی کنی کسی را قانع کنی، ولی نمی‌توانی او را مجبور کنی]"
+      },
+      {
+        en: "One swallow doesn’t make a summer. [one positive sign does not mean that all will be well. A swallow is a very fast-flying bird that returns to Britain in late spring]",
+        fa: "یک پرنده تابستانی بهار را نمی‌آورد. [یک نشانه مثبت به این معنا نیست که همه چیز خوب خواهد بود. پرنده‌ی سویلی پرنده‌ای بسیار پرسرعت است که اواخر بهار به بریتانیا بازمی‌گردد]"
+      },
+      {
+        en: "C Visualising",
+        fa: "C تصور کردن"
+      },
+      {
+        en: "As with learning all vocabulary, visualising some element often helps.",
+        fa: "همانند یادگیری همه‌ی واژگان، تصور کردن یک عنصر اغلب کمک‌کننده است."
+      },
+      {
+        en: "There’s no smoke without fire. or Where there’s smoke, there’s fire. [rumours are usually based on some degree of truth]",
+        fa: "دود بی‌دلیل نمی‌پرد. یا جایی که دود باشد، آتش هم هست. [شایعات معمولاً بر پایه‌ی یک درستی نهفته‌اند]"
+      },
+      {
+        en: "Too many cooks spoil the broth [too many people interfering is a bad way of doing things]",
+        fa: "آشپزخانه‌ی پر از آشپز، خوراکش می‌سوزد. [تعداد زیاد افراد مداخله‌گر، روش بدی برای انجام کارهاست]"
+      },
+      {
+        en: "People who live in glass houses shouldn’t throw stones. [don’t criticise others’ faults if you suffer from them yourself]",
+        fa: "کسانی که در خانه‌های شیشه‌ای زندگی می‌کنند، نباید سنگ پرتاب کنند. [نقاط ضعف دیگران را نقد نکن اگر خودت از آنها رنج می‌بری]"
+      },
+      {
+        en: "Many hands make light work. [a lot of people helping makes a job easier]",
+        fa: "دست‌های فراوان کار را سبک می‌کند. [کمک زیاد از افراد، کار را آسان‌تر می‌کند]"
+      }
+    ],
     exercise: {
       instruction: "88.1 Find proverbs on the left-hand page that fit these situations. — 88.2 Some proverbs are similar in meaning. Which proverbs on the left go with which on the right, and what do they have in common in terms of meaning?",
       instructionFa: "ضرب‌المثل‌هایی در صفحهٔ سمت چپ پیدا کنید که با این موقعیت‌ها همخوانی دارند. — برخی ضرب‌المثل‌ها در معنا مشابه‌اند. کدام ضرب‌المثل‌های سمت چپ با کدام‌های سمت راست جور می‌شوند و از نظر معنا چه وجه مشترکی دارند؟",
@@ -1376,7 +1510,156 @@ export const READINGS_PART_5: Reading[] = [
     title: "Expressions with bring and take",
     titleFa: "عبارت‌های با bring و take",
     source: "VIU Upper-intermediate 2nd ed — درس 90 (کتاب ص182-183)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Here are some common phrasal verbs with bring. Each is exemplified in a typical spoken sentence and a more formal equivalent is provided in brackets.",
+        fa: "A در اینجا برخی افعال ترکیبی رایج با 'bring' آورده شده است. هر یک در یک جمله‌ی گفتاری معمولی مثال زده شده و معادل رسمی‌تر آن در پرانتز ارائه شده است."
+      },
+      {
+        en: "My father's parents brought him up in the country because they thought that country life was better for children. [raised]",
+        fa: "پدربزرگ و مادربزرگ پدرش او را در روستا بزرگ کردند زیرا فکر می‌کردند که زندگی روستایی برای کودکان بهتر است. [تربیت کردند]"
+      },
+      {
+        en: "Don't give up. I'm sure you'll bring it off in the end. [succeed]",
+        fa: "ناامید نشو. مطمئنم در نهایت موفق می‌شوی. [موفق می‌شوی]"
+      },
+      {
+        en: "Cold winds always bring on her cough. [cause to start]",
+        fa: "بادهای سرد همیشه سرفه‌ی او را برمی‌انگیزد. [علت شروع شدن آن می‌شوند]"
+      },
+      {
+        en: "The strike brought about a change of government. [cause to happen]",
+        fa: "اعتصاب باعث تغییر دولت شد. [علت وقوع آن می‌شود]"
+      },
+      {
+        en: "I hope they don't bring back capital punishment. [re-introduce]",
+        fa: "امیدوارم مجازات اعدام را دوباره برنگردانند. [دوباره اجرا کنند]"
+      },
+      {
+        en: "They promised to bring down taxes but they have actually raised them. [lower]",
+        fa: "آنها قول کاهش مالیات را دادند اما در واقع آن را افزایش داده‌اند. [کاهش دهند]"
+      },
+      {
+        en: "Inflation will probably bring down the government. [destroy, remove from power]",
+        fa: "احتمالاً تورم دولت را ساقط خواهد کرد. [نابود کند، از قدرت برکنار کند]"
+      },
+      {
+        en: "Ford Motors are bringing out an interesting new model in the spring. [introducing]",
+        fa: "فورد موتورز مدل جدید و جالبی را در بهار عرضه خواهد کرد. [معرفی می‌کند]"
+      },
+      {
+        en: "Keep trying to persuade him and you'll bring him round to your point of view. [persuade]",
+        fa: "ادامه بده سعی کن او را متقاعد کن و در نهایت او را به دیدگاه خودت می‌آوری. [متقاعدش کن]"
+      },
+      {
+        en: "B Here are some common phrasal verbs with take.",
+        fa: "B در اینجا برخی افعال ترکیبی رایج با 'take' آورده شده است."
+      },
+      {
+        en: "Doesn't he take after his father! They even sound the same. [resemble]",
+        fa: "آیا شبیه پدرش نیست! حتی صدایشان هم یکسان است. [شبیه است]"
+      },
+      {
+        en: "I wish I could take back what I said to her. [withdraw]",
+        fa: "ای کاش می‌توانستم آنچه به گفته‌ام پس بگیرم. [عقب بکشم]"
+      },
+      {
+        en: "It's hard to take in his lectures – he speaks in such an abstract way. [absorb, understand]",
+        fa: "درک سخنرانی‌هایش برایم سخت است - او به این شکل انتزاعی صحبت می‌کند. [جذب کردن، درک کردن]"
+      },
+      {
+        en: "She was completely taken in by him and agreed to give him all her money. [deceived]",
+        fa: "او کاملاً فریب خورد و موافقت کرد که تمام پولش را به او بدهد. [فریب خوردن]"
+      },
+      {
+        en: "Sales have really taken off now – we should make a good profit this year. [started to improve]",
+        fa: "فروش‌ها واقعاً رو به بهبود گذاشته‌اند - امسال باید سود خوبی بکنیم. [شروع به بهبود کردن]"
+      },
+      {
+        en: "The plane took off two hours late. [left the ground]",
+        fa: "هواپیمای دو ساعت با تأخیر از زمین بلند شد. [از زمین بلند شدن]"
+      },
+      {
+        en: "She's very good at taking off her teacher – she sounds just like her. [imitating]",
+        fa: "او خیلی خوب معلمش را تقلید می‌کند - دقیقاً مثل او حرف می‌زند. [تقلید کردن]"
+      },
+      {
+        en: "We'll have to take on more staff if we're to take on more work. [employ; accept]",
+        fa: "اگر کار بیشتری بپذیریم، مجبور خواهیم بود کارمندان بیشتری استخدام کنیم. [استخدام کردن؛ پذیرفتن]"
+      },
+      {
+        en: "She took to him at once and they soon became close friends. [formed an immediate liking for]",
+        fa: "او بلافاصله به او علاقه‌مند شد و خیلی زود دوست صمیمی هم شدند. [فوراً علاقه‌مند شدن]"
+      },
+      {
+        en: "When did you take up golf? [start (a hobby)]",
+        fa: "وقتی شروع به بازی گلف کردی؟ [شروع کردن (یک سرگرمی)]"
+      },
+      {
+        en: "C Here are some other common idioms with bring and take.",
+        fa: "C در اینجا برخی اصطلاحات رایج دیگر با فعل‌های bring و take آورده شده است."
+      },
+      {
+        en: "The new regulations will be brought into force in May. [become law]",
+        fa: "مقررات جدید در ماه مه به اجرا در خواهند آمد. [به قانون تبدیل شدن]"
+      },
+      {
+        en: "His research brought some very interesting facts to light. [revealed]",
+        fa: "تحقیقاتش واقعاً حقایق جالبی را آشکار ساخت. [آشکار کردن]"
+      },
+      {
+        en: "Matters were brought to a head when Pat was sacked. [reached a point where changes had to be made]",
+        fa: "وقتی پات اخراج شد، امور به نقطه‌ای رسید که تغییرات ضروری بود. [به نقطه‌ای رسید که باید تغییراتی صورت می‌گرفت]"
+      },
+      {
+        en: "It's better that everything should be brought into the open. [made public]",
+        fa: "بهتر است همه چیز علنی شود. [عمومی کردن]"
+      },
+      {
+        en: "His new girlfriend has really brought out of the best in him. [been good for him]",
+        fa: "دوست‌ دختر جدیدش واقعاً بهترین‌هایش را در او بروز داده است. [برای او خوب بوده است]"
+      },
+      {
+        en: "Don't let him take advantage of you. [unfairly use superiority]",
+        fa: "اجازه نده از خودت سوءاستفاده کند. [به ناحق از برتری خود استفاده کند]"
+      },
+      {
+        en: "After 20 years of marriage he takes her for granted. [doesn't appreciate her qualities]",
+        fa: "بعد از ۲۰ سال ازدواج، او را بی‌ارزش می‌شمارد. [کیفیت‌های او را ارزشمند نمی‌داند]"
+      },
+      {
+        en: "I took it for granted you'd come – you always do. [assumed]",
+        fa: "برایم مسلول بود که می‌آیی - همیشه می‌آیی. [فرض کردن]"
+      },
+      {
+        en: "She immediately took control of the situation. [started organising]",
+        fa: "او بلافاصله کنترل شرایط را به دست گرفت. [شروع به سازماندهی کردن]"
+      },
+      {
+        en: "His unkind words took my breath away. [surprised]",
+        fa: "کلمات ناجنسانه‌اش مرا حیرت‌زده کرد. [شگفت‌زده کردن]"
+      },
+      {
+        en: "She loves taking care of small children. [looking after, caring for]",
+        fa: "او مراقبت از کودکان کوچک را دوست دارد. [مراقبت کردن، نگهداری کردن]"
+      },
+      {
+        en: "We took part in a demonstration last Saturday. [participated]",
+        fa: "ما در تظاهرات شنبه گذشته شرکت کردیم."
+      },
+      {
+        en: "The story takes place in Mexico. [happens]",
+        fa: "داستان در مکزیک اتفاق می‌افتد."
+      },
+      {
+        en: "He doesn't seem to take pride in his work. [draw satisfaction from]",
+        fa: "به نظر نمی‌رسد از کارش رضایت بگیرد."
+      },
+      {
+        en: "Mother always takes everything in her stride – she never makes a fuss. [copes calmly]",
+        fa: "مادر همیشه همه چیز را با آرامش برمی‌دارد – هرگز fuss نمی‌کند."
+      }
+    ],
     exercise: {
       instruction: "90.2 The diagram below can be called a bubble network (see Unit 2). Can you complete it? — 90.3 Write possible answers to these questions using one of the phrasal verbs in A or B opposite. — 90.4 Reword these sentences using expressions from C opposite. — 90.5 Make up a bubble network like the one in 90.2, based on phrasal verbs with bring. — 90.6 Which of the expressions in C mean the opposite of:",
       instructionFa: "نمودار زیر را می‌توان شبکهٔ حبابی نامید (ببینید واحد ۲). می‌توانید آن را کامل کنید؟ — با استفاده از یکی از فعل‌های عبارتی در بخش‌های A یا B، پاسخ‌های ممکن برای این سؤال‌ها بنویسید. — این جمله‌ها را با استفاده از اصطلاحات بخش C بازنویسی کنید. — یک شبکهٔ حبابی مانند ۹۰.۲ بر اساس فعل‌های عبارتی با bring بسازید. — کدام‌یک از اصطلاحات بخش C عکس معنی‌های زیر هستند:",
@@ -2864,7 +3147,28 @@ export const READINGS_PART_5: Reading[] = [
     title: "US English",
     titleFa: "انگلیسی آمریکایی",
     source: "VIU Upper-intermediate 2nd ed — درس 97 (کتاب ص196-197)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A English in the USA differs considerably from British English. Pronunciation is the most striking difference but there are also a number of differences in vocabulary and spelling as well as slight differences in grammar. Yet, on the whole, speakers of British and American English have little difficulty in understanding each other.",
+        fa: "انگلیسی در آمریکا به طور قابل توجهی با انگلیسی بریتانیا متفاوت است. تلفظ تفاوت برجسته‌ای است اما تفاوت‌های زیادی در واژگان و املا و همچنین تفاوت‌های جزئی در دستور زبان نیز وجود دارد. با این حال، به طور کلی، گویشندگان انگلیسی بریتانیا و آمریکا در درک یکدیگر مشکل چندانی ندارند."
+      },
+      {
+        en: "B American spelling is usually simpler. For example, British English words ending in -our and -re, end in -or and -er in American English, e.g. colour/color, centre/center. Words ending -ise in British English end in -ize in US English. There are differences in individual words too, e.g. British 'plough' becomes 'plow'.",
+        fa: "B املا آمریکایی معمولاً ساده‌تر است. برای مثال، کلمات انگلیسی بریتانیایی که با -our و -re تمام می‌شوند، در انگلیسی آمریکایی با -or و -er تمام می‌شوند، به عنوان مثال colour/color، centre/center. کلمات که در انگلیسی بریتانیایی با -ise تمام می‌شوند، در انگلیسی آمریکا با -ize تمام می‌شوند. تفاوت‌هایی در کلمات فردی نیز وجود دارد، به عنوان مثال 'plough' بریتانیایی به 'plow' تبدیل می‌شود."
+      },
+      {
+        en: "C Here are some common US words with their British equivalents.",
+        fa: "C در اینجا برخی از کلمات رایج آمریکایی با معادل‌های بریتانیایی خود آورده شده است."
+      },
+      {
+        en: "Note: the fall = autumn    semester = term (academic) [semester is becoming more common in Britain.]",
+        fa: "توجه: fall = autumn    semester = term (آکادمیک) [semester در بریتانیا رایج‌تر شده است.]"
+      },
+      {
+        en: "D Here are some words and phrases which can cause confusion when used by Brits and Americans talking together because they mean something different in each 'language'.",
+        fa: "D در اینجا برخی از کلمات و عبارت‌ها آورده شده‌اند که هنگام استفاده توسط بریتانیایی‌ها و آمریکایی‌ها هنگام صحبت با یکدیگر می‌توانند باعث سردرگمی شوند، زیرا در هر 'زبان' معنای متفاوتی دارند."
+      }
+    ],
     exercise: {
       instruction: "97.1 If you saw words spelt in the following way would you expect the writer in each case to be British or American? Why? — 97.2 What are (a) the American and (b) the British words for the following things? — 97.3 You are going on holiday to the States. Which of the words listed in C and D opposite do you think it would be most important for you to know? Which of the words would a person travelling with a baby might well need to know? — 97.4 Translate the following into British English. — 97.5 Can you avoid some of the most common confusions arising between British and American speakers? Try the following quiz. — 97.6 Do you know any other examples of American English? Make a list at an appropriate place in your vocabulary notebook or file. See also Unit 98 for English in other parts of the world.",
       instructionFa: "اگر کلمات را با این املاء می‌دیدید، انتظار داشتید نویسنده در هر مورد بریتانیایی باشد یا آمریکایی؟ چرا؟ — واژه آمریکایی و واژه بریتانیایی موارد زیر (تصاویر) چیست؟ — برای تعطیلات به آمریکا می‌روید. دانستن کدام‌یک از واژه‌های بخش‌های C و D برای شما مهم‌تر است؟ چه واژه‌هایی برای کسی که با نوزاد سفر می‌کند لازم است؟ — جملات زیر را به انگلیسی بریتانیایی برگردانید. — آیا می‌توانید از برخی رایج‌ترین سردرگمی‌های میان گویشوران بریتانیایی و آمریکایی پرهیز کنید؟ این آزمون را امتحان کنید. — مثال‌های دیگری از انگلیسی آمریکایی می‌شناسید؟ فهرستی در جای مناسب دفترچه واژگان خود تهیه کنید. برای انگلیسی در دیگر نقاط جهان واحد ۹۸ را هم ببینید.",

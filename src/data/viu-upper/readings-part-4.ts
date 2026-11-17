@@ -48,7 +48,56 @@ export const READINGS_PART_4: Reading[] = [
     title: "Money – buying, selling and paying",
     titleFa: "پول — خرید، فروش و پرداخت",
     source: "VIU Upper-intermediate 2nd ed — درس 62 (کتاب ص126-127)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Personal finance",
+        fa: "مالیات شخصی"
+      },
+      {
+        en: "Sometimes in a shop they ask you: 'How do you want to pay?'",
+        fa: "گاهی در مغازه از شما می‌پرسند: 'چگونه می‌خواهید پرداخت کنید؟'"
+      },
+      {
+        en: "You can answer: 'Cash. / By cheque. / By credit card.'",
+        fa: "می‌توانید پاسخ دهید: 'نقدی. / با چک. / با کارت اعتباری.'"
+      },
+      {
+        en: "In a bank you usually have a current account, which is one where you pay in your salary and then withdraw money to pay your everyday bills. The bank sends you a regular bank statement telling you how much money has gone in and out of your account. You may also have a savings account where you deposit any extra money that you have and only take money out when you want to spend it on something special. If you spend more than you have in your account you can have an overdraft. The bank allows you to spend more and charges you interest. If your account is overdrawn [you have taken more out of your account than you had in it] you are in the red (as opposed to in the black or in credit).",
+        fa: "در بانک معمولاً یک حساب جاری دارید، که در آن حقوق خود را واریز می‌کنید و سپس پول برداشت می‌کنید تا صورتحساب‌های روزمره خود را بپردازید. بانک به طور منظم به شما یک حساب بانکی ارسال می‌کند که به شما می‌گوید چه مقدار پول به حساب شما وارد و خارج شده است. ممکن است همچنین یک حساب پس‌انداز داشته باشید که در آن پول اضافی خود را واریز می‌کنید و فقط زمانی که می‌خواهید برای خرید چیزی خاصی هزینه کنید، پول از آن خارج می‌کنید. اگر بیشتر از پولی که در حساب خود دارید هزینه کنید، می‌توانید چک منفی (overdraft) داشته باشید. بانک به شما اجازه می‌دهد بیشتر از موجودی خود هزینه کنید و به شما بهره تعلق می‌گیرد. اگر حساب شما منفی باشد [از حساب خود پول بیشتری خارج کرده‌اید تا آنچه داخل بوده] شما در قرمزی هستید (به عنوان مقابل در سیاهی یا اعتبار)."
+      },
+      {
+        en: "Sometimes the bank may lend you money – this is called a bank loan. If the bank [or building society] lends you money to buy a house, that money is called a mortgage",
+        fa: "گاهی بانک ممکن است به شما پول قرض دهد – این به آن وام بانکی می‌گویند. اگر بانک [یا انجمن ساختمانی] به شما پول قرض دهد تا خانه بخرید، آن پول وام مسکن نامیده می‌شود."
+      },
+      {
+        en: "When you buy [or purchase more formally] something in a shop, you usually pay for it outright but sometimes you buy on credit. Sometimes you may be offered a discount or a reduction on something you buy. For example, you might get £10 off perhaps because you are a student. You are often offered a discount if you buy in bulk. It is not usual to haggle about prices in a British shop, as it is in, say, a Turkish market. If you want to return something which you have bought to a shop, you may be given a refund, i.e. your money will be returned, provided you have a receipt.",
+        fa: "وقتی چیزی را در مغازه می‌خرید [یا به صورت رسمی خریداری می‌کنید]، معمولاً آن را به طور کامل پرداخت می‌کنید، اما گاهی به اعتبار می‌خرید. گاهی ممکن است برای چیزی که می‌خرید تخفیف یا کاهش قیمت پیشنهاد شود. برای مثال، شاید ۱۰ پوند تخفیف بگیرید، شاید به این دلیل که دانشجو هستید. اگر به مقدار زیاد خرید کنید، اغلب تخفیف به شما پیشنهاد می‌شود. در مغازه بریتانیایی معمولاً درباره قیمت‌ها چانه نمی‌زنند، مانند مثلاً در یک بازار ترکیه. اگر چیزی که خریده‌اید را به مغازه برگردانید، ممکن است پولی به شما عودت داده شود، یعنی پول شما پس داده می‌شود، به شرطی که رسید داشته باشید."
+      },
+      {
+        en: "The money that you pay for services, e.g. to a school or a lawyer, is usually called a fee or fees; the money paid for a journey is a fare. If you buy something that you feel was very good value, it's a bargain. If you feel that it is definitely not worth what you paid for it, then you can call it a rip-off [very colloquial].",
+        fa: "پولی که برای خدمات، مثلاً به یک مدرسه یا وکیل، پرداخت می‌کنید، معمولاً به آن حق‌الزحمه یا هزینه‌ها می‌گویند؛ پولی که برای یک سفر پرداخت می‌شود، کرایه است. اگر چیزی بخرید که احساس می‌کنید ارزش واقعی داشته است، آن یک معامله خوب است. اگر احساس کنید که قطعاً ارزش پولی که برای آن پرداخت کرده‌اید را ندارد، می‌توانید آن را یک کلاهبرداری [بسیار غیررسمی] بنامید."
+      },
+      {
+        en: "Public finance",
+        fa: "مالیه عمومی"
+      },
+      {
+        en: "The government collects money from citizens through taxes. Income tax is the tax collected on wages and salaries. Inheritance tax is collected on what people inherit from others. Customs or excise duties have to be paid on goods imported from other countries. VAT or value added tax is a tax paid on most goods and services when they are bought or purchased. Companies pay corporation tax on their profits. If you pay too much tax, you should be given some money back, a tax rebate.",
+        fa: "دولت از طریق مالیات‌ها از شهروندان پول جمع‌آوری می‌کند. مالیات بر درآمد مالیاتی است که بر حقوق و دستمزدها جمع‌آوری می‌شود. مالیار ارث بر ارثی که افراد از دیگران به ارث می‌برند، وضع می‌شود. گمرک یا حقوق ورودی باید بر کالاهای وارداتی از کشورهای دیگر پرداخت شود. مالیات بر ارزش افزوده (VAT) مالیاتی است که بر بیشتر کالاها و خدمات هنگام خرید یا دریافت پرداخت می‌شود. شرکت‌ها مالیات بر درآمد شرکتی را بر سودهای خود پرداخت می‌کنند. اگر مالیات بیش از حدی پرداخت کنید، باید بخشی از پولتان پس داده شود، یعنی مالیات بازگشت داده می‌شود."
+      },
+      {
+        en: "The government also sometimes pays out money to people in need, e.g. unemployment benefit [also known as the dole, informal] disability allowances and student loans [money lent to help pay for studying]. Recipients draw a pension / unemployment benefit or are on the dole or on social security.",
+        fa: "دولت گاهی نیز پولی را به افراد نیازمند پرداخت می‌کند، مثلاً مزایای بیکاری [که به آن‌ها کمک بیکاری هم گفته می‌شود، غیررسمی]، کمک‌های معلولیت و وام‌های دانشجویی [پولی که برای کمک به پرداخت هزینه‌های تحصیلی وام داده می‌شود]. دریافت‌کنندگان یک مستمری/مزایای بیکاری دریافت می‌کنند یا روی کمک بیکاری یا بیمه اجتماعی هستند."
+      },
+      {
+        en: "Every country has its own special currency. Every day the rates of exchange are published and you can discover, for example, how many dollars there are currently to the pound sterling.",
+        fa: "هر کشور واحد پول مخصوص به خود را دارد. هر روز نرخ‌های مبادله منتشر می‌شوند و شما می‌توانید کشف کنید، برای مثال، در حال حاضر چند دلار به ازای هر پوند استرلینگ وجود دارد."
+      },
+      {
+        en: "A company may sell shares to members of the public who are then said to have invested in that company. They should be paid a regular dividend on their investment, depending on the profit or loss made by the company.",
+        fa: "یک شرکت ممکن است سهام را به اعضای عمومی بفروشد و در این صورت گفته می‌شود که در آن شرکت سرمایه‌گذاری کرده‌اند. آن‌ها باید سودی منظم (سهام) بر سرمایه‌گذاری خود دریافت کنند که بسته به سود یا زیان شرکت است."
+      }
+    ],
     exercise: {
       instruction: "62.1 Answer the following money quiz. — 62.2 Match the words on the left with their definitions on the right. — 62.3 Is the ordinary ‘person-in-the-street’ pleased to see these newspaper headlines or not? — 62.5 Fill in the table below for your own, or any other, country. — 62.6 Draw two bubble networks (see Units 2 and 3 for examples with CAT and TRAVEL). At the centre of one bubble network put PAYING MONEY and at the centre of the other put GETTING MONEY. Include as many words as possible from this unit.",
       instructionFa: "به آزمون پولی زیر پاسخ دهید. — کلمات سمت چپ را با تعاریف سمت راست تطبیق دهید. — آیا فرد عادی از دیدن این تیترهای روزنامه‌ای خوشحال می‌شود یا نه؟ — جدول زیر را برای کشور خودتان یا هر کشور دیگر پر کنید. — دو شبکه حبابی بکشید (برای نمونه‌ها با CAT و TRAVEL به واحد‌های ۲ و ۳ ببینید). در مرکز یکی PAYING MONEY و در مرکز دیگری GETTING MONEY قرار دهید. تا حد امکان واژه‌های این درس را بگنجانید.",
@@ -855,7 +904,44 @@ export const READINGS_PART_4: Reading[] = [
     title: "Speaking",
     titleFa: "گفتن (صحبت کردن)",
     source: "VIU Upper-intermediate 2nd ed — درس 66 (کتاب ص134-135)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A The verbs in the table below describe how loudly a person is speaking and also, often, indicate mood. These verbs may be followed by clauses beginning with 'that'.",
+        fa: "A افعال جدول زیر توصیف می‌کنند که چگونه یک person به بلندی صحبت می‌کند و همچنین اغلب حال و هوای او را نشان می‌دهند. این افعال می‌توانند توسط جملاتی که با 'that' شروع می‌شوند، دنبال شوند."
+      },
+      {
+        en: "Stuttering and stammering may also be the result of a speech impediment.",
+        fa: "لکنت زبان و لکنت کلام همچنین می‌تواند ناشی از یک نارسایی گفتاری باشد."
+      },
+      {
+        en: "B The following verbs indicate how the speaker feels. (Note: sb = somebody, st = something)",
+        fa: "B افعال زیر نشان می‌دهند که گوینده چه احساسی دارد. (توجه: sb = somebody, st = something)"
+      },
+      {
+        en: "C To give an idea of the way someone speaks and their feelings, you can use a speaking verb, plus an adverb. For example, 'He said proudly. She spoke angrily'. This is most common in written style. Some useful adverbs describing the way someone is feeling while they are speaking.",
+        fa: "C برای دادن ایده‌ای در مورد نحوه صحبت کردن یک person و احساساتش، می‌توانید از یک فعل گفتاری به همراه یک قید استفاده کنید. برای مثال، 'او با افتخار گفت. او با خشم صحبت کرد'. این بیشتر در سبک نوشتاری رایج است. برخی قیدهای مفید که نحوه احساس یک person هنگام صحبت کردن را توصیف می‌کنند."
+      },
+      {
+        en: "If someone feels angry: crossly furiously bitterly (about something in the past)",
+        fa: "اگر کسی احساس خشم کند: با عصبانیت، با خشم، تلخ (در مورد چیزی در گذشته)"
+      },
+      {
+        en: "If someone feels unhappy: unhappily gloomily miserably uneasily sadly",
+        fa: "اگر کسی احساس ناخوشی کند: با ناخوشی، با تاریکی، با بدبختی، با بی‌قراری، با غم"
+      },
+      {
+        en: "If some feels happy: happily cheerfully gladly hopefully eagerly",
+        fa: "اگر کسی احساس خوشی کند: با خوشحالی، با شادمانی، با رضایت، با امیدواری، با اشتیاق"
+      },
+      {
+        en: "If someone feels worried: anxiously nervously desperately hopelessly",
+        fa: "اگر کسی احساس نگرانی کند: با اضطراب، با نگرانی، با یأس، با بی‌پناهی"
+      },
+      {
+        en: "Other useful adverbs are boldly, excitedly, gratefully, impatiently, passionately, reluctantly, shyly, sincerely.",
+        fa: "قیدهای مفید دیگر عبارتند از: با جسارت، با هیجان، با قدردانی، با بی‌صبری، با عشق، با تردید، با خجالت، با صداقت"
+      }
+    ],
     exercise: {
       instruction: "66.1 Choose the verb which best fits the meaning of the sentences. — 66.2 Change the sentences above into reported speech using the same verbs. — 66.3 Add the appropriate adjectives and nouns to the table below. — 66.4 The answers to the following questions are all words which are from the same root as the verbs on the page opposite. Use a dictionary if necessary. — 66.5 Look at the verbs in the table in B and answer the following quiz. — 66.6 Write a sentence to match each of the eight adverbs listed at the end of C.",
       instructionFa: "فعل را انتخاب کنید که بهترین تناسب معنایی را با جمله‌ها دارد. — جمله‌های بالا را با استفاده از همان فعل‌ها به نقل غیرمستقیم تبدیل کنید. — صفت‌ها و اسم‌های مناسب را به جدول زیر اضافه کنید. — پاسخ سؤال‌های زیر همه واژه‌هایی هستند که از همان ریشهٔ فعل‌های صفحهٔ مقابل‌اند. در صورت نیاز از فرهنگ لغت استفاده کنید. — به فعل‌های جدول بخش B نگاه کنید و به مسابقهٔ زیر پاسخ دهید. — برای هر یک از هشت قیدِ فهرست‌شده در انتهای بخش C یک جمله بنویسید.",

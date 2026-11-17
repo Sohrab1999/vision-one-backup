@@ -2593,7 +2593,24 @@ export const READINGS_PART_2: Reading[] = [
     title: "Parts of the body",
     titleFa: "اعضای بدن (سر، پا)",
     source: "VIU Elementary 2nd ed — درس 30 (کتاب ص64-65)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "F Grammar",
+        fa: "گرامر"
+      },
+      {
+        en: "Usually we use my, your, his, her, etc. with parts of the body.",
+        fa: "معمولاً ما از ضمایر مثل my, your, his, her و غیره با اجزای بدن استفاده می‌کنیم."
+      },
+      {
+        en: "Jane is washing her hair. I have a pain in my leg.",
+        fa: "جین در حال شستن موهایش است. من درد در پاهایم دارم."
+      },
+      {
+        en: "[NOT Jane is washing the hair. NOT I have a pain in the leg.]",
+        fa: "[نه جین در حال شستن موهاست. نه من درد در پاها دارم.]"
+      }
+    ],
     exercise: {
       instruction: "30.1 What are these parts of the body? — 30.2 Complete these sentences with words from the opposite page. — 30.3 Parts of the body words are used in different contexts too. — 30.4 Parts of the body are often used in compound nouns too. Complete these nouns with a word from the opposite page. — 30.5 Write down six of the words from the opposite page together with the same words in your own language. Then write down six different words with a picture of what the word means. Next week, test yourself. Which group of words do you remember best - those which you learnt with a translation or those which you learnt with a picture?",
       instructionFa: "این‌ها چه قسمت‌هایی از بدن هستند؟ — این جمله‌ها را با کلمات صفحهٔ مقابل کامل کنید. — کلمات مربوط به اعضای بدن در بافت‌های دیگری هم به کار می‌روند. — اعضای بدن اغلب در اسم‌های مرکب هم به کار می‌روند. این اسم‌ها را با کلمه‌ای از صفحهٔ مقابل کامل کنید. — شش کلمه از صفحهٔ مقابل را همراه با معادل آن‌ها به زبان خودتان بنویسید. سپس شش کلمهٔ متفاوت را با تصویری از معنای کلمه بنویسید. هفتهٔ بعد خودتان را بیازمایید. کدام گروه از کلمات را بهتر به خاطر می‌آورید - آن‌هایی که با ترجمه آموختید یا آن‌هایی که با تصویر آموختید؟",

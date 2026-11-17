@@ -799,7 +799,36 @@ export const READINGS_PART_3: Reading[] = [
     title: "Animals and insects",
     titleFa: "جانوران و حشرات",
     source: "VIU Pre-int & Int 2nd ed — درس 45 (کتاب ص92-93)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Many people keep pets (= own and look after domestic animals that live with people) in Britain.",
+        fa: "در بریتانیا许多人养宠物 (=拥有并与人类一起生活的家养动物)."
+      },
+      {
+        en: "The most common are dogs and cats, but people also keep mice (singular = a mouse), rabbits and goldfish.",
+        fa: "最常见的狗和猫，但人们也养老鼠 (单数 = a mouse)、兔子和金鱼."
+      },
+      {
+        en: "Farm animals include: sheep, pigs, cows, horses, chickens and goats.",
+        fa: "家畜包括：绵羊、猪、牛、马、鸡和山羊."
+      },
+      {
+        en: "NOTE The word 'sheep' is the singular and plural form. A young sheep is called a lamb.",
+        fa: "注意单词 'sheep' 是单数和复数形式。一只年轻的羊叫做 a lamb."
+      },
+      {
+        en: "You will find these animals in a zoo or in the wild. (= living free, e.g. in parts of Africa)",
+        fa: "你会在动物园或野外发现这些动物。 (=自由生活，例如在非洲的部分地区)"
+      },
+      {
+        en: "Some animals that live in the wild are in danger of extinction (= they may not exist much longer), so it is important that we protect them. (= make sure they stay safe)",
+        fa: "一些生活在野外的动物处于灭绝的危险中 (=它们可能不会存在更久了)，所以保护它们很重要。 (=确保它们保持安全)"
+      },
+      {
+        en: "Here are some creatures (= living things, e.g. animals and birds) that swim, fly or move along the ground (e.g. a snake).",
+        fa: "در اینجا برخی موجودات (یعنی چیزهای زنده، مثلاً حیوانات و پرندگان) که شنا می‌کنند، پرواز می‌کنند یا روی زمین حرکت می‌کنند (مثلاً یک مار) آورده شده است."
+      }
+    ],
     exercise: {
       instruction: "45.1 Look at the underlined letters in each pair of words. Is the pronunciation the same or different? Use the pronunciation guide in the Index to help you. — 45.3 Arrange these words into three groups: farm animals, wild animals, and insects. — 45.5 Start each sentence with a suitable creature from the opposite page.",
       instructionFa: "به حروف زیرخط‌دار در هر جفت کلمه نگاه کنید. آیا تلفظ یکسان است یا متفاوت؟ از راهنمای تلفظ در کتاب به کمک بگیرید. — این کلمات را در سه گروه مرتب کنید: حیوانات مزرعه، حیوانات وحشی و حشرات. — هر جمله را با موجودی مناسب از صفحه‌ی مقابل شروع کنید.",
@@ -2316,7 +2345,36 @@ export const READINGS_PART_3: Reading[] = [
     title: "Daily routines",
     titleFa: "کارهای روزمره",
     source: "VIU Pre-int & Int 2nd ed — درس 53 (کتاب ص108-109)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Sleep — During the week I usually wake up at 6.30 am. I sometimes lie in bed (= stay in bed) for 5–10 minutes but then I have to get up (= get out of bed and put on clothes). Most evenings I go to bed about 11.30 pm, and usually go to sleep/fall asleep very quickly. If I have a late night (= go to bed very late; opp an early night), it's easy to oversleep (= sleep too long) the next morning, then I may be late for work. If I can, I have a sleep (= for a short period, e.g. half an hour) in the afternoon. At weekends I often have a lie-in (= stay in bed until later, e.g. 9.30 am).",
+        fa: "خواب — در طول هفته معمولاً ساعت ۶:۳۰ صبح بیدار می‌شوم. گاهی ۵ تا ۱۰ دقیقه در رختخواب می‌مانم (یعنی در رختخواب می‌مانم) اما بعداً باید بلند شوم (یعنی از رختخواب بیرون آمده و لباس بپوشم). اکثر شب‌ها حدود ساعت ۱۱:۳۰ شب می‌خوابم و معمولاً خیلی سریع خوابم می‌برد/خوابم می‌گیرد. اگر شب دیرتر بخوابم (یعنی دیر به رختخواب بروم؛ برخلاف زود خوابیدن)، صبح بعدی راحت بیش از حد می‌خوابم (یعنی خیلی طولانی می‌خوابم) و ممکن است برای کار دیر شوم. اگر بشود، بعد از ظهر یک چرت می‌زنم (برای مدت کوتاه، مثلاً نیم ساعت). در آخر هفته‌ها اغلب دیرتر از معمول از رختخواب بلند می‌شوم (یعنی تا دیرتر در رختخواب می‌مانم، مثلاً تا ساعت ۹:۳۰ صبح)."
+      },
+      {
+        en: "B Food — In the week I have breakfast at 7.00 am, lunch at 1.00, and dinner around 7 pm. I also have one or two snacks (= food eaten between meals, e.g. a cake or biscuits) during the day. As I live alone/on my own (= without other people), I have to make my own breakfast and dinner (= prepare breakfast and dinner for myself), but during the week I don't bother (= don't make an effort) to cook very much. I also have to feed (= give food to) my cats twice a day.",
+        fa: "B غذا — در طول هفته صبحانه را ساعت ۷:۰۰ صبح، ناهار را ساعت ۱:۰۰ بعد از ظهر و شام حدود ساعت ۷ شب می‌خورم. همچنین در طول روز یک یا دو میان‌وعده (غذا خوردن بین وعده‌های اصلی، مثلاً یک کیک یا بیسکویت) هم می‌خورم. چون تنها زندگی می‌کنم (بدون دیگران)، باید صبحانه و شام خودم را درست کنم (برای خودم صبحانه و شام آماده کنم)، اما در طول هفته خیلی اهل آشپزی نیستم (تلاش نمی‌کنم زیاد غذا بپزم). همچنین باید دو بار در روز گربه‌هایم را غذا بدهم (غذا بهشان بدهم)."
+      },
+      {
+        en: "NOTE — Usually there is no definite article (the) with breakfast, lunch or dinner.",
+        fa: "توجه — معمولاً حرف تعریف معین (the) با صبحانه، ناهار یا شام به کار نمی‌رود."
+      },
+      {
+        en: "C Keeping clean — In the summer I have a shower in the morning, but in the winter I often have a bath instead (= in place of a shower). Sometimes I have a shave at the same time, or I shave when I have a wash and clean/brush my teeth after breakfast. I wash my hair two or three times a week. English often uses a verb + noun construction, where other languages may use a verb or reflexive verb, e.g. I had a wash (NOT I washed or I washed myself); I had a rest (NOT I rested or I rested myself).",
+        fa: "D تمیز نگه داشتن — در تابستان صبح دوش می‌گیرم، اما در زمستان اغلب به جای آن (جایگزین دوش) وان می‌گیرم. گاهی همزمان اصلاح می‌کنم، یا بعد از صبحانه وقتی می‌شویم و دندان‌هایمان را تمیز می‌کنیم، اصلاح می‌کنم. موهایم را دو یا سه بار در هفته می‌شویم. انگلیسی اغلب از ساخت فعل + اسم استفاده می‌کند، در حالی که زبان‌های دیگر ممکن است از یک فعل یا فعل متعالی استفاده کنند، مثلاً I had a wash (نه I washed یا I washed myself); I had a rest (نه I rested یا I rested myself)."
+      },
+      {
+        en: "D Work — In the morning I leave home about 8.15 am and get to work (= arrive at work) by 9 am. I have a lunch break (= period when I stop work for lunch) from 1–2 pm, and usually a couple of short breaks (= periods to relax) during the day. I leave work around 5.30 and get home about 6.15.",
+        fa: "D کار — صبح حدود ساعت ۸:۱۵ خانه را ترک می‌کنم و تا ساعت ۹ صبح به سر کار می‌رسم (به محل کار می‌آیم). از ساعت ۱ تا ۲ بعد از ظهر استراحت ناهار (دوره‌ای که کار را برای ناهار متوقف می‌کنم) دارم و معمولاً در طول روز چند استراحت کوتاه (دوره‌هایی برای استراحت) هم دارم. حدود ساعت ۵:۳۳ کار را رها می‌کنم و حدود ساعت ۶:۱۵ به خانه می‌آیم."
+      },
+      {
+        en: "E Spare time (= free time) — In the week I usually stay in (= stay at home) and watch TV or read in the evening. At the weekend I go out (= leave the house for social reasons, e.g. go to a cinema or disco), but I also have friends for dinner (= invite friends to my house and cook dinner for them), or friends come round (= visit me at the house) to play cards, e.g. poker or bridge.",
+        fa: "E وقت آزاد — در طول هفته معمولاً شب‌ها خانه می‌مانم (در خانه می‌مانم) و تلویزیون تماشا می‌کنم یا کتاب می‌خوانم. در آخر هفته از خانه بیرون می‌روم (برای دلایل اجتماعی خانه را ترک می‌کنم، مثلاً به سینما یا دیسکو می‌روم)، اما دوستانم را برای شام دعوت هم می‌کنم (دوستانم را به خانه‌ام دعوت می‌کنم و برایشان شام درست می‌کنم)، یا دوستان به خانه من می‌آیند (به خانه من سر می‌زنند) تا کارت بازی کنند، مثلاً پوکر یا بریج."
+      },
+      {
+        en: "F Housework — I do the shopping (= buy the food and household goods) on Saturday. Fortunately/Luckily (= it is lucky for me) I have a cleaner (= a person who cleans) and she does most of the housework: she does my washing (= washes my clothes), she does the washing-up (= washes the dishes) and most of the ironing.",
+        fa: "F کارهای خانه — شنبه خرید می‌کنم (غذا و وسایل خانه را می‌خرم). خوشبختانه/خوشبختانه (برای من خوش شانس است) یک خدمتکار دارم (شخصی که تمیزکاری می‌کند) و او بیشتر کارهای خانه را انجام می‌دهد: لباس‌هایم را می‌شوید، ظرف‌ها را می‌شوید (ظروف را می‌شوید) و بیشتر اتوکاری را انجام می‌دهد."
+      }
+    ],
     exercise: {
       instruction: "53.1 How many expressions with 'have + noun' from the opposite page can you remember? — 53.2 Match the verbs on the left with the correct word on the right to form common partnerships. — 53.3 Complete this dialogue with a suitable word or phrase from the opposite page. — 53.4 Correct the mistakes in these sentences. — 53.6 Find three facts from the opposite page which are similar to your routine, and three that are different. Complete the table below.",
       instructionFa: "چقدر اصطلاح با «have + اسم» از صفحه مقابل به یاد دارید؟ — فعل‌های سمت چپ را با واژه درست سمت راست مطابقت دهید تا ترکیب‌های رایج ساخته شود. — این گفت‌وگو را با واژه یا عبارت مناسبی از صفحه مقابل کامل کنید. — اشتباهات این جمله‌ها را اصلاح کنید. — سه نکته از صفحه مقابل که با برنامه روزانه شما مشابه است و سه نکته متفاوت پیدا کنید و جدول زیر را کامل کنید.",
@@ -3117,7 +3175,72 @@ export const READINGS_PART_3: Reading[] = [
     title: "Everyday problems",
     titleFa: "مشکلات روزمره",
     source: "VIU Pre-int & Int 2nd ed — درس 57 (کتاب ص116-117)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A There's something wrong with ...",
+        fa: "A مشکلی با ... هست"
+      },
+      {
+        en: "We use these expressions when there is a problem with machines and other things we use.",
+        fa: "ما از این عبارت‌ها وقتی مشکلی با ماشین‌ها و چیزهای دیگر که استفاده می‌کنیم، داریم، استفاده می‌کنیم."
+      },
+      {
+        en: "There's something wrong with the TV. (= there is a problem with it)",
+        fa: "مشکلی با تلویزیون هست. (یعنی مشکل دارد)"
+      },
+      {
+        en: "The light isn't working. (= not functioning/there is no light)",
+        fa: "روشنایی کار نمی‌کند. (یعنی کار نمی‌کند/روشن نیست)"
+      },
+      {
+        en: "The light's not working properly. (= it is functioning but not very well)",
+        fa: "روشنایی درست کار نمی‌کند. (یعنی کار می‌کند ولی خیلی خوب کار نمی‌کند)"
+      },
+      {
+        en: "The telephone is out of order. (= not in use/not functioning)",
+        fa: "تلفن از کار افتاده است. (یعنی در حال استفاده نیست/کار نمی‌کند)"
+      },
+      {
+        en: "You often see a notice saying out of order on a public machine or piece of equipment that isn't working, e.g. pay phone, public toilet, etc. At home we usually say it isn't working.",
+        fa: "شما اغلب تابلویی را می‌بینید که روی آن نوشته شده از کار افتاده، روی یک ماشین یا دستگاه عمومی که کار نمی‌کند، مثلاً تلفن عمومی، توالت عمومی و غیره. در خانه معمولاً می‌گوییم کار نمی‌کند."
+      },
+      {
+        en: "B In the home",
+        fa: "B در خانه"
+      },
+      {
+        en: "Paul had a lot of problems yesterday:",
+        fa: "پل دیروز مشکلات زیادی داشت:"
+      },
+      {
+        en: "He dropped a cup and it broke.",
+        fa: "یک فنجان را انداخت و شکست."
+      },
+      {
+        en: "He got another cup, made some coffee, and then spilt it.",
+        fa: "یک فنجان دیگر گرفت، قهوه درست کرد و بعد آن را ریخت."
+      },
+      {
+        en: "His shirt now has a large stain on it [see picture], and it is ruined. (= he can't wear it again, it has no use)",
+        fa: "حالا پیراهنش یک لکه بزرگ رویش دارد [تصویر را ببینید] و خراب شده است. (یعنی دیگر نمی‌تواند آن را بپوشد، بی‌فایده شده است)"
+      },
+      {
+        en: "Then he decided to make some toast. He burnt the first piece (if you burn something, you damage it with heat or fire), then he realised he'd run out of bread (= the bread was finished/there was no more bread). He left home hungry and in a bad mood. (= angry and unhappy; opp in a good mood)",
+        fa: "سپس تصمیم گرفت کمی نان تست بپزد. اولین تکه را سوخت (اگر چیزی را بسوزانید، آن را با گرما یا آتش آسیب می‌زنید)، سپس متوجه شد که نان تمام شده بود (= نان تمام شده بود/دیگری نان نبود). او گرسنه و با حالی بد خانه را ترک کرد. (= عصبانی و ناراحت؛ برعکس حال خوب)"
+      },
+      {
+        en: "C Out and about",
+        fa: "ج بیرون و در حال حرکت"
+      },
+      {
+        en: "NOTE You can say 'I forgot my book', but if you say where this happened, you must use the verb 'leave', e.g. I left my homework on the bus. (NOT I-forgot-my-books-on-the-bus.)",
+        fa: "توجه: می‌توانی بگویی 'کتابم را فراموش کردم'، اما اگر بگویی این اتفاق کجا رخ داده، باید از فعل 'leave' استفاده کنی، مثلاً 'تکلیفم را در اتوبوس جا گذاشتم'. (نه 'تکلیفم را در اتوبوس فراموش کردم'.)"
+      },
+      {
+        en: "After Paul went out, things got worse (= his situation became worse/there were more problems). He was late, and he missed the bus (= the bus came and went before he got to the bus stop), so he had to walk. That made him even later. He started running, but he fell over and cut himself (see picture). Later, when he got to school, he realised he'd lost some money and left his English book at home. (= forgotten his books)",
+        fa: "پس از اینکه پول بیرون رفت، اوضاع بدتر شد (= وضعیت او بدتر شد/مشکل بیشتری پیش آمد). او دیر شده بود، و اتوبوس را از دست داده بود (= اتوبوس قبل از رسیدنش به ایستگاهbus، حرکت کرده بود)، بنابراین مجبور بود پیاده برود. این باعث شد که او دیرتر هم شود. دویدن را شروع کرد، اما زمین خورد و خود را زخم کرد (به تصویر نگاه کنید). بعداً، وقتی به مدرسه رسید، متوجه شد که بعضی از پول‌هایش را گم کرده و کتاب انگلیسی‌اش را در خانه جا گذاشته است. (= کتاب‌هایش را فراموش کرده بود)"
+      }
+    ],
     exercise: {
       instruction: "57.1 Complete the past tense and past participle of these verbs. — 57.2 Match the sentence beginnings on the left with the correct endings on the right. — 57.3 This is what happened when Anna had a party at her house. Write a description of the damage. — 57.4 Write a logical explanation for each question, using vocabulary from the opposite page. — 57.5 Answer the questions using 'often/occasionally/hardly ever/never'. How often do you:",
       instructionFa: "گذشته ساده و اسم مفعول این فعل‌ها را کامل کنید. — شروع جمله‌های سمت چپ را به پایان درست آن‌ها در سمت راست وصل کنید. — این اتفاق‌ها وقتی افتاد که آنا در خانه‌اش مهمانی گرفت. توصیفی از خرابی‌ها بنویسید. — برای هر سؤال یک توضیح منطقی با واژگان صفحه مقابل بنویسید. — به سؤال‌ها با 'often/occasionally/hardly ever/never' پاسخ دهید. چقدر اغلب ...",

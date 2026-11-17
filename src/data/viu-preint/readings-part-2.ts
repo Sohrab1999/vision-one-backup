@@ -2602,7 +2602,28 @@ export const READINGS_PART_2: Reading[] = [
     title: "Partitives: a bag of ..., a bit of ...",
     titleFa: "کمیت‌نماها (a bag of…، a bit of…)",
     source: "VIU Pre-int & Int 2nd ed — درس 32 (کتاب ص66-67)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "There are many different words used to describe a particular quantity of something.",
+        fa: "کلمات مختلفی برای توصیف مقدار خاصی از چیزی وجود دارد."
+      },
+      {
+        en: "Certain words make uncountable nouns countable in order to describe a specific quantity, e.g. Has anyone got a sheet of paper I can have? Other examples are:",
+        fa: "برخی کلمات اسم‌های غیرقابل شمارش را قابل شمارش می‌کنند تا مقدار مشخصی را توصیف کنند، مثلاً کسی تکه کاغذ داره که به من بده؟ نمونه‌های دیگر عبارتند از:"
+      },
+      {
+        en: "We use piece with the nouns above and some abstract nouns, e.g. a piece of advice, but the most common phrase in spoken English is a bit: we use it with a wide range of nouns.",
+        fa: "ما از «تکه» با اسم‌های بالا و برخی اسم‌های انتزاعی استفاده می‌کنیم، مثلاً یک تکه مشاوره، اما رایج‌ترین عبارت در گفتار انگلیسی «یک مقدار» است: ما آن را با طیف وسیعی از اسم‌ها استفاده می‌کنیم."
+      },
+      {
+        en: "Some nouns have two parts, e.g. trousers (two legs) and shoes (left and right). You can use pair of to specify the number, e.g. a pair of skis, two pairs of shoes, three pairs of shorts.",
+        fa: "برخی اسم‌ها دو قسمتی دارند، مثلاً شلوار (دو پا) و کفش (چپ و راست). می‌توانید از «جفت» برای مشخص کردن تعداد استفاده کنید، مثلاً یک جفت اسکی، دو جفت کفش، سه جفت شلوارک."
+      },
+      {
+        en: "NOTE Gang has a negative meaning: it suggests a group of young people who may cause trouble.",
+        fa: "توجه: «گروه» (gang) معنی منفی دارد: گروهی از جوانان را می‌رساند که ممکن است مشکل‌ساز باشند."
+      }
+    ],
     exercise: {
       instruction: "32.2 Contents come in different containers. Are these normal or unusual? If they are unusual, change them and make them normal. — 32.3 Complete these sentences with a suitable noun. — 32.4 Underline any words in (brackets) which are wrong in these sentences.",
       instructionFa: "محتویات در ظرف‌های مختلفی می‌آیند. آیا این‌ها عادی هستند یا غیرعادی؟ اگر غیرعادی هستند، آن‌ها را تغییر دهید و عادی کنید. — این جمله‌ها را با یک اسم مناسب کامل کنید. — در این جمله‌ها هر کلمه‌ای در (پرانتز) که غلط است خط بکشید.",

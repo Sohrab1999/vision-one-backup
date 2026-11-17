@@ -1286,7 +1286,124 @@ export const READINGS_PART_2: Reading[] = [
     title: "Discourse markers in writing",
     titleFa: "واژه‌های پیوند نوشتار",
     source: "VIU Upper-intermediate 2nd ed — درس 28 (کتاب ص58-59)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "In this unit we look at how certain common words and phrases are used to organise written texts.",
+        fa: "در این واحد، نگاه می‌کنیم که چگونه برخی کلمات و عبارات رایج برای سازماندهی متون نوشتاری به کار می‌روند."
+      },
+      {
+        en: "A Organising a formal text",
+        fa: "ب. سازماندهی یک متن رسمی"
+      },
+      {
+        en: "First / Firstly / First of all, we must consider ...",
+        fa: "اول / نخست / نخست از همه، باید در نظر بگیریم که ..."
+      },
+      {
+        en: "Next, it is important to remember that ...",
+        fa: "بعد، مهم است به یاد داشته باشیم که ..."
+      },
+      {
+        en: "Secondly and thirdly are also used with first/firstly for lists.",
+        fa: "نخستین و سومین نیز با اول/نخستین برای لیست‌ها استفاده می‌شوند."
+      },
+      {
+        en: "Finally/Lastly, we should recall that ... [not 'at last']",
+        fa: "در نهایت/آخرین، باید به یاد بیاوریم که ... [نه 'در آخر']"
+      },
+      {
+        en: "Turning to the question of foreign policy, ... [changing to a new topic]",
+        fa: "در مورد سیاست خارجی صحبت می‌کنیم، ... [تغییر به موضوع جدید]"
+      },
+      {
+        en: "Leaving aside the question of pollution, there are also other reasons ... [the writer will not deal with that question here]",
+        fa: "از بحث آلودگی صرف‌نظر می‌کنیم، دلایل دیگری نیز وجود دارد ... [نویسنده در اینجا به آن سوال نمی‌پردازد]"
+      },
+      {
+        en: "In parenthesis, let us not forget that ... [making a point that is a side issue, not part of the main argument]",
+        fa: "در پرانتز، فراموش نکنیم که ... [نکته‌ای که یک موضوع جانبی است و بخشی از استدلال اصلی محسوب نمی‌شود]"
+      },
+      {
+        en: "In summary, to sum up, we may state that ... [listing / summing up the main points]",
+        fa: "در خلاصه، برای جمع‌بندی، می‌توانیم بگوییم که ... [لیست کردن/جمع‌بندی نکات اصلی]"
+      },
+      {
+        en: "In sum, the economic issues are at the centre of this debate. [listing / summing up the main points: much more formal]",
+        fa: "به طور خلاصه، مسائل اقتصادی در مرکز این بحث قرار دارند. [لیست کردن/جمع‌بندی نکات اصلی: بسیار رسمی‌تر]"
+      },
+      {
+        en: "In conclusion / to conclude, I should like to point out that ... [finishing the text]",
+        fa: "در نتیجه / برای نتیجه‌گیری، باید اشاره کنم که ..."
+      },
+      {
+        en: "B Markers for explaining, exemplifying, rephrasing, etc.",
+        fa: "B نشانگرهای توضیح، مثال‌زنی، بازنویسی و غیره."
+      },
+      {
+        en: "To learn new words properly a lot of recycling is needed; in other words / that is to say, you have to study the same words over and over again. [That is to say is much more formal]",
+        fa: "برای یادگیری صحیح کلمات جدید، تکرار زیاد لازم است؛ به عبارت دیگر / یعنی، باید همان کلمات را بارها و بارها مطالعه کنید. [به عبارت دیگر بسیار رسمی‌تر است]"
+      },
+      {
+        en: "Some English words are hard to pronounce, for example / for instance, 'eighth'.",
+        fa: "برخی از کلمات انگلیسی تلفظ سختی دارند، برای مثال / برای نمونه، 'eighth'."
+      },
+      {
+        en: "It might be possible, say, to include the parents in the discussion. [similar to for example; note the commas before and after; say is also common in spoken language]",
+        fa: "ممکن است، مثلاً، والدین را در بحث وارد کرد. [مشابه برای مثال؛ توجه کنید که کاما قبل و بعد آن آمده است؛ say در زبان گفتاری نیز رایج است]"
+      },
+      {
+        en: "The Parliament has different committees. Briefly, these consist of two main types. [the explanation will be short and not comprehensive]",
+        fa: "پارلمان کمیته‌های مختلفی دارد. به طور خلاصه، این‌ها از دو نوع اصلی تشکیل شده‌اند. [توضیح کوتاه و جامع نخواهد بود]"
+      },
+      {
+        en: "She is, so to speak / as it were, living in a world of her own. [makes what you are saying sound less definite/precise; As it were is more formal.]",
+        fa: "او، به طور حرف / گویی، در دنیایی از خودش زندگی می‌کند. [آنچه می‌گویید را کمتر قطعی/دقیق جلوه می‌دهد؛ به طور حرف رسمی‌تر است.]"
+      },
+      {
+        en: "C Signposts around the text",
+        fa: "C علائم راهنما در اطراف متن"
+      },
+      {
+        en: "These are words and phrases that point the reader to different parts of a text.",
+        fa: "این‌ها کلمات و عباراتی هستند که خواننده را به بخش‌های مختلف یک متن راهنمایی می‌کنند."
+      },
+      {
+        en: "The following points will be covered in this essay: ... [used to introduce a list]",
+        fa: "نکات زیر در این مقاله پوشش داده خواهند شد: ... [برای معرفی یک لیست استفاده می‌شود]"
+      },
+      {
+        en: "It was stated above/earlier that the history of the USA is ... [earlier in the text]",
+        fa: "در بالا/زودتر بیان شد که تاریخ ایالات متحده ... [در بخش قبلی متن]"
+      },
+      {
+        en: "See page 238 for more information. [go to page 238]",
+        fa: "برای اطلاعات بیشتر، به صفحه 238 مراجعه کنید. [به صفحه 238 بروید]"
+      },
+      {
+        en: "Many writers have claimed this (see below). [examples will be given later in the text]",
+        fa: "نویسندگان زیادی این ادعا را کرده‌اند (ملاحظه کنید زیرا). [مثال‌ها بعداً در متن آورده خواهد شد]"
+      },
+      {
+        en: "A full list is given overleaf. [turn the page and you will find the list]",
+        fa: "لیست کامل در صفحه مقابل آورده شده است. [صفحه را بپیچانید و لیست را پیدا خواهید کرد]"
+      },
+      {
+        en: "For further details/discussion, see Chapter 4. [more discussion/details]",
+        fa: "برای جزئیات/بحث بیشتر، به فصل 4 مراجعه کنید. [بحث/جزئیات بیشتر]"
+      },
+      {
+        en: "May I refer you to page 3 of my last letter to you? [formal; May I ask you to look at / read]",
+        fa: "آیا می‌توانم شما را به صفحه ۳ نامه آخرم ارجاع دهم؟ [رسمی؛ آیا می‌توانم از شما بخواهم نگاه کنید / بخوانید؟]"
+      },
+      {
+        en: "With reference to your fax of 28th May 2000, ... [formal; often used at the beginning of a letter to link it with an earlier text]",
+        fa: "با اشاره به فاکس شما در تاریخ ۲۸ مه ۲۰۰۰، ... [رسمی؛ اغلب در ابتدای نامه برای پیوند دادن به متن قبلی استفاده می‌شود]"
+      },
+      {
+        en: "TIP: Make a separate list of markers for spoken and written English. You may end up sounding too formal or too informal if you do not distinguish between those found in writing and those common in speech.",
+        fa: "نکته: فهرستی جداگانه از نشانگرهای انگلیسی گفتاری و نوشتایی تهیه کنید. اگر بین آن‌هایی که در نوشتار و آن‌هایی که در گفتار رایج هستند تمایز قائل نشوید، ممکن است بیش از حد رسمی یا غیررسمی به نظر برسید."
+      }
+    ],
     exercise: {
       instruction: "28.1 Fill the gaps with typical written-text markers. The first letter of each phrase/word is given. — 28.2 Match the markers on the left with the appropriate function on the right. — 28.3 Which marker(s) ... — 28.4 Write a short letter to the Editor of a newspaper about a report in that paper the previous week that a local hospital is going to close. You think the hospital should not close because: Try to include as many as possible of these markers:",
       instructionFa: "جاهای خالی را با نشانگرهای متنی مکتوب پر کنید. حرف اول هر عبارت/کلمه داده شده است. — نشانگرهای سمت چپ را با کارکرد مناسب در سمت راست تطبیق دهید. — کدام نشانگر(ها) ... — نامه‌ای کوتاه به سردبیر روزنامه‌ای درباره گزارشی در آن روزنامه در هفته قبل بنویسید مبنی بر اینکه بیمارستان محلی قرار است بسته شود. شما فکر می‌کنید بیمارستان نباید بسته شود چون: سعی کنید تا حد امکان از این نشانگرها استفاده کنید.",
@@ -2175,7 +2292,20 @@ export const READINGS_PART_2: Reading[] = [
     title: "Containers and contents",
     titleFa: "ظرف‌ها و محتویات",
     source: "VIU Upper-intermediate 2nd ed — درس 34 (کتاب ص70-71)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A There are a number of special words in English which are used to describe different kinds of containers. Look at the following pictures.",
+        fa: "A تعدادی کلمه خاص در انگلیسی وجود دارند که برای توصیف انواع مختلف ظروف استفاده می‌شوند. به تصاویر زیر نگاه کنید."
+      },
+      {
+        en: "B Here is some additional information about each of these types of containers.",
+        fa: "B در اینجا اطلاعات اضافی در مورد هر یک از این انواع ظروف آورده شده است."
+      },
+      {
+        en: "*A case of wine is usually a cardboard box of wine, containing 12 bottles. Half a case is six bottles.",
+        fa: "*یک کارتن شراب معمولاً یک جعبه مقوایی است که ۱۲ بطری شراب در آن قرار دارد. نیم کارتن یعنی شش بطری."
+      }
+    ],
     exercise: {
       instruction: "34.1 Complete the blanks in the shopping list without looking at the opposite page. — 34.2 Try the following quiz about the words on the opposite page. — 34.3 Name the containers and their contents. — 34.4 Think of other words which are often used with the following containers.",
       instructionFa: "جاهای خالی فهرست خرید را بدون نگاه کردن به صفحه مقابل کامل کنید. — به این آزمون درباره واژه‌های صفحه مقابل پاسخ دهید. — ظرف‌ها و محتویات آن‌ها را نام ببرید. — به واژه‌های دیگری فکر کنید که اغلب با این ظرف‌ها به کار می‌روند.",
@@ -3426,7 +3556,24 @@ export const READINGS_PART_2: Reading[] = [
     title: "At home",
     titleFa: "در خانه",
     source: "VIU Upper-intermediate 2nd ed — درس 40 (کتاب ص82-83)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Places in the home — You probably already know the names of most rooms and locations in a typical home. Here are some less common ones and what they are for. master/main bedroom: the largest, most important bedroom; spare bedroom/guest (bed)room: not used every day; visitors can stay there; utility room: usually just for washing machine, freezer, etc.; shed: small building separated from the house usually for storing garden tools; attic/loft: space in the roof of a house used for storing things; it can also be converted into an extra living space with stairs leading up to it (loft/attic conversion); cellar: room below ground level, no windows, used for storing things; basement: room below ground level, windows, for living/working; study: a room for reading/writing/studying in; landing: flat area at the top of a staircase; hall/hallway: open area as you come into a house; porch: covered area before an entrance-door; pantry or larder: large cupboard (usually big enough to walk into) for storing food; terrace or patio: paved area between house and garden for sitting and eating, etc.; drive: short road leading from the street to the house or garage; you can drive/park on it",
+        fa: "فضاهای داخل خانه — احتمالاً نام اکثر اتاق‌ها و مکان‌های یک خانه معمولی را می‌شناسید. در اینجا به برخی از نام‌های کمتر رایج و کاربردشان اشاره می‌کنیم. اتاق خواب اصلی/اتاق خواب بزرگ: بزرگترین و مهم‌ترین اتاق خواب؛ اتاق خواب اضافی/اتاق مهمان: هر روز استفاده نمی‌شود؛ مهمانان می‌توانند در آن اسکان داشته باشند؛ اتاق کاربردی: معمولاً فقط برای ماشین لباسشویی، فریزر و غیره؛ انباری کوچک: سازه کوچکی که جدا از خانه و معمولاً برای نگهداری ابزار باغ است؛ زیر شیروانی/اتاق زیر شیروانی: فضایی در بالای سقف خانه برای نگهداری وسایل؛ می‌تواند با اضافه کردن پله به یک فضای زندگی اضافه تبدیل شود (تبدیل زیر شیروانی/اتاق زیر شیروانی؛ زیرزمین: اتاقی زیر سطح زمین، بدون پنجره، برای نگهداری وسایل؛ زیرزمین با پنجره: اتاقی زیر سطح زمین با پنجره، برای زندگی/کار؛ اتاق مطالعه: اتاقی برای مطالعه/نوشتن/کار؛ لابی/دالان: فضای مسطح بالای پله‌ها؛ ورودی/راهرو: فضای باز هنگام ورود به خانه؛ بالکن: فضای سرپوشیده قبل از در ورودی؛ انباری آشپزخانه/انبار: کمد بزرگی (معمولاً به اندازه‌ای که بتوان داخل آن راه رفت) برای نگهداری غذا؛ تراس حیاط/پاسیو: فضای آجری بین خانه و باغ برای نشستن و غذا خوردن و غیره؛ مسیر ورود: جاده کوتاهی که از خیابان به خانه یا گاراژ منتهی می‌شود؛ می‌توان در آن رانندگی یا پارک کرد."
+      },
+      {
+        en: "Small objects in the home — Some everyday objects are often difficult to name and are often not listed in dictionaries.",
+        fa: "اشیاء کوچک در خانه — برخی اشیاء روزمره اغلب نام‌گذاری آن‌ها دشوار است و اغلب در دیکشنری‌ها لیست نمی‌شوند."
+      },
+      {
+        en: "Types of houses/places people live — detached house: not joined to any other house; semi-detached house (informal: semi-): joined to one other house; self-contained flat: does not share facilities with any other; terraced house: joined to several houses to form a row; cottage: small house in the country or in a village; bungalow: house with only one storey (no upstairs); bedsit: bedroom and living room all in one; villa: large house with big gardens or a rented house in a holiday resort/tourist area; time-share: holiday flat or house where you have the right to live one or two weeks a year",
+        fa: "انواع خانه‌ها/مکان‌های زندگی — خانه ویلایی: به هیچ خانه دیگری متصل نیست؛ نیم‌ویلایی (غیررسمی: نیم‌): به یک خانه دیگر متصل است؛ آپارتمان مستقل: امکانات را با هیچ آپارتمان دیگری به اشتراک نمی‌گذارد؛ خانه ردیفی: به چند خانه دیگر متصل است تا یک ردیف را تشکیل دهد؛ خانه کوچک روستایی: خانه کوچکی در روستا یا در دهکده؛ خانه یک طبقه: خانه با فقط یک طبقه (بدون طبقه بالا); اتاق خواب و اتاق نشمنه در یکجا؛ ویلا: خانه بزرگ با باغ‌های بزرگ یا خانه اجاره‌ای در منطقه تفریحی/گردشگری؛ زمان‌اشتراک: آپارتمان یا خانه تعطیلات که حق زندگی در آن را برای یک یا دو هفته در سال دارید."
+      },
+      {
+        en: "TIP — If you visit an English-speaking country, go to a department store or a supermarket and look at the names of everyday things for the home. This is a good way of getting vocabulary that is not in dictionaries.",
+        fa: "نکته — اگر به کشوری انگلیسی‌زبان سفر می‌کنید، به یک فروشگاه زنجیره‌ای یا هایپرمارکت بروید و نام اشیاء روزمره برای خانه را ببینید. این یک راه خوب برای یادگیری واژگانی است که در دیکشنری‌ها وجود ندارند."
+      }
+    ],
     exercise: {
       instruction: "40.1 Where in a typical house would you look for the following things? — 40.2 Fill in the room and place labels on the plan of the house. — 40.4 Answer these questions about yourself and if possible, ask someone else too. — 40.5 Everyday objects. Answer these questions.",
       instructionFa: "در یک خانه معمولی کجا دنبال چیزهای زیر می‌گردید؟ — برچسب اتاق‌ها و مکان‌ها را روی نقشه خانه کامل کنید. — به این سؤالات درباره خودتان پاسخ دهید و در صورت امکان از کس دیگری هم بپرسید. — اشیاء روزمره. به این سؤالات پاسخ دهید.",

@@ -1681,7 +1681,64 @@ export const READINGS_PART_3: Reading[] = [
     title: "The environment",
     titleFa: "محیط زیست",
     source: "VIU Upper-intermediate 2nd ed — درس 49 (کتاب ص100-101)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "You have to be careful about the use of 'the' with features of the environment.",
+        fa: "باید در استفاده از 'the' با ویژگی‌های محیطی احتیاط کنید."
+      },
+      {
+        en: "Look at this encyclopedia entry about Iceland. Note the words in bold.",
+        fa: "این ورودی دانشنامه‌ای درباره ایسلند را ببینید. به کلمات پررنگ توجه کنید."
+      },
+      {
+        en: "Iceland An island republic in the North Atlantic. The landscape consists largely of barren plains [flat land where little grows] and mountains, with large ice fields particularly in the south west. The island has active volcanoes [they still erupt] and is known for its thermal [hot] springs and geysers [warm water that fountains out of the ground]. With less than 1% of the land suitable for growing crops [food that is grown], the nation's economy is based on fishing, and fish products account for 80% of the exports. Area: 103,000 km². Population: 227,000. Capital: Reykjavik.",
+        fa: "ایسلند یک جمهوری جزیره‌ای در اقیانوس شمالی است. چشم‌انداز آن عمدتاً از دشت‌های بیابانی [زمین‌های مسطح که در آن چیزی کمتر رشد می‌کند] و کوه‌ها تشکیل شده است، با میدان‌های یخی بزرگ به ویژه در جنوب غرب. این جزیره آتشفشان‌های فعال [که هنوز هم فوران می‌کنند] دارد و چشمه‌های گرم [گرم] و گِیزرها [آبی که از زمین فواره می‌شود] آن شهرت دارد. با کمتر از ۱٪ از زمین که برای کشاورزی [غذایی که کشت می‌شود] مناسب است، اقتصاد کشور بر پایه صید ماهی استوار است و محصولات ماهی ۸۰٪ از صادرات را تشکیل می‌دهند. مساحت: ۱۰۳,۰۰۰ کیلومتر مربع. جمعیت: ۲۲۷,۰۰۰. پایتخت: ریکیاویک."
+      },
+      {
+        en: "Here are some other nouns which are useful when talking about the environment. Check their meanings in a dictionary if necessary.",
+        fa: "در اینجا برخی از اسم‌های دیگر که در مورد محیط مفید هستند، آورده شده‌اند. در صورت لزوم معنی آن‌ها را در یک دیکشنری بررسی کنید."
+      },
+      {
+        en: "Where land meets sea: coast, shore, beach, cliff, cape, peninsula, cove, bay, gulf",
+        fa: "جایی که خشکی به دریا می‌رسد: ساحل، کرانه، ساحل شن، صخره، دماغه، شبه‌جزیره، خلیج کوچک، خلیج، خلیج بزرگ"
+      },
+      {
+        en: "Words connected with rivers: source, tributary, waterfall, mouth, valley, gorge, delta, brook, stream, estuary",
+        fa: "واژگان مرتبط با رودها: منبع، شاخه، آبشار، دهانه، دره، دره تنگ، دلتا، رودخانه کوچک، جوی‌آب، خلیج"
+      },
+      {
+        en: "Words connected with mountains: foot, ridge, peak, summit, glacier",
+        fa: "واژگان مرتبط با کوه‌ها: پای کوه، خط‌الرأس، قله، قله بلند، یخچال"
+      },
+      {
+        en: "There are many environmental problems in the world today.",
+        fa: "امروزه مشکلات زیست‌محیطی بسیاری در جهان وجود دارد."
+      },
+      {
+        en: "The air, rivers and seas are all polluted, especially in over-populated and heavily industrialised regions. Poor waste disposal is the cause of much of this pollution.",
+        fa: "هوا، رودخانه‌ها و دریاها آلوده هستند، به خصوص در مناطق پرجمعیت و صنعتی شدید. دفع نامناسب زباله عامل بخش زیادی از این آلودگی است."
+      },
+      {
+        en: "Overfishing has depleted the numbers of fish in the oceans.",
+        fa: "صید بیش از حد ماهی، تعداد ماهی‌ها در اقیانوس‌ها را کاهش داده است."
+      },
+      {
+        en: "The destruction of the ozone layer is leading to climatic changes and what is known as the greenhouse effect.",
+        fa: "نابودی لایه اوزون منجر به تغییرات جوی و آنچه به عنوان اثر گلخانه‌ای شناخته می‌شود، شده است."
+      },
+      {
+        en: "The destruction of the rainforests is causing widespread ecological problems.",
+        fa: "نابودی جنگل‌های بارانی مشکلات زیست‌محیطی گسترده‌ای را به همراه دارد."
+      },
+      {
+        en: "Battery farming provides large amounts of food but it involves keeping animals in crowded and unnatural conditions.",
+        fa: "کشاورزی صنعتی مرغ و دام (تولید انبوه) مقادیر زیادی غذا فراهم می‌کند اما نگهداری حیوانات در شرایط شلوغ و غیرطبیعی را در بر دارد."
+      },
+      {
+        en: "Write down the English names for the main geographical features in your country. Check how these names are pronounced as English may have taken the names of the features from your language or may have anglicised their pronunciation.",
+        fa: "نام‌های انگلیسی ویژگی‌های جغرافیایی اصلی کشور خود را بنویسید. بررسی کنید که این نام‌ها چگونه تلفظ می‌شوند، زیرا انگلیسی ممکن است این نام‌ها را از زبان شما گرفته باشد یا تلفظ آن‌ها را به شکل انگلیسی درآورده باشد."
+      }
+    ],
     exercise: {
       instruction: "49.1 Label the pictures below. — 49.2 In the paragraph below all the instances of the have been omitted. Insert them wherever they are necessary. — 49.3 Can you answer the following general knowledge questions about the environment? — 49.4 Complete the paragraph below about your own country, or any other country that interests you. Remember to use 'the' whenever it is necessary. — 49.5 Give two nouns from the opposite page to go with the adjectives below. Try not to repeat any of the nouns you choose. — 49.6 Answer these questions about being environmentally friendly.",
       instructionFa: "تصاویر زیر را برچسب‌گذاری کنید. — در پاراگراف زیر همه‌ی موارد the حذف شده‌اند. آن‌ها را هرجا لازم است وارد کنید. — آیا می‌توانید به پرسش‌های معلومات عمومی زیر درباره‌ی محیط زیست پاسخ دهید؟ — پاراگراف زیر را درباره‌ی کشور خودتان یا هر کشور دیگری که به شما علاقه‌مند است کامل کنید. یادتان باشد هرجا لازم است از 'the' استفاده کنید. — دو اسم از صفحه‌ی مقابل بیاورید که با صفت‌های زیر همراه شوند. سعی کنید هیچ‌یک از اسم‌ها را تکرار نکنید. — به این پرسش‌ها درباره‌ی دوستی با محیط زیست پاسخ دهید.",
@@ -2587,7 +2644,104 @@ export const READINGS_PART_3: Reading[] = [
     title: "Holidays",
     titleFa: "تعطیلات",
     source: "VIU Upper-intermediate 2nd ed — درس 55 (کتاب ص112-113)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Places to stay and types of holiday",
+        fa: "الف مکان‌های اقامت و انواع تعطیلات"
+      },
+      {
+        en: "camp-site: a place where you can pitch a tent or park a caravan",
+        fa: "پایگاه کمپ: مکانی که می‌توانی چادر ببافی یا کاروان‌پارک کنی"
+      },
+      {
+        en: "self-catering flat: a flat which you rent; you cook for yourself",
+        fa: "آپارتمان خودپخت: آپارتمانی که اجاره می‌کنی و خودت غذا می‌پزی"
+      },
+      {
+        en: "guesthouse: accommodation like a hotel but cheaper and with fewer services",
+        fa: "خانه مهمان: محل اقامتی مانند هتل اما ارزان‌تر و با خدمات کمتر"
+      },
+      {
+        en: "youth hostel: cheap accommodation, mainly for young people, with, perhaps, ten or more people sleeping in bunk beds in one room",
+        fa: "مسافرخانه جوانان: اقامتی ارزان، عمدتاً برای جوانان، که ممکن است ده یا更多的人 در یک اتاق با تخت‌های دو طبقه بخوابند"
+      },
+      {
+        en: "holiday camp: a place providing holiday accommodation in little chalets or flats, with restaurants, bars, swimming pools and lots of other facilities and entertainment for when visitors want a break from sun-bathing",
+        fa: "کمپ تعطیلات: مکانی که اقامت تعطیلات را در ویلاها یا آپارتمان‌های کوچک ارائه می‌دهد، با رستوران‌ها، بارها، استخرها و بسیاری از دیگر امکانات و سرگرمی‌ها برای زمانی که مهمانان می‌خواهند از آفتاب‌ گرفتن استراحت کنند"
+      },
+      {
+        en: "time-share apartment: accommodation of which you share ownership with a number of people, for example you own a twelfth of the apartment so you have the right to stay there for one month every year.",
+        fa: "آپارتمان اشتراکی زمان‌بندی‌شده: اقامتی که مالکیت آن را با چند نفر دیگر به اشتراک می‌گذاری، برای مثال دوازدهم آپارتمان را مالک هستی و حق داری هر سال یک ماه آنجا بمانی"
+      },
+      {
+        en: "package holiday: a holiday in which you pay for travel, accommodation and food (even occasionally excursions) in advance",
+        fa: "تعطیلات بسته‌بندی‌شده: تعطیلاتی که هزینه سفر، اقامت و غذا (گاهی حتی تورهای تفریحی) را از پیش پرداخت می‌کنی"
+      },
+      {
+        en: "cruise: a holiday spent touring on a boat, stopping off to go sight-seeing at different ports",
+        fa: "کروز: تعطیلاتی که در آن با قایق به تور می‌روی و در بنادر مختلف توقف می‌کنی تا از دیدن جاذبه‌ها لذت ببری"
+      },
+      {
+        en: "The language of holiday brochures is often quite exaggerated. Here are some typical adjectives with nouns that they collocate with.",
+        fa: "زبان بروشورهای تعطیلات اغلب بسیار اغراق‌آمیز است. در اینجا برخی از صفت‌های رایج با اسم‌هایی که با آن‌ها هم‌معنی می‌شوند، آورده شده است."
+      },
+      {
+        en: "breath-taking views/scenery/pistes (ski slopes) [breath-taking (like stunning) suggests that something is so magnificent that it takes your breath away]",
+        fa: "مناظر/زیبایی‌های طبیعی/پیست‌های اسکی نفس‌گیر [نفس‌گیر (مانند خیره‌کننده) نشان می‌دهد که چیزی آن‌قدر باشکوه است که نفس‌ات را در می‌آورد]"
+      },
+      {
+        en: "exclusive access/club/shops [only the most special people can use the facilities]",
+        fa: "دسترسی/باشگاه/فروشگاه‌های انحصاری [فقط افراد ویژه‌ای می‌توانند از امکانات استفاده کنند]"
+      },
+      {
+        en: "exhilarating feeling/ride/moment [makes you feel excited and full of energy]",
+        fa: "حس/سفر/لحظه‌ای پرشور [تو را هیجان‌زده و پرانرژی می‌کند]"
+      },
+      {
+        en: "exotic beauty/charm/location [unusual and much more exciting than one's everyday reality]",
+        fa: "زیبایی/جاذبه/مکان خارجی [غیرمعمول و بسیار هیجان‌انگیزتر از واقعیت روزمره]"
+      },
+      {
+        en: "glamorous surroundings/film star/hotel [especially exciting and attractive]",
+        fa: "محیط/ستاره فیلم/هتل جذاب [به‌ویژه هیجان‌انگیز و جذاب]"
+      },
+      {
+        en: "intoxicating views/air/fragrance [makes you feel excited and emotional]",
+        fa: "منظره/هوا/عطر مست‌کننده [تو را هیجان‌زده و احساسی می‌کند]"
+      },
+      {
+        en: "legendary hospitality/figure/status [so special that it has been famous for some time]",
+        fa: "مهمان‌نوازی/چهره/وضعیت افسانه‌ای [آن‌قدر ویژه است که مدت‌هاست مشهور است]"
+      },
+      {
+        en: "luxurious cruise ship/accommodation/lifestyle [provides great comfort]",
+        fa: "کشتی کروز/اقامت/زندگی لوکس [راحتی و تجمل فراوان را فراهم می‌کند]"
+      },
+      {
+        en: "mighty river/cathedral/oak [large and powerful]",
+        fa: "رودخانه/کلیسا/بلوط عظیم [بزرگ و قدرتمند]"
+      },
+      {
+        en: "picturesque streets/villages/cottage [as pretty as a picture]",
+        fa: "خیابان‌ها/روستا/خانه‌کوچک تصویرگونه [همان‌قدر زیبا که یک نقاشی]"
+      },
+      {
+        en: "sublime pleasure/simplicity/skill [heavenly or divine]",
+        fa: "لذت/سادگی/مهارت برتر [آسمانی یا الهی]"
+      },
+      {
+        en: "unsurpassed opportunity/beauty/quality [nothing better exists]",
+        fa: "فرصت/زیبایی/کیفیت بی‌نظیر [چیزی بهتر از آن وجود ندارد]"
+      },
+      {
+        en: "unspoilt charm/village/woodland [still in a beautiful and natural state]",
+        fa: "جاذبه/روستا/جنگل دست‌نخورده [هنوز در حالت زیبا و طبیعی است]"
+      },
+      {
+        en: "TIP To find more useful language relating to holidays, get some holiday brochures or other tourist information written in English. You could either try the embassies of those countries or a travel agency. Ask for the information in English. Note down any useful new words and expressions that you learn from it. Think about what the writer was trying to suggest through his or her choice of words.",
+        fa: "نکته: برای پیدا کردن زبان مفیدتر مرتبط با تعطیلات، چند بروشور سفر یا اطلاعات توریستی دیگر به زبان انگلیسی تهیه کنید. می‌توانید یا سفارت‌های آن کشورها یا یک آژانس مسافرتی را امتحان کنید. اطلاعات را به زبان انگلیسی درخواست کنید. هر واژه و عبارت جدید و مفیدی که از آن یاد می‌گیرید یادداشت کنید. در مورد این که نویسنده سعی داشته چه چیزی از طریق انتخاب کلماتش پیشنهاد دهد، فکر کنید."
+      }
+    ],
     exercise: {
       instruction: "55.1 Which of the holiday places and types of holiday in A have you or any of your friends had experience of? What are the advantages and disadvantages of each? Try and find at least one advantage and one disadvantage for each, even if you have no experience of them. — 55.2 Complete this table. Use a dictionary to help you, if necessary. — 55.3 Fill in the gaps in this postcard with appropriate adjectives from Section B on the opposite page. — 55.5 There are six typical language mistakes in the paragraph below. Underline and correct them. — 55.6 Write a holiday advertisement for a place you know well. Use as many of the words from Section B opposite as possible.",
       instructionFa: "کدام‌یک از مکان‌های اقامتی و انواع تعطیلات در بخش A را شما یا دوستانتان تجربه کرده‌اید؟ مزایا و معایب هر کدام چیست؟ حتی اگر تجربه‌ای ندارید، سعی کنید برای هر کدام حداقل یک مزیت و یک عیب پیدا کنید. — این جدول را کامل کنید. در صورت نیاز از فرهنگ لغت کمک بگیرید. — جاهای خالی این کارت پستال را با صفت‌های مناسب از بخش B صفحهٔ مقابل پر کنید. — شش خطای زبانی رایج در پاراگراف زیر وجود دارد. آن‌ها را زیرخط بکشید و اصلاح کنید. — یک آگهی تعطیلات برای مکانی که خوب می‌شناسید بنویسید. تا حد امکان از کلمات بخش B صفحهٔ مقابل استفاده کنید.",
@@ -3047,7 +3201,124 @@ export const READINGS_PART_3: Reading[] = [
     title: "Computers and the Internet",
     titleFa: "رایانه و اینترنت",
     source: "VIU Upper-intermediate 2nd ed — درس 58 (کتاب ص118-119)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Nowadays computers are everywhere. Even people who don't own or operate computers are exposed to computer terminology. This unit explores some of the most common words and expressions associated with computers and the Internet.",
+        fa: "امروزه کامپیوترها همه‌جا هستند. حتی افرادی که کامپیوتر شخصی ندارند یا از آن استفاده نمی‌کنند، با اصطلاحات کامپیوتر آشنا هستند. این واحد برخی از رایج‌ترین کلمات و عبارات مرتبط با کامپیوترها و اینترنت را بررسی می‌کند."
+      },
+      {
+        en: "Personal computers",
+        fa: "کامپیوترهای شخصی"
+      },
+      {
+        en: "Here are some words associated with personal computers.",
+        fa: "در اینجا برخی از کلمات مرتبط با کامپیوترهای شخصی آورده شده است."
+      },
+      {
+        en: "personal computer / PC / desktop computer: a computer that fits on a desk, used by individuals at work or at home",
+        fa: "کامپیوتر شخصی / کامپیوتر رومیزی / PC: کامپیوتری که روی یک میز جای می‌گیرد و توسط افراد در محل کار یا در خانه استفاده می‌شود"
+      },
+      {
+        en: "laptop (computer): a lightweight portable computer that usually fits in a briefcase",
+        fa: "لپ‌تاپ (کامپیوتر): کامپیوتر سبک و قابل حمل که معمولاً در یک چمدان جا می‌شود"
+      },
+      {
+        en: "palmtop (computer): one small enough to fit in your hand",
+        fa: "پالم‌تاپ (کامپیوتر): آنقدر کوچک که در دست شما جای می‌گیرد"
+      },
+      {
+        en: "hardware: computer equipment or machinery",
+        fa: "سخت‌افزار: تجهیزات یا ماشین‌آلات کامپیوتر"
+      },
+      {
+        en: "software: programs that you put into a computer to make it run",
+        fa: "نرم‌افزار: برنامه‌هایی که در کامپیوتر قرار می‌دهید تا آن را اجرا کند"
+      },
+      {
+        en: "floppy (disk) / diskette: a small plastic disk that stores (a limited amount of) information. A floppy can be inserted into a computer and taken out.",
+        fa: "دیسک نرم / فлопی دیسک: یک دیسک پلاستیکی کوچک که اطلاعات (محدودی) را ذخیره می‌کند. یک دیسک نرم را می‌توان در کامپیوتر قرار داد و خارج کرد."
+      },
+      {
+        en: "hard disk: a device inside a computer that stores large amounts of information",
+        fa: "دیسک سخت: یک دستگاه در داخل کامپیوتر که مقادیر زیادی اطلاعات را ذخیره می‌کند"
+      },
+      {
+        en: "disk drive: an apparatus that allows information to be read from a disk or stored",
+        fa: "درایو دیسک: دستگاهی که امکان خواندن اطلاعات از دیسک یا ذخیره‌سازی آن را فراهم می‌کند"
+      },
+      {
+        en: "modem: a piece of equipment that sends information from one computer along telephone lines to another computer",
+        fa: "مودم: دستگاهی که اطلاعات را از یک کامپیوتر از طریق خطوط تلفن به کامپیوتر دیگر ارسال می‌کند"
+      },
+      {
+        en: "scanner: machine for transferring pictures and texts into a computer",
+        fa: "اسکنر: دستگاهی برای انتقال تصاویر و متن به کامپیوتر"
+      },
+      {
+        en: "to download: to transfer data or software from a large computer to a smaller one",
+        fa: "دانلود کردن: انتقال داده یا نرم‌افزار از یک کامپیوتر بزرگتر به یک کوچکتر"
+      },
+      {
+        en: "RAM (random access memory / memory: the memory available on a computer to store and use information temporarily, usually measured in megabytes)",
+        fa: "RAM (حافظه دسترسی تصادفی / حافظه): حافظه موجود در یک کامپیوتر برای ذخیره‌سازی و استفاده موقت از اطلاعات، معمولاً بر حسب مگابایت اندازه‌گیری می‌شود"
+      },
+      {
+        en: "spreadsheet (program): a program or the grid you create with it to perform mathematical operations",
+        fa: "برنامه صفحه‌گسترده: برنامه یا جدولی که با آن ایجاد می‌کنید تا عملیات ریاضی انجام دهید"
+      },
+      {
+        en: "computer graphics: pictures, images, and symbols that you can form on a computer",
+        fa: "گرافیک کامپیوتری: تصاویر، نمودارها و نمادهایی که می‌توانید روی کامپیوتر ایجاد کنید"
+      },
+      {
+        en: "word processing: writing and storing printed text on a computer",
+        fa: "پردازش واژه: نوشتن و ذخیره‌سازی متن چاپی روی یک کامپیوتر"
+      },
+      {
+        en: "virus: hidden instructions in a program designed to destroy information",
+        fa: "ویروس: دستورات پنهان در یک برنامه که برای نابود کردن اطلاعات طراحی شده‌اند"
+      },
+      {
+        en: "The Internet",
+        fa: "اینترنت"
+      },
+      {
+        en: "The Internet / 'the net': a network connecting millions of computer users worldwide. You can access information on the Internet or send and receive e-mail (electronic mail) from a computer, through a modem.",
+        fa: "اینترنت / 'نت': شبکه‌ای که میلیون‌ها کاربر کامپیوتر را در سراسر جهان به هم متصل می‌کند. شما می‌توانید از طریق مودم، به اطلاعات موجود در اینترنت دسترسی پیدا کنید یا از کامپیوتر خود ایمیل (پست الکترونیک) ارسال و دریافت کنید."
+      },
+      {
+        en: "Here is a small sampling of other words and expressions associated with the Internet.",
+        fa: "در اینجا نمونه کوچکی از دیگر واژه‌ها و عبارات مرتبط با اینترنت آورده شده است."
+      },
+      {
+        en: "World Wide Web / 'the Web': a huge portion of the Internet containing linked documents called pages",
+        fa: "وب جهان‌گیر / 'وب': بخش عظیمی از اینترنت که شامل اسناد پیوند داده شده‌ای به نام صفحات است"
+      },
+      {
+        en: "to surf the net / the Web: to navigate around the Internet, sometimes aimlessly",
+        fa: "گردش در اینترنت / وب: گشت و گذار در اینترنت، گاهی بدون هدف مشخص"
+      },
+      {
+        en: "website / home page: a document on the Web giving information about a person or institution",
+        fa: "وب‌سایت / صفحه خانگی: سندی در وب که اطلاعات مربوط به یک شخص یا نهادی را ارائه می‌دهد"
+      },
+      {
+        en: "newsgroup: a meeting place on the Internet for discussion of a particular topic",
+        fa: "گروه خبری: مکانی در اینترنت برای بحث در مورد یک موضوع خاص"
+      },
+      {
+        en: "chat room / chat forum: a group of people who have the same interests who e-mail one another live as a group",
+        fa: "اتاق گفتگو / انجمن گفتگو: گروهی از افراد با علایق مشترک که به صورت زنده و گروهی با یکدیگر ایمیل می‌زنند"
+      },
+      {
+        en: "FAQ: 'frequently asked questions', a list of common questions and helpful answers",
+        fa: "FAQ: 'سوالات متداول'، فهرستی از سوالات رایج و پاسخ‌های مفید"
+      },
+      {
+        en: "(See Unit 57 on technology, and Unit 16 on abbreviations.)",
+        fa: "(واحد 57 در مورد فناوری و واحد 16 در مورد مخفف‌ها را ببینید.)"
+      }
+    ],
     exercise: {
       instruction: "58.1 Match the words to the pictures below. — 58.3 Here are some other words associated with computers and the Internet. Use them to complete the text. Use your dictionary if you need to. Remember to use the appropriate form of the verbs. — 58.4 Do you use a computer regularly? If so, what do you use it for? Do you have access to the Internet? If so, what do you use it for?",
       instructionFa: "واژه‌ها را به تصاویر زیر وصل کنید. — این چند واژه دیگر مرتبط با رایانه و اینترنت هستند. از آن‌ها برای تکمیل متن استفاده کنید. در صورت نیاز از فرهنگ‌لغت کمک بگیرید. یادتان باشد از شکل مناسب فعل‌ها استفاده کنید. — آیا به‌طور مرتب از رایانه استفاده می‌کنید؟ اگر بله، برای چه کاری؟ آیا به اینترنت دسترسی دارید؟ اگر بله، برای چه؟",
@@ -3296,7 +3567,92 @@ export const READINGS_PART_3: Reading[] = [
     title: "Politics and public institutions",
     titleFa: "سیاست و نهادهای عمومی",
     source: "VIU Upper-intermediate 2nd ed — درس 60 (کتاب ص122-123)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Types of government",
+        fa: "انواع حکومت"
+      },
+      {
+        en: "republic: a state governed by representatives and, usually a president (e.g. USA, France)",
+        fa: "جمهوری: دولتی که توسط نمایندگان و معمولاً یک رئیس جمهور اداره می‌شود (مثلاً آمریکا، فرانسه)"
+      },
+      {
+        en: "monarchy: a state ruled by a king or queen (e.g. UK, Sweden)",
+        fa: "پادشاهی: دولتی که توسط یک پادشاه یا ملکه اداره می‌شود (مثلاً بریتانیا، سوئد)"
+      },
+      {
+        en: "federation: a union of political units (e.g. provinces) under a central government (e.g. USA)",
+        fa: "فدراسیون: اتحادیه از واحدهای سیاسی (مثلاً استان‌ها) تحت یک دولت مرکزی (مثلاً آمریکا)"
+      },
+      {
+        en: "democracy: government of, by and for the people",
+        fa: "دموکراسی: حکومت برای مردم، توسط مردم و به نفع مردم"
+      },
+      {
+        en: "dictatorship: system of government run by a dictator",
+        fa: "دیکتاتوری: سیستم حکومتی که توسط یک دیکتاتور اداره می‌شود"
+      },
+      {
+        en: "independence: freedom from outside control; self-governing",
+        fa: "استقلال: آزادی از کنترل خارجی؛ خودگردانی"
+      },
+      {
+        en: "Presidential and parliamentary government (US and UK)",
+        fa: "حکومت ریاست‌جمهوری و پارلمانی (آمریکا و بریتانیا)"
+      },
+      {
+        en: "United States",
+        fa: "ایالات متحده"
+      },
+      {
+        en: "Presidential government: The powers of the President and the legislature (Congress) are separate. These branches of government are elected separately.",
+        fa: "دولت ریاست جمهوری: قدرت‌های رئیس‌جمهور و نهاد قانون‌گذار (کنگره) از هم جدا هستند. این شاخه‌های دولت به صورت جداگانه انتخاب می‌شوند."
+      },
+      {
+        en: "The President is elected for a four-year term and can appoint or nominate high officials in government, including cabinet members (who advise) and federal judges. The President leads a major party, usually, but not always, the majority party in Congress.",
+        fa: "رئیس‌جمهور برای یک دوره چهار ساله انتخاب می‌شود و می‌تواند مقامات ارشد دولتی، از جمله اعضای کابینه (که مشاوران هستند) و قضات فدرال را منصوب یا نامزد کند. رئیس‌جمهور معمولاً رئیس یک حزب اصلی است، اما همیشه حزبی که در کنگره اکثریت دارد نیست."
+      },
+      {
+        en: "Congress consists of two houses, the House of Representatives and the Senate. Congressmen or women and Senators are elected for fixed terms.",
+        fa: "کنگره از دو مجلس تشکیل شده است: مجلس نمایندگان و مجلس سنا. نمایندگان و سناتورها برای دوره‌های مشخصی انتخاب می‌شوند."
+      },
+      {
+        en: "The judiciary is a separate branch. The Supreme Court, the highest court, can overrule the President and Congress.",
+        fa: "قوه قضاییه یک شاخه جداگانه است. دیوان عالی، به عنوان بالاترین دادگاه، می‌تواند تصمیمات رئیس‌جمهور و کنگره را لغو کند."
+      },
+      {
+        en: "United Kingdom",
+        fa: "پادشاهی متحد"
+      },
+      {
+        en: "Parliamentary government: The government consists of a legislature (Parliament) and a Cabinet of Ministers from the majority party in Parliament.",
+        fa: "دولت پارلمانی: دولت شامل یک نهاد قانون‌گذار (پارلمان) و یک کابینه وزیران از حزب اکثریت در پارلمان است."
+      },
+      {
+        en: "The Prime Minister is the head of the government and the leader of the majority party in the House of Commons, holding office while the party holds a majority. The Prime Minister selects high officials and heads the Cabinet.",
+        fa: "نخست‌وزیر رئیس دولت و رئیس حزب اکثریت در مجلس عوام است و تا زمانی که حزبش اکثریت دارد، در قدرت باقی می‌ماند. نخست‌وزیر مقامات ارشد را انتخاب می‌کند و ریاست کابینه را بر عهده دارد."
+      },
+      {
+        en: "Parliament consists of two chambers, the House of Commons and the House of Lords. MPs are members of parliament elected from each constituency [geographical area] to the House of Commons.",
+        fa: "پارلمان از دو chamber تشکیل شده است: مجلس عوام و مجلس اعیان. نمایندگان پارلمان (MPs) اعضای پارلمان هستند که از هر حوزه انتخابیه [منطقه جغرافیایی] به مجلس عوام انتخاب می‌شوند."
+      },
+      {
+        en: "The judiciary is independent but it cannot overrule the Prime Minister or Parliament. The Highest Court consists of a group of Lords.",
+        fa: "قوه قضاییه مستقل است اما نمی‌تواند تصمیمات نخست‌وزیر یا پارلمان را لغو کند. بالاترین دادگاه از گروهی از اشراف تشکیل شده است."
+      },
+      {
+        en: "Parliamentary elections",
+        fa: "انتخابات پارلمانی"
+      },
+      {
+        en: "During a general election each constituency has to choose which politician it wants as its representative. Usually there are several candidates to choose from. These candidates are all standing (or running) for Parliament. They present the policies that they represent. On polling day each citizen goes to the polling station and casts a vote by marking a cross on their ballot paper. The candidate who gets the majority of votes wins the seat. If the vote is very close, the constituency may be referred to as a marginal seat. If an MP dies in office, then there has to be a by(e)-election to replace him or her. The public can also occasionally vote in a referendum – a direct vote by the people on an important public issue.",
+        fa: "در طول یک انتخابات عمومی، هر حوزه انتخابیه باید سیاستمداری را که می‌خواهد به عنوان نماینده خود انتخاب کند، مشخص کند. معمولاً چندین نامزد برای انتخاب وجود دارد. این نامزدها همگی برای پارلمان نامزد (یا رقابت می‌کنند) می‌شوند. سیاست‌هایی را که نمایندگی می‌کنند، ارائه می‌دهند. در روز رأی‌گیری، هر شهروند به محل رأی‌گیری می‌رود و با علامت十字 روی برگه رأی خود، رأی می‌دهد. نامزدی که اکثریت آرا را به دست آورد، بر صندلی خود پیروز می‌شود. اگر رأی‌گیری بسیار نزدیک باشد، حوزه انتخابیه ممکن است به عنوان یک حوزه حاشیه‌ای شناخته شود. اگر یک نماینده پارلمان در دوره تصدی خود درگذشت، باید انتخابات جزایی (by-election) برای جایگزینی او برگزار شود. عموم مردم همچنین گاهی می‌توانند در یک همه‌پرسی رأی دهند – یعنی رأی مستقیم مردم در مورد یک مسئله عمومی مهم."
+      },
+      {
+        en: "Probably the most useful political words for you will be the ones that relate to your own country. Highlight the words on this page that could be used about your country's political system.",
+        fa: "احتمالاً مفیدترین واژگان سیاسی برای شما، آنهایی هستند که به سیستم سیاسی کشور خودتان مرتبط هستند. واژگانی را در این صفحه که می‌توانید در مورد سیستم سیاسی کشورتان به کار ببرید، مشخص کنید."
+      }
+    ],
     exercise: {
       instruction: "60.2 Look at this text about politics in the UK. Fill in the missing words. — 60.3 Make some more words based on those you studied opposite. — 60.4 Try this political quiz. — 60.5 Using the words on the left-hand page, write a paragraph about the political system in your country.",
       instructionFa: "به این متن دربارهٔ سیاست در بریتانیا نگاه کنید و کلمات جاافتاده را پر کنید. — بر پایهٔ کلماتی که در صفحهٔ مقابل خواندید، کلمات بیشتری بسازید. — به این آزمون سیاسی پاسخ دهید. — با استفاده از کلمات صفحهٔ سمت چپ، دربارهٔ نظام سیاسی کشور خود یک پاراگراف بنویسید.",

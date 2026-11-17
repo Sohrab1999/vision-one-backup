@@ -694,7 +694,56 @@ export const READINGS_PART_5: Reading[] = [
     title: "Law and order",
     titleFa: "قانون و نظم",
     source: "VIU Pre-int & Int 2nd ed — درس 84 (کتاب ص170-171)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A The police",
+        fa: "الف پلیس"
+      },
+      {
+        en: "When someone commits a crime (= breaks the law and does something illegal/against the law/wrong), the police do a number of things.",
+        fa: "وقتی کسی جرمی مرتکب می‌شود (= قانون را زیر پا می‌گذارد و کار غیرقانونی/ضد قانون/غلطی انجام می‌دهد)، پلیس کارهای متعددی انجام می‌دهد."
+      },
+      {
+        en: "They investigate the crime. (= try to find out what happened and who is responsible)",
+        fa: "آن‌ها جنایت را تحقیق می‌کنند. (= سعی می‌کنند بفهمند چه اتفاقی افتاده و چه کسی مسئول است)"
+      },
+      {
+        en: "If they catch (= find) the person they believe is responsible for the crime, they will arrest them. (= take them to the police station because they think the person has committed the crime)",
+        fa: "اگر آن شخصی را که معتقدند مسئول جنایت است، دستگیر کنند، او را بازداشت خواهند کرد. (= او را به ایستگاه پلیس می‌برند زیرا فکر می‌کنند او مرتکب جرم شده است)"
+      },
+      {
+        en: "At the police station, they question them. (= ask them questions)",
+        fa: "در ایستگاه پلیس، از او بازجویی می‌کنند. (= از او سوال می‌پرسند)"
+      },
+      {
+        en: "If they are sure that the person committed the crime, the person is charged with the crime. (= the police make an official statement that they believe the person committed the crime)",
+        fa: "اگر مطمئن باشند که آن شخص مرتکب جرم شده است، متهم به آن جرم می‌شود. (= پلیس یک بیانیه رسمی صادر می‌کند که معتقد است آن شخص مرتکب جرم شده است)"
+      },
+      {
+        en: "For a serious crime (e.g. murder), the person must then go to court for trial. (see section B)",
+        fa: "برای یک جرم جدی (مثلاً قتل)، آن شخص باید برای محاکمه به دادگاه برود. (بخش B را ببینید)"
+      },
+      {
+        en: "B In court",
+        fa: "B در دادگاه"
+      },
+      {
+        en: "In court, the defendant must try to prove (= provide facts to show something is true) that they did not commit the crime. In other words, they must try to prove that they are innocent (opp guilty). Twelve members of the public (called the jury) listen to the evidence (= information about the crime, for and against) and then make their decision. People who see a crime are witnesses, and they usually give evidence at a trial.",
+        fa: "در دادگاه، متهم باید تلاش کند (= حقایقی را برای نشان دادن چیزی درست ارائه دهد) که مرتکب جرم نشده است. به عبارت دیگر، او باید تلاش کند ثابت کند بی‌گناه است (متضاد با مجرم). دوازده عضو عامه مردم (به نام هیئت منصفه) به شواهد (= اطلاعات مربوط به جرم، برای و علیه) گوش می‌دهند و سپس تصمیم خود را می‌گیرند. افرادی که یک جرم را می‌بینند، شهود هستند و معمولاً در محاکمه شاهد می‌دهند."
+      },
+      {
+        en: "C Punishment (= what a person must suffer if they do something wrong)",
+        fa: "C مجازات (= چیزی که یک شخص باید تحمل کند اگر کاری اشتباه انجام دهد)"
+      },
+      {
+        en: "If someone is guilty of a crime, the judge will give the sentence (= the punishment). If a person is guilty of murder, the sentence may be 10–20 years in prison. The person then becomes a prisoner.",
+        fa: "اگر کسی مرتکب جرمی شود، قاضی حکم مجازات را صادر می‌کند. (= مجازات). اگر کسی مرتکب قتل شود، حکم ممکن است ۱۰ تا ۲۰ سال زندان باشد. آن شخص سپس زندانی می‌شود."
+      },
+      {
+        en: "For crimes that are not serious (called minor offences, e.g. illegal parking), the punishment is usually a fine. (= money you have to pay)",
+        fa: "برای جرائم جدی نیست (که جرائم جزایی جزئی نامیده می‌شوند، مثلاً پارک غیرقانونی)، مجازات معمولاً یک جریمه نقدی است. (= پولی که باید بپردازید)"
+      }
+    ],
     exercise: {
       instruction: "84.1 Put this story in the correct order. The first event has been given. — 84.2 Answer the questions. — 84.4 Read the text, then write your answers to the questions below, based on your knowledge of the law in your own country. If possible, discuss your answers with someone else.",
       instructionFa: "این داستان را به ترتیب صحیح قرار دهید. اولین رویداد داده شده است. — به سؤالات پاسخ دهید. — متن را بخوانید، سپس بر اساس دانش خود از قوانین کشورتان به سؤالات پاسخ دهید. در صورت امکان پاسخ‌ها را با دیگری در میان بگذارید.",
@@ -1198,7 +1247,44 @@ export const READINGS_PART_5: Reading[] = [
     title: "Bureaucracy",
     titleFa: "بوروکراسی و اداره‌نویسی",
     source: "VIU Pre-int & Int 2nd ed — درس 87 (کتاب ص176-177)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A What is it? Bureaucracy is the rules used by officials (or bureaucrats) to control an organisation or country. It is often used in a negative way to mean unnecessary rules, e.g. filling in (= completing) forms, and waiting for documents. (= pieces of paper with official information)",
+        fa: "A این چیست؟ بوروکراسی قوانینی است که توسط مقامات (یا بوروکرات‌ها) برای کنترل یک سازمان یا کشور استفاده می‌شود. اغلب به صورت منفی به معنی قوانین غیرضروری به کار می‌رود، مثلاً پر کردن (= تکمیل) فرم‌ها، و انتظار برای اسناد. (= قطعات کاغذ با اطلاعات رسمی)"
+      },
+      {
+        en: "B Important documents (e.g. passport) identity card (= card with your name, date of birth and photo to show who you are. The United Kingdom is one of the few countries where people do not have identity cards.) driving licence (= the official document which permits you to drive on public roads) visa (= document which gives you permission to enter, pass through or leave a country)",
+        fa: "B اسناد مهم (مثلاً گذرنامه) کارت شناسایی (= کارتی با نام، تاریخ تولد و عکس شما برای نشان دادن هویت شما. بریتانیا یکی از معدود کشورهایی است که مردم کارت شناسایی ندارند.) گواهینامه رانندگی (= سند رسمی که به شما اجازه رانندگی در خیابان‌های عمومی را می‌دهد) ویزا (= سندی که به شما اجازه ورود، عبور یا خروج از کشوری را می‌دهد)"
+      },
+      {
+        en: "Officials often check (= look at and examine) your documents, e.g. customs officials check your passport or identity card, and the police may check your driving licence.",
+        fa: "مقامات اغلب اسناد شما را بررسی (= نگاه و بررسی) می‌کنند، مثلاً مقامات گمرکی گذرنامه یا کارت شناسایی شما را بررسی می‌کنند، و پلیس ممکن است گواهینامه رانندگی شما را بررسی کند."
+      },
+      {
+        en: "We also use the word certificates for official pieces of paper stating certain facts: a birth certificate gives the important facts about your birth, exam certificates state you have passed certain exams, and a marriage certificate states you have married.",
+        fa: "ما همچنین از کلمه گواهی‌نامه برای قطعات کاغذ رسمی که حقیقت‌های خاصی را بیان می‌کنند، استفاده می‌کنیم: گواهینامه تولد حقایق مهم مربوط به تولد شما را نشان می‌دهد، گواهینامه‌های آزمون نشان می‌دهد که شما آزمون‌های خاصی را با موفقیت گذرانده‌اید، و گواهینامه ازدواج نشان می‌دهد که ازدواج کرده‌اید."
+      },
+      {
+        en: "Some documents are for a fixed period of time, e.g. a visa may be for six months. At the end of that period, the visa runs out (infml)/expires (fml) (= it finishes/comes to an end). If you want to stay in the country, you must renew it (= get a new one for a further period of time). You can normally renew a visa, a passport, a membership card for a club, etc.",
+        fa: "برخی اسناد برای یک دوره زمانی مشخص هستند، مثلاً یک ویزا ممکن است برای شش ماه باشد. در پایان آن دوره، ویزا منقضی می‌شود (غیررسمی)/اعتبارش تمام می‌شود (رسمی) (= پایان می‌یابد/به پایان می‌رسد). اگر می‌خواهید در کشور بمانید، باید آن را تمدید کنید (= یک نسخه جدید برای یک دوره زمانی بیشتر بگیرید). معمولاً می‌توانید یک ویزا، گذرنامه، کارت عضویت یک باشگاه و غیره را تمدید کنید."
+      },
+      {
+        en: "C Forms There are situations where you need to fill in (= complete) forms. landing card: a form you may have to fill in when you enter another country enrolment form (sometimes called a registration form): a form you often have to fill in when you join a school or course application form: a form where you write details about yourself, often when applying for a job",
+        fa: "C فرم‌ها شرایطی وجود دارد که نیاز به پر کردن (= تکمیل) فرم دارید. کارت ورود: فرمی که ممکن است هنگام ورود به کشور دیگر باید پر کنید فرم ثبت‌نام (گاهی فرم نام‌نویسی نامیده می‌شود): فرمی که معمولاً هنگام پیوستن به یک مدرسه یا دوره باید پر کنید فرم درخواست: فرمی که جزئیات مربوط به خود را در آن می‌نویسید، معمولاً هنگام درخواست برای یک شغل"
+      },
+      {
+        en: "With many forms, you will need to sign them (= write your signature) and print your full name underneath. (= under it) [Signature Julia Gonzales / Name (in capitals) JULIA GONZALES]",
+        fa: "با بسیاری از فرم‌ها، نیاز به امضای آن‌ها (= نوشتن امضای خود) و چاپ نام کامل خود در زیر آن‌ها دارید. (= زیر آن) [امضای جولیا گونزالس / نام (با حروف بزرگ) JULIA GONZALES]"
+      },
+      {
+        en: "D Language of forms Forms often contain formal expressions. In spoken English, this may be different. written spoken: date of birth = When were you born? place of birth = Where were you born? country of origin = Where do you come from? marital status = Are you single or married? date of arrival = When did you arrive? date of departure = When are you leaving? (or When did you leave?)",
+        fa: "D زبان فرم‌ها فرم‌ها اغلب حاوی عبارات رسمی هستند. در انگلیسی گفتاری، این ممکن است متفاوت باشد. نوشتاری گفتاری: تاریخ تولد = متولد چه زمانی شدید؟ محل تولد = کجا به دنیا آمدید؟ کشور مبدأ = از کجا می‌آیید؟ وضعیت تأهل = مجرد هستید یا متأهل هستید؟ تاریخ ورود = چه زمانی رسیدید؟ تاریخ خروج = چه زمانی می‌روید؟ (یا چه زمانی رفتید؟)"
+      },
+      {
+        en: "NOTE In written and spoken English, we use surname (= your last name or family name).",
+        fa: "توجه در انگلیسی نوشتاری و گفتاری، ما از کلمه نام خانوادگی (= نام خانوادگی شما یا نام خانوادگی شما) استفاده می‌کنیم."
+      }
+    ],
     exercise: {
       instruction: "87.1 Check the pronunciation of these phrases in the Index (you will find them at the underlined words). Repeat them until you can say them fluently. — 87.2 Write down a word that can be used before these nouns, but not including words in 87.1. — 87.3 Complete these sentences with a suitable word. — 87.4 How many of these documents do you have? — 87.5 Rewrite these sentences in more informal English. — 87.6 I asked some British people about problems they had had with bureaucracy. What about you? Have you had any problems? If so, write them down and compare them with the replies in the Answer key on page 236.",
       instructionFa: "تلفظ این عبارت‌ها را در واژه‌نامه بررسی کنید و آن‌ها را تکرار کنید تا بتوانید روان بگویید. — واژه‌ای بنویسید که قبل از این اسم‌ها به کار رود، اما شامل واژه‌های تمرین ۸۷.۱ نباشد. — این جمله‌ها را با واژه مناسب کامل کنید. — تا چه تعداد از این مدارک را دارید؟ — این جمله‌ها را به انگلیسی غیررسمی بازنویسی کنید. — از چند نفر بریتانیایی درباره مشکلاتشان با بوروکراسی پرسیدم. شما چه؟ اگر مشکلی داشته‌اید، بنویسید و با پاسخ‌های کلید صصفحه ۲۳۶ مقایسه کنید.",
@@ -1972,7 +2058,28 @@ export const READINGS_PART_5: Reading[] = [
     title: "Time",
     titleFa: "زمان",
     source: "VIU Pre-int & Int 2nd ed — درس 93 (کتاب ص188-189)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Prepositions: at, on, in — at a specific time: at 8 o'clock, at 3.30, at midnight; on a day: on Monday, on July 14, on the second day; in a period: in the morning, in April, in the summer, in 1998. Important exceptions are: at Christmas, at Easter, at the weekend, at night.",
+        fa: "A حروف اضافه: at, on, in — در زمان مشخص: at 8 o'clock, at 3.30, at midnight؛ در یک روز: on Monday, on July 14, on the second day؛ در یک دوره: in the morning, in April, in the summer, in 1998. استثناهای مهم عبارتند از: at Christmas, at Easter, at the weekend, at night."
+      },
+      {
+        en: "B Prepositions often confused — I'll stay until she phones; I'll be here until 4.30. (= I'll leave after she phones/after 4.30) I'll be in the office by 8.15 (= not later than 8.15); I'll be back home by 6.30. (= not later than 6.30) I've worked in this office for six months. [For + a period of time, e.g. a week, a month] I've worked here since May. [Since + a point in time in the past, e.g. last Friday, 3 March] I worked on a farm during the summer/the holidays. [This tells you 'when'.] I worked on a farm for two years. [This tells you 'how long'.] (NOT during two years) I'm going back to Brazil in ten days' time. (= ten days from now) (NOT after ten days)",
+        fa: "B حروف اضافه که اغلب اشتباه گرفته می‌شوند — من تا زمانی که او تماس بگیرد می‌مانم؛ من تا ساعت 4.30 اینجا خواهم بود. (= من بعد از اینکه او تماس گرفت/بعد از ساعت 4.30 می‌روم) من تا ساعت 8:15 در دفتر خواهم بود (= نه بعد از ساعت 8:15)؛ من تا ساعت 6:30 به خانه برمی‌گردم. (= نه بعد از ساعت 6:30) من شش ماه در این دفتر کار کرده‌ام. [For + یک دوره زمانی، مثلاً یک هفته، یک ماه] از ماه مه اینجا کار کرده‌ام. [Since + یک نقطه در زمان در گذشته، مثلاً جمعه گذشته، ۳ مارس] در تابستان/تعطیلات در یک مزرعه کار کردم. [این به شما می‌گوید 'چه زمانی'.] دو سال در یک مزرعه کار کردم. [این به شما می‌گوید 'چقدر طول کشید'. (NOT during two years) من ده روز دیگر به برزیل برمی‌گردم. (= ده روز از حالا) (NOT after ten days)"
+      },
+      {
+        en: "C Approximate periods of time: past, present and future — Past: I've known the two girls for ages. (= for a long time) I haven't been to the dentist recently/lately. (e.g. in the last few months) I saw Tom recently. (e.g. a few weeks ago/not long ago) I used to go skiing, but that was a long time ago. (e.g. 5–10 years ago) My sister went to the zoo the other day. (= a few days ago, perhaps a week) Present: I don't see my sister much these days. (= a period including the past and now) Future: This dictionary will be OK for the time being. (= for now/the near future – but not long) I'm sure I'll go to America one day. (= in the future but I don't know when)",
+        fa: "دوره‌های زمانی تقریبی: گذشته، حال و آینده — گذشته: من این دو دختر را از مدت‌ها پیش می‌شناسم. (= برای مدت طولانی) اخیراً به دندانپزشک نرفته‌ام. (مثلاً در چند ماه گذشته) اخیراً تام را دیدم. (مثلاً چند هفته پیش/اخیر) من پیش‌تر اسکی می‌کردم، اما آن مدت‌ها پیش بود. (مثلاً ۵ تا ۱۰ سال پیش) خواهرم چند روز پیش به باغ‌وحشت رفته بود. (= چند روز پیش، شاید یک هفته) حال: من این روزها خواهرم را زیاد نمی‌بینم. (= یک دوره‌ای که گذشته و حال را در بر می‌گیرد) آینده: این دیکشنری برای حالا کافی خواهد بود. (= برای الان/آینده نزدیک — اما نه برای مدت طولانی) مطمئنم که روزی به آمریکا می‌روم. (= در آینده ولی نمی‌دانم کی)"
+      },
+      {
+        en: "D Counting time — There are 60 seconds in a minute, 60 minutes in an hour, 24 hours in a day, 7 days in a week, 2 weeks in a fortnight, 52 weeks in a year, 10 years in a decade, 100 years in a century.",
+        fa: "D شمارش زمان — در یک دقیقه ۶۰ ثانیه، در یک ساعت ۶۰ دقیقه، در یک روز ۲۴ ساعت، در یک هفته ۷ روز، در دو هفته ۲ هفته، در یک سال ۵۲ هفته، در یک دهه ۱۰ سال، در یک قرن ۱۰۰ سال وجود دارد."
+      },
+      {
+        en: "E 'Take' and 'last' — We use take to say how long we need to do something. It takes me (= I need) half an hour to get to school. We can walk, but it'll take (= we'll need) a long time. We use last to talk about the duration of something, from the beginning to the end. The cookery course lasted for ten weeks. (= it continued for ten weeks) How long does the film last? (= How long is it from the beginning to the end?) The battery in my camera didn't last long. (= didn't continue to function for a long time)",
+        fa: "E 'Take' و 'last' — ما از take برای بیان زمان مورد نیاز برای انجام کاری استفاده می‌کنیم. من نیم ساعت طول می‌کشد به مدرسه برسم. (= به من نیاز است) ما می‌توانیم پیاده برویم، اما طولانی خواهد بود. (= به ما زمان زیادی نیاز خواهد بود) ما از last برای صحبت درباره مدت زمان چیزی، از ابتدا تا انتها استفاده می‌کنیم. دوره آشپزی ده هفته طول کشید. (= این دوره برای ده هفته ادامه یافت) فیلم چقدر طول می‌کشد؟ (= چقدر از ابتدا تا انتها است؟) باتری دوربین من مدت زیادی دوام نیاورد. (= برای مدت طولانی کار نکرد)"
+      }
+    ],
     exercise: {
       instruction: "93.1 Complete the text with at, on or in. — 93.3 Replace the underlined words with more 'approximate' time expressions.",
       instructionFa: "متن را با at، on یا in کامل کنید. — کلمات زیرخط‌دار را با عبارات زمانی «تقریبی» جایگزین کنید.",
@@ -2593,7 +2700,48 @@ export const READINGS_PART_5: Reading[] = [
     title: "Notices and warnings",
     titleFa: "اعلان‌ها و هشدارها",
     source: "VIU Pre-int & Int 2nd ed — درس 97 (کتاب ص196-197)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "OUT OF ORDER for a machine that is not working, e.g. public phone or washing machine",
+        fa: "OUT OF ORDER برای ماشینی که کار نمی‌کند، مثلاً تلفن عمومی یا ماشین لباسشویی"
+      },
+      {
+        en: "NO VACANCIES in the window of a B&B (cheap hotel), it means the hotel is full",
+        fa: "NO VACANCIES در پنجره یک هتل ارزان‌قیمت، به این معنی است که هتل پر شده است"
+      },
+      {
+        en: "SOLD OUT outside a cinema or concert hall – there are no tickets left; they have all been sold",
+        fa: "SOLD OUT خارج از سینما یا سالن کنسرت – بلیط‌ها تمام شده‌اند؛ همه فروخته شده‌اند"
+      },
+      {
+        en: "PLEASE QUEUE OTHER SIDE (= wait in a line on the other side of this notice) e.g. in a bank or post office",
+        fa: "PLEASE QUEUE OTHER SIDE (= در صف در طرف دیگر این اعلان بایستید) مثلاً در بانک یا اداره پست"
+      },
+      {
+        en: "KEEP RIGHT (= stay on the right side, and continue on the right side) e.g. in airports, on the underground",
+        fa: "KEEP RIGHT (= در سمت راست بمانید و در سمت راست ادامه دهید) مثلاً در فرودگاه‌ها، در مترو"
+      },
+      {
+        en: "D Be careful! With these notices, something bad may happen if you do not pay attention to them.",
+        fa: "D مراقب باشید! با این علائم، ممکن است اتفاق بدی بیفتد اگر به آن‌ها توجه نکنید."
+      },
+      {
+        en: "MIND YOUR HEAD (= be careful you don't hit your head) e.g. in front of a low door",
+        fa: "MIND YOUR HEAD (= مراقب باشید سرتان را به چیزی نزنید) مثلاً در مقابل یک در کوتاه"
+      },
+      {
+        en: "MIND THE STEP (= be careful you don't hit the step and fall) e.g. in front of a step",
+        fa: "MIND THE STEP (= مراقب باشید به پله نزنید و نیفتید) مثلاً در مقابل یک پله"
+      },
+      {
+        en: "FRAGILE (= be careful, this will break easily)",
+        fa: "FRAGILE (= مراقب باشید، این به راحتی می‌شکند)"
+      },
+      {
+        en: "BEWARE OF PICKPOCKETS (= be careful, there are people here who will steal things from your bag or pocket without you knowing)",
+        fa: "BEWARE OF PICKPOCKETS (= مراقب باشید، افرادی اینجا هستند که وسایل شما را از کیف یا جیبتان دزدیدن بدون اینکه متوجه شوید)"
+      }
+    ],
     exercise: {
       instruction: "97.1 Complete these notices and warnings in possible ways, without looking at the opposite page. — 97.2 Where could you see these notices or warnings? — 97.4 Now write some different notices of your own. Think of six possible notices you could put in one of these places: — 97.5 Look for other notices (in English or your first language). Can you understand the English notices? Can you translate the ones in your own language. Try to find six more notices in the next week.",
       instructionFa: "این اعلان‌ها و هشدارها را به طرق ممکن کامل کنید، بدون نگاه کردن به صفحهٔ مقابل. — این اعلان‌ها یا هشدارها را کجا می‌توانید ببینید؟ — حالا چند اعلان متفاوت از خودتان بنویسید. شش اعلان ممکن که می‌توانید در یکی از این مکان‌ها قرار دهید فکر کنید: — به دنبال اعلان‌های دیگر بگردید (به انگلیسی یا زبان خودتان). آیا اعلان‌های انگلیسی را می‌فهمید؟ آیا می‌توانید آن‌ها را به زبان خودتان ترجمه کنید. سعی کنید در هفتهٔ آینده شش اعلان دیگر پیدا کنید.",
@@ -3024,7 +3172,132 @@ export const READINGS_PART_5: Reading[] = [
     title: "Formal and informal English",
     titleFa: "انگلیسی رسمی و غیررسمی",
     source: "VIU Pre-int & Int 2nd ed — درس 99 (کتاب ص200-201)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Formal English is more common in writing than speaking, and is used in notices, business letters and legal English. You will hear some examples in spoken English, e.g. airport announcements.",
+        fa: "انگلیسی رسمی در نوشتن رایج‌تر از گفتار است و در اعلان‌ها، نامه‌های تجاری و انگلیسی حقوقی استفاده می‌شود. شما نمونه‌هایی از آن را در گفتار انگلیسی خواهید شنید، مثلاً اعلان‌های فرودگاه."
+      },
+      {
+        en: "Notice in café: Only food purchased (= bought) here may be eaten on the premises.",
+        fa: "اعلان در کافه: فقط غذا یا نوشیدنی‌ای که اینجا خریداری شده باشد (= خریده شده) می‌تواند در محل نوشیده یا خورده شود."
+      },
+      {
+        en: "Police statement: I apprehended (= caught) the accused outside the supermarket.",
+        fa: "گزارش پلیس: من متهم را در خارج از سوپرمارکت دستگیر کردم (= گرفتم)."
+      },
+      {
+        en: "Theatre announcement: The play will commence (= start) in two minutes.",
+        fa: "اعلان تئاتر: نمایش دو دقیقه دیگر آغاز خواهد شد (= شروع می‌شود)."
+      },
+      {
+        en: "Business meeting: The meeting will resume (= start again) this afternoon at 2 pm.",
+        fa: "جلسه تجاری: جلسه بعد از ظهر امروز ساعت ۲ دوباره از سر گرفته خواهد شد (= شروع می‌شود)."
+      },
+      {
+        en: "Lawyer in court: My client had a broken ankle, thus (= so) he couldn't drive the car.",
+        fa: "وکیل در دادگاه: موکلم مچ پاش شکسته بود، بنابراین (= پس) نمی‌توانست ماشین را رانندگی کند."
+      },
+      {
+        en: "Business letter: I regret to inform you (= I'm sorry to say) that we are unable to ... (= can't)",
+        fa: "نامه تجاری: متأسفم به شما اطلاع دهم (= متأسفم بگویم) که ما قادر به ... نیستیم (= نمی‌توانیم)"
+      },
+      {
+        en: "Notice: If you require (= need) further assistance (= more help), please contact ...",
+        fa: "توجه: اگر به کمک بیشتری نیاز دارید، لطفاً با ... تماس بگیرید."
+      },
+      {
+        en: "Airport announcement: Will passengers for Miami please proceed to (= go to) gate 36.",
+        fa: "اعلامیه فرودگاه: مسافرین پرواز میامی لطفاً به درگاه ۳۶ بروید."
+      },
+      {
+        en: "Informal language is more common in spoken English. For example:",
+        fa: "زبان غیررسمی در انگلیسی گفتاری رایج‌تر است. برای مثال:"
+      },
+      {
+        en: "most uses of get are informal (see Unit 29)",
+        fa: "بسیاری از کاربردهای فعل «get» غیررسمی هستند (واحد ۲۹ را ببینید)."
+      },
+      {
+        en: "many phrasal verbs are informal (see Units 23 and 24)",
+        fa: "بسیاری از افعال ترکیبی غیررسمی هستند (واحدهای ۲۳ و ۲۴ را ببینید)."
+      },
+      {
+        en: "many idioms are informal (see Unit 13)",
+        fa: "بسیاری از اصطلاحات غیررسمی هستند (واحد ۱۳ را ببینید)."
+      },
+      {
+        en: "most shortened words are informal (see Unit 100)",
+        fa: "بسیاری از کلمات کوتاه‌شده غیررسمی هستند (واحد ۱۰۰ را ببینید)."
+      },
+      {
+        en: "Informal language is not suitable for formal written English, but in spoken English (and most e-mails or letters to friends) it will help you generally to sound more natural.",
+        fa: "زبان غیررسمی برای انگلیسی نوشتاری رسمی مناسب نیست، اما در انگلیسی گفتاری (و بیشتر ایمیل‌ها یا نامه‌های دوستان) به طور کلی به شما کمک می‌کند تا طبیعی‌تر به نظر برسید."
+      },
+      {
+        en: "I had to go and pick up (= collect) the kids (= children) from school.",
+        fa: "باید می‌رفتم بچه‌ها را از مدرسه جمع کنم."
+      },
+      {
+        en: "I reckon (= think) we'll get (= receive/obtain) the money pretty (= quite) soon.",
+        fa: "فکر می‌کنیم پول را خیلی زود دریافت خواهیم کرد."
+      },
+      {
+        en: "I'm just going to the loo. (= toilet)",
+        fa: "من فقط دارم به دستشویی می‌روم."
+      },
+      {
+        en: "Do you fancy going out? (= Would you like to go out?)",
+        fa: "دوست داری بیرون برویم؟"
+      },
+      {
+        en: "I managed to fix up (= arrange/make) an appointment for 7.30.",
+        fa: "تونستم قرار ملاقاتی برای ساعت ۷:۳۰ ترتیب بدم."
+      },
+      {
+        en: "My flat is very handy for the shops. (= near the shops and very convenient)",
+        fa: "آپارتمان من برای خرید خیلی راحت است (نزدیک مغازه‌ها و بسیار کاربردی)."
+      },
+      {
+        en: "I thought the book was terrific. (= marvellous)",
+        fa: "کتاب فوق‌العاده بود."
+      },
+      {
+        en: "Most of the students are bright (= intelligent) but Paul is really thick. (= stupid)",
+        fa: "اکثر دانشجویان باهوش هستند، اما پل واقعاً احمق است."
+      },
+      {
+        en: "What's up? (= What's the matter?)",
+        fa: "چی شده؟"
+      },
+      {
+        en: "We must get in touch with them (= contact them) very soon.",
+        fa: "باید خیلی زود با آنها تماس بگیریم."
+      },
+      {
+        en: "When we get to (= reach/arrive) the hotel, I'll have a word with (= speak to) them.",
+        fa: "وقتی به هتل رسیدیم، باهاشون چند تا کلام می‌زنم."
+      },
+      {
+        en: "I offered him ten quid (= pounds), but the guy (= man) wasn't interested.",
+        fa: "ده پوند به اون پیشنهاد دادم، ولی آقا بی‌تفاوت بود."
+      },
+      {
+        en: "A: Here's the book I promised you. B: Oh, cheers. (= thank you. It can also mean 'goodbye'.)",
+        fa: "الف: این کتابی است که بهت قول داده بودم. ب: اوه، ممنون. (= متشکرم. همچنین می‌تواند به معنی «خداحافظ» هم باشد.)"
+      },
+      {
+        en: "Did you bring your bike? (= bicycle)",
+        fa: "دوچرخه‌ات رو آوردی؟ (= دوچرخه)"
+      },
+      {
+        en: "This is a form of very informal language. It includes words used by particular groups of people, e.g. young people often refer to 'drugs' as dope, and also words which many people think are impolite and unacceptable in most situations. You should probably not use these words, but some of them are quite common. For example, the word piss is a slang word meaning to urinate/go to the toilet, and it is also used in a number of other slang expressions with different meanings.",
+        fa: "این نوعی از زبان بسیار غیررسمی است. شامل واژه‌هایی است که توسط گروه‌های خاصی از افراد استفاده می‌شود، مثلاً جوانان اغلب به مواد مخدر «دوپ» می‌گویند، همچنین شامل واژه‌هایی است که بسیاری از افراد آنها را نامناسب و غیرقابل قبول در اکثر موقعیت‌ها می‌دانند. احتمالاً نباید از این واژه‌ها استفاده کنید، اما برخی از آنها بسیار رایج هستند. برای مثال، واژه «پیس» یک واژه عامیانه به معنی ادرار کردن/رفتن به دستشویی است و همچنین در عبارات عامیانه دیگری با معانی مختلف استفاده می‌شود."
+      },
+      {
+        en: "Piss off! (= go away)  He was pissed. (= drunk)  It's pissing with rain. (= raining heavily)",
+        fa: "پیس آف! (= از اینجا برو!)  او خورده بود. (= مست بود)  باران می‌ریزه. (= باران شدید می‌بارد)"
+      }
+    ],
     exercise: {
       instruction: "99.1 Put the words on the left into the correct column on the right. — 99.2 Find a synonym in the box for each of the words in 99.1. — 99.3 Replace the underlined words and phrases in these sentences with more informal language. — 99.4 Now rewrite the underlined parts of this letter in more suitable formal English. — 99.5 Dictionaries will tell you if a word is formal or informal/spoken. Use your dictionary to find out if these underlined words are formal or informal/spoken. What do they mean?",
       instructionFa: "واژه‌های سمت چپ را در ستون درست سمت راست قرار دهید. — برای هر یک از واژه‌های تمرین ۹۹.۱ در جعبه، مترادف پیدا کنید. — واژه‌ها و عبارت‌های زیرخط‌دار این جمله‌ها را با زبان غیررسمی‌تر جایگزین کنید. — اکنون بخش‌های زیرخط‌دار این نامه را به انگلیسی رسمی‌تر بازنویسی کنید. — دیکشنری‌ها می‌گویند یک واژه رسمی یا غیررسمی/محاوره‌ای است. با استفاده از دیکشنری مشخص کنید این واژه‌های زیرخط‌دار رسمی هستند یا غیررسمی/محاوره‌ای. معنای آن‌ها چیست؟",

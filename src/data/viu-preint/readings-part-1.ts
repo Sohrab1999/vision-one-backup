@@ -9,7 +9,32 @@ export const READINGS_PART_1: Reading[] = [
     title: "Learning and revising with this book",
     titleFa: "یادگیری و مرور با این کتاب",
     source: "VIU Pre-int & Int 2nd ed — درس 1 (کتاب ص4-5)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Look at Exercise 1.1 on the next page before you read this page.",
+        fa: "قبل از خواندن این صفحه، به تمرین ۱.۱ در صفحه بعدی نگاه کنید."
+      },
+      {
+        en: "A routine means doing certain things often and in the same way. If you are using this book for self-study (= to study alone), it helps to have a routine. So, how much time can you spend on the book each day or each week? Here are some ideas: if you are studying a new unit, spend at least (= a minimum of) half an hour or 45 minutes; if you are revising (= studying a unit for a second or third time), five or ten minutes is very useful.",
+        fa: "روتین به معنای انجام کارهای خاص به طور مکرر و به یک روش است. اگر از این کتاب برای مطالعه مستقل (یعنی مطالعه به تنهایی) استفاده می‌کنید، داشتن یک روتین کمک می‌کند. بنابراین، هر روز یا هر هفته چقدر زمان می‌توانید صرف این کتاب کنید؟ در اینجا چند ایده آمده است: اگر در حال مطالعه یک واحد جدید هستید، حداقل نیم ساعت یا ۴۵ دقیقه وقت بگذارید؛ اگر در حال مرور کردن (یعنی مطالعه یک واحد برای دومین یا سومین بار) هستید، پنج یا ده دقیقه بسیار مفید است."
+      },
+      {
+        en: "So, plan longer periods for new units and shorter periods for revision.",
+        fa: "بنابراین، دوره‌های طولانی‌تری برای واحدهای جدید و دوره‌های کوتاه‌تری برای مرور برنامه‌ریزی کنید."
+      },
+      {
+        en: "Do different things to maintain your interest. (= keep your interest high) For example: 1 Don't study the units in the same order as the book. Choose (= select) units that interest you (= are interesting for you). 2 When you do a unit, you can read the whole (= all) of the left-hand page (= page on the left), then do the exercises. Or, do the exercises first, then read the left-hand page if there is a problem. 3 Be active when you are learning. For example: when you are reading the left-hand page, use a highlighter pen to mark new or interesting vocabulary; practise saying the words aloud (= speaking them), so you can pronounce them (= say the pronunciation), and also silently (= without a noise) in your head to help you to remember them; put new words in your own notebook using some of the ideas from Unit 2.",
+        fa: "کارهای مختلفی را برای حفظ علاقه خود انجام دهید. (یعنی علاقه خود را بالا نگه دارید). برای مثال: 1 واحدها را به همان ترتیبی که در کتاب است مطالعه نکنید. واحدهایی را که برای شما جذاب هستند (برای شما جالب هستند) انتخاب کنید. 2 وقتی یک واحد را انجام می‌دهید، می‌توانید تمام صفحه چپ را بخوانید، سپس تمرینات را انجام دهید. یا، ابتدا تمرینات را انجام دهید، سپس اگر مشکلی داشتید صفحه چپ را بخوانید. 3 هنگام یادگیری فعال باشید. برای مثال: وقتی صفحه چپ را می‌خوانید، از هایلایتر برای علامت‌گذاری واژگان جدید یا جالب استفاده کنید؛ تلفظ کلمات را به صورت بلند (یعنی گفتن آنها) تمرین کنید تا بتوانید آنها را تلفظ کنید، و همچنین به صورت خاموش (بدون صدا) در ذهن خود برای به خاطر سپردن آنها تمرین کنید؛ واژگان جدید را با استفاده از برخی ایده‌های ازواحد ۲ در دفترچه خود بنویسید."
+      },
+      {
+        en: "It's easy to forget words that you learn, but if you revise for short periods, it helps you to remember words and make them part of your active vocabulary. Here are some ideas.",
+        fa: "آسان است کلماتی که یاد می‌گیرید را فراموش کنید، اما اگر برای دوره‌های کوتاه مرور کنید، به شما کمک می‌کند کلمات را به خاطر بسپارید و آنها را بخشی از واژگان فعال خود کنید. در اینجا چند ایده آمده است."
+      },
+      {
+        en: "1 Do exercises in pencil. Check your answers when you finish, then rub them out (= remove them using a rubber). Later, come back and do the exercises again. Use the left-hand page if you have a problem. 2 When you read a left-hand page for a second time, have a blank piece of paper (= paper with no writing on it) with you. When you come to a new word in bold with a definition in (brackets), cover the definition (= put the paper over it) and try to define it (= give the meaning/definition). 3 Revise for short periods but do it often. Five minutes a day (NOT five minutes per day) is probably better than half an hour a week; but half an hour a week is probably better than two hours a month. 4 Be active when you revise, e.g. test yourself, practise the pronunciation, write down important words and phrases in your notebook with example sentences.",
+        fa: "1 تمرینات را با مداد انجام دهید. وقتی تمام کردید، پاسخ‌های خود را بررسی کنید، سپس آنها را پاک کنید (با استفاده از پاک‌کن). بعداً برگردید و دوباره تمرینات را انجام دهید. اگر مشکلی داشتید از صفحه چپ استفاده کنید. 2 وقتی برای بار دوم صفحه چپ را می‌خوانید، یک تکه کاغذ خالی (کاغذی بدون هیچ نوشتاری) با خود داشته باشید. وقتی به یک کلمه جدید به صورت برجسته با یک تعریف داخل (پرانتز) رسیدید، تعریف را بپوشانید (کاغذ را روی آن بگذارید) و سعی کنید آن را تعریف کنید (معنی/تعریف آن را بدهید). 3 برای دوره‌های کوتاه اما مکرر مرور کنید. پنج دقیقه در روز (نه پنج دقیقه در روز) احتمالاً بهتر از نیم ساعت در هفته است؛ اما نیم ساعت در هفته احتمالاً بهتر از دو ساعت در ماه است. 4 هنگام مرور فعال باشید، مثلاً خودتان را آزمایش کنید، تلفظ را تمرین کنید، کلمات و عبارات مهم را با مثال جمله در دفترچه خود بنویسید."
+      }
+    ],
     exercise: {
       instruction: "1.1 Read these questions. What do you think? (Answers are on the opposite page.) — 1.2 Find your way round the book. — 1.3 Complete the table. — 1.4 There is a mistake with the underlined words. Can you correct each one? — 1.5 True or False? If the sentence is false, rewrite it to make it true. Write in pencil.",
       instructionFa: "این سوالات را بخوانید. نظر شما چیست؟ (پاسخ‌ها در صفحه مقابل است.) — با کتاب راه بیایید. — جدول را کامل کنید. — در واژه‌های زیرخط‌دار اشتباهی هست. می‌توانید هر کدام را اصلاح کنید؟ — درست یا غلط؟ اگر جمله غلط است، آن را طوری بازنویسی کنید که درست شود. با مداد بنویسید.",
@@ -583,7 +608,108 @@ export const READINGS_PART_1: Reading[] = [
     title: "Classroom language",
     titleFa: "زبان کلاس درس",
     source: "VIU Pre-int & Int 2nd ed — درس 5 (کتاب ص12-13)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Equipment",
+        fa: "A تجهیزات"
+      },
+      {
+        en: "These are some of the things you may use in your classroom or school.",
+        fa: "این‌ها برخی از چیزهایی هستند که ممکن است در کلاس درس یا مدرسه خود استفاده کنید."
+      },
+      {
+        en: "[labelled diagram: chalk, rubber, OHP (overhead projector), OHT (overhead transparency), board pen, board, file, notebook, pencil, pencil sharpener, bag, socket, highlighter (pen), briefcase, plug, tape recorder/cassette recorder, cassette/tape, photocopier, video]",
+        fa: "[نمودن برچسب‌دار: گچ، پاک‌کن، پروژکتور او اچ پی (OHP) (پروژکتور روپایی)، شفاف او اچ تی (OHT) (شفاف روپایی)، ماژیکتاب، تخته، پرونده، دفترچه، مداد، تیز‌کن مداد، کوله‌پشتی، پریز، هایلایتر (ماژیک)، چمدان، پلاگ، دستگاه پخش نوار/ضبط‌کن نوار، نوار/کاست، دستگاه کپی، ویدیو]"
+      },
+      {
+        en: "We can use some of these nouns as verbs: video a programme (= record it on video); photocopy an exercise; highlight new words; file some papers (= put them in a file).",
+        fa: "ما می‌توانیم برخی از این اسم‌ها را به عنوان فعل استفاده کنیم: ویدیو گرفتن از یک برنامه (یعنی آن را روی ویدیو ضبط کنیم)； photocopy کردن یک تمرین؛ هایلایت کردن کلمات جدید؛ پرونده کردن برخی کاغذها (یعنی آنها را در یک پرونده قرار دادن)."
+      },
+      {
+        en: "B Classroom activities",
+        fa: "B فعالیت‌های کلاس درس"
+      },
+      {
+        en: "Things students or teachers do in the classroom:",
+        fa: "کارهایی که دانش‌آموزان یا معلمان در کلاس درس انجام می‌دهند:"
+      },
+      {
+        en: "Look up a word (= find the meaning of a word in a dictionary)",
+        fa: "به یک کلمه در دیکشنری نگاه کنید (یعنی معنی یک کلمه را در دیکشنری پیدا کنید)"
+      },
+      {
+        en: "Borrow someone's dictionary or rubber (= use it and then return it)",
+        fa: "دیکشنری یا پاک‌کن کسی را قرض بگیرید (از آن استفاده کنید و سپس برگردانید)"
+      },
+      {
+        en: "Rub out mistakes in a notebook (= remove mistakes using a rubber)",
+        fa: "اشتباهات را در دفترچه پاک کنید (اشتباهات را با استفاده از پاک‌کن حذف کنید)"
+      },
+      {
+        en: "Plug in the tape recorder (= put the plug in the electric socket)",
+        fa: "ضبط‌کن نوار را به برق وصل کنید (پلاگ را در پریز برق بگذارید)"
+      },
+      {
+        en: "Turn up the tape recorder if you can't hear it (= increase the volume) (opp turn down)",
+        fa: "ضبط‌کن نوار را بلندتر کنید اگر نمی‌شنوید (صدای آن را افزایش دهید) (متضاد: کم کردن)"
+      },
+      {
+        en: "Rub things off the board (= remove writing from the board)",
+        fa: "چیزها را از تخته پاک کنید (نوشته‌ها را از تخته حذف کنید)"
+      },
+      {
+        en: "Correct students' English (= give the correct English if students make mistakes)",
+        fa: "انگلیسی دانش‌آموزان را تصحیح کنید (اگر دانش‌آموزان اشتباه کنند، انگلیسی صحیح را بدهید)"
+      },
+      {
+        en: "Things a teacher may ask students to do in the classroom:",
+        fa: "کارهایی که معلم ممکن است از دانش‌آموزان بخواهد در کلاس درس انجام دهند:"
+      },
+      {
+        en: "Could you clean the board, Carlos? (= remove all the writing from the board)",
+        fa: "کارلوس، آیا می‌توانی تخته را تمیز کنی؟ (یعنی همه نوشته‌ها را از تخته حذف کنی)"
+      },
+      {
+        en: "Write these words down. (= write these words on a piece of paper/in a notebook)",
+        fa: "این کلمات را بنویس. (یعنی این کلمات را روی یک تکه کاغذ/در دفترچه بنویس)"
+      },
+      {
+        en: "Enrique, could you swap places (= change places) with Lorena?",
+        fa: "انریکه، آیا می‌توانی جای خود را با لورنا عوض کنی؟ (یعنی جابجا شدن)"
+      },
+      {
+        en: "Kim, could you share your book with Petra? (= use it together at the same time)",
+        fa: "کیم، آیا می‌توانی کتابت را با پترا به اشتراک بگذاری؟ (یعنی همزمان با هم از آن استفاده کنید)"
+      },
+      {
+        en: "Repeat this sentence after me. (= say it again)",
+        fa: "این جمله را پس من تکرار کن. (یعنی دوباره بگو)"
+      },
+      {
+        en: "C Questions about vocabulary",
+        fa: "C سوالات درباره واژگان"
+      },
+      {
+        en: "What does 'plug' mean? (NOT what means plug?)",
+        fa: "'plug' به چه معناست؟ (نه: plug به چه معناست؟)"
+      },
+      {
+        en: "How do you pronounce it?",
+        fa: "چگونه آن را تلفظ می‌کنی؟"
+      },
+      {
+        en: "How do you spell 'bicycle'?",
+        fa: "'bicycle' را چگونه می‌نویسی؟"
+      },
+      {
+        en: "How do you use 'anyway' in a sentence?",
+        fa: "'anyway' را در یک جمله چگونه استفاده می‌کنی؟"
+      },
+      {
+        en: "What's the difference between 'lend' and 'borrow'?",
+        fa: "تفاوت بین 'lend' و 'borrow' چیست؟"
+      }
+    ],
     exercise: {
       instruction: "5.1 Label these pictures, then check your answers on the opposite page. — 5.2 Answer these questions. — 5.3 Match the verbs on the left with the nouns on the right. — 5.5 Think about your last lesson (in English or any other subject). Did you do any of these things?",
       instructionFa: "این تصاویر را نام‌گذاری کنید، سپس پاسخ‌های خود را در صفحه مقابل بررسی کنید. — به این سؤال‌ها پاسخ دهید. — فعل‌های سمت چپ را به اسم‌های سمت راست وصل کنید. — به درس آخر خود (انگلیسی یا هر درس دیگری) فکر کنید. آیا هر یک از این کارها را انجام دادید؟",
@@ -1680,7 +1806,48 @@ export const READINGS_PART_1: Reading[] = [
     title: "Nouns and verbs with the same form",
     titleFa: "اسم‌ها و فعل‌های هم‌شکل",
     source: "VIU Pre-int & Int 2nd ed — درس 9 (کتاب ص20-21)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "Many words in English function as noun and verb, or verb and adjective, or noun and adjective, with the same form.",
+        fa: "بسیاری از کلمات در انگلیسی به عنوان اسم و فعل، یا فعل و صفت، یا اسم و صفت با یک شکل واحد عمل می‌کنند."
+      },
+      {
+        en: "What's the answer? (noun) I must clean my room. (verb) I don't like the cold. (noun) Answer the question. (verb) It's a clean room. (adj) I don't like cold weather. (adj)",
+        fa: "پاسخ چیست؟ (اسم) باید اتاقم را تمیز کنم. (فعل) سرما را دوست ندارم. (اسم) به سوال پاسخ بده. (فعل) اتاق تمیز است. (صفت) هوای سرد را دوست ندارم. (صفت)"
+      },
+      {
+        en: "The same word form can have different meanings, but this unit looks at examples where the meaning is the same or similar, and concentrates on nouns and verbs with the same form.",
+        fa: "یک شکل کلمه‌ای می‌تواند معانی مختلفی داشته باشد، اما این واحد به نمونه‌هایی می‌پردازد که در آن معانی یکسان یا مشابه هستند و بر اسامی و افعالی که شکل یکسانی دارند، تمرکز می‌کند."
+      },
+      {
+        en: "A Noun and verb",
+        fa: "اسم و فعل"
+      },
+      {
+        en: "brake (= stop a car using the brake on the floor) ring (= telephone) diet (= eat less to lose weight) queue (= wait in a line of people) guess (= give an answer without knowing the facts) murder (= kill someone)",
+        fa: "ترمز (= توقف کردن یک ماشین با استفاده از ترمز روی کف) زنگ (= تلفن) رژیم غذایی (= خوردن کمتر برای کاهش وزن) صف (= منتظر ماندن در یک خط از افراد) حدس زدن (= دادن یک پاسخ بدون دانستن حقایق) قتل کردن (= کشتن کسی)"
+      },
+      {
+        en: "Many common words can function as noun and verb with the same form and meaning: drink, rest, look, cost, swim, wash, push, pull, reply, kiss, chat (= a casual conversation infml) [also practise (v) and practice (n)].",
+        fa: "بسیاری از کلمات رایج می‌توانند به عنوان اسم و فعل با یک شکل و معانی واحد عمل کنند: نوشیدنی، استراحت کردن، نگاه کردن، هزینه کردن، شنا کردن، شستن، فشار دادن، کشیدن، پاسخ دادن، بوسیدن، گپ زدن (= گفتگوی غیررسمی و صمیمی) [همچنین practice (فعل) و practise (اسم)]."
+      },
+      {
+        en: "B Which verb?",
+        fa: "ب) کدام فعل؟"
+      },
+      {
+        en: "It is often more natural in English to use the verb + noun structure (e.g. had a guess) and not the verb (e.g. guessed). You need to know which verbs to use with the nouns.",
+        fa: "در انگلیسی استفاده از ساختار فعل + اسم (مثلاً had a guess) اغلب طبیعی‌تر از استفاده از خود فعل (مثلاً guessed) است. شما باید بدانید کدام افعال را با اسامی به کار ببرید."
+      },
+      {
+        en: "verb: I didn't know the answer, so I guessed. We rested for a while. She braked suddenly. He needs to diet. I'm going to ring him. I looked in the paper. I dreamt about you last night. We had to queue for half an hour.",
+        fa: "فعل: من پاسخ را نمی‌دانستم، پس حدس زدم. ما برای مدتی استراحت کردیم. او ناگهان ترمز زد. او نیاز به رژیم غذایی دارد. می‌خواهم به او زنگ بزنم. در روزنامه نگاهی انداختم. دیروز شب درباره تو خواب دیدم. ما ناچار بودیم نیم ساعت بایستیم."
+      },
+      {
+        en: "verb + noun: I didn't know the answer, so I had a guess. We had a short rest. She put on the brakes suddenly. He needs to go on a diet. I'm going to give him a ring. I had a look in the paper. I had a dream about you last night. We had to wait in a queue for half an hour.",
+        fa: "فعل + اسم: من پاسخ را نمی‌دانستم، پس یک حدس زدم. ما یک استراحت کوتاه داشتیم. او ناگهان ترمزها را گرفت. او نیاز به رژیم غذایی دارد. می‌خواهم به او یک زنگ بزنم. یک نگاهی در روزنامه انداختم. دیروز شب یک خواب درباره تو دیدم. ما ناچار بودیم نیم ساعت در صف بایستیم."
+      }
+    ],
     exercise: {
       instruction: "9.4 Sometimes the same word can be a verb and noun but the meaning changes. Read these pairs of sentences. Do the verb and noun have a similar meaning, or are they different in meaning?",
       instructionFa: "گاهی همان کلمه می‌تواند فعل و اسم باشد ولی معنا تغییر می‌کند. این جفت‌جملات را بخوانید. آیا فعل و اسم معنای مشابهی دارند یا معنایشان متفاوت است؟",
@@ -1742,7 +1909,72 @@ export const READINGS_PART_1: Reading[] = [
     title: "Compound nouns",
     titleFa: "اسم‌های مرکب",
     source: "VIU Pre-int & Int 2nd ed — درس 10 (کتاب ص22-23)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Formation — A compound noun is formed from two words, and occasionally three, to create a single new idea.",
+        fa: "تشکیل — یک اسم مرکب از دو کلمه، و گاهی سه کلمه، تشکیل می‌شود تا یک ایده واحد جدید خلق کند."
+      },
+      {
+        en: "dining room (= room where you eat meals) | film star (e.g. Tom Cruise, Meg Ryan)",
+        fa: "اتاق غذاخوری (= اتاقی که در آن غذا می‌خورید) | ستاره فیلم (مثلاً تام کروز، مگ رایان)"
+      },
+      {
+        en: "science fiction (= stories about the future) | income tax (= tax you pay on your salary)",
+        fa: "علمی-تخیلی (= داستان‌هایی درباره آینده) | مالیات بر درآمد (= مالیاتی که بر حقوق خودتان پرداخت می‌کنید)"
+      },
+      {
+        en: "writing paper (= paper for writing letters) | dishwasher (= machine for washing dishes)",
+        fa: "کاغذ نامه‌ای (= کاغذی برای نوشتن نامه) | ظرفشویی (= ماشینی برای شستن ظرف‌ها)"
+      },
+      {
+        en: "mother tongue (= your first language) | brother-in-law (= your sister's husband or wife's brother)",
+        fa: "زبان مادری (= زبان اول شما) | برادر همسر (= شوهر خواهر یا برادر همسر شما)"
+      },
+      {
+        en: "bus driver (= person who drives buses)",
+        fa: "راننده اتوبوس (= شخصی که اتوبوس را می‌راند)"
+      },
+      {
+        en: "bus stop (= where buses stop for people to get on)",
+        fa: "ایستگاه اتوبوس (= جایی که اتوبوس برای سوار شدن مردم متوقف می‌شود)"
+      },
+      {
+        en: "haircut (e.g. My hair's long; I need a haircut.)",
+        fa: "کوتاهی مو (مثلاً موهایم بلند است؛ نیاز به کوتاهی دارم.)"
+      },
+      {
+        en: "traffic jam (= long line of cars moving very slowly)",
+        fa: "ترافیک سنگین (= خطوط طولانی ماشین‌ها که با سرعت بسیار کم حرکت می‌کنند)"
+      },
+      {
+        en: "babysitter (= person who looks after children when parents are out)",
+        fa: "بچه‌دوست (= شخصی که وقتی والدین بیرون هستند از کودکان مراقبت می‌کند)"
+      },
+      {
+        en: "box office (= place where you buy cinema or theatre tickets)",
+        fa: "بلیت‌فروشی (= جایی که بلیت‌های سینما یا تئاتر را می‌خرید)"
+      },
+      {
+        en: "travel agent (= job of a person who makes travel arrangements for us)",
+        fa: "مسافرپرداز (= شغلی که یک شخص برای ما ترتیات سفر را انجام می‌دهد)"
+      },
+      {
+        en: "B One word or two? — Some short common compound nouns are written as one word, e.g. bedroom, postman; a few are written with a hyphen, e.g. T-shirt, make-up (= stuff you put on the face, often on lips and around eyes, to be more attractive); but most are written as two words, e.g. credit card, bus stop. Use a dictionary to check if necessary.",
+        fa: "ب) یک کلمه یا دو کلمه؟ — برخی اسامی مرکب کوتاه و رایج به صورت یک کلمه نوشته می‌شوند، مثلاً bedroom، postman؛ تعداد کمی با خط تیره نوشته می‌شوند، مثلاً T-shirt، make-up (= موادی که روی صورت، اغلب روی لب‌ها و دور چشم، می‌زنید تا جذاب‌تر به نظر برسید)؛ اما بیشتر آن‌ها به صورت دو کلمه نوشته می‌شوند، مثلاً credit card، bus stop. در صورت لزوم از دیکشنری استفاده کنید."
+      },
+      {
+        en: "C Pronunciation — The main stress is usually on the first part, e.g. post office, income tax, but sometimes it is on both parts, e.g. science fiction, mother tongue. Use a dictionary to check if necessary.",
+        fa: "ج) تلفظ — اصلی‌ترین تکیه‌گاه معمولاً روی اولین بخش است، مثلاً post office، income tax، اما گاهی روی هر دو بخش است، مثلاً science fiction، mother tongue. در صورت لزوم از دیکشنری استفاده کنید."
+      },
+      {
+        en: "D Forming new compounds — One part of a compound often forms the basis for a number of compound nouns.",
+        fa: "د) تشکیل اسامی مرکب جدید — یک بخش از یک مرکب اغلب پایه و اساس تعدادی از اسامی مرکب را تشکیل می‌دهد."
+      },
+      {
+        en: "postman / postbox / post office | film star / pop star / rock star | toothbrush / toothpaste / toothache | living room / waiting room / chat room (= an area for communication on the internet)",
+        fa: "پستچی / صندوق پستی / اداره پست | ستاره فیلم / ستاره پاپ / ستاره راک | مسواک | خمیر دندان | درد دندان | اتاق نشیمن / اتاق انتظار / اتاق گپ (= فضایی برای ارتباط در اینترنت)"
+      }
+    ],
     exercise: {
       instruction: "10.1 Find compound nouns on the opposite page connected with each of these topics. — 10.2 Complete each sentence with a suitable compound noun from the opposite page. — 10.3 Take one word (the first part or the second part) from each compound and create a new compound. Use a dictionary to help you if necessary. Now mark the main stress on each of the compound nouns you have created.",
       instructionFa: "اسم‌های مرکب را در صفحهٔ مقابل که با هر یک از این موضوع‌ها مرتبط‌اند پیدا کنید. — هر جمله را با یک اسم مرکب مناسب از صفحهٔ مقابل کامل کنید. — از هر اسم مرکب یک واژه (بخش اول یا دوم) را بردارید و یک مرکب جدید بسازید. در صورت نیاز از فرهنگ لغت کمک بگیرید. حالا تکیهٔ اصلی هر یک از اسم‌های مرکبی که ساخته‌اید را علامت بزنید.",
@@ -2106,7 +2338,168 @@ export const READINGS_PART_1: Reading[] = [
     title: "Idioms and fixed expressions",
     titleFa: "اصطلاح‌ها و عبارت‌های ثابت",
     source: "VIU Pre-int & Int 2nd ed — درس 13 (کتاب ص28-29)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "What is an idiom?",
+        fa: "ایده‌آموز (Idiom) چیست؟"
+      },
+      {
+        en: "An idiom is a group of words with a meaning that is different from the individual words. Sometimes the meaning is easy to understand; sometimes it is difficult to understand from the individual words. These examples move from 'easy to understand' to 'more difficult to understand'.",
+        fa: "ایده‌آموز (Idiom) گروهی از کلمات است که معنای آن با معنای کلمات فردی متفاوت است. گاهی معنای آن به راحتی قابل درک است؛ گاهی درک آن از روی کلمات فردی دشوار است. این مثال‌ها از 'آسان‌تر برای درک' به 'دشوارتر برای درک' می‌روند."
+      },
+      {
+        en: "I've changed my mind about those shoes. (= changed my decision or opinion)",
+        fa: "ذهنم را درباره آن کفش‌ها تغییر داده‌ام. (= تصمیم یا نظر خودم را تغییر داده‌ام)"
+      },
+      {
+        en: "I'm tired today because I had a late night. (= went to bed later than usual) (opp an early night)",
+        fa: "امروز خسته‌ام چون دیشب دیر خوابیدم. (= دیرتر از معمول خوابیدن) (ضد: خوابیدن زود)"
+      },
+      {
+        en: "I'm trying to write an essay but I'm getting nowhere. (= not making progress)",
+        fa: "در تلاشم یک مقاله بنویسم ولی هیچ جوری جلو نمی‌رم. (= پیشرفتی ندارم)"
+      },
+      {
+        en: "You find fast food restaurants all over the place. (= everywhere)",
+        fa: "فست‌فود رستوران‌ها رو همه‌جا پیدا می‌کنی. (= همه جا)"
+      },
+      {
+        en: "My wife and I take it in turns to cook. (= I cook one day, she cooks the next, etc.)",
+        fa: "من و همسرم نوبت‌آشپزی می‌کنیم. (= من یک روز آشپزی می‌کنم، روز بعد او آشپزی می‌کند و به همین ترتیب ادامه پیدا می‌کند.)"
+      },
+      {
+        en: "I'm sorry but I don't think I can make it (= come) on Friday. I'm really busy.",
+        fa: "متاسفم ولی فکر نمی‌کنم جمعه بیام. (= بیایم) خیلی شلوغ هستم."
+      },
+      {
+        en: "They asked us to keep an eye on (= watch/look after) the house while they're away.",
+        fa: "از ما خواستند وقتی اون‌ها نیستند، خانه رو زیر نظر داشته باشیم. (= نگاه کنیم/مراقبش باشیم)"
+      },
+      {
+        en: "I feel like (= want) a drink; I feel like going out this evening. (= want to go out)",
+        fa: "حوصله نوشیدنی دارم؛ حوصله بیرون رفتن امشب هم دارم. (= می‌خواهم بیرون بروم)"
+      },
+      {
+        en: "We should get rid of some of this stuff. (= remove it/throw it away)",
+        fa: "باید بعضی از این وسایل رو دور بریزیم. (= آن را حذف کنیم/دور بیندازیم)"
+      },
+      {
+        en: "That boy really gets on my nerves. (= is very annoying; makes me angry)",
+        fa: "اون پسر واقعاً عصبیم می‌کنه. (= خیلی آزاردهنده است؛ باعث خشم من می‌شود)"
+      },
+      {
+        en: "The answer's on the tip of my tongue. (= I know it, but can't remember it at this moment)",
+        fa: "جوابه روی زبونمه. (= می‌دونم ولی الان به خاطر نمیارم)"
+      },
+      {
+        en: "Pairs of idioms",
+        fa: "جفت‌های اصطلاحات"
+      },
+      {
+        en: "These pairs are related in meaning and sometimes they are used together.",
+        fa: "این جفت‌ها از نظر معنایی مرتبط هستند و گاهی با هم استفاده می‌شوند."
+      },
+      {
+        en: "On the one hand/on the other hand (= used to contrast opposite points of view)",
+        fa: "از یک سو / از سوی دیگر (= برای مقایسه دیدگاه‌های مخالف استفاده می‌شود)"
+      },
+      {
+        en: "I'm not sure about these new apartments. On the one hand they provide homes for people, which is good. But on the other hand, we have lost the only piece of open land in the area.",
+        fa: "در مورد این آپارتمان‌های جدید مطمئن نیستم. از یک سوی، مسکنی برای مردم فراهم می‌کنند که خوب است. اما از سوی دیگر، تنها تکه زمین باز منطقه را از دست داده‌ایم."
+      },
+      {
+        en: "In the short term/in the long term (= a short or long period of time in the future)",
+        fa: "در کوتاه مدت / در بلندمدت (= یک دوره زمانی کوتاه یا بلند در آینده)"
+      },
+      {
+        en: "In the short term we can manage here, but in the long term we will need a bigger place.",
+        fa: "در کوتاه مدت می‌توانیم اینجا مدیریت کنیم، اما در بلندمدت به جای بزرگ‌تری نیاز خواهیم داشت."
+      },
+      {
+        en: "If we do this, it will be cheaper in the long term. (= over a long period of time)",
+        fa: "اگر این کار را انجام دهیم، در بلندمدت ارزان‌تر خواهد بود. (= در طول یک دوره زمانی طولانی)"
+      },
+      {
+        en: "In theory/in practice (used to contrast a general idea with reality)",
+        fa: "در تئوری / در عمل (= برای مقایسه یک ایده عمومی با واقعیت استفاده می‌شود)"
+      },
+      {
+        en: "In theory your plan looks very interesting; but in practice, it may be too expensive for us.",
+        fa: "در تئوری، طرح شما خیلی جالب به نظر می‌رسد؛ اما در عمل، ممکن است برای ما بیش از حد پرهزینه باشد."
+      },
+      {
+        en: "Common idioms",
+        fa: "اصطلاحات رایج"
+      },
+      {
+        en: "Some common idioms are used in everyday questions and replies.",
+        fa: "برخی اصطلاحات رایج در سؤالات و پاسخ‌های روزمره استفاده می‌شوند."
+      },
+      {
+        en: "A: Are you coming?",
+        fa: "آ: می‌ای؟"
+      },
+      {
+        en: "B: Yes, hang on. (= wait a minute)",
+        fa: "ب: آره، صبر کن. (= یه لحظه صبر کن)"
+      },
+      {
+        en: "A: What's up? (= What's the matter?)",
+        fa: "آ: چی کار داری؟ (= چی شده؟)"
+      },
+      {
+        en: "B: Nothing.",
+        fa: "ب: هیچی."
+      },
+      {
+        en: "A: I've forgotten to bring your book.",
+        fa: "آ: کتابتو فراموش کردم بیارم."
+      },
+      {
+        en: "B: Never mind. (= it's OK, no problem)",
+        fa: "ب: مهم نیست. (= مشکلی نیست)"
+      },
+      {
+        en: "A: Shall we go out?",
+        fa: "آ: بیرون بریم؟"
+      },
+      {
+        en: "B: Yeah, if you like. (= I am happy to do that)",
+        fa: "ب: آره، اگه دوست داری. (= خوشحال می‌شوم)"
+      },
+      {
+        en: "A: Can I borrow your dictionary?",
+        fa: "آ: می‌تونیم دیکشنری تو رو قرض بگیرم؟"
+      },
+      {
+        en: "B: Sure, go ahead. (= help yourself; take it; do it)",
+        fa: "ب: حتماً، برو جلو. (= خودت بردار)"
+      },
+      {
+        en: "A: I don't know which one to choose.",
+        fa: "آ: نمی‌دونم کدومشو انتخاب کنم."
+      },
+      {
+        en: "B: Well, make up your mind. (= make a decision)",
+        fa: "ب: خب، تصمیم بگیر. (= یه تصمیم بگیر)"
+      },
+      {
+        en: "A: What's the answer?",
+        fa: "آ: جواب چیه؟"
+      },
+      {
+        en: "B: I haven't a clue. (= I don't know)",
+        fa: "ب: هیچی نمی‌دونم. (= نمی‌دونم)"
+      },
+      {
+        en: "A: Would you prefer to stay in?",
+        fa: "آ: ترجیح می‌دی تو خونه بمونی؟"
+      },
+      {
+        en: "B: It's up to you. (= it's your decision)",
+        fa: "ب: به عهده توئه. (= تصمیم با توئه)"
+      }
+    ],
     exercise: {
       instruction: "13.3 It can be difficult to guess the meaning of an idiom, especially if you do not have the full context. Look at these examples (they are not presented on the opposite page).",
       instructionFa: "حدس زدن معنای یک اصطلاح می‌تواند دشوار باشد، مخصوصاً بدون بافت کامل. به این مثال‌ها نگاه کنید. سپس با بافت کامل‌تر معنا را حدس بزنید.",
@@ -2521,7 +2914,24 @@ export const READINGS_PART_1: Reading[] = [
     title: "Preposition + noun",
     titleFa: "حرف اضافه + اسم",
     source: "VIU Pre-int & Int 2nd ed — درس 15 (کتاب ص32-33)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "A Common patterns Sometimes a preposition is used with a particular meaning in a number of expressions. A book by Stephen King; a film by Steven Spielberg; a song by Elton John I heard it on the radio; I saw it on TV; we spoke on the phone (but I read it in the newspaper) You can go for a walk, for a swim, for a drive, for a run You can visit in the morning, in the afternoon, in the evening (but at night) You can travel by car, by train, by plane, by bus (but on foot) The man in the blue jumper, in the dark glasses (= wearing the blue jumper/dark glasses)",
+        fa: "الگوهای رایگاهه گاهی یک حرف اضافه با معنی خاصی در چندین عبارت استفاده می‌شه. یک کتاب از استفان کینگ؛ یک فیلم از استیون اسپیلبرگ؛ یک آهنگ از التون جان اون رو رادیو شنیدم؛ تلویزیون دیدم؛ با هم تلفن صحبت کردیم (ولی روزنامه رو خوندم) می‌تونی بری پیاده‌روی، شنا، رانندگی، دویدن می‌تونی صبح، بعدازظهر، عصر بیای (ولی شب) می‌تونی با ماشین، قطار، هواپیما، اتوبوس سفر کنی (ولی پیاده) آقای با ژاکت آبی، با عینک تیره (= با ژاکت آبی/عینک تیره)"
+      },
+      {
+        en: "B Fixed expressions I took his pen by mistake. (= I thought it was my pen) I did all the work by myself/on my own. (= without help from others) The shoes are made by hand. (= not by machine) The workers are on strike. (= they won't work because of a problem over pay, hours, etc.) I met them by chance. (= it wasn't a planned meeting; it was luck) The children are on holiday. (= they are having a holiday) There are two million out of work. (= without a job) I think Marianne's in love with him. (= she loves him) The building's on fire. (= it is burning) Why are they always in a hurry? (= need to do things or go somewhere very quickly)",
+        fa: "عبارات ثابت اشتباهاً خودکارشو گرفتم. (= فکر می‌کردم خودمه) همه کار رو خودم انجام دادم. (= بدون کمک دیگران) این کفش‌ها دستی ساخته شدن. (= با ماشین) کارگرها در اعتصاب هستن. (= کار نمی‌کنن به خونه مشکل حقوق، ساعت کاری و ...) تصادفاً اونا رو دیدم. (= قرار نبود ملاقات کنیم؛ شانس بود) بچه‌ها در تعطیله. (= در تعطیلات هستن) دو میلیون نفر بیکارن. (= بدون شغل) فکر می‌کنم ماریان عاشقشه. (= اونو دوست داره) ساختمون در حال آتش گرفتنه. (= داره می‌سوزه) چرا همیشه عجله دارن؟ (= لازمن سریع کار یا جایی رو انجام بدن)"
+      },
+      {
+        en: "He broke the plate by accident. (= he did not want to do it; it was a mistake) He broke the plate on purpose. (= he wanted to do it and intended to do it)",
+        fa: "اشتباهاً بشکوندش. (= نمی‌خواست این کارو بکنه؛ اشتباه بود) عمداً بشکوندش. (= می‌خواست و قصد داشت این کارو بکنه)"
+      },
+      {
+        en: "C 'In time' or 'on time'? Sometimes two prepositions can be used with the same noun, but the meaning is different. Lessons begin at 8.30 and the students are usually here on time. (= at 8.30) If we hurry, we'll be there in time. (= before the time we need to be there; we won't be late) We were tired of waiting, so in the end we went home. (= finally, after a long period) At the end of the book they get married. (= in the last part) The two men have been in business (= worked as businessmen) for many years. They're both in Germany on business. (= they are there for work, not a holiday) I'll see you in a moment. (= very soon) I can't speak to you at the moment. (= right now/at this moment)",
+        fa: "«به موقع» یا «به موقع»؟ گاهی دو حرف اضافه می‌توانند با یک اسم واحد استفاده شوند، اما معنی متفاوتی دارند. کلاس‌ها ساعت ۸:۳۰ شروع می‌شوند و دانش‌آموزان معمولاً اینجا به موقع می‌آیند. (= ساعت ۸:۳۰) اگر عجله کنیم، به موقع آنجا خواهیم بود. (= قبل از زمانی که باید آنجا باشیم؛ دیر نخواهیم شد) از انتظار خسته شدیم، در نهایت به خانه رفتیم. (= در نهایت، پس از یک دوره طولانی) در انتهای کتاب ازدواج می‌کنند. (= در بخش آخر) این دو مرد سال‌هاست که در کسب‌وکار فعالیت می‌کنند. (= به عنوان کسب‌وکارکار) هر دو در آلمان به سر می‌برند. (= آنجا برای کار، نه تعطیلات) با تو در یک لحظه دیدار خواهم کرد. (= خیلی زود) الان نمی‌توانم با تو صحبت کنم. (= همین الان/در این لحظه)"
+      }
+    ],
     exercise: {
       instruction: "15.2 Replace the underlined words with a suitable phrase from the opposite page. — 15.3 Respond to these questions using a suitable prepositional phrase. Look at the example first.",
       instructionFa: "کلمات زیرخط‌دار را با عبارت مناسبی از صفحهٔ مقابل جایگزین کنید. — به این سؤال‌ها با استفاده از یک عبارت حرف‌اضافه‌ای مناسب پاسخ دهید. ابتدا به مثال نگاه کنید.",
@@ -3397,7 +3807,40 @@ export const READINGS_PART_1: Reading[] = [
     title: "Frequently asked questions",
     titleFa: "پرسش‌های پرتکرار",
     source: "VIU Pre-int & Int 2nd ed — درس 20 (کتاب ص42-43)",
-    paragraphs: [],
+    paragraphs: [
+      {
+        en: "It will help you to learn these common questions as fixed expressions.",
+        fa: "این سوالات رایج را به عنوان عبارات ثابت یاد بگیرید تا به شما کمک کند."
+      },
+      {
+        en: "NOTE: The last two constructions are very similar in meaning. Often you can use either, but remember not to confuse the forms. (How's …? and What's … like! NOT How's it like?)",
+        fa: "توجه: دو ساختار آخر از نظر معنی بسیار شبیه هستند. اغلب می‌توانید هر دو را استفاده کنید، اما مراقب باشید فرم‌ها را با هم اشتباه نگیرید. (چطوریه …؟ و … چیه؟ نه اینکه چطوریه؟)"
+      },
+      {
+        en: "How was (the party)? (= tell me your opinion of it)",
+        fa: "پارتی چطور بود؟ (= نظرت درباره‌ش را به من بگو)"
+      },
+      {
+        en: "What's (the flat) like? (= describe it to me and tell me what you think of it)",
+        fa: "آپارتمون چطوریه؟ (= برایم توصیفش کن و بگو چه فکری درباره‌اش داری)"
+      },
+      {
+        en: "A: I live in Italy. B: Whereabouts? (= where exactly in Italy)",
+        fa: "الف: من در ایتالیا زندگی می‌کنم. ب: کجای ایتالیا؟ (= دقیقاً کجا در ایتالیا)"
+      },
+      {
+        en: "A: How far is it? (= what distance is it?) B: About ten miles.",
+        fa: "الف: فاصله‌ش چقدره؟ (= چه فاصله‌ای است؟) ب: حدود ده مایل."
+      },
+      {
+        en: "A: How do I get to the (railway station)? B: Sorry, I don't know.",
+        fa: "الف: چطوری به ایستگاه قطار برسم؟ ب: ببخشید، نمی‌دانم."
+      },
+      {
+        en: "SITUATION: You are on holiday in Ireland for two weeks. On the evening of the fourth day you meet someone in a bar. These are typical questions they may ask you.",
+        fa: "موقعیت: شما دو هفته تعطیلات در ایرلند هستید. در شب چهارم روز با کسی در یک بار ملاقات می‌کنید. این‌ها سوالات رایجی هستند که ممکن است از شما بپرسند."
+      }
+    ],
     exercise: {
       instruction: "20.1 Complete each dialogue with a suitable word. — 20.2 Here are some answers. What could the questions be? — 20.3 Replace the underlined word or phrase with a word or phrase of similar meaning. — 20.4 You are on holiday in Prague. Complete this conversation with a person you meet on the third day.",
       instructionFa: "هر گفت‌وگو را با یک واژه‌ی مناسب کامل کنید. — چند پاسخ اینجا آمده است. سؤالات می‌توانند چه باشند؟ — واژه یا عبارت زیرخط‌دار را با واژه یا عبارت هم‌معنا جایگزین کنید. — شما در پراگ تعطیلات هستید. این گفت‌وگو را با شخصی که روز سوم ملاقات می‌کنید کامل کنید.",
