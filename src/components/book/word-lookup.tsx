@@ -10,7 +10,7 @@ import { readUserName } from "@/lib/name-store";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useBook, useBookData } from "@/lib/book-context";
-import type { DictEntry, VocabEntry, VocabWord } from "@/data/types";
+import type { DictEntry, IrregularVerb, VocabEntry, VocabWord } from "@/data/types";
 import { getBookMeta } from "@/data/books/registry";
 import { SpeakButton } from "./speak-button";
 import { useStarredWords, toggleStar } from "@/lib/star-store";
@@ -31,6 +31,10 @@ interface LookupMaps {
   dict: Map<string, DictEntry>;
   vocab: Map<string, VocabWord>;
   phrases: Set<string>;
+  /** R3-d: جدول افعال بی‌قاعدهٔ کتاب فعال — کلیدها: base/past/participle نرمال‌شده
+   *  (اتصال جدول فعل به درس‌های مصرف‌کننده در سطح پاپ‌آپ — رفع اذعان سند الگوی آموزشی؛
+   *  صفر دادهٔ ساختگی — فقط فرم‌های چاپی خود جدول tracked) */
+  verbs: Map<string, IrregularVerb>;
 }
 
 function normalize(raw: string): string {
@@ -41,7 +45,7 @@ function normalize(raw: string): string {
     .toLowerCase();
 }
 
-function buildMaps(dictionary: DictEntry[], vocabList: VocabEntry[]): LookupMaps {
+function buildMaps(dictionary: DictEntry[], vocabList: VocabEntry[], verbs: IrregularVerb[]): LookupMaps {
   const dict = new Map<string, DictEntry>();
   const vocab = new Map<string, VocabWord>();
   const phrases = new Set<string>();
@@ -55,18 +59,25 @@ function buildMaps(dictionary: DictEntry[], vocabList: VocabEntry[]): LookupMaps
     if (key && !vocab.has(key)) vocab.set(key, v);
     if (key.includes(" ")) phrases.add(key);
   }
-  return { dict, vocab, phrases };
+  const verbMap = new Map<string, IrregularVerb>();
+  for (const w of verbs) {
+    for (const f of [w.base, w.past, w.participle]) {
+      const key = normalize(f);
+      if (key && !verbMap.has(key)) verbMap.set(key, w);
+    }
+  }
+  return { dict, vocab, phrases, verbs: verbMap };
 }
 
 /** کش سبک بهازای آرایه‌های دادهٔ کتاب فعال — با تغییر کتاب (تغییر رفرنس داده) بازسازی می‌شود */
-let mapsCache: { dictionary: DictEntry[]; vocab: VocabEntry[]; maps: LookupMaps } | null = null;
+let mapsCache: { dictionary: DictEntry[]; vocab: VocabEntry[]; verbs: IrregularVerb[]; maps: LookupMaps } | null = null;
 
-function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[]): LookupMaps {
-  if (mapsCache && mapsCache.dictionary === dictionary && mapsCache.vocab === vocab) {
+function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[], verbs: IrregularVerb[]): LookupMaps {
+  if (mapsCache && mapsCache.dictionary === dictionary && mapsCache.vocab === vocab && mapsCache.verbs === verbs) {
     return mapsCache.maps;
   }
-  const maps = buildMaps(dictionary, vocab);
-  mapsCache = { dictionary, vocab, maps };
+  const maps = buildMaps(dictionary, vocab, verbs);
+  mapsCache = { dictionary, vocab, verbs, maps };
   return maps;
 }
 
@@ -173,6 +184,8 @@ interface LookupHit {
   word: string;
   dict?: DictEntry;
   vocab?: VocabWord;
+  /** R3-d: فعل بی‌قاعدهٔ متناظر از جدول افعال کتاب (کلید base/past/participle) */
+  verb?: IrregularVerb;
   /** کالوکیشن‌های مرتبط — وقتی واژهٔ تکی در بانک نبود (کتاب‌های عبارت‌محور مثل کالوکیشن‌ها) */
   related?: VocabWord[];
 }
@@ -190,7 +203,13 @@ function lookup(maps: LookupMaps, norm: string): LookupHit {
     if (!c) continue;
     const hit = maps.dict.get(c);
     const vocab = maps.vocab.get(c);
-    if (hit || vocab) return { word: c, dict: hit, vocab };
+    if (hit || vocab) return { word: c, dict: hit, vocab, verb: maps.verbs.get(c) };
+  }
+  // R3-d: فرم‌های فعل بی‌قاعده (went → go) — حتی وقتی واژه در dict/vocab بانک نیست
+  for (const c of candidates) {
+    if (!c) continue;
+    const verb = maps.verbs.get(c);
+    if (verb) return { word: c, verb };
   }
   // فال‌بک عبارت‌محور: کالوکیشن‌های کتاب که همین واژه را دارند (سقف ۵) —
   // برای کتاب‌هایی مثل «کالوکیشن‌ها» که بانک واژگانشان عبارت‌های چندواژه‌ای است
@@ -278,8 +297,8 @@ export function ClickableEnText({ text, className }: { text: string; className?:
   const wrapRef = useRef<HTMLSpanElement>(null);
 
   const maps = useMemo(
-    () => getLookupMaps(data.dictionary, data.vocab.all),
-    [data.dictionary, data.vocab.all],
+    () => getLookupMaps(data.dictionary, data.vocab.all, data.verbs),
+    [data.dictionary, data.vocab.all, data.verbs],
   );
   const segs = useMemo(() => segmentText(text, maps), [text, maps]);
 
@@ -666,6 +685,23 @@ function LookupPopover({
           <LessonExamplesSection key={`les-${hit.word}`} lesson={viuLesson} norm={hit.word} />
           <SameLessonChips key={`chips-${hit.word}`} lesson={viuLesson} currentWord={hit.word} onSelect={onSelectWord} />
         </>
+      )}
+
+      {/* R3-d — گره جدول افعال بی‌قاعدهٔ کتاب به درس‌های مصرف‌کننده (رفع اذعان سند الگوی آموزشی):
+          فرم‌ها عین جدول چاپ tracked خود کتاب (base/past/participle + معنی کلاس FA-NEW) —
+          کلیدها base/past/participle؛ کلیک روی فرم صرفی (مثل went) هم جدول را پیدا می‌کند.
+          فقط‌خواندنی — بدون نوشتن در استورها */}
+      {hit.verb && (
+        <div className="mt-2 rounded-xl border bg-muted/40 p-2.5">
+          <p className="mb-1 flex items-center gap-1 text-[11px] font-black text-primary">
+            <GraduationCap size={11} />
+            فعل بی‌قاعده — جدول افعال کتاب
+          </p>
+          <p dir="ltr" className="font-en text-left text-[12.5px] font-bold leading-5 text-foreground">
+            {hit.verb.base} – {hit.verb.past} – {hit.verb.participle}
+          </p>
+          {hit.verb.meaning && <p className="mt-0.5 text-[11px] font-bold text-muted-foreground">{hit.verb.meaning}</p>}
+        </div>
       )}
 
       {hit.dict ? (

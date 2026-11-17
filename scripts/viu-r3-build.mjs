@@ -1,6 +1,6 @@
-// VIU Phase R3-b/R3-c — build viu-elem DICTIONARY from the two-pass verified census + honest inline-pos parse report.
-// Owner mandate (trace 1a1eb2190f5570f9): "برو سراغ فاز بعدی" — R3 wave 1 (ELEM).
-// Roadmap: نقشه راه ها/نقشه-راه-کیفیت-استخراج-سه-کتاب-VIU-2026-11-16.md §بخش ۳ فاز R3.
+// VIU Phase R3-b — build per-book DICTIONARY from the two-pass verified census (+ honest inline-pos parse report for elem wave-1).
+// Wave 1 (ELEM — DONE 2026-11-17): 60 units → 197 admitted entries.
+// Wave 2 (owner approved 2026-11-17 "بله موافقم" — R3-WAVE2): --book preint | --book upper.
 //
 // MECHANICAL entry-level admission rules (documented, reproducible — no invention):
 //   per unit, each verify issue maps DIRECTLY to a census entry by normalized field value:
@@ -17,17 +17,57 @@
 //
 // Honesty rules: word/def/example = exactly as printed (verbatim census), never normalized in the data;
 //   pos/ipa stay EMPTY when not printed; no invented values anywhere.
+//   printed "group" headings (WAVE2 census addition) are stored ONLY in the provenance report —
+//   the DictEntry product contract is unchanged (word/phonetic/pos/definition/examples/lesson).
 //
 // Modes:
-//   bun scripts/viu-r3-build.mjs            → build dictionary + provenance report + inline-pos parse report
-//   bun scripts/viu-r3-build.mjs --dry      → compute and print stats without writing product file
+//   bun scripts/viu-r3-build.mjs --book elem     → build viu-elem dictionary (wave 1 — rerun-safe)
+//   bun scripts/viu-r3-build.mjs --book preint   → build viu-preint dictionary (wave 2)
+//   bun scripts/viu-r3-build.mjs --book upper    → build viu-upper dictionary (wave 2)
+//   --dry                                        → compute and print stats without writing product file
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 
 const ROOT = process.cwd();
 const TMP = "/tmp/viu/r3";
 const TODAY = "2026-11-17";
-const UNITS = 60;
+
+const BOOKS = {
+  elem: {
+    label: "Elementary",
+    units: 60,
+    excluded: new Set(),
+    captureDir: "docs/qa/viu-r3-capture-elem",
+    censusReport: `docs/qa/viu-r3-dictionary-census-elem-${TODAY}.json`,
+    buildReport: `docs/qa/viu-r3-dictionary-build-elem-${TODAY}.json`,
+    dictPath: `src/data/viu-elem/dictionary.ts`,
+    wave: "R3-wave1",
+    bookFa: "Elementary",
+  },
+  preint: {
+    label: "Pre-int & Int",
+    units: 100,
+    excluded: new Set(),
+    captureDir: "docs/qa/viu-r3-capture-preint",
+    censusReport: `docs/qa/viu-r3-dictionary-census-preint-${TODAY}.json`,
+    buildReport: `docs/qa/viu-r3-dictionary-build-preint-${TODAY}.json`,
+    dictPath: `src/data/viu-preint/dictionary.ts`,
+    wave: "R3-wave2",
+    bookFa: "Pre-intermediate & Intermediate",
+  },
+  upper: {
+    label: "Upper-int",
+    units: 100,
+    excluded: new Set([52]), // scan-missing 106-107 — owner-only (standing principle 4)
+    captureDir: "docs/qa/viu-r3-capture-upper",
+    censusReport: `docs/qa/viu-r3-dictionary-census-upper-${TODAY}.json`,
+    buildReport: `docs/qa/viu-r3-dictionary-build-upper-${TODAY}.json`,
+    dictPath: `src/data/viu-upper/dictionary.ts`,
+    wave: "R3-wave2",
+    bookFa: "Upper-Intermediate",
+  },
+};
+
 const pad3 = (n) => String(n).padStart(3, "0");
 
 function readJson(path) {
@@ -47,6 +87,7 @@ const isPrefix = (short, long) => {
 };
 
 // ── inline-pos parse (R3-c part 1 — mechanical, from the printed word string itself) ──
+// (elem wave-1 behavior preserved — only written when --book elem)
 async function inlinePosParse() {
   const { VOCAB_ALL: E } = await import(`${ROOT}/src/data/viu-elem/vocab.ts`);
   const { VOCAB_ALL: P } = await import(`${ROOT}/src/data/viu-preint/vocab.ts`);
@@ -80,16 +121,34 @@ async function inlinePosParse() {
 
 (async () => {
   const dry = process.argv.includes("--dry");
+  const bookArg = process.argv[process.argv.indexOf("--book") + 1];
+  if (!bookArg || !BOOKS[bookArg]) {
+    console.error("usage: bun scripts/viu-r3-build.mjs --book elem|preint|upper [--dry]");
+    process.exit(1);
+  }
+  const cfg = BOOKS[bookArg];
+  const unitsTotal = cfg.units - cfg.excluded.size;
+
   const issuesByUnit = {};
   let unitsVerified = 0, unitsPartially = 0;
 
   const entries = [];
-  const provenance = { generatedAt: TODAY, book: "viu-elem", source: "docs/qa/viu-r3-dictionary-census-elem-2026-11-17.json + docs/qa/viu-r3-capture-elem/", rules: "mechanical entry-level admission (see script header)", units: {}, stats: null };
+  const groupsByUnit = {}; // printed group headings per unit (provenance only — NOT in DictEntry)
+  const provenance = {
+    generatedAt: TODAY,
+    book: `viu-${bookArg}`,
+    wave: cfg.wave,
+    source: `${cfg.censusReport} + ${cfg.captureDir}/`,
+    rules: "mechanical entry-level admission (see script header)",
+    units: {},
+    stats: null,
+  };
   let admitted = 0, removed = 0, noDef = 0, fieldNullPos = 0, fieldNullIpa = 0, exampleExtended = 0, exampleNulled = 0;
 
-  for (let n = 1; n <= UNITS; n++) {
-    const census = readJson(`${TMP}/census/elem/unit-${pad3(n)}.json`);
-    const verify = readJson(`${TMP}/verify/elem/unit-${pad3(n)}.json`);
+  for (let n = 1; n <= cfg.units; n++) {
+    if (cfg.excluded.has(n)) continue;
+    const census = readJson(`${TMP}/census/${bookArg}/unit-${pad3(n)}.json`);
+    const verify = readJson(`${TMP}/verify/${bookArg}/unit-${pad3(n)}.json`);
     if (!census || !Array.isArray(census.entries) || !verify) {
       provenance.units[n] = { status: "missing-data", admitted: 0 };
       continue;
@@ -142,15 +201,20 @@ async function inlinePosParse() {
         else { example = ""; exampleNulled++; uStats.adjusted.push({ word: e.word, field: "example", action: "nulled-unverified" }); }
       }
       entries.push({ word: e.word, phonetic: ipa, pos, definition: e.def, examples: example ? [example] : [], lesson: n });
+      if (e.group != null && String(e.group).trim()) {
+        groupsByUnit[n] = groupsByUnit[n] || [];
+        groupsByUnit[n].push({ word: e.word, group: e.group });
+      }
       admitted++;
       uStats.admitted++;
     }
     provenance.units[n] = { status: unitHasIssue ? (uStats.removed.length + uStats.noDef.length === 0 ? "verified-with-reported-gaps" : "partially-admitted") : "fully-verified", ...uStats };
-    if (unitHasIssue) unitsPartially++; else unitsVerified++;
+    if (unitHasIssue) unitsPartially++;
+    else unitsVerified++;
   }
 
   provenance.stats = {
-    unitsTotal: UNITS,
+    unitsTotal,
     unitsFullyVerified: unitsVerified,
     unitsPartially: unitsPartially,
     censusEntries: admitted + removed + noDef,
@@ -162,24 +226,30 @@ async function inlinePosParse() {
     exampleExtended: exampleExtended,
     exampleNulled: exampleNulled,
   };
+  provenance.printedGroups = groupsByUnit; // provenance-only (R3-c analysis input) — NOT part of DictEntry
 
   console.log(JSON.stringify(provenance.stats));
 
-  // ── R3-c inline-pos parse report ──
-  const posRows = await inlinePosParse();
-  const posReport = { generatedAt: TODAY, rule: "printed parenthetical pos marker inside the word string (word string kept byte-identical — only the empty pos FIELD is filled, from the printed marker itself)", scanTotal: posRows.length, actionable: posRows.filter((r) => r.action === "fill-pos"), reportOnly: posRows.filter((r) => r.action === "report-only"), note: "roadmap audit estimated ~37 parseable cases with a wider pattern; this mechanical scan with the documented parenthesis pattern finds " + posRows.length + " — the delta is honest method difference, recorded here" };
-
-  if (dry) {
-    console.log("fill-pos:", JSON.stringify(posReport.actionable));
-    return;
+  // ── R3-c inline-pos parse report — elem wave-1 file only (preserved byte-behavior) ──
+  if (bookArg === "elem") {
+    const posRows = await inlinePosParse();
+    const posReport = { generatedAt: TODAY, rule: "printed parenthetical pos marker inside the word string (word string kept byte-identical — only the empty pos FIELD is filled, from the printed marker itself)", scanTotal: posRows.length, actionable: posRows.filter((r) => r.action === "fill-pos"), reportOnly: posRows.filter((r) => r.action === "report-only"), note: "roadmap audit estimated ~37 parseable cases with a wider pattern; this mechanical scan with the documented parenthesis pattern finds " + posRows.length + " — the delta is honest method difference, recorded here" };
+    if (dry) {
+      console.log("fill-pos:", JSON.stringify(posReport.actionable));
+      return;
+    }
+    writeFileSync(`${ROOT}/docs/qa/viu-r3-inline-pos-parse-${TODAY}.json`, JSON.stringify(posReport));
+    console.log(`written: docs/qa/viu-r3-inline-pos-parse-${TODAY}.json (fill-pos: ${posReport.actionable.length})`);
   }
 
+  if (dry) return;
+
   // ── write dictionary.ts (product) ──
-  const ts = `// دیکشنری Exact-Sense Curated کتاب English Vocabulary in Use — Elementary (فاز R3 — موج اول ELEM)
+  const ts = `// دیکشنری Exact-Sense Curated کتاب English Vocabulary in Use — ${cfg.bookFa} (فاز R3 — ${cfg.wave === "R3-wave1" ? "موج اول ELEM" : "موج دوم"})
 // منبع: جدول واژهٔ چاپی هر درس — استخراج verbatim با دوگذر مستقل (census + verify) — اسکریپت بازتولیدپذیر
-//   scripts/viu-r3-dict-census.mjs (رندر 200dpi + z-ai vision) و scripts/viu-r3-build.mjs (قواعد ورود مکانیکی)
-// گزارش ممیزی: docs/qa/viu-r3-dictionary-census-elem-2026-11-17.json + docs/qa/viu-r3-dictionary-build-elem-2026-11-17.json
-// کپچر خام (بازتولید بدون VLM): docs/qa/viu-r3-capture-elem/
+//   scripts/viu-r3-dict-census.mjs (رندر 200dpi + z-ai vision) و scripts/viu-r3-build.mjs --book ${bookArg} (قواعد ورود مکانیکی)
+// گزارش ممیزی: docs/qa/viu-r3-dictionary-census-${bookArg}-${TODAY}.json + docs/qa/viu-r3-dictionary-build-${bookArg}-${TODAY}.json
+// کپچر خام (بازتولید بدون VLM): docs/qa/viu-r3-capture-${bookArg}/
 // صداقت: word/definition/example عین چاپ کتاب — pos/phonetic فقط اگر چاپی (وگرنه خالی) — صفر مقدار ساختگی.
 // مسیر ① Exact-Sense Curated طبق O1 — مسیر ② Verified Sense-Aware AI نیازمند دروازهٔ مالک است و اجرا نشده است.
 import type { DictEntry } from "../types";
@@ -192,15 +262,11 @@ ${entries
   .join("\n")}
 ];
 `;
-  writeFileSync(`${ROOT}/src/data/viu-elem/dictionary.ts`, ts);
-  console.log(`written: src/data/viu-elem/dictionary.ts (${entries.length} entries)`);
+  writeFileSync(`${ROOT}/${cfg.dictPath}`, ts);
+  console.log(`written: ${cfg.dictPath} (${entries.length} entries)`);
 
   // ── write provenance report ──
   mkdirSync(`${ROOT}/docs/qa`, { recursive: true });
-  writeFileSync(`${ROOT}/docs/qa/viu-r3-dictionary-build-elem-${TODAY}.json`, JSON.stringify(provenance));
-  console.log(`written: docs/qa/viu-r3-dictionary-build-elem-${TODAY}.json`);
-
-  // ── write inline-pos report ──
-  writeFileSync(`${ROOT}/docs/qa/viu-r3-inline-pos-parse-${TODAY}.json`, JSON.stringify(posReport));
-  console.log(`written: docs/qa/viu-r3-inline-pos-parse-${TODAY}.json (fill-pos: ${posReport.actionable.length})`);
+  writeFileSync(`${ROOT}/${cfg.buildReport}`, JSON.stringify(provenance));
+  console.log(`written: ${cfg.buildReport}`);
 })();

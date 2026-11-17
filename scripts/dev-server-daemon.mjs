@@ -33,22 +33,26 @@ if (!cmd) {
 }
 const args = process.argv.slice(3);
 const cwd = path.resolve(import.meta.dir, "..");
-const out = openSync(path.join(cwd, "dev.log"), "a");
+// مسیر لاگ اختیاری (DAEMON_LOG) — پیش‌فرض dev.log — برای ورکرهای استخراج VLM تا dev.log آلوده نشود
+const out = openSync(process.env.DAEMON_LOG || path.join(cwd, "dev.log"), "a");
 
 // سدّ ضدحذف — پیش از هر راه‌اندازی سرور، همگامی با Remote راستی‌آزمایی و ترمیم می‌شود
-const guard = spawnSync("bun", [path.join(import.meta.dir, "sync-guard.mjs")], {
-  cwd,
-  encoding: "utf8",
-  stdio: ["ignore", "pipe", "pipe"],
-  timeout: 180000,
-});
-const guardOut = (guard.stdout || "") + (guard.stderr || "");
-if (guardOut.trim()) console.log(guardOut.trim());
-if (guard.status !== 0 && guard.status !== null) {
-  console.error(
-    `[dev-server-daemon] sync-guard exit=${guard.status} — راه‌اندازی ادامه می‌یابد ولی همگامی راستی‌آزمایی نشد؛ خروجی کامل در dev.log`
-  );
-  out.write(`[dev-server-daemon] sync-guard exit=${guard.status}\n${guardOut}\n`);
+// (DAEMON_NO_GUARD=1 — برای ورکرهای استخراج VLM غیرسروری — گارد سروری مربوط به dev است)
+if (process.env.DAEMON_NO_GUARD !== "1") {
+  const guard = spawnSync("bun", [path.join(import.meta.dir, "sync-guard.mjs")], {
+    cwd,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+    timeout: 180000,
+  });
+  const guardOut = (guard.stdout || "") + (guard.stderr || "");
+  if (guardOut.trim()) console.log(guardOut.trim());
+  if (guard.status !== 0 && guard.status !== null) {
+    console.error(
+      `[dev-server-daemon] sync-guard exit=${guard.status} — راه‌اندازی ادامه می‌یابد ولی همگامی راستی‌آزمایی نشد؛ خروجی کامل در dev.log`
+    );
+    out.write(`[dev-server-daemon] sync-guard exit=${guard.status}\n${guardOut}\n`);
+  }
 }
 
 const child = spawn(cmd, args, {
