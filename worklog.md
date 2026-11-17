@@ -6146,3 +6146,8 @@ Stage Summary:
 - **اثبات Remote:** push خودکار هوک اثبات‌شده (`d0351cc..49e247b main -> main` — لاگ `/tmp/devhook.log` «auto-push OK» ۰۹:۲۹) + **`git ls-remote backup refs/heads/main` = `49e247bd5626f8b3809fc41173c299814fa8065d` (۰/۰ — عین HEAD محلی)**
 - کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر
 - **وضعیت: `ROADMAP R1 — DONE (پوشش ۵۹٫۶٪ → ۹۷٫۳٪ — صفر ساختگی) · main = backup/main (۰/۰) · R2..R5 — AWAITING OWNER GATES · O1..O6 APPROVED & DOCUMENTED · O7..O10 OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
+
+## ۱۴۰۵/۸/۲۶ — ۲۰۲۶-۱۱-۱۷ — تکمیل قطعی‌سازی بازتولیدپذیری سرشماری R1 (پیوست مأموریت فاز R1)
+- **یافته در آزمون معیار پذیرش مالک (Clone صرف Remote):** خروجی `census` از Clone فقط در فیلد `totals.newSeeds` (۰ در census در برابر ۱٬۴۹۶ در convert) با JSON کامیت‌شده فرق داشت — همهٔ دادهٔ اصلی (missingLessons/summary/per-lesson) بایت‌به‌بیت یکسان بود.
+- **رفع:** `scripts/viu-r1-quiz-convert.mjs` — `censusOut.totals.newSeeds = grand.convertibleItems` در هر دو حالت (هر آیتم قابل‌تبدیل = یک seed — هم‌ارزی census/convert) + بازتولید JSON سرشماری (تغییر فقط همین فیلد) · راستی‌آزمایی `viu-r1-verify.mjs` پس از بازتولید: ۵٬۸۶۶ گزینه — صفر شکست (✅ صفر ساختگی).
+- **وضعیت: بدون تغییر نسبت به ثبت-اثبات R1 — این کامیت فقط قطعی‌سازی خروجی census است.**

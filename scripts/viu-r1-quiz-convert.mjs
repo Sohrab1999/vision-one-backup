@@ -487,7 +487,7 @@ async function main() {
     }
   }
 
-  censusOut.totals = { ...grand };
+  censusOut.totals = { ...grand, newSeeds: grand.convertibleItems }; // census/convert هم‌ارز — هر آیتم قابل‌تبدیل = یک seed
   writeFileSync(new URL("../docs/qa/viu-r1-quiz-gap-census-2026-11-17.json", import.meta.url), JSON.stringify(censusOut, null, 2));
 
   if (MODE === "convert") {
