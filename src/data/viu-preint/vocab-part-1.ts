@@ -2168,12 +2168,14 @@ const ROWS: Row[] = [
     word: "practise (v)",
     meaning: "تمرین کردن",
     lesson: 9,
+    pos: "v.",
     lessonLabel: "درس 9 — اسم‌ها و فعل‌های هم‌شکل"
   },
   {
     word: "practice (n)",
     meaning: "تمرین",
     lesson: 9,
+    pos: "n.",
     lessonLabel: "درس 9 — اسم‌ها و فعل‌های هم‌شکل"
   },
   {

@@ -207,10 +207,11 @@ const LIGHT_LOADERS: Partial<Record<BookId, () => Promise<BookLightIndex>>> = {
     const v = await import("../data/hill-adv/vocab");
     return buildIndex(v.VOCAB_ALL, [], [], v.VOCAB_LESSONS);
   },
-  // VIU Elementary (فاز ۳) — فقط ماژول‌های سبک واژگان (عین الگوی کتاب‌های hill)
+  // VIU Elementary (فاز ۳ + دیکشنری Exact-Sense فاز R3) — فقط ماژول‌های سبک واژگان (عین الگوی کتاب‌های hill)
   "viu-elem": async () => {
     const v = await import("../data/viu-elem/vocab");
-    return buildIndex(v.VOCAB_ALL, [], [], v.VOCAB_LESSONS);
+    const d = await import("../data/viu-elem/dictionary");
+    return buildIndex(v.VOCAB_ALL, d.DICTIONARY, [], v.VOCAB_LESSONS);
   },
   // VIU Pre-int & Int (فاز ۴) — فقط ماژول‌های سبک واژگان (عین الگوی کتاب‌های hill)
   "viu-preint": async () => {
