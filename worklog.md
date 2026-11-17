@@ -6206,3 +6206,7 @@ Stage Summary:
 - **اثبات Remote:** push خودکار هوک (push دستی بعدی transient rejected — ریموت از قبل به‌روز بود) + **`git ls-remote backup refs/heads/main` = `d5a8620f7ea22350afd5fccdbeb5844b0bfe3335` (۰/۰ — عین HEAD محلی)** · `git rev-list` دوطرفه = ۰/۰ · merge-base — Remote زیرمجموعهٔ HEAD
 - کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر
 - **وضعیت: `ROADMAP R3 — WAVE 1 (ELEM DICTIONARY) DONE (۱۹۷ مدخل Exact-Sense چاپی — صفر ساختگی) · main = backup/main = d5a8620 (۰/۰) · R3-WAVE2 (preint/upper + R3-d/R3-e کامل) — AWAITING OWNER CONTINUATION · R4..R5 — AWAITING OWNER GATES · O1..O6 APPROVED & DOCUMENTED · O7..O10 OPEN · STEP 6 NOT AUTHORIZED — توقف اجباری`**
+
+## ۱۴۰۵/۸/۲۶ — ۲۰۲۶-۱۱-۱۷ — پیوست الزام ۸ (اقلام خارج از ریپو) — ثبت دو قلم میانی مأموریت R3
+- جدول §۱۱-ب SNAPSHOT دو سطر گرفت: ① رندرهای JPEG موج R3 (`/tmp/viu/` — بازتولید صددرصدی با `bun scripts/viu-r3-dict-census.mjs render` از سه PDF tracked؛ پاسخ‌های خام VLM از قبل tracked ⇒ بازتولید گزارش بدون VLM) ② بکاپ بیمه‌ای بازیابی شانزدهم (`/tmp/viu-recovery-backup-16` — بی‌نیاز از بازیابی؛ بازماندهٔ رأی رد مالک یا نسخهٔ کهنه با بدنه بایت‌به‌بیت در tracked جدیدتر — اثبات §۲) — صفر تغییر دیگر
+- اثبات بازیابی‌پذیری از Clone عملی همین نشست: clone تازهٔ Remote = `6654548` · درخت پاک · ۶ مسیر حیاتی R3 حاضر · کپچر ۶۰+۶۰ · SNAPSHOT سربرگ ۸۳مین · lint=۰ · audit پاک · runtime dict=۱۹۷/words=۱۴۹۲/quiz=۶۶۹ عین · db سیدشده ۶۶۹/۱٬۱۷۶/۱٬۰۲۷ عین — معیار پذیرش مالک عملی اثبات شد (بازیابی کامل بدون Sandbox و بدون تاریخچهٔ چت؛ فقط با قید جدول §۱۱-ب — هرگز «کامل بی‌قید»)
