@@ -6125,3 +6125,8 @@ Stage Summary:
 - **مرورگری agent-browser:** قفسه = **«۱۴ جزوه فعال»** + سه کارت VIU (`Vocabulary in Use — Elementary/Pre-int & Int/Upper-int`) · دیالوگ تازه‌ها بسته شد · ورود به VIU Elementary = جلد کامل Cambridge (McCarthy & O'Dell — 2nd Edition) · آزمون تعاملی «۲۳۶ تست واقعی جزوه» · API `?book=viu-elem` سؤال واقعی درس ۱۲ تمرین ۱۲٫۱ · API `?book=viu-preint` درس ۴۲ = ۱ سؤال ۳-گزینه‌ای، صفر تکرار case-insensitive (تعامل R0-1 زنده) — اسکرین‌شات‌های QA حذف شدند (الگوی صفر فایل تصویری رویداد بازیابی)
 - **ثبات‌های حیاتی (آغاز=پایان):** db `2770470df9c1244d7974…`/1,781,760B (وضعیت Remote — صفر seed جدید) · هوک هر دو کپی `ee679bc1…` · سه PDF `c4f9452`/`fcb1638`/`81d68be` · WAVE2 `src/lib/word-in-context.ts` = `1dc185bf03` باند سالم — صفر تغییر محصولی/داده/db/hook
 - **کامیت محتوایی این مأموریت:** SNAPSHOT (سربرگ ۸۰مین + §۲ + §۱۱-ج) + این بلوک — صفر تغییر دیگر · **ثبت SHA واقعی کامیت محتوایی طبق قاعدهٔ §۱۰-۷ در کامیت ثبت-اثبات بعدی.**
+
+## ۱۴۰۵/۸/۲۶ — ۲۰۲۶-۱۱-۱۷ — ثبت اثبات رویداد بازیابی پانزدهم (قاعدهٔ §۱۰-۷)
+- **SHA کامیت محتوایی این مأموریت = `c68b747fb760a09801d5d44136246e89c9d6c36c`** (۲ فایل — SNAPSHOT سربرگ ۸۰مین + §۲ + §۱۱-ج · worklog بلوک بازیابی پانزدهم) — **اثبات Remote با `git ls-remote backup refs/heads/main` = `c68b747fb760a09801d5d44136246e89c9d6c36c` (۰/۰)** — push خودکار هوک پس از کامیت محتوایی
+- کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر
+- **وضعیت: `RECOVERY EVENT 15 — HANDLED (ff-only ۰/۰) · main = backup/main (۰/۰) · ROADMAP R0 — DONE · R1..R5 — AWAITING OWNER GATES · O1..O6 APPROVED & DOCUMENTED · O7..O10 OPEN · STEP 6 — NOT AUTHORIZED — توقف اجباری`**
