@@ -124,7 +124,7 @@
 | R4-b اصلاح جراحی | NEW `scripts/viu-r4-b-translation-fix.mjs` idempotent (match دقیق meaning+word+lesson) — **۱۰/۱۰ OK صفر ambiguity** — دلتا دقیق ۵ فایل vocab / ۱۰ خط meaning — صفر تغییر دیگر |
 | بازتأیید نهایی | `audit:viu` پاک (emptyMeaning=۰ · emptyWord=۰ · emptyEn=۰ · emptyFa=۰) · `lint` = ۰ · QA مرورگری ۴ اسکرین‌شات `qa-shots/r4-01..04` (appal L65 · unless L22 · make a living L44 · cousin preint L51 موبایل) — کنسول صفر |
 | شاخه | main |
-| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی = `9aad94c` → **پس از کامیت محتوایی این گام: در کامیت ثبت-اثبات تکمیل می‌شود** (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰ — push خودکار هوک) |
+| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی = `9aad94c` → **پس از کامیت محتوایی این گام: `c671d7b`** (اثبات `git ls-remote backup refs/heads/main` = `c671d7b6bb56c796c823c4c1336701a96598dec9` — divergence ۰/۰ — push خودکار هوک `9aad94c..c671d7b` · لاگ /tmp/devhook.log «auto-push OK» ۲۰۲۶-۱۱-۱۹ ۱۹:۴۴:۲۸) |
 | ثبات‌های حیاتی | db / هوک / WAVE2 / سه PDF / quiz / readings / verbs / dictionary هر سه کتاب — صفر تغییر محتوایی (فقط ۱۰ معنی FA-NEW مردود در vocab-partها) |
 
 **لحظهٔ اسنپ‌شات «R3-d word formation Upper — گره خانوادهٔ واژگانی درس‌های ۸/۹/۱۰» — پیشا-کامیت محتوایی گام پیشین — ۱۴۰۵/۸/۲۹ — ۲۰۲۶-۱۱-۱۹:**
