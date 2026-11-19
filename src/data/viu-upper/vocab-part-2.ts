@@ -189,7 +189,7 @@ const ROWS: Row[] = [
   },
   {
     word: "unless",
-    meaning: "مگر اینکه، به‌جز اینکه اگر",
+    meaning: "مگر اینکه",
     lesson: 22,
     pos: "conj.",
     lessonLabel: "درس 22 — شرط"
@@ -602,7 +602,7 @@ const ROWS: Row[] = [
   },
   {
     word: "it's all very well ... but",
-    meaning: "خوب است گفتنِ... اما (انتقاد آمیخته با تقابل)",
+    meaning: "خیلی خوب است که... اما (برای بیان انتقاد)",
     lesson: 24,
     pos: "phr.",
     lessonLabel: "درس 24 — اگرچه، علی‌رغم و تضاد"
@@ -2543,7 +2543,7 @@ const ROWS: Row[] = [
   },
   {
     word: "item of news",
-    meaning: "قلم خبر",
+    meaning: "یک بند از خبر / مورد خبر",
     lesson: 33,
     pos: "phr.",
     lessonLabel: "درس 33 — قابل‌شمارش کردن اسم‌های غیرقابل‌شمارش"
@@ -4385,7 +4385,7 @@ const ROWS: Row[] = [
   },
   {
     word: "assertive",
-    meaning: "پرانگیزه و با اعتماد به نفس",
+    meaning: "صریح، قاطع و مطمئن (با اعتماد به نفس)",
     lesson: 38,
     pos: "adj.",
     lessonLabel: "درس 38 — وصف آدم‌ها: شخصیت"

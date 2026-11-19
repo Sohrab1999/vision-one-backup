@@ -1063,7 +1063,7 @@ const ROWS: Row[] = [
   },
   {
     word: "make a living",
-    meaning: "اقرار معاش کردن (به‌قدر کافی درآمد داشتن)",
+    meaning: "گذران زندگی کردن (به‌قدر کافی درآمد داشتن)",
     lesson: 44,
     pos: "phr.",
     lessonLabel: "درس 44 — کار"

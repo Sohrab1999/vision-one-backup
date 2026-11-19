@@ -1463,7 +1463,7 @@ const ROWS: Row[] = [
   },
   {
     word: "appal",
-    meaning: "قفل کردن، وحشت‌زده کردن",
+    meaning: "وحشت‌زده و حیرت‌زده کردن",
     lesson: 65,
     pos: "v.",
     lessonLabel: "درس 65 — علاقه، بی‌علاقگی و خواسته"

@@ -2712,7 +2712,7 @@ const ROWS: Row[] = [
   },
   {
     word: "post-impressionist",
-    meaning: "پسادربیمی‌گرا",
+    meaning: "پساامپرسیونیست",
     lesson: 9,
     lessonLabel: "درس 9 — پیشوندها"
   },
@@ -5858,7 +5858,7 @@ const ROWS: Row[] = [
   },
   {
     word: "would",
-    meaning: "خواهد (فعل کمکی)",
+    meaning: "فعل کمکی شرطی (گذشتهٔ will)",
     lesson: 18,
     lessonLabel: "درس 18 — واژه‌هایی که معمولاً بد تلفظ می‌شوند"
   },
@@ -6447,7 +6447,7 @@ const ROWS: Row[] = [
   },
   {
     word: "moo",
-    meaning: "صدا کردن (گاو: موقردن)",
+    meaning: "موق گفتن (صدای گاو)",
     lesson: 19,
     pos: "v.",
     lessonLabel: "درس 19 — واژه‌های نمادصوتی"
