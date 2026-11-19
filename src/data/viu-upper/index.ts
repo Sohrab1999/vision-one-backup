@@ -9,6 +9,7 @@ import { READING_LIST } from "./readings";
 import { QUIZ_SEED, QUESTION_COUNTS } from "./quiz-seed";
 import { VERBS } from "./verbs";
 import { DICTIONARY } from "./dictionary";
+import { WORD_FAMILIES } from "./word-families"; // R3-d: خانوادهٔ واژگانی درس‌های word formation ۸/۹/۱۰ (تولید مکانیکی از census)
 import { VOCAB_ALL, VOCAB_LESSONS, VOCAB_COUNT_BY_LESSON, vocabOfLesson } from "./vocab";
 
 const STATS = {
@@ -43,4 +44,5 @@ export const VIU_UPPER_BOOK = {
   conversations: [],
   dictionary: DICTIONARY,
   verbs: VERBS,
+  wordFamilies: WORD_FAMILIES, // R3-d — کلیک عضو در متن ⇒ بلوک «خانوادهٔ واژه» (فقط‌خواندنی)
 } satisfies BookData;

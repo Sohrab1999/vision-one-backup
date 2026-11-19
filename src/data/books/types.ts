@@ -8,6 +8,7 @@ import type {
   Conversation,
   DictEntry,
   IrregularVerb,
+  WordFamilyRow,
   ChapterMeta,
   BookInfo,
   GrammarLesson,
@@ -85,6 +86,9 @@ export interface BookData {
   conversations: Conversation[];
   dictionary: DictEntry[];
   verbs: IrregularVerb[];
+  /** R3-d: خانوادهٔ واژگانی چاپی درس‌های word formation (فقط کتاب‌هایی که census آن را دارند —
+   *  فعلاً viu-upper واحدهای ۸/۹/۱۰) — اختیاری؛ مکانیزم پاپ‌آپ فقط‌خواندنی */
+  wordFamilies?: WordFamilyRow[];
 }
 
 /** رنگ‌های مجاز کارت جلد — بدون آبی/ایندیگو */

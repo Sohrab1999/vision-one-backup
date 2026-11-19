@@ -114,6 +114,37 @@ export interface IrregularVerb {
   meaning: string;
 }
 
+/** R3-d: عضو خانوادهٔ واژگانی چاپی — واژهٔ عضو عین کتاب + کلیدهای جست‌وجو
+ *  (verbatim + واریانت‌های صرفی با همان قواعد ساده‌سازی پاپ‌آپ) */
+export interface WordFamilyMember {
+  /** واژهٔ عضو عین چاپ کتاب (مثل "writer" یا "anti-war" یا "supported") */
+  word: string;
+  /** کلیدهای نرمال‌شدهٔ جست‌وجو — تولید مکانیکی (verbatim + ساده‌سازی صرفی) */
+  keys: string[];
+  /** مثال چاپی مخصوص این عضو (فقط unit 10 — سطر خود عضو در census) — وگرنه خالی */
+  example?: string;
+}
+
+/** R3-d: سطر خانوادهٔ واژگانی چاپی کتاب (درس‌های word formation) — عین census tracked
+ *  منبع تولید: کپچر دوگذر census (صفر مقدار ساختگی — قواعد در اسکریپت تولیدکننده) */
+export interface WordFamilyRow {
+  /** مدخل چاپی عین کتاب — مثل "-er" / "anti" / "SPECT" / "inspector" */
+  entry: string;
+  /** شماره درس کتاب */
+  lesson: number;
+  /** گروه چاپی census — مثل "Common noun suffixes" یا برچسب کلاس-واژه */
+  group: string;
+  /** pos چاپی اگر چاپ شده باشد (مثل "(nouns)") — وگرنه خالی */
+  pos: string;
+  /** تعریف چاپی اگر چاپ شده باشد — وگرنه خالی */
+  definition: string;
+  /** IPA چاپی اگر چاپ شده باشد — وگرنه خالی */
+  phonetic: string;
+  /** مثال چاپی verbatim سطر (منبع اعضا برای واحدهای ۸/۹) — وگرنه خالی */
+  example: string;
+  members: WordFamilyMember[];
+}
+
 // ─── تایپ‌های چندکتابی (مشترک بین همه جزوه‌ها) ───
 
 /** یک واژه به‌همراه برچسب درس (برای نمایش در لیست‌ها) */
