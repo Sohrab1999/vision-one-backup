@@ -116,7 +116,7 @@
 | بازیابی | حذف دقیق ۴ شبح + `git reset --hard backup/main` (معادل ff-only — ۰/۱۱۲ — صفر reset/rebase/force تاریخچهٔ Remote) ⇒ HEAD = `e456b3f39dfcc61bf55acfb7aa44cda301e66250` = Remote · divergence **۰/۰** · درخت پاک (`git status --porcelain` = ۰) |
 | راستی‌آزمایی پس از بازیابی | هوک هر دو کپی `ee679bc1…` بایت‌به‌بیت · sync-guard در راه‌اندازی سرور = «in sync (۰/۰)» · سرور dev restart با دیمن (سرور stale کد کهنه سرو می‌داد — الگوی §۱۰-۵) ⇒ GET / = 200 · `audit:viu` پاک (صفر issue ×۳) · lint=۰ · API ۶۶۹/۱٬۱۷۶/۱٬۰۲۷ عین R1 |
 | شاخه | main |
-| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote = `e456b3f` (`git ls-remote backup refs/heads/main` — اثبات دوباره پس از کامیت این گام در بلوک ثبت-اثبات worklog) |
+| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote = `e456b3f` → پس از کامیت محتوایی این گام: **`2424fb8`** (اثبات `git ls-remote backup refs/heads/main` = `2424fb8658d79b42b6079c8fd98ee0bd41ee9a72` — divergence ۰/۰ — push خودکار هوک `e456b3f..2424fb8`) |
 | وضعیت §۳-۵ | گام‌های ①② دوباره اجرا شد (بازیابی ۱۹ — /tmp ریست شده بود): seed cache از کپچرهای tracked (census ۵۵ + verify ۵۰) + رندر ۱۹۷/۱۹۷ صفحهٔ upper — آزمون کووتا = **429 پابرگ (پروب ۱۵ صادقانهٔ امروز ۰۹:۲۰UTC + ۱۴ probe قبلی ۰۴:۵۸→۰۸:۳۲)** — دیمون gate بازمسلح با **اسکریپت tracked NEW `scripts/viu-r3-quota-gate.mjs`** (PID 9616 — ۶۰ probe ≈ ۱۲h → censusverify upper 51-100 → archive — صفر اتلاف) — checkpointهای پلتفرمی 537875/537876 فعال راستی‌آزمایی‌شده — استخراج در انتظار آزاد شدن کووتای روزانه VLM |
 | ثبات‌های حیاتی | db (`ca0f7b68…`/2,424,832B) / هوک (هر دو کپی `ee679bc1…`) / WAVE2 / سه PDF (`35ea1b5b…`/`0dfdab2e…`/`415fc985…`) / vocab-quiz-readings هر سه کتاب — بازیابی بایت‌به‌بیت از Remote (آغاز=پایان) |
 
