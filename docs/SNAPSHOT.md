@@ -119,7 +119,7 @@
 | بازیابی | حذف دقیق ۷۴ شبح + `git reset --hard backup/main` (معادل ff-only — ۰/۱۱۶ — صفر reset/rebase/force تاریخچهٔ Remote) ⇒ HEAD = `529d5d0…` = Remote · divergence **۰/۰** · درخت پاک (`git status --porcelain` = ۰) |
 | راستی‌آزمایی پس از بازیابی | هوک post-commit حاضر · sync-guard = «in sync (۰/۰)» · سرور GET / = 200 (بدون نیاز به revive) · `audit:viu` پاک (همهٔ شمارش‌ها صفر) · `lint` = ۰ |
 | شاخه | main |
-| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote پیشا-کامیت = `529d5d0` → پس از کامیت محتوایی این گام: SHA جدید در بخش ثبت-اثبات worklog (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰ — push خودکار هوک) |
+| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote پیشا-کامیت = `529d5d0` → **پس از کامیت محتوایی این گام: `ff394c9`** (اثبات `git ls-remote backup refs/heads/main` = `ff394c96b0867f15d3c8bbb89019636bdd743fa6` — divergence ۰/۰ — push خودکار هوک `529d5d0..ff394c9` · لاگ /tmp/devhook.log «auto-push OK» ۲۰۲۶-۱۱-۱۹ ۱۲:۰۸) |
 | وضعیت §۳-۵ | گام‌های ①② دوباره اجرا شد (بازیابی ۲۰ — /tmp ریست شده بود): seed cache از کپچرهای tracked (census ۵۵ + verify ۵۰ — عین پایهٔ ثبت) + رندر ۱۹۷/۱۹۷ (۴۲ بازیافتی + ۱۵۵ نو) — دیمون gate بازمسلح با اسکریپت tracked + الگوی ثبت ⇒ **PID 3218** (probe ۱/۶۰ از ۱۲:۰۲:۳۶ UTC) — استخراج در انتظار آزاد شدن کووتای روزانه VLM — checkpoint 537876 (۱۳:۱۰UTC) فعال |
 | ثبات‌های حیاتی | db / هوک / WAVE2 / سه PDF / vocab-quiz-readings هر سه کتاب — بازیابی بایت‌به‌بیت از Remote (آغاز=پایان — صفر تغییر) |
 
