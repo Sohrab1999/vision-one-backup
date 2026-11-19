@@ -124,7 +124,7 @@
 | QA مرورگری | ۶ اسکرین‌شات `qa-shots/r3d-01..06`: قفسه · جلد upper · پاپ‌آپ «-ship:» درس ۸ (کلیک friendship — سطر چاپی + درس ۸ + عضو) · ریشهٔ PORT درس ۳۰ (کلیک transport — «carry, take» + عضو) · رگرسیون ELEM (پاپ‌آپ بدون بلوک خانواده) · موبایل ۳۹۰×۸۴۴ — کنسول صفر خطا |
 | بازتأیید نهایی | `audit:viu` پاک (issues []×۳) · `lint` = ۰ · صفر تغییر db/هوک/WAVE2/سه PDF/vocab/quiz/readings/verbs — wiring فقط افزودنی |
 | شاخه | main |
-| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی = `29c519e` → پس از کامیت محتوایی این گام: (ثبت SHA واقعی + اثبات ls-remote در کامیت ثبت-اثبات — §۱۰-۷) |
+| Remote و SHA تأییدشده | `backup` → Sohrab1999/webapp · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی = `29c519e` → **پس از کامیت محتوایی این گام: `66c64b9`** (اثبات `git ls-remote backup refs/heads/main` = `66c64b915911cdf95e014d5996a39a11cb38d104` — divergence ۰/۰ — push خودکار هوک `29c519e..66c64b9` · لاگ /tmp/devhook.log «auto-push OK» ۲۰۲۶-۱۱-۱۹ ۱۸:۰۶:۱۳) |
 | ثبات‌های حیاتی | db / هوک / WAVE2 / سه PDF / vocab-quiz-readings هر سه کتاب — صفر تغییر محتوایی (فقط افزودنی: فیلد اختیاری types + word-families.ts جدید + بلوک پاپ‌آپ) |
 
 **لحظهٔ اسنپ‌شات «بازیابی بیست‌ویکم + GATE COMPLETE + اتمام pipeline §۳-۵ upper» — پس از build/wiring و پیشا-کامیت محتوایی این گام — ۱۴۰۵/۸/۲۹ — ۲۰۲۶-۱۱-۱۹:**
