@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { BookMarked, MessagesSquare, Languages, CircleHelp, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -142,22 +142,131 @@ export function ReadingCard({
   );
 }
 
-/** یک آیتم تمرین با دکمهٔ باز/بستن پاسخ نمونه */
-function ExerciseItem({ index, item }: { index: number; item: ReadingExercise["items"][number] }) {
+/**
+ * R5 — بازآرایی نمایشی بدون تغییر داده (دروازهٔ مالک ۱۴۰۵/۸/۲۹):
+ * بلوک‌های پشت‌سرهم با کلید یکسان (عین ساخت Answer key چاپی کتاب — یافتهٔ ۲-۲ الف ممیزی کیفیت:
+ * ۲٬۹۶۵ آیتم = ۵۷٪ کلید گروهی تکراری) در نمایش گروهی می‌آیند — کلید بلوک فقط یک‌بار در کارت
+ * «کلید گروهی چاپی» بعد از آیتم‌ها رندر می‌شود؛ دادهٔ خام بایت‌به‌بیت دست‌نخورده می‌ماند.
+ */
+type KeyGroupSegment =
+  | { kind: "single"; index: number }
+  | { kind: "group"; from: number; to: number; answerEn: string; answerFa: string };
+
+/** ساخت سگمنت‌های نمایشی: بلوک‌های پشت‌سرهم (≥۲ آیتم) با کلید چاپی یکسان → یک گروه */
+function buildKeySegments(items: ReadingExercise["items"]): KeyGroupSegment[] {
+  const groupKeyOf = (it: ReadingExercise["items"][number]) =>
+    (it.answerEn ?? "").trim()
+      ? `${(it.answerEn ?? "").trim()}\u0000${(it.answerFa ?? "").trim()}`
+      : "";
+  const segments: KeyGroupSegment[] = [];
+  let i = 0;
+  while (i < items.length) {
+    const key = groupKeyOf(items[i]);
+    if (!key) {
+      segments.push({ kind: "single", index: i });
+      i++;
+      continue;
+    }
+    let j = i + 1;
+    while (j < items.length && groupKeyOf(items[j]) === key) j++;
+    if (j - i >= 2) {
+      segments.push({
+        kind: "group",
+        from: i,
+        to: j - 1,
+        answerEn: items[i].answerEn ?? "",
+        answerFa: items[i].answerFa ?? "",
+      });
+    } else {
+      for (let x = i; x < j; x++) segments.push({ kind: "single", index: x });
+    }
+    i = j;
+  }
+  return segments;
+}
+
+/** یک آیتم تمرین با دکمهٔ باز/بستن پاسخ نمونه — عضو بلوک گروهی: بدون دکمهٔ فردی (کلید در کارت گروهی) */
+function ExerciseItem({
+  index,
+  item,
+  groupMember = false,
+}: {
+  index: number;
+  item: ReadingExercise["items"][number];
+  groupMember?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const { bookId } = useBook();
+  const hasKey = Boolean((item.answerEn ?? "").trim() || (item.answerFa ?? "").trim());
   return (
-    <li className="rounded-xl border bg-muted/30 p-3.5 space-y-2">
+    <li
+      className={cn(
+        "rounded-xl border bg-muted/30 p-3.5 space-y-2",
+        groupMember && "border-dashed border-primary/25",
+      )}
+    >
       <div className="flex items-start gap-2.5">
         <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-black text-primary">
           {faNum(index + 1)}
         </span>
         <ClickableEnText
-          text={stripPrintedExerciseNumber(item.en, bookId)}
+          text={stripPrintedExerciseNumber(item.en, bookId ?? undefined)}
           className="font-en flex-1 text-[14.5px] leading-7 text-foreground"
         />
       </div>
       {item.fa && <p className="ps-8.5 text-[12.5px] leading-6 text-muted-foreground">{item.fa}</p>}
+      {hasKey && !groupMember && (
+        <div className="ps-8.5">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            className="h-8 gap-1.5 px-2.5 text-[11.5px] font-bold text-primary hover:text-primary"
+          >
+            <Eye size={13} />
+            {open ? "پنهان کردن پاسخ" : "نمایش پاسخ نمونه"}
+          </Button>
+          {open && (
+            <div className="mt-1.5 rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1">
+              <p dir="ltr" className="font-en text-[13.5px] leading-7 text-left">
+                {item.answerEn}
+              </p>
+              {item.answerFa && (
+                <p className="text-[12px] leading-6 text-muted-foreground">{item.answerFa}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
+
+/** کارت «کلید گروهی چاپی» — یک کلید واحد برای بلوک آیتم‌های پشت‌سرهم (R5 — صفر تغییر داده) */
+function GroupKeyCard({
+  from,
+  to,
+  answerEn,
+  answerFa,
+}: {
+  from: number;
+  to: number;
+  answerEn: string;
+  answerFa: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <li className="rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 p-3.5 space-y-2">
+      <div className="flex items-start gap-2.5">
+        <span className="mt-0.5 flex h-6 shrink-0 items-center justify-center rounded-full bg-primary/10 px-2 text-[11px] font-black text-primary" aria-hidden>
+          {faNum(from + 1)}–{faNum(to + 1)}
+        </span>
+        <p className="flex-1 text-[12.5px] leading-6 text-muted-foreground">
+          کلید گروهی چاپیِ کتاب — این بلوک یک پاسخ مشترک دارد (عین Answer key کتاب)
+        </p>
+      </div>
       <div className="ps-8.5">
         <Button
           type="button"
@@ -168,15 +277,15 @@ function ExerciseItem({ index, item }: { index: number; item: ReadingExercise["i
           className="h-8 gap-1.5 px-2.5 text-[11.5px] font-bold text-primary hover:text-primary"
         >
           <Eye size={13} />
-          {open ? "پنهان کردن پاسخ" : "نمایش پاسخ نمونه"}
+          {open ? "پنهان کردن کلید گروهی" : "نمایش کلید گروهی"}
         </Button>
         {open && (
           <div className="mt-1.5 rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1">
             <p dir="ltr" className="font-en text-[13.5px] leading-7 text-left">
-              {item.answerEn}
+              {answerEn}
             </p>
-            {item.answerFa && (
-              <p className="text-[12px] leading-6 text-muted-foreground">{item.answerFa}</p>
+            {answerFa && (
+              <p className="text-[12px] leading-6 text-muted-foreground">{answerFa}</p>
             )}
           </div>
         )}
@@ -186,6 +295,7 @@ function ExerciseItem({ index, item }: { index: number; item: ReadingExercise["i
 }
 
 function ReadingExerciseBlock({ exercise }: { exercise: ReadingExercise }) {
+  const segments = useMemo(() => buildKeySegments(exercise.items), [exercise.items]);
   return (
     <section className="rounded-2xl border-2 border-dashed border-primary/25 bg-background p-4 space-y-3" aria-label="تمرین درک مطلب">
       <div className="flex flex-wrap items-baseline justify-between gap-1">
@@ -199,9 +309,23 @@ function ReadingExerciseBlock({ exercise }: { exercise: ReadingExercise }) {
       </div>
       <p className="text-[12px] text-muted-foreground">{exercise.instructionFa}</p>
       <ol className="space-y-2.5">
-        {exercise.items.map((item, i) => (
-          <ExerciseItem key={i} index={i} item={item} />
-        ))}
+        {segments.map((seg, si) =>
+          seg.kind === "single" ? (
+            <ExerciseItem key={`s-${seg.index}`} index={seg.index} item={exercise.items[seg.index]} />
+          ) : (
+            <Fragment key={`g-${si}`}>
+              {exercise.items.slice(seg.from, seg.to + 1).map((item, x) => (
+                <ExerciseItem key={seg.from + x} index={seg.from + x} item={item} groupMember />
+              ))}
+              <GroupKeyCard
+                from={seg.from}
+                to={seg.to}
+                answerEn={seg.answerEn}
+                answerFa={seg.answerFa}
+              />
+            </Fragment>
+          ),
+        )}
       </ol>
     </section>
   );
