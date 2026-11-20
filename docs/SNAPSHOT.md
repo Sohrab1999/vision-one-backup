@@ -134,7 +134,7 @@
 | دو گیت سه‌کتابی | R3-e (گیت مستقل STEP 6) · FA-REVIEWED (برگهٔ ۳۹۷سطری) — **دست‌نخورده** |
 | اقلام untracked ثبت‌شدهٔ خارج از گیت | `public/viu-images/` (~۹۹۶KB) + `src/data/viu-images/` (~۱۶KB) — آرتیافت pilot نقشه راه تصویر — بدون import از کد tracked — بازتولیدپذیر با اسکریپت‌های tracked (`scripts/viu-image-pilot-extract.py` …) — گزارش pilot tracked (`docs/qa/viu-images-phase3-pilot-report-2026-11-14.md`) |
 | شاخه | main |
-| Remote و SHA تأییدشده | `backup` → github.com/Sohrab1999/vision-one-backup.git · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی این گام = **`4953d14da5a8e558e9d8508405ae1b5d933a0182`** (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰) · SHA کامیت محتوایی این گام = «پس از کامیت در همین سطر و §۳ ثبت می‌شود» — push خودکار هوک + `git ls-remote` پسا-کامیت |
+| Remote و SHA تأییدشده | `backup` → github.com/Sohrab1999/vision-one-backup.git · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی این گام = **`4953d14da5a8e558e9d8508405ae1b5d933a0182`** (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰) · SHA کامیت محتوایی این گام = **`d12725039587e6ffb4437536cb0e665f2687682e`** (۱۱۷ مسیر — والد `4953d14`) — push اثبات‌شده (`4953d14..d127250 main -> main` — لاگ /tmp/devhook.log «auto-push OK» ۱۴:۴۲:۵۶) + `git ls-remote backup refs/heads/main` مطابق (divergence ۰/۰) |
 | ثبات‌های حیاتی | db / هوک / WAVE2 / چهار PDF / vocab / quiz / readings / verbs / dictionary هر سه کتاب — صفر تغییر محتوایی (دلتا = ۲ اسکریپت NEW فقط‌خواندنی + ~۱۰۹ فایل JSON/PNG NEW + ۱ سند tracked شدن + ۶ سند همگام − ۶۲ شبح untracked حذف‌شده) |
 
 **لحظهٔ اسنپ‌شات «A0 کتاب چهارم AVU-3 — انجماد پایهٔ ساختاری + هویت — پیشا-کامیت محتوایی این گام» — ۱۴۰۵/۸/۳۰ (۲۰۲۶-۱۱-۲۰ — سربرگ ۹۸مین):**
