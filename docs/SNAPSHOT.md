@@ -131,7 +131,7 @@
 | گیت G0 | **بسته می‌ماند** — تأیید دامنه + `bookId: viu-advanced` + یادداشت «کتاب چهارم، ویرایش ۳ — متمایز از Upper-int ویرایش ۲» = فرمان مستقل مالک |
 | دو گیت سه‌کتابی | R3-e (گیت مستقل STEP 6) · FA-REVIEWED (برگهٔ ۳۹۷سطری) — **دست‌نخورده** |
 | شاخه | main |
-| Remote و SHA تأییدشده | `backup` → github.com/Sohrab1999/vision-one-backup.git · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی این گام = **`a2822e518499a74231167996e634ef0701aeaeb1`** (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰) · SHA کامیت محتوایی این گام = «ثبت طبق قاعدهٔ §۱۰-۷ پس از push» |
+| Remote و SHA تأییدشده | `backup` → github.com/Sohrab1999/vision-one-backup.git · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی این گام = **`a2822e518499a74231167996e634ef0701aeaeb1`** (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰) · SHA کامیت محتوایی این گام = **`f28e64485c9efe80c059baf57c3e15bc91c2c365`** (۷ مسیر — والد `a2822e5`) — push خودکار هوک اثبات‌شده (`a2822e5..f28e644 main -> main` — لاگ /tmp/devhook.log «auto-push OK» ۱۲:۵۰:۲۴) + `git ls-remote backup refs/heads/main` مطابق (divergence ۰/۰) |
 | ثبات‌های حیاتی | db / هوک / WAVE2 / چهار PDF / vocab / quiz / readings / verbs / dictionary هر سه کتاب — صفر تغییر محتوایی (دلتا = ۱ اسکریپت NEW فقط‌خواندنی + ۱ JSON NEW + اسناد همگام) |
 
 **لحظهٔ اسنپ‌شات «پاک‌سازی موج دوم نقشه‌راه‌های کامل‌شده + بازیابی ۲۴ — پیشا-کامیت محتوایی این گام» — ۱۴۰۵/۸/۳۰ (۲۰۲۶-۱۱-۲۰ — سربرگ ۹۷مین):**
