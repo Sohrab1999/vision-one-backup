@@ -1,0 +1,5689 @@
+{
+  "meta": {
+    "phase": "FA-REVIEWED — بستهٔ داوری مالک (اجرای مجازی — گام مکانیکی آخر)",
+    "date": "2026-11-20",
+    "purpose": "برگهٔ داوری ساختاریافتهٔ نمونهٔ ۳۹۷تایی R4-a برای بازخوانی انسانی مالک — تنها مسیر اعطای کلاس FA-REVIEWED",
+    "sources": [
+      "docs/qa/viu-r4a-translation-review-2026-11-19.json",
+      "scripts/viu-r4-b-translation-fix.mjs",
+      "src/data/viu-*/vocab-part-*.ts"
+    ],
+    "judgeAtReview": "GLM — سنجش مکانیکی-معنایی (دانش واژه‌ای + pos + بستر lessonLabel) — بدون کلید چاپی فارسی (کتاب فارسی ندارد)",
+    "criteria": [
+      "سازگاری معنی با pos چاپی",
+      "دقت معنایی حس رایج/حس درس",
+      "طبیعی‌بودن فارسی و صفر typo",
+      "مردود قطعی: معنی بی‌ارتباط/خراب/گمراه‌کنندهٔ جدی"
+    ],
+    "classRule": "هیچ آیتمی با این بسته FA-REVIEWED نمی‌شود — کلاس فقط با فرمان داوری مالک اعطا می‌شود",
+    "howToAdjudicate": {
+      "decisionVocabulary": "APPROVE (تأیید عین معنی حاضر) | EDIT (مالک معنی جایگزین می‌دهد) | REJECT (مردود — معنی جایگزین الزامی)",
+      "priorityOrder": "۱) آیتم‌های FIX (۱۰ — پیش‌تر توسط GLM اصلاح شده‌اند و نیازمند تأیید مالک) ۲) آیتم‌های note‌دار (۱۰ — «قبول با نکته») ۳) مابقی OK (۳۷۷)",
+      "commandGrammar": "پس از پر کردن ownerDecision (+ ownerNote اختیاری) در همین JSON یا ارسال فهرست «id: decision [note]»، اجرای اعمال فقط با فرمان صریح مالک انجام می‌شود (اسکریپت اعمال آینده gated)"
+    }
+  },
+  "stats": {
+    "n": 397,
+    "ok": 387,
+    "fix": 10,
+    "withNote": 10,
+    "runtimeVerifiedOk": 387,
+    "runtimeVerifiedFix": 10,
+    "runtimeMismatches": [],
+    "byBook": {
+      "elem": 69,
+      "preint": 145,
+      "upper": 183
+    }
+  },
+  "items": [
+    {
+      "id": "R4A-001",
+      "book": "elem",
+      "lesson": 1,
+      "word": "Match the words on the left with the words on the right. Draw lines.",
+      "meaningAtReview": "کلمات سمت چپ را به کلمات سمت راست وصل کنید. خط بکشید.",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-002",
+      "book": "elem",
+      "lesson": 1,
+      "word": "Fill the gaps in the sentence.",
+      "meaningAtReview": "جای خالی‌های جمله را پر کنید.",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-003",
+      "book": "elem",
+      "lesson": 7,
+      "word": "come from",
+      "meaningAtReview": "اهل ... بودن؛ از ... آمدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-004",
+      "book": "elem",
+      "lesson": 5,
+      "word": "do the housework",
+      "meaningAtReview": "کارهای خانه را انجام دادن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-005",
+      "book": "elem",
+      "lesson": 6,
+      "word": "make coffee",
+      "meaningAtReview": "قهوه درست کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-006",
+      "book": "elem",
+      "lesson": 3,
+      "word": "breakfast",
+      "meaningAtReview": "صبحانه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-007",
+      "book": "elem",
+      "lesson": 10,
+      "word": "get home",
+      "meaningAtReview": "به خانه رسیدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-008",
+      "book": "elem",
+      "lesson": 6,
+      "word": "do the dishes",
+      "meaningAtReview": "ظرف‌ها را شستن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-009",
+      "book": "elem",
+      "lesson": 6,
+      "word": "make a noise",
+      "meaningAtReview": "سر و صدا کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-010",
+      "book": "elem",
+      "lesson": 11,
+      "word": "do up",
+      "meaningAtReview": "بستن (کاپشن)؛ بازسازی/تعمیر کردن (آپارتمان)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-011",
+      "book": "elem",
+      "lesson": 13,
+      "word": "ask somebody to do something",
+      "meaningAtReview": "از کسی بخواهید کاری انجام دهد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-012",
+      "book": "elem",
+      "lesson": 14,
+      "word": "catch",
+      "meaningAtReview": "به‌موقع رسیدن (به اتوبوس/قطار)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-013",
+      "book": "elem",
+      "lesson": 17,
+      "word": "from 1994 to 1996",
+      "meaningAtReview": "از ۱۹۹۴ تا ۱۹۹۶",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-014",
+      "book": "elem",
+      "lesson": 14,
+      "word": "bike",
+      "meaningAtReview": "دوچرخه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-015",
+      "book": "elem",
+      "lesson": 18,
+      "word": "beginning",
+      "meaningAtReview": "ابتدا، آغاز",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-016",
+      "book": "elem",
+      "lesson": 15,
+      "word": "after",
+      "meaningAtReview": "بعد از اینکه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-017",
+      "book": "elem",
+      "lesson": 14,
+      "word": "bus",
+      "meaningAtReview": "اتوبوس",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-018",
+      "book": "elem",
+      "lesson": 14,
+      "word": "pilot",
+      "meaningAtReview": "خلبان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-019",
+      "book": "elem",
+      "lesson": 16,
+      "word": "winter",
+      "meaningAtReview": "زمستان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-020",
+      "book": "elem",
+      "lesson": 25,
+      "word": "ex (+noun)",
+      "meaningAtReview": "پیشوند «اِکس» (همسر/مقام سابق؛ بود اما اکنون نیست)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-021",
+      "book": "elem",
+      "lesson": 26,
+      "word": "ful (adjective)",
+      "meaningAtReview": "پسوند «پر از» برای ساختن صفت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-022",
+      "book": "elem",
+      "lesson": 27,
+      "word": "felt",
+      "meaningAtReview": "حس کرد (از feel)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-023",
+      "book": "elem",
+      "lesson": 21,
+      "word": "sugar",
+      "meaningAtReview": "شکر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-024",
+      "book": "elem",
+      "lesson": 21,
+      "word": "milk",
+      "meaningAtReview": "شیر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 4
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-025",
+      "book": "elem",
+      "lesson": 25,
+      "word": "rewrite",
+      "meaningAtReview": "بازنویسی کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-026",
+      "book": "elem",
+      "lesson": 22,
+      "word": "terrible",
+      "meaningAtReview": "وحشتناک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-027",
+      "book": "elem",
+      "lesson": 22,
+      "word": "Great",
+      "meaningAtReview": "عالی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-028",
+      "book": "elem",
+      "lesson": 25,
+      "word": "half-hour",
+      "meaningAtReview": "نیم‌ساعت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-029",
+      "book": "elem",
+      "lesson": 21,
+      "word": "traffic",
+      "meaningAtReview": "ترافیک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-030",
+      "book": "elem",
+      "lesson": 37,
+      "word": "minus 50 degrees",
+      "meaningAtReview": "منفی پنجاه درجه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-031",
+      "book": "elem",
+      "lesson": 32,
+      "word": "fat",
+      "meaningAtReview": "چاق (تقریباً منفی)",
+      "verdict": "OK",
+      "note": "پرانتز توضیحی «(تقریباً منفی)» — ملاک چاپی کتاب است؛ قابل‌قبول",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-032",
+      "book": "elem",
+      "lesson": 32,
+      "word": "handsome",
+      "meaningAtReview": "خوش‌قیافه (معمولاً برای مرد)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-033",
+      "book": "elem",
+      "lesson": 38,
+      "word": "read",
+      "meaningAtReview": "خواندن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-034",
+      "book": "elem",
+      "lesson": 36,
+      "word": "Germany",
+      "meaningAtReview": "آلمان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-035",
+      "book": "elem",
+      "lesson": 31,
+      "word": "wear",
+      "meaningAtReview": "پوشیدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-036",
+      "book": "elem",
+      "lesson": 36,
+      "word": "Vietnamese",
+      "meaningAtReview": "ویتنامی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-037",
+      "book": "elem",
+      "lesson": 36,
+      "word": "Jamaican",
+      "meaningAtReview": "جامائیکایی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-038",
+      "book": "elem",
+      "lesson": 31,
+      "word": "skirt",
+      "meaningAtReview": "دامن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-039",
+      "book": "elem",
+      "lesson": 34,
+      "word": "cold",
+      "meaningAtReview": "سرد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-040",
+      "book": "elem",
+      "lesson": 34,
+      "word": "angry",
+      "meaningAtReview": "عصبانی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-041",
+      "book": "elem",
+      "lesson": 31,
+      "word": "coat",
+      "meaningAtReview": "پالتو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-042",
+      "book": "elem",
+      "lesson": 31,
+      "word": "boots",
+      "meaningAtReview": "چکمه/بوت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-043",
+      "book": "elem",
+      "lesson": 38,
+      "word": "town centre",
+      "meaningAtReview": "مرکز شهر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-044",
+      "book": "elem",
+      "lesson": 31,
+      "word": "gloves",
+      "meaningAtReview": "دستکش",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-045",
+      "book": "elem",
+      "lesson": 50,
+      "word": "package holiday",
+      "meaningAtReview": "تور کامل (که همه‌چیز شامل پرواز، هتل و غیره است)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-046",
+      "book": "elem",
+      "lesson": 44,
+      "word": "cooker",
+      "meaningAtReview": "اجاق گاز / پلوپز",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-047",
+      "book": "elem",
+      "lesson": 48,
+      "word": "pass your exams",
+      "meaningAtReview": "قبول شدن در امتحان‌ها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-048",
+      "book": "elem",
+      "lesson": 46,
+      "word": "remote control",
+      "meaningAtReview": "کنترل از راه دور",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-049",
+      "book": "elem",
+      "lesson": 50,
+      "word": "visa",
+      "meaningAtReview": "ویزا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-050",
+      "book": "elem",
+      "lesson": 46,
+      "word": "next to",
+      "meaningAtReview": "کنارِ، بغلِ",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-051",
+      "book": "elem",
+      "lesson": 46,
+      "word": "near",
+      "meaningAtReview": "نزدیک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-052",
+      "book": "elem",
+      "lesson": 50,
+      "word": "by bus",
+      "meaningAtReview": "با اتوبوس",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-053",
+      "book": "elem",
+      "lesson": 44,
+      "word": "fridge",
+      "meaningAtReview": "یخچال",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-054",
+      "book": "elem",
+      "lesson": 48,
+      "word": "desk",
+      "meaningAtReview": "میز تحریر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-055",
+      "book": "elem",
+      "lesson": 50,
+      "word": "camping",
+      "meaningAtReview": "چادرزنی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-056",
+      "book": "elem",
+      "lesson": 45,
+      "word": "cupboard",
+      "meaningAtReview": "کابینت / گنجه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-057",
+      "book": "elem",
+      "lesson": 43,
+      "word": "apple",
+      "meaningAtReview": "سیب",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-058",
+      "book": "elem",
+      "lesson": 58,
+      "word": "nature programme",
+      "meaningAtReview": "برنامه طبیعت (برنامه‌های درباره حیوانات و پرندگان)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-059",
+      "book": "elem",
+      "lesson": 58,
+      "word": "soap / soap opera",
+      "meaningAtReview": "سریال (آپرا صابونی)",
+      "verdict": "OK",
+      "note": "«آپرا صابونی» واژه‌به‌واژه؛ معنی اصلی «سریال» درست",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-060",
+      "book": "elem",
+      "lesson": 57,
+      "word": "to attack somebody or a place",
+      "meaningAtReview": "حمله کردن به کسی یا جایی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-061",
+      "book": "elem",
+      "lesson": 54,
+      "word": "motor racing",
+      "meaningAtReview": "مسابقات اتومبیلرانی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-062",
+      "book": "elem",
+      "lesson": 51,
+      "word": "baker",
+      "meaningAtReview": "نانوا / نانوایی",
+      "verdict": "OK",
+      "note": "«نانوا / نانوایی» — دومین حس خلط با bakery؛ حس اصلی درست",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-063",
+      "book": "elem",
+      "lesson": 57,
+      "word": "take drugs",
+      "meaningAtReview": "مصرف مواد مخدر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-064",
+      "book": "elem",
+      "lesson": 52,
+      "word": "bathroom",
+      "meaningAtReview": "حمام",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-065",
+      "book": "elem",
+      "lesson": 51,
+      "word": "butcher",
+      "meaningAtReview": "قصاب",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-066",
+      "book": "elem",
+      "lesson": 56,
+      "word": "do nothing",
+      "meaningAtReview": "هیچ کاری نکردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-067",
+      "book": "elem",
+      "lesson": 51,
+      "word": "basement",
+      "meaningAtReview": "زیرزمین",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-068",
+      "book": "elem",
+      "lesson": 59,
+      "word": "colleague",
+      "meaningAtReview": "همکار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-069",
+      "book": "elem",
+      "lesson": 56,
+      "word": "grow flowers",
+      "meaningAtReview": "گل کاشتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-070",
+      "book": "preint",
+      "lesson": 6,
+      "word": "overcharge",
+      "meaningAtReview": "گران فروختن، بیش از اندازه پول گرفتن (= پول زیادی خواستن)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-071",
+      "book": "preint",
+      "lesson": 7,
+      "word": "-or",
+      "meaningAtReview": "پسوند فاعل/شغل",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-072",
+      "book": "preint",
+      "lesson": 5,
+      "word": "OHT (overhead transparency)",
+      "meaningAtReview": "شفاف (اسلاید) مخصوص پروژکتور",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-073",
+      "book": "preint",
+      "lesson": 2,
+      "word": "put on my gloves",
+      "meaningAtReview": "دستکش‌هایم را پوشیدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-074",
+      "book": "preint",
+      "lesson": 6,
+      "word": "reopen",
+      "meaningAtReview": "دوباره باز کردن/شدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-075",
+      "book": "preint",
+      "lesson": 8,
+      "word": "careful",
+      "meaningAtReview": "بااحتیاط، مراقب",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-076",
+      "book": "preint",
+      "lesson": 10,
+      "word": "chat room",
+      "meaningAtReview": "اتاق گفتگو (فضایی برای ارتباط در اینترنت)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-077",
+      "book": "preint",
+      "lesson": 7,
+      "word": "management",
+      "meaningAtReview": "مدیریت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-078",
+      "book": "preint",
+      "lesson": 7,
+      "word": "election",
+      "meaningAtReview": "انتخابات",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-079",
+      "book": "preint",
+      "lesson": 5,
+      "word": "board pen",
+      "meaningAtReview": "ماژیک تخته",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-080",
+      "book": "preint",
+      "lesson": 4,
+      "word": "plural noun (pl)",
+      "meaningAtReview": "اسم جمع",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-081",
+      "book": "preint",
+      "lesson": 7,
+      "word": "translator",
+      "meaningAtReview": "مترجم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-082",
+      "book": "preint",
+      "lesson": 1,
+      "word": "pronunciation",
+      "meaningAtReview": "تلفظ",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-083",
+      "book": "preint",
+      "lesson": 1,
+      "word": "revision",
+      "meaningAtReview": "مرور",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-084",
+      "book": "preint",
+      "lesson": 1,
+      "word": "revise",
+      "meaningAtReview": "مرور کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-085",
+      "book": "preint",
+      "lesson": 7,
+      "word": "improve (= get better)",
+      "meaningAtReview": "بهبود یافتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-086",
+      "book": "preint",
+      "lesson": 13,
+      "word": "get rid of",
+      "meaningAtReview": "خلاص شدن از شر چیزی (= remove it/throw it away)",
+      "verdict": "OK",
+      "note": "gloss چاپی EN در meaning (= remove it/throw it away) — عین چاپی، بدون تغییر",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-087",
+      "book": "preint",
+      "lesson": 17,
+      "word": "Could you possibly",
+      "meaningAtReview": "ممکن است لطفاً...",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-088",
+      "book": "preint",
+      "lesson": 15,
+      "word": "on my own",
+      "meaningAtReview": "تنها، بدون کمک دیگران",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-089",
+      "book": "preint",
+      "lesson": 17,
+      "word": "I was wondering if I could",
+      "meaningAtReview": "می‌خواستم بپرسم آیا می‌توانم...",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-090",
+      "book": "preint",
+      "lesson": 18,
+      "word": "but don't you think ...",
+      "meaningAtReview": "اما فکر نمی‌کنی که ...",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-091",
+      "book": "preint",
+      "lesson": 18,
+      "word": "You're (absolutely) right",
+      "meaningAtReview": "(کاملاً) حق با توئه",
+      "verdict": "OK",
+      "note": "«حق با توئه» — املا غیررسمی؛ متن چاپی informal است؛ قابل‌قبول",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-092",
+      "book": "preint",
+      "lesson": 15,
+      "word": "at the moment",
+      "meaningAtReview": "در حال حاضر، الان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-093",
+      "book": "preint",
+      "lesson": 17,
+      "word": "Would you like to",
+      "meaningAtReview": "دوست دارید...",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-094",
+      "book": "preint",
+      "lesson": 15,
+      "word": "in love with",
+      "meaningAtReview": "عاشق",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-095",
+      "book": "preint",
+      "lesson": 15,
+      "word": "for a swim",
+      "meaningAtReview": "برای شنا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-096",
+      "book": "preint",
+      "lesson": 13,
+      "word": "all over the place",
+      "meaningAtReview": "همه جا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-097",
+      "book": "preint",
+      "lesson": 14,
+      "word": "afraid of",
+      "meaningAtReview": "ترسیدن از",
+      "verdict": "OK",
+      "note": "pos=adj. با معنی فعلی «ترسیدن از» — کارکردی و درست در بستر collocation",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-098",
+      "book": "preint",
+      "lesson": 26,
+      "word": "sb a favour (= do sth to help sb)",
+      "meaningAtReview": "به کسی لطف کردن (کاری برای کمک به کسی انجام دادن)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-099",
+      "book": "preint",
+      "lesson": 28,
+      "word": "catch sb doing sth (= see sb when they are doing sth wrong)",
+      "meaningAtReview": "کسی را در حال انجام کاری (اشتباه) گرفتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-100",
+      "book": "preint",
+      "lesson": 23,
+      "word": "go up",
+      "meaningAtReview": "بالا رفتن، افزایش یافتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-101",
+      "book": "preint",
+      "lesson": 23,
+      "word": "go off",
+      "meaningAtReview": "زنگ زدن؛ منفجر شدن؛ فاسد شدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-102",
+      "book": "preint",
+      "lesson": 26,
+      "word": "research (= detailed study)",
+      "meaningAtReview": "تحقیق (مطالعهٔ دقیق)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-103",
+      "book": "preint",
+      "lesson": 21,
+      "word": "Wow! How exciting.",
+      "meaningAtReview": "وای! چه هیجان‌انگیز!",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-104",
+      "book": "preint",
+      "lesson": 29,
+      "word": "It's getting better/worse",
+      "meaningAtReview": "دارد بهتر/بدتر می‌شود",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-105",
+      "book": "preint",
+      "lesson": 30,
+      "word": "bring",
+      "meaningAtReview": "آوردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-106",
+      "book": "preint",
+      "lesson": 29,
+      "word": "get divorced",
+      "meaningAtReview": "طلاق گرفتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-107",
+      "book": "preint",
+      "lesson": 30,
+      "word": "It's time to go",
+      "meaningAtReview": "وقت رفتن است",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-108",
+      "book": "preint",
+      "lesson": 30,
+      "word": "come",
+      "meaningAtReview": "آمدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-109",
+      "book": "preint",
+      "lesson": 35,
+      "word": "mention (= say or write a fact or piece of information)",
+      "meaningAtReview": "اشاره کردن (گفتن یا نوشتن یک واقعیت/اطلاع)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-110",
+      "book": "preint",
+      "lesson": 31,
+      "word": "touch",
+      "meaningAtReview": "لامسه؛ لمس کردن",
+      "verdict": "OK",
+      "note": "pos دوگانه n.|v. با پوشش هر دو حس در معنی — درست",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-111",
+      "book": "preint",
+      "lesson": 33,
+      "word": "hair (C)",
+      "meaningAtReview": "تار مو (قابل شمارش)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-112",
+      "book": "preint",
+      "lesson": 38,
+      "word": "hardly",
+      "meaningAtReview": "به‌سختی، تقریباً هیچ",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-113",
+      "book": "preint",
+      "lesson": 36,
+      "word": "(very) small",
+      "meaningAtReview": "(خیلی) کوچک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-114",
+      "book": "preint",
+      "lesson": 40,
+      "word": "though",
+      "meaningAtReview": "اگرچه / ولی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-115",
+      "book": "preint",
+      "lesson": 32,
+      "word": "pairs of shorts",
+      "meaningAtReview": "جفت شلوارک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-116",
+      "book": "preint",
+      "lesson": 34,
+      "word": "forget",
+      "meaningAtReview": "فراموش کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-117",
+      "book": "preint",
+      "lesson": 32,
+      "word": "a pair of skis",
+      "meaningAtReview": "یک جفت اسکی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-118",
+      "book": "preint",
+      "lesson": 39,
+      "word": "before",
+      "meaningAtReview": "قبل از اینکه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-119",
+      "book": "preint",
+      "lesson": 37,
+      "word": "over",
+      "meaningAtReview": "از روی (پل)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-120",
+      "book": "preint",
+      "lesson": 50,
+      "word": "mixed feelings",
+      "meaningAtReview": "احساسات متناقض (مطمئن نبودن چه فکری یا احساسی داشتن)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-121",
+      "book": "preint",
+      "lesson": 48,
+      "word": "pretty",
+      "meaningAtReview": "دلربا، خوش‌چهره",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-122",
+      "book": "preint",
+      "lesson": 47,
+      "word": "blow your nose",
+      "meaningAtReview": "بینی خود را پاک کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-123",
+      "book": "preint",
+      "lesson": 49,
+      "word": "punctual",
+      "meaningAtReview": "وقت‌شناس (= همیشه سر وقت)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-124",
+      "book": "preint",
+      "lesson": 43,
+      "word": "the earth",
+      "meaningAtReview": "زمین",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-125",
+      "book": "preint",
+      "lesson": 49,
+      "word": "insensitive",
+      "meaningAtReview": "بی‌حساس",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-126",
+      "book": "preint",
+      "lesson": 49,
+      "word": "shy",
+      "meaningAtReview": "خجالتی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-127",
+      "book": "preint",
+      "lesson": 41,
+      "word": "with the exception of",
+      "meaningAtReview": "به استثنای",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-128",
+      "book": "preint",
+      "lesson": 45,
+      "word": "creature",
+      "meaningAtReview": "موجود",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-129",
+      "book": "preint",
+      "lesson": 46,
+      "word": "Portuguese",
+      "meaningAtReview": "پرتغالی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-130",
+      "book": "preint",
+      "lesson": 48,
+      "word": "dark skin",
+      "meaningAtReview": "پوست تیره",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-131",
+      "book": "preint",
+      "lesson": 47,
+      "word": "breathe",
+      "meaningAtReview": "نفس کشیدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-132",
+      "book": "preint",
+      "lesson": 48,
+      "word": "overweight",
+      "meaningAtReview": "اضافه‌وزن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-133",
+      "book": "preint",
+      "lesson": 45,
+      "word": "the wild",
+      "meaningAtReview": "طبیعت وحشی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-134",
+      "book": "preint",
+      "lesson": 46,
+      "word": "Japanese",
+      "meaningAtReview": "ژاپنی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-135",
+      "book": "preint",
+      "lesson": 47,
+      "word": "bite your nails",
+      "meaningAtReview": "ناخن جویدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-136",
+      "book": "preint",
+      "lesson": 51,
+      "word": "cousin(s)",
+      "meaningAtReview": "پسرخاله/دوپسر عمو و... (پسرعمو/دخترعمو)",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "پسرخاله/دوپسر عمو و... (پسرعمو/دخترعمو)",
+        "currentMeaning": "پسرعمو/دخترعمو/پسرخاله/دخترخاله و...",
+        "reason": "typo «دوپسر عمو»",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-137",
+      "book": "preint",
+      "lesson": 53,
+      "word": "leave work",
+      "meaningAtReview": "ترک کردن محل کار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-138",
+      "book": "preint",
+      "lesson": 53,
+      "word": "go to bed",
+      "meaningAtReview": "به رختخواب رفتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-139",
+      "book": "preint",
+      "lesson": 59,
+      "word": "ache",
+      "meaningAtReview": "درد مبهم و مداوم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-140",
+      "book": "preint",
+      "lesson": 51,
+      "word": "looks like",
+      "meaningAtReview": "از نظر ظاهر شبیه بودن به",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-141",
+      "book": "preint",
+      "lesson": 52,
+      "word": "late thirties",
+      "meaningAtReview": "اواخر دههٔ سی (حدود ۳۸ سالگی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-142",
+      "book": "preint",
+      "lesson": 59,
+      "word": "lung cancer",
+      "meaningAtReview": "سرطان ریه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-143",
+      "book": "preint",
+      "lesson": 60,
+      "word": "weapon",
+      "meaningAtReview": "سلاح",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-144",
+      "book": "preint",
+      "lesson": 54,
+      "word": "lift",
+      "meaningAtReview": "آسانسور",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-145",
+      "book": "preint",
+      "lesson": 53,
+      "word": "do the washing-up",
+      "meaningAtReview": "شستن ظرف‌ها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-146",
+      "book": "preint",
+      "lesson": 60,
+      "word": "wound",
+      "meaningAtReview": "زخم/زخم کردن",
+      "verdict": "OK",
+      "note": "pos=n. با حس دوم فعل‌گونه «زخم کردن» — پوشش دو حس چاپی",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-147",
+      "book": "preint",
+      "lesson": 52,
+      "word": "a child",
+      "meaningAtReview": "کودک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-148",
+      "book": "preint",
+      "lesson": 55,
+      "word": "bedroom(s)",
+      "meaningAtReview": "اتاق خواب",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-149",
+      "book": "preint",
+      "lesson": 52,
+      "word": "an adult",
+      "meaningAtReview": "بزرگسال",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-150",
+      "book": "preint",
+      "lesson": 60,
+      "word": "cream",
+      "meaningAtReview": "کرم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-151",
+      "book": "preint",
+      "lesson": 57,
+      "word": "it isn't working",
+      "meaningAtReview": "کار نمی‌کند",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-152",
+      "book": "preint",
+      "lesson": 65,
+      "word": "go out",
+      "meaningAtReview": "بیرون رفتن (= رفتن به مکان‌ها به دلایل اجتماعی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-153",
+      "book": "preint",
+      "lesson": 61,
+      "word": "change into",
+      "meaningAtReview": "تغییر کردن به (لباس دیگر)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-154",
+      "book": "preint",
+      "lesson": 64,
+      "word": "hot/spicy",
+      "meaningAtReview": "تند (پر از ادویه)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-155",
+      "book": "preint",
+      "lesson": 65,
+      "word": "cope with",
+      "meaningAtReview": "از پسِ (کار دشوار) برآمدن، کنار آمدن با",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-156",
+      "book": "preint",
+      "lesson": 64,
+      "word": "medium",
+      "meaningAtReview": "متوسط (بیشتر پخته و صورتی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-157",
+      "book": "preint",
+      "lesson": 65,
+      "word": "there's plenty to see",
+      "meaningAtReview": "چیزهای زیادی برای دیدن هست",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-158",
+      "book": "preint",
+      "lesson": 65,
+      "word": "dirty",
+      "meaningAtReview": "کثیف (متضاد: clean)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-159",
+      "book": "preint",
+      "lesson": 61,
+      "word": "boot",
+      "meaningAtReview": "چکمه/بوت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-160",
+      "book": "preint",
+      "lesson": 61,
+      "word": "tie",
+      "meaningAtReview": "کراوات",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-161",
+      "book": "preint",
+      "lesson": 61,
+      "word": "put on",
+      "meaningAtReview": "پوشیدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-162",
+      "book": "preint",
+      "lesson": 63,
+      "word": "pork",
+      "meaningAtReview": "گوشت خوک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-163",
+      "book": "preint",
+      "lesson": 63,
+      "word": "vinegar",
+      "meaningAtReview": "سرکه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-164",
+      "book": "preint",
+      "lesson": 63,
+      "word": "pineapple",
+      "meaningAtReview": "آناناس",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-165",
+      "book": "preint",
+      "lesson": 68,
+      "word": "drive",
+      "meaningAtReview": "رانندگی کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-166",
+      "book": "preint",
+      "lesson": 63,
+      "word": "cabbage",
+      "meaningAtReview": "کلم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-167",
+      "book": "preint",
+      "lesson": 62,
+      "word": "stationery",
+      "meaningAtReview": "لوازم تحریر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-168",
+      "book": "preint",
+      "lesson": 62,
+      "word": "household goods",
+      "meaningAtReview": "کالاهای خانگی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-169",
+      "book": "preint",
+      "lesson": 78,
+      "word": "reviews",
+      "meaningAtReview": "نقد و بررسی‌ها (مقاله‌ای که نظر می‌دهد درباره‌ی فیلم و کتاب جدید)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-170",
+      "book": "preint",
+      "lesson": 78,
+      "word": "articles",
+      "meaningAtReview": "مقاله‌ها (نوشته درباره‌ی موضوع مهم)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-171",
+      "book": "preint",
+      "lesson": 71,
+      "word": "work abroad",
+      "meaningAtReview": "کار در خارج از کشور",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-172",
+      "book": "preint",
+      "lesson": 75,
+      "word": "motor racing",
+      "meaningAtReview": "مسابقه‌های اتومبیل‌رانی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-173",
+      "book": "preint",
+      "lesson": 73,
+      "word": "rise/go up/increase",
+      "meaningAtReview": "بالا رفتن، افزایش یافتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-174",
+      "book": "preint",
+      "lesson": 76,
+      "word": "screen",
+      "meaningAtReview": "پرده (سینما)، صفحه نمایش",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-175",
+      "book": "preint",
+      "lesson": 79,
+      "word": "plug it in",
+      "meaningAtReview": "دوشاخه‌اش را به پریز بزن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-176",
+      "book": "preint",
+      "lesson": 77,
+      "word": "hit record",
+      "meaningAtReview": "آهنگ محبوب و پرفروش",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-177",
+      "book": "preint",
+      "lesson": 72,
+      "word": "keyboard",
+      "meaningAtReview": "صفحه‌کلید",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-178",
+      "book": "preint",
+      "lesson": 75,
+      "word": "boots",
+      "meaningAtReview": "چکمه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-179",
+      "book": "preint",
+      "lesson": 76,
+      "word": "director",
+      "meaningAtReview": "کارگردان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-180",
+      "book": "preint",
+      "lesson": 77,
+      "word": "classical music",
+      "meaningAtReview": "موسیقی کلاسیک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-181",
+      "book": "preint",
+      "lesson": 72,
+      "word": "loads of work",
+      "meaningAtReview": "کار فراوان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-182",
+      "book": "preint",
+      "lesson": 80,
+      "word": "answerphone",
+      "meaningAtReview": "پیام‌گیر تلفن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-183",
+      "book": "preint",
+      "lesson": 72,
+      "word": "desk",
+      "meaningAtReview": "میز کار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-184",
+      "book": "preint",
+      "lesson": 72,
+      "word": "photocopier",
+      "meaningAtReview": "دستگاه فتوکپی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-185",
+      "book": "preint",
+      "lesson": 73,
+      "word": "main aim/objective",
+      "meaningAtReview": "هدف اصلی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-186",
+      "book": "preint",
+      "lesson": 90,
+      "word": "a single room",
+      "meaningAtReview": "اتاق یک‌نفره (با یک تخت یک‌نفره)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-187",
+      "book": "preint",
+      "lesson": 90,
+      "word": "a double room",
+      "meaningAtReview": "اتاق دونفره (با یک تخت بزرگ)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-188",
+      "book": "preint",
+      "lesson": 88,
+      "word": "kill/assassinate",
+      "meaningAtReview": "کشتن/ترور کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-189",
+      "book": "preint",
+      "lesson": 89,
+      "word": "departures board",
+      "meaningAtReview": "تابلوی پروازهای خارج‌شده",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-190",
+      "book": "preint",
+      "lesson": 89,
+      "word": "take-off",
+      "meaningAtReview": "برخاستن هواپیما",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-191",
+      "book": "preint",
+      "lesson": 87,
+      "word": "renew",
+      "meaningAtReview": "تمدید کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-192",
+      "book": "preint",
+      "lesson": 81,
+      "word": "search engine",
+      "meaningAtReview": "موتور جستجو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-193",
+      "book": "preint",
+      "lesson": 84,
+      "word": "evidence",
+      "meaningAtReview": "دلیل، مدرک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-194",
+      "book": "preint",
+      "lesson": 85,
+      "word": "rob",
+      "meaningAtReview": "سرقت کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-195",
+      "book": "preint",
+      "lesson": 86,
+      "word": "communism",
+      "meaningAtReview": "کمونیسم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-196",
+      "book": "preint",
+      "lesson": 84,
+      "word": "prisoner",
+      "meaningAtReview": "زندانی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-197",
+      "book": "preint",
+      "lesson": 81,
+      "word": "laser printer",
+      "meaningAtReview": "چاپگر لیزری",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-198",
+      "book": "preint",
+      "lesson": 84,
+      "word": "fine",
+      "meaningAtReview": "جریمه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-199",
+      "book": "preint",
+      "lesson": 82,
+      "word": "good at",
+      "meaningAtReview": "خوب بودن در",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-200",
+      "book": "preint",
+      "lesson": 83,
+      "word": "a loan",
+      "meaningAtReview": "وام",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-201",
+      "book": "preint",
+      "lesson": 86,
+      "word": "conservative",
+      "meaningAtReview": "محافظه‌کار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-202",
+      "book": "preint",
+      "lesson": 95,
+      "word": "great",
+      "meaningAtReview": "عالی (در معنای محاوره‌ای)، بزرگ",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-203",
+      "book": "preint",
+      "lesson": 97,
+      "word": "Silence — Examination in progress",
+      "meaningAtReview": "سکوت — آزمون در جریان است",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-204",
+      "book": "preint",
+      "lesson": 97,
+      "word": "Do not disturb",
+      "meaningAtReview": "مزاحم نشوید / مزاحم ممنوع",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-205",
+      "book": "preint",
+      "lesson": 92,
+      "word": "rocks",
+      "meaningAtReview": "صخره‌ها/سنگ‌ها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-206",
+      "book": "preint",
+      "lesson": 93,
+      "word": "recently",
+      "meaningAtReview": "اخیراً",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-207",
+      "book": "preint",
+      "lesson": 91,
+      "word": "cathedral",
+      "meaningAtReview": "کلیسای جامع",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-208",
+      "book": "preint",
+      "lesson": 94,
+      "word": "degrees below zero",
+      "meaningAtReview": "درجه زیر صفر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-209",
+      "book": "preint",
+      "lesson": 95,
+      "word": "deep",
+      "meaningAtReview": "عمیق",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-210",
+      "book": "preint",
+      "lesson": 99,
+      "word": "guy",
+      "meaningAtReview": "مرد / آقا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-211",
+      "book": "preint",
+      "lesson": 95,
+      "word": "wide road",
+      "meaningAtReview": "جاده پهن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-212",
+      "book": "preint",
+      "lesson": 95,
+      "word": "deep lake",
+      "meaningAtReview": "دریاچه عمیق",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-213",
+      "book": "preint",
+      "lesson": 100,
+      "word": "a paper (newspaper)",
+      "meaningAtReview": "روزنامه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-214",
+      "book": "preint",
+      "lesson": 100,
+      "word": "phone (telephone)",
+      "meaningAtReview": "تلفن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-215",
+      "book": "upper",
+      "lesson": 7,
+      "word": "It's something you use for (painting pictures / cleaning the kitchen floor ...)",
+      "meaningAtReview": "چیزی است که برای (نقاشی کشیدن / تمیز کردن کف آشپزخانه ...) استفاده می‌شود",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-216",
+      "book": "upper",
+      "lesson": 1,
+      "word": "royal",
+      "meaningAtReview": "سلطنتی، سلطنتی‌مانند (از فرانسوی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-217",
+      "book": "upper",
+      "lesson": 4,
+      "word": "block capitals",
+      "meaningAtReview": "حروف بزرگ (همه با حروف بزرگ)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-218",
+      "book": "upper",
+      "lesson": 9,
+      "word": "dismount",
+      "meaningAtReview": "پیاده شدن (از اسب/دوچرخه)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-219",
+      "book": "upper",
+      "lesson": 9,
+      "word": "post-impressionist",
+      "meaningAtReview": "پسادربیمی‌گرا",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "پسادربیمی‌گرا",
+        "currentMeaning": "پساامپرسیونیست",
+        "reason": "typo «دربیمی» — نام‌گذاری جنبش صحیح",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-220",
+      "book": "upper",
+      "lesson": 5,
+      "word": "hairy",
+      "meaningAtReview": "پرمو؛ (غیررسمی) ترسناک و هیجان‌انگیز",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-221",
+      "book": "upper",
+      "lesson": 1,
+      "word": "core vocabulary",
+      "meaningAtReview": "واژگان اصلی/هسته‌ای",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-222",
+      "book": "upper",
+      "lesson": 8,
+      "word": "terrorist",
+      "meaningAtReview": "تروریست",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-223",
+      "book": "upper",
+      "lesson": 6,
+      "word": "heart-broken",
+      "meaningAtReview": "دل‌شکسته",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-224",
+      "book": "upper",
+      "lesson": 2,
+      "word": "kick",
+      "meaningAtReview": "ضربه زدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-225",
+      "book": "upper",
+      "lesson": 3,
+      "word": "charter flight",
+      "meaningAtReview": "پرواز چارتر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-226",
+      "book": "upper",
+      "lesson": 3,
+      "word": "hotel",
+      "meaningAtReview": "هتل",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-227",
+      "book": "upper",
+      "lesson": 8,
+      "word": "washable",
+      "meaningAtReview": "قابل شستشو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-228",
+      "book": "upper",
+      "lesson": 2,
+      "word": "summer",
+      "meaningAtReview": "تابستان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-229",
+      "book": "upper",
+      "lesson": 4,
+      "word": "pronoun",
+      "meaningAtReview": "ضمیر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-230",
+      "book": "upper",
+      "lesson": 2,
+      "word": "perfect",
+      "meaningAtReview": "کامل",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-231",
+      "book": "upper",
+      "lesson": 9,
+      "word": "anti-war",
+      "meaningAtReview": "ضدجنگ",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-232",
+      "book": "upper",
+      "lesson": 10,
+      "word": "produce",
+      "meaningAtReview": "تولید کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-233",
+      "book": "upper",
+      "lesson": 8,
+      "word": "worker",
+      "meaningAtReview": "کارگر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-234",
+      "book": "upper",
+      "lesson": 8,
+      "word": "edible",
+      "meaningAtReview": "خوراکی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-235",
+      "book": "upper",
+      "lesson": 9,
+      "word": "underworked",
+      "meaningAtReview": "کم‌کار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-236",
+      "book": "upper",
+      "lesson": 17,
+      "word": "road rage",
+      "meaningAtReview": "خشم جاده‌ای؛ خشم شدید رانندگان در شرایط استرس‌زا که به رانندگی خطرناک یا حمله به دیگران می‌انجامد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-237",
+      "book": "upper",
+      "lesson": 16,
+      "word": "OPEC",
+      "meaningAtReview": "سازمان کشورهای صادرکننده نفت (Organisation of Petroleum Exporting Countries)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-238",
+      "book": "upper",
+      "lesson": 15,
+      "word": "dogma",
+      "meaningAtReview": "دوگما؛ عقیده تعصبی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-239",
+      "book": "upper",
+      "lesson": 14,
+      "word": "outlook",
+      "meaningAtReview": "چشم‌انداز/پیش‌بینی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-240",
+      "book": "upper",
+      "lesson": 19,
+      "word": "moo",
+      "meaningAtReview": "صدا کردن (گاو: موقردن)",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "صدا کردن (گاو: موقردن)",
+        "currentMeaning": "موق گفتن (صدای گاو)",
+        "reason": "«موقردن» نامأنوس",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-241",
+      "book": "upper",
+      "lesson": 15,
+      "word": "frankfurter",
+      "meaningAtReview": "سوسیس کوچک (هات‌داگ)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-242",
+      "book": "upper",
+      "lesson": 20,
+      "word": "raise/rays",
+      "meaningAtReview": "بالا بردن / پرتوها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-243",
+      "book": "upper",
+      "lesson": 14,
+      "word": "takeover",
+      "meaningAtReview": "تملک/خرید یک شرکت توسط شرکت دیگر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-244",
+      "book": "upper",
+      "lesson": 11,
+      "word": "stardom",
+      "meaningAtReview": "ستاره شدن، شهرت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-245",
+      "book": "upper",
+      "lesson": 18,
+      "word": "would",
+      "meaningAtReview": "خواهد (فعل کمکی)",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "خواهد (فعل کمکی)",
+        "currentMeaning": "فعل کمکی شرطی (گذشتهٔ will)",
+        "reason": "معنی «خواهد» گمراه‌کننده — would آیندهٔ ساده نیست",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-246",
+      "book": "upper",
+      "lesson": 18,
+      "word": "transport",
+      "meaningAtReview": "حمل‌ونقل / حمل کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-247",
+      "book": "upper",
+      "lesson": 18,
+      "word": "soften",
+      "meaningAtReview": "نرم کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-248",
+      "book": "upper",
+      "lesson": 11,
+      "word": "intention",
+      "meaningAtReview": "نیت، قصد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-249",
+      "book": "upper",
+      "lesson": 13,
+      "word": "baby-sitter",
+      "meaningAtReview": "پرستار بچه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-250",
+      "book": "upper",
+      "lesson": 16,
+      "word": "radar",
+      "meaningAtReview": "رادار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-251",
+      "book": "upper",
+      "lesson": 18,
+      "word": "tart",
+      "meaningAtReview": "تارت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-252",
+      "book": "upper",
+      "lesson": 13,
+      "word": "kitchen scissors",
+      "meaningAtReview": "قیچی آشپزخانه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-253",
+      "book": "upper",
+      "lesson": 18,
+      "word": "photographically",
+      "meaningAtReview": "از نظر عکاسی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-254",
+      "book": "upper",
+      "lesson": 15,
+      "word": "bazaar",
+      "meaningAtReview": "بازار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-255",
+      "book": "upper",
+      "lesson": 11,
+      "word": "carelessness",
+      "meaningAtReview": "بی‌دقتی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-256",
+      "book": "upper",
+      "lesson": 11,
+      "word": "wisdom",
+      "meaningAtReview": "حکمت، خرد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-257",
+      "book": "upper",
+      "lesson": 16,
+      "word": "Rd (Road)",
+      "meaningAtReview": "جاده/راه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-258",
+      "book": "upper",
+      "lesson": 18,
+      "word": "psychology",
+      "meaningAtReview": "روان‌شناسی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-259",
+      "book": "upper",
+      "lesson": 12,
+      "word": "two-faced",
+      "meaningAtReview": "دورو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-260",
+      "book": "upper",
+      "lesson": 12,
+      "word": "time-consuming",
+      "meaningAtReview": "وقت‌گیر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-261",
+      "book": "upper",
+      "lesson": 16,
+      "word": "plane (aeroplane)",
+      "meaningAtReview": "هواپیما",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-262",
+      "book": "upper",
+      "lesson": 24,
+      "word": "it's all very well ... but",
+      "meaningAtReview": "خوب است گفتنِ... اما (انتقاد آمیخته با تقابل)",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "خوب است گفتنِ... اما (انتقاد آمیخته با تقابل)",
+        "currentMeaning": "خیلی خوب است که... اما (برای بیان انتقاد)",
+        "reason": "عبارت آشفته با اعراب نابجا",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-263",
+      "book": "upper",
+      "lesson": 25,
+      "word": "on top of (all) that",
+      "meaningAtReview": "در کنار همهٔ این‌ها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-264",
+      "book": "upper",
+      "lesson": 25,
+      "word": "furthermore",
+      "meaningAtReview": "علاوه بر این، افزون بر این",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-265",
+      "book": "upper",
+      "lesson": 25,
+      "word": "and so on and so forth",
+      "meaningAtReview": "و همین‌طور همین‌طور",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-266",
+      "book": "upper",
+      "lesson": 22,
+      "word": "unless",
+      "meaningAtReview": "مگر اینکه، به‌جز اینکه اگر",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "مگر اینکه، به‌جز اینکه اگر",
+        "currentMeaning": "مگر اینکه",
+        "reason": "بخش دوم آشفته و زائد",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-267",
+      "book": "upper",
+      "lesson": 30,
+      "word": "(swimming) trunks",
+      "meaningAtReview": "شلوارک شنا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-268",
+      "book": "upper",
+      "lesson": 25,
+      "word": "in addition to",
+      "meaningAtReview": "علاوه بر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-269",
+      "book": "upper",
+      "lesson": 22,
+      "word": "whichever",
+      "meaningAtReview": "هر کدام که",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-270",
+      "book": "upper",
+      "lesson": 30,
+      "word": "goods",
+      "meaningAtReview": "کالاها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-271",
+      "book": "upper",
+      "lesson": 25,
+      "word": "equally",
+      "meaningAtReview": "به همان اندازه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-272",
+      "book": "upper",
+      "lesson": 23,
+      "word": "consequently",
+      "meaningAtReview": "در نتیجه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 4
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-273",
+      "book": "upper",
+      "lesson": 29,
+      "word": "butter",
+      "meaningAtReview": "کره",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-274",
+      "book": "upper",
+      "lesson": 26,
+      "word": "answer",
+      "meaningAtReview": "پاسخ (به)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-275",
+      "book": "upper",
+      "lesson": 40,
+      "word": "study",
+      "meaningAtReview": "اتاق مطالعه برای خواندن/نوشتن/درس خواندن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-276",
+      "book": "upper",
+      "lesson": 38,
+      "word": "aggressive",
+      "meaningAtReview": "تهاجمی و پرخاشگر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-277",
+      "book": "upper",
+      "lesson": 38,
+      "word": "assertive",
+      "meaningAtReview": "پرانگیزه و با اعتماد به نفس",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "پرانگیزه و با اعتماد به نفس",
+        "currentMeaning": "صریح، قاطع و مطمئن (با اعتماد به نفس)",
+        "reason": "«پرانگیزه» انحراف معنایی (motivated ≠ assertive)",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-278",
+      "book": "upper",
+      "lesson": 35,
+      "word": "Afro-Caribbeans",
+      "meaningAtReview": "آفریقا-کارائیبی‌ها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-279",
+      "book": "upper",
+      "lesson": 37,
+      "word": "dark",
+      "meaningAtReview": "تیره (مو یا پوست)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-280",
+      "book": "upper",
+      "lesson": 40,
+      "word": "hall/hallway",
+      "meaningAtReview": "راهرو/فضای ورودی خانه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-281",
+      "book": "upper",
+      "lesson": 40,
+      "word": "power point and plug",
+      "meaningAtReview": "پریز برق و دوشاخه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-282",
+      "book": "upper",
+      "lesson": 35,
+      "word": "Europe",
+      "meaningAtReview": "اروپا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-283",
+      "book": "upper",
+      "lesson": 33,
+      "word": "cartons of milk",
+      "meaningAtReview": "بسته‌های شیر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-284",
+      "book": "upper",
+      "lesson": 37,
+      "word": "wrinkles",
+      "meaningAtReview": "چین و چروک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-285",
+      "book": "upper",
+      "lesson": 36,
+      "word": "flood",
+      "meaningAtReview": "سیل",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-286",
+      "book": "upper",
+      "lesson": 35,
+      "word": "Thai",
+      "meaningAtReview": "تایلندی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-287",
+      "book": "upper",
+      "lesson": 36,
+      "word": "blustery",
+      "meaningAtReview": "بادی و تند",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-288",
+      "book": "upper",
+      "lesson": 37,
+      "word": "plump",
+      "meaningAtReview": "تاحدی چاق و تپل",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-289",
+      "book": "upper",
+      "lesson": 33,
+      "word": "pieces of",
+      "meaningAtReview": "تکه‌های",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-290",
+      "book": "upper",
+      "lesson": 38,
+      "word": "gifted",
+      "meaningAtReview": "بااستعداد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-291",
+      "book": "upper",
+      "lesson": 33,
+      "word": "item of news",
+      "meaningAtReview": "قلم خبر",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "قلم خبر",
+        "currentMeaning": "یک بند از خبر / مورد خبر",
+        "reason": "«قلم» ناتمام (کاربرد حسابداری)",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-292",
+      "book": "upper",
+      "lesson": 35,
+      "word": "The Indian Ocean",
+      "meaningAtReview": "اقیانوس هند",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-293",
+      "book": "upper",
+      "lesson": 37,
+      "word": "round-faced",
+      "meaningAtReview": "گردصورت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-294",
+      "book": "upper",
+      "lesson": 31,
+      "word": "potato",
+      "meaningAtReview": "سیب‌زمینی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-295",
+      "book": "upper",
+      "lesson": 44,
+      "word": "public relations officer",
+      "meaningAtReview": "مسئول روابط عمومی (ارائهٔ اطلاعات به مطبوعات و تلویزیون)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-296",
+      "book": "upper",
+      "lesson": 44,
+      "word": "go/be on strike",
+      "meaningAtReview": "اعتصاب کردن/در اعتصاب بودن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-297",
+      "book": "upper",
+      "lesson": 49,
+      "word": "heavily industrialised regions",
+      "meaningAtReview": "مناطق به‌شدت صنعتی‌شده",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-298",
+      "book": "upper",
+      "lesson": 48,
+      "word": "done to a turn",
+      "meaningAtReview": "درست و حسابی پخته (بی‌نقص)",
+      "verdict": "OK",
+      "note": "idiom چاپی با معنی دقیق — درست",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-299",
+      "book": "upper",
+      "lesson": 44,
+      "word": "economist",
+      "meaningAtReview": "اقتصاددان (متخصص امور مالی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-300",
+      "book": "upper",
+      "lesson": 41,
+      "word": "grazed",
+      "meaningAtReview": "سائیدگی (زخم سطحی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-301",
+      "book": "upper",
+      "lesson": 44,
+      "word": "make a living",
+      "meaningAtReview": "اقرار معاش کردن (به‌قدر کافی درآمد داشتن)",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "اقرار معاش کردن (به‌قدر کافی درآمد داشتن)",
+        "currentMeaning": "گذران زندگی کردن (به‌قدر کافی درآمد داشتن)",
+        "reason": "typo «اقرار معاش» — بی‌معنا",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-302",
+      "book": "upper",
+      "lesson": 44,
+      "word": "redundant",
+      "meaningAtReview": "اضافی/تعدیل‌شده",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-303",
+      "book": "upper",
+      "lesson": 43,
+      "word": "school-leaving exams",
+      "meaningAtReview": "امتحانات پایان تحصیل در مدرسه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-304",
+      "book": "upper",
+      "lesson": 48,
+      "word": "paprika",
+      "meaningAtReview": "فلفل قرمز پاپریکا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-305",
+      "book": "upper",
+      "lesson": 44,
+      "word": "director",
+      "meaningAtReview": "عضو هیئت مدیرهٔ شرکت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-306",
+      "book": "upper",
+      "lesson": 50,
+      "word": "imposing",
+      "meaningAtReview": "با شکوه / مجلل",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-307",
+      "book": "upper",
+      "lesson": 46,
+      "word": "exhibition",
+      "meaningAtReview": "نمایشگاه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-308",
+      "book": "upper",
+      "lesson": 50,
+      "word": "art gallery",
+      "meaningAtReview": "نگارخانه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-309",
+      "book": "upper",
+      "lesson": 45,
+      "word": "hold the record",
+      "meaningAtReview": "رکورد را داشتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-310",
+      "book": "upper",
+      "lesson": 48,
+      "word": "thyme",
+      "meaningAtReview": "آویشن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-311",
+      "book": "upper",
+      "lesson": 46,
+      "word": "novel",
+      "meaningAtReview": "رمان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-312",
+      "book": "upper",
+      "lesson": 49,
+      "word": "tributary",
+      "meaningAtReview": "شاخه‌ی رود",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-313",
+      "book": "upper",
+      "lesson": 47,
+      "word": "peaceful",
+      "meaningAtReview": "آرام",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 4
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-314",
+      "book": "upper",
+      "lesson": 44,
+      "word": "vet",
+      "meaningAtReview": "دامپزشک",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-315",
+      "book": "upper",
+      "lesson": 49,
+      "word": "stream",
+      "meaningAtReview": "جریان آب، نهر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-316",
+      "book": "upper",
+      "lesson": 48,
+      "word": "cauliflower",
+      "meaningAtReview": "گل کلم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-317",
+      "book": "upper",
+      "lesson": 45,
+      "word": "mountaineer",
+      "meaningAtReview": "کوهنورد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-318",
+      "book": "upper",
+      "lesson": 41,
+      "word": "fell down",
+      "meaningAtReview": "افتاد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-319",
+      "book": "upper",
+      "lesson": 48,
+      "word": "beef",
+      "meaningAtReview": "گوشت گاو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-320",
+      "book": "upper",
+      "lesson": 60,
+      "word": "republic",
+      "meaningAtReview": "جمهوری: کشوری که توسط نمایندگان و معمولاً یک رئیس‌جمهور اداره می‌شود",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-321",
+      "book": "upper",
+      "lesson": 60,
+      "word": "marginal seat",
+      "meaningAtReview": "کرسی پرتنش/نزدیک",
+      "verdict": "OK",
+      "note": "«کرسی پرتنش/نزدیک» — قابل‌قبول؛ کاندید بازخوانی انسانی برای صیقل",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-322",
+      "book": "upper",
+      "lesson": 59,
+      "word": "detective stories",
+      "meaningAtReview": "داستان‌های جنایی/کارآگاهی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-323",
+      "book": "upper",
+      "lesson": 60,
+      "word": "independence",
+      "meaningAtReview": "استقلال: آزادی از کنترل خارجی؛ خودمختاری",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-324",
+      "book": "upper",
+      "lesson": 54,
+      "word": "journey",
+      "meaningAtReview": "سفر (مسافت طولانی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-325",
+      "book": "upper",
+      "lesson": 54,
+      "word": "back",
+      "meaningAtReview": "عقب راندن (خودرو)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-326",
+      "book": "upper",
+      "lesson": 53,
+      "word": "bed rest",
+      "meaningAtReview": "استراحت مطلق در بستر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-327",
+      "book": "upper",
+      "lesson": 57,
+      "word": "patent",
+      "meaningAtReview": "ثبت اختراع کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-328",
+      "book": "upper",
+      "lesson": 57,
+      "word": "analyse",
+      "meaningAtReview": "تحلیل کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-329",
+      "book": "upper",
+      "lesson": 57,
+      "word": "food processor",
+      "meaningAtReview": "غذاساز",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-330",
+      "book": "upper",
+      "lesson": 56,
+      "word": "4² four squared",
+      "meaningAtReview": "چهار به توان دو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-331",
+      "book": "upper",
+      "lesson": 54,
+      "word": "compartment",
+      "meaningAtReview": "کوپه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-332",
+      "book": "upper",
+      "lesson": 57,
+      "word": "rotate",
+      "meaningAtReview": "چرخیدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-333",
+      "book": "upper",
+      "lesson": 54,
+      "word": "freight train",
+      "meaningAtReview": "قطار باری",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-334",
+      "book": "upper",
+      "lesson": 60,
+      "word": "term",
+      "meaningAtReview": "دوره (تصدی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-335",
+      "book": "upper",
+      "lesson": 56,
+      "word": "triangle",
+      "meaningAtReview": "مثلث",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-336",
+      "book": "upper",
+      "lesson": 53,
+      "word": "medicine",
+      "meaningAtReview": "دارو (مایع)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-337",
+      "book": "upper",
+      "lesson": 54,
+      "word": "aisle",
+      "meaningAtReview": "راهرو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-338",
+      "book": "upper",
+      "lesson": 54,
+      "word": "cockpit",
+      "meaningAtReview": "کابین خلبان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-339",
+      "book": "upper",
+      "lesson": 51,
+      "word": "gills",
+      "meaningAtReview": "آبشش",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-340",
+      "book": "upper",
+      "lesson": 67,
+      "word": "musty",
+      "meaningAtReview": "بو گرفته (نمناکی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-341",
+      "book": "upper",
+      "lesson": 65,
+      "word": "yearn for",
+      "meaningAtReview": "تشنه و مشتاق بودن به",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-342",
+      "book": "upper",
+      "lesson": 62,
+      "word": "purchase",
+      "meaningAtReview": "خریدن (رسمی‌تر)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-343",
+      "book": "upper",
+      "lesson": 61,
+      "word": "charge (someone) with",
+      "meaningAtReview": "متهم کردن (کسی) به",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-344",
+      "book": "upper",
+      "lesson": 64,
+      "word": "cross",
+      "meaningAtReview": "عصبانی (غیررسمی، معمولاً درباره بچه‌ها)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-345",
+      "book": "upper",
+      "lesson": 65,
+      "word": "appal",
+      "meaningAtReview": "قفل کردن، وحشت‌زده کردن",
+      "verdict": "FIX",
+      "fix": {
+        "oldMeaning": "قفل کردن، وحشت‌زده کردن",
+        "currentMeaning": "وحشت‌زده و حیرت‌زده کردن",
+        "reason": "«قفل کردن» کاملاً غلط (appal ≠ lock)",
+        "sourceScript": "scripts/viu-r4-b-translation-fix.mjs"
+      },
+      "runtimeCheck": {
+        "oldMeaningStillInRuntime": 0,
+        "newMeaningInRuntime": 1,
+        "wordInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-346",
+      "book": "upper",
+      "lesson": 63,
+      "word": "feel",
+      "meaningAtReview": "احساس کردن، عقیده داشتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-347",
+      "book": "upper",
+      "lesson": 61,
+      "word": "case",
+      "meaningAtReview": "پرونده",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-348",
+      "book": "upper",
+      "lesson": 62,
+      "word": "salaries",
+      "meaningAtReview": "حقوق‌ها",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-349",
+      "book": "upper",
+      "lesson": 69,
+      "word": "heaps/bags/loads of",
+      "meaningAtReview": "انبوهی از",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-350",
+      "book": "upper",
+      "lesson": 66,
+      "word": "furiously",
+      "meaningAtReview": "با شدت و خشم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-351",
+      "book": "upper",
+      "lesson": 69,
+      "word": "a good/great deal",
+      "meaningAtReview": "مقدار زیاد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-352",
+      "book": "upper",
+      "lesson": 68,
+      "word": "breathe",
+      "meaningAtReview": "نفس کشیدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-353",
+      "book": "upper",
+      "lesson": 63,
+      "word": "religious",
+      "meaningAtReview": "مذهبی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-354",
+      "book": "upper",
+      "lesson": 63,
+      "word": "Muslim",
+      "meaningAtReview": "مسلمان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-355",
+      "book": "upper",
+      "lesson": 67,
+      "word": "putrid",
+      "meaningAtReview": "پوسیده",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-356",
+      "book": "upper",
+      "lesson": 66,
+      "word": "happily",
+      "meaningAtReview": "با خوشحالی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-357",
+      "book": "upper",
+      "lesson": 63,
+      "word": "socialist",
+      "meaningAtReview": "سوسیالیست",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-358",
+      "book": "upper",
+      "lesson": 74,
+      "word": "proprietor",
+      "meaningAtReview": "صاحب/مالک (رسمی، برای مغازه‌ها و کسب‌وکارها)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-359",
+      "book": "upper",
+      "lesson": 80,
+      "word": "dry as a bone",
+      "meaningAtReview": "خشک مثل استخوان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-360",
+      "book": "upper",
+      "lesson": 76,
+      "word": "jagged",
+      "meaningAtReview": "دندانه‌دار و تیز",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-361",
+      "book": "upper",
+      "lesson": 78,
+      "word": "take the weight off your feet",
+      "meaningAtReview": "بنشین (استراحت کن)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-362",
+      "book": "upper",
+      "lesson": 79,
+      "word": "As I was saying",
+      "meaningAtReview": "همان‌طور که می‌گفتم",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-363",
+      "book": "upper",
+      "lesson": 72,
+      "word": "wants",
+      "meaningAtReview": "خواستن (غیررسمی، برای نیاز)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-364",
+      "book": "upper",
+      "lesson": 74,
+      "word": "cater for",
+      "meaningAtReview": "رسیدگی به نیازهای (افراد)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-365",
+      "book": "upper",
+      "lesson": 76,
+      "word": "to the touch",
+      "meaningAtReview": "از نظر لمسی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-366",
+      "book": "upper",
+      "lesson": 73,
+      "word": "sound",
+      "meaningAtReview": "صدا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-367",
+      "book": "upper",
+      "lesson": 72,
+      "word": "need for",
+      "meaningAtReview": "نیاز به",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-368",
+      "book": "upper",
+      "lesson": 76,
+      "word": "shiny",
+      "meaningAtReview": "براق",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-369",
+      "book": "upper",
+      "lesson": 77,
+      "word": "succeed in",
+      "meaningAtReview": "موفق شدن در",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 3
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-370",
+      "book": "upper",
+      "lesson": 89,
+      "word": "make up",
+      "meaningAtReview": "ساختن/دروغ‌بافیدن؛ تشکیل دادن؛ آرایش کردن؛ آماده کردن؛ جبران کمبود کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-371",
+      "book": "upper",
+      "lesson": 90,
+      "word": "take pride in",
+      "meaningAtReview": "افتخار کردن به، از کاری رضایت گرفتن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-372",
+      "book": "upper",
+      "lesson": 81,
+      "word": "part and parcel",
+      "meaningAtReview": "بخش جدایی‌ناپذیر",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-373",
+      "book": "upper",
+      "lesson": 90,
+      "word": "bring it off",
+      "meaningAtReview": "موفق شدن در کاری",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-374",
+      "book": "upper",
+      "lesson": 82,
+      "word": "round the bend",
+      "meaningAtReview": "دیوانه؛ کاملاً مجنون",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-375",
+      "book": "upper",
+      "lesson": 85,
+      "word": "pick holes",
+      "meaningAtReview": "نقص‌گیری کردن، عیب‌جویی کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-376",
+      "book": "upper",
+      "lesson": 81,
+      "word": "odds and ends",
+      "meaningAtReview": "چیزهای خرد و من‌و‌مزهٔ بی‌اهمیت",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-377",
+      "book": "upper",
+      "lesson": 86,
+      "word": "get the wrong end of the stick",
+      "meaningAtReview": "برداشت اشتباه کردن؛ سوءتفاهم شدن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-378",
+      "book": "upper",
+      "lesson": 81,
+      "word": "hot and cold",
+      "meaningAtReview": "گرم و سرد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-379",
+      "book": "upper",
+      "lesson": 85,
+      "word": "first-rate",
+      "meaningAtReview": "درجه‌یک، عالی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-380",
+      "book": "upper",
+      "lesson": 92,
+      "word": "a put-up job",
+      "meaningAtReview": "کاری از پیش طراحی‌شده برای ایجاد تصور نادرست",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-381",
+      "book": "upper",
+      "lesson": 97,
+      "word": "bill",
+      "meaningAtReview": "برگه حساب/اسکناس",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-382",
+      "book": "upper",
+      "lesson": 96,
+      "word": "wicked",
+      "meaningAtReview": "باحال، عالی (عامیانه دهه ۸۰)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-383",
+      "book": "upper",
+      "lesson": 98,
+      "word": "dram",
+      "meaningAtReview": "نوشیدنی (معمولاً ویسکی)",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-384",
+      "book": "upper",
+      "lesson": 97,
+      "word": "trunk (of car)",
+      "meaningAtReview": "صندوق عقب ماشین",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-385",
+      "book": "upper",
+      "lesson": 99,
+      "word": "bar*",
+      "meaningAtReview": "ممنوع کردن، محروم کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-386",
+      "book": "upper",
+      "lesson": 91,
+      "word": "get off to a good/bad start",
+      "meaningAtReview": "شروع خوب/بد کردن",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-387",
+      "book": "upper",
+      "lesson": 93,
+      "word": "go without saying",
+      "meaningAtReview": "بدون گفتن بدیهی است",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-388",
+      "book": "upper",
+      "lesson": 92,
+      "word": "set/put the world to rights",
+      "meaningAtReview": "گفت‌وگو دربارهٔ مسائل مهم جهان",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-389",
+      "book": "upper",
+      "lesson": 94,
+      "word": "look out",
+      "meaningAtReview": "مواظب بودن، حواس‌مان باشد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-390",
+      "book": "upper",
+      "lesson": 96,
+      "word": "dickhead",
+      "meaningAtReview": "توهین شدید برای آدم احمق",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-391",
+      "book": "upper",
+      "lesson": 94,
+      "word": "run me off my feet",
+      "meaningAtReview": "خسته و کلافه کردن از سر کار زیاد",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-392",
+      "book": "upper",
+      "lesson": 97,
+      "word": "freeway/highway",
+      "meaningAtReview": "بزرگراه",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-393",
+      "book": "upper",
+      "lesson": 94,
+      "word": "see Jim off",
+      "meaningAtReview": "بدرقه کردن کسی",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-394",
+      "book": "upper",
+      "lesson": 98,
+      "word": "truckie",
+      "meaningAtReview": "راننده کامیون",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-395",
+      "book": "upper",
+      "lesson": 98,
+      "word": "kirk",
+      "meaningAtReview": "کلیسا",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-396",
+      "book": "upper",
+      "lesson": 97,
+      "word": "sidewalk",
+      "meaningAtReview": "پیاده‌رو",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 1
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    },
+    {
+      "id": "R4A-397",
+      "book": "upper",
+      "lesson": 98,
+      "word": "burn",
+      "meaningAtReview": "جویبار",
+      "verdict": "OK",
+      "runtimeCheck": {
+        "meaningOccurrencesInRuntime": 2
+      },
+      "runtimeVerified": true,
+      "ownerDecision": null,
+      "ownerNote": null
+    }
+  ]
+}
