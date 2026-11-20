@@ -124,7 +124,7 @@
 | FA-REVIEWED (اجرای مجازی) | NEW `scripts/viu-fa-reviewed-worksheet.mjs` → NEW **برگهٔ داوری ۳۹۷سطری** `docs/qa/viu-fa-reviewed-adjudication-worksheet-2026-11-20.json` (ownerDecision/ownerNote خالی) — راستی‌آزمایی مکانیکی review↔runtime: **۳۸۷/۳۸۷ OK عین runtime + ۱۰/۱۰ FIX (قدیمی صفر/جدید حاضر/word حاضر) — mismatches = ۰** + NEW بستهٔ داوری `docs/qa/viu-fa-reviewed-owner-adjudication-package-2026-11-20.md` (صف سه‌اولویتی + واژگان APPROVE/EDIT/REJECT + دستورالعمل اعمال گیت‌دار) — **کلاس FA-REVIEWED همچنان صفر — گیت انسانی دست‌نخورده** |
 | بازتأیید نهایی | `lint` = ۰ · صفر تغییر db/هوک/WAVE2/سه PDF/vocab/quiz/readings/verbs/dictionary — دلتا = ۲ اسکریپت NEW فقط‌خواندنی + ۲ JSON اثبات NEW + ۲ سند بسته NEW + ۴ سند همگام |
 | شاخه | main |
-| Remote و SHA تأییدشده | `backup` → github.com/Sohrab1999/vision-one-backup.git · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی این گام = `194afeb` (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰ پس از بازیابی) — SHA پسا-کامیت محتوایی + اثبات push: بلوک ثبت-اثبات §۱۰-۷ در worklog |
+| Remote و SHA تأییدشده | `backup` → github.com/Sohrab1999/vision-one-backup.git · SHA تأییدشدهٔ Remote پیشا-کامیت محتوایی این گام = `194afeb` (اثبات `git ls-remote backup refs/heads/main` — divergence ۰/۰ پس از بازیابی) → **پس از کامیت محتوایی این گام: `0d27a88`** (اثبات `git ls-remote backup refs/heads/main` = `0d27a885756906a28b089801a2d2ff6710459972` — divergence ۰/۰ — push خودکار هوک `194afeb..0d27a88` · لاگ /tmp/devhook.log «auto-push OK» ۲۰۲۶-۱۱-۲۰ ۰۸:۳۵:۴۶) |
 | ثبات‌های حیاتی | db / هوک / WAVE2 / سه PDF / vocab / quiz / readings / verbs / dictionary هر سه کتاب — صفر تغییر محتوایی |
 
 **لحظهٔ اسنپ‌شات «R5 — بازآرایی نمایشی بدون تغییر داده — پیشا-کامیت محتوایی این گام» — ۱۴۰۵/۸/۲۹ — ۲۰۲۶-۱۱-۱۹:**
