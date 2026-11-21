@@ -20,6 +20,11 @@
 //   A1-4 out-of-domain pages excluded: PDF 1 (cover noise), PDF 2 (blank), PDF 303 (eBook ad) — never read.
 //   A1-5 IPA remap: the 8 mandatory §۲-۳ mappings applied everywhere; every other PUA codepoint stays
 //        verbatim and is queued (U+E022 etc.) — zero guessing.
+//        G1 amendment (2026-11-21, independent gate verification): the unknown queue is extended to
+//        non-printable C0/C1 control codepoints (e.g. U+001F/U+0019 found once each in unit 1's
+//        'plagiarism' IPA footnote — the phonetic font maps two glyphs to control codes). They are NOT
+//        PUA so the original queue missed them; text stays verbatim (no remap added) — only visibility.
+//        Mechanical resolution candidate via Phonemic-symbols cross-reference remains A3 scope.
 //   A1-6 de-dup ONLY on PDF 50 (unit 21 left) and PDF 201 (unit 96 right) — the two adjudicated real
 //        double-render pages (A0): page 50 = two stacked copies of the same paragraph (~+2.8pt y offset,
 //        variable x shift) → adjacent-line-pair alignment drops the second copy; page 201 = the picture-label
@@ -154,7 +159,10 @@ function collectUnknown(text) {
   for (const ch of text) {
     const c = ch.codePointAt(0);
     const isPua = (c >= 0xe000 && c <= 0xf8ff) || c === 0x03c5;
-    if (isPua && KNOWN_IPA[c] === undefined) {
+    // G1 amendment 2026-11-21: non-printable C0/C1 controls are equally opaque in IPA context —
+    // queue them verbatim too (metadata only; the text itself is never altered).
+    const isControl = c < 0x20 || (c >= 0x7f && c <= 0x9f);
+    if ((isPua && KNOWN_IPA[c] === undefined) || isControl) {
       const key = `U+${c.toString(16).toUpperCase().padStart(4, "0")}`;
       map.set(key, (map.get(key) ?? 0) + 1);
     }
