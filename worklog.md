@@ -6505,3 +6505,11 @@ Stage Summary:
 - **همگام‌سازی اسناد:** SNAPSHOT سربرگ ۱۰۰مین (سربرگ + §۲ جدول لحظهٔ اسنپ‌شات جدید + §۳ گام تکمیل‌شده + §۴ + §۱۱-ج ورود ممیزی) + این worklog — هیچ تصمیم مهمی فقط در چت/حافظه/فایل موقت نیست.
 - **ثبات‌ها:** صفر تغییر db/هوک/WAVE2/کد/دادهٔ محصولی سه کتاب/چهار PDF/رجیستری — دلتای این گام فقط ۲ سند (SNAPSHOT + worklog) — ۷ اسکرین‌شات QA untracked (قرارداد qa-shots) — دو گیت سه‌کتابی R3-e/FA-REVIEWED دست‌نخورده — lint = ۰.
 - **وضعیت پس از این مأموریت: `RECOVERY EVENT 26 — HANDLED (شاخهٔ بیمه‌ای + ff-only ۰/۰) · AVU-3 — A0+G0+A1 ✅ · G1 AWAITING OWNER (قراردادهای استخراج + ۲ نمونهٔ کنار-هم‌نهمد unit-001/u21-p50) · A2..A6 پابرجای گیت‌دار · دو گیت سه‌کتابی R3-e/FA-REVIEWED دست‌نخورده — توقف گیت‌دار`** — ثبت اثبات §۱۰-۷ بعداً · شاخهٔ بیمه‌ای به Remote آرشیو می‌شود (`archive/recovery26-wt-snapshot-20261120`).
+
+## ۱۴۰۵/۸/۳۰ — ۲۰۲۶-۱۱-۲۰ — ثبت اثبات زنجیرهٔ «بازیابی ۲۶ + راستی‌آزمایی عقبگرد + تست عملی برنامه» (قاعدهٔ §۱۰-۷ — صفر تغییر دیگر)
+
+- **SHA کامیت محتوایی این مأموریت = `b5596b61b00441095700baa93e9156c9c29c1811`** (۲ مسیر — والد `b403f3d8e1eacd3f0d2331a20c1f260312aabaa5` — فقط docs/SNAPSHOT.md سربرگ ۱۰۰مین + worklog — صفر تغییر دیگر).
+- **اثبات Remote:** push خودکار هوک اثبات‌شده (لاگ `/tmp/devhook.log`: «b403f3d..b5596b6 main -> main · auto-push OK» ۱۱-۲۱ ۱۴:۳۵:۱۱) + `git ls-remote backup refs/heads/main` = `b5596b61b00441095700baa93e9156c9c29c1811` = HEAD محلی (divergence ۰/۰ — برابری بایت‌به‌بیت).
+- **اثبات آرشیو شاخهٔ بیمه‌ای:** `git push backup recovery/wt-snapshot-20261120:archive/recovery26-wt-snapshot-20261120` = `[new branch]` — state پیشا-بازیابی (۱٬۴۴۷ مسیر @ `e8a6712`) اکنون در Remote پایدار است — صفر وابستگی بازیابی به Sandbox یا /tmp.
+- کامیت ثبت-اثبات (این کامیت): فقط این بلوک worklog — صفر تغییر دیگر.
+- **وضعیت نهایی: `RECOVERY EVENT 26 — HANDLED (شاخهٔ بیمه‌ای e8a6712 + ff-only ⇒ b403f3d) · برنامه — صفر رگرسیون (lint=۰ · audit قطعی · سرور 200 · QA مرورگری ۷ اسکرین‌شات صفر خطا) · AVU-3 — A0+G0+A1 ✅ · G1 AWAITING OWNER (۲ نمونهٔ unit-001/u21-p50) · A2..A6 گیت‌دار · R3-e READY-TO-EXECUTE-ON-COMMAND · FA-REVIEWED AWAITING OWNER ADJUDICATION — توقف گیت‌دار`**
