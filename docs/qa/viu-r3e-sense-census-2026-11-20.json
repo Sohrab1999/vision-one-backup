@@ -1,0 +1,504 @@
+{
+  "meta": {
+    "phase": "R3-e — dry-run مکانیکی (اجرای مجازی)",
+    "date": "2026-11-20",
+    "purpose": "سرشماری فقط‌خواندنی دادهٔ «حس چاپی شماره‌دار» در کپچرهای tracked (census+verify سه کتاب) — بازتولید عددیِ یافتهٔ ساختاری نقشه راه کیفیت VIU",
+    "sources": [
+      "docs/qa/viu-r3-capture-elem/census",
+      "docs/qa/viu-r3-capture-elem/verify",
+      "docs/qa/viu-r3-capture-preint/census",
+      "docs/qa/viu-r3-capture-preint/verify",
+      "docs/qa/viu-r3-capture-upper/census",
+      "docs/qa/viu-r3-capture-upper/verify"
+    ],
+    "classification": {
+      "senseWithDef": "حس شماره‌دار چاپی + تعریف چاپی (قالب دیکشنری‌وار — تنها دادهٔ واقعاً قابل‌استناد R3-e)",
+      "senseNoDef": "sense شماره‌دار بدون تعریف (حساس: کاندید شماره‌گذاری فهرست واژه — نه حس — عین استثنای درس ۳۶ upper ثبت‌شده در نقشه راه)"
+    },
+    "gate": "R3-e همچنان BLOCKED — گیت مستقل STEP 6 مالک + سیاست O3=S2 پابرجا — این سرشماری هیچ گامی از R3-e را اجرا نمی‌کند"
+  },
+  "books": {
+    "elem": {
+      "census": {
+        "dir": "docs/qa/viu-r3-capture-elem/census",
+        "files": 60,
+        "entries": 1110,
+        "parseErrors": [],
+        "senseNonNull": 14,
+        "senseWithDef": 4,
+        "senseNoDef": 10,
+        "wordsWithDefSense": [
+          {
+            "word": "turn down",
+            "rows": 2
+          },
+          {
+            "word": "take off",
+            "rows": 2
+          }
+        ],
+        "unitsWithSense": [
+          {
+            "unit": "unit-003.json",
+            "senseNonNull": 10
+          },
+          {
+            "unit": "unit-011.json",
+            "senseNonNull": 4
+          }
+        ]
+      },
+      "verify": {
+        "dir": "docs/qa/viu-r3-capture-elem/verify",
+        "files": 60,
+        "entries": 0,
+        "parseErrors": [],
+        "senseNonNull": 0,
+        "senseWithDef": 0,
+        "senseNoDef": 0,
+        "wordsWithDefSense": [],
+        "unitsWithSense": []
+      },
+      "summary": {
+        "files": 120,
+        "entries": 1110,
+        "senseNonNull": 14,
+        "senseWithDef": 4,
+        "senseNoDef": 10,
+        "wordsWithDefSense": [
+          {
+            "word": "turn down",
+            "rows": 2
+          },
+          {
+            "word": "take off",
+            "rows": 2
+          }
+        ],
+        "unitsWithSense": [
+          {
+            "pass": "census",
+            "unit": "unit-003.json",
+            "senseNonNull": 10
+          },
+          {
+            "pass": "census",
+            "unit": "unit-011.json",
+            "senseNonNull": 4
+          }
+        ]
+      }
+    },
+    "preint": {
+      "census": {
+        "dir": "docs/qa/viu-r3-capture-preint/census",
+        "files": 100,
+        "entries": 2495,
+        "parseErrors": [],
+        "senseNonNull": 1,
+        "senseWithDef": 1,
+        "senseNoDef": 0,
+        "wordsWithDefSense": [
+          {
+            "word": "seat¹",
+            "rows": 1
+          }
+        ],
+        "unitsWithSense": [
+          {
+            "unit": "unit-003.json",
+            "senseNonNull": 1
+          }
+        ]
+      },
+      "verify": {
+        "dir": "docs/qa/viu-r3-capture-preint/verify",
+        "files": 100,
+        "entries": 0,
+        "parseErrors": [],
+        "senseNonNull": 0,
+        "senseWithDef": 0,
+        "senseNoDef": 0,
+        "wordsWithDefSense": [],
+        "unitsWithSense": []
+      },
+      "summary": {
+        "files": 200,
+        "entries": 2495,
+        "senseNonNull": 1,
+        "senseWithDef": 1,
+        "senseNoDef": 0,
+        "wordsWithDefSense": [
+          {
+            "word": "seat¹",
+            "rows": 1
+          }
+        ],
+        "unitsWithSense": [
+          {
+            "pass": "census",
+            "unit": "unit-003.json",
+            "senseNonNull": 1
+          }
+        ]
+      }
+    },
+    "upper": {
+      "census": {
+        "dir": "docs/qa/viu-r3-capture-upper/census",
+        "files": 99,
+        "entries": 3139,
+        "parseErrors": [],
+        "senseNonNull": 38,
+        "senseWithDef": 36,
+        "senseNoDef": 2,
+        "wordsWithDefSense": [
+          {
+            "word": "ma·lig·nant",
+            "rows": 2
+          },
+          {
+            "word": "hairy",
+            "rows": 2
+          },
+          {
+            "word": "ma·lig·nancy",
+            "rows": 1
+          },
+          {
+            "word": "chilly",
+            "rows": 1
+          },
+          {
+            "word": "frost",
+            "rows": 1
+          },
+          {
+            "word": "sleet",
+            "rows": 1
+          },
+          {
+            "word": "slush",
+            "rows": 1
+          },
+          {
+            "word": "settle",
+            "rows": 1
+          },
+          {
+            "word": "blizzard",
+            "rows": 1
+          },
+          {
+            "word": "snowdrift",
+            "rows": 1
+          },
+          {
+            "word": "freezing",
+            "rows": 1
+          },
+          {
+            "word": "thaw",
+            "rows": 1
+          },
+          {
+            "word": "melt",
+            "rows": 1
+          },
+          {
+            "word": "start the ball rolling",
+            "rows": 1
+          },
+          {
+            "word": "to put it in a nutshell",
+            "rows": 1
+          },
+          {
+            "word": "get to the point",
+            "rows": 1
+          },
+          {
+            "word": "speak my mind",
+            "rows": 1
+          },
+          {
+            "word": "wrap up the discussion",
+            "rows": 1
+          },
+          {
+            "word": "talks sense",
+            "rows": 1
+          },
+          {
+            "word": "talks rubbish",
+            "rows": 1
+          },
+          {
+            "word": "long-winded",
+            "rows": 1
+          },
+          {
+            "word": "Do not alight from the bus whilst it is in motion",
+            "rows": 1
+          },
+          {
+            "word": "KINDLY REFRAIN FROM SMOKING IN THE AUDITORIUM",
+            "rows": 1
+          },
+          {
+            "word": "PENALTY FOR DROPPING LITTER – UP TO £100 FINE",
+            "rows": 1
+          },
+          {
+            "word": "Lunches now being served",
+            "rows": 1
+          },
+          {
+            "word": "NO ADMISSION TO UNACCOMPANIED MINORS",
+            "rows": 1
+          },
+          {
+            "word": "FEEDING THE ANIMALS STRICTLY PROHIBITED",
+            "rows": 1
+          },
+          {
+            "word": "No through road for motor vehicles",
+            "rows": 1
+          },
+          {
+            "word": "NO BILL-STICKING",
+            "rows": 1
+          },
+          {
+            "word": "Please place your purchases here",
+            "rows": 1
+          },
+          {
+            "word": "This packet carries a government health warning",
+            "rows": 1
+          },
+          {
+            "word": "Reduce speed now",
+            "rows": 1
+          },
+          {
+            "word": "Cyclists dismount here",
+            "rows": 1
+          },
+          {
+            "word": "FISHING: PERMIT HOLDERS ONLY",
+            "rows": 1
+          }
+        ],
+        "unitsWithSense": [
+          {
+            "unit": "unit-005.json",
+            "senseNonNull": 5
+          },
+          {
+            "unit": "unit-036.json",
+            "senseNonNull": 10
+          },
+          {
+            "unit": "unit-086.json",
+            "senseNonNull": 8
+          },
+          {
+            "unit": "unit-100.json",
+            "senseNonNull": 15
+          }
+        ]
+      },
+      "verify": {
+        "dir": "docs/qa/viu-r3-capture-upper/verify",
+        "files": 99,
+        "entries": 0,
+        "parseErrors": [],
+        "senseNonNull": 0,
+        "senseWithDef": 0,
+        "senseNoDef": 0,
+        "wordsWithDefSense": [],
+        "unitsWithSense": []
+      },
+      "summary": {
+        "files": 198,
+        "entries": 3139,
+        "senseNonNull": 38,
+        "senseWithDef": 36,
+        "senseNoDef": 2,
+        "wordsWithDefSense": [
+          {
+            "word": "ma·lig·nant",
+            "rows": 2
+          },
+          {
+            "word": "hairy",
+            "rows": 2
+          },
+          {
+            "word": "ma·lig·nancy",
+            "rows": 1
+          },
+          {
+            "word": "chilly",
+            "rows": 1
+          },
+          {
+            "word": "frost",
+            "rows": 1
+          },
+          {
+            "word": "sleet",
+            "rows": 1
+          },
+          {
+            "word": "slush",
+            "rows": 1
+          },
+          {
+            "word": "settle",
+            "rows": 1
+          },
+          {
+            "word": "blizzard",
+            "rows": 1
+          },
+          {
+            "word": "snowdrift",
+            "rows": 1
+          },
+          {
+            "word": "freezing",
+            "rows": 1
+          },
+          {
+            "word": "thaw",
+            "rows": 1
+          },
+          {
+            "word": "melt",
+            "rows": 1
+          },
+          {
+            "word": "start the ball rolling",
+            "rows": 1
+          },
+          {
+            "word": "to put it in a nutshell",
+            "rows": 1
+          },
+          {
+            "word": "get to the point",
+            "rows": 1
+          },
+          {
+            "word": "speak my mind",
+            "rows": 1
+          },
+          {
+            "word": "wrap up the discussion",
+            "rows": 1
+          },
+          {
+            "word": "talks sense",
+            "rows": 1
+          },
+          {
+            "word": "talks rubbish",
+            "rows": 1
+          },
+          {
+            "word": "long-winded",
+            "rows": 1
+          },
+          {
+            "word": "Do not alight from the bus whilst it is in motion",
+            "rows": 1
+          },
+          {
+            "word": "KINDLY REFRAIN FROM SMOKING IN THE AUDITORIUM",
+            "rows": 1
+          },
+          {
+            "word": "PENALTY FOR DROPPING LITTER – UP TO £100 FINE",
+            "rows": 1
+          },
+          {
+            "word": "Lunches now being served",
+            "rows": 1
+          },
+          {
+            "word": "NO ADMISSION TO UNACCOMPANIED MINORS",
+            "rows": 1
+          },
+          {
+            "word": "FEEDING THE ANIMALS STRICTLY PROHIBITED",
+            "rows": 1
+          },
+          {
+            "word": "No through road for motor vehicles",
+            "rows": 1
+          },
+          {
+            "word": "NO BILL-STICKING",
+            "rows": 1
+          },
+          {
+            "word": "Please place your purchases here",
+            "rows": 1
+          },
+          {
+            "word": "This packet carries a government health warning",
+            "rows": 1
+          },
+          {
+            "word": "Reduce speed now",
+            "rows": 1
+          },
+          {
+            "word": "Cyclists dismount here",
+            "rows": 1
+          },
+          {
+            "word": "FISHING: PERMIT HOLDERS ONLY",
+            "rows": 1
+          }
+        ],
+        "unitsWithSense": [
+          {
+            "pass": "census",
+            "unit": "unit-005.json",
+            "senseNonNull": 5
+          },
+          {
+            "pass": "census",
+            "unit": "unit-036.json",
+            "senseNonNull": 10
+          },
+          {
+            "pass": "census",
+            "unit": "unit-086.json",
+            "senseNonNull": 8
+          },
+          {
+            "pass": "census",
+            "unit": "unit-100.json",
+            "senseNonNull": 15
+          }
+        ]
+      }
+    }
+  },
+  "total": {
+    "files": 518,
+    "entries": 6744,
+    "senseNonNull": 53,
+    "senseWithDef": 41,
+    "senseNoDef": 12
+  },
+  "conclusion": {
+    "finding": "کل کپچرهای tracked سه کتاب: ۶٬۷۴۴ رکورد — sense شماره‌دار چاپی با تعریف (دادهٔ واقعاً قابل‌استناد R3-e) = ۴۱ رکورد (0.61٪) · sense شماره‌دار بدون تعریف (کاندید شماره‌گذاری فهرست) = ۱۲",
+    "roadmapEcho": "عین یافتهٔ نقشه راه (۱۴۰۵/۸/۲۹): دادهٔ چاپی sense-aware تقریباً موجود نیست — R3-e فقط پس از فرمان مستقل مالک (STEP 6) و با دادهٔ واقعی چاپی اجرا می‌شود.",
+    "verdict": "R3-e — BLOCKED (بدون تغییر) — dry-run کامل شد؛ هیچ تغییر داده یا مکانیزم SENSE اعمال نشد."
+  }
+}

@@ -10,7 +10,7 @@ import { readUserName } from "@/lib/name-store";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useBook, useBookData } from "@/lib/book-context";
-import type { DictEntry, VocabEntry, VocabWord } from "@/data/types";
+import type { DictEntry, IrregularVerb, VocabEntry, VocabWord, WordFamilyMember, WordFamilyRow } from "@/data/types";
 import { getBookMeta } from "@/data/books/registry";
 import { SpeakButton } from "./speak-button";
 import { useStarredWords, toggleStar } from "@/lib/star-store";
@@ -19,7 +19,7 @@ import { useLearnedWords } from "@/lib/learned-store";
 import { setPracticeIntent } from "@/lib/practice-intent";
 import { requestView } from "@/lib/nav-store";
 import { CrossBookSection } from "./cross-book-section";
-import { WordContextSection } from "./word-context-section";
+import { WordContextSection, LessonExamplesSection } from "./word-context-section";
 
 /**
  * Word lookup — کلیک روی هر واژهٔ انگلیسی در متن‌ها، معنی و دیکشنری همان واژه را نشان می‌دهد.
@@ -31,6 +31,14 @@ interface LookupMaps {
   dict: Map<string, DictEntry>;
   vocab: Map<string, VocabWord>;
   phrases: Set<string>;
+  /** R3-d: جدول افعال بی‌قاعدهٔ کتاب فعال — کلیدها: base/past/participle نرمال‌شده
+   *  (اتصال جدول فعل به درس‌های مصرف‌کننده در سطح پاپ‌آپ — رفع اذعان سند الگوی آموزشی؛
+   *  صفر دادهٔ ساختگی — فقط فرم‌های چاپی خود جدول tracked) */
+  verbs: Map<string, IrregularVerb>;
+  /** R3-d (موج دوم): خانوادهٔ واژگانی چاپی درس‌های word formation کتاب فعال — کلیدها:
+   *  عضو verbatim + واریانت‌های صرفی (عین قواعد ساده‌سازی پاپ‌آپ — عین الگوی جدول افعال)؛
+   *  صفر دادهٔ ساختگی — فقط اعضای چاپی census tracked (word-families.ts تولید مکانیکی) */
+  family: Map<string, { row: WordFamilyRow; member: WordFamilyMember }>;
 }
 
 function normalize(raw: string): string {
@@ -41,7 +49,12 @@ function normalize(raw: string): string {
     .toLowerCase();
 }
 
-function buildMaps(dictionary: DictEntry[], vocabList: VocabEntry[]): LookupMaps {
+function buildMaps(
+  dictionary: DictEntry[],
+  vocabList: VocabEntry[],
+  verbs: IrregularVerb[],
+  families: WordFamilyRow[],
+): LookupMaps {
   const dict = new Map<string, DictEntry>();
   const vocab = new Map<string, VocabWord>();
   const phrases = new Set<string>();
@@ -55,18 +68,41 @@ function buildMaps(dictionary: DictEntry[], vocabList: VocabEntry[]): LookupMaps
     if (key && !vocab.has(key)) vocab.set(key, v);
     if (key.includes(" ")) phrases.add(key);
   }
-  return { dict, vocab, phrases };
+  const verbMap = new Map<string, IrregularVerb>();
+  for (const w of verbs) {
+    for (const f of [w.base, w.past, w.participle]) {
+      const key = normalize(f);
+      if (key && !verbMap.has(key)) verbMap.set(key, w);
+    }
+  }
+  // R3-d (موج دوم): کلیدهای خانوادهٔ واژگانی — اول برنده در برخورد کلید (ثبت در گزارش QA)
+  const familyMap = new Map<string, { row: WordFamilyRow; member: WordFamilyMember }>();
+  for (const row of families) {
+    for (const m of row.members) {
+      for (const k of m.keys) {
+        if (k && !familyMap.has(k)) familyMap.set(k, { row, member: m });
+      }
+    }
+  }
+  return { dict, vocab, phrases, verbs: verbMap, family: familyMap };
 }
 
 /** کش سبک بهازای آرایه‌های دادهٔ کتاب فعال — با تغییر کتاب (تغییر رفرنس داده) بازسازی می‌شود */
-let mapsCache: { dictionary: DictEntry[]; vocab: VocabEntry[]; maps: LookupMaps } | null = null;
+const EMPTY_FAMILIES: WordFamilyRow[] = [];
+let mapsCache: {
+  dictionary: DictEntry[];
+  vocab: VocabEntry[];
+  verbs: IrregularVerb[];
+  families: WordFamilyRow[];
+  maps: LookupMaps;
+} | null = null;
 
-function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[]): LookupMaps {
-  if (mapsCache && mapsCache.dictionary === dictionary && mapsCache.vocab === vocab) {
+function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[], verbs: IrregularVerb[], families: WordFamilyRow[]): LookupMaps {
+  if (mapsCache && mapsCache.dictionary === dictionary && mapsCache.vocab === vocab && mapsCache.verbs === verbs && mapsCache.families === families) {
     return mapsCache.maps;
   }
-  const maps = buildMaps(dictionary, vocab);
-  mapsCache = { dictionary, vocab, maps };
+  const maps = buildMaps(dictionary, vocab, verbs, families);
+  mapsCache = { dictionary, vocab, verbs, families, maps };
   return maps;
 }
 
@@ -173,6 +209,11 @@ interface LookupHit {
   word: string;
   dict?: DictEntry;
   vocab?: VocabWord;
+  /** R3-d: فعل بی‌قاعدهٔ متناظر از جدول افعال کتاب (کلید base/past/participle) */
+  verb?: IrregularVerb;
+  /** R3-d (موج دوم): سطر خانوادهٔ واژگانی چاپی + عضو کلیک‌شده */
+  family?: WordFamilyRow;
+  familyMember?: WordFamilyMember;
   /** کالوکیشن‌های مرتبط — وقتی واژهٔ تکی در بانک نبود (کتاب‌های عبارت‌محور مثل کالوکیشن‌ها) */
   related?: VocabWord[];
 }
@@ -190,7 +231,9 @@ function lookup(maps: LookupMaps, norm: string): LookupHit {
     if (!c) continue;
     const hit = maps.dict.get(c);
     const vocab = maps.vocab.get(c);
-    if (hit || vocab) return { word: c, dict: hit, vocab };
+    const verb = maps.verbs.get(c);
+    const fam = maps.family.get(c);
+    if (hit || vocab || verb || fam) return { word: c, dict: hit, vocab, verb, family: fam?.row, familyMember: fam?.member };
   }
   // فال‌بک عبارت‌محور: کالوکیشن‌های کتاب که همین واژه را دارند (سقف ۵) —
   // برای کتاب‌هایی مثل «کالوکیشن‌ها» که بانک واژگانشان عبارت‌های چندواژه‌ای است
@@ -278,8 +321,8 @@ export function ClickableEnText({ text, className }: { text: string; className?:
   const wrapRef = useRef<HTMLSpanElement>(null);
 
   const maps = useMemo(
-    () => getLookupMaps(data.dictionary, data.vocab.all),
-    [data.dictionary, data.vocab.all],
+    () => getLookupMaps(data.dictionary, data.vocab.all, data.verbs, data.wordFamilies ?? EMPTY_FAMILIES),
+    [data.dictionary, data.vocab.all, data.verbs, data.wordFamilies],
   );
   const segs = useMemo(() => segmentText(text, maps), [text, maps]);
 
@@ -375,12 +418,27 @@ export function ClickableEnText({ text, className }: { text: string; className?:
           <span className="truncate">جست‌وجوی «{selSearch.raw}»</span>
         </button>
       )}
-      {sel && <LookupPopover sel={sel} onClose={() => setSel(null)} />}
+      {sel && (
+        <LookupPopover
+          sel={sel}
+          onClose={() => setSel(null)}
+          onSelectWord={(h) => setSel((s) => (s ? { hit: h, x: s.x, y: s.y } : s))}
+        />
+      )}
     </>
   );
 }
 
-function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: number }; onClose: () => void }) {
+function LookupPopover({
+  sel,
+  onClose,
+  onSelectWord,
+}: {
+  sel: { hit: LookupHit; x: number; y: number };
+  onClose: () => void;
+  /** گزینهٔ ۲ آموزش — چیپ «واژه‌های هم‌درس» با این callback در همان پاپ‌آپ به واژهٔ دیگر می‌پرد */
+  onSelectWord?: (h: LookupHit) => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { bookId } = useBook();
   const starred = useStarredWords();
@@ -432,6 +490,20 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
   const srsItem = srs[hit.word];
   const srsBox = srsItem?.box ?? 0;
   const isLearned = learned.has(hit.word);
+
+  // O6 — قاعدهٔ عمومی «مدخل بدون تصویر» (تصمیم مصوب مالک ۲۰۲۶-۱۱-۰۸ — گزینهٔ B):
+  // در مدخل‌های سه کتاب جدید VIU، جایگاه تصویر حفظ می‌شود و پیام کوتاه «تصویری موجود نیست» نمایش داده می‌شود؛
+  // نبودِ تصویر هرگز به‌عنوان خطا/خرابی/تصویرِ ردشده معرفی نمی‌شود (تفکیک NO IMAGE از REJECT) و هیچ اعتباری القا نمی‌کند.
+  // دامنه: فقط مدخل‌های واقعی (واژگان/دیکشنری) کتاب‌های VIU — رفتار ۱۱ کتاب موجود بایت‌به‌بیت بدون تغییر می‌ماند.
+  const isViuEntry =
+    (bookId === "viu-elem" || bookId === "viu-preint" || bookId === "viu-upper") &&
+    Boolean(hit.vocab || hit.dict);
+  const viuNoImage = isViuEntry && memImg.word !== hit.word;
+
+  // گزینهٔ ۲ سند آموزش (مصوب مالک ۲۰۲۶-۱۱-۱۴): کارت واژهٔ غنی — فقط مدخل‌های واژگانی VIU
+  // که شمارهٔ درس دارند: «مثال‌های همین درس» (از word-in-context موج ۱) + چیپ «واژه‌های هم‌درس».
+  // دکمهٔ تلفظ از قبل بالای پاپ‌آپ هست (SpeakButton — بدون تغییر).
+  const viuLesson = isViuEntry && hit.vocab ? hit.vocab.lesson : null;
 
   // F-CV-2: پیام miss نام جزوهٔ فعال را می‌آورد — دانش‌آموز می‌فهمد اول «همین جزوه» گشته (شفافیت cascade)
   const activeBookTitle = bookId ? getBookMeta(bookId)?.title : undefined;
@@ -554,6 +626,14 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
         </p>
       )}
 
+      {/* O6 — جایگاه تصویرِ حفظ‌شده برای مدخل بدون تصویر: پیام کوتاه و شفاف — نه خطا، نه تصویر ردشده (فقط کتاب‌های VIU) */}
+      {viuNoImage && (
+        <div role="status" className="mt-2.5 flex flex-col items-center justify-center gap-1 rounded-xl border bg-muted/30 px-3 py-6">
+          <span aria-hidden className="text-lg leading-none text-muted-foreground/40">◌</span>
+          <p className="text-[11.5px] font-bold text-muted-foreground">تصویری موجود نیست</p>
+        </div>
+      )}
+
       {/* تصویر حافظه (Dual Coding) — فقط برای واژهِ فعلی رندر می‌شود */}
       {memImg.word === hit.word && memImg.loading && (
         <div className="mt-2.5 flex items-center justify-center gap-2 rounded-xl border border-primary/25 bg-primary/5 px-3 py-6">
@@ -618,6 +698,70 @@ function LookupPopover({ sel, onClose }: { sel: { hit: LookupHit; x: number; y: 
               ))}
             </span>
           </span>
+        </div>
+      )}
+
+      {/* گزینهٔ ۲ آموزش (مصوب مالک ۲۰۲۶-۱۱-۱۴) — زیر ردیف SRS، پیش از بلوک دیکشنری؛
+          جایگاه O6 تصویر (بالا، زیر معنی) بایت‌به‌بایت دست‌نخورده می‌ماند؛
+          فقط‌خواندنی — هر دو بلوک هیچ نوشتنی در استورها انجام نمی‌دهند */}
+      {viuLesson !== null && (
+        <>
+          <LessonExamplesSection key={`les-${hit.word}`} lesson={viuLesson} norm={hit.word} />
+          <SameLessonChips key={`chips-${hit.word}`} lesson={viuLesson} currentWord={hit.word} onSelect={onSelectWord} />
+        </>
+      )}
+
+      {/* R3-d — گره جدول افعال بی‌قاعدهٔ کتاب به درس‌های مصرف‌کننده (رفع اذعان سند الگوی آموزشی):
+          فرم‌ها عین جدول چاپ tracked خود کتاب (base/past/participle + معنی کلاس FA-NEW) —
+          کلیدها base/past/participle؛ کلیک روی فرم صرفی (مثل went) هم جدول را پیدا می‌کند.
+          فقط‌خواندنی — بدون نوشتن در استورها */}
+      {hit.verb && (
+        <div className="mt-2 rounded-xl border bg-muted/40 p-2.5">
+          <p className="mb-1 flex items-center gap-1 text-[11px] font-black text-primary">
+            <GraduationCap size={11} />
+            فعل بی‌قاعده — جدول افعال کتاب
+          </p>
+          <p dir="ltr" className="font-en text-left text-[12.5px] font-bold leading-5 text-foreground">
+            {hit.verb.base} – {hit.verb.past} – {hit.verb.participle}
+          </p>
+          {hit.verb.meaning && <p className="mt-0.5 text-[11px] font-bold text-muted-foreground">{hit.verb.meaning}</p>}
+        </div>
+      )}
+
+      {/* R3-d (موج دوم) — گره درس‌های word formation کتاب (واحدهای ۸/۹/۱۰) به متن درس‌ها:
+          عضو عین جدول چاپ tracked خود کتاب (word-families.ts — تولید مکانیکی از census دوگذر —
+          صفر مقدار ساختگی)؛ کلیک روی عضو (یا فرم صرفی‌اش با همان قواعد ساده‌سازی پاپ‌آپ)
+          سطر چاپی affix/ریشه/کلاس-واژه را در پاپ‌آپ نشان می‌دهد. عین الگوی بلوک فعل بی‌قاعده.
+          فقط‌خواندنی — بدون نوشتن در استورها */}
+      {hit.family && (
+        <div className="mt-2 rounded-xl border bg-muted/40 p-2.5">
+          <p className="mb-1 flex items-center gap-1 text-[11px] font-black text-primary">
+            <GraduationCap size={11} />
+            خانوادهٔ واژه — جدول word formation کتاب
+          </p>
+          <p dir="ltr" className="font-en text-left text-[12.5px] font-bold leading-5 text-foreground">
+            {hit.family.entry}
+            {hit.family.phonetic && <span className="ml-1.5 font-normal text-muted-foreground">{hit.family.phonetic}</span>}
+          </p>
+          {(hit.family.definition || hit.family.pos) && (
+            <p dir="ltr" className="font-en mt-0.5 text-left text-[11.5px] leading-5 text-muted-foreground">
+              {hit.family.definition || hit.family.pos}
+            </p>
+          )}
+          {(hit.familyMember?.example || hit.family.example) && (
+            <p
+              dir="ltr"
+              className="font-en mt-1 rounded-lg bg-muted/60 px-2.5 py-1.5 text-left text-[12px] leading-5 text-muted-foreground"
+            >
+              {hit.familyMember?.example || hit.family.example}
+            </p>
+          )}
+          <p className="mt-1 text-[10px] font-bold text-muted-foreground">
+            درس {hit.family.lesson.toLocaleString("fa-IR")} · {hit.family.group || "word formation"}
+            {hit.familyMember && normalize(hit.familyMember.word) !== normalize(hit.family.entry) && (
+              <span className="text-primary"> · عضو: {hit.familyMember.word}</span>
+            )}
+          </p>
         </div>
       )}
 
@@ -853,6 +997,48 @@ function WordNoteSection({ bookId, word }: { bookId: string; word: string }) {
             حذف
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ── چیپ «واژه‌های هم‌درس» (گزینهٔ ۲ سند آموزش — مصوب مالک ۲۰۲۶-۱۱-۱۴) ──
+// فقط برای مدخل‌های واژگانی VIU؛ کلیک روی چیپ = پرش به همان واژه در همان پاپ‌آپ
+// (بدون بستن پاپ‌آپ — onSelectWord جای sel.parent را عوض می‌کند). فقط‌خواندنی.
+
+function SameLessonChips({
+  lesson,
+  currentWord,
+  onSelect,
+}: {
+  lesson: number;
+  currentWord: string;
+  onSelect?: (h: LookupHit) => void;
+}) {
+  const data = useBookData();
+  const chips = data.vocab.ofLesson(lesson).filter((v) => v.word !== currentWord).slice(0, 8);
+  if (chips.length === 0) return null;
+  const label = data.vocab.lessons.find((l) => l.lesson === lesson)?.label ?? `درس ${lesson}`;
+  return (
+    <div className="mt-2.5 rounded-xl border bg-muted/40 p-2.5">
+      <p className="mb-1.5 flex items-center gap-1 text-[11px] font-black text-primary">
+        <BookOpen size={11} />
+        واژه‌های هم‌درس ({label})
+      </p>
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label={`پرش سریع به واژه‌های ${label}`}>
+        {chips.map((v) => (
+          <button
+            key={v.word}
+            type="button"
+            onClick={() => onSelect?.({ word: v.word, vocab: v })}
+            title={`${v.word} — ${v.meaning}`}
+            className="flex min-h-8 items-center rounded-full border border-border bg-card px-2.5 transition-all hover:border-primary/50 hover:bg-primary/10 active:scale-95"
+          >
+            <span dir="ltr" className="font-en max-w-[120px] truncate text-[11px] font-bold text-foreground/85">
+              {v.word}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -1,0 +1,27 @@
+{
+  "unit": 1,
+  "ok": true,
+  "issues": [],
+  "checks": {
+    "partitionEquivalence": "byte-exact against the G1-approved raw lines (order- and tag-sensitive) — all groups matched",
+    "titleExtracted": true,
+    "sectionsFound": [
+      "A",
+      "B",
+      "C"
+    ],
+    "miniDictEntries": 8,
+    "mixedLineSplitsResolved": 2,
+    "dropCaps": [],
+    "exercises": 4,
+    "exerciseAnchors": 4,
+    "banks": 0,
+    "blanksNormalized": 8,
+    "imageDependentCandidates": 3,
+    "queuedChars": [
+      "U+001F×1@leftPage",
+      "U+0019×1@leftPage"
+    ]
+  },
+  "note": "Structural parse mirrors the approved A1 partition (proved byte-exact) + word-level structural rules; keyed=null until A3; fa stays empty (A4)."
+}
