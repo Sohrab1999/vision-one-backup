@@ -78,7 +78,44 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            243
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "anaesthetist",
+              "textX0": 127.6
+            },
+            {
+              "n": 2,
+              "text": "cardiologist",
+              "textX0": 127.6
+            },
+            {
+              "n": 3,
+              "text": "paediatrician",
+              "textX0": 127.6
+            },
+            {
+              "n": 4,
+              "text": "ophthalmologist",
+              "textX0": 127.6
+            },
+            {
+              "n": 5,
+              "text": "obstetrician",
+              "textX0": 127.6
+            },
+            {
+              "n": 6,
+              "text": "dermatologist",
+              "textX0": 127.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -139,7 +176,54 @@
         "bank": [
           "acute chronic condition locum organ prescription refer surgery"
         ],
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            243
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "surgery",
+              "textX0": 127.6
+            },
+            {
+              "n": 5,
+              "text": "condition",
+              "textX0": 221.2
+            },
+            {
+              "n": 2,
+              "text": "chronic",
+              "textX0": 127.6
+            },
+            {
+              "n": 6,
+              "text": "locum",
+              "textX0": 221.2
+            },
+            {
+              "n": 3,
+              "text": "prescription",
+              "textX0": 127.6
+            },
+            {
+              "n": 7,
+              "text": "organ",
+              "textX0": 221.2
+            },
+            {
+              "n": 4,
+              "text": "refer",
+              "textX0": 127.6
+            },
+            {
+              "n": 8,
+              "text": "acute",
+              "textX0": 221.2
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -198,7 +282,54 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            243
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "What is the name of your family doctor?",
+              "textX0": 127.6
+            },
+            {
+              "n": 2,
+              "text": "Is there a prescription charge in your country?",
+              "textX0": 127.6
+            },
+            {
+              "n": 3,
+              "text": "In your country is there a similar structure of primary care and secondary care?",
+              "textX0": 127.6
+            },
+            {
+              "n": 4,
+              "text": "Do doctors often do home visits in your country?",
+              "textX0": 127.6
+            },
+            {
+              "n": 5,
+              "text": "Are there insurance schemes for private healthcare in your country?",
+              "textX0": 127.6
+            },
+            {
+              "n": 6,
+              "text": "When it comes to healthcare, do many people in your country go private?",
+              "textX0": 127.6
+            },
+            {
+              "n": 7,
+              "text": "How popular is complementary medicine in your country?",
+              "textX0": 127.6
+            },
+            {
+              "n": 8,
+              "text": "Have you ever been to a specialist who practises some kind of alternative medicine?",
+              "textX0": 127.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "open"
       },
       {
@@ -241,5 +372,12 @@
     "banks": 1,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
+  },
+  "a3": {
+    "status": "keyed+print-keyless",
+    "keyed": 3,
+    "printKeyless": 1,
+    "generator": "scripts/viu-adv-a3.mjs (A3-2)",
+    "generatedAt": "2026-11-21T19:43:38.272Z"
   }
 }

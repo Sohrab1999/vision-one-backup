@@ -135,7 +135,62 @@
           "A"
         ],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            234
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "You’ll have to show a vaccination certificate for infectious diseases when you enter the country.",
+              "textX0": 110.6
+            },
+            {
+              "n": 2,
+              "text": "People entering from war-torn countries often claim asylum.",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "You have to clear customs if you arrive on an international flight at San Francisco airport, even if",
+              "textX0": 110.6,
+              "more": [
+                "you are flying on within the USA."
+              ]
+            },
+            {
+              "n": 4,
+              "text": "You may have to fill in a customs declaration (form) before going through customs control.",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "At the airport now, they use facial recognition technology.",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "Passenger to airline cabin attendant: Could you give me a landing card before we arrive, please?",
+              "textX0": 110.6
+            },
+            {
+              "n": 7,
+              "text": "At the airport, the security guards had sniffer/detector dogs.",
+              "textX0": 110.6
+            },
+            {
+              "n": 8,
+              "text": "You’ll need a visa; the entry regulations are very strict.",
+              "textX0": 110.6
+            },
+            {
+              "n": 9,
+              "text": "You have to fill in the port of entry in this box here.",
+              "textX0": 110.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "open"
       },
       {
@@ -176,7 +231,74 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            234
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "g",
+              "letter": "g",
+              "textX0": 109.2
+            },
+            {
+              "n": 2,
+              "text": "j",
+              "letter": "j",
+              "textX0": 139.3
+            },
+            {
+              "n": 3,
+              "text": "h",
+              "letter": "h",
+              "textX0": 166.7
+            },
+            {
+              "n": 4,
+              "text": "e",
+              "letter": "e",
+              "textX0": 197.1
+            },
+            {
+              "n": 5,
+              "text": "i",
+              "letter": "i",
+              "textX0": 227
+            },
+            {
+              "n": 6,
+              "text": "d",
+              "letter": "d",
+              "textX0": 254.5
+            },
+            {
+              "n": 7,
+              "text": "b",
+              "letter": "b",
+              "textX0": 285
+            },
+            {
+              "n": 8,
+              "text": "a",
+              "letter": "a",
+              "textX0": 315.5
+            },
+            {
+              "n": 9,
+              "text": "f",
+              "letter": "f",
+              "textX0": 345.5
+            },
+            {
+              "n": 10,
+              "text": "c",
+              "letter": "c",
+              "textX0": 378.4
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -223,7 +345,44 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            234
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "a plain-clothes (police) officer",
+              "textX0": 110.6
+            },
+            {
+              "n": 2,
+              "text": "a traffic warden",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "the anti-corruption squad",
+              "textX0": 110.6
+            },
+            {
+              "n": 4,
+              "text": "a parking ticket",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "an undercover police officer",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "the security forces",
+              "textX0": 110.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "open"
       },
       {
@@ -284,7 +443,54 @@
         "bank": [
           "detect suspicion exceed search enforce refugee persecution allowance"
         ],
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            234
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "detected",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "enforce",
+              "textX0": 204.2
+            },
+            {
+              "n": 2,
+              "text": "refugees",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "allowance",
+              "textX0": 204.2
+            },
+            {
+              "n": 3,
+              "text": "persecution",
+              "textX0": 110.6
+            },
+            {
+              "n": 7,
+              "text": "search",
+              "textX0": 204.2
+            },
+            {
+              "n": 4,
+              "text": "exceeding",
+              "textX0": 110.6
+            },
+            {
+              "n": 8,
+              "text": "suspicions / a suspicion",
+              "textX0": 204.2
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -333,5 +539,12 @@
     "banks": 1,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 1
+  },
+  "a3": {
+    "status": "keyed+print-keyless",
+    "keyed": 4,
+    "printKeyless": 1,
+    "generator": "scripts/viu-adv-a3.mjs (A3-2)",
+    "generatedAt": "2026-11-21T19:43:38.272Z"
   }
 }

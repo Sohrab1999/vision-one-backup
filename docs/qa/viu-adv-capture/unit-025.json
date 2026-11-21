@@ -134,7 +134,69 @@
           "opposite"
         ],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            228
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "tow-away",
+              "textX0": 110.6
+            },
+            {
+              "n": 7,
+              "text": "(exhaust) emissions",
+              "textX0": 204.2
+            },
+            {
+              "n": 2,
+              "text": "tailback",
+              "textX0": 110.6
+            },
+            {
+              "n": 8,
+              "text": "breathalyser, drink-driving, penalty points",
+              "textX0": 204.2
+            },
+            {
+              "n": 3,
+              "text": "pile-ups",
+              "textX0": 110.6
+            },
+            {
+              "n": 9,
+              "text": "sound/beep, horns",
+              "textX0": 204.2
+            },
+            {
+              "n": 4,
+              "text": "give-way",
+              "textX0": 110.6
+            },
+            {
+              "n": 10,
+              "text": "disruption",
+              "textX0": 204.2
+            },
+            {
+              "n": 5,
+              "text": "right of way",
+              "textX0": 110.6
+            },
+            {
+              "n": 11,
+              "text": "congestion",
+              "textX0": 204.2
+            },
+            {
+              "n": 6,
+              "text": "hit-and-run",
+              "textX0": 110.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -195,7 +257,56 @@
           "opposite"
         ],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            228
+          ],
+          "rows": [
+            {
+              "n": 2,
+              "text": "B: Oh, so you skidded.",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "B: Oh, I guess it was a case of road rage.",
+              "textX0": 110.6
+            },
+            {
+              "n": 4,
+              "text": "B: Oh, so your tyres were bald, were they?",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "B: Oh, so it was a head-on collision.",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "B: Oh, really? I didn’t know they could give on-the-spot fines.",
+              "textX0": 110.6
+            },
+            {
+              "n": 7,
+              "text": "B: Oh, so it’s not roadworthy.",
+              "textX0": 110.6
+            },
+            {
+              "n": 8,
+              "text": "B: Oh, really? Do you have to pay a toll? I didn’t know that.",
+              "textX0": 110.6
+            }
+          ],
+          "extras": [
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "Suggested answers:",
+              "bigGap": false
+            }
+          ]
+        },
         "kind": "fillIn"
       },
       {
@@ -236,7 +347,52 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            228
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "All the traffic in all directions was unable to move.",
+              "textX0": 110.6
+            },
+            {
+              "n": 2,
+              "text": "The police car made me stop at the side of the road.",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "I had a small accident where I hit something or another car, but without serious damage. (Bump is",
+              "textX0": 110.6,
+              "more": [
+                "an informal alternative to collision.)"
+              ]
+            },
+            {
+              "n": 4,
+              "text": "My car broke down. (Conk out is very informal.)",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "He’s an irritating person who sits in the passenger seat and thinks he can tell the driver how",
+              "textX0": 110.6,
+              "more": [
+                "to drive."
+              ]
+            }
+          ],
+          "extras": [
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "Suggested answers:",
+              "bigGap": false
+            }
+          ]
+        },
         "kind": "open"
       }
     ],
@@ -280,5 +436,12 @@
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 2
+  },
+  "a3": {
+    "status": "keyed",
+    "keyed": 3,
+    "printKeyless": 0,
+    "generator": "scripts/viu-adv-a3.mjs (A3-2)",
+    "generatedAt": "2026-11-21T19:43:38.272Z"
   }
 }

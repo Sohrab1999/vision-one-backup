@@ -104,7 +104,44 @@
         "bank": [
           "attachment cookie spam chat room ISP webinar"
         ],
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            241
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "chat room",
+              "textX0": 127.6
+            },
+            {
+              "n": 4,
+              "text": "cookie",
+              "textX0": 221.2
+            },
+            {
+              "n": 2,
+              "text": "webinar",
+              "textX0": 127.6
+            },
+            {
+              "n": 5,
+              "text": "attachment",
+              "textX0": 221.2
+            },
+            {
+              "n": 3,
+              "text": "ISP",
+              "textX0": 127.6
+            },
+            {
+              "n": 6,
+              "text": "spam",
+              "textX0": 221.2
+            }
+          ],
+          "extras": []
+        },
         "kind": "bank"
       },
       {
@@ -116,7 +153,56 @@
           "opposite"
         ],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            242
+          ],
+          "rows": [],
+          "extras": [
+            {
+              "kind": "tableRow",
+              "x0": 105.2,
+              "text": "word opposite exists doesn’t exist",
+              "bigGap": true
+            },
+            {
+              "kind": "tableRow",
+              "x0": 105.2,
+              "text": "delete undelete ✓",
+              "bigGap": true
+            },
+            {
+              "kind": "tableRow",
+              "x0": 105.2,
+              "text": "download upload ✓",
+              "bigGap": true
+            },
+            {
+              "kind": "tableRow",
+              "x0": 105.2,
+              "text": "update downdate ✓",
+              "bigGap": true
+            },
+            {
+              "kind": "tableRow",
+              "x0": 105.2,
+              "text": "inbox outbox ✓",
+              "bigGap": true
+            },
+            {
+              "kind": "tableRow",
+              "x0": 105.2,
+              "text": "online offline ✓",
+              "bigGap": true
+            },
+            {
+              "kind": "tableRow",
+              "x0": 105.2,
+              "text": "install uninstall ✓",
+              "bigGap": true
+            }
+          ]
+        },
         "kind": "instruction"
       },
       {
@@ -163,7 +249,44 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            242
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "upload, online",
+              "textX0": 110.6
+            },
+            {
+              "n": 2,
+              "text": "inbox",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "install",
+              "textX0": 110.6
+            },
+            {
+              "n": 4,
+              "text": "undelete",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "offline",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "update",
+              "textX0": 110.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -222,7 +345,83 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            242
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "E-signatures are a way of identifying yourself on the internet with a unique code or name, which",
+              "textX0": 110.6,
+              "more": [
+                "you can use, for example, to agree to pay for goods."
+              ]
+            },
+            {
+              "n": 2,
+              "text": "E-learning means taking courses over the internet instead of going to a school or college to do",
+              "textX0": 110.6,
+              "more": [
+                "your studies."
+              ]
+            },
+            {
+              "n": 3,
+              "text": "E-enabled here means that all the study materials can be accessed and worked with through the",
+              "textX0": 110.6,
+              "more": [
+                "internet."
+              ]
+            },
+            {
+              "n": 4,
+              "text": "E-books are books which you buy from the internet, and which you then read on your computer,",
+              "textX0": 110.6,
+              "more": [
+                "tablet, e-reader or smartphone."
+              ]
+            },
+            {
+              "n": 5,
+              "text": "The dotcom economy refers to internet companies, whose web addresses typically end in ‘.com’,",
+              "textX0": 110.6,
+              "more": [
+                "e.g. a company that sells bicycles over the internet might call itself newbikes.com, which would be",
+                "read aloud as ‘new bikes dot com’."
+              ]
+            },
+            {
+              "n": 6,
+              "text": "A tablet is a very thin (and often quite small) portable computer used mostly for email and online",
+              "textX0": 110.6,
+              "more": [
+                "activities."
+              ]
+            },
+            {
+              "n": 7,
+              "text": "Parental controls are controls on the computer which allow parents to decide which websites",
+              "textX0": 110.6,
+              "more": [
+                "their children can visit and to restrict certain activities."
+              ]
+            },
+            {
+              "n": 8,
+              "text": "I can’t stop doing this activity; I want to do it all the time and can’t stop myself.",
+              "textX0": 110.6
+            }
+          ],
+          "extras": [
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "Suggested answers:",
+              "bigGap": false
+            }
+          ]
+        },
         "kind": "open"
       }
     ],
@@ -266,5 +465,12 @@
     "banks": 1,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 2
+  },
+  "a3": {
+    "status": "keyed",
+    "keyed": 4,
+    "printKeyless": 0,
+    "generator": "scripts/viu-adv-a3.mjs (A3-2)",
+    "generatedAt": "2026-11-21T19:43:38.272Z"
   }
 }

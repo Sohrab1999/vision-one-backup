@@ -186,7 +186,59 @@
           "opposite"
         ],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            240
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "debit card",
+              "textX0": 110.6
+            },
+            {
+              "n": 2,
+              "text": "credit card fraud (you can also say identity theft)",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "put it / stick it",
+              "textX0": 110.6
+            },
+            {
+              "n": 4,
+              "text": "direct debit",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "electronic transfer",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "broke / skint",
+              "textX0": 110.6
+            },
+            {
+              "n": 7,
+              "text": "strapped",
+              "textX0": 110.6
+            },
+            {
+              "n": 8,
+              "text": "tight",
+              "textX0": 110.6
+            },
+            {
+              "n": 9,
+              "text": "contactless",
+              "textX0": 110.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -235,7 +287,48 @@
           "opposite"
         ],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            240,
+            241
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "She got a huge golden handshake when she left the company.",
+              "textX0": 110.6
+            },
+            {
+              "n": 2,
+              "text": "My old aunt Jessie is rolling in it. Every time I go to see her, she gives me £100.",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "My father got a lump sum when he retired, so he bought a weekend cottage.",
+              "textX0": 110.6
+            },
+            {
+              "n": 4,
+              "text": "She put her life savings into an online company and lost everything when it collapsed.",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "The bank tried to persuade me to put my money into a share portfolio, with stocks and shares in",
+              "textX0": 127.6,
+              "more": [
+                "different companies."
+              ]
+            },
+            {
+              "n": 6,
+              "text": "If you need a very large sum of money, it’s not a good idea to borrow from friends or neighbours.",
+              "textX0": 127.6
+            }
+          ],
+          "extras": []
+        },
         "kind": "open"
       },
       {
@@ -282,7 +375,50 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            241
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "d",
+              "letter": "d",
+              "textX0": 126.3
+            },
+            {
+              "n": 2,
+              "text": "f",
+              "letter": "f",
+              "textX0": 156.8
+            },
+            {
+              "n": 3,
+              "text": "e",
+              "letter": "e",
+              "textX0": 184.7
+            },
+            {
+              "n": 4,
+              "text": "b",
+              "letter": "b",
+              "textX0": 214.6
+            },
+            {
+              "n": 5,
+              "text": "a",
+              "letter": "a",
+              "textX0": 245.1
+            },
+            {
+              "n": 6,
+              "text": "c",
+              "letter": "c",
+              "textX0": 275.1
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -325,5 +461,12 @@
     "banks": 0,
     "mixedLineSplits": 2,
     "imageDependentCandidates": 0
+  },
+  "a3": {
+    "status": "keyed+print-keyless",
+    "keyed": 3,
+    "printKeyless": 1,
+    "generator": "scripts/viu-adv-a3.mjs (A3-2)",
+    "generatedAt": "2026-11-21T19:43:38.272Z"
   }
 }

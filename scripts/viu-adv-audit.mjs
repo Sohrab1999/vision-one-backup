@@ -1,17 +1,27 @@
-// VIU Book 4 (AVU-3) — Phase A2-6 — automated audit of the structural capture layer.
-// Roadmap A2-6: "NEW ممیزی audit:viu-adv (صفر فیلد خالی · ایندکس پاسخ معتبر · متغارهای ساختاری)"
-// — at the A2 stage exercises carry keyed=null (the printed Answer key is linked in Phase A3), so
-// the audit enforces the structural invariants that ARE mechanically checkable now:
+// VIU Book 4 (AVU-3) — Phase A2-6 + A3 — automated audit of the structural capture layer.
+// Roadmap A2-6 + A3-4: structural invariants enforced mechanically at every stage —
+//   A2 stage (originally): exercises carried keyed=null (printed Answer key linked in Phase A3).
+//   A3 stage (now): the printed key (answer-key.json) + index (index.json) are linked into the
+//   capture, and the audit enforces the FULL post-A3 contract:
 //   Z1 file set complete (unit-001..101 capture + verify + fa-cache stub) and parseable
 //   Z2 titles/sections/blocks/notes/items: zero empty text fields, letters ⊆ A..E, kinds valid
 //   Z3 exercises: numbering N.x, item numbers ≥1, blankCount == "____" occurrences, refs ⊆ A..E,
-//      keyed === null (honest until A3), instruction-or-items present
+//      keyed linkage: keyed=null ⇔ the printed key has NO block for the exercise (honest
+//      print-keyless — 42, all kind=instruction); keyed≠null ⇔ byte-equal to answer-key.json's block
 //   Z4 miniDict: entry text non-empty, headword/ipa only when mechanically derived
 //   Z5 queued unknown chars (PUA/C0 — A1-KA-4): every queued codepoint present verbatim in the
 //      capture text with the exact count, and ZERO unqueued PUA/C0 chars anywhere in the capture
 //   Z6 census consistency: per-unit census == recomputed counts; global totals == Σ rows
-//   Z7 knownArtifacts carried: u1 U+001F/U+0019 · u21 drop-cap T · u72 U+E022
+//   Z7 knownArtifacts carried: u1 U+001F/U+0019 · u21 drop-cap T · u72 U+E022 · u84 84.4 grid extras (A3-KA-1)
 //   Z8 partition-equivalence claim recorded in every verify file (byte-exact vs raw layer)
+//   Z9 answer-key.json integrity (A3-1): 101 unit blocks in order · 413 exercises · shapes
+//      (rows n≥1 + non-empty text + single-letter letter field; extras kind ∈ note|tableRow|grid)
+//      · totals recomputed · every key exercise exists in a capture (orphans=0)
+//   Z10 index.json integrity (A3-3): entries shape (non-empty headword · units ⊆ 1..101 · ipa null
+//      or /…/) · totals recomputed (incl. columns + multiUnit) · unknownQueue == recomputed PUA/C0
+//      scan · raw a3 layers present
+//   Z11 intersections (A3-4): file present · coverage pass with orphans=0 · balance totals sum
+//      correctly · pattern labels sum · a3KnownArtifacts (KA-1, KA-2) registered
 // Exit code 1 on any violation — a red audit can never be shipped as green.
 //
 // READ-ONLY (writes nothing).
@@ -36,6 +46,10 @@ for (let n = 1; n <= 101; n++) {
 const fa = JSON.parse(readFileSync(`${CAP}/fa-cache.json`, "utf8"));
 if (fa.status !== "A4-pending" || fa.faNew !== 0 || fa.faReviewed !== 0) fail("Z1 fa-cache stub must be {status:A4-pending, faNew:0, faReviewed:0}");
 
+const keyData = JSON.parse(readFileSync(`${CAP}/answer-key.json`, "utf8"));
+const idxData = JSON.parse(readFileSync(`${CAP}/index.json`, "utf8"));
+const captureExerciseNos = new Map(); // unit → Set(exercise no) — for Z9 orphan check
+
 const totals = { vocabCandidates: 0, marginNotes: 0, proseBlocks: 0, languageHelp: 0, dropCaps: 0, exercises: 0, exerciseItems: 0, blanks: 0, banks: 0, mixedLineSplits: 0, imageDependentCandidates: 0, queuedChars: 0 };
 const census = JSON.parse(readFileSync(CENSUS, "utf8"));
 
@@ -58,10 +72,21 @@ for (let n = 1; n <= 101; n++) {
     for (const m of s.marginNotes) if (!m.text?.trim()) fail(`Z2 u${n} ${s.letter} empty margin note y=${m.y}`);
   }
 
-  // Z3 — exercises
+  // Z3 — exercises (with the A3 keyed-linkage contract)
+  captureExerciseNos.set(n, new Set());
+  if (!c.a3?.status) fail(`Z3 u${n} missing a3.status provenance`);
+  if (!c.a3?.generator?.includes("viu-adv-a3")) fail(`Z3 u${n} a3.generator not the A3 script`);
   for (const ex of c.rightPage.exercises) {
+    captureExerciseNos.get(n).add(ex.no);
     if (!new RegExp(`^${n}\\.\\d+$`).test(ex.no)) fail(`Z3 u${n} bad exercise no ${ex.no}`);
-    if (ex.keyed !== null) fail(`Z3 u${n}/${ex.no} keyed must be null until A3, got ${ex.keyed}`);
+    const kb = keyData.units[String(n)]?.[ex.no];
+    if (ex.keyed === null) {
+      if (kb) fail(`Z3 u${n}/${ex.no} keyed=null but the printed key HAS a block for it (linkage lost)`);
+    } else {
+      if (!kb) fail(`Z3 u${n}/${ex.no} keyed set but the printed key has NO block for it`);
+      else if (JSON.stringify(ex.keyed) !== JSON.stringify({ pdfPages: kb.pdfPages, rows: kb.rows, extras: kb.extras }))
+        fail(`Z3 u${n}/${ex.no} keyed != answer-key block (byte mismatch)`);
+    }
     if (!["fillIn", "bank", "open", "instruction"].includes(ex.kind)) fail(`Z3 u${n}/${ex.no} invalid kind ${ex.kind}`);
     if (!ex.instruction?.trim() && ex.items.length === 0 && !ex.bank) fail(`Z3 u${n}/${ex.no} empty exercise (no instruction, items, bank)`);
     for (const r of ex.refs ?? []) if (!/^[A-E]$/.test(r) && r !== "opposite") fail(`Z3 u${n}/${ex.no} bad ref ${r}`);
@@ -127,10 +152,98 @@ if (census.units.length !== 101) fail(`Z6 census rows ${census.units.length} != 
 const u1 = JSON.parse(readFileSync(`${CAP}/unit-001.json`, "utf8"));
 const u21 = JSON.parse(readFileSync(`${CAP}/unit-021.json`, "utf8"));
 const u72 = JSON.parse(readFileSync(`${CAP}/unit-072.json`, "utf8"));
+const u84 = JSON.parse(readFileSync(`${CAP}/unit-084.json`, "utf8"));
 const u1q = new Set(u1.queuedChars.map((q) => q.codepoint));
 if (u1q.size !== 2 || !u1q.has("U+001F") || !u1q.has("U+0019")) fail(`Z7 u1 queued chars ${JSON.stringify([...u1q])} — expected U+001F+U+0019 (A1-KA-4)`);
 if (u21.leftPage.sections.reduce((a, s) => a + s.blocks.filter((b) => b.kind === "dropCap").length, 0) !== 1) fail("Z7 u21 drop-cap T not carried (A1-KA-2)");
 if (!u72.queuedChars.some((q) => q.codepoint === "U+E022")) fail("Z7 u72 U+E022 not carried (A1-KA-3)");
+const ex84 = u84.rightPage.exercises.find((e) => e.no === "84.4");
+if (!ex84?.keyed?.extras?.some((e) => e.kind === "grid")) fail("Z7 u84 84.4 grid extras missing (A3-KA-1)");
+
+// Z9 — answer-key.json integrity (A3-1)
+{
+  const units = keyData.units ?? {};
+  const uk = Object.keys(units).map(Number).sort((a, b) => a - b);
+  if (uk.length !== 101 || uk.some((v, i) => v !== i + 1)) fail(`Z9 key unit blocks ${uk.length}/101 or out of sequence`);
+  let keyEx = 0, keyRows = 0, keyLetter = 0, keyExtras = 0, keyNotes = 0, keyTable = 0, keyGrid = 0, keyConts = 0;
+  for (const [uS, exs] of Object.entries(units)) {
+    const u = Number(uS);
+    if (!captureExerciseNos.get(u)) { fail(`Z9 key unit ${u} has no capture unit`); continue; }
+    for (const [no, blk] of Object.entries(exs)) {
+      keyEx++;
+      if (!captureExerciseNos.get(u).has(no)) fail(`Z9 key exercise ${no} has NO capture exercise (orphan)`);
+      if (!Array.isArray(blk.pdfPages) || blk.pdfPages.some((p) => p < 212 || p > 277)) fail(`Z9 ${no} bad pdfPages`);
+      for (const r of blk.rows ?? []) {
+        keyRows++;
+        if (!Number.isInteger(r.n) || r.n < 1) fail(`Z9 ${no} bad row n ${r.n}`);
+        if (!r.text?.trim()) fail(`Z9 ${no} empty row text n=${r.n}`);
+        if (r.letter !== undefined && !/^[A-Za-z]$/.test(r.letter)) fail(`Z9 ${no} bad letter field n=${r.n}`);
+        if (r.letter !== undefined) keyLetter++;
+        if (r.more) { for (const m of r.more) if (!String(m).trim()) fail(`Z9 ${no} empty continuation line n=${r.n}`); keyConts += r.more.length; }
+      }
+      for (const e of blk.extras ?? []) {
+        keyExtras++;
+        if (!["note", "tableRow", "grid"].includes(e.kind)) fail(`Z9 ${no} bad extra kind ${e.kind}`);
+        if (!e.text?.trim()) fail(`Z9 ${no} empty extra text (${e.kind})`);
+        if (e.kind === "note") keyNotes++; else if (e.kind === "tableRow") keyTable++; else keyGrid++;
+      }
+    }
+  }
+  const t = keyData.totals ?? {};
+  const expect = { unitBlocks: uk.length, exercises: keyEx, rows: keyRows, letterRows: keyLetter, extras: keyExtras, notes: keyNotes, tableRows: keyTable, conts: keyConts, gridLines: keyGrid };
+  for (const [k, v] of Object.entries(expect)) if (t[k] !== v) fail(`Z9 key totals.${k}=${t[k]} != recomputed ${v}`);
+  if (keyEx !== 413) fail(`Z9 key exercises ${keyEx} != 413 (A0 baseline count)`);
+}
+
+// Z10 — index.json integrity (A3-3)
+{
+  const isPuaOrCtlA = (cp) => (cp >= 0xe000 && cp <= 0xf8ff) || cp < 0x20 || (cp >= 0x7f && cp <= 0x9f);
+  const entries = idxData.entries ?? [];
+  if (entries.length === 0) fail("Z10 index has zero entries");
+  let withIpa = 0, multi = 0;
+  const cols = { 1: 0, 2: 0, 3: 0 };
+  const q = new Map();
+  for (const e of entries) {
+    if (!e.headword?.trim()) { fail(`Z10 index p${e.pdfPage} empty headword`); continue; }
+    if (!Array.isArray(e.units) || e.units.length === 0 || e.units.some((u) => !Number.isInteger(u) || u < 1 || u > 101)) fail(`Z10 ${e.headword} bad units ${JSON.stringify(e.units)}`);
+    if (e.ipa !== null && !(typeof e.ipa === "string" && e.ipa.startsWith("/") && e.ipa.endsWith("/") && e.ipa.length > 2)) fail(`Z10 ${e.headword} bad ipa ${JSON.stringify(e.ipa)}`);
+    if (![1, 2, 3].includes(e.col)) fail(`Z10 ${e.headword} bad col ${e.col}`); else cols[e.col]++;
+    if (e.ipa) withIpa++;
+    if (e.units.length > 1) multi++;
+    for (const s of [e.headword, e.ipa ?? ""]) for (const ch of s) { const cp = ch.codePointAt(0); if (isPuaOrCtlA(cp)) { const kk = `U+${cp.toString(16).toUpperCase().padStart(4, "0")}`; q.set(kk, (q.get(kk) ?? 0) + 1); } }
+  }
+  const tq = (idxData.unknownQueue ?? []).map((x) => `${x.codepoint}×${x.count}`).join(",");
+  const rq = [...q.entries()].map(([kk, cc]) => `${kk}×${cc}`).join(",");
+  if (tq !== rq) fail(`Z10 unknownQueue ${tq} != recomputed ${rq}`);
+  const tt = idxData.totals ?? {};
+  if (tt.entries !== entries.length) fail(`Z10 totals.entries ${tt.entries} != ${entries.length}`);
+  if (tt.withIpa !== withIpa) fail(`Z10 totals.withIpa ${tt.withIpa} != ${withIpa}`);
+  if (tt.multiUnit !== multi) fail(`Z10 totals.multiUnit ${tt.multiUnit} != ${multi}`);
+  for (const cN of [1, 2, 3]) if (tt.columns?.[cN] !== cols[cN]) fail(`Z10 totals.columns.${cN} ${tt.columns?.[cN]} != ${cols[cN]}`);
+  if (tt.wrappedEntries === undefined) fail("Z10 totals.wrappedEntries missing");
+  for (const f of [`${RAW}/a3-key-pages.json`, `${RAW}/a3-index-pages.json`]) { try { JSON.parse(readFileSync(f, "utf8")); } catch (e) { fail(`Z10 raw layer ${f} missing/invalid`); } }
+}
+
+// Z11 — intersections file consistency (A3-4)
+{
+  const inter = JSON.parse(readFileSync("docs/qa/viu-adv-a3-intersections-2026-11-21.json", "utf8"));
+  const cov = inter.coverage?.totals ?? {};
+  if (cov.keyed !== totals.exercises - 42 || cov.printKeyless !== 42) fail(`Z11 coverage totals keyed=${cov.keyed}/keyless=${cov.printKeyless} != recomputed ${totals.exercises - 42}/42`);
+  if (cov.orphans !== 0 || cov.pass !== true) fail(`Z11 coverage orphans=${cov.orphans} pass=${cov.pass}`);
+  if (inter.coverage?.perUnit?.length !== 101) fail("Z11 perUnit rows != 101");
+  const icv = inter.indexCoverage?.totals ?? {};
+  if (icv.entries !== (idxData.totals?.entries ?? -1)) fail("Z11 indexCoverage.entries != index totals");
+  if ((inter.indexCoverage?.mismatches?.length ?? -1) !== icv.mismatch) fail("Z11 indexCoverage mismatch list != total");
+  const bal = inter.balance?.totals ?? {};
+  if (bal.keyedExercises !== totals.exercises - 42) fail("Z11 balance.keyedExercises != keyed count");
+  if (bal.equal + bal.unequal !== bal.keyedExercises) fail("Z11 balance equal+unequal != keyed");
+  if ((inter.balance?.diffs?.length ?? -1) !== bal.unequal) fail("Z11 balance diffs length != unequal");
+  const pc = Object.values(inter.balance?.totals?.patternCounts ?? {});
+  if (pc.reduce((a, b) => a + b, 0) !== bal.unequal) fail("Z11 patternCounts sum != unequal");
+  const ka = inter.meta?.a3KnownArtifacts ?? {};
+  if (!ka.A3_KA_1 || !ka.A3_KA_2) fail("Z11 a3KnownArtifacts (KA-1/KA-2) not registered");
+  try { const v3 = JSON.parse(readFileSync(`${CAP}/verify-a3-key-index.json`, "utf8")); if (v3.ok !== true || v3.checks?.keyRawByteExact !== true || v3.checks?.indexRawByteExact !== true) fail("Z11 verify-a3-key-index not ok/byte-exact"); } catch (e) { fail(`Z11 verify-a3-key-index missing: ${e.message}`); }
+}
 
 // verdict
 const verdict = { ok: issues.length === 0, checks: { captures, verifies, totals }, issues };

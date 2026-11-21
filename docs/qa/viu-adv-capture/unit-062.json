@@ -126,7 +126,54 @@
           "A"
         ],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            250
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "done",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "ceremony",
+              "textX0": 204.2
+            },
+            {
+              "n": 2,
+              "text": "netiquette",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "insolent",
+              "textX0": 204.2
+            },
+            {
+              "n": 3,
+              "text": "offhand",
+              "textX0": 110.6
+            },
+            {
+              "n": 7,
+              "text": "straitlaced",
+              "textX0": 204.2
+            },
+            {
+              "n": 4,
+              "text": "manners",
+              "textX0": 110.6
+            },
+            {
+              "n": 8,
+              "text": "courteous, discourteous",
+              "textX0": 204.2
+            }
+          ],
+          "extras": []
+        },
         "kind": "fillIn"
       },
       {
@@ -185,7 +232,70 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            250
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "No, he was probably feeling nervous.",
+              "textX0": 110.6
+            },
+            {
+              "n": 2,
+              "text": "She didn’t like them.",
+              "textX0": 110.6
+            },
+            {
+              "n": 3,
+              "text": "He probably flinched because his arm hurt.",
+              "textX0": 110.6
+            },
+            {
+              "n": 4,
+              "text": "It must have been rather surprising or shocking in some way; maybe they were being very rowdy",
+              "textX0": 110.6,
+              "more": [
+                "or swearing a lot."
+              ]
+            },
+            {
+              "n": 5,
+              "text": "Tanya, because a smirk is not a pleasant smile.",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "No, he was probably not pleased. A titter is rather a weak laugh and more from embarrassment",
+              "textX0": 110.6,
+              "more": [
+                "than amusement."
+              ]
+            },
+            {
+              "n": 7,
+              "text": "She probably felt embarrassed or nervous.",
+              "textX0": 110.6
+            },
+            {
+              "n": 8,
+              "text": "Badly. Perhaps they leant across the table and grabbed food, didn’t say ‘thank you’ or didn’t use",
+              "textX0": 110.6,
+              "more": [
+                "the cutlery properly."
+              ]
+            }
+          ],
+          "extras": [
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "Suggested answers:",
+              "bigGap": false
+            }
+          ]
+        },
         "kind": "open"
       },
       {
@@ -232,7 +342,44 @@
         ],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            250
+          ],
+          "rows": [
+            {
+              "n": 1,
+              "text": "snorted",
+              "textX0": 110.6
+            },
+            {
+              "n": 4,
+              "text": "tittered",
+              "textX0": 204.1
+            },
+            {
+              "n": 2,
+              "text": "twitch",
+              "textX0": 110.6
+            },
+            {
+              "n": 5,
+              "text": "flinch",
+              "textX0": 204.2
+            },
+            {
+              "n": 3,
+              "text": "squirming",
+              "textX0": 110.6
+            },
+            {
+              "n": 6,
+              "text": "beamed",
+              "textX0": 204.2
+            }
+          ],
+          "extras": []
+        },
         "kind": "open"
       },
       {
@@ -242,7 +389,38 @@
         "items": [],
         "refs": [],
         "bank": null,
-        "keyed": null,
+        "keyed": {
+          "pdfPages": [
+            250
+          ],
+          "rows": [],
+          "extras": [
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "eyes: raise your eyebrows",
+              "bigGap": false
+            },
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "mouth: titter, smirk, beam",
+              "bigGap": false
+            },
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "nose: snort, sniff",
+              "bigGap": false
+            },
+            {
+              "kind": "note",
+              "x0": 99.3,
+              "text": "no specific part of the body: twitch, squirm, flinch",
+              "bigGap": false
+            }
+          ]
+        },
         "kind": "instruction"
       },
       {
@@ -291,5 +469,12 @@
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 1
+  },
+  "a3": {
+    "status": "keyed+print-keyless",
+    "keyed": 4,
+    "printKeyless": 1,
+    "generator": "scripts/viu-adv-a3.mjs (A3-2)",
+    "generatedAt": "2026-11-21T19:43:38.272Z"
   }
 }
