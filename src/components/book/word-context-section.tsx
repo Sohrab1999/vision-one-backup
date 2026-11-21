@@ -36,7 +36,7 @@ import type { BookId } from "@/data/books/types";
 import { getBookMeta } from "@/data/books/registry";
 import { lookupSentencesWithStatus, type ContextSentence } from "@/lib/word-in-context";
 import { isGradedBookId } from "@/lib/cross-book-vocab";
-import { useBook } from "@/lib/book-context";
+import { useBook, useBookData } from "@/lib/book-context";
 import { cn } from "@/lib/utils";
 
 // ─── کش ماژولی نتیجه‌ها — کلید = «کتاب فعال::واژه» (الگوی cross-book-section) ───
@@ -337,6 +337,101 @@ export function WordContextSection({ norm, allowWave2 = false }: { norm: string;
         <WifiOff size={10} aria-hidden />
         جست‌وجو در متن‌های محلی جزوه‌ها — بدون اینترنت
       </p>
+    </div>
+  );
+}
+
+// ─── «مثال‌های همین درس» (گزینهٔ ② سند آموزش — مصوب مالک ۲۰۲۶-۱۱-۱۴) ───
+// در پاپ‌آپ Word Lookup فقط برای مدخل‌های VIU با شمارهٔ درس: جمله‌های واقعیِ همان درس
+// از موج ۱ سرویس word-in-context (لودرهای VIU افزودنی) — صفر تغییر در سکشن عمومی
+// «در متن‌های واقعی» (D2/D4 دست‌نخورده). فقط‌خواندنی — بدون هرگونه نوشتن در استورها.
+// حالت خالی/بارگذاری/ناموجود = هیچ رندری نمی‌شود (بدون ادعای گمراه‌کننده — پیام‌های
+// صادقانهٔ C-1/C-5 همان‌جا که هست بر عهدهٔ سکشن عمومی زیرین می‌ماند).
+
+type LessonSectionState =
+  | { status: "loading" }
+  | { status: "ready"; sentences: ContextSentence[] };
+
+const lessonCache = new Map<string, LessonSectionState>();
+const lessonListeners = new Set<() => void>();
+let lessonVersion = 0;
+
+function bumpLesson() {
+  lessonVersion += 1;
+  lessonListeners.forEach((l) => l());
+}
+
+function subscribeLesson(cb: () => void) {
+  lessonListeners.add(cb);
+  return () => {
+    lessonListeners.delete(cb);
+  };
+}
+
+function getLessonVersion() {
+  return lessonVersion;
+}
+
+function lessonEntryKey(bookId: string, norm: string, lesson: number) {
+  return `${bookId}::${norm}::lesson-${lesson}`;
+}
+
+function ensureLessonLookup(bookId: BookId, norm: string, lesson: number, lessonLabel: string | null) {
+  const key = lessonEntryKey(bookId, norm, lesson);
+  if (lessonCache.get(key)) return;
+  lessonCache.set(key, { status: "loading" });
+  bumpLesson();
+  lookupSentencesWithStatus(bookId, norm, { includeWave2: false })
+    .then((r) => {
+      // فقط جمله‌های خود کتاب فعال با برچسب همان درس — موج ۲ هرگز اینجا نیست
+      const inLesson = r.sentences.filter(
+        (s) => s.bookId === bookId && lessonLabel !== null && s.source.lessonLabel === lessonLabel,
+      );
+      lessonCache.set(key, { status: "ready", sentences: inLesson.slice(0, LESSON_EXAMPLES_CAP) });
+      bumpLesson();
+    })
+    .catch(() => {
+      lessonCache.set(key, { status: "ready", sentences: [] });
+      bumpLesson();
+    });
+}
+
+const LESSON_EXAMPLES_CAP = 3;
+
+export function LessonExamplesSection({ lesson, norm }: { lesson: number; norm: string }) {
+  const { bookId } = useBook();
+  const data = useBookData();
+  useSyncExternalStore(subscribeLesson, getLessonVersion, getLessonVersion);
+  const mountedRef = useRef(false);
+
+  // برچسب درس دقیقاً مثل lessonLabelFor سرویس (chapters منبع یگانهٔ برچسب)
+  const lessonLabel = data.chapters.find((c) => c.id === lesson)?.number ?? null;
+
+  useEffect(() => {
+    if (!bookId || !norm || !lessonLabel) return;
+    if (mountedRef.current) return;
+    mountedRef.current = true;
+    ensureLessonLookup(bookId as BookId, norm, lesson, lessonLabel);
+  }, [bookId, norm, lesson, lessonLabel]);
+
+  if (!bookId || !lessonLabel) return null;
+  const entry = lessonCache.get(lessonEntryKey(bookId, norm, lesson));
+  if (!entry || entry.status !== "ready" || entry.sentences.length === 0) return null;
+
+  return (
+    <div className="mt-2.5 rounded-xl border border-primary/25 bg-primary/5 p-2.5" aria-label="مثال‌های همین درس">
+      <p className="flex items-center gap-1 text-[11px] font-black text-primary">
+        <BookOpenText size={12} aria-hidden />
+        مثال‌های همین درس
+      </p>
+      <p className="mt-0.5 pr-4 text-[9.5px] font-bold text-muted-foreground/75">
+        {lessonLabel} · عین متن جزوه — فقط‌خواندنی
+      </p>
+      <ul className="mt-2 space-y-2">
+        {entry.sentences.map((s) => (
+          <ContextItem key={`${s.bookId}-${s.refKind}-${s.refId}-${s.sentIdx}`} s={s} />
+        ))}
+      </ul>
     </div>
   );
 }

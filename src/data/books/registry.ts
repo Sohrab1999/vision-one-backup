@@ -119,6 +119,36 @@ export const BOOKS: BookMeta[] = [
     emoji: "🦅",
     available: true,
   },
+  {
+    id: "viu-elem",
+    title: "Vocabulary in Use — Elementary",
+    gradeLabel: "مقدماتی — Cambridge",
+    author: "Michael McCarthy & Felicity O'Dell",
+    tagline: "۶۰ درس واژگان پایه — متن دو زبانه، واژگان هر درس و آزمون چهارگزینه‌ای از خود کتاب",
+    color: "amber",
+    emoji: "🌱",
+    available: true,
+  },
+  {
+    id: "viu-preint",
+    title: "Vocabulary in Use — Pre-int & Int",
+    gradeLabel: "نیمه‌متوسط و متوسط — Cambridge",
+    author: "Stuart Redman",
+    tagline: "۱۰۰ درس واژگان متوسط — متن دو زبانه، واژگان هر درس و آزمون چهارگزینه‌ای از خود کتاب",
+    color: "teal",
+    emoji: "🌿",
+    available: true,
+  },
+  {
+    id: "viu-upper",
+    title: "Vocabulary in Use — Upper-int",
+    gradeLabel: "فوق‌متوسط — Cambridge",
+    author: "Michael McCarthy & Felicity O'Dell",
+    tagline: "۱۰۰ درس واژگان فوق‌متوسط — متن دو زبانه، واژگان هر درس و آزمون چهارگزینه‌ای از خود کتاب",
+    color: "violet",
+    emoji: "🌳",
+    available: true,
+  },
 ];
 
 // ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
@@ -136,6 +166,9 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "hill-elem": () => import("../hill-elem").then((m) => m.HILL_ELEMENTARY_BOOK),
   "hill-inter": () => import("../hill-inter").then((m) => m.HILL_INTERMEDIATE_BOOK),
   "hill-adv": () => import("../hill-adv").then((m) => m.HILL_ADVANCED_BOOK),
+  "viu-elem": () => import("../viu-elem").then((m) => m.VIU_ELEMENTARY_BOOK),
+  "viu-preint": () => import("../viu-preint").then((m) => m.VIU_PREINT_BOOK),
+  "viu-upper": () => import("../viu-upper").then((m) => m.VIU_UPPER_BOOK),
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {

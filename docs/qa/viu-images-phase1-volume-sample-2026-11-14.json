@@ -1,0 +1,189 @@
+{
+ "rows": [
+  {
+   "book": "elem",
+   "pdfPage": 31,
+   "kind": "picture-dictionary",
+   "sizes": {
+    "webp120q80": 118702,
+    "webp120q70": 104596,
+    "webp200q80": 272828,
+    "webp200q70": 244936
+   },
+   "px": [
+    1390,
+    1890
+   ]
+  },
+  {
+   "book": "elem",
+   "pdfPage": 15,
+   "kind": "drawing-large",
+   "sizes": {
+    "webp120q80": 92760,
+    "webp120q70": 81690,
+    "webp200q80": 197450,
+    "webp200q70": 177270
+   },
+   "px": [
+    1390,
+    1890
+   ]
+  },
+  {
+   "book": "elem",
+   "pdfPage": 42,
+   "kind": "table",
+   "sizes": {
+    "webp120q80": 89206,
+    "webp120q70": 79410,
+    "webp200q80": 174422,
+    "webp200q70": 156766
+   },
+   "px": [
+    1391,
+    1891
+   ]
+  },
+  {
+   "book": "elem",
+   "pdfPage": 47,
+   "kind": "text-only",
+   "sizes": {
+    "webp120q80": 78856,
+    "webp120q70": 69440,
+    "webp200q80": 159314,
+    "webp200q70": 143400
+   },
+   "px": [
+    1390,
+    1891
+   ]
+  },
+  {
+   "book": "preint",
+   "pdfPage": 19,
+   "kind": "picture-dictionary",
+   "sizes": {
+    "webp120q80": 120540,
+    "webp120q70": 103718,
+    "webp200q80": 242836,
+    "webp200q70": 211390
+   },
+   "px": [
+    1559,
+    1996
+   ]
+  },
+  {
+   "book": "preint",
+   "pdfPage": 125,
+   "kind": "photo",
+   "sizes": {
+    "webp120q80": 104984,
+    "webp120q70": 89534,
+    "webp200q80": 207352,
+    "webp200q70": 179422
+   },
+   "px": [
+    1413,
+    1984
+   ]
+  },
+  {
+   "book": "preint",
+   "pdfPage": 207,
+   "kind": "text-only",
+   "sizes": {
+    "webp120q80": 137306,
+    "webp120q70": 119362,
+    "webp200q80": 271760,
+    "webp200q70": 237322
+   },
+   "px": [
+    1400,
+    1959
+   ]
+  },
+  {
+   "book": "upper",
+   "pdfPage": 12,
+   "kind": "chart-diagram",
+   "sizes": {
+    "webp120q80": 83852,
+    "webp120q70": 74356,
+    "webp200q80": 166860,
+    "webp200q70": 150406
+   },
+   "px": [
+    1518,
+    2010
+   ]
+  },
+  {
+   "book": "upper",
+   "pdfPage": 20,
+   "kind": "drawing-medium",
+   "sizes": {
+    "webp120q80": 129362,
+    "webp120q70": 114026,
+    "webp200q80": 255528,
+    "webp200q70": 230162
+   },
+   "px": [
+    1527,
+    2089
+   ]
+  },
+  {
+   "book": "upper",
+   "pdfPage": 188,
+   "kind": "text-only",
+   "sizes": {
+    "webp120q80": 167696,
+    "webp120q70": 149198,
+    "webp200q80": 334332,
+    "webp200q70": 299998
+   },
+   "px": [
+    1526,
+    2077
+   ]
+  }
+ ],
+ "averages": {
+  "artwork120q80": 103.2,
+  "artwork120q70": 90.3,
+  "artwork200q80": 211.7,
+  "all120q80": 109.7,
+  "all200q80": 222.9,
+  "textOnly120q80": 125.0
+ },
+ "scenarios": {
+  "pilot_10_lessons": {
+   "pages": 20,
+   "kb120": 2194,
+   "kb200": 4458
+  },
+  "pilot_5_lessons": {
+   "pages": 10,
+   "kb120": 1097,
+   "kb200": 2229
+  },
+  "artwork_lessons_only": {
+   "pages": 424,
+   "kb120": 43757,
+   "kb200": 89761
+  },
+  "all_lessons": {
+   "pages": 517,
+   "kb120": 56715,
+   "kb200": 115239
+  }
+ },
+ "assumptions": {
+  "lessonPagesAll": 517,
+  "artworkLessons": 212,
+  "note": "artwork_lessons_only assumes both pages of each artwork lesson rendered at artwork-average size (conservative upper band)"
+ }
+}

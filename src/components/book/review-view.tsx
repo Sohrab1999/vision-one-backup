@@ -55,6 +55,7 @@ import {
   type SrsGrade,
 } from "@/lib/srs-engine";
 import { awardReviewActivity } from "@/lib/gamification";
+import { getReviewLessonIntent, clearReviewLessonIntent } from "@/lib/review-lesson-intent";
 import { SpeakButton } from "./speak-button";
 
 type Phase = "setup" | "playing" | "done";
@@ -100,6 +101,9 @@ function shuffle<T>(arr: T[]): T[] {
 /**
  * صف استاندارد مرور: کارت‌های سررسید (صعودی dueAt) + کارت‌های نو تا سقف
  * باقی‌ماندهٔ روز (به‌ترتیب درس، شافل درون‌درس؛ فعل‌ها در پایان) — سقف کل ۶۰.
+ * گزینهٔ ④ سند آموزش (مصوب مالک ۲۰۲۶-۱۱-۱۴): فیلتر «فقط درس N» — وقتی فعال است
+ * فقط واژه‌های همان درس می‌آیند؛ فعل‌ها (بی‌درس) حذف می‌شوند. صفر تغییر رفتار
+ * پیش‌فرض (lessonFilter = null = همهٔ کتاب — بایت‌به‌بایت همان صف قبلی).
  */
 function buildQueue(
   srs: Record<string, SrsItem>,
@@ -108,6 +112,7 @@ function buildQueue(
   now: number,
   newLimit: number,
   newDone: number,
+  lessonFilter: number | null = null,
 ): QueueCard[] {
   const due: QueueCard[] = [];
   const newByLesson = new Map<number, QueueCard[]>();
@@ -115,6 +120,7 @@ function buildQueue(
   let totalNew = 0;
 
   for (const w of words) {
+    if (lessonFilter !== null && w.lesson !== lessonFilter) continue;
     const st = srs[w.word];
     if (!st || st.reps === 0) {
       totalNew++;
@@ -146,6 +152,7 @@ function buildQueue(
   }
 
   for (const v of verbs) {
+    if (lessonFilter !== null) break; // فعل‌ها برچسب درس ندارند — در فیلتر درس‌محور حذف‌اند
     const key = `v:${v.base}`;
     const st = srs[key];
     if (!st || st.reps === 0) {
@@ -278,6 +285,13 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
   const [hardCount, setHardCount] = useState(0);
   const [goodCount, setGoodCount] = useState(0);
 
+  // گزینهٔ ④ — فیلتر درس‌پایه: intent از جمع‌بندی جریان درس‌محور («مرور فقط همین درس»)
+  // در اولین mount مصرف می‌شود (الگوی practice-intent)
+  const [lessonFilter, setLessonFilter] = useState<number | null>(() => {
+    const intent = getReviewLessonIntent();
+    return intent.nonce > 0 ? intent.lesson : null;
+  });
+
   // سقف کارت نو و شمارندهٔ روزانه فقط یک‌بار در ابتدا خوانده می‌شوند و
   // در event handlerها (شروع جلسه / بازگشت به setup) تازه‌سازی می‌شوند.
   const [newLimit, setNewLimitUi] = useState(() => getDailyNewLimit());
@@ -285,6 +299,11 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
 
   const startedAtRef = useRef(0);
   const againRef = useRef(0); // فاز ۶ — شمارش پاسخ‌های «باز هم» برای XP مرور
+
+  // مصرف یک‌بارهٔ intent — پس از اعمال روی initializer، پاک می‌شود (الگوی practice-intent)
+  useEffect(() => {
+    clearReviewLessonIntent();
+  }, []);
 
   const words = data.vocab.all;
   const verbs = data.verbs;
@@ -306,7 +325,10 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
   const forecast = buildForecast(srs, now);
   const forecastMax = Math.max(1, ...forecast.map((f) => f.count));
 
-  const preview = phase === "setup" ? buildQueue(srs, words, verbs, now, newLimit, newDone) : EMPTY_QUEUE;
+  const preview =
+    phase === "setup"
+      ? buildQueue(srs, words, verbs, now, newLimit, newDone, lessonFilter)
+      : EMPTY_QUEUE;
   const previewFor =
     phase === "playing" && current ? previewIntervals(srs[current.key], now) : ([0, 0, 0] as [number, number, number]);
 
@@ -472,6 +494,50 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
                 </div>
               </div>
 
+              {/* گزینهٔ ۴ سند آموزش (مصوب مالک ۲۰۲۶-۱۱-۱۴) — فیلتر درس‌پایه در صف مرور;
+                  پیش‌فرض null = همهٔ کتاب — رفتار قبلی بایت‌به‌بایت */}
+              <div>
+                <p className="mb-2 text-[13px] font-bold">فیلتر درس</p>
+                <div className="flex gap-1.5 overflow-x-auto pb-1" role="group" aria-label="فیلتر درس در صف مرور">
+                  <button
+                    type="button"
+                    onClick={() => setLessonFilter(null)}
+                    aria-pressed={lessonFilter === null}
+                    className={cn(
+                      "h-9 shrink-0 rounded-full border px-3.5 text-[12px] font-black transition-all active:scale-95",
+                      lessonFilter === null
+                        ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+                        : "text-muted-foreground hover:bg-muted",
+                    )}
+                  >
+                    همهٔ کتاب
+                  </button>
+                  {data.vocab.lessons
+                    .filter((l) => l.lesson > 0)
+                    .map((l) => (
+                      <button
+                        key={l.lesson}
+                        type="button"
+                        onClick={() => setLessonFilter(l.lesson)}
+                        aria-pressed={lessonFilter === l.lesson}
+                        className={cn(
+                          "h-9 shrink-0 rounded-full border px-3.5 text-[12px] font-black transition-all active:scale-95",
+                          lessonFilter === l.lesson
+                            ? "border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+                            : "text-muted-foreground hover:bg-muted",
+                        )}
+                      >
+                        {l.label}
+                      </button>
+                    ))}
+                </div>
+                {lessonFilter !== null && (
+                  <p className="mt-1.5 text-[10.5px] font-bold leading-5 text-amber-600 dark:text-amber-400">
+                    صف فعلی فقط واژه‌های «{"درس " + lessonFilter.toLocaleString("fa-IR")}» را مرور می‌کند — فعل‌ها و بقیهٔ کتاب در صف نیستند.
+                  </p>
+                )}
+              </div>
+
               {/* پیش‌بینی بار مرور ۷ روز آینده — نمودار میله‌ای CSS خالص */}
               <div>
                 <p className="mb-3 flex items-center gap-1.5 text-[13px] font-bold">
@@ -566,12 +632,20 @@ export function ReviewView({ onNavigate }: { onNavigate?: (v: string) => void })
                 شروع مرور ({fa(preview.length)} کارت)
               </Button>
               {preview.length === 0 ? (
-                <p className="text-center text-[13px] font-bold text-emerald-600 dark:text-emerald-400">
-                  همه‌چیز مرور شده! 🎉 فردا دوباره سر بزن.
-                </p>
+                lessonFilter !== null ? (
+                  <p className="text-center text-[13px] font-bold text-emerald-600 dark:text-emerald-400">
+                    برای «{"درس " + lessonFilter.toLocaleString("fa-IR")}» الان کارت سررسیدی نیست — فیلتر را بردار یا فردا سر بزن.
+                  </p>
+                ) : (
+                  <p className="text-center text-[13px] font-bold text-emerald-600 dark:text-emerald-400">
+                    همه‌چیز مرور شده! 🎉 فردا دوباره سر بزن.
+                  </p>
+                )
               ) : (
                 <p className="text-center text-[11px] text-muted-foreground">
-                  صف امروز: {fa(dueCount)} کارت سررسید + تا {fa(newRemaining)} کارت نو — سقف جلسه {fa(QUEUE_CAP)} کارت.
+                  {lessonFilter !== null
+                    ? `صف این درس: ${fa(preview.length)} کارت — سقف جلسه ${fa(QUEUE_CAP)} کارت.`
+                    : `صف امروز: ${fa(dueCount)} کارت سررسید + تا ${fa(newRemaining)} کارت نو — سقف جلسه ${fa(QUEUE_CAP)} کارت.`}
                 </p>
               )}
               <p className="rounded-xl bg-muted/60 p-3 text-[11px] leading-5 text-muted-foreground">

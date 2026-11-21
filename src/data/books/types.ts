@@ -8,6 +8,7 @@ import type {
   Conversation,
   DictEntry,
   IrregularVerb,
+  WordFamilyRow,
   ChapterMeta,
   BookInfo,
   GrammarLesson,
@@ -25,7 +26,10 @@ export type BookId =
   | "hill-intro" // Introductory Steps to Understanding — L. A. Hill (PDF)
   | "hill-elem" // Elementary Steps to Understanding — L. A. Hill (PDF)
   | "hill-inter" // Intermediate Steps to Understanding — L. A. Hill (PDF)
-  | "hill-adv"; // Advanced Steps to Understanding — L. A. Hill (PDF)
+  | "hill-adv" // Advanced Steps to Understanding — L. A. Hill (PDF)
+  | "viu-elem" // English Vocabulary in Use — Elementary — McCarthy & O'Dell (فاز ۳ استخراج از اسکن PDF)
+  | "viu-preint" // English Vocabulary in Use — Pre-intermediate & intermediate — Stuart Redman (فاز ۴ استخراج از اسکن PDF)
+  | "viu-upper"; // English Vocabulary in Use — Upper-intermediate — McCarthy & O'Dell (فاز ۵ استخراج از اسکن PDF)
 
 /** نام‌های مجاز برای بخش‌های scoped در localStorage (پیشرفت مخصوص هر کتاب) */
 export const SCOPED_STORE_NAMES = [
@@ -40,6 +44,7 @@ export const SCOPED_STORE_NAMES = [
   "rounds",
   "srs-settings",
   "srs-daily",
+  "lesson-progress", // گزینهٔ ① آموزش درس‌محور — مصوب مالک ۲۰۲۶-۱۱-۱۴
 ] as const;
 
 export type ScopedStoreName = (typeof SCOPED_STORE_NAMES)[number];
@@ -81,6 +86,9 @@ export interface BookData {
   conversations: Conversation[];
   dictionary: DictEntry[];
   verbs: IrregularVerb[];
+  /** R3-d: خانوادهٔ واژگانی چاپی درس‌های word formation (فقط کتاب‌هایی که census آن را دارند —
+   *  فعلاً viu-upper واحدهای ۸/۹/۱۰) — اختیاری؛ مکانیزم پاپ‌آپ فقط‌خواندنی */
+  wordFamilies?: WordFamilyRow[];
 }
 
 /** رنگ‌های مجاز کارت جلد — بدون آبی/ایندیگو */
