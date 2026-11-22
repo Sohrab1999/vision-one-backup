@@ -19,6 +19,7 @@ const BOOK_IDS: readonly string[] = [
   "viu-elem",
   "viu-preint",
   "viu-upper",
+  "viu-advanced",
 ];
 
 /** شناسه پیش‌فرض — کتاب فعلی که محتوا دارد */
@@ -51,6 +52,7 @@ const GRADE_LABELS: Record<Exclude<BookId, "vision-one">, string> = {
   "viu-elem": "English Vocabulary in Use — Elementary (McCarthy & O'Dell — Cambridge — سطح مقدماتی)",
   "viu-preint": "English Vocabulary in Use — Pre-intermediate & intermediate (Stuart Redman — Cambridge — سطح نیمه‌متوسط و متوسط)",
   "viu-upper": "English Vocabulary in Use — Upper-intermediate (McCarthy & O'Dell — Cambridge — سطح فوق‌متوسط)",
+  "viu-advanced": "English Vocabulary in Use — Advanced 3rd ed (McCarthy & O'Dell — Cambridge — سطح پیشرفته)",
 };
 
 /**

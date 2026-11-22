@@ -62,7 +62,7 @@ const GRADE_RANK: Partial<Record<BookId, number>> = {
 };
 
 /** ترتیب پایدار کتاب‌های بی‌پایه — همیشه بعد از کتاب‌های مدرسه‌ای */
-const UNGRADED_ORDER: BookId[] = ["collocations", "hill-intro", "hill-elem", "hill-inter", "hill-adv", "viu-elem", "viu-preint", "viu-upper"];
+const UNGRADED_ORDER: BookId[] = ["collocations", "hill-intro", "hill-elem", "hill-inter", "hill-adv", "viu-elem", "viu-preint", "viu-upper", "viu-advanced"];
 
 /** رتبهٔ نزدیکی: هرچه کمتر، نزدیک‌تر. کتاب‌های بی‌پایه همیشه بعد از مدرسه‌ای‌ها (۱۰۰+) */
 export function proximityRank(active: BookId, other: BookId): number {
@@ -223,6 +223,12 @@ const LIGHT_LOADERS: Partial<Record<BookId, () => Promise<BookLightIndex>>> = {
   "viu-upper": async () => {
     const v = await import("../data/viu-upper/vocab");
     const d = await import("../data/viu-upper/dictionary");
+    return buildIndex(v.VOCAB_ALL, d.DICTIONARY, [], v.VOCAB_LESSONS);
+  },
+  // VIU Advanced (فاز A5 کتاب چهارم) — فقط ماژول‌های سبک واژگان (عین الگوی viu-upper)
+  "viu-advanced": async () => {
+    const v = await import("../data/viu-advanced/vocab");
+    const d = await import("../data/viu-advanced/dictionary");
     return buildIndex(v.VOCAB_ALL, d.DICTIONARY, [], v.VOCAB_LESSONS);
   },
 };

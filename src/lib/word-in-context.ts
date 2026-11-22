@@ -560,6 +560,11 @@ export const SENTENCE_LOADERS: Record<BookId, SentenceLoader> = {
     meta: () => import("../data/viu-upper/book-meta"),
     verbs: () => import("../data/viu-upper/verbs"),
   }),
+  "viu-advanced": viuLoader("viu-advanced", {
+    readings: () => import("../data/viu-advanced/readings"),
+    meta: () => import("../data/viu-advanced/book-meta"),
+    verbs: () => import("../data/viu-advanced/verbs"),
+  }),
 };
 
 const indexCache = new Map<BookId, SentenceIndex>();

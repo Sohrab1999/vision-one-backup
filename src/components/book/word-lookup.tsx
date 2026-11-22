@@ -492,11 +492,11 @@ function LookupPopover({
   const isLearned = learned.has(hit.word);
 
   // O6 — قاعدهٔ عمومی «مدخل بدون تصویر» (تصمیم مصوب مالک ۲۰۲۶-۱۱-۰۸ — گزینهٔ B):
-  // در مدخل‌های سه کتاب جدید VIU، جایگاه تصویر حفظ می‌شود و پیام کوتاه «تصویری موجود نیست» نمایش داده می‌شود؛
+  // در مدخل‌های چهار کتاب VIU، جایگاه تصویر حفظ می‌شود و پیام کوتاه «تصویری موجود نیست» نمایش داده می‌شود؛
   // نبودِ تصویر هرگز به‌عنوان خطا/خرابی/تصویرِ ردشده معرفی نمی‌شود (تفکیک NO IMAGE از REJECT) و هیچ اعتباری القا نمی‌کند.
-  // دامنه: فقط مدخل‌های واقعی (واژگان/دیکشنری) کتاب‌های VIU — رفتار ۱۱ کتاب موجود بایت‌به‌بیت بدون تغییر می‌ماند.
+  // دامنه: فقط مدخل‌های واقعی (واژگان/دیکشنری) کتاب‌های VIU (شامل viu-advanced فاز A5) — رفتار سایر کتاب‌ها بدون تغییر می‌ماند.
   const isViuEntry =
-    (bookId === "viu-elem" || bookId === "viu-preint" || bookId === "viu-upper") &&
+    (bookId === "viu-elem" || bookId === "viu-preint" || bookId === "viu-upper" || bookId === "viu-advanced") &&
     Boolean(hit.vocab || hit.dict);
   const viuNoImage = isViuEntry && memImg.word !== hit.word;
 

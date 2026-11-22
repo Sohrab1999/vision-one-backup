@@ -29,7 +29,8 @@ export type BookId =
   | "hill-adv" // Advanced Steps to Understanding — L. A. Hill (PDF)
   | "viu-elem" // English Vocabulary in Use — Elementary — McCarthy & O'Dell (فاز ۳ استخراج از اسکن PDF)
   | "viu-preint" // English Vocabulary in Use — Pre-intermediate & intermediate — Stuart Redman (فاز ۴ استخراج از اسکن PDF)
-  | "viu-upper"; // English Vocabulary in Use — Upper-intermediate — McCarthy & O'Dell (فاز ۵ استخراج از اسکن PDF)
+  | "viu-upper" // English Vocabulary in Use — Upper-intermediate — McCarthy & O'Dell (فاز ۵ استخراج از اسکن PDF)
+  | "viu-advanced"; // English Vocabulary in Use — Advanced (3rd ed) — McCarthy & O'Dell (فاز A5 استخراج مکانیکی از اسکن PDF — کتاب چهارم VIU)
 
 /** نام‌های مجاز برای بخش‌های scoped در localStorage (پیشرفت مخصوص هر کتاب) */
 export const SCOPED_STORE_NAMES = [

@@ -149,6 +149,16 @@ export const BOOKS: BookMeta[] = [
     emoji: "🌳",
     available: true,
   },
+  {
+    id: "viu-advanced",
+    title: "Vocabulary in Use — Advanced",
+    gradeLabel: "پیشرفته — Cambridge",
+    author: "Michael McCarthy & Felicity O'Dell",
+    tagline: "۱۰۱ درس واژگان پیشرفته — متن دو زبانه، واژگان هر درس و آزمون عین خود کتاب (ورود فاز A5)",
+    color: "orange",
+    emoji: "🌲",
+    available: true,
+  },
 ];
 
 // ─── بارگذارهای تنبل هر جزوه — هر جزوه یک chunk مستقل ───
@@ -169,6 +179,7 @@ const LOADERS: Record<BookId, () => Promise<BookData | null>> = {
   "viu-elem": () => import("../viu-elem").then((m) => m.VIU_ELEMENTARY_BOOK),
   "viu-preint": () => import("../viu-preint").then((m) => m.VIU_PREINT_BOOK),
   "viu-upper": () => import("../viu-upper").then((m) => m.VIU_UPPER_BOOK),
+  "viu-advanced": () => import("../viu-advanced").then((m) => m.VIU_ADVANCED_BOOK),
 };
 
 export function getBookMeta(id: BookId): BookMeta | undefined {

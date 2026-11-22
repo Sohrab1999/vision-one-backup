@@ -112,6 +112,11 @@ export function AppFooter() {
                   Vocabulary in Use — Upper-intermediate (2nd Edition) · Michael McCarthy &amp; Felicity O&apos;Dell ·
                   ISBN 0-521-66435-7 · © Cambridge University Press — first edition 1994, this edition 2002
                 </li>
+                <li dir="ltr" className="text-left font-en">
+                  Vocabulary in Use — Advanced (3rd Edition) · Michael McCarthy &amp; Felicity O&apos;Dell ·
+                  ISBN 978-131663006-8 (with answers and ebook) / 978-131663117-1 (with answers) ·
+                  © Cambridge University Press 2017 — first published 2002
+                </li>
               </ul>
               <p className="mt-1.5">
                 محتوای این کتاب‌ها صرفاً به‌صورت پردازش شخصی در همین وب‌اپ مالک به‌کار رفته است؛
