@@ -13,7 +13,7 @@
       "right": 207
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 208,
@@ -120,19 +120,37 @@
           {
             "n": 1,
             "y": 90.7,
-            "text": "____4 PM TO REVEAL SOCCER LOUT PLANS THUGS BESIEGE TEEN STAR",
-            "blankCount": 1
+            "text": "PM TO REVEAL SOCCER LOUT PLANS",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 90.7,
+            "text": "THUGS BESIEGE TEEN STAR",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 108.3,
-            "text": "____5 TOP PLAYERS DEFEND COACH ____COPS TARGET YOBS",
-            "blankCount": 2
+            "text": "TOP PLAYERS DEFEND COACH",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 108.3,
+            "text": "COPS TARGET YOBS",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 126,
-            "text": "____6",
+            "text": "____",
+            "blankCount": 1
+          },
+          {
+            "n": 6,
+            "y": 126,
+            "text": "____",
             "blankCount": 1
           }
         ],
@@ -254,31 +272,55 @@
           {
             "n": 1,
             "y": 416.3,
-            "text": "Bad blood ____6 Hopping mad",
-            "blankCount": 1
+            "text": "Bad blood",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 416.3,
+            "text": "Hopping mad",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 434,
-            "text": "Happy days? ____7 Flushed with success",
-            "blankCount": 1
+            "text": "Happy days?",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 434,
+            "text": "Flushed with success",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 451.6,
-            "text": "Shell-shocked ____8 Highly embarrassed",
-            "blankCount": 1
+            "text": "Shell-shocked",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 451.6,
+            "text": "Highly embarrassed",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 468.6,
-            "text": "False impressions ____9 Round-up",
-            "blankCount": 1
+            "text": "False impressions",
+            "blankCount": 0
+          },
+          {
+            "n": 9,
+            "y": 468.6,
+            "text": "Round-up",
+            "blankCount": 0
           },
           {
             "n": 5,
             "y": 487.5,
-            "text": "Happy haunting a A grandfather’s breathing problems were solved when doctors found four false teeth at the entrance to his lungs. They had been forced down his windpipe in a car crash eight years before. b A 25-year-old terrapin is being treated for a fractured shell after surviving a 200-foot drop. c A Shetland teacher has suggested sheepdogs could be used to control pupils in playgrounds. d A ghost society has been told not to scare off a friendly female apparition at a hotel. e An unusual travel company is offering adults the chance to experience going back to school again – they will spend a week wearing school uniform, sitting through lessons and eating school dinners. f An ex-public loo in Hackney, East London, is to be sold for £276,000. g A Whitby vicar has attacked the resort’s attempts to profit on its connections with Dracula: ‘a pale- faced man with a bad sense of fashion, severe dental problems and an eating disorder’. h A toad triggered a police alert when it set off a new hi-tech alarm system. i Firefighters had to scale a 30-foot tree to rescue a man who was trying to capture his pet iguana.",
+            "text": "Happy haunting",
             "blankCount": 0
           }
         ],
@@ -368,12 +410,48 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "passage": {
+          "columns": [
+            "a A grandfather’s breathing problems were solved when doctors found four false teeth at the entrance to his lungs. They had been forced down his windpipe in a car crash eight years before. b A 25-year-old terrapin is being treated for a fractured shell after surviving a 200-foot drop. c A Shetland teacher has suggested sheepdogs could be used to control pupils in playgrounds. d A ghost society has been told not to scare off a friendly female apparition at a hotel. e An unusual travel company is offering adults the chance to experience going back to school again – they will spend a week wearing school uniform, sitting through lessons and eating school dinners. f An ex-public loo in Hackney, East London, is to be sold for £276,000. g A Whitby vicar has attacked the resort’s attempts to profit on its connections with Dracula: ‘a pale- faced man with a bad sense of fashion, severe dental problems and an eating disorder’. h A toad triggered a police alert when it set off a new hi-tech alarm system. i Firefighters had to scale a 30-foot tree to rescue a man who was trying to capture his pet iguana."
+          ],
+          "staged": false
+        },
+        "kind": "open"
       }
     ],
     "diagnostics": {
       "anchors": 3,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "100.1",
+            "fires": [
+              4,
+              5,
+              6
+            ],
+            "maxNum": 6,
+            "staged": true,
+            "items": 6
+          },
+          {
+            "no": "100.3",
+            "fires": [
+              6,
+              7,
+              8,
+              9
+            ],
+            "maxNum": 9,
+            "staged": false,
+            "items": 9
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -395,8 +473,8 @@
     "languageHelp": 1,
     "dropCaps": 0,
     "exercises": 3,
-    "exerciseItems": 10,
-    "blanks": 8,
+    "exerciseItems": 17,
+    "blanks": 2,
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -406,6 +484,6 @@
     "keyed": 3,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

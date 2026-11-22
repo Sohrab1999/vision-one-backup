@@ -13,7 +13,7 @@
       "right": 19
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 20,
@@ -140,26 +140,44 @@
           {
             "n": 1,
             "y": 183.3,
-            "text": "a very unusual, exciting job ____6 a full staff of workers",
-            "blankCount": 1
+            "text": "a very unusual, exciting job",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 183.3,
+            "text": "a full staff of workers",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 195.3,
-            "text": "a person who is highly motivated ____7 someone who has a light workload and is paid",
-            "blankCount": 1
+            "text": "a person who is highly motivated",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 195.3,
+            "text": "someone who has a light workload and is paid a lot",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 207.3,
-            "text": "a rather static and slow-moving profession ____a lot",
-            "blankCount": 1
+            "text": "a rather static and slow-moving profession",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 219.3,
-            "text": "a drop in salary ____8 an automatic pay rise each year",
-            "blankCount": 1
+            "text": "a drop in salary",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 219.3,
+            "text": "an automatic pay rise each year",
+            "blankCount": 0
           },
           {
             "n": 5,
@@ -220,7 +238,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "6.3",
@@ -395,7 +413,25 @@
     ],
     "diagnostics": {
       "anchors": 4,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "6.2",
+            "fires": [
+              6,
+              7,
+              8
+            ],
+            "maxNum": 8,
+            "staged": false,
+            "items": 8
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -417,8 +453,8 @@
     "languageHelp": 1,
     "dropCaps": 0,
     "exercises": 4,
-    "exerciseItems": 19,
-    "blanks": 5,
+    "exerciseItems": 22,
+    "blanks": 1,
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -428,6 +464,6 @@
     "keyed": 4,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

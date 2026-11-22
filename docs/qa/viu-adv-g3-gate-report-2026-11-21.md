@@ -66,4 +66,6 @@
 - داده: `docs/qa/viu-adv-capture/{answer-key,index,verify-a3-key-index}.json` + `docs/qa/viu-adv-raw/a3-{key,index}-pages.json` + ۱۰۱ فایل واحد (keyed + a3 provenance) + `docs/qa/viu-adv-a3-intersections-2026-11-21.json`.
 - گزارش فاز: `docs/qa/viu-adv-a3-answer-key-index-2026-11-21.md`.
 
-**پس از رأی مالک روی بندهای ۱..۶ (§۴ — همه ثبت شد) ⇒ G3 بسته شد؛ A4 (ترجمهٔ فارسی FA-NEW) و اصلاح جراحی A3-KA-2 فقط با فرمان صریح مالک آغاز می‌شوند.**
+**پس از رأی مالک روی بندهای ۱..۶ (§۴ — همه ثبت شد) ⇒ G3 بسته شد؛ A4 (ترجمهٔ فارسی FA-NEW) و اصلاح جراحی A3-KA-2 با فرمان صریح مالک اجرا شدند (trace `1a2020f0eacabe65` «ادامه بده» — ۲۰۲۶-۱۱-۲۱):**
+
+> **ثبت اجرا (گام مجاز ① + ② — به‌ترتیب):** ① اصلاح جراحی A3-KA-2 = `scripts/viu-adv-parse.mjs` (آمندمنت مکانیکی دو قاعده‌ای — ۳۶ دوستونه + ۱ درون‌خطی 20.3) + بازاجرای A2+A3 با اثبات بایت‌به‌بیت (partition abort-on-mismatch در هر اجرا + خام دو گذر A3) + اثبات Z12 (۳۷/۳۷ پوشش کلید↔آیتم) ⇒ توازن برابر ۳۴۷⇒۳۸۳ · twoColumnItems ۵⇒۰ · گزارش: `docs/qa/viu-adv-a3ka2-surgical-fix-2026-11-21.md`. ② فاز A4 = `scripts/viu-adv-a4-{translate,sample,fix}.mjs` — ۱٬۴۰۱ قطعه FA-NEW (پوشش کامل جمعیت قراردادی runtimeMapping) · نمونه‌گیری استراتیفای n=۳۰۲ (seed 20261121) — مردودی ۲۱٫۹٪ ⇒ موج اصلاح فقط-مردودها (۶۶/۶۶) ⇒ ۱۳٫۹٪ پسا-موج (زیر خط توقف ۲۵٪) · قانون «پوشش ≠ صحت» · FA-REVIEWED = صفر (فقط داوری انسانی مالک) — گزارش G4: `docs/qa/viu-adv-fa-quality-2026-11-21.md`. گیت بعدی = G5 (فقط با فرمان صریح مالک).

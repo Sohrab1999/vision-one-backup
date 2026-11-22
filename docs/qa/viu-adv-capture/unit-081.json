@@ -13,7 +13,7 @@
       "right": 169
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 170,
@@ -381,32 +381,62 @@
           {
             "n": 1,
             "y": 410.5,
-            "text": "bullet ____6 quotation ____a marks ____f commas",
-            "blankCount": 3
+            "text": "bullet",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 410.5,
+            "text": "quotation",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 422.5,
-            "text": "type ____7 block ____b typing ____g case",
-            "blankCount": 3
+            "text": "type",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 422.5,
+            "text": "block",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 434.5,
-            "text": "inverted ____8 lower ____c point ____h brackets",
-            "blankCount": 3
+            "text": "inverted",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 434.5,
+            "text": "lower",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 446.5,
-            "text": "square ____9 touch ____d heading ____i face",
-            "blankCount": 3
+            "text": "square",
+            "blankCount": 0
+          },
+          {
+            "n": 9,
+            "y": 446.5,
+            "text": "touch",
+            "blankCount": 0
           },
           {
             "n": 5,
             "y": 458.5,
-            "text": "font ____10 chapter ____e capitals ____j size",
-            "blankCount": 3
+            "text": "font",
+            "blankCount": 0
+          },
+          {
+            "n": 10,
+            "y": 458.5,
+            "text": "chapter",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -479,7 +509,16 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "passage": {
+          "columns": [
+            "",
+            "",
+            "a marks b typing c point d heading e capitals",
+            "f commas g case h brackets i face j size"
+          ],
+          "staged": false
+        },
+        "kind": "open"
       },
       {
         "no": "81.4",
@@ -592,7 +631,27 @@
     ],
     "diagnostics": {
       "anchors": 4,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "81.3",
+            "fires": [
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "maxNum": 10,
+            "staged": false,
+            "items": 10
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -614,8 +673,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 4,
-    "exerciseItems": 33,
-    "blanks": 40,
+    "exerciseItems": 38,
+    "blanks": 25,
     "banks": 0,
     "mixedLineSplits": 2,
     "imageDependentCandidates": 0
@@ -625,6 +684,6 @@
     "keyed": 4,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

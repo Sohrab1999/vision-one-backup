@@ -13,7 +13,7 @@
       "right": 29
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 30,
@@ -92,56 +92,80 @@
           {
             "n": 1,
             "y": 100,
-            "text": "love ____a pals ____4 hit ____d spirits",
-            "blankCount": 3
+            "text": "love",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 100,
+            "text": "hit",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 112,
-            "text": "head ____b it off ____5 kindred ____e at first sight",
-            "blankCount": 3
+            "text": "head",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 112,
+            "text": "kindred",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 124,
-            "text": "bosom ____c acquaintances ____6 mutual ____f over heels in love",
-            "blankCount": 3
+            "text": "bosom",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 124,
+            "text": "mutual",
+            "blankCount": 0
           },
           {
             "n": 1,
             "y": 140.2,
-            "text": "When Josh met Emma, it was ____.",
-            "blankCount": 1
+            "text": "When Josh met Emma, it was",
+            "blankCount": 0,
+            "part": 2
           },
           {
             "n": 2,
             "y": 152.2,
-            "text": "Phil and Toby look at life in the same way. They’re ____.",
-            "blankCount": 1
+            "text": "Phil and Toby look at life in the same way. They’re",
+            "blankCount": 0,
+            "part": 2
           },
           {
             "n": 3,
             "y": 164.2,
-            "text": "Ever since they worked together, Lucy and Olivia have been ____.",
-            "blankCount": 1
+            "text": "Ever since they worked together, Lucy and Olivia have been",
+            "blankCount": 0,
+            "part": 2
           },
           {
             "n": 4,
             "y": 176.2,
-            "text": "I was introduced to Zoe by some ____.",
-            "blankCount": 1
+            "text": "I was introduced to Zoe by some",
+            "blankCount": 0,
+            "part": 2
           },
           {
             "n": 5,
             "y": 188.2,
-            "text": "They just looked at each other and fell ____.",
-            "blankCount": 1
+            "text": "They just looked at each other and fell",
+            "blankCount": 0,
+            "part": 2
           },
           {
             "n": 6,
             "y": 200.2,
-            "text": "When Ross and I met, we immediately ____.",
-            "blankCount": 1
+            "text": "When Ross and I met, we immediately",
+            "blankCount": 0,
+            "part": 2
           }
         ],
         "refs": [],
@@ -220,7 +244,16 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "passage": {
+          "columns": [
+            "",
+            "a pals b it off c acquaintances . . . . . .",
+            "",
+            "d spirits e at first sight f over heels in love"
+          ],
+          "staged": false
+        },
+        "kind": "open"
       },
       {
         "no": "11.2",
@@ -538,7 +571,25 @@
     ],
     "diagnostics": {
       "anchors": 5,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "11.1",
+            "fires": [
+              4,
+              5,
+              6
+            ],
+            "maxNum": 6,
+            "staged": false,
+            "items": 12
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -560,8 +611,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 5,
-    "exerciseItems": 25,
-    "blanks": 32,
+    "exerciseItems": 28,
+    "blanks": 17,
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -571,6 +622,6 @@
     "keyed": 4,
     "printKeyless": 1,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

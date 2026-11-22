@@ -399,29 +399,239 @@ function parseLeft(unitJson) {
   return { title, unitNumber: unitNumberLine ? +unitNumberLine.text.trim() : unitJson.unit, sections, miniDict, diagnostics: diag };
 }
 
-// ---------- right-page structural parse (A2-2) ----------
-function parseRight(unitJson) {
-  const groups = buildWordLayer(unitJson, "rightPage", unitJson.provenance.pdfPages.right).emitted;
-  const diag = { anchors: 0, banks: 0 };
-  const anchorRe = /^(\d+)\.(\d+)\s*$/;
-  const exercises = [];
-  let cur = null;
-  let curItem = null;
-  const flushItem = () => { if (cur && curItem) { cur.items.push(curItem); curItem = null; } };
-  for (const g of groups) {
-    const m = anchorRe.exec(g.text.trim());
-    if (m) {
-      diag.anchors++;
-      flushItem();
-      if (cur) exercises.push(cur);
-      cur = { no: `${m[1]}.${m[2]}`, y: g.y, instruction: "", items: [], refs: [], bank: null, keyed: null };
-      continue;
+// ---------- right-page structural parse (A2-2 + A3-KA-2 surgical amendment) ----------
+// A3-KA-2 amendment (owner vote ④, gate-report §۴ row 4, trace 1a201df91ffdf639): printed
+// exercises whose items sit in TWO-or-more printed columns were merged pairwise by the
+// single-column item parser, producing «____6» artifacts («average ____6 rays from the sun»,
+// 29.4). The amendment re-assembles the item layer mechanically and ONLY for exercises that
+// pass every gate below (else the original single-column path runs unchanged — zero regression):
+//   (a) ≥2 fire points = a standalone sequence digit (1..30) at word position >0 of a
+//       digit-start line, reached across ≥22pt (measured column gaps 22.6–196pt; bank
+//       separators ~15pt; normal word gaps ≤6pt) or starting right of x=300;
+//   (b) every fire digit ∉ the exercise's own line-start item numbers (a content digit can
+//       never steal an item slot);
+//   (c) coverage validation: line-start numbers ∪ fired digits = exactly 1..max consecutive;
+//   (d) exercise ∉ {84.4} (A3-KA-1 registered grid artifact — its digits are grid column
+//       labels, risk register #6; the whole 84.4 activity stays verbatim for the A5-5 menu).
+// Runs are split on digit-start lines only at sequence digits, [a-h] option letters and
+// right-column jumps (x ≥ colEdge−20pt with ≥25pt gap) so genuine blanks (53–94pt, next word
+// near the blank start) stay inside their item and keep textWithBlanks "____". Continuation
+// lines (non-digit-start) split at every ≥22pt gap; runs attach per column (run index for
+// multi-run lines, nearest column edge for single-run lines) to that column's current item,
+// or to the exercise's honest per-column `passage` once the number grid is complete (or when
+// the column has no item yet). «Staged» exercises (a digit row after content that followed a
+// digit row — 97.5, 64.2) never close the grid, so their content keeps attaching. Doniméh
+// second sequences (11.1) re-use numbers and carry part=2. Digit-only runs stay empty and get
+// the literal slot "____" ONLY if no content ever attaches (picture-slot items 89.2/9.3/49.4/…).
+// A separate inline signature (instruction "first letter is given" + zero items + ≥2 glued
+// «Nl» tokens — 20.3) itemizes the printed paragraph gaps as {n, text:"____<letter>"} with the
+// paragraph preserved verbatim in passage. All 20.3/84.4-style exclusions and fallbacks are
+// recorded in rightPage.diagnostics.ka2 for review.
+// A3-KA-2 constants (all measured — see the amendment comment above)
+const KA2_FIRE_GAP = 22;   // pt — digit-fire gap (measured column gaps 22.6–196pt; banks ~15pt)
+const KA2_FIRE_X = 300;    // pt — alternative fire position (right-column starts measured 305–362)
+const KA2_EDGE_TOL = 20;   // pt — column-edge clustering tolerance + right-jump slack
+const KA2_PASSAGE_GAP = 25;// pt — right-column jump gap (blank calibration boundary)
+const KA2_GRID_GUARD = new Set(["84.4"]); // A3-KA-1 registered artifact — never re-assembled
+
+const isSeqDigit = (w) => /^\d{1,2}$/.test(w.t) && +w.t >= 1 && +w.t <= 30;
+const isOptLetter = (w) => /^[a-h]$/.test(w.t);
+
+// pre-scan an exercise's lines for the A3-KA-2 mechanical signature
+function scanKA2(no, lines) {
+  const digitStart = [];
+  const firesPerLine = [];
+  const fireXs = [];
+  const startNums = [];
+  const startNumXs = [];
+  const fireNums = [];
+  lines.forEach((g) => {
+    const fs = new Set();
+    const bank = g.words?.length ? isBankRow(g.words) : false;
+    const w0 = g.words?.[0];
+    const ds = !bank && w0 && isSeqDigit(w0);
+    digitStart.push(ds);
+    if (ds) { startNums.push(+w0.t); startNumXs.push(w0.x0); }
+    if (ds && g.words) {
+      for (let k = 1; k < g.words.length; k++) {
+        const w = g.words[k];
+        if (!isSeqDigit(w)) continue;
+        const gap = w.x0 - g.words[k - 1].x1;
+        if (gap >= KA2_FIRE_GAP || w.x0 >= KA2_FIRE_X) {
+          if (!startNums.includes(+w.t)) { fs.add(k); fireNums.push(+w.t); fireXs.push(w.x0); }
+        }
+      }
     }
-    if (!cur) continue;
+    firesPerLine.push(fs);
+  });
+  // staged = a digit-start line preceded by a non-digit line that itself follows a digit-start line
+  let seenDigit = false, seenNonAfter = false, staged = false;
+  lines.forEach((g, li) => {
+    if (g.words?.length && isBankRow(g.words)) return;
+    if (digitStart[li]) { if (seenNonAfter) staged = true; seenDigit = true; }
+    else if (seenDigit) seenNonAfter = true;
+  });
+  const union = [...new Set([...startNums, ...fireNums])].sort((a, b) => a - b);
+  const coverageOK = union.length > 0 && union.every((v, i) => v === i + 1) && union[union.length - 1] <= 30;
+  const declared = coverageOK && fireNums.length >= 2 && !KA2_GRID_GUARD.has(no);
+  return { digitStart, firesPerLine, startNums, startNumXs, fireNums, fireXs, staged, declared, maxNum: union[union.length - 1] ?? 0 };
+}
+
+// split a digit-start line's words into column runs: at sequence digits (fire rule), [a-h]
+// option letters, and right-column jumps — genuine blanks (next word near the blank) survive
+function splitRunsDigit(words, fires, colEdge) {
+  const runs = [];
+  let cur = [words[0]];
+  for (let k = 1; k < words.length; k++) {
+    const w = words[k];
+    const gap = w.x0 - words[k - 1].x1;
+    const fire = fires.has(k);
+    const opt = isOptLetter(w) && gap >= KA2_FIRE_GAP;
+    // right-column jump — but never before an all-uppercase single-letter tail (the printed
+    // «A B C D» circle-the-letter option row belongs to its own item, 94.5) and never directly
+    // after a standalone digit (the number-column gap of the item's own text, 64.2 «3 topic»)
+    const optCircleTail = words.slice(k).every((w2) => /^[A-H]$/.test(w2.t));
+    const jump = !isSeqDigit(words[k - 1]) && !optCircleTail && w.x0 >= colEdge - KA2_EDGE_TOL && gap >= KA2_PASSAGE_GAP;
+    if (fire || opt || jump) { runs.push(cur); cur = [w]; }
+    else cur.push(w);
+  }
+  runs.push(cur);
+  return runs;
+}
+
+// continuation lines: split at every ≥22pt gap (column boundary), keep genuine blanks intact
+function splitRunsCont(words) {
+  const runs = [];
+  let cur = [words[0]];
+  for (let k = 1; k < words.length; k++) {
+    if (words[k].x0 - words[k - 1].x1 >= KA2_FIRE_GAP) { runs.push(cur); cur = [words[k]]; }
+    else cur.push(words[k]);
+  }
+  runs.push(cur);
+  return runs;
+}
+
+const runText = (ws) => textWithBlanks(ws).replace(/\s+/g, " ").trim();
+
+// A3-KA-2 declared assembly — returns { instruction, items, bank, passage? }
+function assembleKA2(no, lines, scan, diag) {
+  const { digitStart, firesPerLine, startNumXs, fireXs, staged, maxNum } = scan;
+  // column edges = clustered x0 of line-start digits + fired digits
+  const xs = [...startNumXs, ...fireXs].sort((a, b) => a - b);
+  const edges = [];
+  for (const x of xs) if (!edges.length || x - edges[edges.length - 1] > KA2_EDGE_TOL) edges.push(x);
+  const colEdge = Math.min(...fireXs);
+  const nearestCol = (x0) => {
+    let best = 0, bd = Infinity;
+    edges.forEach((e, i) => { const d = Math.abs(x0 - e); if (d < bd) { bd = d; best = i; } });
+    return best;
+  };
+  const items = [];
+  const tails = []; // per item: { x1, line } of its last word — same-line ≥25pt rejoin = blank
+  const seen = new Map();
+  const colItem = [];
+  const colPassage = [];
+  const instrParts = [];
+  let bank = null;
+  let itemPhase = false;
+  let complete = false;
+  const attach = (item, text, run, lineIdx) => {
+    const tail = tails[items.indexOf(item)];
+    const sameLine = tail && tail.line === lineIdx && run[0].x0 - tail.x1 >= KA2_PASSAGE_GAP;
+    item.text = (item.text + " " + (sameLine ? "____ " : "") + text).replace(/\s+/g, " ").trim();
+    tails[items.indexOf(item)] = { x1: run[run.length - 1].x1, line: lineIdx };
+  };
+  for (let li = 0; li < lines.length; li++) {
+    const g = lines[li];
+    if (g.words?.length && isBankRow(g.words)) { diag.banks++; bank = (bank ?? []).concat(g.text.trim()); continue; }
+    if (!g.words?.length) continue;
+    if (!itemPhase && !digitStart[li]) { instrParts.push(runText(g.words)); continue; }
+    const runs = digitStart[li] ? splitRunsDigit(g.words, firesPerLine[li], colEdge) : splitRunsCont(g.words);
+    for (let ri = 0; ri < runs.length; ri++) {
+      const run = runs[ri];
+      if (isSeqDigit(run[0])) {
+        const n = +run[0].t;
+        const part = (seen.get(n) ?? 0) + 1;
+        seen.set(n, part);
+        const item = { n, y: g.y, text: run.length > 1 ? runText(run.slice(1)) : "", blankCount: 0 };
+        if (part > 1) item.part = part;
+        items.push(item);
+        tails.push(run.length > 1 ? { x1: run[run.length - 1].x1, line: li } : null);
+        colItem[runs.length === 1 ? nearestCol(run[0].x0) : ri] = item;
+        itemPhase = true;
+        continue;
+      }
+      if (!itemPhase) continue; // pre-item non-digit content on a digit line — impossible; guarded
+      const col = runs.length === 1 ? nearestCol(run[0].x0) : ri;
+      const cur = colItem[col];
+      const text = runText(run);
+      if (!text) continue;
+      if (cur && !complete) attach(cur, text, run, li);
+      else (colPassage[col] ??= []).push(text);
+    }
+    if (!complete && !staged && items.length) {
+      complete = Array.from({ length: maxNum }, (_, i) => i + 1).every((n) => seen.has(n));
+    }
+  }
+  for (let i = 0; i < items.length; i++) {
+    if (!items[i].text) { items[i].text = "____"; items[i].blankCount = 1; }
+    else items[i].blankCount = (items[i].text.match(/____/g) ?? []).length;
+  }
+  const columns = Array.from(colPassage, (c) => (c ?? []).join(" ").replace(/\s+/g, " ").trim());
+  const passage = columns.some((t) => t) ? { columns, staged } : null;
+  const out = { instruction: instrParts.join(" ").replace(/\s+/g, " ").trim(), items, bank };
+  if (passage) out.passage = passage;
+  return out;
+}
+
+// A3-KA-2 inline-gap signature (20.3 family): "first letter is given" + zero items + ≥2 glued
+// «Nl» paragraph gaps — pdftotext splits the glued token into a digit word + a single-letter
+// word at ≤6pt, so the pair (digit, letter) is the mechanical unit; the paragraph becomes
+// verbatim passage and each pair becomes an item {n, text:"____<letter>"}
+function assembleInlineGap(ex, lines) {
+  if (ex.items.length !== 0 || !/first letter/i.test(ex.instruction)) return false;
+  let start = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const g = lines[i];
+    if (!g.words || (g.words.length && isBankRow(g.words))) continue;
+    if (g.x0 >= 120 && inlinePairs(g.words).length) { start = i; break; }
+  }
+  if (start < 0) return false;
+  const paraLines = lines.slice(start);
+  const items = [];
+  for (const g of paraLines) {
+    for (const [dw, lw] of inlinePairs(g.words)) {
+      const n = +dw.t;
+      if (items.some((it) => it.n === n)) return false; // duplicated inline number — not the signature
+      items.push({ n, y: g.y, text: `____${lw.t}`, blankCount: 1 });
+    }
+  }
+  if (items.length < 2) return false;
+  const nums = items.map((it) => it.n).sort((a, b) => a - b);
+  if (!nums.every((v, i) => v === i + 1)) return false; // gaps must number 1..K consecutively
+  ex.items = items;
+  ex.instruction = lines.slice(0, start).map((g) => runText(g.words)).join(" ").replace(/\s+/g, " ").trim();
+  ex.passage = { columns: [paraLines.map((g) => runText(g.words)).join(" ").replace(/\s+/g, " ").trim()], staged: false };
+  return true;
+}
+// glued «Nl» pairs: a digits-only word immediately followed by a single lowercase letter word
+const inlinePairs = (ws) => {
+  const out = [];
+  for (let k = 0; k < ws.length - 1; k++) {
+    if (/^\d{1,2}$/.test(ws[k].t) && /^[a-z]$/.test(ws[k + 1].t) && ws[k + 1].x0 - ws[k].x1 < 8) out.push([ws[k], ws[k + 1]]);
+  }
+  return out;
+};
+
+// original single-column assembly — byte-identical behavior for non-declared exercises
+function assembleSingleColumn(ex, lines, diag) {
+  let curItem = null;
+  const flushItem = () => { if (curItem) { ex.items.push(curItem); curItem = null; } };
+  for (const g of lines) {
     if (isBankRow(g.words)) {
       diag.banks++;
       flushItem();
-      cur.bank = (cur.bank ?? []).concat(g.text.trim());
+      ex.bank = (ex.bank ?? []).concat(g.text.trim());
       continue;
     }
     const itemM = /^(\d+)\s+(.*)$/.exec(g.text.trim());
@@ -436,11 +646,49 @@ function parseRight(unitJson) {
       curItem.text = (curItem.text + " " + text).replace(/\s+/g, " ").trim();
       curItem.blankCount = (curItem.text.match(/____/g) ?? []).length;
     } else {
-      cur.instruction = (cur.instruction + " " + text).replace(/\s+/g, " ").trim();
+      ex.instruction = (ex.instruction + " " + text).replace(/\s+/g, " ").trim();
     }
   }
   flushItem();
+}
+
+function parseRight(unitJson) {
+  const groups = buildWordLayer(unitJson, "rightPage", unitJson.provenance.pdfPages.right).emitted;
+  const diag = { anchors: 0, banks: 0, ka2: { declared: [], inlineGap: [], excludedGrid: [], fallback: [] } };
+  const anchorRe = /^(\d+)\.(\d+)\s*$/;
+  const exercises = [];
+  let cur = null;
+  for (const g of groups) {
+    const m = anchorRe.exec(g.text.trim());
+    if (m) {
+      diag.anchors++;
+      if (cur) exercises.push(cur);
+      cur = { no: `${m[1]}.${m[2]}`, y: g.y, _lines: [] };
+      continue;
+    }
+    if (cur) cur._lines.push(g);
+  }
   if (cur) exercises.push(cur);
+  for (const ex of exercises) {
+    const lines = ex._lines;
+    delete ex._lines;
+    const full = { no: ex.no, y: ex.y, instruction: "", items: [], refs: [], bank: null, keyed: null };
+    const scan = scanKA2(ex.no, lines);
+    if (KA2_GRID_GUARD.has(ex.no) && scan.fireNums.length >= 2) diag.ka2.excludedGrid.push(ex.no);
+    if (scan.declared) {
+      const r = assembleKA2(ex.no, lines, scan, diag);
+      full.instruction = r.instruction;
+      full.items = r.items;
+      full.bank = r.bank;
+      if (r.passage) full.passage = r.passage;
+      diag.ka2.declared.push({ no: ex.no, fires: scan.fireNums, maxNum: scan.maxNum, staged: scan.staged, items: r.items.length });
+    } else {
+      if (scan.fireNums.length >= 2) diag.ka2.fallback.push({ no: ex.no, fires: scan.fireNums, unionMax: scan.maxNum, reason: "coverage" });
+      assembleSingleColumn(full, lines, diag);
+      if (assembleInlineGap(full, lines)) diag.ka2.inlineGap.push({ no: ex.no, items: full.items.length });
+    }
+    Object.assign(ex, full);
+  }
   for (const ex of exercises) {
     if (/opposite/i.test(ex.instruction)) {
       const refs = [...ex.instruction.matchAll(/from\s+([A-E])\s+opposite/gi)].map((m) => m[1]);
@@ -497,7 +745,7 @@ for (let n = 1; n <= 101; n++) {
     unit: n,
     title: left.title,
     bookId: "viu-advanced",
-    provenance: { rawFile: `${RAW}/unit-${id}.json`, pdfPages: raw.provenance.pdfPages, printedPages: raw.provenance.printedPages, sha256: raw.provenance.sha256, generator: "scripts/viu-adv-parse.mjs (A2-1..A2-5)" },
+    provenance: { rawFile: `${RAW}/unit-${id}.json`, pdfPages: raw.provenance.pdfPages, printedPages: raw.provenance.printedPages, sha256: raw.provenance.sha256, generator: "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)" },
     leftPage: { pdfPage: raw.provenance.pdfPages.left, title: left.title, unitNumber: left.unitNumber, sections: left.sections, miniDict: left.miniDict, diagnostics: left.diagnostics },
     rightPage: { pdfPage: raw.provenance.pdfPages.right, exercises: right.exercises, diagnostics: right.diagnostics },
     imageEvidence: images,
@@ -530,8 +778,16 @@ for (let n = 1; n <= 101; n++) {
       blanksNormalized: blanks,
       imageDependentCandidates: imgCands.length,
       queuedChars: queuedChars.map((q) => `${q.codepoint}×${q.count}@${q.where}`),
+      ka2: {
+        declaredExercises: right.diagnostics.ka2.declared.map((d) => d.no),
+        declaredItems: right.diagnostics.ka2.declared.reduce((a, d) => a + d.items, 0),
+        inlineGap: right.diagnostics.ka2.inlineGap.map((d) => d.no),
+        excludedGrid: right.diagnostics.ka2.excludedGrid,
+        fallback: right.diagnostics.ka2.fallback,
+        passageExercises: right.exercises.filter((e) => e.passage).length,
+      },
     },
-    note: "Structural parse mirrors the approved A1 partition (proved byte-exact) + word-level structural rules; keyed=null until A3; fa stays empty (A4).",
+    note: "Structural parse mirrors the approved A1 partition (proved byte-exact) + word-level structural rules + A3-KA-2 two-column item amendment (declared exercises only, mechanical gates a-d); keyed=null until A3; fa stays empty (A4).",
   };
   writeFileSync(`${CAP}/verify-unit-${id}.json`, JSON.stringify(verify, null, 2) + "\n");
 
@@ -566,8 +822,9 @@ const census = {
     generatedAt: new Date().toISOString(),
     bookId: "viu-advanced",
     roadmap: "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Advanced-Vocabulary-in-Use-ویرایش-سوم-2026-11-20.md",
-    gate: "G1 PASS (docs/qa/viu-adv-g1-gate-decision-2026-11-21.md) + owner pre-authorization trace 1a1feb704efa1a55",
+    gate: "G1 PASS (docs/qa/viu-adv-g1-gate-decision-2026-11-21.md) + owner pre-authorization trace 1a1feb704efa1a55 + G3 vote ④ A3-KA-2 amendment (trace 1a201df91ffdf639)",
     blankGapCalibration: "≥25pt = blank (53–94pt observed) · ~15pt = bank separator · 2pt = normal word gap",
+    ka2Amendment: "two-column item re-assembly — fires: standalone seq digit across ≥22pt (or x≥300) · coverage 1..max · grid guard 84.4 · per-exercise diagnostics in each unit's rightPage.diagnostics.ka2",
     marginColumnRule: "≥2 short whole-lines right of 340pt → column edge; mixed body lines split at ≥8pt gaps whose trailing run lies in the column (G1 limitation resolution — all splits recorded in diagnostics)",
   },
   totals,

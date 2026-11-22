@@ -3,7 +3,10 @@
 //   A2 stage (originally): exercises carried keyed=null (printed Answer key linked in Phase A3).
 //   A3 stage (now): the printed key (answer-key.json) + index (index.json) are linked into the
 //   capture, and the audit enforces the FULL post-A3 contract:
-//   Z1 file set complete (unit-001..101 capture + verify + fa-cache stub) and parseable
+//   Z1 file set complete (unit-001..101 capture + verify + fa-cache) and parseable — the fa-cache
+//      contract is phase-aware: pre-A4 stub {status:A4-pending, faNew:0, faReviewed:0} OR the A4
+//      FA-NEW layer {status:A4-FA-NEW-complete|A4-FA-NEW-partial, faNew=segments, faReviewed:0,
+//      every segment {en,fa,unit,cls:FA-NEW} with non-empty strings, law present in meta}
 //   Z2 titles/sections/blocks/notes/items: zero empty text fields, letters ⊆ A..E, kinds valid
 //   Z3 exercises: numbering N.x, item numbers ≥1, blankCount == "____" occurrences, refs ⊆ A..E,
 //      keyed linkage: keyed=null ⇔ the printed key has NO block for the exercise (honest
@@ -22,6 +25,11 @@
 //      scan · raw a3 layers present
 //   Z11 intersections (A3-4): file present · coverage pass with orphans=0 · balance totals sum
 //      correctly · pattern labels sum · a3KnownArtifacts (KA-1, KA-2) registered
+//   Z12 A3-KA-2 amendment proof (owner vote ④): for every exercise declared by the two-column
+//      amendment (rightPage.diagnostics.ka2.declared) — item-number MULTISET == key-row-number
+//      MULTISET (keyed exercises) · zero «____<digit>» merge artifacts in any item text ·
+//      passage shape valid (columns = non-empty string array, staged boolean) · inline-gap
+//      items (20.3 family) number 1..K consecutively
 // Exit code 1 on any violation — a red audit can never be shipped as green.
 //
 // READ-ONLY (writes nothing).
@@ -44,7 +52,19 @@ for (let n = 1; n <= 101; n++) {
   try { JSON.parse(readFileSync(`${CAP}/verify-unit-${id}.json`, "utf8")); verifies++; } catch (e) { fail(`Z1 verify unit-${id} missing/invalid: ${e.message}`); }
 }
 const fa = JSON.parse(readFileSync(`${CAP}/fa-cache.json`, "utf8"));
-if (fa.status !== "A4-pending" || fa.faNew !== 0 || fa.faReviewed !== 0) fail("Z1 fa-cache stub must be {status:A4-pending, faNew:0, faReviewed:0}");
+if (fa.status === "A4-pending") {
+  if (fa.faNew !== 0 || fa.faReviewed !== 0) fail("Z1 fa-cache stub must be {status:A4-pending, faNew:0, faReviewed:0}");
+} else if (typeof fa.status === "string" && fa.status.startsWith("A4-FA-NEW")) {
+  const segs = fa.segments ?? {};
+  let bad = 0;
+  for (const [k, v] of Object.entries(segs)) {
+    if (!k || typeof v.en !== "string" || !v.en.trim() || typeof v.fa !== "string" || !v.fa.trim() || !Number.isInteger(v.unit) || v.unit < 1 || v.unit > 101 || v.cls !== "FA-NEW") bad++;
+  }
+  if (bad) fail(`Z1 fa-cache ${bad} invalid segments`);
+  if (fa.faNew !== Object.keys(segs).length) fail(`Z1 fa-cache faNew ${fa.faNew} != segment count ${Object.keys(segs).length}`);
+  if (fa.faReviewed !== 0) fail("Z1 fa-cache faReviewed must be 0 — FA-REVIEWED only via owner human adjudication (A4-4)");
+  if (!fa.meta?.law?.includes("پوشش ≠ صحت")) fail("Z1 fa-cache meta.law missing — پوشش ≠ صحت is mandatory");
+} else fail(`Z1 fa-cache status ${JSON.stringify(fa.status)} is neither the A4-pending stub nor an A4-FA-NEW layer`);
 
 const keyData = JSON.parse(readFileSync(`${CAP}/answer-key.json`, "utf8"));
 const idxData = JSON.parse(readFileSync(`${CAP}/index.json`, "utf8"));
@@ -112,7 +132,7 @@ for (let n = 1; n <= 101; n++) {
   const scanText = (t) => { for (const ch of t ?? "") { const cp = ch.codePointAt(0); if (isPuaOrCtl(cp)) { const k = `U+${cp.toString(16).toUpperCase().padStart(4, "0")}`; seen.set(k, (seen.get(k) ?? 0) + 1); } } };
   for (const s of c.leftPage.sections) { for (const b of s.blocks) scanText(b.text); for (const m of s.marginNotes) scanText(m.text); }
   for (const e of c.leftPage.miniDict) scanText(e.text);
-  for (const ex of c.rightPage.exercises) { scanText(ex.instruction); for (const i of ex.items) scanText(i.text); for (const b of ex.bank ?? []) scanText(b); }
+  for (const ex of c.rightPage.exercises) { scanText(ex.instruction); for (const i of ex.items) scanText(i.text); for (const b of ex.bank ?? []) scanText(b); if (ex.passage) for (const col of ex.passage.columns ?? []) scanText(col); }
   for (const [k, cnt] of seen) if (!queued.has(k)) fail(`Z5 u${n} unqueued unknown char ${k}×${cnt} in capture text`);
   for (const [k, cnt] of queued) {
     const rawUnit = JSON.parse(readFileSync(`${RAW}/unit-${id}.json`, "utf8"));
@@ -243,6 +263,50 @@ if (!ex84?.keyed?.extras?.some((e) => e.kind === "grid")) fail("Z7 u84 84.4 grid
   const ka = inter.meta?.a3KnownArtifacts ?? {};
   if (!ka.A3_KA_1 || !ka.A3_KA_2) fail("Z11 a3KnownArtifacts (KA-1/KA-2) not registered");
   try { const v3 = JSON.parse(readFileSync(`${CAP}/verify-a3-key-index.json`, "utf8")); if (v3.ok !== true || v3.checks?.keyRawByteExact !== true || v3.checks?.indexRawByteExact !== true) fail("Z11 verify-a3-key-index not ok/byte-exact"); } catch (e) { fail(`Z11 verify-a3-key-index missing: ${e.message}`); }
+}
+
+// Z12 — A3-KA-2 amendment proof (declared exercises: item multiset == key row multiset, no merge artifacts)
+{
+  const multiset = (arr) => [...arr].sort((a, b) => a - b);
+  let declaredTotal = 0, multisetOK = 0, multisetSkipped = 0;
+  const artifactRe = /____\d{1,2}(?=\s|$)/;
+  for (let n = 1; n <= 101; n++) {
+    const c = JSON.parse(readFileSync(`${CAP}/unit-${String(n).padStart(3, "0")}.json`, "utf8"));
+    const ka2 = c.rightPage.diagnostics?.ka2;
+    if (!ka2) fail(`Z12 u${n} missing ka2 diagnostics`);
+    for (const ex of c.rightPage.exercises) {
+      const declared = ka2?.declared?.some((d) => d.no === ex.no);
+      if (declared) declaredTotal++;
+      for (const it of ex.items) {
+        // merge-artifact check: every exercise EXCEPT the A3-KA-1 registered grid (84.4 — its
+        // digits are grid column labels and stay verbatim for the A5-5 menu)
+        if (ex.no !== "84.4" && artifactRe.test(it.text)) fail(`Z12 u${n}/${ex.no} item ${it.n} still has a «____N» merge artifact`);
+        if (it.part !== undefined && (!Number.isInteger(it.part) || it.part < 1)) fail(`Z12 u${n}/${ex.no} item ${it.n} bad part`);
+      }
+      if (ex.passage !== undefined && ex.passage !== null) {
+        if (!Array.isArray(ex.passage.columns) || ex.passage.columns.some((col) => typeof col !== "string")) fail(`Z12 u${n}/${ex.no} passage.columns invalid`);
+        if (typeof ex.passage.staged !== "boolean") fail(`Z12 u${n}/${ex.no} passage.staged invalid`);
+      }
+      if (declared && ex.keyed && ex.keyed.rows.length > 0) {
+        // mechanical proof: every key row number is covered by an item with that number
+        // (workedExample keys intentionally start at 2 — the row-1 answer is printed in the
+        // book — so row-multiset ⊆ item-multiset is the invariant, equality is NOT required)
+        const itemNs = multiset(ex.items.map((i) => i.n));
+        const rowNs = multiset(ex.keyed.rows.map((r) => r.n));
+        let ri = 0;
+        const covered = rowNs.every((rn) => {
+          while (ri < itemNs.length && itemNs[ri] < rn) ri++;
+          if (ri < itemNs.length && itemNs[ri] === rn) { ri++; return true; }
+          return false;
+        });
+        if (!covered)
+          fail(`Z12 u${n}/${ex.no} declared key rows ${JSON.stringify(rowNs)} not covered by item numbers ${JSON.stringify(itemNs)}`);
+        else multisetOK++;
+      } else if (declared) multisetSkipped++;
+    }
+  }
+  if (declaredTotal !== 37) fail(`Z12 declared exercises ${declaredTotal} != 37 (the A3-KA-2 declared set)`);
+  console.error(`Z12 ka2 declared=${declaredTotal} multisetOK=${multisetOK} noKeyRows=${multisetSkipped}`);
 }
 
 // verdict

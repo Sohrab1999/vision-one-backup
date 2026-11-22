@@ -13,7 +13,7 @@
       "right": 135
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 136,
@@ -180,14 +180,26 @@
           {
             "n": 1,
             "y": 269.6,
-            "text": "____vehicle ____3 ____topic goods train ____issue equipment ____tone of voice",
-            "blankCount": 5
+            "text": "vehicle goods train equipment",
+            "blankCount": 0
+          },
+          {
+            "n": 3,
+            "y": 269.6,
+            "text": "topic issue tone of voice",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 311.3,
-            "text": "____procedure ____4 ____sermon suitcase ____narrative",
-            "blankCount": 4
+            "text": "procedure suitcase",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 311.3,
+            "text": "sermon narrative",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -220,7 +232,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "64.3",
@@ -439,7 +451,24 @@
     ],
     "diagnostics": {
       "anchors": 4,
-      "banks": 1
+      "banks": 1,
+      "ka2": {
+        "declared": [
+          {
+            "no": "64.2",
+            "fires": [
+              3,
+              4
+            ],
+            "maxNum": 4,
+            "staged": true,
+            "items": 4
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -461,8 +490,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 4,
-    "exerciseItems": 23,
-    "blanks": 15,
+    "exerciseItems": 25,
+    "blanks": 6,
     "banks": 1,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -472,6 +501,6 @@
     "keyed": 4,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

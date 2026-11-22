@@ -13,7 +13,7 @@
       "right": 201
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 202,
@@ -349,8 +349,26 @@
           {
             "n": 1,
             "y": 430.2,
-            "text": "apothecary ____2 damsel ____3 poesy ____4 whither",
-            "blankCount": 3
+            "text": "apothecary",
+            "blankCount": 0
+          },
+          {
+            "n": 2,
+            "y": 430.2,
+            "text": "damsel",
+            "blankCount": 0
+          },
+          {
+            "n": 3,
+            "y": 430.2,
+            "text": "poesy",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 430.2,
+            "text": "whither",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -383,7 +401,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "97.5",
@@ -393,14 +411,32 @@
           {
             "n": 1,
             "y": 528.9,
-            "text": "____2 When you have created a file that is to be stored ____Views are certainly divided on the answers to in a shared folder, or one that is located on a ____the questions listed above; even whether it server, you can use the tools in the client software ____matters that pluralism and different paradigms to restrict access to the file. ____reign in SLA is a matter of heated debate.",
-            "blankCount": 5
+            "text": "When you have created a file that is to be stored in a shared folder, or one that is located on a server, you can use the tools in the client software to restrict access to the file.",
+            "blankCount": 0
+          },
+          {
+            "n": 2,
+            "y": 528.9,
+            "text": "Views are certainly divided on the answers to the questions listed above; even whether it matters that pluralism and different paradigms reign in SLA is a matter of heated debate.",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 603.5,
-            "text": "____4 ____5 Sweetest love, I do not go, ____And so, my fellow Americans: ask ____Mind you there was a For weariness of thee, ____not what your country can do for ____lot of rain in Germany Nor in hope the world can show ____you – ask what you can do for your ____over Christmas wasn’t A fitter love for me; ____country. My fellow citizens of the ____there, cos I saw the river But since that I ____world: ask not what America will ____in Bonn on the news on Must die at last, ’tis best, ____do for you, but what together we ____telly, the Rhine. Yeah, To use myself in jest ____can do for the freedom of man. ____the river in Bonn. Thus by feigned deaths to die.",
-            "blankCount": 16
+            "text": "Sweetest love, I do not go, For weariness of thee, Nor in hope the world can show A fitter love for me; But since that I Must die at last, ’tis best, To use myself in jest Thus by feigned deaths to die.",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 603.5,
+            "text": "And so, my fellow Americans: ask not what your country can do for you – ask what you can do for your country. My fellow citizens of the world: ask not what America will do for you, but what together we can do for the freedom of man.",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 603.5,
+            "text": "Mind you there was a lot of rain in Germany over Christmas wasn’t there, cos I saw the river in Bonn on the news on telly, the Rhine. Yeah, the river in Bonn.",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -462,12 +498,41 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       }
     ],
     "diagnostics": {
       "anchors": 5,
-      "banks": 2
+      "banks": 2,
+      "ka2": {
+        "declared": [
+          {
+            "no": "97.4",
+            "fires": [
+              2,
+              3,
+              4
+            ],
+            "maxNum": 4,
+            "staged": false,
+            "items": 4
+          },
+          {
+            "no": "97.5",
+            "fires": [
+              2,
+              4,
+              5
+            ],
+            "maxNum": 5,
+            "staged": true,
+            "items": 5
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -489,8 +554,8 @@
     "languageHelp": 1,
     "dropCaps": 0,
     "exercises": 5,
-    "exerciseItems": 9,
-    "blanks": 24,
+    "exerciseItems": 15,
+    "blanks": 0,
     "banks": 2,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -500,6 +565,6 @@
     "keyed": 5,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

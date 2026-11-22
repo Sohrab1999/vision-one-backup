@@ -13,7 +13,7 @@
       "right": 17
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 18,
@@ -420,32 +420,62 @@
           {
             "n": 1,
             "y": 570,
-            "text": "assembly-line worker in a car factory ____6 lifeguard on a beach",
-            "blankCount": 1
+            "text": "assembly-line worker in a car factory",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 570,
+            "text": "lifeguard on a beach",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 582,
-            "text": "supermarket shelf stacker ____7 receptionist at a dentist’s",
-            "blankCount": 1
+            "text": "supermarket shelf stacker",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 582,
+            "text": "receptionist at a dentist’s",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 594,
-            "text": "public relations officer in a multinational company 8 private detective",
+            "text": "public relations officer in a multinational company",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 594,
+            "text": "private detective",
             "blankCount": 0
           },
           {
             "n": 4,
             "y": 606,
-            "text": "bodyguard to a celebrity ____9 refuse collector in a city",
-            "blankCount": 1
+            "text": "bodyguard to a celebrity",
+            "blankCount": 0
+          },
+          {
+            "n": 9,
+            "y": 606,
+            "text": "refuse collector in a city",
+            "blankCount": 0
           },
           {
             "n": 5,
             "y": 618,
-            "text": "surgeon ____10 night-security guard",
-            "blankCount": 1
+            "text": "surgeon",
+            "blankCount": 0
+          },
+          {
+            "n": 10,
+            "y": 618,
+            "text": "night-security guard",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -517,7 +547,7 @@
             }
           ]
         },
-        "kind": "fillIn"
+        "kind": "bank"
       },
       {
         "no": "5.5",
@@ -532,7 +562,27 @@
     ],
     "diagnostics": {
       "anchors": 5,
-      "banks": 1
+      "banks": 1,
+      "ka2": {
+        "declared": [
+          {
+            "no": "5.4",
+            "fires": [
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "maxNum": 10,
+            "staged": false,
+            "items": 10
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -554,8 +604,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 5,
-    "exerciseItems": 21,
-    "blanks": 19,
+    "exerciseItems": 26,
+    "blanks": 15,
     "banks": 1,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -565,6 +615,6 @@
     "keyed": 4,
     "printKeyless": 1,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

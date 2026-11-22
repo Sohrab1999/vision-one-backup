@@ -413,7 +413,13 @@ for (let n = 1; n <= 101; n++) {
     for (const b of s.blocks) if (b.kind === "paragraph") addWords(b.text, corpusFull);
     for (const m of s.marginNotes) addWords(m.text, corpusFull);
   }
-  for (const ex of c.rightPage.exercises) { addWords(ex.instruction, corpusPrimary); for (const i of ex.items) addWords(i.text, corpusPrimary); for (const b of ex.bank ?? []) addWords(b, corpusPrimary); }
+  for (const ex of c.rightPage.exercises) {
+    addWords(ex.instruction, corpusPrimary); for (const i of ex.items) addWords(i.text, corpusPrimary); for (const b of ex.bank ?? []) addWords(b, corpusPrimary);
+    // A3-KA-2 amendment: exercise `passage` (per-column verbatim text — prose stimuli, letter
+    // options, residual table words) is printed exercise content; its words previously lived in
+    // the item layer, so the corpus keeps covering them (continuity of intersection (ب)).
+    if (ex.passage) for (const col of ex.passage.columns ?? []) addWords(col, corpusPrimary);
+  }
 }
 for (const t of corpusPrimary) corpusFull.add(t); // supplementary union = primary ∪ prose ∪ margin (one set, like the roadmap's اجتماع)
 const stripParens = (s) => s.replace(/\([^)]*\)/g, " ");
@@ -472,7 +478,7 @@ const intersections = {
     roadmap: "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Advanced-Vocabulary-in-Use-ویرایش-سوم-2026-11-20.md §۴ فاز A3",
     a3KnownArtifacts: {
       A3_KA_1: "کلید تمرین جدول‌فکرک 84.4 verbatim به‌صورت extras{kind:grid} ثبت شد — ارقام آن خطوط برچسب ستون گرید ۱-۵ هستند نه شمارهٔ پاسخ (تنها فعالیت گریدمحور کتاب — risk #6 نقشه راه؛ منوی A5-5)",
-      A3_KA_2: "لایهٔ آیتم A2 چیدمان دوستونهٔ آیتم‌های صفحهٔ راست را تک‌ستونه پارس کرده (ادغام جفتی با آرتیفکت «____6»؛ نمونه: 29.4 کپچر items=5 در برابر ۹ آیتم چاپی و ۹ ردیف کلید) — توسط تقاطع (ج) آشکار شد؛ اصلاح جراحی پیشنهادی در دروازهٔ G3 به تصمیم مالک می‌رسد — A3 لایهٔ A2 را بازنویسی نمی‌کند",
+      A3_KA_2: "لایهٔ آیتم A2 چیدمان دوستونهٔ آیتم‌های صفحهٔ راست را تک‌ستونه پارس کرده بود (ادغام جفتی با آرتیفکت «____6»؛ نمونه: 29.4 کپچر items=5 در برابر ۹ آیتم چاپی و ۹ ردیف کلید) — توسط تقاطع (ج) آشکار شد؛ با رأی ④ مالک (trace 1a201df91ffdf639) اصلاح جراحی در scripts/viu-adv-parse.mjs اجرا شد (قاعدهٔ مکانیکی: fire = رقم توالی مستقل با گپ ≥22pt یا x≥300 · پوشش 1..max · گارد گرید 84.4 · قاعدهٔ درون‌خطی «first letter is given» برای 20.3) و A2+A3 بازاجرا شد — اثبات بایت‌به‌بیت partition در برابر لایهٔ خام در هر اجرا (abort-on-mismatch) + الگوی twoColumnItems در توازن (ج) از ۵ به ۰ رسید (برابر ۳۴۷⇒۳۸۳) — exercise.passage (ستون‌های verbatim) ثبت جدید لایهٔ کپچر است و واژه‌هایش در پیکرهٔ تقاطع (ب) پوشش داده می‌شود",
     },
   },
   coverage: {

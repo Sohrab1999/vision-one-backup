@@ -1,12 +1,12 @@
 {
   "meta": {
     "generator": "scripts/viu-adv-a3.mjs (A3-4)",
-    "generatedAt": "2026-11-21T19:43:38.380Z",
+    "generatedAt": "2026-11-22T07:44:51.927Z",
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
     "roadmap": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Advanced-Vocabulary-in-Use-ویرایش-سوم-2026-11-20.md §۴ فاز A3",
     "a3KnownArtifacts": {
       "A3_KA_1": "کلید تمرین جدول‌فکرک 84.4 verbatim به‌صورت extras{kind:grid} ثبت شد — ارقام آن خطوط برچسب ستون گرید ۱-۵ هستند نه شمارهٔ پاسخ (تنها فعالیت گریدمحور کتاب — risk #6 نقشه راه؛ منوی A5-5)",
-      "A3_KA_2": "لایهٔ آیتم A2 چیدمان دوستونهٔ آیتم‌های صفحهٔ راست را تک‌ستونه پارس کرده (ادغام جفتی با آرتیفکت «____6»؛ نمونه: 29.4 کپچر items=5 در برابر ۹ آیتم چاپی و ۹ ردیف کلید) — توسط تقاطع (ج) آشکار شد؛ اصلاح جراحی پیشنهادی در دروازهٔ G3 به تصمیم مالک می‌رسد — A3 لایهٔ A2 را بازنویسی نمی‌کند"
+      "A3_KA_2": "لایهٔ آیتم A2 چیدمان دوستونهٔ آیتم‌های صفحهٔ راست را تک‌ستونه پارس کرده بود (ادغام جفتی با آرتیفکت «____6»؛ نمونه: 29.4 کپچر items=5 در برابر ۹ آیتم چاپی و ۹ ردیف کلید) — توسط تقاطع (ج) آشکار شد؛ با رأی ④ مالک (trace 1a201df91ffdf639) اصلاح جراحی در scripts/viu-adv-parse.mjs اجرا شد (قاعدهٔ مکانیکی: fire = رقم توالی مستقل با گپ ≥22pt یا x≥300 · پوشش 1..max · گارد گرید 84.4 · قاعدهٔ درون‌خطی «first letter is given» برای 20.3) و A2+A3 بازاجرا شد — اثبات بایت‌به‌بیت partition در برابر لایهٔ خام در هر اجرا (abort-on-mismatch) + الگوی twoColumnItems در توازن (ج) از ۵ به ۰ رسید (برابر ۳۴۷⇒۳۸۳) — exercise.passage (ستون‌های verbatim) ثبت جدید لایهٔ کپچر است و واژه‌هایش در پیکرهٔ تقاطع (ب) پوشش داده می‌شود"
     }
   },
   "coverage": {
@@ -3744,14 +3744,14 @@
     },
     "totals": {
       "keyedExercises": 413,
-      "equal": 347,
-      "unequal": 66,
+      "equal": 383,
+      "unequal": 30,
       "patternCounts": {
         "inlineSequence": 1,
-        "workedExample": 10,
-        "twoColumnItems": 5,
-        "moreRowsThanItems": 44,
-        "duplicateNumbers": 3,
+        "workedExample": 12,
+        "twoColumnItems": 0,
+        "moreRowsThanItems": 12,
+        "duplicateNumbers": 2,
         "other": 3
       }
     },
@@ -3782,103 +3782,6 @@
         "rowsOverItemCount": [],
         "extras": 0,
         "pattern": "inlineSequence"
-      },
-      {
-        "exercise": "5.4",
-        "items": 5,
-        "rows": 10,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "extras": 1,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "6.2",
-        "items": 5,
-        "rows": 8,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "8.1",
-        "items": 2,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          3,
-          4,
-          5,
-          6
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "8.4",
-        "items": 3,
-        "rows": 10,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
       },
       {
         "exercise": "8.5",
@@ -3912,66 +3815,6 @@
         "pattern": "moreRowsThanItems"
       },
       {
-        "exercise": "9.3",
-        "items": 2,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          3,
-          4,
-          5,
-          6
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "11.1",
-        "items": 9,
-        "rows": 12,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [],
-        "extras": 0,
-        "pattern": "duplicateNumbers"
-      },
-      {
-        "exercise": "13.2",
-        "items": 2,
-        "rows": 4,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "rowsOverItemCount": [
-          3,
-          4
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
         "exercise": "15.4",
         "items": 2,
         "rows": 9,
@@ -3994,69 +3837,6 @@
           7,
           8,
           9
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "20.1",
-        "items": 3,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "20.3",
-        "items": 0,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          4,
-          2,
-          5,
-          3,
-          6
-        ],
-        "rowsOverItemCount": [
-          1,
-          4,
-          2,
-          5,
-          3,
-          6
-        ],
-        "extras": 0,
-        "pattern": "twoColumnItems"
-      },
-      {
-        "exercise": "23.1",
-        "items": 3,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6
         ],
         "extras": 0,
         "pattern": "moreRowsThanItems"
@@ -4097,31 +3877,8 @@
         "pattern": "workedExample"
       },
       {
-        "exercise": "29.1",
-        "items": 4,
-        "rows": 8,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7,
-          8
-        ],
-        "extras": 1,
-        "pattern": "moreRowsThanItems"
-      },
-      {
         "exercise": "29.2",
-        "items": 3,
+        "items": 9,
         "rows": 8,
         "rowNumbers": [
           2,
@@ -4133,220 +3890,9 @@
           8,
           9
         ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ],
+        "rowsOverItemCount": [],
         "extras": 1,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "29.3",
-        "items": 3,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6
-        ],
-        "extras": 1,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "29.4",
-        "items": 5,
-        "rows": 9,
-        "rowNumbers": [
-          1,
-          6,
-          2,
-          7,
-          3,
-          8,
-          4,
-          9,
-          5
-        ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8,
-          9
-        ],
-        "extras": 0,
-        "pattern": "twoColumnItems"
-      },
-      {
-        "exercise": "31.1",
-        "items": 4,
-        "rows": 7,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "34.2",
-        "items": 4,
-        "rows": 9,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7,
-          8,
-          9
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "35.2",
-        "items": 5,
-        "rows": 10,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "36.2",
-        "items": 4,
-        "rows": 7,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "41.2",
-        "items": 4,
-        "rows": 8,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7,
-          8
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "49.3",
-        "items": 4,
-        "rows": 8,
-        "rowNumbers": [
-          1,
-          5,
-          2,
-          6,
-          3,
-          7,
-          4,
-          8
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7,
-          8
-        ],
-        "extras": 0,
-        "pattern": "twoColumnItems"
-      },
-      {
-        "exercise": "49.4",
-        "items": 2,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          3,
-          4,
-          5,
-          6
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
+        "pattern": "workedExample"
       },
       {
         "exercise": "50.2",
@@ -4363,27 +3909,6 @@
         "rowsOverItemCount": [
           1,
           2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "51.1",
-        "items": 2,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
           3,
           4,
           5,
@@ -4418,25 +3943,6 @@
         "pattern": "moreRowsThanItems"
       },
       {
-        "exercise": "58.1",
-        "items": 2,
-        "rows": 5,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "rowsOverItemCount": [
-          3,
-          4,
-          5
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
         "exercise": "59.2",
         "items": 1,
         "rows": 0,
@@ -4462,23 +3968,6 @@
         "rowsOverItemCount": [],
         "extras": 1,
         "pattern": "workedExample"
-      },
-      {
-        "exercise": "64.2",
-        "items": 2,
-        "rows": 4,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "rowsOverItemCount": [
-          3,
-          4
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
       },
       {
         "exercise": "65.1",
@@ -4615,32 +4104,6 @@
           4
         ],
         "extras": 2,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "81.3",
-        "items": 5,
-        "rows": 10,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "extras": 0,
         "pattern": "moreRowsThanItems"
       },
       {
@@ -4789,51 +4252,8 @@
         "pattern": "workedExample"
       },
       {
-        "exercise": "87.5",
-        "items": 3,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          4,
-          2,
-          5,
-          3,
-          6
-        ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6
-        ],
-        "extras": 0,
-        "pattern": "twoColumnItems"
-      },
-      {
-        "exercise": "87.6",
-        "items": 4,
-        "rows": 8,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7,
-          8
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
         "exercise": "88.1",
-        "items": 5,
+        "items": 9,
         "rows": 8,
         "rowNumbers": [
           2,
@@ -4845,37 +4265,9 @@
           8,
           9
         ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8,
-          9
-        ],
+        "rowsOverItemCount": [],
         "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "88.2",
-        "items": 4,
-        "rows": 8,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "rowsOverItemCount": [
-          5,
-          6,
-          7,
-          8
-        ],
-        "extras": 1,
-        "pattern": "moreRowsThanItems"
+        "pattern": "workedExample"
       },
       {
         "exercise": "88.3",
@@ -4911,106 +4303,6 @@
         "pattern": "workedExample"
       },
       {
-        "exercise": "89.2",
-        "items": 1,
-        "rows": 4,
-        "rowNumbers": [
-          1,
-          3,
-          2,
-          4
-        ],
-        "rowsOverItemCount": [
-          3,
-          2,
-          4
-        ],
-        "extras": 0,
-        "pattern": "twoColumnItems"
-      },
-      {
-        "exercise": "91.1",
-        "items": 5,
-        "rows": 10,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "94.5",
-        "items": 3,
-        "rows": 5,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "rowsOverItemCount": [
-          4,
-          5
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "96.2",
-        "items": 3,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "96.5",
-        "items": 1,
-        "rows": 4,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "rowsOverItemCount": [
-          2,
-          3,
-          4
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
         "exercise": "97.3",
         "items": 0,
         "rows": 10,
@@ -5042,43 +4334,6 @@
         "pattern": "duplicateNumbers"
       },
       {
-        "exercise": "97.4",
-        "items": 1,
-        "rows": 4,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "rowsOverItemCount": [
-          2,
-          3,
-          4
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "97.5",
-        "items": 2,
-        "rows": 5,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "rowsOverItemCount": [
-          3,
-          4,
-          5
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
         "exercise": "99.4",
         "items": 6,
         "rows": 1,
@@ -5088,26 +4343,6 @@
         "rowsOverItemCount": [],
         "extras": 1,
         "pattern": "other"
-      },
-      {
-        "exercise": "100.1",
-        "items": 3,
-        "rows": 6,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "rowsOverItemCount": [
-          4,
-          5,
-          6
-        ],
-        "extras": 1,
-        "pattern": "moreRowsThanItems"
       },
       {
         "exercise": "100.2",
@@ -5124,30 +4359,6 @@
           3,
           4,
           5
-        ],
-        "extras": 0,
-        "pattern": "moreRowsThanItems"
-      },
-      {
-        "exercise": "100.3",
-        "items": 5,
-        "rows": 9,
-        "rowNumbers": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ],
-        "rowsOverItemCount": [
-          6,
-          7,
-          8,
-          9
         ],
         "extras": 0,
         "pattern": "moreRowsThanItems"

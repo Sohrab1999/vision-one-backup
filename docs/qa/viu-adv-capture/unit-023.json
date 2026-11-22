@@ -13,7 +13,7 @@
       "right": 53
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 54,
@@ -66,20 +66,38 @@
           {
             "n": 1,
             "y": 302,
-            "text": "Who is concerned about animal welfare? ____4 Who has a food allergy?",
-            "blankCount": 1
+            "text": "Who is concerned about animal welfare?",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 302,
+            "text": "Who has a food allergy?",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 314,
-            "text": "Who wants food without additives? ____5 Who uses convenience foods?",
-            "blankCount": 1
+            "text": "Who wants food without additives?",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 314,
+            "text": "Who uses convenience foods?",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 326,
-            "text": "Who uses a fair trade product? ____6 Who prefers a free-range product?",
-            "blankCount": 1
+            "text": "Who uses a fair trade product?",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 326,
+            "text": "Who prefers a free-range product?",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -122,7 +140,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "23.2",
@@ -372,7 +390,25 @@
     ],
     "diagnostics": {
       "anchors": 3,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "23.1",
+            "fires": [
+              4,
+              5,
+              6
+            ],
+            "maxNum": 6,
+            "staged": false,
+            "items": 6
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -394,8 +430,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 3,
-    "exerciseItems": 21,
-    "blanks": 14,
+    "exerciseItems": 24,
+    "blanks": 11,
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -405,6 +441,6 @@
     "keyed": 3,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

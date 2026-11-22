@@ -13,7 +13,7 @@
       "right": 181
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 182,
@@ -366,20 +366,38 @@
           {
             "n": 1,
             "y": 550.6,
-            "text": "food for vegetarians must be this ____4 can be dry-cleaned",
-            "blankCount": 1
+            "text": "food for vegetarians must be this",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 550.6,
+            "text": "can be dry-cleaned",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 562.6,
-            "text": "connected with class ____5 very aware of people’s clothes",
-            "blankCount": 1
+            "text": "connected with class",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 562.6,
+            "text": "very aware of people’s clothes",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 574.6,
-            "text": "containing a lot of vitamins ____6 initiated by the government",
-            "blankCount": 1
+            "text": "containing a lot of vitamins",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 574.6,
+            "text": "initiated by the government",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -422,7 +440,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "87.6",
@@ -432,26 +450,50 @@
           {
             "n": 1,
             "y": 609.9,
-            "text": "dampen ____5 roughen",
-            "blankCount": 1
+            "text": "dampen",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 609.9,
+            "text": "roughen",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 621.9,
-            "text": "friendly ____6 masterly",
-            "blankCount": 1
+            "text": "friendly",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 621.9,
+            "text": "masterly",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 633.9,
-            "text": "dearly ____7 kindly",
-            "blankCount": 1
+            "text": "dearly",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 633.9,
+            "text": "kindly",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 645.9,
-            "text": "silken ____8 darken",
-            "blankCount": 1
+            "text": "silken",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 645.9,
+            "text": "darken",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -504,12 +546,42 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       }
     ],
     "diagnostics": {
       "anchors": 6,
-      "banks": 5
+      "banks": 5,
+      "ka2": {
+        "declared": [
+          {
+            "no": "87.5",
+            "fires": [
+              4,
+              5,
+              6
+            ],
+            "maxNum": 6,
+            "staged": false,
+            "items": 6
+          },
+          {
+            "no": "87.6",
+            "fires": [
+              5,
+              6,
+              7,
+              8
+            ],
+            "maxNum": 8,
+            "staged": false,
+            "items": 8
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -531,8 +603,8 @@
     "languageHelp": 1,
     "dropCaps": 0,
     "exercises": 6,
-    "exerciseItems": 14,
-    "blanks": 7,
+    "exerciseItems": 21,
+    "blanks": 0,
     "banks": 5,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -542,6 +614,6 @@
     "keyed": 6,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

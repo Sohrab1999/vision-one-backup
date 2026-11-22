@@ -13,7 +13,7 @@
       "right": 183
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 184,
@@ -76,26 +76,50 @@
           {
             "n": 1,
             "y": 87.8,
-            "text": "biography = writing about a life ____6 to retrogress",
-            "blankCount": 1
+            "text": "biography = writing about a life",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 87.8,
+            "text": "to retrogress",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 99.8,
-            "text": "monologue ____7 graphology",
-            "blankCount": 1
+            "text": "monologue",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 99.8,
+            "text": "graphology",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 111.8,
-            "text": "telephone ____8 to destabilise",
-            "blankCount": 1
+            "text": "telephone",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 111.8,
+            "text": "to destabilise",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 123.8,
-            "text": "autobiography ____9 autograph",
-            "blankCount": 1
+            "text": "autobiography",
+            "blankCount": 0
+          },
+          {
+            "n": 9,
+            "y": 123.8,
+            "text": "autograph",
+            "blankCount": 0
           },
           {
             "n": 5,
@@ -154,7 +178,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "88.2",
@@ -164,26 +188,50 @@
           {
             "n": 1,
             "y": 207.2,
-            "text": "mono ____5 auto",
-            "blankCount": 1
+            "text": "mono",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 207.2,
+            "text": "auto",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 219.2,
-            "text": "techno ____6 pre",
-            "blankCount": 1
+            "text": "techno",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 219.2,
+            "text": "pre",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 231.2,
-            "text": "retro ____7 post",
-            "blankCount": 1
+            "text": "retro",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 231.2,
+            "text": "post",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 243.2,
-            "text": "tele ____8 bio",
-            "blankCount": 1
+            "text": "tele",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 243.2,
+            "text": "bio",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -243,7 +291,7 @@
             }
           ]
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "88.3",
@@ -552,7 +600,38 @@
     ],
     "diagnostics": {
       "anchors": 5,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "88.1",
+            "fires": [
+              6,
+              7,
+              8,
+              9
+            ],
+            "maxNum": 9,
+            "staged": false,
+            "items": 9
+          },
+          {
+            "no": "88.2",
+            "fires": [
+              5,
+              6,
+              7,
+              8
+            ],
+            "maxNum": 8,
+            "staged": false,
+            "items": 8
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -574,8 +653,8 @@
     "languageHelp": 1,
     "dropCaps": 0,
     "exercises": 5,
-    "exerciseItems": 30,
-    "blanks": 8,
+    "exerciseItems": 38,
+    "blanks": 0,
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -585,6 +664,6 @@
     "keyed": 5,
     "printKeyless": 0,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

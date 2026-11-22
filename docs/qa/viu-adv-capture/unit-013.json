@@ -13,7 +13,7 @@
       "right": 33
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 34,
@@ -173,14 +173,26 @@
           {
             "n": 1,
             "y": 416.1,
-            "text": "Who is yearning to do something? ____3 Who has a thirst for something?",
-            "blankCount": 1
+            "text": "Who is yearning to do something?",
+            "blankCount": 0
+          },
+          {
+            "n": 3,
+            "y": 416.1,
+            "text": "Who has a thirst for something?",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 428.1,
-            "text": "Who is placating someone? ____4 Who covets something?",
-            "blankCount": 1
+            "text": "Who is placating someone?",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 428.1,
+            "text": "Who covets something?",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -213,7 +225,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "13.3",
@@ -394,7 +406,24 @@
     ],
     "diagnostics": {
       "anchors": 5,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "13.2",
+            "fires": [
+              3,
+              4
+            ],
+            "maxNum": 4,
+            "staged": false,
+            "items": 4
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -416,8 +445,8 @@
     "languageHelp": 1,
     "dropCaps": 0,
     "exercises": 5,
-    "exerciseItems": 19,
-    "blanks": 25,
+    "exerciseItems": 21,
+    "blanks": 23,
     "banks": 0,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -427,6 +456,6 @@
     "keyed": 4,
     "printKeyless": 1,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

@@ -13,7 +13,7 @@
       "right": 77
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 78,
@@ -201,32 +201,62 @@
           {
             "n": 1,
             "y": 303.3,
-            "text": "detector ____6 spot ____a squad ____f ticket",
-            "blankCount": 3
+            "text": "detector",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 303.3,
+            "text": "spot",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 315.3,
-            "text": "landing ____7 closed-circuit ____b television g dogs",
-            "blankCount": 2
+            "text": "landing",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 315.3,
+            "text": "closed-circuit",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 327.3,
-            "text": "cyber ____8 drug ____c goods ____h crime",
-            "blankCount": 3
+            "text": "cyber",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 327.3,
+            "text": "drug",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 339.3,
-            "text": "speed ____9 parking ____d check ____i warrant",
-            "blankCount": 3
+            "text": "speed",
+            "blankCount": 0
+          },
+          {
+            "n": 9,
+            "y": 339.3,
+            "text": "parking",
+            "blankCount": 0
           },
           {
             "n": 5,
             "y": 351.3,
-            "text": "search ____10 restricted ____e camera j card",
-            "blankCount": 2
+            "text": "search",
+            "blankCount": 0
+          },
+          {
+            "n": 10,
+            "y": 351.3,
+            "text": "restricted",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -299,7 +329,16 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "passage": {
+          "columns": [
+            "",
+            "",
+            "a squad b television g dogs c goods d check e camera j card",
+            "f ticket h crime i warrant"
+          ],
+          "staged": false
+        },
+        "kind": "open"
       },
       {
         "no": "35.3",
@@ -506,7 +545,27 @@
     ],
     "diagnostics": {
       "anchors": 5,
-      "banks": 1
+      "banks": 1,
+      "ka2": {
+        "declared": [
+          {
+            "no": "35.2",
+            "fires": [
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
+            "maxNum": 10,
+            "staged": false,
+            "items": 10
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -534,8 +593,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 5,
-    "exerciseItems": 28,
-    "blanks": 21,
+    "exerciseItems": 33,
+    "blanks": 8,
     "banks": 1,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 1
@@ -545,6 +604,6 @@
     "keyed": 4,
     "printKeyless": 1,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

@@ -13,7 +13,7 @@
       "right": 79
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 80,
@@ -138,26 +138,44 @@
           {
             "n": 1,
             "y": 203.9,
-            "text": "want to achieve ____5 organised activities to try to achieve",
-            "blankCount": 1
+            "text": "want to achieve",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 203.9,
+            "text": "organised activities to try to achieve something",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 215.9,
-            "text": "have their roots in ____something",
-            "blankCount": 1
+            "text": "have their roots in",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 227.9,
-            "text": "completely get rid of ____6 principle",
-            "blankCount": 1
+            "text": "completely get rid of",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 227.9,
+            "text": "principle",
+            "blankCount": 0
           },
           {
             "n": 4,
             "y": 239.9,
-            "text": "supporters ____7 campaign of protest",
-            "blankCount": 1
+            "text": "supporters",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 239.9,
+            "text": "campaign of protest",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -205,7 +223,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "36.3",
@@ -445,7 +463,25 @@
     ],
     "diagnostics": {
       "anchors": 5,
-      "banks": 1
+      "banks": 1,
+      "ka2": {
+        "declared": [
+          {
+            "no": "36.2",
+            "fires": [
+              5,
+              6,
+              7
+            ],
+            "maxNum": 7,
+            "staged": false,
+            "items": 7
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -467,8 +503,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 5,
-    "exerciseItems": 21,
-    "blanks": 12,
+    "exerciseItems": 24,
+    "blanks": 8,
     "banks": 1,
     "mixedLineSplits": 0,
     "imageDependentCandidates": 0
@@ -478,6 +514,6 @@
     "keyed": 4,
     "printKeyless": 1,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

@@ -13,7 +13,7 @@
       "right": 23
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 24,
@@ -224,14 +224,38 @@
           {
             "n": 1,
             "y": 259.5,
-            "text": "Who is placid? ____3 Who tends to get carried away? 5 Who is shrewd?",
-            "blankCount": 1
+            "text": "Who is placid?",
+            "blankCount": 0
+          },
+          {
+            "n": 3,
+            "y": 259.5,
+            "text": "Who tends to get carried away?",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 259.5,
+            "text": "Who is shrewd?",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 271.5,
-            "text": "Who is down-to-earth? 4 Who is often tactless? ____6 Who is chauvinistic?",
-            "blankCount": 1
+            "text": "Who is down-to-earth?",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 271.5,
+            "text": "Who is often tactless?",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 271.5,
+            "text": "Who is chauvinistic?",
+            "blankCount": 0
           }
         ],
         "refs": [],
@@ -274,7 +298,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "8.2",
@@ -465,20 +489,62 @@
           {
             "n": 1,
             "y": 560.3,
-            "text": "altruism ____4 placidity ____7 distrust ____10 unscrupulousness",
-            "blankCount": 3
+            "text": "altruism",
+            "blankCount": 0
+          },
+          {
+            "n": 4,
+            "y": 560.3,
+            "text": "placidity",
+            "blankCount": 0
+          },
+          {
+            "n": 7,
+            "y": 560.3,
+            "text": "distrust",
+            "blankCount": 0
+          },
+          {
+            "n": 10,
+            "y": 560.3,
+            "text": "unscrupulousness",
+            "blankCount": 0
           },
           {
             "n": 2,
             "y": 572.3,
-            "text": "parsimony ____5 industriousness ____8 terseness",
-            "blankCount": 2
+            "text": "parsimony",
+            "blankCount": 0
+          },
+          {
+            "n": 5,
+            "y": 572.3,
+            "text": "industriousness",
+            "blankCount": 0
+          },
+          {
+            "n": 8,
+            "y": 572.3,
+            "text": "terseness",
+            "blankCount": 0
           },
           {
             "n": 3,
             "y": 584.3,
-            "text": "diligence ____6 rebellion ____9 naivety",
-            "blankCount": 2
+            "text": "diligence",
+            "blankCount": 0
+          },
+          {
+            "n": 6,
+            "y": 584.3,
+            "text": "rebellion",
+            "blankCount": 0
+          },
+          {
+            "n": 9,
+            "y": 584.3,
+            "text": "naivety",
+            "blankCount": 0
           }
         ],
         "refs": [
@@ -543,7 +609,7 @@
           ],
           "extras": []
         },
-        "kind": "fillIn"
+        "kind": "open"
       },
       {
         "no": "8.5",
@@ -632,7 +698,41 @@
     ],
     "diagnostics": {
       "anchors": 6,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "8.1",
+            "fires": [
+              3,
+              5,
+              4,
+              6
+            ],
+            "maxNum": 6,
+            "staged": false,
+            "items": 6
+          },
+          {
+            "no": "8.4",
+            "fires": [
+              4,
+              7,
+              10,
+              5,
+              8,
+              6,
+              9
+            ],
+            "maxNum": 10,
+            "staged": false,
+            "items": 10
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -654,8 +754,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 6,
-    "exerciseItems": 17,
-    "blanks": 22,
+    "exerciseItems": 28,
+    "blanks": 13,
     "banks": 0,
     "mixedLineSplits": 2,
     "imageDependentCandidates": 0
@@ -665,6 +765,6 @@
     "keyed": 5,
     "printKeyless": 1,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }

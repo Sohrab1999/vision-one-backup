@@ -13,7 +13,7 @@
       "right": 123
     },
     "sha256": "08c8bf18fdce423016680a3dcb3d844b53160a432ceacb8c3d363e3ef9b1dccf",
-    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5)"
+    "generator": "scripts/viu-adv-parse.mjs (A2-1..A2-5 + A3-KA-2 surgical amendment — owner vote ④ trace 1a201df91ffdf639)"
   },
   "leftPage": {
     "pdfPage": 124,
@@ -124,13 +124,31 @@
           {
             "n": 1,
             "y": 197.8,
-            "text": "____2 ____3",
-            "blankCount": 2
+            "text": "____",
+            "blankCount": 1
+          },
+          {
+            "n": 2,
+            "y": 197.8,
+            "text": "____",
+            "blankCount": 1
+          },
+          {
+            "n": 3,
+            "y": 197.8,
+            "text": "____",
+            "blankCount": 1
           },
           {
             "n": 4,
             "y": 301.2,
-            "text": "____5",
+            "text": "____",
+            "blankCount": 1
+          },
+          {
+            "n": 5,
+            "y": 301.2,
+            "text": "____",
             "blankCount": 1
           }
         ],
@@ -368,7 +386,25 @@
     ],
     "diagnostics": {
       "anchors": 4,
-      "banks": 0
+      "banks": 0,
+      "ka2": {
+        "declared": [
+          {
+            "no": "58.1",
+            "fires": [
+              2,
+              3,
+              5
+            ],
+            "maxNum": 5,
+            "staged": false,
+            "items": 5
+          }
+        ],
+        "inlineGap": [],
+        "excludedGrid": [],
+        "fallback": []
+      }
     }
   },
   "imageEvidence": {
@@ -396,8 +432,8 @@
     "languageHelp": 0,
     "dropCaps": 0,
     "exercises": 4,
-    "exerciseItems": 14,
-    "blanks": 15,
+    "exerciseItems": 17,
+    "blanks": 17,
     "banks": 0,
     "mixedLineSplits": 2,
     "imageDependentCandidates": 1
@@ -407,6 +443,6 @@
     "keyed": 3,
     "printKeyless": 1,
     "generator": "scripts/viu-adv-a3.mjs (A3-2)",
-    "generatedAt": "2026-11-21T19:43:38.272Z"
+    "generatedAt": "2026-11-22T07:44:51.826Z"
   }
 }
