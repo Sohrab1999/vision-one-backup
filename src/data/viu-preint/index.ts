@@ -8,6 +8,7 @@ import { READING_LIST } from "./readings";
 import { QUIZ_SEED, QUESTION_COUNTS } from "./quiz-seed";
 import { VERBS } from "./verbs";
 import { DICTIONARY } from "./dictionary";
+import { SENSES } from "./senses"; // R3-e: حس چاپی شماره‌دار p.8 — مدخل نمونهٔ دیکشنری seat¹ (گیت STEP 6)
 import { VOCAB_ALL, VOCAB_LESSONS, VOCAB_COUNT_BY_LESSON, vocabOfLesson } from "./vocab";
 
 const STATS = {
@@ -42,4 +43,5 @@ export const VIU_PREINT_BOOK = {
   conversations: [],
   dictionary: DICTIONARY,
   verbs: VERBS,
+  senses: SENSES, // R3-e — کلیک واژه ⇒ بلوک «حس‌های چاپی کتاب» (فقط‌خواندنی — p.8)
 } satisfies BookData;

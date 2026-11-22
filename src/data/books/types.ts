@@ -9,6 +9,7 @@ import type {
   DictEntry,
   IrregularVerb,
   WordFamilyRow,
+  WordSenseRow,
   ChapterMeta,
   BookInfo,
   GrammarLesson,
@@ -90,6 +91,9 @@ export interface BookData {
   /** R3-d: خانوادهٔ واژگانی چاپی درس‌های word formation (فقط کتاب‌هایی که census آن را دارند —
    *  فعلاً viu-upper واحدهای ۸/۹/۱۰) — اختیاری؛ مکانیزم پاپ‌آپ فقط‌خواندنی */
   wordFamilies?: WordFamilyRow[];
+  /** R3-e (گیت STEP 6): حس‌های چاپی شماره‌دار (فقط کتاب‌هایی که مدخل نمونهٔ دیکشنری چاپی دارند —
+   *  فعلاً viu-upper p.12 و viu-preint p.8) — اختیاری؛ بلوک فقط‌خواندنی پاپ‌آپ واژه */
+  senses?: WordSenseRow[];
 }
 
 /** رنگ‌های مجاز کارت جلد — بدون آبی/ایندیگو */

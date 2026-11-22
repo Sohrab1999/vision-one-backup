@@ -10,7 +10,7 @@ import { readUserName } from "@/lib/name-store";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useBook, useBookData } from "@/lib/book-context";
-import type { DictEntry, IrregularVerb, VocabEntry, VocabWord, WordFamilyMember, WordFamilyRow } from "@/data/types";
+import type { DictEntry, IrregularVerb, VocabEntry, VocabWord, WordFamilyMember, WordFamilyRow, WordSenseRow } from "@/data/types";
 import { getBookMeta } from "@/data/books/registry";
 import { SpeakButton } from "./speak-button";
 import { useStarredWords, toggleStar } from "@/lib/star-store";
@@ -39,6 +39,10 @@ interface LookupMaps {
    *  عضو verbatim + واریانت‌های صرفی (عین قواعد ساده‌سازی پاپ‌آپ — عین الگوی جدول افعال)؛
    *  صفر دادهٔ ساختگی — فقط اعضای چاپی census tracked (word-families.ts تولید مکانیکی) */
   family: Map<string, { row: WordFamilyRow; member: WordFamilyMember }>;
+  /** R3-e (گیت STEP 6): حس‌های چاپی شماره‌دار کتاب فعال — کلید: واژهٔ نرمال‌شده (بدون نقطهٔ هجایی/
+   *  بالانویس — همان normalize پاپ‌آپ نقطهٔ وسط را حذف می‌کند) → همهٔ سطرهای حس همان واژه؛
+   *  صفر دادهٔ ساختگی — فقط مدخل‌های نمونهٔ دیکشنری چاپی tracked (senses.ts تولید مکانیکی) */
+  senses: Map<string, WordSenseRow[]>;
 }
 
 function normalize(raw: string): string {
@@ -54,6 +58,7 @@ function buildMaps(
   vocabList: VocabEntry[],
   verbs: IrregularVerb[],
   families: WordFamilyRow[],
+  senseRows: WordSenseRow[],
 ): LookupMaps {
   const dict = new Map<string, DictEntry>();
   const vocab = new Map<string, VocabWord>();
@@ -84,25 +89,43 @@ function buildMaps(
       }
     }
   }
-  return { dict, vocab, phrases, verbs: verbMap, family: familyMap };
+  // R3-e: کلیدهای حس‌های چاپی — همهٔ سطرهای حسِ یک واژه در یک آرایه (ترتیب چاپ حفظ می‌شود)
+  const sensesMap = new Map<string, WordSenseRow[]>();
+  for (const row of senseRows) {
+    const k = normalize(row.word);
+    if (!k) continue;
+    const arr = sensesMap.get(k);
+    if (arr) arr.push(row);
+    else sensesMap.set(k, [row]);
+  }
+  return { dict, vocab, phrases, verbs: verbMap, family: familyMap, senses: sensesMap };
 }
 
 /** کش سبک بهازای آرایه‌های دادهٔ کتاب فعال — با تغییر کتاب (تغییر رفرنس داده) بازسازی می‌شود */
 const EMPTY_FAMILIES: WordFamilyRow[] = [];
+const EMPTY_SENSES: WordSenseRow[] = [];
 let mapsCache: {
   dictionary: DictEntry[];
   vocab: VocabEntry[];
   verbs: IrregularVerb[];
   families: WordFamilyRow[];
+  senseRows: WordSenseRow[];
   maps: LookupMaps;
 } | null = null;
 
-function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[], verbs: IrregularVerb[], families: WordFamilyRow[]): LookupMaps {
-  if (mapsCache && mapsCache.dictionary === dictionary && mapsCache.vocab === vocab && mapsCache.verbs === verbs && mapsCache.families === families) {
+function getLookupMaps(dictionary: DictEntry[], vocab: VocabEntry[], verbs: IrregularVerb[], families: WordFamilyRow[], senseRows: WordSenseRow[]): LookupMaps {
+  if (
+    mapsCache &&
+    mapsCache.dictionary === dictionary &&
+    mapsCache.vocab === vocab &&
+    mapsCache.verbs === verbs &&
+    mapsCache.families === families &&
+    mapsCache.senseRows === senseRows
+  ) {
     return mapsCache.maps;
   }
-  const maps = buildMaps(dictionary, vocab, verbs, families);
-  mapsCache = { dictionary, vocab, verbs, families, maps };
+  const maps = buildMaps(dictionary, vocab, verbs, families, senseRows);
+  mapsCache = { dictionary, vocab, verbs, families, senseRows, maps };
   return maps;
 }
 
@@ -214,6 +237,8 @@ interface LookupHit {
   /** R3-d (موج دوم): سطر خانوادهٔ واژگانی چاپی + عضو کلیک‌شده */
   family?: WordFamilyRow;
   familyMember?: WordFamilyMember;
+  /** R3-e (گیت STEP 6): سطرهای حس چاپی کتاب برای همین واژه (به ترتیب چاپ) */
+  senses?: WordSenseRow[];
   /** کالوکیشن‌های مرتبط — وقتی واژهٔ تکی در بانک نبود (کتاب‌های عبارت‌محور مثل کالوکیشن‌ها) */
   related?: VocabWord[];
 }
@@ -233,7 +258,8 @@ function lookup(maps: LookupMaps, norm: string): LookupHit {
     const vocab = maps.vocab.get(c);
     const verb = maps.verbs.get(c);
     const fam = maps.family.get(c);
-    if (hit || vocab || verb || fam) return { word: c, dict: hit, vocab, verb, family: fam?.row, familyMember: fam?.member };
+    const senses = maps.senses.get(c);
+    if (hit || vocab || verb || fam || senses) return { word: c, dict: hit, vocab, verb, family: fam?.row, familyMember: fam?.member, senses };
   }
   // فال‌بک عبارت‌محور: کالوکیشن‌های کتاب که همین واژه را دارند (سقف ۵) —
   // برای کتاب‌هایی مثل «کالوکیشن‌ها» که بانک واژگانشان عبارت‌های چندواژه‌ای است
@@ -321,8 +347,8 @@ export function ClickableEnText({ text, className }: { text: string; className?:
   const wrapRef = useRef<HTMLSpanElement>(null);
 
   const maps = useMemo(
-    () => getLookupMaps(data.dictionary, data.vocab.all, data.verbs, data.wordFamilies ?? EMPTY_FAMILIES),
-    [data.dictionary, data.vocab.all, data.verbs, data.wordFamilies],
+    () => getLookupMaps(data.dictionary, data.vocab.all, data.verbs, data.wordFamilies ?? EMPTY_FAMILIES, data.senses ?? EMPTY_SENSES),
+    [data.dictionary, data.vocab.all, data.verbs, data.wordFamilies, data.senses],
   );
   const segs = useMemo(() => segmentText(text, maps), [text, maps]);
 
@@ -761,6 +787,49 @@ function LookupPopover({
             {hit.familyMember && normalize(hit.familyMember.word) !== normalize(hit.family.entry) && (
               <span className="text-primary"> · عضو: {hit.familyMember.word}</span>
             )}
+          </p>
+        </div>
+      )}
+
+      {/* R3-e (گیت STEP 6 — فرمان مالک trace 1a2043987aa69c95 — ۱۴۰۵/۹/۱) — حس‌های چاپی شماره‌دار کتاب:
+          فقط مدخل‌های نمونهٔ دیکشنری که کتاب خودش حس شماره‌دار چاپ کرده (senses.ts — تولید مکانیکی از
+          کپچر راستی‌آزمایی‌شدهٔ viu-r3e-capture: رونویسی 300DPI + پروب 500DPI + cross-check دوگذر — صفر استنتاج؛
+          فعلاً upper p.12 ma·lig·nant/ma·lig·nancy/hairy و preint p.8 seat¹)؛ کلیک واژه در متن هر درس
+          سطرهای حس چاپی را نشان می‌دهد. عین الگوی بلوک خانوادهٔ واژه.
+          فقط‌خواندنی — بدون نوشتن در استورها */}
+      {hit.senses && hit.senses.length > 0 && (
+        <div className="mt-2 rounded-xl border bg-muted/40 p-2.5">
+          <p className="mb-1 flex items-center gap-1 text-[11px] font-black text-primary">
+            <GraduationCap size={11} />
+            حس‌های چاپی کتاب — مدخل نمونهٔ دیکشنری
+          </p>
+          <p dir="ltr" className="font-en text-left text-[12.5px] font-bold leading-5 text-foreground">
+            {hit.senses[0].word}
+            {hit.senses[0].phonetic && <span className="ml-1.5 font-normal text-muted-foreground">{hit.senses[0].phonetic}</span>}
+            {hit.senses[0].pos && <span className="ml-1.5 italic text-muted-foreground">{hit.senses[0].pos}</span>}
+            {hit.senses[0].labels && <span className="ml-1 text-muted-foreground">{hit.senses[0].labels}</span>}
+          </p>
+          <div className="mt-1.5 space-y-1.5">
+            {hit.senses.map((s) => (
+              <div key={`${s.word}-${s.sense}`}>
+                <p dir="ltr" className="font-en text-left text-[11.5px] leading-5 text-foreground/90">
+                  <span className="font-black text-primary">{s.sense}</span>
+                  {s.subject && <span className="ml-1 text-muted-foreground">{s.subject}</span>} {s.definition}
+                </p>
+                {s.examples.map((ex) => (
+                  <p
+                    key={ex}
+                    dir="ltr"
+                    className="font-en mt-0.5 rounded-lg bg-muted/60 px-2.5 py-1 text-left text-[11.5px] leading-5 text-muted-foreground"
+                  >
+                    {ex}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
+          <p className="mt-1 text-[10px] font-bold text-muted-foreground">
+            درس {hit.senses[0].lesson.toLocaleString("fa-IR")} · صفحهٔ {Number(hit.senses[0].page).toLocaleString("fa-IR")}
           </p>
         </div>
       )}

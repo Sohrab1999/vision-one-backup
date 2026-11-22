@@ -1,0 +1,36 @@
+{
+ "unit": 11,
+ "phase": "R3-e",
+ "kind": "negative-control",
+ "executedAt": "2026-11-22",
+ "provenance": {
+  "sourcePdf": "upload/Vocabulary In Use-Elementary 2nd Edition.pdf",
+  "pdfSha256": "35ea1b5be92eef4c…",
+  "pdfPage": 29,
+  "bookPage": 26,
+  "layoutRule": "lesson N = PDF pages [2N+7, 2N+8] (audit 2026-11-09)",
+  "dpi": 300,
+  "renderTool": "pdftoppm",
+  "visionModel": "z-ai vision CLI (GLM)",
+  "promptKind": "negative-control",
+  "script": "scripts/viu-r3e-verify-source.mjs",
+  "ownerCommand": "«اینو شروع کن» — trace 1a2043987aa69c95 — ۱۴۰۵/۹/۱",
+  "bookPageNote": "برچسب چاپی صفحه توسط VLM=26 خوانده شد (آفست front-matter این کتاب با دو کتاب دیگر متفاوت است)؛ نگاشت واحد ۱۱ ← PDF p.29 طبق layoutRule audited سرشماری فاز ۱ (docs/qa/viu-images-phase1-census-elem-2026-11-14.json) — پیش‌فرض اولیهٔ ۲۲ اصلاح شد"
+ },
+ "result": {
+  "footer": 26,
+  "headwords": [
+   "get up/on/over",
+   "turn on/off/up/down",
+   "go on/off",
+   "put something on",
+   "come on",
+   "turn down",
+   "do up",
+   "take off"
+  ],
+  "printedSenseNumbers": false,
+  "evidence": "Next to 'turn down' and 'take off' the meanings are given as separate example sentences with parentheses glosses, with no printed sense numbers or bullets.",
+  "sampleTranscription": "turn down\nShe turned down the stereo. (= made it not so loud)\nShe turned down the invitation. (= refused it)"
+ }
+}
