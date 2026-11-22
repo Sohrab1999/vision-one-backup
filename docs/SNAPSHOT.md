@@ -142,6 +142,7 @@
 | دلتای این گام | scripts: `viu-adv-parse.mjs` (آمندمنت) · `viu-adv-a3.mjs` (پیکرهٔ passage + ثبت اجرای KA-2) · `viu-adv-audit.mjs` (Z1 قرارداد fa + Z12) · NEW `viu-adv-a4-translate/sample/fix.mjs` · داده: ۱۰۱ capture + verify-* + census + intersections + answer-key/index + **fa-cache (۱٬۴۰۱ قطعه)** + sample/fixwave JSONs · سندها: گزارش جراحی NEW + گزارش G4 NEW + دروازهٔ G3 (نشانگر اجرا) + نقشه راه (سربرگ ۱۰۹مین) + SNAPSHOT + worklog + فهرست-مستندات |
 | کنترل‌های مکانیکی | `audit:viu-adv` ok=true صفر issue · lint = ۰ (exit 0) · GET `/` = 200 (dev server باز-start شد — سالم) · صفر تغییر db/هوک/WAVE2/کد/دادهٔ محصولی سه کتاب/چهار PDF |
 | وضعیت پسا-گام | **A4 ✅ DONE** — G4 گزارش ثبت شد — گیت بعدی = G5 (یکپارچه‌سازی A5) فقط با فرمان صریح مالک |
+| ثبت اثبات §۱۰-۷ | کامیت محتوایی `9fabe2b053d1f3bcaeee01c5c7268bdbf8118425` = Remote (ls-remote ۰/۰ — HEAD و backup/main برابر) · کامیت ثبت-اثبات: فقط بلوک worklog + این سطر — صفر تغییر دیگر |
 
 **لحظهٔ اسنپ‌شات «بسته شدن گیت G3 با رأی‌نامهٔ ۶بندی مالک — پیشا-کامیت محتوایی این گام» — ۱۴۰۵/۹/۱ (۲۰۲۶-۱۱-۲۱ — سربرگ ۱۰۸مین):**
 
