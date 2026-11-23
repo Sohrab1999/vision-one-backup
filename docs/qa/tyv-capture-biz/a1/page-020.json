@@ -1,0 +1,94 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 20,
+    "dpi": 300,
+    "renderSha256": "4a622465e2678467efe5eb247d70623ea568c729710480989f72894ac11f3a33",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T20:15:35.764Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 23,
+    "testNumber": "1",
+    "testTitle": "Units 1–16 Summary Test 1",
+    "exercises": [
+      {
+        "id": "1",
+        "marks": "10 marks",
+        "instruction": "For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "1 This company was set up as a small family ........................ in 1977.",
+          "A empire B corporation C business",
+          "2 Sally Green is on the board of ........................ .",
+          "A directors B founders C managers",
+          "3 Tom East is the ........................ executive in charge of Marketing.",
+          "A chief B head C senior",
+          "4 Last year we made ........................ of £1.5 million.",
+          "A liabilities B profits C finances",
+          "5 The corporate ........................ we try to present is of a business that truly values its customers.",
+          "A image B logo C ladder",
+          "6 We ........................ about 20 people in our London office and most have been with us for years.",
+          "A hire B employ C appoint",
+          "7 Each year, we ........................ two or three graduates as trainee managers.",
+          "A recruit B qualify C situate",
+          "8 We pay reasonable salaries and offer excellent fringe ........................ .",
+          "A perks B tips C benefits",
+          "9 Next month we are going to ........................ two new products.",
+          "A forecast B innovate C launch",
+          "10 We have carried out a lot of market ........................ over the past year.",
+          "A focus B research C development"
+        ]
+      },
+      {
+        "id": "2",
+        "marks": "10 marks",
+        "instruction": "Write the abbreviations below in words. One word has been given in each case to help you.",
+        "items": [
+          "1 HR H____ Resources",
+          "2 IT I__________ Technology",
+          "3 CEO Chief E________ O______",
+          "4 CAD C________ Assisted D______",
+          "5 RSI Repetitive S______ I_____",
+          "6 PLC P_____ L_______ Company"
+        ]
+      },
+      {
+        "id": "3",
+        "marks": "5 marks",
+        "instruction": "Match each sentence beginning (1–5) with the correct ending. Write the letter (a–f) of the ending you choose in the box below. There is one extra ending that you don’t have to use.",
+        "items": [
+          "1 The company has an equal opportunities",
+          "2 Please send your application form,",
+          "3 The health and safety inspector noticed",
+          "4 Last month, I achieved my sales target",
+          "5 When the firm downsized,",
+          "a I was offered early retirement.",
+          "b with a covering letter, by Monday 9th May.",
+          "c policy to fight discrimination.",
+          "d candidates had to do psychometric tests.",
+          "e that the fire extinguisher was missing.",
+          "f so I got a performance-related bonus."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 75",
+      "Target 60+",
+      "Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Read the questions carefully. Try to answer them all. This test takes about 45 minutes.",
+      "Summary Test 1"
+    ]
+  },
+  "rawModelText": "{\"footer\": 23, \"testNumber\": \"1\", \"testTitle\": \"Units 1–16 Summary Test 1\", \"exercises\": [{\"id\": \"1\", \"marks\": \"10 marks\", \"instruction\": \"For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.\", \"items\": [\"1 This company was set up as a small family ........................ in 1977.\", \"A empire B corporation C business\", \"2 Sally Green is on the board of ........................ .\", \"A directors B founders C managers\", \"3 Tom East is the ........................ executive in charge of Marketing.\", \"A chief B head C senior\", \"4 Last year we made ........................ of £1.5 million.\", \"A liabilities B profits C finances\", \"5 The corporate ........................ we try to present is of a business that truly values its customers.\", \"A image B logo C ladder\", \"6 We ........................ about 20 people in our London office and most have been with us for years.\", \"A hire B employ C appoint\", \"7 Each year, we ........................ two or three graduates as trainee managers.\", \"A recruit B qualify C situate\", \"8 We pay reasonable salaries and offer excellent fringe ........................ .\", \"A perks B tips C benefits\", \"9 Next month we are going to ........................ two new products.\", \"A forecast B innovate C launch\", \"10 We have carried out a lot of market ........................ over the past year.\", \"A focus B research C development\"]}, {\"id\": \"2\", \"marks\": \"10 marks\", \"instruction\": \"Write the abbreviations below in words. One word has been given in each case to help you.\", \"items\": [\"1 HR H____ Resources\", \"2 IT I__________ Technology\", \"3 CEO Chief E________ O______\", \"4 CAD C________ Assisted D______\", \"5 RSI Repetitive S______ I_____\", \"6 PLC P_____ L_______ Company\"]}, {\"id\": \"3\", \"marks\": \"5 marks\", \"instruction\": \"Match each sentence beginning (1–5) with the correct ending. Write the letter (a–f) of the ending you choose in the box below. There is one extra ending that you don’t have to use.\", \"items\": [\"1 The company has an equal opportunities\", \"2 Please send your application form,\", \"3 The health and safety inspector noticed\", \"4 Last month, I achieved my sales target\", \"5 When the firm downsized,\", \"a I was offered early retirement.\", \"b with a covering letter, by Monday 9th May.\", \"c policy to fight discrimination.\", \"d candidates had to do psychometric tests.\", \"e that the fire extinguisher was missing.\", \"f so I got a performance-related bonus.\"]}], \"boxesAndLists\": [\"Total 75\", \"Target 60+\", \"Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............\"], \"pictures\": [], \"unclassified\": [\"Read the questions carefully. Try to answer them all. This test takes about 45 minutes.\", \"Summary Test 1\"]}"
+}
