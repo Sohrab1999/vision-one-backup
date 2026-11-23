@@ -1,0 +1,3250 @@
+{
+  "meta": {
+    "phase": "R4-a ارزیابی",
+    "date": "2026-11-19",
+    "judge": "GLM — سنجش مکانیکی-معنایی (دانش واژه‌ای + pos + بستر lessonLabel) — بدون کلید چاپی فارسی (کتاب فارسی ندارد)",
+    "criteria": [
+      "سازگاری معنی با pos چاپی",
+      "دقت معنایی حس رایج/حس درس",
+      "طبیعی‌بودن فارسی و صفر typo",
+      "مردود قطعی: معنی بی‌ارتباط/خراب/گمراه‌کنندهٔ جدی"
+    ],
+    "classRule": "هیچ تغییر کلاس FA-NEW → FA-REVIEWED انجام نشد — فقط با بازخوانی انسانی (R4-b نقشه راه)",
+    "sampleFile": "docs/qa/viu-r4a-translation-sample-2026-11-19.json",
+    "seed": 20261119
+  },
+  "stats": {
+    "n": 397,
+    "fail": 10,
+    "failRate": 0.02518891687657431,
+    "failRatePct": 2.52,
+    "wilson95": {
+      "lo": 1.37,
+      "hi": 4.57
+    },
+    "stopThresholdPct": 25,
+    "decision": "CONTINUE — نسبت مردود ≤ ۲۵٪ — موج اصلاح هدفمند R4-b مجاز است (فقط موارد مردود نمونه)",
+    "byBook": {
+      "elem": {
+        "n": 69,
+        "fail": 0
+      },
+      "preint": {
+        "n": 145,
+        "fail": 1
+      },
+      "upper": {
+        "n": 183,
+        "fail": 9
+      }
+    }
+  },
+  "review": [
+    {
+      "id": "R4A-001",
+      "book": "elem",
+      "lesson": 1,
+      "word": "Match the words on the left with the words on the right. Draw lines.",
+      "meaning": "کلمات سمت چپ را به کلمات سمت راست وصل کنید. خط بکشید.",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-002",
+      "book": "elem",
+      "lesson": 1,
+      "word": "Fill the gaps in the sentence.",
+      "meaning": "جای خالی‌های جمله را پر کنید.",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-003",
+      "book": "elem",
+      "lesson": 7,
+      "word": "come from",
+      "meaning": "اهل ... بودن؛ از ... آمدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-004",
+      "book": "elem",
+      "lesson": 5,
+      "word": "do the housework",
+      "meaning": "کارهای خانه را انجام دادن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-005",
+      "book": "elem",
+      "lesson": 6,
+      "word": "make coffee",
+      "meaning": "قهوه درست کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-006",
+      "book": "elem",
+      "lesson": 3,
+      "word": "breakfast",
+      "meaning": "صبحانه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-007",
+      "book": "elem",
+      "lesson": 10,
+      "word": "get home",
+      "meaning": "به خانه رسیدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-008",
+      "book": "elem",
+      "lesson": 6,
+      "word": "do the dishes",
+      "meaning": "ظرف‌ها را شستن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-009",
+      "book": "elem",
+      "lesson": 6,
+      "word": "make a noise",
+      "meaning": "سر و صدا کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-010",
+      "book": "elem",
+      "lesson": 11,
+      "word": "do up",
+      "meaning": "بستن (کاپشن)؛ بازسازی/تعمیر کردن (آپارتمان)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-011",
+      "book": "elem",
+      "lesson": 13,
+      "word": "ask somebody to do something",
+      "meaning": "از کسی بخواهید کاری انجام دهد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-012",
+      "book": "elem",
+      "lesson": 14,
+      "word": "catch",
+      "meaning": "به‌موقع رسیدن (به اتوبوس/قطار)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-013",
+      "book": "elem",
+      "lesson": 17,
+      "word": "from 1994 to 1996",
+      "meaning": "از ۱۹۹۴ تا ۱۹۹۶",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-014",
+      "book": "elem",
+      "lesson": 14,
+      "word": "bike",
+      "meaning": "دوچرخه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-015",
+      "book": "elem",
+      "lesson": 18,
+      "word": "beginning",
+      "meaning": "ابتدا، آغاز",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-016",
+      "book": "elem",
+      "lesson": 15,
+      "word": "after",
+      "meaning": "بعد از اینکه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-017",
+      "book": "elem",
+      "lesson": 14,
+      "word": "bus",
+      "meaning": "اتوبوس",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-018",
+      "book": "elem",
+      "lesson": 14,
+      "word": "pilot",
+      "meaning": "خلبان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-019",
+      "book": "elem",
+      "lesson": 16,
+      "word": "winter",
+      "meaning": "زمستان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-020",
+      "book": "elem",
+      "lesson": 25,
+      "word": "ex (+noun)",
+      "meaning": "پیشوند «اِکس» (همسر/مقام سابق؛ بود اما اکنون نیست)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-021",
+      "book": "elem",
+      "lesson": 26,
+      "word": "ful (adjective)",
+      "meaning": "پسوند «پر از» برای ساختن صفت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-022",
+      "book": "elem",
+      "lesson": 27,
+      "word": "felt",
+      "meaning": "حس کرد (از feel)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-023",
+      "book": "elem",
+      "lesson": 21,
+      "word": "sugar",
+      "meaning": "شکر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-024",
+      "book": "elem",
+      "lesson": 21,
+      "word": "milk",
+      "meaning": "شیر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-025",
+      "book": "elem",
+      "lesson": 25,
+      "word": "rewrite",
+      "meaning": "بازنویسی کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-026",
+      "book": "elem",
+      "lesson": 22,
+      "word": "terrible",
+      "meaning": "وحشتناک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-027",
+      "book": "elem",
+      "lesson": 22,
+      "word": "Great",
+      "meaning": "عالی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-028",
+      "book": "elem",
+      "lesson": 25,
+      "word": "half-hour",
+      "meaning": "نیم‌ساعت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-029",
+      "book": "elem",
+      "lesson": 21,
+      "word": "traffic",
+      "meaning": "ترافیک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-030",
+      "book": "elem",
+      "lesson": 37,
+      "word": "minus 50 degrees",
+      "meaning": "منفی پنجاه درجه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-031",
+      "book": "elem",
+      "lesson": 32,
+      "word": "fat",
+      "meaning": "چاق (تقریباً منفی)",
+      "verdict": "OK",
+      "note": "پرانتز توضیحی «(تقریباً منفی)» — ملاک چاپی کتاب است؛ قابل‌قبول"
+    },
+    {
+      "id": "R4A-032",
+      "book": "elem",
+      "lesson": 32,
+      "word": "handsome",
+      "meaning": "خوش‌قیافه (معمولاً برای مرد)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-033",
+      "book": "elem",
+      "lesson": 38,
+      "word": "read",
+      "meaning": "خواندن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-034",
+      "book": "elem",
+      "lesson": 36,
+      "word": "Germany",
+      "meaning": "آلمان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-035",
+      "book": "elem",
+      "lesson": 31,
+      "word": "wear",
+      "meaning": "پوشیدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-036",
+      "book": "elem",
+      "lesson": 36,
+      "word": "Vietnamese",
+      "meaning": "ویتنامی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-037",
+      "book": "elem",
+      "lesson": 36,
+      "word": "Jamaican",
+      "meaning": "جامائیکایی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-038",
+      "book": "elem",
+      "lesson": 31,
+      "word": "skirt",
+      "meaning": "دامن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-039",
+      "book": "elem",
+      "lesson": 34,
+      "word": "cold",
+      "meaning": "سرد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-040",
+      "book": "elem",
+      "lesson": 34,
+      "word": "angry",
+      "meaning": "عصبانی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-041",
+      "book": "elem",
+      "lesson": 31,
+      "word": "coat",
+      "meaning": "پالتو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-042",
+      "book": "elem",
+      "lesson": 31,
+      "word": "boots",
+      "meaning": "چکمه/بوت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-043",
+      "book": "elem",
+      "lesson": 38,
+      "word": "town centre",
+      "meaning": "مرکز شهر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-044",
+      "book": "elem",
+      "lesson": 31,
+      "word": "gloves",
+      "meaning": "دستکش",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-045",
+      "book": "elem",
+      "lesson": 50,
+      "word": "package holiday",
+      "meaning": "تور کامل (که همه‌چیز شامل پرواز، هتل و غیره است)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-046",
+      "book": "elem",
+      "lesson": 44,
+      "word": "cooker",
+      "meaning": "اجاق گاز / پلوپز",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-047",
+      "book": "elem",
+      "lesson": 48,
+      "word": "pass your exams",
+      "meaning": "قبول شدن در امتحان‌ها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-048",
+      "book": "elem",
+      "lesson": 46,
+      "word": "remote control",
+      "meaning": "کنترل از راه دور",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-049",
+      "book": "elem",
+      "lesson": 50,
+      "word": "visa",
+      "meaning": "ویزا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-050",
+      "book": "elem",
+      "lesson": 46,
+      "word": "next to",
+      "meaning": "کنارِ، بغلِ",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-051",
+      "book": "elem",
+      "lesson": 46,
+      "word": "near",
+      "meaning": "نزدیک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-052",
+      "book": "elem",
+      "lesson": 50,
+      "word": "by bus",
+      "meaning": "با اتوبوس",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-053",
+      "book": "elem",
+      "lesson": 44,
+      "word": "fridge",
+      "meaning": "یخچال",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-054",
+      "book": "elem",
+      "lesson": 48,
+      "word": "desk",
+      "meaning": "میز تحریر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-055",
+      "book": "elem",
+      "lesson": 50,
+      "word": "camping",
+      "meaning": "چادرزنی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-056",
+      "book": "elem",
+      "lesson": 45,
+      "word": "cupboard",
+      "meaning": "کابینت / گنجه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-057",
+      "book": "elem",
+      "lesson": 43,
+      "word": "apple",
+      "meaning": "سیب",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-058",
+      "book": "elem",
+      "lesson": 58,
+      "word": "nature programme",
+      "meaning": "برنامه طبیعت (برنامه‌های درباره حیوانات و پرندگان)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-059",
+      "book": "elem",
+      "lesson": 58,
+      "word": "soap / soap opera",
+      "meaning": "سریال (آپرا صابونی)",
+      "verdict": "OK",
+      "note": "«آپرا صابونی» واژه‌به‌واژه؛ معنی اصلی «سریال» درست"
+    },
+    {
+      "id": "R4A-060",
+      "book": "elem",
+      "lesson": 57,
+      "word": "to attack somebody or a place",
+      "meaning": "حمله کردن به کسی یا جایی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-061",
+      "book": "elem",
+      "lesson": 54,
+      "word": "motor racing",
+      "meaning": "مسابقات اتومبیلرانی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-062",
+      "book": "elem",
+      "lesson": 51,
+      "word": "baker",
+      "meaning": "نانوا / نانوایی",
+      "verdict": "OK",
+      "note": "«نانوا / نانوایی» — دومین حس خلط با bakery؛ حس اصلی درست"
+    },
+    {
+      "id": "R4A-063",
+      "book": "elem",
+      "lesson": 57,
+      "word": "take drugs",
+      "meaning": "مصرف مواد مخدر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-064",
+      "book": "elem",
+      "lesson": 52,
+      "word": "bathroom",
+      "meaning": "حمام",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-065",
+      "book": "elem",
+      "lesson": 51,
+      "word": "butcher",
+      "meaning": "قصاب",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-066",
+      "book": "elem",
+      "lesson": 56,
+      "word": "do nothing",
+      "meaning": "هیچ کاری نکردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-067",
+      "book": "elem",
+      "lesson": 51,
+      "word": "basement",
+      "meaning": "زیرزمین",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-068",
+      "book": "elem",
+      "lesson": 59,
+      "word": "colleague",
+      "meaning": "همکار",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-069",
+      "book": "elem",
+      "lesson": 56,
+      "word": "grow flowers",
+      "meaning": "گل کاشتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-070",
+      "book": "preint",
+      "lesson": 6,
+      "word": "overcharge",
+      "meaning": "گران فروختن، بیش از اندازه پول گرفتن (= پول زیادی خواستن)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-071",
+      "book": "preint",
+      "lesson": 7,
+      "word": "-or",
+      "meaning": "پسوند فاعل/شغل",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-072",
+      "book": "preint",
+      "lesson": 5,
+      "word": "OHT (overhead transparency)",
+      "meaning": "شفاف (اسلاید) مخصوص پروژکتور",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-073",
+      "book": "preint",
+      "lesson": 2,
+      "word": "put on my gloves",
+      "meaning": "دستکش‌هایم را پوشیدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-074",
+      "book": "preint",
+      "lesson": 6,
+      "word": "reopen",
+      "meaning": "دوباره باز کردن/شدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-075",
+      "book": "preint",
+      "lesson": 8,
+      "word": "careful",
+      "meaning": "بااحتیاط، مراقب",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-076",
+      "book": "preint",
+      "lesson": 10,
+      "word": "chat room",
+      "meaning": "اتاق گفتگو (فضایی برای ارتباط در اینترنت)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-077",
+      "book": "preint",
+      "lesson": 7,
+      "word": "management",
+      "meaning": "مدیریت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-078",
+      "book": "preint",
+      "lesson": 7,
+      "word": "election",
+      "meaning": "انتخابات",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-079",
+      "book": "preint",
+      "lesson": 5,
+      "word": "board pen",
+      "meaning": "ماژیک تخته",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-080",
+      "book": "preint",
+      "lesson": 4,
+      "word": "plural noun (pl)",
+      "meaning": "اسم جمع",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-081",
+      "book": "preint",
+      "lesson": 7,
+      "word": "translator",
+      "meaning": "مترجم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-082",
+      "book": "preint",
+      "lesson": 1,
+      "word": "pronunciation",
+      "meaning": "تلفظ",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-083",
+      "book": "preint",
+      "lesson": 1,
+      "word": "revision",
+      "meaning": "مرور",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-084",
+      "book": "preint",
+      "lesson": 1,
+      "word": "revise",
+      "meaning": "مرور کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-085",
+      "book": "preint",
+      "lesson": 7,
+      "word": "improve (= get better)",
+      "meaning": "بهبود یافتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-086",
+      "book": "preint",
+      "lesson": 13,
+      "word": "get rid of",
+      "meaning": "خلاص شدن از شر چیزی (= remove it/throw it away)",
+      "verdict": "OK",
+      "note": "gloss چاپی EN در meaning (= remove it/throw it away) — عین چاپی، بدون تغییر"
+    },
+    {
+      "id": "R4A-087",
+      "book": "preint",
+      "lesson": 17,
+      "word": "Could you possibly",
+      "meaning": "ممکن است لطفاً...",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-088",
+      "book": "preint",
+      "lesson": 15,
+      "word": "on my own",
+      "meaning": "تنها، بدون کمک دیگران",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-089",
+      "book": "preint",
+      "lesson": 17,
+      "word": "I was wondering if I could",
+      "meaning": "می‌خواستم بپرسم آیا می‌توانم...",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-090",
+      "book": "preint",
+      "lesson": 18,
+      "word": "but don't you think ...",
+      "meaning": "اما فکر نمی‌کنی که ...",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-091",
+      "book": "preint",
+      "lesson": 18,
+      "word": "You're (absolutely) right",
+      "meaning": "(کاملاً) حق با توئه",
+      "verdict": "OK",
+      "note": "«حق با توئه» — املا غیررسمی؛ متن چاپی informal است؛ قابل‌قبول"
+    },
+    {
+      "id": "R4A-092",
+      "book": "preint",
+      "lesson": 15,
+      "word": "at the moment",
+      "meaning": "در حال حاضر، الان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-093",
+      "book": "preint",
+      "lesson": 17,
+      "word": "Would you like to",
+      "meaning": "دوست دارید...",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-094",
+      "book": "preint",
+      "lesson": 15,
+      "word": "in love with",
+      "meaning": "عاشق",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-095",
+      "book": "preint",
+      "lesson": 15,
+      "word": "for a swim",
+      "meaning": "برای شنا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-096",
+      "book": "preint",
+      "lesson": 13,
+      "word": "all over the place",
+      "meaning": "همه جا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-097",
+      "book": "preint",
+      "lesson": 14,
+      "word": "afraid of",
+      "meaning": "ترسیدن از",
+      "verdict": "OK",
+      "note": "pos=adj. با معنی فعلی «ترسیدن از» — کارکردی و درست در بستر collocation"
+    },
+    {
+      "id": "R4A-098",
+      "book": "preint",
+      "lesson": 26,
+      "word": "sb a favour (= do sth to help sb)",
+      "meaning": "به کسی لطف کردن (کاری برای کمک به کسی انجام دادن)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-099",
+      "book": "preint",
+      "lesson": 28,
+      "word": "catch sb doing sth (= see sb when they are doing sth wrong)",
+      "meaning": "کسی را در حال انجام کاری (اشتباه) گرفتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-100",
+      "book": "preint",
+      "lesson": 23,
+      "word": "go up",
+      "meaning": "بالا رفتن، افزایش یافتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-101",
+      "book": "preint",
+      "lesson": 23,
+      "word": "go off",
+      "meaning": "زنگ زدن؛ منفجر شدن؛ فاسد شدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-102",
+      "book": "preint",
+      "lesson": 26,
+      "word": "research (= detailed study)",
+      "meaning": "تحقیق (مطالعهٔ دقیق)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-103",
+      "book": "preint",
+      "lesson": 21,
+      "word": "Wow! How exciting.",
+      "meaning": "وای! چه هیجان‌انگیز!",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-104",
+      "book": "preint",
+      "lesson": 29,
+      "word": "It's getting better/worse",
+      "meaning": "دارد بهتر/بدتر می‌شود",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-105",
+      "book": "preint",
+      "lesson": 30,
+      "word": "bring",
+      "meaning": "آوردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-106",
+      "book": "preint",
+      "lesson": 29,
+      "word": "get divorced",
+      "meaning": "طلاق گرفتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-107",
+      "book": "preint",
+      "lesson": 30,
+      "word": "It's time to go",
+      "meaning": "وقت رفتن است",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-108",
+      "book": "preint",
+      "lesson": 30,
+      "word": "come",
+      "meaning": "آمدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-109",
+      "book": "preint",
+      "lesson": 35,
+      "word": "mention (= say or write a fact or piece of information)",
+      "meaning": "اشاره کردن (گفتن یا نوشتن یک واقعیت/اطلاع)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-110",
+      "book": "preint",
+      "lesson": 31,
+      "word": "touch",
+      "meaning": "لامسه؛ لمس کردن",
+      "verdict": "OK",
+      "note": "pos دوگانه n.|v. با پوشش هر دو حس در معنی — درست"
+    },
+    {
+      "id": "R4A-111",
+      "book": "preint",
+      "lesson": 33,
+      "word": "hair (C)",
+      "meaning": "تار مو (قابل شمارش)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-112",
+      "book": "preint",
+      "lesson": 38,
+      "word": "hardly",
+      "meaning": "به‌سختی، تقریباً هیچ",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-113",
+      "book": "preint",
+      "lesson": 36,
+      "word": "(very) small",
+      "meaning": "(خیلی) کوچک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-114",
+      "book": "preint",
+      "lesson": 40,
+      "word": "though",
+      "meaning": "اگرچه / ولی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-115",
+      "book": "preint",
+      "lesson": 32,
+      "word": "pairs of shorts",
+      "meaning": "جفت شلوارک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-116",
+      "book": "preint",
+      "lesson": 34,
+      "word": "forget",
+      "meaning": "فراموش کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-117",
+      "book": "preint",
+      "lesson": 32,
+      "word": "a pair of skis",
+      "meaning": "یک جفت اسکی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-118",
+      "book": "preint",
+      "lesson": 39,
+      "word": "before",
+      "meaning": "قبل از اینکه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-119",
+      "book": "preint",
+      "lesson": 37,
+      "word": "over",
+      "meaning": "از روی (پل)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-120",
+      "book": "preint",
+      "lesson": 50,
+      "word": "mixed feelings",
+      "meaning": "احساسات متناقض (مطمئن نبودن چه فکری یا احساسی داشتن)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-121",
+      "book": "preint",
+      "lesson": 48,
+      "word": "pretty",
+      "meaning": "دلربا، خوش‌چهره",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-122",
+      "book": "preint",
+      "lesson": 47,
+      "word": "blow your nose",
+      "meaning": "بینی خود را پاک کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-123",
+      "book": "preint",
+      "lesson": 49,
+      "word": "punctual",
+      "meaning": "وقت‌شناس (= همیشه سر وقت)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-124",
+      "book": "preint",
+      "lesson": 43,
+      "word": "the earth",
+      "meaning": "زمین",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-125",
+      "book": "preint",
+      "lesson": 49,
+      "word": "insensitive",
+      "meaning": "بی‌حساس",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-126",
+      "book": "preint",
+      "lesson": 49,
+      "word": "shy",
+      "meaning": "خجالتی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-127",
+      "book": "preint",
+      "lesson": 41,
+      "word": "with the exception of",
+      "meaning": "به استثنای",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-128",
+      "book": "preint",
+      "lesson": 45,
+      "word": "creature",
+      "meaning": "موجود",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-129",
+      "book": "preint",
+      "lesson": 46,
+      "word": "Portuguese",
+      "meaning": "پرتغالی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-130",
+      "book": "preint",
+      "lesson": 48,
+      "word": "dark skin",
+      "meaning": "پوست تیره",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-131",
+      "book": "preint",
+      "lesson": 47,
+      "word": "breathe",
+      "meaning": "نفس کشیدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-132",
+      "book": "preint",
+      "lesson": 48,
+      "word": "overweight",
+      "meaning": "اضافه‌وزن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-133",
+      "book": "preint",
+      "lesson": 45,
+      "word": "the wild",
+      "meaning": "طبیعت وحشی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-134",
+      "book": "preint",
+      "lesson": 46,
+      "word": "Japanese",
+      "meaning": "ژاپنی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-135",
+      "book": "preint",
+      "lesson": 47,
+      "word": "bite your nails",
+      "meaning": "ناخن جویدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-136",
+      "book": "preint",
+      "lesson": 51,
+      "word": "cousin(s)",
+      "meaning": "پسرخاله/دوپسر عمو و... (پسرعمو/دخترعمو)",
+      "verdict": "FIX",
+      "reason": "typo «دوپسر عمو» — متن خراب",
+      "proposedNew": "پسرعمو/دخترعمو/پسرخاله/دخترخاله و..."
+    },
+    {
+      "id": "R4A-137",
+      "book": "preint",
+      "lesson": 53,
+      "word": "leave work",
+      "meaning": "ترک کردن محل کار",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-138",
+      "book": "preint",
+      "lesson": 53,
+      "word": "go to bed",
+      "meaning": "به رختخواب رفتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-139",
+      "book": "preint",
+      "lesson": 59,
+      "word": "ache",
+      "meaning": "درد مبهم و مداوم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-140",
+      "book": "preint",
+      "lesson": 51,
+      "word": "looks like",
+      "meaning": "از نظر ظاهر شبیه بودن به",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-141",
+      "book": "preint",
+      "lesson": 52,
+      "word": "late thirties",
+      "meaning": "اواخر دههٔ سی (حدود ۳۸ سالگی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-142",
+      "book": "preint",
+      "lesson": 59,
+      "word": "lung cancer",
+      "meaning": "سرطان ریه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-143",
+      "book": "preint",
+      "lesson": 60,
+      "word": "weapon",
+      "meaning": "سلاح",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-144",
+      "book": "preint",
+      "lesson": 54,
+      "word": "lift",
+      "meaning": "آسانسور",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-145",
+      "book": "preint",
+      "lesson": 53,
+      "word": "do the washing-up",
+      "meaning": "شستن ظرف‌ها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-146",
+      "book": "preint",
+      "lesson": 60,
+      "word": "wound",
+      "meaning": "زخم/زخم کردن",
+      "verdict": "OK",
+      "note": "pos=n. با حس دوم فعل‌گونه «زخم کردن» — پوشش دو حس چاپی"
+    },
+    {
+      "id": "R4A-147",
+      "book": "preint",
+      "lesson": 52,
+      "word": "a child",
+      "meaning": "کودک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-148",
+      "book": "preint",
+      "lesson": 55,
+      "word": "bedroom(s)",
+      "meaning": "اتاق خواب",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-149",
+      "book": "preint",
+      "lesson": 52,
+      "word": "an adult",
+      "meaning": "بزرگسال",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-150",
+      "book": "preint",
+      "lesson": 60,
+      "word": "cream",
+      "meaning": "کرم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-151",
+      "book": "preint",
+      "lesson": 57,
+      "word": "it isn't working",
+      "meaning": "کار نمی‌کند",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-152",
+      "book": "preint",
+      "lesson": 65,
+      "word": "go out",
+      "meaning": "بیرون رفتن (= رفتن به مکان‌ها به دلایل اجتماعی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-153",
+      "book": "preint",
+      "lesson": 61,
+      "word": "change into",
+      "meaning": "تغییر کردن به (لباس دیگر)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-154",
+      "book": "preint",
+      "lesson": 64,
+      "word": "hot/spicy",
+      "meaning": "تند (پر از ادویه)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-155",
+      "book": "preint",
+      "lesson": 65,
+      "word": "cope with",
+      "meaning": "از پسِ (کار دشوار) برآمدن، کنار آمدن با",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-156",
+      "book": "preint",
+      "lesson": 64,
+      "word": "medium",
+      "meaning": "متوسط (بیشتر پخته و صورتی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-157",
+      "book": "preint",
+      "lesson": 65,
+      "word": "there's plenty to see",
+      "meaning": "چیزهای زیادی برای دیدن هست",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-158",
+      "book": "preint",
+      "lesson": 65,
+      "word": "dirty",
+      "meaning": "کثیف (متضاد: clean)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-159",
+      "book": "preint",
+      "lesson": 61,
+      "word": "boot",
+      "meaning": "چکمه/بوت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-160",
+      "book": "preint",
+      "lesson": 61,
+      "word": "tie",
+      "meaning": "کراوات",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-161",
+      "book": "preint",
+      "lesson": 61,
+      "word": "put on",
+      "meaning": "پوشیدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-162",
+      "book": "preint",
+      "lesson": 63,
+      "word": "pork",
+      "meaning": "گوشت خوک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-163",
+      "book": "preint",
+      "lesson": 63,
+      "word": "vinegar",
+      "meaning": "سرکه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-164",
+      "book": "preint",
+      "lesson": 63,
+      "word": "pineapple",
+      "meaning": "آناناس",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-165",
+      "book": "preint",
+      "lesson": 68,
+      "word": "drive",
+      "meaning": "رانندگی کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-166",
+      "book": "preint",
+      "lesson": 63,
+      "word": "cabbage",
+      "meaning": "کلم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-167",
+      "book": "preint",
+      "lesson": 62,
+      "word": "stationery",
+      "meaning": "لوازم تحریر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-168",
+      "book": "preint",
+      "lesson": 62,
+      "word": "household goods",
+      "meaning": "کالاهای خانگی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-169",
+      "book": "preint",
+      "lesson": 78,
+      "word": "reviews",
+      "meaning": "نقد و بررسی‌ها (مقاله‌ای که نظر می‌دهد درباره‌ی فیلم و کتاب جدید)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-170",
+      "book": "preint",
+      "lesson": 78,
+      "word": "articles",
+      "meaning": "مقاله‌ها (نوشته درباره‌ی موضوع مهم)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-171",
+      "book": "preint",
+      "lesson": 71,
+      "word": "work abroad",
+      "meaning": "کار در خارج از کشور",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-172",
+      "book": "preint",
+      "lesson": 75,
+      "word": "motor racing",
+      "meaning": "مسابقه‌های اتومبیل‌رانی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-173",
+      "book": "preint",
+      "lesson": 73,
+      "word": "rise/go up/increase",
+      "meaning": "بالا رفتن، افزایش یافتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-174",
+      "book": "preint",
+      "lesson": 76,
+      "word": "screen",
+      "meaning": "پرده (سینما)، صفحه نمایش",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-175",
+      "book": "preint",
+      "lesson": 79,
+      "word": "plug it in",
+      "meaning": "دوشاخه‌اش را به پریز بزن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-176",
+      "book": "preint",
+      "lesson": 77,
+      "word": "hit record",
+      "meaning": "آهنگ محبوب و پرفروش",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-177",
+      "book": "preint",
+      "lesson": 72,
+      "word": "keyboard",
+      "meaning": "صفحه‌کلید",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-178",
+      "book": "preint",
+      "lesson": 75,
+      "word": "boots",
+      "meaning": "چکمه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-179",
+      "book": "preint",
+      "lesson": 76,
+      "word": "director",
+      "meaning": "کارگردان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-180",
+      "book": "preint",
+      "lesson": 77,
+      "word": "classical music",
+      "meaning": "موسیقی کلاسیک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-181",
+      "book": "preint",
+      "lesson": 72,
+      "word": "loads of work",
+      "meaning": "کار فراوان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-182",
+      "book": "preint",
+      "lesson": 80,
+      "word": "answerphone",
+      "meaning": "پیام‌گیر تلفن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-183",
+      "book": "preint",
+      "lesson": 72,
+      "word": "desk",
+      "meaning": "میز کار",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-184",
+      "book": "preint",
+      "lesson": 72,
+      "word": "photocopier",
+      "meaning": "دستگاه فتوکپی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-185",
+      "book": "preint",
+      "lesson": 73,
+      "word": "main aim/objective",
+      "meaning": "هدف اصلی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-186",
+      "book": "preint",
+      "lesson": 90,
+      "word": "a single room",
+      "meaning": "اتاق یک‌نفره (با یک تخت یک‌نفره)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-187",
+      "book": "preint",
+      "lesson": 90,
+      "word": "a double room",
+      "meaning": "اتاق دونفره (با یک تخت بزرگ)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-188",
+      "book": "preint",
+      "lesson": 88,
+      "word": "kill/assassinate",
+      "meaning": "کشتن/ترور کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-189",
+      "book": "preint",
+      "lesson": 89,
+      "word": "departures board",
+      "meaning": "تابلوی پروازهای خارج‌شده",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-190",
+      "book": "preint",
+      "lesson": 89,
+      "word": "take-off",
+      "meaning": "برخاستن هواپیما",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-191",
+      "book": "preint",
+      "lesson": 87,
+      "word": "renew",
+      "meaning": "تمدید کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-192",
+      "book": "preint",
+      "lesson": 81,
+      "word": "search engine",
+      "meaning": "موتور جستجو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-193",
+      "book": "preint",
+      "lesson": 84,
+      "word": "evidence",
+      "meaning": "دلیل، مدرک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-194",
+      "book": "preint",
+      "lesson": 85,
+      "word": "rob",
+      "meaning": "سرقت کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-195",
+      "book": "preint",
+      "lesson": 86,
+      "word": "communism",
+      "meaning": "کمونیسم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-196",
+      "book": "preint",
+      "lesson": 84,
+      "word": "prisoner",
+      "meaning": "زندانی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-197",
+      "book": "preint",
+      "lesson": 81,
+      "word": "laser printer",
+      "meaning": "چاپگر لیزری",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-198",
+      "book": "preint",
+      "lesson": 84,
+      "word": "fine",
+      "meaning": "جریمه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-199",
+      "book": "preint",
+      "lesson": 82,
+      "word": "good at",
+      "meaning": "خوب بودن در",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-200",
+      "book": "preint",
+      "lesson": 83,
+      "word": "a loan",
+      "meaning": "وام",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-201",
+      "book": "preint",
+      "lesson": 86,
+      "word": "conservative",
+      "meaning": "محافظه‌کار",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-202",
+      "book": "preint",
+      "lesson": 95,
+      "word": "great",
+      "meaning": "عالی (در معنای محاوره‌ای)، بزرگ",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-203",
+      "book": "preint",
+      "lesson": 97,
+      "word": "Silence — Examination in progress",
+      "meaning": "سکوت — آزمون در جریان است",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-204",
+      "book": "preint",
+      "lesson": 97,
+      "word": "Do not disturb",
+      "meaning": "مزاحم نشوید / مزاحم ممنوع",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-205",
+      "book": "preint",
+      "lesson": 92,
+      "word": "rocks",
+      "meaning": "صخره‌ها/سنگ‌ها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-206",
+      "book": "preint",
+      "lesson": 93,
+      "word": "recently",
+      "meaning": "اخیراً",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-207",
+      "book": "preint",
+      "lesson": 91,
+      "word": "cathedral",
+      "meaning": "کلیسای جامع",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-208",
+      "book": "preint",
+      "lesson": 94,
+      "word": "degrees below zero",
+      "meaning": "درجه زیر صفر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-209",
+      "book": "preint",
+      "lesson": 95,
+      "word": "deep",
+      "meaning": "عمیق",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-210",
+      "book": "preint",
+      "lesson": 99,
+      "word": "guy",
+      "meaning": "مرد / آقا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-211",
+      "book": "preint",
+      "lesson": 95,
+      "word": "wide road",
+      "meaning": "جاده پهن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-212",
+      "book": "preint",
+      "lesson": 95,
+      "word": "deep lake",
+      "meaning": "دریاچه عمیق",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-213",
+      "book": "preint",
+      "lesson": 100,
+      "word": "a paper (newspaper)",
+      "meaning": "روزنامه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-214",
+      "book": "preint",
+      "lesson": 100,
+      "word": "phone (telephone)",
+      "meaning": "تلفن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-215",
+      "book": "upper",
+      "lesson": 7,
+      "word": "It's something you use for (painting pictures / cleaning the kitchen floor ...)",
+      "meaning": "چیزی است که برای (نقاشی کشیدن / تمیز کردن کف آشپزخانه ...) استفاده می‌شود",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-216",
+      "book": "upper",
+      "lesson": 1,
+      "word": "royal",
+      "meaning": "سلطنتی، سلطنتی‌مانند (از فرانسوی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-217",
+      "book": "upper",
+      "lesson": 4,
+      "word": "block capitals",
+      "meaning": "حروف بزرگ (همه با حروف بزرگ)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-218",
+      "book": "upper",
+      "lesson": 9,
+      "word": "dismount",
+      "meaning": "پیاده شدن (از اسب/دوچرخه)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-219",
+      "book": "upper",
+      "lesson": 9,
+      "word": "post-impressionist",
+      "meaning": "پسادربیمی‌گرا",
+      "verdict": "FIX",
+      "reason": "typo «پسادربیمی‌گرا» — نام جنبش صحیح پساامپرسیونیست",
+      "proposedNew": "پساامپرسیونیست"
+    },
+    {
+      "id": "R4A-220",
+      "book": "upper",
+      "lesson": 5,
+      "word": "hairy",
+      "meaning": "پرمو؛ (غیررسمی) ترسناک و هیجان‌انگیز",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-221",
+      "book": "upper",
+      "lesson": 1,
+      "word": "core vocabulary",
+      "meaning": "واژگان اصلی/هسته‌ای",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-222",
+      "book": "upper",
+      "lesson": 8,
+      "word": "terrorist",
+      "meaning": "تروریست",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-223",
+      "book": "upper",
+      "lesson": 6,
+      "word": "heart-broken",
+      "meaning": "دل‌شکسته",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-224",
+      "book": "upper",
+      "lesson": 2,
+      "word": "kick",
+      "meaning": "ضربه زدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-225",
+      "book": "upper",
+      "lesson": 3,
+      "word": "charter flight",
+      "meaning": "پرواز چارتر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-226",
+      "book": "upper",
+      "lesson": 3,
+      "word": "hotel",
+      "meaning": "هتل",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-227",
+      "book": "upper",
+      "lesson": 8,
+      "word": "washable",
+      "meaning": "قابل شستشو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-228",
+      "book": "upper",
+      "lesson": 2,
+      "word": "summer",
+      "meaning": "تابستان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-229",
+      "book": "upper",
+      "lesson": 4,
+      "word": "pronoun",
+      "meaning": "ضمیر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-230",
+      "book": "upper",
+      "lesson": 2,
+      "word": "perfect",
+      "meaning": "کامل",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-231",
+      "book": "upper",
+      "lesson": 9,
+      "word": "anti-war",
+      "meaning": "ضدجنگ",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-232",
+      "book": "upper",
+      "lesson": 10,
+      "word": "produce",
+      "meaning": "تولید کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-233",
+      "book": "upper",
+      "lesson": 8,
+      "word": "worker",
+      "meaning": "کارگر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-234",
+      "book": "upper",
+      "lesson": 8,
+      "word": "edible",
+      "meaning": "خوراکی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-235",
+      "book": "upper",
+      "lesson": 9,
+      "word": "underworked",
+      "meaning": "کم‌کار",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-236",
+      "book": "upper",
+      "lesson": 17,
+      "word": "road rage",
+      "meaning": "خشم جاده‌ای؛ خشم شدید رانندگان در شرایط استرس‌زا که به رانندگی خطرناک یا حمله به دیگران می‌انجامد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-237",
+      "book": "upper",
+      "lesson": 16,
+      "word": "OPEC",
+      "meaning": "سازمان کشورهای صادرکننده نفت (Organisation of Petroleum Exporting Countries)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-238",
+      "book": "upper",
+      "lesson": 15,
+      "word": "dogma",
+      "meaning": "دوگما؛ عقیده تعصبی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-239",
+      "book": "upper",
+      "lesson": 14,
+      "word": "outlook",
+      "meaning": "چشم‌انداز/پیش‌بینی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-240",
+      "book": "upper",
+      "lesson": 19,
+      "word": "moo",
+      "meaning": "صدا کردن (گاو: موقردن)",
+      "verdict": "FIX",
+      "reason": "«موقردن» نامأنوس و بی‌سابقهٔ لغوی",
+      "proposedNew": "موق گفتن (صدای گاو)"
+    },
+    {
+      "id": "R4A-241",
+      "book": "upper",
+      "lesson": 15,
+      "word": "frankfurter",
+      "meaning": "سوسیس کوچک (هات‌داگ)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-242",
+      "book": "upper",
+      "lesson": 20,
+      "word": "raise/rays",
+      "meaning": "بالا بردن / پرتوها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-243",
+      "book": "upper",
+      "lesson": 14,
+      "word": "takeover",
+      "meaning": "تملک/خرید یک شرکت توسط شرکت دیگر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-244",
+      "book": "upper",
+      "lesson": 11,
+      "word": "stardom",
+      "meaning": "ستاره شدن، شهرت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-245",
+      "book": "upper",
+      "lesson": 18,
+      "word": "would",
+      "meaning": "خواهد (فعل کمکی)",
+      "verdict": "FIX",
+      "reason": "«would = خواهد» گمراه‌کننده — would آیندهٔ ساده نیست",
+      "proposedNew": "فعل کمکی شرطی (گذشتهٔ will)"
+    },
+    {
+      "id": "R4A-246",
+      "book": "upper",
+      "lesson": 18,
+      "word": "transport",
+      "meaning": "حمل‌ونقل / حمل کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-247",
+      "book": "upper",
+      "lesson": 18,
+      "word": "soften",
+      "meaning": "نرم کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-248",
+      "book": "upper",
+      "lesson": 11,
+      "word": "intention",
+      "meaning": "نیت، قصد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-249",
+      "book": "upper",
+      "lesson": 13,
+      "word": "baby-sitter",
+      "meaning": "پرستار بچه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-250",
+      "book": "upper",
+      "lesson": 16,
+      "word": "radar",
+      "meaning": "رادار",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-251",
+      "book": "upper",
+      "lesson": 18,
+      "word": "tart",
+      "meaning": "تارت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-252",
+      "book": "upper",
+      "lesson": 13,
+      "word": "kitchen scissors",
+      "meaning": "قیچی آشپزخانه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-253",
+      "book": "upper",
+      "lesson": 18,
+      "word": "photographically",
+      "meaning": "از نظر عکاسی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-254",
+      "book": "upper",
+      "lesson": 15,
+      "word": "bazaar",
+      "meaning": "بازار",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-255",
+      "book": "upper",
+      "lesson": 11,
+      "word": "carelessness",
+      "meaning": "بی‌دقتی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-256",
+      "book": "upper",
+      "lesson": 11,
+      "word": "wisdom",
+      "meaning": "حکمت، خرد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-257",
+      "book": "upper",
+      "lesson": 16,
+      "word": "Rd (Road)",
+      "meaning": "جاده/راه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-258",
+      "book": "upper",
+      "lesson": 18,
+      "word": "psychology",
+      "meaning": "روان‌شناسی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-259",
+      "book": "upper",
+      "lesson": 12,
+      "word": "two-faced",
+      "meaning": "دورو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-260",
+      "book": "upper",
+      "lesson": 12,
+      "word": "time-consuming",
+      "meaning": "وقت‌گیر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-261",
+      "book": "upper",
+      "lesson": 16,
+      "word": "plane (aeroplane)",
+      "meaning": "هواپیما",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-262",
+      "book": "upper",
+      "lesson": 24,
+      "word": "it's all very well ... but",
+      "meaning": "خوب است گفتنِ... اما (انتقاد آمیخته با تقابل)",
+      "verdict": "FIX",
+      "reason": "عبارت آشفته با اعراب نابجا («گفتنِ»)",
+      "proposedNew": "خیلی خوب است که... اما (برای بیان انتقاد)"
+    },
+    {
+      "id": "R4A-263",
+      "book": "upper",
+      "lesson": 25,
+      "word": "on top of (all) that",
+      "meaning": "در کنار همهٔ این‌ها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-264",
+      "book": "upper",
+      "lesson": 25,
+      "word": "furthermore",
+      "meaning": "علاوه بر این، افزون بر این",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-265",
+      "book": "upper",
+      "lesson": 25,
+      "word": "and so on and so forth",
+      "meaning": "و همین‌طور همین‌طور",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-266",
+      "book": "upper",
+      "lesson": 22,
+      "word": "unless",
+      "meaning": "مگر اینکه، به‌جز اینکه اگر",
+      "verdict": "FIX",
+      "reason": "بخش دوم «به‌جز اینکه اگر» آشفته و زائد",
+      "proposedNew": "مگر اینکه"
+    },
+    {
+      "id": "R4A-267",
+      "book": "upper",
+      "lesson": 30,
+      "word": "(swimming) trunks",
+      "meaning": "شلوارک شنا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-268",
+      "book": "upper",
+      "lesson": 25,
+      "word": "in addition to",
+      "meaning": "علاوه بر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-269",
+      "book": "upper",
+      "lesson": 22,
+      "word": "whichever",
+      "meaning": "هر کدام که",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-270",
+      "book": "upper",
+      "lesson": 30,
+      "word": "goods",
+      "meaning": "کالاها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-271",
+      "book": "upper",
+      "lesson": 25,
+      "word": "equally",
+      "meaning": "به همان اندازه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-272",
+      "book": "upper",
+      "lesson": 23,
+      "word": "consequently",
+      "meaning": "در نتیجه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-273",
+      "book": "upper",
+      "lesson": 29,
+      "word": "butter",
+      "meaning": "کره",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-274",
+      "book": "upper",
+      "lesson": 26,
+      "word": "answer",
+      "meaning": "پاسخ (به)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-275",
+      "book": "upper",
+      "lesson": 40,
+      "word": "study",
+      "meaning": "اتاق مطالعه برای خواندن/نوشتن/درس خواندن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-276",
+      "book": "upper",
+      "lesson": 38,
+      "word": "aggressive",
+      "meaning": "تهاجمی و پرخاشگر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-277",
+      "book": "upper",
+      "lesson": 38,
+      "word": "assertive",
+      "meaning": "پرانگیزه و با اعتماد به نفس",
+      "verdict": "FIX",
+      "reason": "«پرانگیزه» انحراف معنایی (motivated ≠ assertive)",
+      "proposedNew": "صریح، قاطع و مطمئن (با اعتماد به نفس)"
+    },
+    {
+      "id": "R4A-278",
+      "book": "upper",
+      "lesson": 35,
+      "word": "Afro-Caribbeans",
+      "meaning": "آفریقا-کارائیبی‌ها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-279",
+      "book": "upper",
+      "lesson": 37,
+      "word": "dark",
+      "meaning": "تیره (مو یا پوست)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-280",
+      "book": "upper",
+      "lesson": 40,
+      "word": "hall/hallway",
+      "meaning": "راهرو/فضای ورودی خانه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-281",
+      "book": "upper",
+      "lesson": 40,
+      "word": "power point and plug",
+      "meaning": "پریز برق و دوشاخه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-282",
+      "book": "upper",
+      "lesson": 35,
+      "word": "Europe",
+      "meaning": "اروپا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-283",
+      "book": "upper",
+      "lesson": 33,
+      "word": "cartons of milk",
+      "meaning": "بسته‌های شیر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-284",
+      "book": "upper",
+      "lesson": 37,
+      "word": "wrinkles",
+      "meaning": "چین و چروک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-285",
+      "book": "upper",
+      "lesson": 36,
+      "word": "flood",
+      "meaning": "سیل",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-286",
+      "book": "upper",
+      "lesson": 35,
+      "word": "Thai",
+      "meaning": "تایلندی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-287",
+      "book": "upper",
+      "lesson": 36,
+      "word": "blustery",
+      "meaning": "بادی و تند",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-288",
+      "book": "upper",
+      "lesson": 37,
+      "word": "plump",
+      "meaning": "تاحدی چاق و تپل",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-289",
+      "book": "upper",
+      "lesson": 33,
+      "word": "pieces of",
+      "meaning": "تکه‌های",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-290",
+      "book": "upper",
+      "lesson": 38,
+      "word": "gifted",
+      "meaning": "بااستعداد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-291",
+      "book": "upper",
+      "lesson": 33,
+      "word": "item of news",
+      "meaning": "قلم خبر",
+      "verdict": "FIX",
+      "reason": "«قلم خبر» ناتمام (کاربرد قلم در حسابداری)",
+      "proposedNew": "یک بند از خبر / مورد خبر"
+    },
+    {
+      "id": "R4A-292",
+      "book": "upper",
+      "lesson": 35,
+      "word": "The Indian Ocean",
+      "meaning": "اقیانوس هند",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-293",
+      "book": "upper",
+      "lesson": 37,
+      "word": "round-faced",
+      "meaning": "گردصورت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-294",
+      "book": "upper",
+      "lesson": 31,
+      "word": "potato",
+      "meaning": "سیب‌زمینی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-295",
+      "book": "upper",
+      "lesson": 44,
+      "word": "public relations officer",
+      "meaning": "مسئول روابط عمومی (ارائهٔ اطلاعات به مطبوعات و تلویزیون)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-296",
+      "book": "upper",
+      "lesson": 44,
+      "word": "go/be on strike",
+      "meaning": "اعتصاب کردن/در اعتصاب بودن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-297",
+      "book": "upper",
+      "lesson": 49,
+      "word": "heavily industrialised regions",
+      "meaning": "مناطق به‌شدت صنعتی‌شده",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-298",
+      "book": "upper",
+      "lesson": 48,
+      "word": "done to a turn",
+      "meaning": "درست و حسابی پخته (بی‌نقص)",
+      "verdict": "OK",
+      "note": "idiom چاپی با معنی دقیق — درست"
+    },
+    {
+      "id": "R4A-299",
+      "book": "upper",
+      "lesson": 44,
+      "word": "economist",
+      "meaning": "اقتصاددان (متخصص امور مالی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-300",
+      "book": "upper",
+      "lesson": 41,
+      "word": "grazed",
+      "meaning": "سائیدگی (زخم سطحی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-301",
+      "book": "upper",
+      "lesson": 44,
+      "word": "make a living",
+      "meaning": "اقرار معاش کردن (به‌قدر کافی درآمد داشتن)",
+      "verdict": "FIX",
+      "reason": "typo «اقرار معاش» — بی‌معنا",
+      "proposedNew": "گذران زندگی کردن (به‌قدر کافی درآمد داشتن)"
+    },
+    {
+      "id": "R4A-302",
+      "book": "upper",
+      "lesson": 44,
+      "word": "redundant",
+      "meaning": "اضافی/تعدیل‌شده",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-303",
+      "book": "upper",
+      "lesson": 43,
+      "word": "school-leaving exams",
+      "meaning": "امتحانات پایان تحصیل در مدرسه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-304",
+      "book": "upper",
+      "lesson": 48,
+      "word": "paprika",
+      "meaning": "فلفل قرمز پاپریکا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-305",
+      "book": "upper",
+      "lesson": 44,
+      "word": "director",
+      "meaning": "عضو هیئت مدیرهٔ شرکت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-306",
+      "book": "upper",
+      "lesson": 50,
+      "word": "imposing",
+      "meaning": "با شکوه / مجلل",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-307",
+      "book": "upper",
+      "lesson": 46,
+      "word": "exhibition",
+      "meaning": "نمایشگاه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-308",
+      "book": "upper",
+      "lesson": 50,
+      "word": "art gallery",
+      "meaning": "نگارخانه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-309",
+      "book": "upper",
+      "lesson": 45,
+      "word": "hold the record",
+      "meaning": "رکورد را داشتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-310",
+      "book": "upper",
+      "lesson": 48,
+      "word": "thyme",
+      "meaning": "آویشن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-311",
+      "book": "upper",
+      "lesson": 46,
+      "word": "novel",
+      "meaning": "رمان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-312",
+      "book": "upper",
+      "lesson": 49,
+      "word": "tributary",
+      "meaning": "شاخه‌ی رود",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-313",
+      "book": "upper",
+      "lesson": 47,
+      "word": "peaceful",
+      "meaning": "آرام",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-314",
+      "book": "upper",
+      "lesson": 44,
+      "word": "vet",
+      "meaning": "دامپزشک",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-315",
+      "book": "upper",
+      "lesson": 49,
+      "word": "stream",
+      "meaning": "جریان آب، نهر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-316",
+      "book": "upper",
+      "lesson": 48,
+      "word": "cauliflower",
+      "meaning": "گل کلم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-317",
+      "book": "upper",
+      "lesson": 45,
+      "word": "mountaineer",
+      "meaning": "کوهنورد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-318",
+      "book": "upper",
+      "lesson": 41,
+      "word": "fell down",
+      "meaning": "افتاد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-319",
+      "book": "upper",
+      "lesson": 48,
+      "word": "beef",
+      "meaning": "گوشت گاو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-320",
+      "book": "upper",
+      "lesson": 60,
+      "word": "republic",
+      "meaning": "جمهوری: کشوری که توسط نمایندگان و معمولاً یک رئیس‌جمهور اداره می‌شود",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-321",
+      "book": "upper",
+      "lesson": 60,
+      "word": "marginal seat",
+      "meaning": "کرسی پرتنش/نزدیک",
+      "verdict": "OK",
+      "note": "«کرسی پرتنش/نزدیک» — قابل‌قبول؛ کاندید بازخوانی انسانی برای صیقل"
+    },
+    {
+      "id": "R4A-322",
+      "book": "upper",
+      "lesson": 59,
+      "word": "detective stories",
+      "meaning": "داستان‌های جنایی/کارآگاهی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-323",
+      "book": "upper",
+      "lesson": 60,
+      "word": "independence",
+      "meaning": "استقلال: آزادی از کنترل خارجی؛ خودمختاری",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-324",
+      "book": "upper",
+      "lesson": 54,
+      "word": "journey",
+      "meaning": "سفر (مسافت طولانی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-325",
+      "book": "upper",
+      "lesson": 54,
+      "word": "back",
+      "meaning": "عقب راندن (خودرو)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-326",
+      "book": "upper",
+      "lesson": 53,
+      "word": "bed rest",
+      "meaning": "استراحت مطلق در بستر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-327",
+      "book": "upper",
+      "lesson": 57,
+      "word": "patent",
+      "meaning": "ثبت اختراع کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-328",
+      "book": "upper",
+      "lesson": 57,
+      "word": "analyse",
+      "meaning": "تحلیل کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-329",
+      "book": "upper",
+      "lesson": 57,
+      "word": "food processor",
+      "meaning": "غذاساز",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-330",
+      "book": "upper",
+      "lesson": 56,
+      "word": "4² four squared",
+      "meaning": "چهار به توان دو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-331",
+      "book": "upper",
+      "lesson": 54,
+      "word": "compartment",
+      "meaning": "کوپه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-332",
+      "book": "upper",
+      "lesson": 57,
+      "word": "rotate",
+      "meaning": "چرخیدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-333",
+      "book": "upper",
+      "lesson": 54,
+      "word": "freight train",
+      "meaning": "قطار باری",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-334",
+      "book": "upper",
+      "lesson": 60,
+      "word": "term",
+      "meaning": "دوره (تصدی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-335",
+      "book": "upper",
+      "lesson": 56,
+      "word": "triangle",
+      "meaning": "مثلث",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-336",
+      "book": "upper",
+      "lesson": 53,
+      "word": "medicine",
+      "meaning": "دارو (مایع)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-337",
+      "book": "upper",
+      "lesson": 54,
+      "word": "aisle",
+      "meaning": "راهرو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-338",
+      "book": "upper",
+      "lesson": 54,
+      "word": "cockpit",
+      "meaning": "کابین خلبان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-339",
+      "book": "upper",
+      "lesson": 51,
+      "word": "gills",
+      "meaning": "آبشش",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-340",
+      "book": "upper",
+      "lesson": 67,
+      "word": "musty",
+      "meaning": "بو گرفته (نمناکی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-341",
+      "book": "upper",
+      "lesson": 65,
+      "word": "yearn for",
+      "meaning": "تشنه و مشتاق بودن به",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-342",
+      "book": "upper",
+      "lesson": 62,
+      "word": "purchase",
+      "meaning": "خریدن (رسمی‌تر)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-343",
+      "book": "upper",
+      "lesson": 61,
+      "word": "charge (someone) with",
+      "meaning": "متهم کردن (کسی) به",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-344",
+      "book": "upper",
+      "lesson": 64,
+      "word": "cross",
+      "meaning": "عصبانی (غیررسمی، معمولاً درباره بچه‌ها)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-345",
+      "book": "upper",
+      "lesson": 65,
+      "word": "appal",
+      "meaning": "قفل کردن، وحشت‌زده کردن",
+      "verdict": "FIX",
+      "reason": "«قفل کردن» کاملاً غلط — appal به معنای lock نیست",
+      "proposedNew": "وحشت‌زده و حیرت‌زده کردن"
+    },
+    {
+      "id": "R4A-346",
+      "book": "upper",
+      "lesson": 63,
+      "word": "feel",
+      "meaning": "احساس کردن، عقیده داشتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-347",
+      "book": "upper",
+      "lesson": 61,
+      "word": "case",
+      "meaning": "پرونده",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-348",
+      "book": "upper",
+      "lesson": 62,
+      "word": "salaries",
+      "meaning": "حقوق‌ها",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-349",
+      "book": "upper",
+      "lesson": 69,
+      "word": "heaps/bags/loads of",
+      "meaning": "انبوهی از",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-350",
+      "book": "upper",
+      "lesson": 66,
+      "word": "furiously",
+      "meaning": "با شدت و خشم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-351",
+      "book": "upper",
+      "lesson": 69,
+      "word": "a good/great deal",
+      "meaning": "مقدار زیاد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-352",
+      "book": "upper",
+      "lesson": 68,
+      "word": "breathe",
+      "meaning": "نفس کشیدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-353",
+      "book": "upper",
+      "lesson": 63,
+      "word": "religious",
+      "meaning": "مذهبی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-354",
+      "book": "upper",
+      "lesson": 63,
+      "word": "Muslim",
+      "meaning": "مسلمان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-355",
+      "book": "upper",
+      "lesson": 67,
+      "word": "putrid",
+      "meaning": "پوسیده",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-356",
+      "book": "upper",
+      "lesson": 66,
+      "word": "happily",
+      "meaning": "با خوشحالی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-357",
+      "book": "upper",
+      "lesson": 63,
+      "word": "socialist",
+      "meaning": "سوسیالیست",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-358",
+      "book": "upper",
+      "lesson": 74,
+      "word": "proprietor",
+      "meaning": "صاحب/مالک (رسمی، برای مغازه‌ها و کسب‌وکارها)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-359",
+      "book": "upper",
+      "lesson": 80,
+      "word": "dry as a bone",
+      "meaning": "خشک مثل استخوان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-360",
+      "book": "upper",
+      "lesson": 76,
+      "word": "jagged",
+      "meaning": "دندانه‌دار و تیز",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-361",
+      "book": "upper",
+      "lesson": 78,
+      "word": "take the weight off your feet",
+      "meaning": "بنشین (استراحت کن)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-362",
+      "book": "upper",
+      "lesson": 79,
+      "word": "As I was saying",
+      "meaning": "همان‌طور که می‌گفتم",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-363",
+      "book": "upper",
+      "lesson": 72,
+      "word": "wants",
+      "meaning": "خواستن (غیررسمی، برای نیاز)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-364",
+      "book": "upper",
+      "lesson": 74,
+      "word": "cater for",
+      "meaning": "رسیدگی به نیازهای (افراد)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-365",
+      "book": "upper",
+      "lesson": 76,
+      "word": "to the touch",
+      "meaning": "از نظر لمسی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-366",
+      "book": "upper",
+      "lesson": 73,
+      "word": "sound",
+      "meaning": "صدا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-367",
+      "book": "upper",
+      "lesson": 72,
+      "word": "need for",
+      "meaning": "نیاز به",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-368",
+      "book": "upper",
+      "lesson": 76,
+      "word": "shiny",
+      "meaning": "براق",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-369",
+      "book": "upper",
+      "lesson": 77,
+      "word": "succeed in",
+      "meaning": "موفق شدن در",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-370",
+      "book": "upper",
+      "lesson": 89,
+      "word": "make up",
+      "meaning": "ساختن/دروغ‌بافیدن؛ تشکیل دادن؛ آرایش کردن؛ آماده کردن؛ جبران کمبود کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-371",
+      "book": "upper",
+      "lesson": 90,
+      "word": "take pride in",
+      "meaning": "افتخار کردن به، از کاری رضایت گرفتن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-372",
+      "book": "upper",
+      "lesson": 81,
+      "word": "part and parcel",
+      "meaning": "بخش جدایی‌ناپذیر",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-373",
+      "book": "upper",
+      "lesson": 90,
+      "word": "bring it off",
+      "meaning": "موفق شدن در کاری",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-374",
+      "book": "upper",
+      "lesson": 82,
+      "word": "round the bend",
+      "meaning": "دیوانه؛ کاملاً مجنون",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-375",
+      "book": "upper",
+      "lesson": 85,
+      "word": "pick holes",
+      "meaning": "نقص‌گیری کردن، عیب‌جویی کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-376",
+      "book": "upper",
+      "lesson": 81,
+      "word": "odds and ends",
+      "meaning": "چیزهای خرد و من‌و‌مزهٔ بی‌اهمیت",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-377",
+      "book": "upper",
+      "lesson": 86,
+      "word": "get the wrong end of the stick",
+      "meaning": "برداشت اشتباه کردن؛ سوءتفاهم شدن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-378",
+      "book": "upper",
+      "lesson": 81,
+      "word": "hot and cold",
+      "meaning": "گرم و سرد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-379",
+      "book": "upper",
+      "lesson": 85,
+      "word": "first-rate",
+      "meaning": "درجه‌یک، عالی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-380",
+      "book": "upper",
+      "lesson": 92,
+      "word": "a put-up job",
+      "meaning": "کاری از پیش طراحی‌شده برای ایجاد تصور نادرست",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-381",
+      "book": "upper",
+      "lesson": 97,
+      "word": "bill",
+      "meaning": "برگه حساب/اسکناس",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-382",
+      "book": "upper",
+      "lesson": 96,
+      "word": "wicked",
+      "meaning": "باحال، عالی (عامیانه دهه ۸۰)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-383",
+      "book": "upper",
+      "lesson": 98,
+      "word": "dram",
+      "meaning": "نوشیدنی (معمولاً ویسکی)",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-384",
+      "book": "upper",
+      "lesson": 97,
+      "word": "trunk (of car)",
+      "meaning": "صندوق عقب ماشین",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-385",
+      "book": "upper",
+      "lesson": 99,
+      "word": "bar*",
+      "meaning": "ممنوع کردن، محروم کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-386",
+      "book": "upper",
+      "lesson": 91,
+      "word": "get off to a good/bad start",
+      "meaning": "شروع خوب/بد کردن",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-387",
+      "book": "upper",
+      "lesson": 93,
+      "word": "go without saying",
+      "meaning": "بدون گفتن بدیهی است",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-388",
+      "book": "upper",
+      "lesson": 92,
+      "word": "set/put the world to rights",
+      "meaning": "گفت‌وگو دربارهٔ مسائل مهم جهان",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-389",
+      "book": "upper",
+      "lesson": 94,
+      "word": "look out",
+      "meaning": "مواظب بودن، حواس‌مان باشد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-390",
+      "book": "upper",
+      "lesson": 96,
+      "word": "dickhead",
+      "meaning": "توهین شدید برای آدم احمق",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-391",
+      "book": "upper",
+      "lesson": 94,
+      "word": "run me off my feet",
+      "meaning": "خسته و کلافه کردن از سر کار زیاد",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-392",
+      "book": "upper",
+      "lesson": 97,
+      "word": "freeway/highway",
+      "meaning": "بزرگراه",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-393",
+      "book": "upper",
+      "lesson": 94,
+      "word": "see Jim off",
+      "meaning": "بدرقه کردن کسی",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-394",
+      "book": "upper",
+      "lesson": 98,
+      "word": "truckie",
+      "meaning": "راننده کامیون",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-395",
+      "book": "upper",
+      "lesson": 98,
+      "word": "kirk",
+      "meaning": "کلیسا",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-396",
+      "book": "upper",
+      "lesson": 97,
+      "word": "sidewalk",
+      "meaning": "پیاده‌رو",
+      "verdict": "OK"
+    },
+    {
+      "id": "R4A-397",
+      "book": "upper",
+      "lesson": 98,
+      "word": "burn",
+      "meaning": "جویبار",
+      "verdict": "OK"
+    }
+  ]
+}

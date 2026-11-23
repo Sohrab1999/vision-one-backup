@@ -1,0 +1,3675 @@
+{
+ "book": "upper",
+ "sourcePdf": "upload/Vocabulary In Use-Upper Intermediate 2nd Edition.pdf",
+ "censusDate": "2026-11-14",
+ "method": "VLM census of EVERY lesson page (pdftoppm 120 DPI renders in /tmp; z-ai vision batch=8) + pixel-metric cross-check (scripts/viu-image-metrics.py) + focus-probe verification of suspect pages",
+ "layoutRule": "N=1..15: [2N+7,2N+8] · 16: [39,39] · N=17..51: [2N+6,2N+7] · 52: MISSING · N=53..100: [2N+4,2N+5] (audit 2026-11-09)",
+ "summary": {
+  "lessons": 100,
+  "lessonPages": 198,
+  "lessonsArtwork": 78,
+  "lessonsTableOnly": 6,
+  "lessonsTextOnly": 15,
+  "lessonsMissingInScan": 1,
+  "pageVisualCount": 123,
+  "pageTextOnlyCount": 74,
+  "pageFailedCount": 0,
+  "lessonsByKind": {
+   "drawing": 66,
+   "chart-diagram": 17,
+   "table": 24,
+   "picture-dictionary": 9,
+   "photo": 1
+  }
+ },
+ "lessons": [
+  {
+   "lesson": 1,
+   "pdfPages": [
+    9,
+    10
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 9,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "cartoon of reader dreaming of royalty"
+    },
+    {
+     "pdfPage": 10,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "cartoon of reader dreaming of royalty"
+   ]
+  },
+  {
+   "lesson": 2,
+   "pdfPages": [
+    11,
+    12
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "drawing",
+    "table"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 11,
+     "visual": true,
+     "kinds": [
+      "drawing",
+      "chart-diagram"
+     ],
+     "area": "large",
+     "desc": "bubble network for CAT and labelled body diagram"
+    },
+    {
+     "pdfPage": 12,
+     "visual": true,
+     "kinds": [
+      "chart-diagram",
+      "table"
+     ],
+     "area": "large",
+     "desc": "word tree, forks, bubble network and collocation table"
+    }
+   ],
+   "descs": [
+    "bubble network for CAT and labelled body diagram",
+    "word tree, forks, bubble network and collocation table"
+   ]
+  },
+  {
+   "lesson": 3,
+   "pdfPages": [
+    13,
+    14
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 13,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "large",
+     "desc": "tree diagram and travel bubble network"
+    },
+    {
+     "pdfPage": 14,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "word-map diagram with handwritten notebook panel"
+    }
+   ],
+   "descs": [
+    "tree diagram and travel bubble network",
+    "word-map diagram with handwritten notebook panel"
+   ]
+  },
+  {
+   "lesson": 4,
+   "pdfPages": [
+    15,
+    16
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 15,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "small",
+     "desc": "sentence with arrows labelling parts of speech"
+    },
+    {
+     "pdfPage": 16,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "sentence with arrows labelling parts of speech"
+   ]
+  },
+  {
+   "lesson": 5,
+   "pdfPages": [
+    17,
+    18
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 17,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 18,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "drawings of sofa, boots, sailing boat"
+    }
+   ],
+   "descs": [
+    "drawings of sofa, boots, sailing boat"
+   ]
+  },
+  {
+   "lesson": 6,
+   "pdfPages": [
+    19,
+    20
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 19,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "small book and puzzle decorative icons"
+    },
+    {
+     "pdfPage": 20,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "three black-and-white cartoon scenes of people"
+    }
+   ],
+   "descs": [
+    "small book and puzzle decorative icons",
+    "three black-and-white cartoon scenes of people"
+   ]
+  },
+  {
+   "lesson": 7,
+   "pdfPages": [
+    21,
+    22
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 21,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 22,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "tortoise silhouette illustration beside text"
+    }
+   ],
+   "descs": [
+    "tortoise silhouette illustration beside text"
+   ]
+  },
+  {
+   "lesson": 8,
+   "pdfPages": [
+    23,
+    24
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 23,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 24,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "drawings of stapler, grinder, tin-opener, clippers, hanger"
+    }
+   ],
+   "descs": [
+    "drawings of stapler, grinder, tin-opener, clippers, hanger"
+   ]
+  },
+  {
+   "lesson": 9,
+   "pdfPages": [
+    25,
+    26
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 25,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 26,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 10,
+   "pdfPages": [
+    27,
+    28
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 27,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 28,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "cartoon of man writing at a desk"
+    }
+   ],
+   "descs": [
+    "cartoon of man writing at a desk"
+   ]
+  },
+  {
+   "lesson": 11,
+   "pdfPages": [
+    29,
+    30
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 29,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 30,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "cartoon of two people walking"
+    }
+   ],
+   "descs": [
+    "cartoon of two people walking"
+   ]
+  },
+  {
+   "lesson": 12,
+   "pdfPages": [
+    31,
+    32
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 31,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "cartoon of reclining man relaxing with drink"
+    },
+    {
+     "pdfPage": 32,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "cartoon of reclining man relaxing with drink"
+   ]
+  },
+  {
+   "lesson": 13,
+   "pdfPages": [
+    33,
+    34
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 33,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 34,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "small",
+     "desc": "bubble network diagrams for money, health, social problems"
+    }
+   ],
+   "descs": [
+    "bubble network diagrams for money, health, social problems"
+   ]
+  },
+  {
+   "lesson": 14,
+   "pdfPages": [
+    35,
+    36
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 35,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 36,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 15,
+   "pdfPages": [
+    37,
+    38
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 37,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "large",
+     "desc": "map of Europe with word origins labeled by country"
+    },
+    {
+     "pdfPage": 38,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "four bubble network diagrams: food, politics, arts, animals"
+    }
+   ],
+   "descs": [
+    "map of Europe with word origins labeled by country",
+    "four bubble network diagrams: food, politics, arts, animals"
+   ]
+  },
+  {
+   "lesson": 16,
+   "pdfPages": [
+    39,
+    39
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 39,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 17,
+   "pdfPages": [
+    40,
+    41
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 40,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "cartoon of people rollerblading inline skating"
+    },
+    {
+     "pdfPage": 41,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "cartoon of people rollerblading inline skating"
+   ]
+  },
+  {
+   "lesson": 18,
+   "pdfPages": [
+    42,
+    43
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 42,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 43,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "drawing of poet writing at candle-lit desk"
+    }
+   ],
+   "descs": [
+    "drawing of poet writing at candle-lit desk"
+   ]
+  },
+  {
+   "lesson": 19,
+   "pdfPages": [
+    44,
+    45
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 44,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "cartoon: man exclaiming 'Oh no! It's smashed!'"
+    },
+    {
+     "pdfPage": 45,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "six numbered drawings of actions for exercise 19.5"
+    }
+   ],
+   "descs": [
+    "cartoon: man exclaiming 'Oh no! It's smashed!'",
+    "six numbered drawings of actions for exercise 19.5"
+   ]
+  },
+  {
+   "lesson": 20,
+   "pdfPages": [
+    46,
+    47
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 46,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 47,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "eight small drawings of objects for exercise 20.5"
+    }
+   ],
+   "descs": [
+    "eight small drawings of objects for exercise 20.5"
+   ]
+  },
+  {
+   "lesson": 21,
+   "pdfPages": [
+    48,
+    49
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 48,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 49,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "handwritten diary pages panel for exercise"
+    }
+   ],
+   "descs": [
+    "handwritten diary pages panel for exercise"
+   ]
+  },
+  {
+   "lesson": 22,
+   "pdfPages": [
+    50,
+    51
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 50,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "four cartoons: ticket, bike, fire notice, sofa"
+    },
+    {
+     "pdfPage": 51,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "four exercise cartoons: motorbike, checkpoint, cinema, monument"
+    }
+   ],
+   "descs": [
+    "four cartoons: ticket, bike, fire notice, sofa",
+    "four exercise cartoons: motorbike, checkpoint, cinema, monument"
+   ]
+  },
+  {
+   "lesson": 23,
+   "pdfPages": [
+    52,
+    53
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 52,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "sketch of two lorries colliding on icy road"
+    },
+    {
+     "pdfPage": 53,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "four cartoons: snowed car, refunds, angry customers, walking home"
+    }
+   ],
+   "descs": [
+    "sketch of two lorries colliding on icy road",
+    "four cartoons: snowed car, refunds, angry customers, walking home"
+   ]
+  },
+  {
+   "lesson": 24,
+   "pdfPages": [
+    54,
+    55
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 54,
+     "visual": true,
+     "kinds": [
+      "table",
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "verbs table plus two contrast cartoons"
+    },
+    {
+     "pdfPage": 55,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "small",
+     "desc": "blank crossword puzzle grid"
+    }
+   ],
+   "descs": [
+    "verbs table plus two contrast cartoons",
+    "blank crossword puzzle grid"
+   ]
+  },
+  {
+   "lesson": 25,
+   "pdfPages": [
+    56,
+    57
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 56,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 57,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "handwritten letter facsimile and four small drawings (boot, watch, maths, teapot)"
+    }
+   ],
+   "descs": [
+    "handwritten letter facsimile and four small drawings (boot, watch, maths, teapot)"
+   ]
+  },
+  {
+   "lesson": 26,
+   "pdfPages": [
+    58,
+    59
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 58,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 59,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 27,
+   "pdfPages": [
+    60,
+    61
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 60,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 61,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 28,
+   "pdfPages": [
+    62,
+    63
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 62,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 63,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 29,
+   "pdfPages": [
+    64,
+    65
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "picture-dictionary"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 64,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary",
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "labelled black-and-white drawings: travel and household items"
+    },
+    {
+     "pdfPage": 65,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "tiny decorative book icons beside exercise numbers"
+    }
+   ],
+   "descs": [
+    "labelled black-and-white drawings: travel and household items",
+    "tiny decorative book icons beside exercise numbers"
+   ]
+  },
+  {
+   "lesson": 30,
+   "pdfPages": [
+    66,
+    67
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "picture-dictionary"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 66,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary",
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "labelled drawings of tools and clothes in rows"
+    },
+    {
+     "pdfPage": 67,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "cartoon clothesline with plural-noun garments hanging"
+    }
+   ],
+   "descs": [
+    "labelled drawings of tools and clothes in rows",
+    "cartoon clothesline with plural-noun garments hanging"
+   ]
+  },
+  {
+   "lesson": 31,
+   "pdfPages": [
+    68,
+    69
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "picture-dictionary"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 68,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary",
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "labelled drawings: glass, cloth, fish, food items"
+    },
+    {
+     "pdfPage": 69,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "drawings of iron, pepper, cake, paper, glass"
+    }
+   ],
+   "descs": [
+    "labelled drawings: glass, cloth, fish, food items",
+    "drawings of iron, pepper, cake, paper, glass"
+   ]
+  },
+  {
+   "lesson": 32,
+   "pdfPages": [
+    70,
+    71
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 70,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "drawings of crowds, landscape, objects like strawberries"
+    },
+    {
+     "pdfPage": 71,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "drawings of crowds, landscape, objects like strawberries"
+   ]
+  },
+  {
+   "lesson": 33,
+   "pdfPages": [
+    72,
+    73
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 72,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "drawing of grocery basket with bread and goods"
+    },
+    {
+     "pdfPage": 73,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "small",
+     "desc": "crossword puzzle grid for exercise"
+    }
+   ],
+   "descs": [
+    "drawing of grocery basket with bread and goods",
+    "crossword puzzle grid for exercise"
+   ]
+  },
+  {
+   "lesson": 34,
+   "pdfPages": [
+    74,
+    75
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "picture-dictionary",
+    "table"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 74,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary",
+      "table"
+     ],
+     "area": "large",
+     "desc": "labelled container illustrations plus container vocabulary table"
+    },
+    {
+     "pdfPage": 75,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "twelve numbered drawings of containers to name"
+    }
+   ],
+   "descs": [
+    "labelled container illustrations plus container vocabulary table",
+    "twelve numbered drawings of containers to name"
+   ]
+  },
+  {
+   "lesson": 35,
+   "pdfPages": [
+    76,
+    77
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "drawing"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 76,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "large",
+     "desc": "world map labelled with regions and oceans"
+    },
+    {
+     "pdfPage": 77,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "newspaper headline clippings in torn boxes"
+    }
+   ],
+   "descs": [
+    "world map labelled with regions and oceans",
+    "newspaper headline clippings in torn boxes"
+   ]
+  },
+  {
+   "lesson": 36,
+   "pdfPages": [
+    78,
+    79
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "table"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 78,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 79,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "small",
+     "desc": "four-column weather-by-season chart"
+    }
+   ],
+   "descs": [
+    "four-column weather-by-season chart"
+   ]
+  },
+  {
+   "lesson": 37,
+   "pdfPages": [
+    80,
+    81
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 80,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "drawn faces showing hair types and body builds"
+    },
+    {
+     "pdfPage": 81,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "four wanted/missing police posters with face drawings"
+    }
+   ],
+   "descs": [
+    "drawn faces showing hair types and body builds",
+    "four wanted/missing police posters with face drawings"
+   ]
+  },
+  {
+   "lesson": 38,
+   "pdfPages": [
+    82,
+    83
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 82,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 83,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "small drawing of a wine glass"
+    }
+   ],
+   "descs": [
+    "small drawing of a wine glass"
+   ]
+  },
+  {
+   "lesson": 39,
+   "pdfPages": [
+    84,
+    85
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 84,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 85,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 40,
+   "pdfPages": [
+    86,
+    87
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "picture-dictionary"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 86,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary"
+     ],
+     "area": "medium",
+     "desc": "labelled drawings of small household objects"
+    },
+    {
+     "pdfPage": 87,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "house floor plan with labelled arrows"
+    }
+   ],
+   "descs": [
+    "labelled drawings of small household objects",
+    "house floor plan with labelled arrows"
+   ]
+  },
+  {
+   "lesson": 41,
+   "pdfPages": [
+    88,
+    89
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 88,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "cartoon drawings of household problems and injuries"
+    },
+    {
+     "pdfPage": 89,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "matrix table ticking things that go wrong"
+    }
+   ],
+   "descs": [
+    "cartoon drawings of household problems and injuries",
+    "matrix table ticking things that go wrong"
+   ]
+  },
+  {
+   "lesson": 42,
+   "pdfPages": [
+    90,
+    91
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 90,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "ambulance drawing plus newspaper headline cut-out panels"
+    },
+    {
+     "pdfPage": 91,
+     "visual": true,
+     "kinds": [
+      "table",
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "word-class table and torn newspaper headline cut-outs"
+    }
+   ],
+   "descs": [
+    "ambulance drawing plus newspaper headline cut-out panels",
+    "word-class table and torn newspaper headline cut-outs"
+   ]
+  },
+  {
+   "lesson": 43,
+   "pdfPages": [
+    92,
+    93
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 92,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "education stages table with three columns"
+    },
+    {
+     "pdfPage": 93,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "education stages table with three columns"
+   ]
+  },
+  {
+   "lesson": 44,
+   "pdfPages": [
+    94,
+    95
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 94,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 95,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 45,
+   "pdfPages": [
+    96,
+    97
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 96,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "sport silhouette drawings: hang-gliding, windsurfing, athletics events"
+    },
+    {
+     "pdfPage": 97,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "sport silhouette drawings: hang-gliding, windsurfing, athletics events"
+   ]
+  },
+  {
+   "lesson": 46,
+   "pdfPages": [
+    98,
+    99
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 98,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "network diagram of the arts categories"
+    },
+    {
+     "pdfPage": 99,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "network diagram of the arts categories"
+   ]
+  },
+  {
+   "lesson": 47,
+   "pdfPages": [
+    100,
+    101
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 100,
+     "visual": true,
+     "kinds": [
+      "drawing",
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "rock band cartoon and music style diagram"
+    },
+    {
+     "pdfPage": 101,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "four musician silhouettes for exercise 47.2"
+    }
+   ],
+   "descs": [
+    "rock band cartoon and music style diagram",
+    "four musician silhouettes for exercise 47.2"
+   ]
+  },
+  {
+   "lesson": 48,
+   "pdfPages": [
+    102,
+    103
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "picture-dictionary"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 102,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary"
+     ],
+     "area": "medium",
+     "desc": "labelled herb drawings and cooking verbs illustrations"
+    },
+    {
+     "pdfPage": 103,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "labelled herb drawings and cooking verbs illustrations"
+   ]
+  },
+  {
+   "lesson": 49,
+   "pdfPages": [
+    104,
+    105
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 104,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "table of geographical features with 'the' usage"
+    },
+    {
+     "pdfPage": 105,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "twelve numbered drawings of natural features to label"
+    }
+   ],
+   "descs": [
+    "table of geographical features with 'the' usage",
+    "twelve numbered drawings of natural features to label"
+   ]
+  },
+  {
+   "lesson": 50,
+   "pdfPages": [
+    106,
+    107
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "photo",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 106,
+     "visual": true,
+     "kinds": [
+      "photo",
+      "table"
+     ],
+     "area": "medium",
+     "desc": "photo of Cork city plus problems table"
+    },
+    {
+     "pdfPage": 107,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "photo of Cork city plus problems table"
+   ]
+  },
+  {
+   "lesson": 51,
+   "pdfPages": [
+    108,
+    109
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "picture-dictionary"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 108,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary",
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "labelled drawings of animals, flowers, trees, creatures"
+    },
+    {
+     "pdfPage": 109,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "labelled drawings of animals, flowers, trees, creatures"
+   ]
+  },
+  {
+   "lesson": 52,
+   "pdfPages": null,
+   "status": "missing-in-scan",
+   "hasArtwork": null,
+   "hasTable": null,
+   "hasImage": null,
+   "imageTypes": [],
+   "maxArea": null,
+   "pages": [],
+   "descs": []
+  },
+  {
+   "lesson": 53,
+   "pdfPages": [
+    110,
+    111
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 110,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "drawings of symptoms and doctor examining patient"
+    },
+    {
+     "pdfPage": 111,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "drawings of symptoms and doctor examining patient"
+   ]
+  },
+  {
+   "lesson": 54,
+   "pdfPages": [
+    112,
+    113
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 112,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "travel vocabulary table with transport types",
+     "verified": "focus-probe correction 2026-11-14"
+    },
+    {
+     "pdfPage": 113,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "labelled drawings of car, aeroplane, ship"
+    }
+   ],
+   "descs": [
+    "travel vocabulary table with transport types",
+    "labelled drawings of car, aeroplane, ship"
+   ]
+  },
+  {
+   "lesson": 55,
+   "pdfPages": [
+    114,
+    115
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "picture-dictionary"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 114,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "sketch of caravans, tent, camping scene"
+    },
+    {
+     "pdfPage": 115,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary"
+     ],
+     "area": "medium",
+     "desc": "illustrated postcard with handwritten message and stamp"
+    }
+   ],
+   "descs": [
+    "sketch of caravans, tent, camping scene",
+    "illustrated postcard with handwritten message and stamp"
+   ]
+  },
+  {
+   "lesson": 56,
+   "pdfPages": [
+    116,
+    117
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 116,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "labelled 2D and 3D geometric shapes"
+    },
+    {
+     "pdfPage": 117,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "labelled 2D and 3D geometric shapes"
+   ]
+  },
+  {
+   "lesson": 57,
+   "pdfPages": [
+    118,
+    119
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 118,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "labelled drawings of gadgets: computer, phone, iron"
+    },
+    {
+     "pdfPage": 119,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "drawings of computer, iron, stapler, clock, coffee maker"
+    }
+   ],
+   "descs": [
+    "labelled drawings of gadgets: computer, phone, iron",
+    "drawings of computer, iron, stapler, clock, coffee maker"
+   ]
+  },
+  {
+   "lesson": 58,
+   "pdfPages": [
+    120,
+    121
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 120,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 121,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "labeled drawings: computer, mouse, printer, laptop, floppy disk"
+    }
+   ],
+   "descs": [
+    "labeled drawings: computer, mouse, printer, laptop, floppy disk"
+   ]
+  },
+  {
+   "lesson": 59,
+   "pdfPages": [
+    122,
+    123
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 122,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "row of drawings: TV aerial, satellite dish, camcorder, headphones"
+    },
+    {
+     "pdfPage": 123,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "row of drawings: TV aerial, satellite dish, camcorder, headphones"
+   ]
+  },
+  {
+   "lesson": 60,
+   "pdfPages": [
+    124,
+    125
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 124,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 125,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 61,
+   "pdfPages": [
+    126,
+    127
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 126,
+     "visual": true,
+     "kinds": [
+      "table",
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "crime vocabulary table and courtroom illustration"
+    },
+    {
+     "pdfPage": 127,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "crime vocabulary table and courtroom illustration"
+   ]
+  },
+  {
+   "lesson": 62,
+   "pdfPages": [
+    128,
+    129
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 128,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 129,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "torn newspaper headline graphics about money topics"
+    }
+   ],
+   "descs": [
+    "torn newspaper headline graphics about money topics"
+   ]
+  },
+  {
+   "lesson": 63,
+   "pdfPages": [
+    130,
+    131
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 130,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "tree diagram of beliefs, ideologies, philosophies, convictions"
+    },
+    {
+     "pdfPage": 131,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "small decorative box listing situations like religion, sport"
+    }
+   ],
+   "descs": [
+    "tree diagram of beliefs, ideologies, philosophies, convictions",
+    "small decorative box listing situations like religion, sport"
+   ]
+  },
+  {
+   "lesson": 64,
+   "pdfPages": [
+    132,
+    133
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 132,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "small cartoon faces showing different feelings"
+    },
+    {
+     "pdfPage": 133,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "small cartoon faces showing different feelings"
+   ]
+  },
+  {
+   "lesson": 65,
+   "pdfPages": [
+    134,
+    135
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 134,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 135,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 66,
+   "pdfPages": [
+    136,
+    137
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 136,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 137,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 67,
+   "pdfPages": [
+    138,
+    139
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 138,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 139,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "small drawings of flowers in vase and skunk"
+    }
+   ],
+   "descs": [
+    "small drawings of flowers in vase and skunk"
+   ]
+  },
+  {
+   "lesson": 68,
+   "pdfPages": [
+    140,
+    141
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 140,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "four small drawings: sleeping man, eating, faces, shivering man"
+    },
+    {
+     "pdfPage": 141,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "nine face drawings plus a crossword puzzle grid"
+    }
+   ],
+   "descs": [
+    "four small drawings: sleeping man, eating, faces, shivering man",
+    "nine face drawings plus a crossword puzzle grid"
+   ]
+  },
+  {
+   "lesson": 69,
+   "pdfPages": [
+    142,
+    143
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 142,
+     "visual": true,
+     "kinds": [
+      "chart-diagram",
+      "table"
+     ],
+     "area": "medium",
+     "desc": "scale arrow of size adjectives and example-comments table"
+    },
+    {
+     "pdfPage": 143,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "bubble network diagram with small/large amount bubbles"
+    }
+   ],
+   "descs": [
+    "scale arrow of size adjectives and example-comments table",
+    "bubble network diagram with small/large amount bubbles"
+   ]
+  },
+  {
+   "lesson": 70,
+   "pdfPages": [
+    144,
+    145
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 144,
+     "visual": true,
+     "kinds": [
+      "drawing",
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "hourglass time diagram, plane, radio, clocks illustrations"
+    },
+    {
+     "pdfPage": 145,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "hourglass time diagram, plane, radio, clocks illustrations"
+   ]
+  },
+  {
+   "lesson": 71,
+   "pdfPages": [
+    146,
+    147
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 146,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "drawing of deep and shallow ends of swimming pool"
+    },
+    {
+     "pdfPage": 147,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "drawing of deep and shallow ends of swimming pool"
+   ]
+  },
+  {
+   "lesson": 72,
+   "pdfPages": [
+    148,
+    149
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 148,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "drawings: haircut, walking figure, plant watering"
+    },
+    {
+     "pdfPage": 149,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "probability collocation matrix table"
+    }
+   ],
+   "descs": [
+    "drawings: haircut, walking figure, plant watering",
+    "probability collocation matrix table"
+   ]
+  },
+  {
+   "lesson": 73,
+   "pdfPages": [
+    150,
+    151
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 150,
+     "visual": true,
+     "kinds": [
+      "table",
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "sound words table and drawings of light sources"
+    },
+    {
+     "pdfPage": 151,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "sound words table and drawings of light sources"
+   ]
+  },
+  {
+   "lesson": 74,
+   "pdfPages": [
+    152,
+    153
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 152,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "cartoon scenes of giving and sharing"
+    },
+    {
+     "pdfPage": 153,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "cartoon scenes of giving and sharing"
+   ]
+  },
+  {
+   "lesson": 75,
+   "pdfPages": [
+    154,
+    155
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 154,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "cartoons of traffic, dawdling person, speeding car"
+    },
+    {
+     "pdfPage": 155,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "cartoons of traffic, dawdling person, speeding car"
+   ]
+  },
+  {
+   "lesson": 76,
+   "pdfPages": [
+    156,
+    157
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 156,
+     "visual": true,
+     "kinds": [
+      "drawing",
+      "table"
+     ],
+     "area": "medium",
+     "desc": "texture table plus drawings of shoes, costumes, lamp"
+    },
+    {
+     "pdfPage": 157,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "texture table plus drawings of shoes, costumes, lamp"
+   ]
+  },
+  {
+   "lesson": 77,
+   "pdfPages": [
+    158,
+    159
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 158,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "collocation matrix and word-formation tables"
+    },
+    {
+     "pdfPage": 159,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "collocation matrix and word-formation tables"
+   ]
+  },
+  {
+   "lesson": 78,
+   "pdfPages": [
+    160,
+    161
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 160,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 161,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 79,
+   "pdfPages": [
+    162,
+    163
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 162,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "small",
+     "desc": "THIS/THAT word network diagram with connecting lines"
+    },
+    {
+     "pdfPage": 163,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "small",
+     "desc": "NOW word network diagram with branches"
+    }
+   ],
+   "descs": [
+    "THIS/THAT word network diagram with connecting lines",
+    "NOW word network diagram with branches"
+   ]
+  },
+  {
+   "lesson": 80,
+   "pdfPages": [
+    164,
+    165
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram",
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 164,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "drawings: bat, rake, ox, mouse illustrating similes"
+    },
+    {
+     "pdfPage": 165,
+     "visual": true,
+     "kinds": [
+      "table",
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "crossword puzzle grid and matching boxes"
+    }
+   ],
+   "descs": [
+    "drawings: bat, rake, ox, mouse illustrating similes",
+    "crossword puzzle grid and matching boxes"
+   ]
+  },
+  {
+   "lesson": 81,
+   "pdfPages": [
+    166,
+    167
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 166,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 167,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 82,
+   "pdfPages": [
+    168,
+    169
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 168,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "cartoons of classroom idioms: teacher's pet, big-head, lazy-bones"
+    },
+    {
+     "pdfPage": 169,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "three drawings: grapes, road, mountain for idioms"
+    }
+   ],
+   "descs": [
+    "cartoons of classroom idioms: teacher's pet, big-head, lazy-bones",
+    "three drawings: grapes, road, mountain for idioms"
+   ]
+  },
+  {
+   "lesson": 83,
+   "pdfPages": [
+    170,
+    171
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 170,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "zodiac illustration icons in horoscope boxes"
+    },
+    {
+     "pdfPage": 171,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "zodiac illustration icons in horoscope boxes"
+    }
+   ],
+   "descs": [
+    "zodiac illustration icons in horoscope boxes",
+    "zodiac illustration icons in horoscope boxes"
+   ]
+  },
+  {
+   "lesson": 84,
+   "pdfPages": [
+    172,
+    173
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 172,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "two drawings: man burying hatchet, sweeping under carpet"
+    },
+    {
+     "pdfPage": 173,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "two drawings: man burying hatchet, sweeping under carpet"
+   ]
+  },
+  {
+   "lesson": 85,
+   "pdfPages": [
+    174,
+    175
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 174,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 175,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "four idiom drawings: cat, flowers, dog, man"
+    }
+   ],
+   "descs": [
+    "four idiom drawings: cat, flowers, dog, man"
+   ]
+  },
+  {
+   "lesson": 86,
+   "pdfPages": [
+    176,
+    177
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 176,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "multiple cartoons of conversations and meeting scene"
+    },
+    {
+     "pdfPage": 177,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "four small drawings illustrating idioms (object, bin, ball, arrow)"
+    }
+   ],
+   "descs": [
+    "multiple cartoons of conversations and meeting scene",
+    "four small drawings illustrating idioms (object, bin, ball, arrow)"
+   ]
+  },
+  {
+   "lesson": 87,
+   "pdfPages": [
+    178,
+    179
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 178,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "labelled drawing of man illustrating body-part idioms"
+    },
+    {
+     "pdfPage": 179,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "singing woman and three small idiom drawings"
+    }
+   ],
+   "descs": [
+    "labelled drawing of man illustrating body-part idioms",
+    "singing woman and three small idiom drawings"
+   ]
+  },
+  {
+   "lesson": 88,
+   "pdfPages": [
+    180,
+    181
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 180,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "four cartoons illustrating proverbs"
+    },
+    {
+     "pdfPage": 181,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "single small drawing of person sweeping"
+    }
+   ],
+   "descs": [
+    "four cartoons illustrating proverbs",
+    "single small drawing of person sweeping"
+   ]
+  },
+  {
+   "lesson": 89,
+   "pdfPages": [
+    182,
+    183
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 182,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "table of phrasal verbs with meanings and examples"
+    },
+    {
+     "pdfPage": 183,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "table of phrasal verbs with meanings and examples"
+   ]
+  },
+  {
+   "lesson": 90,
+   "pdfPages": [
+    184,
+    185
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "chart-diagram"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 184,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 185,
+     "visual": true,
+     "kinds": [
+      "chart-diagram"
+     ],
+     "area": "medium",
+     "desc": "two bubble network diagrams for phrasal verbs take/bring"
+    }
+   ],
+   "descs": [
+    "two bubble network diagrams for phrasal verbs take/bring"
+   ]
+  },
+  {
+   "lesson": 91,
+   "pdfPages": [
+    186,
+    187
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 186,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "large",
+     "desc": "table of phrasal verbs with get, meanings and examples"
+    },
+    {
+     "pdfPage": 187,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "drawing of pills bottle labelled get rich quick"
+    }
+   ],
+   "descs": [
+    "table of phrasal verbs with get, meanings and examples",
+    "drawing of pills bottle labelled get rich quick"
+   ]
+  },
+  {
+   "lesson": 92,
+   "pdfPages": [
+    188,
+    189
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 188,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 189,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 93,
+   "pdfPages": [
+    190,
+    191
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 190,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "cartoons: woman, alarm clock, two men talking"
+    },
+    {
+     "pdfPage": 191,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "small decorative language logo in corner"
+    }
+   ],
+   "descs": [
+    "cartoons: woman, alarm clock, two men talking",
+    "small decorative language logo in corner"
+   ]
+  },
+  {
+   "lesson": 94,
+   "pdfPages": [
+    192,
+    193
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 192,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "three cartoon scenes of people with speech bubbles"
+    },
+    {
+     "pdfPage": 193,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "three cartoon scenes of people with speech bubbles"
+   ]
+  },
+  {
+   "lesson": 95,
+   "pdfPages": [
+    194,
+    195
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 194,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "formality scale table plus notice examples"
+    },
+    {
+     "pdfPage": 195,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": [
+    "formality scale table plus notice examples"
+   ]
+  },
+  {
+   "lesson": 96,
+   "pdfPages": [
+    196,
+    197
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "small",
+   "pages": [
+    {
+     "pdfPage": 196,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 197,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "small",
+     "desc": "three small cartoons illustrating slang words"
+    }
+   ],
+   "descs": [
+    "three small cartoons illustrating slang words"
+   ]
+  },
+  {
+   "lesson": 97,
+   "pdfPages": [
+    198,
+    199
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "picture-dictionary",
+    "table"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 198,
+     "visual": true,
+     "kinds": [
+      "table",
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "vocabulary table plus labelled confusion drawings"
+    },
+    {
+     "pdfPage": 199,
+     "visual": true,
+     "kinds": [
+      "picture-dictionary"
+     ],
+     "area": "medium",
+     "desc": "ten numbered objects for naming exercise"
+    }
+   ],
+   "descs": [
+    "vocabulary table plus labelled confusion drawings",
+    "ten numbered objects for naming exercise"
+   ]
+  },
+  {
+   "lesson": 98,
+   "pdfPages": [
+    200,
+    201
+   ],
+   "status": "complete",
+   "hasArtwork": false,
+   "hasTable": false,
+   "hasImage": false,
+   "imageTypes": [],
+   "maxArea": "none",
+   "pages": [
+    {
+     "pdfPage": 200,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    },
+    {
+     "pdfPage": 201,
+     "visual": false,
+     "kinds": [],
+     "area": "none",
+     "desc": ""
+    }
+   ],
+   "descs": []
+  },
+  {
+   "lesson": 99,
+   "pdfPages": [
+    202,
+    203
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": true,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing",
+    "table"
+   ],
+   "maxArea": "medium",
+   "pages": [
+    {
+     "pdfPage": 202,
+     "visual": true,
+     "kinds": [
+      "table"
+     ],
+     "area": "medium",
+     "desc": "two-column vocabulary table of newspaper words"
+    },
+    {
+     "pdfPage": 203,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "torn-paper headline panels scattered across exercises"
+    }
+   ],
+   "descs": [
+    "two-column vocabulary table of newspaper words",
+    "torn-paper headline panels scattered across exercises"
+   ]
+  },
+  {
+   "lesson": 100,
+   "pdfPages": [
+    204,
+    205
+   ],
+   "status": "complete",
+   "hasArtwork": true,
+   "hasTable": false,
+   "hasImage": true,
+   "imageTypes": [
+    "drawing"
+   ],
+   "maxArea": "large",
+   "pages": [
+    {
+     "pdfPage": 204,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "large",
+     "desc": "fifteen boxed signs and notices with translations"
+    },
+    {
+     "pdfPage": 205,
+     "visual": true,
+     "kinds": [
+      "drawing"
+     ],
+     "area": "medium",
+     "desc": "eleven boxed notice panels in exercises"
+    }
+   ],
+   "descs": [
+    "fifteen boxed signs and notices with translations",
+    "eleven boxed notice panels in exercises"
+   ]
+  }
+ ]
+}
