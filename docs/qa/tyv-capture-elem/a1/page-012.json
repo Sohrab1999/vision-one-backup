@@ -1,0 +1,88 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 12,
+    "dpi": 300,
+    "renderSha256": "cde3ad291f9ccf72f78f73942bb000dbb8bbc9f2770e21f2a579fb84b420cd53",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:25:33.196Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 11,
+    "testNumber": "5",
+    "testTitle": "Describing people",
+    "exercises": [
+      {
+        "id": "5.1",
+        "marks": "10 marks",
+        "instruction": "Put the words in the box into the correct column. Some words can go in more than one column.",
+        "items": []
+      },
+      {
+        "id": "5.2",
+        "marks": "10 marks",
+        "instruction": "Answer these questions using the opposites.",
+        "items": [
+          "Example: Is your cat old?  No, she's young.",
+          "1 Has your sister got long, fair hair?",
+          "2 Is your aunt short and overweight?",
+          "3 Is your dog young?",
+          "4 Is your uncle ugly?",
+          "5 Has your mother got blonde hair?",
+          "6 Is your brother thin?",
+          "7 Is your little sister beautiful?",
+          "8 Is your cousin tall?"
+        ]
+      },
+      {
+        "id": "5.3",
+        "marks": "5 marks",
+        "instruction": "Complete the five sentences describing this man.",
+        "items": [
+          "Example: He's got brown/dark  eyes.",
+          "1 He's got a  .",
+          "2 He's also got a  .",
+          "3 His skin is  .",
+          "4 He's got  hair.",
+          "5 He is  ."
+        ]
+      },
+      {
+        "id": "5.4",
+        "marks": "5 marks",
+        "instruction": "Make questions to match the answers on the right, using the words in brackets.",
+        "items": [
+          "Example: (your sister / old / ?) How old is your sister?  She's 14.",
+          "1 (you / tall / ?)  1 metre 56.",
+          "2 (the baby / heavy / ?)  Nearly 5 kilos.",
+          "3 (the child / weigh / ?)  Twenty kilos.",
+          "4 (your new teacher / look like / ?)  She's tall and slim.",
+          "5 (her hair / colour / ?)  Blonde."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "blue tall fair thin long slim green short brown dark fat",
+      "Eyes  Skin  Hair  Height and weight"
+    ],
+    "pictures": [
+      "table for exercise 5.1 with four columns (Eyes, Skin, Hair, Height and weight), 'blue' handwritten in Eyes column",
+      "drawing of a man with dark hair, beard and moustache, wearing a white shirt (for exercise 5.3)"
+    ],
+    "unclassified": [
+      "www.ir language.com",
+      "مرجع آموزش زبان های خارجی",
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 11,\n  \"testNumber\": \"5\",\n  \"testTitle\": \"Describing people\",\n  \"exercises\": [\n    {\n      \"id\": \"5.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Put the words in the box into the correct column. Some words can go in more than one column.\",\n      \"items\": []\n    },\n    {\n      \"id\": \"5.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Answer these questions using the opposites.\",\n      \"items\": [\n        \"Example: Is your cat old?  No, she's young.\",\n        \"1 Has your sister got long, fair hair?\",\n        \"2 Is your aunt short and overweight?\",\n        \"3 Is your dog young?\",\n        \"4 Is your uncle ugly?\",\n        \"5 Has your mother got blonde hair?\",\n        \"6 Is your brother thin?\",\n        \"7 Is your little sister beautiful?\",\n        \"8 Is your cousin tall?\"\n      ]\n    },\n    {\n      \"id\": \"5.3\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Complete the five sentences describing this man.\",\n      \"items\": [\n        \"Example: He's got brown/dark  eyes.\",\n        \"1 He's got a  .\",\n        \"2 He's also got a  .\",\n        \"3 His skin is  .\",\n        \"4 He's got  hair.\",\n        \"5 He is  .\"\n      ]\n    },\n    {\n      \"id\": \"5.4\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Make questions to match the answers on the right, using the words in brackets.\",\n      \"items\": [\n        \"Example: (your sister / old / ?) How old is your sister?  She's 14.\",\n        \"1 (you / tall / ?)  1 metre 56.\",\n        \"2 (the baby / heavy / ?)  Nearly 5 kilos.\",\n        \"3 (the child / weigh / ?)  Twenty kilos.\",\n        \"4 (your new teacher / look like / ?)  She's tall and slim.\",\n        \"5 (her hair / colour / ?)  Blonde.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"blue tall fair thin long slim green short brown dark fat\",\n    \"Eyes  Skin  Hair  Height and weight\"\n  ],\n  \"pictures\": [\n    \"table for exercise 5.1 with four columns (Eyes, Skin, Hair, Height and weight), 'blue' handwritten in Eyes column\",\n    \"drawing of a man with dark hair, beard and moustache, wearing a white shirt (for exercise 5.3)\"\n  ],\n  \"unclassified\": [\n    \"www.ir language.com\",\n    \"مرجع آموزش زبان های خارجی\",\n    \"Test Your English Vocabulary in Use Elementary\",\n    \"Your score /30\"\n  ]\n}\n```"
+}

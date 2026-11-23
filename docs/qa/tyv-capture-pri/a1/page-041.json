@@ -1,0 +1,93 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 41,
+    "dpi": 300,
+    "renderSha256": "53b2da3e6095f11dc75d81e74e33b7590d409f94114fb2b360ce2adc69a19be9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:22:25.759Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 39,
+    "testNumber": "36",
+    "testTitle": "Reason, purpose and result",
+    "exercises": [
+      {
+        "id": "36.1",
+        "marks": null,
+        "instruction": "Make six correct and logical sentences using words and phrases from each column. You cannot use a word or phrase more than once.",
+        "items": [
+          "Column 1                    Column 2            Column 3",
+          "1 I lost my wallet,                        because of          I learnt the bad news much later.",
+          "2 I went to the post office             so that                I had to borrow some money.",
+          "3 I had to stop the traffic             Consequently,      I needed some stamps.",
+          "4 I stayed at work late                   so                       I have given up work to look after her.",
+          "5 My wife is very ill and                because             I could finish the report.",
+          "6 I couldn't go to the meeting.      therefore            the accident."
+        ]
+      },
+      {
+        "id": "36.2",
+        "marks": "6 marks",
+        "instruction": "Choose the most logical ending for these sentences.",
+        "items": [
+          "1 The purpose of joining the class was",
+          "a) to improve my English.       b) that I needed English for my job.",
+          "2 A fall in sales could lead to",
+          "a) a financial crisis in the company.       b) a pay rise for all the workers.",
+          "3 The investigators decided that the bad weather caused",
+          "a) the ice.     b) the accident.",
+          "4 The company's economic problems have resulted in",
+          "a) the loss of ten jobs.       b) the world's financial situation.",
+          "5 She bought the bike so that",
+          "a) she had won some money.       b) she could get to work more cheaply.",
+          "6 The police believe the young boy was responsible for",
+          "a) the fire.       b) his parents."
+        ]
+      },
+      {
+        "id": "36.3",
+        "marks": "7 marks",
+        "instruction": "Circle the correct link word or phrase in the sentences below.",
+        "items": [
+          "1 Due to / As it was raining heavily, we left early.",
+          "2 Owing to / Because the bad weather, the match began late.",
+          "3 A fight started. As a result / So, several people were taken to hospital.",
+          "4 The boy failed his exam because / because of his illness.",
+          "5 She parked on a busy, narrow bridge. Consequently / Owing to, she was fined £50.",
+          "6 They gave him a medal since / because of his bravery.",
+          "7 We got a taxi because / because of we were late."
+        ]
+      },
+      {
+        "id": "36.4",
+        "marks": "5 marks",
+        "instruction": "Complete the sentences below using the correct word or phrase from the box.",
+        "items": [
+          "1 We've decided to move house .......................................... my wife has a new job in London.",
+          "2 Many visitors to the hotel have complained about the bathrooms. .......................................... , we intend to decorate them all this year.",
+          "3 The plane was delayed .......................................... the foggy weather.",
+          "4 My parents are unwell .......................................... I have decided to move nearer them.",
+          "5 Bring the chairs inside .......................................... they don't get wet."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "consequently        so that        and therefore        as        due to"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "TOTAL score [?]"
+    ]
+  },
+  "rawModelText": "{\"footer\": 39,\n \"testNumber\": \"36\",\n \"testTitle\": \"Reason, purpose and result\",\n \"exercises\": [\n  {\"id\": \"36.1\",\n   \"marks\": null,\n   \"instruction\": \"Make six correct and logical sentences using words and phrases from each column. You cannot use a word or phrase more than once.\",\n   \"items\": [\"Column 1                    Column 2            Column 3\",\n    \"1 I lost my wallet,                        because of          I learnt the bad news much later.\",\n    \"2 I went to the post office             so that                I had to borrow some money.\",\n    \"3 I had to stop the traffic             Consequently,      I needed some stamps.\",\n    \"4 I stayed at work late                   so                       I have given up work to look after her.\",\n    \"5 My wife is very ill and                because             I could finish the report.\",\n    \"6 I couldn't go to the meeting.      therefore            the accident.\"]},\n  {\"id\": \"36.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the most logical ending for these sentences.\",\n   \"items\": [\"1 The purpose of joining the class was\",\n    \"a) to improve my English.       b) that I needed English for my job.\",\n    \"2 A fall in sales could lead to\",\n    \"a) a financial crisis in the company.       b) a pay rise for all the workers.\",\n    \"3 The investigators decided that the bad weather caused\",\n    \"a) the ice.     b) the accident.\",\n    \"4 The company's economic problems have resulted in\",\n    \"a) the loss of ten jobs.       b) the world's financial situation.\",\n    \"5 She bought the bike so that\",\n    \"a) she had won some money.       b) she could get to work more cheaply.\",\n    \"6 The police believe the young boy was responsible for\",\n    \"a) the fire.       b) his parents.\"]},\n  {\"id\": \"36.3\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Circle the correct link word or phrase in the sentences below.\",\n   \"items\": [\"1 Due to / As it was raining heavily, we left early.\",\n    \"2 Owing to / Because the bad weather, the match began late.\",\n    \"3 A fight started. As a result / So, several people were taken to hospital.\",\n    \"4 The boy failed his exam because / because of his illness.\",\n    \"5 She parked on a busy, narrow bridge. Consequently / Owing to, she was fined £50.\",\n    \"6 They gave him a medal since / because of his bravery.\",\n    \"7 We got a taxi because / because of we were late.\"]},\n  {\"id\": \"36.4\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Complete the sentences below using the correct word or phrase from the box.\",\n   \"items\": [\"1 We've decided to move house .......................................... my wife has a new job in London.\",\n    \"2 Many visitors to the hotel have complained about the bathrooms. .......................................... , we intend to decorate them all this year.\",\n    \"3 The plane was delayed .......................................... the foggy weather.\",\n    \"4 My parents are unwell .......................................... I have decided to move nearer them.\",\n    \"5 Bring the chairs inside .......................................... they don't get wet.\"]}\n ],\n \"boxesAndLists\": [\"consequently        so that        and therefore        as        due to\"],\n \"pictures\": [],\n \"unclassified\": [\"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"TOTAL score [?]\"]\n}"
+}

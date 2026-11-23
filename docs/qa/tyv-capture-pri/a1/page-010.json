@@ -1,0 +1,96 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 10,
+    "dpi": 300,
+    "renderSha256": "f888df7a5fb6640e19b74e68a1cd1a24e8876d273109abc5b187cb5cebce1111",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:22:09.892Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": null,
+    "testNumber": "6",
+    "testTitle": "Classroom language",
+    "exercises": [
+      {
+        "id": "6.1",
+        "marks": null,
+        "instruction": "Complete the names of the objects below.",
+        "items": [
+          "1 video ..................................... 3 photo ............................. 5 overhead .....................",
+          "2 pencil ................................... 4 cassette ........................... 6 hole ..........................."
+        ]
+      },
+      {
+        "id": "6.2",
+        "marks": "6 marks",
+        "instruction": "Complete these definitions.",
+        "items": [
+          "1 find the meaning of a word in a dictionary = ................................. it ............",
+          "2 use something and return it = ................................. it",
+          "3 remove writing from the board = ................................. it off",
+          "4 say something again = ................................. it",
+          "5 increase the volume = ................................. it .................................",
+          "6 exchange/change places = ................................. places"
+        ]
+      },
+      {
+        "id": "6.3",
+        "marks": "8 marks",
+        "instruction": "Find pairs of objects from the box which have a logical connection, and write down what th[e] [?] connection is. Look at the example first.",
+        "items": [
+          "Example: You put a cassette in a tape recorder.",
+          "1 ...........................................................................................................................................................",
+          "2 ...........................................................................................................................................................",
+          "3 ...........................................................................................................................................................",
+          "4 ..........................................................................................................................................................."
+        ]
+      },
+      {
+        "id": "6.4",
+        "marks": "4 marks",
+        "instruction": "Complete these classroom dialogues.",
+        "items": [
+          "Teacher to student(s):",
+          "1 I'd like all of you to write this word .................... in your books.",
+          "2 Maria, could you ........................ in the tape recorder and turn it on?",
+          "Student to teacher:",
+          "3 Will you .................... my English if I make any mistakes?",
+          "Student to student:",
+          "4 I've written the wrong word in my book. Could I use your ..................... ?"
+        ]
+      },
+      {
+        "id": "6.5",
+        "marks": "6 marks",
+        "instruction": "Complete these common classroom questions.",
+        "items": [
+          "1 You want to know the meaning of the word 'damage', so you ask: What ........................................................................................................................................",
+          "2 You want to know the correct spelling of a word, so you ask: How ..................................................................................................................................",
+          "3 You want to know the pronunciation of 'bicycle', so you ask: How .................................................................................................................................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "OHT   plug   cassette [crossed out]   chalk   OHP\nfile   board   socket   briefcase   tape recorder [crossed out]"
+    ],
+    "pictures": [
+      "six small line drawings illustrating the objects in 6.1: video cassette, photocopier, overhead projector, pencil sharpener with pencil, cassette player/recorder, hole punch"
+    ],
+    "unclassified": [
+      "TEST",
+      "www.irlanguage.com [logo]",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": null,\n \"testNumber\": \"6\",\n \"testTitle\": \"Classroom language\",\n \"exercises\": [\n  {\"id\": \"6.1\",\n   \"marks\": null,\n   \"instruction\": \"Complete the names of the objects below.\",\n   \"items\": [\n    \"1 video ..................................... 3 photo ............................. 5 overhead .....................\",\n    \"2 pencil ................................... 4 cassette ........................... 6 hole ...........................\"\n   ]},\n  {\"id\": \"6.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete these definitions.\",\n   \"items\": [\n    \"1 find the meaning of a word in a dictionary = ................................. it ............\",\n    \"2 use something and return it = ................................. it\",\n    \"3 remove writing from the board = ................................. it off\",\n    \"4 say something again = ................................. it\",\n    \"5 increase the volume = ................................. it .................................\",\n    \"6 exchange/change places = ................................. places\"\n   ]},\n  {\"id\": \"6.3\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Find pairs of objects from the box which have a logical connection, and write down what th[e] [?] connection is. Look at the example first.\",\n   \"items\": [\n    \"Example: You put a cassette in a tape recorder.\",\n    \"1 ...........................................................................................................................................................\",\n    \"2 ...........................................................................................................................................................\",\n    \"3 ...........................................................................................................................................................\",\n    \"4 ...........................................................................................................................................................\"\n   ]},\n  {\"id\": \"6.4\",\n   \"marks\": \"4 marks\",\n   \"instruction\": \"Complete these classroom dialogues.\",\n   \"items\": [\n    \"Teacher to student(s):\",\n    \"1 I'd like all of you to write this word .................... in your books.\",\n    \"2 Maria, could you ........................ in the tape recorder and turn it on?\",\n    \"Student to teacher:\",\n    \"3 Will you .................... my English if I make any mistakes?\",\n    \"Student to student:\",\n    \"4 I've written the wrong word in my book. Could I use your ..................... ?\"\n   ]},\n  {\"id\": \"6.5\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete these common classroom questions.\",\n   \"items\": [\n    \"1 You want to know the meaning of the word 'damage', so you ask: What ........................................................................................................................................\",\n    \"2 You want to know the correct spelling of a word, so you ask: How ..................................................................................................................................\",\n    \"3 You want to know the pronunciation of 'bicycle', so you ask: How ..................................................................................................................................\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"OHT   plug   cassette [crossed out]   chalk   OHP\\nfile   board   socket   briefcase   tape recorder [crossed out]\"\n ],\n \"pictures\": [\n  \"six small line drawings illustrating the objects in 6.1: video cassette, photocopier, overhead projector, pencil sharpener with pencil, cassette player/recorder, hole punch\"\n ],\n \"unclassified\": [\n  \"TEST\",\n  \"www.irlanguage.com [logo]\",\n  \"Your score /30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}
