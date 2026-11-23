@@ -294,7 +294,7 @@ export function BookshelfView({ onNavigate }: { onNavigate: (v: ViewId) => void 
       {/* نکته پیشرفت */}
       <p className="flex items-center justify-center gap-1.5 pb-2 text-center text-xs text-muted-foreground">
         <Layers size={13} className="shrink-0" aria-hidden />
-        {availableCount} جزوه فعال در کتابخانه — جزوه‌های پایه هفتم تا دوازدهم، ویژن وان، کالوکیشن و نسخهٔ متنی مجموعه داستان Steps to Understanding.
+        {availableCount} جزوه فعال در کتابخانه — جزوه‌های پایه هفتم تا دوازدهم، ویژن وان، کالوکیشن، نسخهٔ متنی مجموعه داستان Steps to Understanding و سه سطح مجموعه واژگان Cambridge English Vocabulary in Use (Elementary · Pre-int & Int · Upper-int).
       </p>
     </div>
   );

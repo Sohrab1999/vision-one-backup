@@ -163,7 +163,15 @@ function ChapterIntro({
       ? [{ icon: MessagesSquare, title: "مکالمه", desc: "گفت‌وگوی کتاب با روایت صوتی هر جمله", tab: "conv" as const }]
       : []),
     ...(data.grammar.lessons.length > 0
-      ? [{ icon: GraduationCap, title: "گرامر", desc: chapter.grammarTopics.join(" • "), tab: "grammar" as const }]
+      ? [{
+          icon: GraduationCap,
+          title: "گرامر",
+          // R5 — فیلد مردهٔ grammarTopics (خالی در ۱۰۰٪ فصل‌های VIU) در متن توصیفی رندر نمی‌شود
+          desc: chapter.grammarTopics.length > 0
+            ? chapter.grammarTopics.join(" • ")
+            : "درسنامه‌های گرامر جزوه — بدون فهرست موضوعی درس",
+          tab: "grammar" as const,
+        }]
       : []),
     { icon: ClipboardList, title: "تمرین", desc: "تست‌های آموزشی اختصاصی همین درس", tab: "quiz" },
   ];
