@@ -6873,3 +6873,7 @@ SHA کامیت محتوایی این گام = `be0231dbb1b0471cc9eb72c6938d394f9
 **۵) گام بعدی مجاز:** A1-BIZ-S03 = `bun scripts/tyv-a1-vlm-capture.mjs biz 25,26,27,28,29,30,31,32,33,34,35,36` — سپس S04..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — توقف گیت‌دار.
 
 **۶) کنترل‌ها:** bun run lint = ۰ (exit 0) · چک‌لیست پذیرش دفتر §۱ همگی ✓ (خروجی DONE · پروونانس ۶/۶ · index · failed=0 · فوتر ۶/۶ · صفر تغییر src/db/اسکریپت) — گیت‌های ایستنده دست‌نخورده (R3-e EXECUTED موج اول · FA-REVIEWED AWAITING OWNER · G5/A5-5 AWAITING OWNER).
+
+## ۱۴۰۵/۹/۲ — ۲۰۲۶-۱۱-۲۳ — ثبت اثبات §۱۰-۷ گام A1-BIZ-S02 + بازیابی ۳۶ (صفر تغییر دیگر)
+
+SHA کامیت محتوایی این گام = `c18ef7fe31acde6a52154fd1ab12aa16c489ae84` (۱۴ مسیر — والد `a4c4eb4b4e427e8c6654a326a62b66d224791615` = SHA تأییدشدهٔ Remote پیشا-کامیت — divergence ۰/۰) — push خودکار هوک اثبات‌شده: `git ls-remote backup refs/heads/main` = `c18ef7fe31acde6a52154fd1ab12aa16c489ae84` = HEAD محلی بلافاصله پس از کامیت — divergence ۰/۰ — دلتای این کامیت ثبت-اثبات فقط: یک سطر §۲ SNAPSHOT (SHA واقعی کامیت محتوایی c18ef7f + اثبات push) + بلوک worklog — صفر تغییر دیگر — درخت پاک — وضعیت: گام A1-BIZ-S02 COMPLETE — A1 = ۳۱/۴۸۹ — گام بعدی مجاز: A1-BIZ-S03 (biz ۲۵–۳۶) — توقف گیت‌دار.
