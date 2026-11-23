@@ -15,7 +15,7 @@
 | `Test Your English Vocabulary in Use-Pre & Int.pdf` | **tyv-pri** | Test Your English Vocabulary in Use — pre-intermediate & intermediate (Redman & Gairns) | ۱۴۲ | صفر (اسکن) | ✅ کتاب متمایز — نقشه راه §TYV-PRI |
 | `Test Your English Vocabulary in Use-Upper Intermediate.pdf` | **tyv-upp** | Test Your English Vocabulary in Use — upper-intermediate (McCarthy & O'Dell — CUP ۲۰۰۱) | ۱۵۳ | صفر (اسکن) | ✅ کتاب متمایز — نقشه راه §TYV-UPP |
 | `Test Your English Vocabulary in Use-Business.pdf` | **tyv-biz** | Test your Business Vocabulary in Use (Bethell & Aspinall) | ۹۸ | صفر (اسکن) | ✅ کتاب متمایز — نقشه راه §TYV-BIZ |
-| `Test Your English Vocabulary in Use-Intermediate.pdf` | — | (بدون کتاب متمایز) | ۹۸ | صفر | ⚠️ نسخهٔ تکراری Business — سند `نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md` |
+| `Test Your English Vocabulary in Use-Intermediate.pdf` | — | (بدون کتاب متمایز) | ۹۸ | صفر | ⚠️ نسخهٔ تکراری Business — سند `07-نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md` (هم‌پوشهٔ «سری-TYV») |
 
 - **پروب لایهٔ متنی:** `pdftotext` روی صفحات ۱..۶ هر پنج فایل = ۳..۵ کاراکتر کل ⇒ **هر پنج فایل اسکن تصویری‌اند؛ مسیر A1 برای همه = رونویسی VLM** (الگوی اثبات‌شدهٔ `scripts/viu-r3e-verify-source.mjs`).
 - **SHA کامل هر پنج فایل + pdfinfo + حقایق کتاب (ISBN/چاپ/کلید)** در JSON اثبات A0 ثبت شده است.
@@ -68,7 +68,7 @@
 
 - **A0 ✅** — intake JSON (۵ فایل + اثبات تکراری + ثبت ISBN/ساختار) + پروب لایهٔ متنی.
 - **A1 ▶ در جریان (پراب ۱۲/۴۸۹ ⇒ **۲۵/۴۸۹ پس از گام ۱۱۵مین**):** پراب ۳×۴ (۱۲/۱۲ ok · ۱۱/۱۲ فوتر · ۴۵ تمرین / ۳۲۰ آیتم) + گام ۱۱۵مین: biz ۵ + 7–18 (۱۳/۱۳ ok) ⇒ biz ۱۶/۹۸ · جمع ۸۸ تمرین / ۵۵۴ آیتم / فوتر ۲۴/۲۵ — خروجی: `docs/qa/tyv-capture-{biz,elem,pri,upp}/a1/` + گزارش `docs/qa/tyv-a1-probe-2026-11-22.json`. دو درس اجرای واقعی در اسکریپت ثبت شد (padding خروجی pdftoppم وابسته به تعداد کل صفحات سند) + درس سندباکس: دستهٔ پس‌زمینهٔ nohup می‌میرد ⇒ اجرای هم‌گام (SNAPSHOT §۹ سربرگ ۱۱۵مین).
-- **دفتر گام‌های کوچک (NEW — ۲۰۲۶-۱۱-۲۳):** «نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md» — تجزیهٔ A1 به ۴۲ دستهٔ ۱۲صفحه‌ای با چک‌لیست پذیرش + قدم‌به‌قدم G1..G6 — هر گام = یک پرامپت = یک چرخهٔ کامل پایداری.
+- **دفتر گام‌های کوچک (NEW — ۲۰۲۶-۱۱-۲۳):** «02-نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md» (هم‌پوشهٔ «سری-TYV») — تجزیهٔ A1 به ۴۲ دستهٔ ۱۲صفحه‌ای با چک‌لیست پذیرش + قدم‌به‌قدم G1..G6 — هر گام = یک پرامپت = یک چرخهٔ کامل پایداری.
 - **بازیابی ۳۴ (۲۰۲۶-۱۱-۲۳ — ثبت در همین §۶):** ریست پنهان ۳۴م (الگوی ۳۱/۳۲/۳۳ — HEAD بازگشته `193269b`) کشف و صفرتلفاتی رسیدگی شد — ۱۷۴۶ untracked همسان بایت‌به‌بیت ریموت (kept=۰) — ff-only → HEAD=`4c643cd` — A1 پابرجا **۲۵/۴۸۹** (biz ۱۶/۹۸ · elem ۳/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳ — دیسک‌حقیقت بازشماری‌شده) — شواهد: `docs/qa/recovery34-proof-2026-11-23.json` — هر هفت سند نقشه‌راه این سری دست‌نخورده و برابر ریموت.
 - **گام بعدی مجاز:** ادامهٔ A1 (مکانیکی — resumable — هم‌گام) طبق دفتر گام‌های کوچک §۱-۱: گام فوری `bun scripts/tyv-a1-vlm-capture.mjs biz 19,20,21,22,23,24` سپس S03..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP تا پوشش کامل ۴۸۹ صفحه ⇒ سپس سند دروازهٔ **G1**.
 - **A2..A6 گیت‌دار** — هیچ wired محصولی انجام نشده (صفر تغییر src/ · صفر db).
