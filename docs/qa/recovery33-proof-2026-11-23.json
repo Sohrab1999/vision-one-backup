@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "event": "رویداد بازیابی ۳۳ سندباکس — ریست پنهان ۳۳م پلتفرمی — رسیدگی کامل صفرتلفاتی (الگوی ff-only رویدادهای ۶..۳۲)",
+    "date": "2026-11-23",
+    "jalali": "۱۴۰۵/۹/۲",
+    "ownerCommand": "«یک نقشه راه بنویس مثل کتاب های قبل برای استخراج کتاب های آپلود شده جدید…» + متن کامل الزام پایداری — trace 1a2086a29b62065d — channel zai-web",
+    "sessionStartDiscovery": "HEAD محلی روی 193269b (۲۰۲۶-۱۱-۰۸) برگشته بود؛ remote باز پیکربندی نشده بود (origin غایب — remote واقعی = backup)؛ ee33154/4505163 (R3-e) محلاً موجود نبودند؛ fsck = ۹+ dangling commit",
+    "recovery": [
+      "① کشف remote سالم: git remote -v ⇒ backup (github Sohrab1999/vision-one-backup) — git ls-remote ⇒ main = de3384b (شامل ee33154 + 4505163 + بازیابی۳۲ + intake TYV)",
+      "② git fetch backup main ⇒ 193269b..de3384b",
+      "③ git diff de3384b -M پیشا-بازیابی: 1683 D (غایب در محلی) + 48 R (مسیر-تختِ محلی، شباهت ۹۲-۱۰۰٪ با نسخهٔ Remote) + 0 M + 0 A ⇒ صفر محتوای محلی-یگانه",
+      "④ بیمهٔ صفرتلفاتی: git stash push -u (بایگانی ۴۸ مسیر-تخت + untracked) ⇒ push به Remote به‌عنوان شاخهٔ recovery/rc33-pre-ff-stash-2026-11-23",
+      "⑤ git merge --ff-only backup/main ⇒ HEAD = de3384b — git status = صفر تغییر",
+      "⑥ git diff de3384b پسا-بازیابی = صفر سطر ⇒ درخت بایت‌به‌بیت برابر Remote"
+    ],
+    "stashArchiveBranch": "recovery/rc33-pre-ff-stash-2026-11-23 (روی Remote — بایگانی ۴۸ فایل مسیر-تختِ هم‌ارز محتوا؛ TRUTH = Remote)",
+    "truthPolicy": "Remote نسخهٔ §10-7-تأییدشده و مبنای حقیقت است؛ ۴۸ فایل مسیر-تخت محلی نسخه‌های کهن‌تر/هم‌ارز اسناد نقشه راه N1-2 بودند و در stash بایگانی شدند — صفر محتوای یگانه از دست رفت"
+  },
+  "mandateReassertion19": {
+    "event": "ابلاغ مجدد نوزدهم الزام پایداری توسط مالک در پیام trace 1a2086a29b62065d",
+    "method": "استخراج متن ابلاغ از پیام مالک + مقایسهٔ SHA-256 با §۱ سند مرجع docs/owner-persistence-mandate-2026-11-04.md",
+    "chatTextSha256": "42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8",
+    "canonicalSection1Sha256": "42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8",
+    "byteEqual": true,
+    "diffLines": 0,
+    "verdict": "متن عین §۱ بایت‌به‌بیت (شامل عنوان ### + ۱۰ بند + معیار پذیرش + جملهٔ تقویت «صرفاً نوشتن Snapshot کافی نیست…») — وضعیت STANDING — RE-ASSERTED #19"
+  },
+  "postRecoveryState": {
+    "head": "de3384b1b7ef3e6d2b4f17b60f7fabe38966810b",
+    "headEqualsRemote": true,
+    "workingTreeChanges": 0,
+    "tyvArtifactsRestored": [
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md",
+      "scripts/tyv-a1-vlm-capture.mjs",
+      "docs/qa/tyv-intake-a0-fingerprint-2026-11-22.json",
+      "docs/qa/tyv-a1-probe-2026-11-22.json",
+      "docs/qa/tyv-capture-{biz,elem,pri,upp}/a1/* (پراب ۳×۴)"
+    ],
+    "uploadPdfsTracked": true,
+    "r3eCommitsRestored": ["4505163 (VIU R3-e gate execution)", "ee33154 (R3-e persistence proof)"]
+  },
+  "a1ContinuationThisStep": {
+    "pipelineTest": "bun scripts/tyv-a1-vlm-capture.mjs biz 5 ⇒ page 5: ok (۱۷۰s سقف؛ عملاً ~۱دقیقه)",
+    "batchLaunched": "biz صفحات 7,8,9,10,11,12,13,14,15,16,17,18 — پس‌زمینه — checkpoint/resume — نتیجه در docs/qa/tyv-capture-biz/a1/ + a1-index.json"
+  },
+  "controls": {
+    "zeroSrcDbChanges": true,
+    "zeroProductWiring": true,
+    "ffOnly": true,
+    "noResetRebaseForce": true,
+    "stashNeverPopped": true
+  }
+}

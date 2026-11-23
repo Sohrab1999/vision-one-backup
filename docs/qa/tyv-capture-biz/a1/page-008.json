@@ -1,0 +1,82 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 8,
+    "dpi": 300,
+    "renderSha256": "eb4d85fee512dd5b62a33fe6fc2765c4ac10742aa5753ef341c88942a798340f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T12:59:12.760Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 11,
+    "testNumber": "5",
+    "testTitle": "Pay and benefits",
+    "exercises": [
+      {
+        "id": "5.1",
+        "marks": "7 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 I work in a small hotel in Amsterdam. I .................. €8 an hour. (earn/paid)",
+          "2 It's not a lot, but it's more than the .................. wage. (maximum/minimum)",
+          "3 Some customers leave me .................. and that is a great help. (perks/tips)",
+          "4 My sister works in a bank and her .................. is €3,000 a month. (salary/wages)",
+          "5 The bank also provides her with a good .................. package. (bonus/benefits)",
+          "6 Next year she thinks she will get a .................. car. (company/business)",
+          "7 When she is 55 she will be able to give up work and live on her .................. . (package/pension)"
+        ]
+      },
+      {
+        "id": "5.2",
+        "marks": "7 marks",
+        "instruction": "Read the job advertisements. Write one word in each gap to complete the sentences. The first letter of each word is given. The first one is an example.",
+        "items": [
+          "0 In this job, the wages............. are £224 for 37 hours.",
+          "1 The p.................. is just over £6 an hour.",
+          "2 Workers get £10 an hour for any o.................. they do.",
+          "3 There are some p.................. including free meals.",
+          "4 This job offers a b.................. salary of £1000 a month.",
+          "5 You get 10% c.................. on everything you sell.",
+          "6 When you sell enough you get a b.................. of £400.",
+          "7 There are some f.................. benefits including a pension."
+        ]
+      },
+      {
+        "id": "5.3",
+        "marks": "6 marks",
+        "instruction": "Match each statement with a word or phrase from the list below. Write the letter of your chosen answer next to the statement. (There is one extra word/phrase that you don't have to use.) The first one is an example.",
+        "items": [
+          "0 American term for all the benefits that an employee receives. C",
+          "1 Payment for those who have stopped working – especially due to age.",
+          "2 Benefit that lets employees buy company shares at a low price.",
+          "3 This describes bonuses given for reaching objectives set by the company.",
+          "4 Money paid to an employee who is asked to leave an organization.",
+          "5 Formal word for all the pay that an employee receives.",
+          "6 Director of a company who is paid a huge salary . . . but doesn't deserve it."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Production Line Workers\n£224 for a 37-hour week (£6.05 per hour).\n£10 an hour for any additional hours.\nBenefits include a company pension scheme and free meals in our new canteen.\nFor further details, phone Paul on 020 8843 6060",
+      "JOIN OUR SALES TEAM\nWE OFFER £1,000 PER MONTH PLUS 10% OF ANY SALES YOU MAKE. AND, IF YOU MEET YOUR MONTHLY SALES TARGET, WE GIVE YOU AN EXTRA £400.\nWHAT ELSE? WELL, THERE'S A COMPANY PENSION SCHEME AND AN ALLOWANCE OF 40P PER MILE WHEN YOU USE YOUR OWN CAR.\nIF YOU WANT THESE REWARDS, CALL 020 8844 8800.",
+      "A severance payment  B stock options  C compensation package  D remuneration  E performance-related  F fat cat  G boardroom row  H pension"
+    ],
+    "pictures": [
+      "Cartoon drawing of a fat cat in a striped suit relaxing with feet on a desk"
+    ],
+    "unclassified": [
+      "Total 20\nTarget 15+",
+      "Your score /20",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 11, \"testNumber\": \"5\", \"testTitle\": \"Pay and benefits\", \"exercises\": [{\"id\": \"5.1\", \"marks\": \"7 marks\", \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\", \"items\": [\"1 I work in a small hotel in Amsterdam. I .................. €8 an hour. (earn/paid)\", \"2 It's not a lot, but it's more than the .................. wage. (maximum/minimum)\", \"3 Some customers leave me .................. and that is a great help. (perks/tips)\", \"4 My sister works in a bank and her .................. is €3,000 a month. (salary/wages)\", \"5 The bank also provides her with a good .................. package. (bonus/benefits)\", \"6 Next year she thinks she will get a .................. car. (company/business)\", \"7 When she is 55 she will be able to give up work and live on her .................. . (package/pension)\"]}, {\"id\": \"5.2\", \"marks\": \"7 marks\", \"instruction\": \"Read the job advertisements. Write one word in each gap to complete the sentences. The first letter of each word is given. The first one is an example.\", \"items\": [\"0 In this job, the wages............. are £224 for 37 hours.\", \"1 The p.................. is just over £6 an hour.\", \"2 Workers get £10 an hour for any o.................. they do.\", \"3 There are some p.................. including free meals.\", \"4 This job offers a b.................. salary of £1000 a month.\", \"5 You get 10% c.................. on everything you sell.\", \"6 When you sell enough you get a b.................. of £400.\", \"7 There are some f.................. benefits including a pension.\"]}, {\"id\": \"5.3\", \"marks\": \"6 marks\", \"instruction\": \"Match each statement with a word or phrase from the list below. Write the letter of your chosen answer next to the statement. (There is one extra word/phrase that you don't have to use.) The first one is an example.\", \"items\": [\"0 American term for all the benefits that an employee receives. C\", \"1 Payment for those who have stopped working – especially due to age.\", \"2 Benefit that lets employees buy company shares at a low price.\", \"3 This describes bonuses given for reaching objectives set by the company.\", \"4 Money paid to an employee who is asked to leave an organization.\", \"5 Formal word for all the pay that an employee receives.\", \"6 Director of a company who is paid a huge salary . . . but doesn't deserve it.\"]}], \"boxesAndLists\": [\"Production Line Workers\\n£224 for a 37-hour week (£6.05 per hour).\\n£10 an hour for any additional hours.\\nBenefits include a company pension scheme and free meals in our new canteen.\\nFor further details, phone Paul on 020 8843 6060\", \"JOIN OUR SALES TEAM\\nWE OFFER £1,000 PER MONTH PLUS 10% OF ANY SALES YOU MAKE. AND, IF YOU MEET YOUR MONTHLY SALES TARGET, WE GIVE YOU AN EXTRA £400.\\nWHAT ELSE? WELL, THERE'S A COMPANY PENSION SCHEME AND AN ALLOWANCE OF 40P PER MILE WHEN YOU USE YOUR OWN CAR.\\nIF YOU WANT THESE REWARDS, CALL 020 8844 8800.\", \"A severance payment  B stock options  C compensation package  D remuneration  E performance-related  F fat cat  G boardroom row  H pension\"], \"pictures\": [\"Cartoon drawing of a fat cat in a striped suit relaxing with feet on a desk\"], \"unclassified\": [\"Total 20\\nTarget 15+\", \"Your score /20\", \"Test Your Business Vocabulary in Use\"]}"
+}
