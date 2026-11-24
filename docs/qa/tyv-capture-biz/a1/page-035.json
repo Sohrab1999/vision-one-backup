@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 35,
+    "dpi": 300,
+    "renderSha256": "7137107e6dd7d3727cffe4bf99e6dc6dcbd8929eb1a770ec19ce3d9df04118d9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:00:14.524Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 38,
+    "testNumber": "28",
+    "testTitle": "Profitability and unprofitability",
+    "exercises": [
+      {
+        "id": "28.1",
+        "marks": "5 marks",
+        "instruction": "Look at the costs and prices of these lamps. Choose the best word from the brackets ( ) to fill the gap in each sentence that follows.",
+        "items": [
+          "1 We make a .................... of €15 on lamp A.   (budget/expense/profit)",
+          "2 We .................... even on sales of lamp B.   (break/make/take)",
+          "3 We make a .................... on lamp C.   (lose/loss/lost)",
+          "4 Lamp D is very popular. It's a real ....................-spinner.   (cash/finance/money)",
+          "5 We are going to stop making lamp C because it's just not .................... .\n(profitable/saleable/valuable)"
+        ]
+      },
+      {
+        "id": "28.2",
+        "marks": "5 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.",
+        "items": [
+          "'My name is Ann Morgan and I'm Advertising Manager at Gissing PLC. Last year, I had an advertising .................... of £1,000,000. Our .................... on TV adverts was £800,000 and £400,000 went on placing display ads in magazines. So our actual .................... was £1,200,000. That means that we .................... by £200,000. The Director of Finance was not pleased and I have been told that I must not be .................... budget again next year.'"
+        ]
+      },
+      {
+        "id": "28.3",
+        "marks": "6 marks",
+        "instruction": "Write one word in each gap to complete the sentences.",
+        "items": [
+          "1 We sell 15,000 of this model a year and make $80 on each one. It's a real _ _ _ _ cow.",
+          "2 I overspent because I didn't budget _ _ _ the repair of the photocopier.",
+          "3 We reach break-even _ _ _ _ _ when we've got ten buyers. After that, everything is profit.",
+          "4 We sell this product at less than cost price. Loss _ _ _ _ _ _ like this attract customers into the shop.",
+          "5 The big supermarkets benefit from _ _ _ _ _ _ _ _ _ of scale because they get low prices from suppliers.",
+          "6 Since we set up the business two years ago we've been on a steep _ _ _ _ _ _ _ _ curve."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "expenditure   expenses   budget   under   over   spend   overspent   underspent",
+      "Production cost: €45 | €30 | €45 | €60",
+      "Selling price: €60 | €30 | €40 | €120"
+    ],
+    "pictures": [
+      "Table of four lamp drawings labelled A, B, C, D with Production cost and Selling price rows"
+    ],
+    "unclassified": [
+      "Total 16",
+      "Target 13+",
+      "Your score /16",
+      "Test Your Business Vocabulary in Use",
+      "www.irlanguage.com [?] IR Language [?]"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 38,\n \"testNumber\": \"28\",\n \"testTitle\": \"Profitability and unprofitability\",\n \"exercises\": [\n   {\"id\": \"28.1\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Look at the costs and prices of these lamps. Choose the best word from the brackets ( ) to fill the gap in each sentence that follows.\",\n    \"items\": [\n      \"1 We make a .................... of €15 on lamp A.   (budget/expense/profit)\",\n      \"2 We .................... even on sales of lamp B.   (break/make/take)\",\n      \"3 We make a .................... on lamp C.   (lose/loss/lost)\",\n      \"4 Lamp D is very popular. It's a real ....................-spinner.   (cash/finance/money)\",\n      \"5 We are going to stop making lamp C because it's just not .................... .\\n(profitable/saleable/valuable)\"\n    ]},\n   {\"id\": \"28.2\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.\",\n    \"items\": [\n      \"'My name is Ann Morgan and I'm Advertising Manager at Gissing PLC. Last year, I had an advertising .................... of £1,000,000. Our .................... on TV adverts was £800,000 and £400,000 went on placing display ads in magazines. So our actual .................... was £1,200,000. That means that we .................... by £200,000. The Director of Finance was not pleased and I have been told that I must not be .................... budget again next year.'\"\n    ]},\n   {\"id\": \"28.3\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Write one word in each gap to complete the sentences.\",\n    \"items\": [\n      \"1 We sell 15,000 of this model a year and make $80 on each one. It's a real _ _ _ _ cow.\",\n      \"2 I overspent because I didn't budget _ _ _ the repair of the photocopier.\",\n      \"3 We reach break-even _ _ _ _ _ when we've got ten buyers. After that, everything is profit.\",\n      \"4 We sell this product at less than cost price. Loss _ _ _ _ _ _ like this attract customers into the shop.\",\n      \"5 The big supermarkets benefit from _ _ _ _ _ _ _ _ _ of scale because they get low prices from suppliers.\",\n      \"6 Since we set up the business two years ago we've been on a steep _ _ _ _ _ _ _ _ curve.\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"expenditure   expenses   budget   under   over   spend   overspent   underspent\",\n   \"Production cost: €45 | €30 | €45 | €60\",\n   \"Selling price: €60 | €30 | €40 | €120\"\n ],\n \"pictures\": [\n   \"Table of four lamp drawings labelled A, B, C, D with Production cost and Selling price rows\"\n ],\n \"unclassified\": [\n   \"Total 16\",\n   \"Target 13+\",\n   \"Your score /16\",\n   \"Test Your Business Vocabulary in Use\",\n   \"www.irlanguage.com [?] IR Language [?]\"\n ]\n}\n```"
+}
