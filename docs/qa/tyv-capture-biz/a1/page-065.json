@@ -1,0 +1,68 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 65,
+    "dpi": 300,
+    "renderSha256": "28b17cfcf7472e6d495920154c06a3d8609421e6ee5c57dab3985ef5b30a6161",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:57:14.550Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 68,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "6",
+        "marks": "6 marks",
+        "instruction": "In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.",
+        "items": [
+          "0 Over the past three years, we've changed the company (cult) here. .......culture.......",
+          "1 We are encouraging people to use their own initiate. .......................",
+          "2 We want to power employees so we delegate responsibility. .......................",
+          "3 We also want our people to be simulated at work – not stressed. .......................",
+          "4 The company has a strict note of conduct which we all follow. .......................",
+          "5 We hope that there is no racial or sexual decrimination here. .......................",
+          "6 And a happy team is more productive. Last year sales sawed by 27%."
+        ]
+      },
+      {
+        "id": "7",
+        "marks": "6 marks",
+        "instruction": "Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)",
+        "items": [
+          "1 Children work a 12-hour day for 50¢ making trainers that retail in the US at more than $150.",
+          "2 The research shows that employees who dress casually produce more than those in business suits.",
+          "3 Mr Trent took the cash in return for inside information about the company's merger plans.",
+          "4 The problem with perfection is that it can't be achieved – even if you work 24 hours a day.",
+          "5 The study shows that ethical investment increased at more than twice the market average last year.",
+          "6 More and more people are giving up jobs with huge salaries to move to a slower, more relaxed lifestyle.",
+          "7 They can't relax because the boss may call at any time of the day or night wherever they are."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Top executives leave rat race",
+      "Dress-down Friday ups productivity",
+      "Mobiles increase stress says report",
+      "Green investors grow in importance",
+      "Sportswear giant in sweatshop claim",
+      "CEO's backhander lands him in court"
+    ],
+    "pictures": [
+      "empty answer boxes next to each of the six headline boxes"
+    ],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 68,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"6\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.\",\n      \"items\": [\n        \"0 Over the past three years, we've changed the company (cult) here. .......culture.......\",\n        \"1 We are encouraging people to use their own initiate. .......................\",\n        \"2 We want to power employees so we delegate responsibility. .......................\",\n        \"3 We also want our people to be simulated at work – not stressed. .......................\",\n        \"4 The company has a strict note of conduct which we all follow. .......................\",\n        \"5 We hope that there is no racial or sexual decrimination here. .......................\",\n        \"6 And a happy team is more productive. Last year sales sawed by 27%.\"\n      ]\n    },\n    {\n      \"id\": \"7\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)\",\n      \"items\": [\n        \"1 Children work a 12-hour day for 50¢ making trainers that retail in the US at more than $150.\",\n        \"2 The research shows that employees who dress casually produce more than those in business suits.\",\n        \"3 Mr Trent took the cash in return for inside information about the company's merger plans.\",\n        \"4 The problem with perfection is that it can't be achieved – even if you work 24 hours a day.\",\n        \"5 The study shows that ethical investment increased at more than twice the market average last year.\",\n        \"6 More and more people are giving up jobs with huge salaries to move to a slower, more relaxed lifestyle.\",\n        \"7 They can't relax because the boss may call at any time of the day or night wherever they are.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Top executives leave rat race\",\n    \"Dress-down Friday ups productivity\",\n    \"Mobiles increase stress says report\",\n    \"Green investors grow in importance\",\n    \"Sportswear giant in sweatshop claim\",\n    \"CEO's backhander lands him in court\"\n  ],\n  \"pictures\": [\n    \"empty answer boxes next to each of the six headline boxes\"\n  ],\n  \"unclassified\": [\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

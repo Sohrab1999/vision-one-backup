@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 69,
+    "dpi": 300,
+    "renderSha256": "3054ab06da71a0bdb0a3c075f5f7c392a0268bf01f3079d6681c2097f2d1ba22",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:58:00.165Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 72,
+    "testNumber": "54",
+    "testTitle": "Meetings 1: types of meeting",
+    "exercises": [
+      {
+        "id": "54.1",
+        "marks": "8 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 Can we .................... up a meeting for early next week? (arrange/set/agree)",
+          "2 I'm afraid I've got to bring .................... this morning's meeting to ten o'clock. (up/along/forward)",
+          "3 Something came up so they .................... Monday's meeting till Friday. (postponed/cancelled/fixed)",
+          "4 Anita is off sick so Michael will have to .................... the staff meeting. (charge/chief/chair)",
+          "5 I've got to .................... the meeting in Paris because my boss will be in Spain. (go/attend/visit)",
+          "6 It's a very important meeting so make sure you don't .................... it. (miss/lose/avoid)",
+          "7 On Friday we have a meeting .................... our most important client. (of/with/to)",
+          "8 It wasn't really a meeting – just an informal .................... over coffee. (speech/report/chat)"
+        ]
+      },
+      {
+        "id": "54.2",
+        "marks": "8 marks",
+        "instruction": "Decide which of the alternatives (A–E) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.",
+        "items": [
+          "1 'We tried to produce as many ideas as possible for the new marketing campaign.'",
+          "2 'All the Sales team get together once a month to see how everything is going.'",
+          "3 'We had to get all the shareholders together at short notice to discuss the merger plans.'",
+          "4 'The annual report and the company's accounts were presented to the shareholders.'",
+          "5 'The directors met in May to discuss restructuring the company.'",
+          "6 'Two new non-executive directors were appointed at the annual meeting.'",
+          "7 'The debt crisis was so bad that we had to have an emergency meeting for all members.'",
+          "8 'We came up with lots of new ideas. Most were crazy but some are worth developing.'",
+          "A board meeting   B departmental meeting   C AGM   D EGM   E brainstorming"
+        ]
+      },
+      {
+        "id": "54.3",
+        "marks": "6 marks",
+        "instruction": "In each of the numbered sentences (1–6) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "We had a project meeting yesterday to discuss progress.",
+          "1 They can be a complete waste of timing but this one was good. ....................",
+          "2 We had some useful discusses and cleared up some problems. ....................",
+          "3 Ahmed was chairing it and he kept things move along. ....................",
+          "4 When Sunita started to scramble, he brought her back to the point. ....................",
+          "5 Because there were no digressions we covered a lot of earth. ....................",
+          "6 I said I thought it was very producing and the others agreed. ...................."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "table of eight numbered speaker sentences with an empty answer box column at the right"
+    ],
+    "unclassified": [
+      "Total 22",
+      "Target 18+",
+      "Your score /22",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 72,\n \"testNumber\": \"54\",\n \"testTitle\": \"Meetings 1: types of meeting\",\n \"exercises\": [\n  {\"id\": \"54.1\", \"marks\": \"8 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n   \"items\": [\n    \"1 Can we .................... up a meeting for early next week? (arrange/set/agree)\",\n    \"2 I'm afraid I've got to bring .................... this morning's meeting to ten o'clock. (up/along/forward)\",\n    \"3 Something came up so they .................... Monday's meeting till Friday. (postponed/cancelled/fixed)\",\n    \"4 Anita is off sick so Michael will have to .................... the staff meeting. (charge/chief/chair)\",\n    \"5 I've got to .................... the meeting in Paris because my boss will be in Spain. (go/attend/visit)\",\n    \"6 It's a very important meeting so make sure you don't .................... it. (miss/lose/avoid)\",\n    \"7 On Friday we have a meeting .................... our most important client. (of/with/to)\",\n    \"8 It wasn't really a meeting – just an informal .................... over coffee. (speech/report/chat)\"]},\n  {\"id\": \"54.2\", \"marks\": \"8 marks\",\n   \"instruction\": \"Decide which of the alternatives (A–E) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.\",\n   \"items\": [\n    \"1 'We tried to produce as many ideas as possible for the new marketing campaign.'\",\n    \"2 'All the Sales team get together once a month to see how everything is going.'\",\n    \"3 'We had to get all the shareholders together at short notice to discuss the merger plans.'\",\n    \"4 'The annual report and the company's accounts were presented to the shareholders.'\",\n    \"5 'The directors met in May to discuss restructuring the company.'\",\n    \"6 'Two new non-executive directors were appointed at the annual meeting.'\",\n    \"7 'The debt crisis was so bad that we had to have an emergency meeting for all members.'\",\n    \"8 'We came up with lots of new ideas. Most were crazy but some are worth developing.'\",\n    \"A board meeting   B departmental meeting   C AGM   D EGM   E brainstorming\"]},\n  {\"id\": \"54.3\", \"marks\": \"6 marks\",\n   \"instruction\": \"In each of the numbered sentences (1–6) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\n    \"We had a project meeting yesterday to discuss progress.\",\n    \"1 They can be a complete waste of timing but this one was good. ....................\",\n    \"2 We had some useful discusses and cleared up some problems. ....................\",\n    \"3 Ahmed was chairing it and he kept things move along. ....................\",\n    \"4 When Sunita started to scramble, he brought her back to the point. ....................\",\n    \"5 Because there were no digressions we covered a lot of earth. ....................\",\n    \"6 I said I thought it was very producing and the others agreed. ....................\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"table of eight numbered speaker sentences with an empty answer box column at the right\"],\n \"unclassified\": [\"Total 22\", \"Target 18+\", \"Your score /22\", \"Test Your Business Vocabulary in Use\"]\n}\n```"
+}

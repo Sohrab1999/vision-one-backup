@@ -1,0 +1,88 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 63,
+    "dpi": 300,
+    "renderSha256": "e421ad6c2e3d73c0aa7bb7a40ca0a37229902188d795bd02867ab862c1524462",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:56:49.225Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 66,
+    "testNumber": "3",
+    "testTitle": "Summary Test 3",
+    "exercises": [
+      {
+        "id": "1",
+        "marks": "12 marks",
+        "instruction": "For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "1 The company's debt ........................ was too large and it couldn't make the repayments.",
+          "A schedule    B default    C burden",
+          "2 With 51% of the shares, Max Com now has a ........................ interest in Media World.",
+          "A majority    B mid-range    C minority",
+          "3 We agreed a £4,000 ........................ with the bank but the interest rate is very high.",
+          "A deposit    B overdraft    C balance",
+          "4 Geno Science was ........................ on the stock exchange last year.",
+          "A issued    B floated    C invested",
+          "5 The FTSE 100 ........................ fell by 1.4% yesterday.",
+          "A market    B bourse    C index",
+          "6 I've got lots to do but finishing this report is my first ........................ .",
+          "A priority    B schedule    C perfection",
+          "7 The Japanese car manufacturer is to ........................ 5,000 jobs at its plants in Europe.",
+          "A axe    B plunge    C ease",
+          "8 He was selling Rolex watches for $1,000, but they turned out to be ........................ .",
+          "A counterfeits    B forges    C fakes",
+          "9 The country's gross domestic ........................ has grown by more than $200 billion.",
+          "A payment    B product    C profit",
+          "10 I gave up my job in the City to have more ........................ time with my family.",
+          "A downshift    B value    C quality",
+          "11 Our new CEO has charisma and a natural ........................ for leadership.",
+          "A flair    B drive    C energy",
+          "12 I think that ........................ is important so I am never late for a business meeting.",
+          "A hospitality    B formality    C punctuality"
+        ]
+      },
+      {
+        "id": "2",
+        "marks": "6 marks",
+        "instruction": "Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.",
+        "items": [
+          "1 If we are late completing the project",
+          "2 I got through to Ivan in Moscow",
+          "3 Work has become so stressful",
+          "4 Something has come up",
+          "5 I don't really like videoconferencing",
+          "6 The market had another difficult day",
+          "a because I prefer to meet people face to face.",
+          "b that we are thinking of downshifting.",
+          "c so I've got to put off our meeting.",
+          "d then we will have to pay a penalty.",
+          "e if the bank won't reschedule our debt.",
+          "f but then I got cut off.",
+          "g and was nearly 2% down at the close."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 75",
+      "Target 60+",
+      "Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "33–51",
+      "Read the questions carefully. Try to answer them all. This test takes about 45 minutes.",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 66,\n  \"testNumber\": \"3\",\n  \"testTitle\": \"Summary Test 3\",\n  \"exercises\": [\n    {\n      \"id\": \"1\",\n      \"marks\": \"12 marks\",\n      \"instruction\": \"For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.\",\n      \"items\": [\n        \"1 The company's debt ........................ was too large and it couldn't make the repayments.\",\n        \"A schedule    B default    C burden\",\n        \"2 With 51% of the shares, Max Com now has a ........................ interest in Media World.\",\n        \"A majority    B mid-range    C minority\",\n        \"3 We agreed a £4,000 ........................ with the bank but the interest rate is very high.\",\n        \"A deposit    B overdraft    C balance\",\n        \"4 Geno Science was ........................ on the stock exchange last year.\",\n        \"A issued    B floated    C invested\",\n        \"5 The FTSE 100 ........................ fell by 1.4% yesterday.\",\n        \"A market    B bourse    C index\",\n        \"6 I've got lots to do but finishing this report is my first ........................ .\",\n        \"A priority    B schedule    C perfection\",\n        \"7 The Japanese car manufacturer is to ........................ 5,000 jobs at its plants in Europe.\",\n        \"A axe    B plunge    C ease\",\n        \"8 He was selling Rolex watches for $1,000, but they turned out to be ........................ .\",\n        \"A counterfeits    B forges    C fakes\",\n        \"9 The country's gross domestic ........................ has grown by more than $200 billion.\",\n        \"A payment    B product    C profit\",\n        \"10 I gave up my job in the City to have more ........................ time with my family.\",\n        \"A downshift    B value    C quality\",\n        \"11 Our new CEO has charisma and a natural ........................ for leadership.\",\n        \"A flair    B drive    C energy\",\n        \"12 I think that ........................ is important so I am never late for a business meeting.\",\n        \"A hospitality    B formality    C punctuality\"\n      ]\n    },\n    {\n      \"id\": \"2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.\",\n      \"items\": [\n        \"1 If we are late completing the project\",\n        \"2 I got through to Ivan in Moscow\",\n        \"3 Work has become so stressful\",\n        \"4 Something has come up\",\n        \"5 I don't really like videoconferencing\",\n        \"6 The market had another difficult day\",\n        \"a because I prefer to meet people face to face.\",\n        \"b that we are thinking of downshifting.\",\n        \"c so I've got to put off our meeting.\",\n        \"d then we will have to pay a penalty.\",\n        \"e if the bank won't reschedule our debt.\",\n        \"f but then I got cut off.\",\n        \"g and was nearly 2% down at the close.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Total 75\",\n    \"Target 60+\",\n    \"Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"33–51\",\n    \"Read the questions carefully. Try to answer them all. This test takes about 45 minutes.\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}
