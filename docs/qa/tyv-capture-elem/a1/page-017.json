@@ -1,0 +1,98 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 17,
+    "dpi": 300,
+    "renderSha256": "6da4393bd62577a9c50defcc80796e78e347689491d6c77fcd478a2d1bdb75ae",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:00:47.766Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 16,
+    "testNumber": "10",
+    "testTitle": "Food and drink",
+    "exercises": [
+      {
+        "id": "10.1",
+        "marks": "10 marks",
+        "instruction": "Complete the two crosswords with the names of the fruit and vegetables in the pictures.",
+        "items": [
+          "Down",
+          "1 [?]",
+          "2 [?]",
+          "Across",
+          "3 [?]",
+          "4 [?]",
+          "5 [?]",
+          "Across",
+          "1 [?]",
+          "2 [?]",
+          "3 [?]",
+          "4 [?]",
+          "Down",
+          "5 [?]"
+        ]
+      },
+      {
+        "id": "10.2",
+        "marks": "10 marks",
+        "instruction": "Use the words from 10.1 to fill the gaps in the sentences. The first letter is given.",
+        "items": [
+          "1 P........................ have a very hard skin and are difficult to cut, but the fruit is delicious.",
+          "2 O........................ always make my eyes water when I peel them.",
+          "3 When t........................ are red, they are ready to eat.",
+          "4 A b........................ is a good, healthy snack; fruit is better for you than sweets",
+          "5 We use p........................ to make chips.",
+          "6 P........................ grow on trees, and are ready to eat in the autumn.",
+          "7 Green b........................ are a popular vegetable and are very good for you.",
+          "8 O........................ are often used to make juice.",
+          "9 You don’t have to cook c........................ . They are very nice to eat raw.",
+          "10 Red g........................ and green ones are both used to make wine."
+        ]
+      },
+      {
+        "id": "10.3",
+        "marks": "10 marks",
+        "instruction": "Complete the conversations, using words from the box. Use each word once only.",
+        "items": [
+          "1 EDITH: Are you a vegetarian?",
+          "SYLVIE: Not really. I don’t eat meat but I do eat .......................... because we live near the sea.",
+          "2 CARMEN: Do they only sell beer in British pubs?",
+          "JOE: No, they sell .................... too, and non-alcoholic drinks such as ......................... .",
+          "3 VERA: What types of fast food do you like?",
+          "RITA: Oh, everything – .......................... , .......................... , .......................... .",
+          "4 KIERA: What’s your favourite fruit?",
+          "DONNA: .......................... . I just love them! Especially with cream or ice cream!",
+          "5 NURDAN: Are there any vegetables you don’t like?",
+          "JANE: I don’t like .......................... . It’s too strong for me, and I don’t like the smell.",
+          "6 HENRY: What shall we have with the fish? Potatoes?",
+          "LISA: Mmm, I’d prefer .......................... or rice.",
+          "HENRY: Okay, what about vegetables? There are some frozen ......................... in the freezer.",
+          "LISA: Yes, fine."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "fish    pasta    pizza    fruit juice    wine    garlic    peas    strawberries    hamburgers    hot-dogs"
+    ],
+    "pictures": [
+      "two crossword grids numbered 1 and 2",
+      "picture clues for crossword 1: Down 1 onion, 2 grapes; Across 3 oranges/tomatoes [?], 4 banana, 5 pear",
+      "picture clues for crossword 2: Across 1 pineapple, 2 carrots [?], 3 tomatoes, 4 beans/peas [?]; Down 5 potatoes [?]"
+    ],
+    "unclassified": [
+      "Test 10",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 16,\n  \"testNumber\": \"10\",\n  \"testTitle\": \"Food and drink\",\n  \"exercises\": [\n    {\n      \"id\": \"10.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete the two crosswords with the names of the fruit and vegetables in the pictures.\",\n      \"items\": [\n        \"Down\",\n        \"1 [?]\",\n        \"2 [?]\",\n        \"Across\",\n        \"3 [?]\",\n        \"4 [?]\",\n        \"5 [?]\",\n        \"Across\",\n        \"1 [?]\",\n        \"2 [?]\",\n        \"3 [?]\",\n        \"4 [?]\",\n        \"Down\",\n        \"5 [?]\"\n      ]\n    },\n    {\n      \"id\": \"10.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Use the words from 10.1 to fill the gaps in the sentences. The first letter is given.\",\n      \"items\": [\n        \"1 P........................ have a very hard skin and are difficult to cut, but the fruit is delicious.\",\n        \"2 O........................ always make my eyes water when I peel them.\",\n        \"3 When t........................ are red, they are ready to eat.\",\n        \"4 A b........................ is a good, healthy snack; fruit is better for you than sweets\",\n        \"5 We use p........................ to make chips.\",\n        \"6 P........................ grow on trees, and are ready to eat in the autumn.\",\n        \"7 Green b........................ are a popular vegetable and are very good for you.\",\n        \"8 O........................ are often used to make juice.\",\n        \"9 You don’t have to cook c........................ . They are very nice to eat raw.\",\n        \"10 Red g........................ and green ones are both used to make wine.\"\n      ]\n    },\n    {\n      \"id\": \"10.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete the conversations, using words from the box. Use each word once only.\",\n      \"items\": [\n        \"1 EDITH: Are you a vegetarian?\",\n        \"SYLVIE: Not really. I don’t eat meat but I do eat .......................... because we live near the sea.\",\n        \"2 CARMEN: Do they only sell beer in British pubs?\",\n        \"JOE: No, they sell .................... too, and non-alcoholic drinks such as ......................... .\",\n        \"3 VERA: What types of fast food do you like?\",\n        \"RITA: Oh, everything – .......................... , .......................... , .......................... .\",\n        \"4 KIERA: What’s your favourite fruit?\",\n        \"DONNA: .......................... . I just love them! Especially with cream or ice cream!\",\n        \"5 NURDAN: Are there any vegetables you don’t like?\",\n        \"JANE: I don’t like .......................... . It’s too strong for me, and I don’t like the smell.\",\n        \"6 HENRY: What shall we have with the fish? Potatoes?\",\n        \"LISA: Mmm, I’d prefer .......................... or rice.\",\n        \"HENRY: Okay, what about vegetables? There are some frozen ......................... in the freezer.\",\n        \"LISA: Yes, fine.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"fish    pasta    pizza    fruit juice    wine    garlic    peas    strawberries    hamburgers    hot-dogs\"\n  ],\n  \"pictures\": [\n    \"two crossword grids numbered 1 and 2\",\n    \"picture clues for crossword 1: Down 1 onion, 2 grapes; Across 3 oranges/tomatoes [?], 4 banana, 5 pear\",\n    \"picture clues for crossword 2: Across 1 pineapple, 2 carrots [?], 3 tomatoes, 4 beans/peas [?]; Down 5 potatoes [?]\"\n  ],\n  \"unclassified\": [\n    \"Test 10\",\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

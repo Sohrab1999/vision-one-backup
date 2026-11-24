@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 16,
+    "dpi": 300,
+    "renderSha256": "c40fa90f24245569c48167fa1bc4f7a40037b0367d2198df04bbd9ea6ca59775",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:00:34.158Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 15,
+    "testNumber": "9",
+    "testTitle": "Conversations 2: Useful words and expressions",
+    "exercises": [
+      {
+        "id": "9.1",
+        "marks": "10 marks",
+        "instruction": "Choose an expression from the box to fill each gap.",
+        "items": [
+          "Example: ANNA: How ....................about.................... doing something together this evening?",
+          "ARI: Good idea. (1) ......................... don’t we go to the cinema?",
+          "ANNA: Great. I’d (2) ........................ like that. Which film would you like to see?",
+          "ARI: I don’t (3) ........................ . It’s (4) ........................ to you.",
+          "ANNA: OK. (5) ......................... about that new one with Angelina Jolie? It sounds quite good.",
+          "ARI: OK. (6) ......................... go and see that one, then. It starts at eight. I can come to your house at (7) ......................... seven and we can take the bus into town together.",
+          "ANNA: Well, let’s just meet at the cinema. I’m going to be in town (8) ......................... – I have to go to the dentist at 5 o’clock.",
+          "ARI: Oh (9) ......................... , I’m sorry! I hate going to the dentist, don’t you?",
+          "ANNA: (10) ......................... !"
+        ]
+      },
+      {
+        "id": "9.2",
+        "marks": "10 marks",
+        "instruction": "What do you say? Complete each expression in the speech bubbles. Then match them to the correct pictures.",
+        "items": [
+          "Example:",
+          "It doesn’t m _ _ _ _ _",
+          "Be c a r e f u l !",
+          "Well d _ _ _ !",
+          "What a p _ _ _ !",
+          "Hurry u _ !",
+          "Look o _ _ !"
+        ]
+      },
+      {
+        "id": "9.3",
+        "marks": "10 marks",
+        "instruction": "Circle the correct underlined word.",
+        "items": [
+          "Example: How around / about going out for a meal tonight?",
+          "1 What other/else do you want to do today?",
+          "2 JANE: Would you like some coffee? I haven’t got any milk. NICOLA: It doesn’t matter/mind. I prefer black coffee.",
+          "3 Other people in the class thought the test was difficult but I thought it was quite easy, absolutely/actually.",
+          "4 I don’t / am not agree with your answer.",
+          "5 How about going/go for a swim?",
+          "6 The train arrived at up/around midday.",
+          "7 Let’s meeting/meet at six.",
+          "8 They’re really/absolutely nice people.",
+          "9 Look at/out! There’s a banana skin on the floor!",
+          "10 Anyway/Else, let’s get back to work now."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "about (crossed out)   absolutely   anyway   around   dear   let’s   mind   really   up   what   why"
+    ],
+    "pictures": [
+      "Example picture: two people dropping a baguette/bread",
+      "Speech bubbles with partially completed expressions (It doesn’t m_____ / Be careful! / Well d___! / What a p___! / Hurry u_! / Look o__!)",
+      "Picture 3: a man shouting at an older woman with a walking stick",
+      "Picture 1: two women celebrating with a passing car and papers in the air",
+      "Picture 4: people having a picnic in the rain",
+      "Picture 2: a man running and falling on ice/snow",
+      "Picture 5: people in a traffic jam / car interior, one shouting"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 15,\n \"testNumber\": \"9\",\n \"testTitle\": \"Conversations 2: Useful words and expressions\",\n \"exercises\": [\n  {\"id\": \"9.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Choose an expression from the box to fill each gap.\",\n   \"items\": [\n    \"Example: ANNA: How ....................about.................... doing something together this evening?\",\n    \"ARI: Good idea. (1) ......................... don’t we go to the cinema?\",\n    \"ANNA: Great. I’d (2) ........................ like that. Which film would you like to see?\",\n    \"ARI: I don’t (3) ........................ . It’s (4) ........................ to you.\",\n    \"ANNA: OK. (5) ......................... about that new one with Angelina Jolie? It sounds quite good.\",\n    \"ARI: OK. (6) ......................... go and see that one, then. It starts at eight. I can come to your house at (7) ......................... seven and we can take the bus into town together.\",\n    \"ANNA: Well, let’s just meet at the cinema. I’m going to be in town (8) ......................... – I have to go to the dentist at 5 o’clock.\",\n    \"ARI: Oh (9) ......................... , I’m sorry! I hate going to the dentist, don’t you?\",\n    \"ANNA: (10) ......................... !\"\n   ]},\n  {\"id\": \"9.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"What do you say? Complete each expression in the speech bubbles. Then match them to the correct pictures.\",\n   \"items\": [\n    \"Example:\",\n    \"It doesn’t m _ _ _ _ _\",\n    \"Be c a r e f u l !\",\n    \"Well d _ _ _ !\",\n    \"What a p _ _ _ !\",\n    \"Hurry u _ !\",\n    \"Look o _ _ !\"\n   ]},\n  {\"id\": \"9.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Circle the correct underlined word.\",\n   \"items\": [\n    \"Example: How around / about going out for a meal tonight?\",\n    \"1 What other/else do you want to do today?\",\n    \"2 JANE: Would you like some coffee? I haven’t got any milk. NICOLA: It doesn’t matter/mind. I prefer black coffee.\",\n    \"3 Other people in the class thought the test was difficult but I thought it was quite easy, absolutely/actually.\",\n    \"4 I don’t / am not agree with your answer.\",\n    \"5 How about going/go for a swim?\",\n    \"6 The train arrived at up/around midday.\",\n    \"7 Let’s meeting/meet at six.\",\n    \"8 They’re really/absolutely nice people.\",\n    \"9 Look at/out! There’s a banana skin on the floor!\",\n    \"10 Anyway/Else, let’s get back to work now.\"\n   ]}\n ],\n \"boxesAndLists\": [\"about (crossed out)   absolutely   anyway   around   dear   let’s   mind   really   up   what   why\"],\n \"pictures\": [\n  \"Example picture: two people dropping a baguette/bread\",\n  \"Speech bubbles with partially completed expressions (It doesn’t m_____ / Be careful! / Well d___! / What a p___! / Hurry u_! / Look o__!)\",\n  \"Picture 3: a man shouting at an older woman with a walking stick\",\n  \"Picture 1: two women celebrating with a passing car and papers in the air\",\n  \"Picture 4: people having a picnic in the rain\",\n  \"Picture 2: a man running and falling on ice/snow\",\n  \"Picture 5: people in a traffic jam / car interior, one shouting\"\n ],\n \"unclassified\": [\"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}
