@@ -1,0 +1,47 @@
+{
+  "step": "A1-BIZ-S04 (صفحات ۳۷–۴۸ biz — صفحهٔ ۴۳ skip خودکار) — دستهٔ سوم اجرای نقشهٔ مادر سری TYV",
+  "date": "2026-11-24 (1405/09/03)",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول هر دو وضعیت ④ (گام بعدی مجاز S03 — پیشا-اجرا) و ⑥ (گام بعدی مجاز S04 — پسا-اجرای S03؛ دیسک S03 را تأیید می‌کرد) — trace 1a20bfceaf3e9599 — channel zai-web — الزام پایداری ایستندهٔ نوزدهم پابرجا",
+  "sessionStart": {
+    "headLocal": "56b6a936c8d7e12e0f9513f7347888cf451b04fe (= ثبت اثبات §۱۰-۷ گام A1-BIZ-S03 — سربرگ ۱۲۰مین)",
+    "remoteMain": "56b6a936c8d7e12e0f9513f7347888cf451b04fe (= git ls-remote backup refs/heads/main — divergence 0/0)",
+    "porcelain": 0,
+    "hiddenReset": "هیچ — اولین نشست بدون ریست پنهان پس از الگوی ۳۱..۳۷ — بازیابی پیشا-گام لازم نشد",
+    "diskTruthPreStep": "A1 = 43/489 (biz 34/98 · elem 3/96 · pri 3/142 · upp 3/153)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs biz 37,38,39,40,41,42,43,44,45,46,47,48 (هم‌گام — درس سندباکس nohup)",
+  "result": "DONE tyv-biz: captured=11 skipped=1 failed=0",
+  "page43AutoSkip": {
+    "reason": "checkpoint/resume — JSON موجود از پراب A0 (2026-11-23T06:25:09.548Z) — عین پیش‌بینی دقیق وضعیت ⑥ گزارش پیشین",
+    "content": "p43 = footer 46 · testNumber=2 · ۲ تمرین — ادامهٔ Summary Test 2 (واحد مرکب)"
+  },
+  "newPages": {
+    "files": "docs/qa/tyv-capture-biz/a1/page-037..042.json + page-044..048.json (۱۱ JSON NEW)",
+    "provenance": "۱۱/۱۱ کامل — renderSha256 / DPI=300 / promptVersion=tyv-a1-v1 / attempts≤3 / timestamp",
+    "footers": "p37→40 · p38→41 · p39→42 · p40→43 · p41→44 · p42→45 · p44→47 · p45→48 · p46→49 · p47→50 · p48→51 — آفست +۳ پابرجا — صفر null",
+    "tests": "۳۰ «Assets, liabilities and the balance sheet» · ۳۱ «The bottom line» · ۳۲ «Share capital and debt» · Summary Test 2 (p40) · ادامهٔ مرکب (p41 — testNumber=null) · Summary Test 2 (p42) · ۳۳ «Success and failure» · ۳۴ «Mergers, takeovers and sell-offs» · ۳۵ «Personal finance» · ۳۶ «Financial centres» · ۳۷ «Trading»",
+    "summaryTest2Composite": "واحد مرکب چهارصفحه‌ای p40–p43 (pdf) = چاپی 43–46 — p43 عضو چهارم از پراب قبلی — ریسک ۷ مادر (ثبت دوگذر G1) — عین الگوی Summary Test 1 (p20–p23 سربرگ ۱۱۹مین)",
+    "counts": { "exercises": 32, "items": 215, "boxesAndLists": 26, "pictures": 8, "unclassified": 30, "unknownTokens": 0 },
+    "unknownTokensNote": "[?] صفر — بهتر از S03 (فقط p35 ×۲ بود) — قاعدهٔ O3=S2 پابرجا: صفر ساختن sense"
+  },
+  "diskTruthPostStep": {
+    "a1Total": "54/489",
+    "perBook": { "biz": "45/98", "elem": "3/96", "pri": "3/142", "upp": "3/153" },
+    "bizRemaining": 53,
+    "a1Index": "capturedNow=11 · skippedExisting=1 · failedNow=[] · capturedPages=45 (cumulative)"
+  },
+  "zeroChanges": ["src/", "db", "اسکریپت‌ها", "hook", "WAVE2", "PDFها", "رفتار وب‌اپ"],
+  "acceptanceChecklist": {
+    "checklistRef": "دفتر گام‌های کوچک §۱",
+    "items": [
+      { "item": "خروجی DONE و failed=0", "ok": true },
+      { "item": "پروونانس کامل ۱۱/۱۱", "ok": true },
+      { "item": "a1-index به‌روزرسانی شد", "ok": true },
+      { "item": "فوترها ۱۱/۱۱ صفر null (آفست +۳)", "ok": true },
+      { "item": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF", "ok": true },
+      { "item": "دیسک‌حقیقت = ۵۴/۴۸۹", "ok": true }
+    ],
+    "allPass": true
+  },
+  "nextStep": "A1-BIZ-S05 = bun scripts/tyv-a1-vlm-capture.mjs biz 49,50,51,52,53,54,55,56,57,58,59,60 — سپس S06..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده"
+}

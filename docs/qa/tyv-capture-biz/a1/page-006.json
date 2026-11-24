@@ -1,0 +1,87 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 6,
+    "dpi": 300,
+    "renderSha256": "556adc359c39f0b0286e77cca5150be62ed341afb693c25ebe7e6cbbe42f30fc",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:25:00.328Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 9,
+    "testNumber": "3",
+    "testTitle": "Recruitment and selection",
+    "exercises": [
+      {
+        "id": "3.1",
+        "marks": "4 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.",
+        "items": []
+      },
+      {
+        "id": "3.2",
+        "marks": "7 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap. The first one is an example.",
+        "items": [
+          "0 We need to ....recruit.... four new people for our office in Manchester. (join/recruit)",
+          "1 We are using a recruitment ..................... to find them for us. (agency/headhunter)",
+          "2 They advertised the ..................... in the local newspaper last week. (positions/applicants)",
+          "3 So far, over 60 people have applied for the ..................... . (works/posts)",
+          "4 We are going to look at all the letters of ..................... over the weekend. (application/situation)",
+          "5 On Monday, we will draw up a ..................... of 10 or 11 people. (reference/shortlist)",
+          "6 Then we'll invite them all to come for an ..................... . (interview/appointment)",
+          "7 We hope to ..................... the successful applicants by the end of the month. (apply/appoint)"
+        ]
+      },
+      {
+        "id": "3.3",
+        "marks": "6 marks",
+        "instruction": "Look at each sentence. Would you find it in the Situations Vacant section of a newspaper (SV), in an applicant's CV, or in a covering letter (CL)? Tick the right box. The first one is an example.",
+        "items": [
+          "0 'The post offers a starting salary of £17,000 plus benefits.' [tick in SV column]",
+          "1 'I enclose my résumé for your consideration.'",
+          "2 '1997–2000 University of Maryland, MBA (Marketing and Public Relations).'",
+          "3 'I am looking for a more stimulating environment and your company offers this.'",
+          "4 'Training will be given but basic word-processing skills would be an advantage.'",
+          "5 '1994–1997: The Biscuit Company, London – Manager responsible for 22 staff.'",
+          "6 'The successful applicant will be expected to take up the post in January.'"
+        ]
+      },
+      {
+        "id": "3.4",
+        "marks": "6 marks",
+        "instruction": "Find a word related to each clue. Some of the letters are given.",
+        "items": [
+          "1 Certificates from school and university",
+          "2 Where you've worked and what you've achieved",
+          "3 Hire a good person who is working for another company",
+          "4 People you can contact to find out about an applicant",
+          "5 Process to find the right person for a job",
+          "6 An applicant who has a good chance of getting the job"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "covering / employment / application / curriculum / psychometric",
+      "agency / references / test / letter / form / vitae"
+    ],
+    "pictures": [
+      "drawing of hands writing on a notepad labelled 'CV'",
+      "word-grid for exercise 3.4 with numbered rows 1–6 and given letters (q, f, t, s, e, x, h, u, r, f, s, c, n, c, d, d)",
+      "Total 23 / Target 17+ box at top right"
+    ],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use",
+      "Your score /23"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 9,\n  \"testNumber\": \"3\",\n  \"testTitle\": \"Recruitment and selection\",\n  \"exercises\": [\n    {\n      \"id\": \"3.1\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.\",\n      \"items\": []\n    },\n    {\n      \"id\": \"3.2\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap. The first one is an example.\",\n      \"items\": [\n        \"0 We need to ....recruit.... four new people for our office in Manchester. (join/recruit)\",\n        \"1 We are using a recruitment ..................... to find them for us. (agency/headhunter)\",\n        \"2 They advertised the ..................... in the local newspaper last week. (positions/applicants)\",\n        \"3 So far, over 60 people have applied for the ..................... . (works/posts)\",\n        \"4 We are going to look at all the letters of ..................... over the weekend. (application/situation)\",\n        \"5 On Monday, we will draw up a ..................... of 10 or 11 people. (reference/shortlist)\",\n        \"6 Then we'll invite them all to come for an ..................... . (interview/appointment)\",\n        \"7 We hope to ..................... the successful applicants by the end of the month. (apply/appoint)\"\n      ]\n    },\n    {\n      \"id\": \"3.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Look at each sentence. Would you find it in the Situations Vacant section of a newspaper (SV), in an applicant's CV, or in a covering letter (CL)? Tick the right box. The first one is an example.\",\n      \"items\": [\n        \"0 'The post offers a starting salary of £17,000 plus benefits.' [tick in SV column]\",\n        \"1 'I enclose my résumé for your consideration.'\",\n        \"2 '1997–2000 University of Maryland, MBA (Marketing and Public Relations).'\",\n        \"3 'I am looking for a more stimulating environment and your company offers this.'\",\n        \"4 'Training will be given but basic word-processing skills would be an advantage.'\",\n        \"5 '1994–1997: The Biscuit Company, London – Manager responsible for 22 staff.'\",\n        \"6 'The successful applicant will be expected to take up the post in January.'\"\n      ]\n    },\n    {\n      \"id\": \"3.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Find a word related to each clue. Some of the letters are given.\",\n      \"items\": [\n        \"1 Certificates from school and university\",\n        \"2 Where you've worked and what you've achieved\",\n        \"3 Hire a good person who is working for another company\",\n        \"4 People you can contact to find out about an applicant\",\n        \"5 Process to find the right person for a job\",\n        \"6 An applicant who has a good chance of getting the job\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"covering / employment / application / curriculum / psychometric\",\n    \"agency / references / test / letter / form / vitae\"\n  ],\n  \"pictures\": [\n    \"drawing of hands writing on a notepad labelled 'CV'\",\n    \"word-grid for exercise 3.4 with numbered rows 1–6 and given letters (q, f, t, s, e, x, h, u, r, f, s, c, n, c, d, d)\",\n    \"Total 23 / Target 17+ box at top right\"\n  ],\n  \"unclassified\": [\n    \"Test Your Business Vocabulary in Use\",\n    \"Your score /23\"\n  ]\n}\n```"
+}

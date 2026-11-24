@@ -1,0 +1,74 @@
+{
+  "step": "A1-BIZ-S05 (صفحات ۴۹–۶۰ biz) — دستهٔ پنجم اجرای نقشهٔ مادر سری TYV — با رفع ناهنجاری parse صفحهٔ ۶۰ در دو اجرا",
+  "date": "2026-11-24 (1405/09/03)",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت ⑤ (گام بعدی مجاز S05 — پسا-اجرای S04) — trace 1a20c0d5911ef8d1 — channel zai-web — الزام پایداری ایستندهٔ بیستم پابرجا",
+  "sessionStart": {
+    "headLocal": "17823a3aa477c7ae5504a1160257745a2b346b83 (= ثبت اثبات §۱۰-۷ گام A1-BIZ-S04 — سربرگ ۱۲۱مین)",
+    "remoteMain": "17823a3aa477c7ae5504a1160257745a2b346b83 (= git ls-remote backup refs/heads/main — divergence 0/0)",
+    "porcelain": 0,
+    "stash": 0,
+    "hiddenReset": "هیچ — دومین نشست متوالی بدون ریست پنهان — بازیابی پیشا-گام لازم نشد",
+    "diskTruthPreStep": "A1 = 54/489 (biz 45/98 · elem 3/96 · pri 3/142 · upp 3/153) == رکورد SNAPSHOT (بازشماری page-*.json: biz 45 = 004-036 + 043 + 037-042 + 044-048)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs biz 49,50,51,52,53,54,55,56,57,58,59,60 (هم‌گام — عین دستور مالک — دو اجرا)",
+  "run1": {
+    "result": "DONE tyv-biz: captured=11 skipped=0 failed=1",
+    "failedPage": 60,
+    "failureKind": "parse-failed (پاسخ vision برگشت ولی JSON.parse رد کرد — رکورد با status=parse-failed و transcription=null و rawModelText کامل نوشته شد)",
+    "rootCause": "خروجی مدل JSON ناقص — یک براکت بستن آرایهٔ items در آخرین تمرین جا افتاده: توالی «…later.’\"}]» به‌جای «…later.’\"]}]» (position 1912 — Expected ',' or ']' after array element) — تأیید با تشخیص Node (JSON.parse error + بازرسی charCode position 1910-1913)",
+    "internalRetryNotApplicable": "retry داخلی callVision (۳ تلاش با backoff) فقط در خطای CLI فعال است؛ parse-fail بدون exception است ⇒ بدون retry داخلی — طبق مکانیزم checkpoint/resume اسکریپت",
+    "evidenceArchived": {
+      "failedRecord": "docs/qa/tyv-a1-biz-s05-page060-parsefail-2026-11-24.json (کپی بایت‌به‌بیت page-060.json پیشا-حذف)",
+      "indexAfterRun1": "docs/qa/tyv-a1-biz-s05-index-after-run1-2026-11-24.json (capturedNow=11 · skippedExisting=0 · failedNow=[60] · failedTotal=1)"
+    },
+    "recoveryAction": "آرشیو رکورد شکست → حذف page-060.json → اجرای مجدد دقیقاً همان دستور مالک (۴۹–۵۹ skip خودکار checkpoint/resume — فقط ۶۰ دوباره تلاش شد) — صفر دست‌برد در خروجی مدل"
+  },
+  "run2": {
+    "result": "DONE tyv-biz: captured=1 skipped=11 failed=0",
+    "page60": "ok — پروونانس کامل (renderSha256/DPI=300/promptVersion=tyv-a1-v1/attempts≤3/timestamp) — footer 63 · testNumber=49 · «Telephoning 2: getting through» · ۱ تمرین/۸ آیتم"
+  },
+  "combinedStep": "۱۲/۱۲ صفحه ok (۱۱ در اجرای اول + ۱ در اجرای دوم پس از رفع ناهنجاری) — صفر skipped ناخواسته — صفر failed نهایی",
+  "newPages": {
+    "files": "docs/qa/tyv-capture-biz/a1/page-049..060.json (۱۲ JSON — ۱۱ NEW در run1 + page-060 NEW در run2)",
+    "provenance": "۱۲/۱۲ کامل — renderSha256 / DPI=300 / promptVersion=tyv-a1-v1 / attempts≤3 / timestamp",
+    "footers": "p49→52 · p50→53 · p51→54 · p52→55 · p53→56 · p54→57 · p55→58 · p56→59 · p57→60 · p58→61 · p59→62 · p60→63 — آفست +۳ پابرجا — صفر null",
+    "tests": "۳۸ «Indicators 1» · ۳۹ «Indicators 2» · ۴۰ «Wrongdoing and corruption» · ۴۱ «Ethics» · ۴۲ «Time and time management» · ۴۳ «Stress and stress management» · ۴۴ «Leadership and management styles» · ۴۵ «Business across cultures 1» · ۴۶ «Business across cultures 2» · ۴۷ «Business across cultures 3» · ۴۸ «Telephoning 1: phones and numbers» · ۴۹ «Telephoning 2: getting through» — همگی یک‌صفحه‌ای مستقل (بدون واحد مرکب در این دسته)",
+    "counts": { "exercises": 31, "items": 205, "boxesAndLists": 23, "pictures": 15, "unclassified": 52, "unknownTokens": 0 },
+    "perPage": [
+      { "page": 49, "footer": 52, "exercises": 3, "items": 17, "boxes": 0, "pictures": 2, "unclassified": 4 },
+      { "page": 50, "footer": 53, "exercises": 3, "items": 20, "boxes": 0, "pictures": 2, "unclassified": 4 },
+      { "page": 51, "footer": 54, "exercises": 3, "items": 18, "boxes": 2, "pictures": 1, "unclassified": 2 },
+      { "page": 52, "footer": 55, "exercises": 2, "items": 16, "boxes": 0, "pictures": 2, "unclassified": 4 },
+      { "page": 53, "footer": 56, "exercises": 3, "items": 20, "boxes": 11, "pictures": 2, "unclassified": 1 },
+      { "page": 54, "footer": 57, "exercises": 3, "items": 19, "boxes": 2, "pictures": 1, "unclassified": 2 },
+      { "page": 55, "footer": 58, "exercises": 3, "items": 20, "boxes": 2, "pictures": 1, "unclassified": 2 },
+      { "page": 56, "footer": 59, "exercises": 3, "items": 18, "boxes": 2, "pictures": 1, "unclassified": 4 },
+      { "page": 57, "footer": 60, "exercises": 1, "items": 7, "boxes": 0, "pictures": 1, "unclassified": 16 },
+      { "page": 58, "footer": 61, "exercises": 3, "items": 18, "boxes": 3, "pictures": 0, "unclassified": 5 },
+      { "page": 59, "footer": 62, "exercises": 3, "items": 24, "boxes": 1, "pictures": 2, "unclassified": 4 },
+      { "page": 60, "footer": 63, "exercises": 1, "items": 8, "boxes": 0, "pictures": 0, "unclassified": 4 }
+    ]
+  },
+  "indexStateFinal": "capturedNow=1 · skippedExisting=11 · failedNow=[] (ثبت آخرین اجرا — جمع گام = ۱۲ صفحه در دو اجرا؛ شواهد هر دو اجرا آرشیو شده)",
+  "diskTruthPostStep": {
+    "a1Total": "66/489",
+    "biz": "57/98 (بازشماری page-*.json = 57)",
+    "elem": "3/96",
+    "pri": "3/142",
+    "upp": "3/153"
+  },
+  "zeroChanges": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده",
+  "acceptanceChecklist": {
+    "items": [
+      { "item": "خروجی DONE دو اجرا (run1: captured=11 failed=1 → run2: captured=1 failed=0)", "ok": true },
+      { "item": "پروونانس ۱۲/۱۲ کامل", "ok": true },
+      { "item": "a1-index به‌روزرسانی شد (failedNow=[] نهایی)", "ok": true },
+      { "item": "فوترها ۱۲/۱۲ صفر null (آفست +۳)", "ok": true },
+      { "item": "ناهنجاری p60 با مسیر مکانیکی مجاز رفع شد (آرشیو+حذف+اجرای مجدد همان دستور — صفر دست‌برد در خروجی مدل)", "ok": true },
+      { "item": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF", "ok": true },
+      { "item": "دیسک‌حقیقت = ۶۶/۴۸۹", "ok": true }
+    ],
+    "allPass": true
+  },
+  "nextStep": "A1-BIZ-S06 = bun scripts/tyv-a1-vlm-capture.mjs biz 61,62,63,64,65,66,67,68,69,70,71,72 — سپس S07..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده"
+}

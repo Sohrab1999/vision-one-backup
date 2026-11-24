@@ -1,0 +1,50 @@
+{
+ "step": "A1-BIZ-S07 (صفحات ۷۳–۸۴ biz) — هفتمین دستهٔ اجرای نقشهٔ مادر سری TYV — تک‌اجرایی بدون ناهنجاری",
+ "date": "2026-11-24 (1405/09/03)",
+ "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S06 (گام بعدی مجاز S07 = biz 73,74,75,76,77,78,79,80,81,82,83,84) — trace 1a20c90e17235ee5 — channel zai-web — الزام پایداری ایستندهٔ بیست‌ودوم پابرجا",
+ "reconciliation": {
+  "title": "بازیابی ۳۸ — ریست پنهان ۳۸م (الگوی ۳۱..۳۷ — HEAD بازگشته `193269b` درحالی‌که درخت کار = پسا-S06) — کشف پیشا-گام — رسیدگی صفرتلفاتی ff-only",
+  "detection": "پیشا-گام S07: انتظار SNAPSHOT = HEAD پسا-S06؛ واقعیت: HEAD محلی `193269b76cf46f9dcb210c71953bd1614c4dc45f` (کامیت اثبات O6 — ۲۰۲۶-۱۱-۰۸) — `3ce4b27` (ثبت اثبات S05) ancestor HEAD نیست",
+  "remoteVerification": "git ls-remote backup refs/heads/main = `7f1b378939c381ffa8e879f842087c3a806b44fe` — divergece: HEAD..remote = ۱۹۳ (محلی عقب) · remote..HEAD = ۰ (صفر کامیت محلی-یکتا) — تمام پیشرفت تأییدشده S01..S06 روی ریموت موجود (کامیت محتوایی S06 = `c834ba8046e01d349a24b349bb453f4c8c2b7688` + ثبت اثبات = `7f1b378`)",
+  "safetySnapshot": "git stash push -u ⇒ stash `865fedd819698a186dcad4f4d1c1bd4d4fa5c3cd` (شامل ۱۸۱۶ فایل untracked + تغییرات tracked) — درخت پاک (porcelain ۰)",
+  "ffMerge": "git merge --ff-only FETCH_HEAD ⇒ HEAD محلی = `7f1b378` = ریموت — porcelain ۰ — صفر reset/rebase/force",
+  "zeroLossProof": "stash^3 (untracked) = ۱۸۱۶ فایل؛ در HEAD فقط ۷ فایل نبودند و هر ۷ = نقشه‌راه‌های تختِ قدیمیِ پیش-سازمان‌دهی (superseded توسط نسخه‌های سری-TYV ریموت طبق فرمان سازمان‌دهی مالک) — diff tracked stash-vs-HEAD = ۳۴ قلم همگی در نقشه‌راه‌های قدیمی (جابه‌جایی تخت/تودرتو) — اسکریپت `scripts/tyv-a1-vlm-capture.mjs` در stash^3 بایت‌به‌بیت == HEAD — SNAPSHOT/worklog/db/src صفر تفاوت — اثبات: بازیابی پیشا-گام S07 در سربرگ ۱۲۴مین SNAPSHOT",
+  "stashRetention": "stash `865fedd` حذف نشد — به‌عنوان آرشیو اطمینان محلی نگه داشته شد (محتوا superseded؛ تنها مسیر بازیابی خارج از ریموت — ثبت طبق بند ۸ الزام)"
+ },
+ "sessionStart": {
+  "headLocal": "193269b76cf46f9dcb210c71953bd1614c4dc45f (= ثبت اثبات O6 — ریست پنهان ۳۸م — پس از ff-only رسیدگی شد)",
+  "remoteMain": "7f1b378939c381ffa8e879f842087c3a806b44fe (= git ls-remote backup refs/heads/main — divergence remote..local ۰/۰)",
+  "porcelain": "۴۱۷ (۳۸۵ untracked + ۳۲ modified) پیش از stash؛ پس از ff-only = ۰",
+  "hiddenReset": "ریست پنهان ۳۸م — کشف و صفرتلفاتی رسیدگی شد (الگوی ff-only رویدادهای ۳۱..۳۷)",
+  "diskTruthPreStep": "A1 = 78/489 (biz 69/98 · elem 3/96 · pri 3/142 · upp 3/153) == رکورد SNAPSHOT سربرگ ۱۲۳مین"
+ },
+ "command": "bun scripts/tyv-a1-vlm-capture.mjs biz 73,74,75,76,77,78,79,80,81,82,83,84 (هم‌گام — عین دستور مالک — تک‌اجرایی)",
+ "result": "DONE tyv-biz: captured=12 skipped=0 failed=0",
+ "newPages": {
+  "files": "docs/qa/tyv-capture-biz/a1/page-073..084.json (۱۲ JSON NEW)",
+  "provenance": "۱۲/۱۲ کامل — renderSha256 / DPI=300 / promptVersion=tyv-a1-v1 / status=ok / timestamp — renderSha256 (۱۶ کاراکتر اول): 073=c05e3fa32f7e5bab · 074=12d857071e44b1e7 · 075=8e51776173349e32 · 076=f8ed7dc7c53a8b35 · 077=84a428e12f13efa5 · 078=9305ff60202a2ded · 079=6631524e6e5451f5 · 080=cf86954b31eaa3c0 · 081=4dc6db4045f5d337 · 082=7b26e9ffb2d26a05 · 083=970b3e2c8ffcd28f · 084=5665a871694cccf1",
+  "footers": "p73→76 · p74→77 · p75→78 · p76→79 · p77→80 · p78→81 · p79→82 · p80→83 · p81→84 · p82→85 · p83→86 · p84→87 — آفست +۳ پابرجا — صفر null",
+  "tests": "۵۸ «Meetings 3: discussion techniques» (p73) · ۵۹ «Presentations 1. preparation and introduction» (p74) · ۶۰ «Presentations 2: main part» (p75) · ۶۱ «Presentations 3: closing and questions» (p76) · ۶۲ «Negotiations 1: situations and negotiators» (p77) · ۶۳ «Negotiations 2: preparing» (p78) · ۶۴ «Negotiations 3: Furthering negotiations» (p79) · ۶۵ «Negotiations 4: difficulties» (p80) · ۶۶ «Negotiations 3: reaching agreement» (p81) · **Summary Test 4 واحد مرکب سه‌صفحه‌ای p82–p84** (p82 testNumber=4 «Summary Test 4» · p83 ادامه testNumber=null · p84 testNumber=4/testTitle=null)",
+  "summaryTest4Composite": "واحد مرکب سه‌صفحه‌ای p82–p84 (pdf) = چاپی 85–87 — ریسک ۷ مادر (ثبت دوگذر G1) — الگوی Summary Test 1 (p20–p23 چهارصفحه‌ای) و Summary Test 2 (p40–p43 چهارصفحه‌ای) و Summary Test 3 (p63–p66 چهارصفحه‌ای) — ST4 کوتاه‌تر: سه‌صفحه‌ای",
+  "counts": {
+   "exercises": 35,
+   "items": 265,
+   "boxesAndLists": 31,
+   "pictures": 14,
+   "unclassified": 31,
+   "unknownTokens": 2
+  },
+  "unknownTokenDetail": "[؟] فقط p75 ×۲ — توکن نامطمئن «artention» درون‌محتوایی (گزینهٔ چندگزینه‌ای تمرین 60.x — احتمال چاپی «attention») — برخلاف [؟] p64 در S06 (واترمارک غیرمحتوایی) این توکن درون‌محتوایی است — ثبت خام دست‌نخورده — کاندید دوگذر G1",
+  "observationsForG1": [
+   "p81: ناسازگاری درونی ثبت‌شده — testNumber=66 با testTitle «Negotiations 3: reaching agreement» (در چاپ قفسه‌ای انتظار «Negotiations 5») — لایهٔ خام دست‌نخورده (رونویسی عین VLM) — کاندید دوگذر G1",
+   "Summary Test 4 سه‌صفحه‌ای (نه چهارصفحه‌ای مثل ST1/ST2/ST3) — در A2 پارس واحد مرکب جداگانه می‌خواهد",
+   "عنوان تست ۵۹ با نقطهٔ چاپی «Presentations 1. preparation and introduction» (نقطه به‌جای دونقطه در سایر تست‌ها) — رونویسی verbatim حفظ شد"
+  ]
+ },
+ "postStep": {
+  "diskTruth": "A1 = 90/489 (biz 81/98 · elem 3/96 · pri 3/142 · upp 3/153)",
+  "index": "docs/qa/tyv-capture-biz/a1-index.json — capturedNow=12 · skippedExisting=0 · failedNow=[] — updatedAt 2026-11-24T08:14:02.942Z",
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده"
+ },
+ "nextAllowedStep": "A1-BIZ-S08 = bun scripts/tyv-a1-vlm-capture.mjs biz 85,86,87,88,89,90,91,92,93,94,95,96 — سپس S09 (باقی‌ماندهٔ biz) ⇒ ELEM ⇒ PRI ⇒ UPP تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده"
+}

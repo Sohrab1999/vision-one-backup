@@ -1,0 +1,33 @@
+{
+  "unit": 91,
+  "ok": true,
+  "issues": [],
+  "checks": {
+    "partitionEquivalence": "byte-exact against the G1-approved raw lines (order- and tag-sensitive) — all groups matched",
+    "titleExtracted": true,
+    "sectionsFound": [
+      "A",
+      "B"
+    ],
+    "miniDictEntries": 0,
+    "mixedLineSplitsResolved": 0,
+    "dropCaps": [],
+    "exercises": 6,
+    "exerciseAnchors": 6,
+    "banks": 0,
+    "blanksNormalized": 30,
+    "imageDependentCandidates": 0,
+    "queuedChars": [],
+    "ka2": {
+      "declaredExercises": [
+        "91.1"
+      ],
+      "declaredItems": 10,
+      "inlineGap": [],
+      "excludedGrid": [],
+      "fallback": [],
+      "passageExercises": 0
+    }
+  },
+  "note": "Structural parse mirrors the approved A1 partition (proved byte-exact) + word-level structural rules + A3-KA-2 two-column item amendment (declared exercises only, mechanical gates a-d); keyed=null until A3; fa stays empty (A4)."
+}

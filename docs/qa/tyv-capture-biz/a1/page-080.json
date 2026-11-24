@@ -1,0 +1,82 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 80,
+    "dpi": 300,
+    "renderSha256": "cf86954b31eaa3c020c42c2f0fc2d62a0606ad9f7e5aa703340da3893d65fb31",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:12:50.121Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 83,
+    "testNumber": "65",
+    "testTitle": "Negotiations 4: difficulties",
+    "exercises": [
+      {
+        "id": "65.1",
+        "marks": "6 marks",
+        "instruction": "Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.",
+        "items": [
+          "1 They threatened to sack us all but",
+          "2 Things are looking much better now",
+          "3 There is no point talking about it because",
+          "4 We tried to stick to our demands but",
+          "5 I'm afraid that the atmosphere was",
+          "6 We've looked at all the figures and",
+          "a confrontational right from the start.",
+          "b $240 is our final offer.",
+          "c in the end we had to back down.",
+          "d we called their bluff and we're still in work.",
+          "e have to be willing to compromise.",
+          "f our demand for 4% is non-negotiable.",
+          "g that we have found some common ground.",
+          "Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............"
+        ]
+      },
+      {
+        "id": "65.2",
+        "marks": "6 marks",
+        "instruction": "The statements below are about difficult negotiations. Write one word in the gap to complete each statement.",
+        "items": [
+          "1 'Having the public behind us gives us a lot of bargaining P.................. .'",
+          "2 'The employers are negotiating from a position of S.................. because unemployment is high.'",
+          "3 'They are making us negotiate under d.................. . They are forcing us to accept their offer.'",
+          "4 'I'm pleased to tell you that the company has s.................. down and accepted our demands.'",
+          "5 'The union has issued an u.................. ; agree to everything or the workers strike.'",
+          "6 'We've made progress and there are only a few minor s.................. points to resolve.'"
+        ]
+      },
+      {
+        "id": "65.3",
+        "marks": "5 marks",
+        "instruction": "Clues 1–5 are about negotiating. Find the word that means the same as the clue. The first two or three letters of the answers are given.",
+        "items": [
+          "1 Threaten to do something that you don't intend to do",
+          "2 Something that stands in the way of a solution",
+          "3 Reduce your demands",
+          "4 Make a trade-off to get something from the other side",
+          "5 Think about your position again"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 17 / Target 13+"
+    ],
+    "pictures": [
+      "word grid for 65.3 with numbered rows 1–5, rows beginning: b l / o b / m o d / c o m / r e"
+    ],
+    "unclassified": [
+      "our score /17",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 83,\n  \"testNumber\": \"65\",\n  \"testTitle\": \"Negotiations 4: difficulties\",\n  \"exercises\": [\n    {\n      \"id\": \"65.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.\",\n      \"items\": [\n        \"1 They threatened to sack us all but\",\n        \"2 Things are looking much better now\",\n        \"3 There is no point talking about it because\",\n        \"4 We tried to stick to our demands but\",\n        \"5 I'm afraid that the atmosphere was\",\n        \"6 We've looked at all the figures and\",\n        \"a confrontational right from the start.\",\n        \"b $240 is our final offer.\",\n        \"c in the end we had to back down.\",\n        \"d we called their bluff and we're still in work.\",\n        \"e have to be willing to compromise.\",\n        \"f our demand for 4% is non-negotiable.\",\n        \"g that we have found some common ground.\",\n        \"Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............\"\n      ]\n    },\n    {\n      \"id\": \"65.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"The statements below are about difficult negotiations. Write one word in the gap to complete each statement.\",\n      \"items\": [\n        \"1 'Having the public behind us gives us a lot of bargaining P.................. .'\",\n        \"2 'The employers are negotiating from a position of S.................. because unemployment is high.'\",\n        \"3 'They are making us negotiate under d.................. . They are forcing us to accept their offer.'\",\n        \"4 'I'm pleased to tell you that the company has s.................. down and accepted our demands.'\",\n        \"5 'The union has issued an u.................. ; agree to everything or the workers strike.'\",\n        \"6 'We've made progress and there are only a few minor s.................. points to resolve.'\"\n      ]\n    },\n    {\n      \"id\": \"65.3\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Clues 1–5 are about negotiating. Find the word that means the same as the clue. The first two or three letters of the answers are given.\",\n      \"items\": [\n        \"1 Threaten to do something that you don't intend to do\",\n        \"2 Something that stands in the way of a solution\",\n        \"3 Reduce your demands\",\n        \"4 Make a trade-off to get something from the other side\",\n        \"5 Think about your position again\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Total 17 / Target 13+\"\n  ],\n  \"pictures\": [\n    \"word grid for 65.3 with numbered rows 1–5, rows beginning: b l / o b / m o d / c o m / r e\"\n  ],\n  \"unclassified\": [\n    \"our score /17\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

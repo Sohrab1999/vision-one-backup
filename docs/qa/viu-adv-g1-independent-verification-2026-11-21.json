@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "script": "scripts/viu-adv-g1-verify.mjs",
+    "protocol": "independent re-derivation from the PDF (pdftotext -bbox) + line-level reconstruction + contract checks + global sweep",
+    "ownerMandateTrace": "1a1feb704efa1a55 (G1 verification delegated to the executing agent; A2 pre-authorized on PASS)",
+    "samples": [
+      {
+        "unit": 1,
+        "json": "docs/qa/viu-adv-raw/unit-001.json",
+        "render": "docs/qa/viu-adv-raw/g1-samples/u1-p10-010.png",
+        "pdfPages": [
+          10,
+          11
+        ]
+      },
+      {
+        "unit": 21,
+        "json": "docs/qa/viu-adv-raw/unit-021.json",
+        "render": "docs/qa/viu-adv-raw/g1-samples/u21-p50-050.png",
+        "pdfPages": [
+          50,
+          51
+        ]
+      }
+    ],
+    "generatedAt": "2026-11-21T15:45:08.503Z"
+  },
+  "preAmendmentFinding": null,
+  "samples": {
+    "u1_contracts": {
+      "titleLines": 3,
+      "titleTexts": [
+        "Cramming for success: study and",
+        "1",
+        "academic work"
+      ],
+      "regionAnchoredEntries": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "regionRefMarkers": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "regionMarkerAfterWords": [
+        "cram",
+        "genius",
+        "papers",
+        "rote-learning",
+        "mnemonics",
+        "books",
+        "intensively",
+        "out"
+      ],
+      "columnSplitCalibration": {
+        "g0": 375.7,
+        "g1": 391.1,
+        "rightLines": 14
+      },
+      "okTitle": true,
+      "okRegion": true,
+      "okMarkerWords": true
+    },
+    "u21_contracts": {
+      "pairsDropped": 16,
+      "residualGlyphs": [
+        {
+          "y": 108.9,
+          "token": "T"
+        }
+      ],
+      "keptZoneDuplicationCheck": {
+        "token": "centuries,",
+        "keptZoneOccurrences": 1
+      },
+      "registeredStringsPresent": [
+        {
+          "s": "suspicious of the new art movements",
+          "present": true
+        },
+        {
+          "s": "shocked by Impressionism1",
+          "present": true
+        },
+        {
+          "s": "as careless daubers2",
+          "present": true
+        },
+        {
+          "s": "with Cubist3",
+          "present": true
+        }
+      ],
+      "headerExercisesRecorded": [
+        "Exercises"
+      ],
+      "ok": true
+    },
+    "u1_zeroLoss": {
+      "leftPage": {
+        "page": 10,
+        "removedBandsExact": true,
+        "lineReconstruction": {
+          "total": 68,
+          "failed": []
+        },
+        "unexplained": [],
+        "ok": true
+      },
+      "rightPage": {
+        "page": 11,
+        "removedBandsExact": true,
+        "lineReconstruction": {
+          "total": 51,
+          "failed": []
+        },
+        "unexplained": [],
+        "ok": true
+      }
+    },
+    "u21_zeroLoss": {
+      "leftPage": {
+        "page": 50,
+        "removedBandsExact": true,
+        "lineReconstruction": {
+          "total": 46,
+          "failed": []
+        },
+        "unexplained": [],
+        "ok": true
+      },
+      "rightPage": {
+        "page": 51,
+        "removedBandsExact": true,
+        "lineReconstruction": {
+          "total": 47,
+          "failed": []
+        },
+        "unexplained": [],
+        "ok": true
+      }
+    }
+  },
+  "global": {
+    "units": 101,
+    "provenanceOk": 101,
+    "plausibleOk": 101,
+    "splitPages": [
+      1,
+      3,
+      5,
+      8,
+      9,
+      22,
+      41,
+      54
+    ],
+    "queueViolations": [],
+    "knownMapLeaks": [],
+    "unknownQueueGlobal": {
+      "U+001F": 1,
+      "U+0019": 1,
+      "U+E022": 1
+    },
+    "splitPagesExact": true
+  },
+  "visualChecks": {
+    "method": "direct render reading (110dpi pdftoppm) by the gate verifier + prior VLM sampler (docs/qa/viu-adv-raw/vlm-qa-2026-11-20.json)",
+    "u1": {
+      "render": "g1-samples/u1-p10-010.png",
+      "observed": "title 'Cramming for success: study and academic work' + big '1'; A/B/C headings present; section A paragraph word-for-word incl. 'cram¹…inside out⁸'; mini-dictionary entries 1–8 complete (5 = /nɪˈmɒnɪks/ … '(e.g. friend, but receive)'); B list complete (composition…thesis + PhD); boxed mind-map paragraph complete; its footnotes ¹–⁸ complete; C body + margin notes ¹–⁴ + footnotes ⁵–⁸ complete — incl. footnote 7 'last exams before the end of a college or university course' and footnote 8 'with the right formal qualifications'",
+      "priorVlmClaim": "prior VLM sampler said C footnotes 7/8 'truncated' — REFUTED by direct reading: both footnotes are fully present in unit-001.json at y=691.2 (main line) — the sampler truncated its own reading, not the extraction",
+      "verdict": "PASS"
+    },
+    "u21": {
+      "render": "g1-samples/u21-p50-050.png",
+      "observed": "title 'The visual arts'; drop-cap 'T' preserved; paragraph single-copy and word-for-word ('Throughout the centuries… hostility in future.'); footnotes line '1, 3, 4, 6, 8 types of artist…' complete; B word list complete (original…skilful with all opp. glosses); C metaphor paragraph complete; footer '48 English Vocabulary in Use Advanced' recorded in removedBands",
+      "verdict": "PASS"
+    }
+  },
+  "verdict": {
+    "zeroLossOk": true,
+    "contractsOk": true,
+    "globalOk": true,
+    "allPass": true,
+    "notes": [
+      "Zero-loss: every raw token of pages 10/11/50/51 is consumed by exactly one JSON line, a contracted band record, or a recorded de-dup pair — and every JSON line is byte-reconstructed from the raw words.",
+      "Contract gap found + fixed BEFORE the gate verdict: unknown queue only covered PUA — extended to C0/C1 controls (U+001F/U+0019 in unit 1); re-run deterministic (only unit-001.json queue fields + report queue/generatedAt changed; the other 100 unit files byte-identical).",
+      "Prior VLM sampler's 'truncated C footnotes 7/8' claim refuted — extraction is complete."
+    ]
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "artifact": "tyv-roadmap-reorg-2026-11-23",
+  "date": "2026-11-23",
+  "ownerCommand": "این نقشه راه ها رو توی یک پوشه قرار بده و اسمشون به ترتیب انجامشون تغییر بده بدونم کدوم رو باید شروع کنیم",
+  "ownerTrace": "1a2093a41f92c9ad",
+  "channel": "zai-web",
+  "snapshotHeader": "۱۱۸مین",
+  "preState": {
+    "head": "cd688a920e10bb6d80f59b0374bcf114f02d258d",
+    "remoteBackupMain": "cd688a920e10bb6d80f59b0374bcf114f02d258d",
+    "divergence": "0/0",
+    "porcelain": 0,
+    "stash": 0,
+    "method": "git ls-remote backup refs/heads/main == git rev-parse HEAD (اثبات پیشا-گام)"
+  },
+  "summary": {
+    "stagedEntries": 10,
+    "moves": 7,
+    "pureMovesBlobUnchanged": 1,
+    "movesWithReferenceSync": 6
+  },
+  "moves": [
+    {
+      "status": "R095",
+      "from": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md",
+      "to": "نقشه راه ها/سری-TYV/01-نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md",
+      "blobBefore": "edc662ead7ccef219fc9b73db73de5c8872576f6",
+      "blobAfter": "2f8e50302d160120da4fa8acc182f98bd4fd81bf",
+      "blobUnchanged": false
+    },
+    {
+      "status": "R097",
+      "from": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md",
+      "to": "نقشه راه ها/سری-TYV/02-نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md",
+      "blobBefore": "222d2410f56f1f833b64878cd94f99fe7f59d178",
+      "blobAfter": "39d3665882a56a63cb3d99b6c422261ecb598945",
+      "blobUnchanged": false
+    },
+    {
+      "status": "R097",
+      "from": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md",
+      "to": "نقشه راه ها/سری-TYV/03-نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md",
+      "blobBefore": "b40a7279445db8b35e3921be3f4530d59e65a581",
+      "blobAfter": "846ff9d3039818ebd094634ed61cb2070ca0d78a",
+      "blobUnchanged": false
+    },
+    {
+      "status": "R097",
+      "from": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md",
+      "to": "نقشه راه ها/سری-TYV/04-نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md",
+      "blobBefore": "ba0150b9adab066b610d2673b1bd102a415d6d26",
+      "blobAfter": "1707b49d9cc35a8df9c89b899532d98d008d473f",
+      "blobUnchanged": false
+    },
+    {
+      "status": "R097",
+      "from": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md",
+      "to": "نقشه راه ها/سری-TYV/05-نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md",
+      "blobBefore": "a52149ef463dea54de9e0f110c3f7fbd131c642d",
+      "blobAfter": "cccf88bb8b0b044aac65e8b3d9e6ffc94ea52376",
+      "blobUnchanged": false
+    },
+    {
+      "status": "R097",
+      "from": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md",
+      "to": "نقشه راه ها/سری-TYV/06-نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md",
+      "blobBefore": "088eadfb61e7cd0ba9c9717988248ebf2f75607d",
+      "blobAfter": "37430bb002f1667f43a29260b620024a5d69467c",
+      "blobUnchanged": false
+    },
+    {
+      "status": "R100",
+      "from": "نقشه راه ها/نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md",
+      "to": "نقشه راه ها/سری-TYV/07-نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md",
+      "blobBefore": "e676e4bd5fe8380c9db21043084033e1a45df387",
+      "blobAfter": "e676e4bd5fe8380c9db21043084033e1a45df387",
+      "blobUnchanged": true
+    }
+  ],
+  "otherStaged": [
+    {
+      "status": "A",
+      "path": "docs/qa/tyv-roadmap-reorg-2026-11-23.json",
+      "blobAfter": "11f81744ce8bdddecbab834eb676d89df54b1865"
+    },
+    {
+      "status": "M",
+      "path": "scripts/tyv-a1-vlm-capture.mjs",
+      "blobAfter": "3731a4798627bbdd47c29e8d182e9c6081b63307"
+    },
+    {
+      "status": "M",
+      "path": "نقشه راه ها/فهرست-مستندات.md",
+      "blobAfter": "1d74581c91a81f802f23da9a92902b0c93fb8275"
+    }
+  ],
+  "referenceSync": [
+    "01-مادر: ارجاع سند تکراری Intermediate → «07-…» + ارجاع دفتر گام‌های کوچک → «02-…» (هم‌پوشهٔ سری-TYV)",
+    "02-دفتر: ارجاع سند مادر → «01-…» (هم‌پوشهٔ سری-TYV)",
+    "03-BIZ / 04-ELEM / 05-PRI / 06-UPP: ارجاع مأموریت مادر → «01-…» (هم‌پوشهٔ سری-TYV)",
+    "scripts/tyv-a1-vlm-capture.mjs: کامنت مسیر نقشهٔ مادر → «نقشه راه ها/سری-TYV/01-…»",
+    "نقشه راه ها/فهرست-مستندات.md: سربرگ بازسازی ۱۱۸مین + بخش «📚 سری TYV» با مسیرهای جدید + منطق ترتیب + قاعدهٔ سازمان‌دهی"
+  ],
+  "notes": [
+    "هفت جابه‌جایی با git mv خالص — سند 07-Intermediate بدون تغییر محتوا (blobUnchanged=true و R100 تشخیص خود گیت) — شش سند دیگر فقط ارجاع‌ها همگام شدند",
+    "شواهد تاریخی (docs/qa/recovery32/33/34-proof، tyv-intake-a0-fingerprint) دست‌نخورده ماندند — مسیرهای ثبت‌شدهٔ آن‌ها حقیقت لحظهٔ ثبت خودشان است",
+    "صفر تغییر src/db/PDF/کپچرها — وضعیت اجرای سری دست‌نخورده: A0 ✅ · A1 ▶ ۲۵/۴۸۹",
+    "فایل تکراری Intermediate همچنان tracked نیست (روش بازیابی ثبت‌شده در A0/SNAPSHOT)"
+  ]
+}

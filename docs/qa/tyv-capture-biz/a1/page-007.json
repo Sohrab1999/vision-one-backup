@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 7,
+    "dpi": 300,
+    "renderSha256": "84c03b378b5545e197e7a3f74cac522925afca5ce4d6d4104ffb5c9a01825c69",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T12:58:59.760Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 10,
+    "testNumber": "4",
+    "testTitle": "Skills and qualifications",
+    "exercises": [
+      {
+        "id": "4.1",
+        "marks": "6 marks",
+        "instruction": "Write one word from the box below in each gap to complete the text. You may choose to use some words more than once. The first one is an example.",
+        "items": [
+          "'My name is Jean Wilson and I have just started working ........in........ a bank. I graduated .................. Edinburgh University last year with a degree .................. Business and Management. Now I am going to train .................. an accountant. I think I will do well because I am good .................. figures and I am skilled .................. using computers. I think that training .................. a specific job will be more interesting than the general education I got at university.'"
+        ]
+      },
+      {
+        "id": "4.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap. The first one is an example.",
+        "items": [
+          "0 Everyone should stay in full-time ...education... until they are at least 18. (school/education)",
+          "1 Of course .................. qualifications are important, but they're not everything.",
+          "(printed/paper)",
+          "2 I look for people with lots of relevant .................. experience. (job/work)",
+          "3 Our company runs some very good in-house .................. courses. (training/skilled)",
+          "4 Last year we spent over £50,000 on management .................. . (experience/development)",
+          "5 We value people who are highly .................. and want to get on. (motivated/graduated)",
+          "6 Tom gets on well with everyone. He is a great team .................. . (person/player)"
+        ]
+      },
+      {
+        "id": "4.3",
+        "marks": "6 marks",
+        "instruction": "Look at these sentences taken from job advertisements. Are they describing work which is highly skilled (HS), skilled (Sk), semi-skilled (S-S), or unskilled (U)? Tick the right box. The first one is an example.",
+        "items": [
+          "0 'Experience of managing a modern production plant is essential.'",
+          "1 'Wanted – Early morning cleaners for office block in the centre of town.'",
+          "2 'Eastern Buses now recruiting drivers. Competitive salary plus benefits.'",
+          "3 'Building labourers required. Good money for hard workers.'",
+          "4 'Pilot with experience of flying 747s required for new cargo carrier.'",
+          "5 'Local electrical company requires production line workers now.'",
+          "6 'Black Box Games needs an experienced software developer. Good salary.'"
+        ]
+      },
+      {
+        "id": "4.4",
+        "marks": "6 marks",
+        "instruction": "Find a word related to each clue. Some of the letters are given.",
+        "items": [
+          "1 Good at working on his/her own",
+          "2 Works in a systematic, orderly way",
+          "3 Good with figures",
+          "4 Naturally very good at what they do",
+          "5 Someone who is good with PCs is 'computer-..............'",
+          "6 Works well on his/her own"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "with  from  in  as  for  at",
+      "Table with columns HS | Sk | S-S | U (rows 0–6 with sentences; a tick ✓ printed in Sk column for row 0)",
+      "Word grid: rows labelled 1–6: p r o / m e t h / n u m / t a l / l i t / s e l f - d"
+    ],
+    "pictures": [
+      "Word puzzle grid (letters given in cells, row numbers 1–6) for exercise 4.4"
+    ],
+    "unclassified": [
+      "Test 4",
+      "Total 24",
+      "Target 17+",
+      "Your score /24",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 10,\n \"testNumber\": \"4\",\n \"testTitle\": \"Skills and qualifications\",\n \"exercises\": [\n  {\"id\": \"4.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Write one word from the box below in each gap to complete the text. You may choose to use some words more than once. The first one is an example.\",\n   \"items\": [\"'My name is Jean Wilson and I have just started working ........in........ a bank. I graduated .................. Edinburgh University last year with a degree .................. Business and Management. Now I am going to train .................. an accountant. I think I will do well because I am good .................. figures and I am skilled .................. using computers. I think that training .................. a specific job will be more interesting than the general education I got at university.'\"]},\n  {\"id\": \"4.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap. The first one is an example.\",\n   \"items\": [\"0 Everyone should stay in full-time ...education... until they are at least 18. (school/education)\",\n    \"1 Of course .................. qualifications are important, but they're not everything.\",\n    \"(printed/paper)\",\n    \"2 I look for people with lots of relevant .................. experience. (job/work)\",\n    \"3 Our company runs some very good in-house .................. courses. (training/skilled)\",\n    \"4 Last year we spent over £50,000 on management .................. . (experience/development)\",\n    \"5 We value people who are highly .................. and want to get on. (motivated/graduated)\",\n    \"6 Tom gets on well with everyone. He is a great team .................. . (person/player)\"]},\n  {\"id\": \"4.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Look at these sentences taken from job advertisements. Are they describing work which is highly skilled (HS), skilled (Sk), semi-skilled (S-S), or unskilled (U)? Tick the right box. The first one is an example.\",\n   \"items\": [\"0 'Experience of managing a modern production plant is essential.'\",\n    \"1 'Wanted – Early morning cleaners for office block in the centre of town.'\",\n    \"2 'Eastern Buses now recruiting drivers. Competitive salary plus benefits.'\",\n    \"3 'Building labourers required. Good money for hard workers.'\",\n    \"4 'Pilot with experience of flying 747s required for new cargo carrier.'\",\n    \"5 'Local electrical company requires production line workers now.'\",\n    \"6 'Black Box Games needs an experienced software developer. Good salary.'\"]},\n  {\"id\": \"4.4\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Find a word related to each clue. Some of the letters are given.\",\n   \"items\": [\"1 Good at working on his/her own\",\n    \"2 Works in a systematic, orderly way\",\n    \"3 Good with figures\",\n    \"4 Naturally very good at what they do\",\n    \"5 Someone who is good with PCs is 'computer-..............'\",\n    \"6 Works well on his/her own\"]}\n ],\n \"boxesAndLists\": [\"with  from  in  as  for  at\",\n  \"Table with columns HS | Sk | S-S | U (rows 0–6 with sentences; a tick ✓ printed in Sk column for row 0)\",\n  \"Word grid: rows labelled 1–6: p r o / m e t h / n u m / t a l / l i t / s e l f - d\"],\n \"pictures\": [\"Word puzzle grid (letters given in cells, row numbers 1–6) for exercise 4.4\"],\n \"unclassified\": [\"Test 4\", \"Total 24\", \"Target 17+\", \"Your score /24\", \"Test Your Business Vocabulary in Use\"]}\n```"
+}

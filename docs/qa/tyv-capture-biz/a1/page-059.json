@@ -1,0 +1,84 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 59,
+    "dpi": 300,
+    "renderSha256": "1522aa44d7fa31578db696e6555f04f0468a4cdf8418fca46caaf26486d1a321",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:39:02.332Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 62,
+    "testNumber": "48",
+    "testTitle": "Telephoning 1: phones and numbers",
+    "exercises": [
+      {
+        "id": "48.1",
+        "marks": "10 marks",
+        "instruction": "Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.",
+        "items": [
+          "1 'Our meeting was in Paris but we linked up with Bill's team in the New York office.'",
+          "2 'It's an oh-eight-hundred number so you don't have to pay.'",
+          "3 'Good morning, Washington. Good afternoon, Oslo. Can you all see and hear us?'",
+          "4 'Yes, she's in her office. I'll put you through to her now.'",
+          "5 'If I'm not in the office, call me on my mobile.'",
+          "6 'You have to put in at least 20 pence before you can make a call.'",
+          "7 'The picture is not very good but it's nice to see who you're talking to over the Internet.'",
+          "8 'To order at this special price, call our sales team on 01776 223344 – now!'",
+          "9 'I take it with me in the car. But I don't use it when I'm driving.'",
+          "10 'If you have any problems, call our technical team on 01473 123123.'"
+        ]
+      },
+      {
+        "id": "48.2",
+        "marks": "9 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 I'm out tomorrow morning, so give me a .......................... in the afternoon. (call/phone/telephone)",
+          "2 I like this .......................... phone because I can use it in the garden. (moveable/cordless/extended)",
+          "3 If they need me at work, they send a message on my .......................... . (pager/reader/text)",
+          "4 I have one .......................... for my phone and another for my Internet connection. (wire/cord/line)",
+          "5 Jim phoned from Los Angeles. Can you call him .......................... tomorrow? (out/up/down)",
+          "6 We have a call .......................... in Dublin that deals with customer enquiries. (office/centre/site)",
+          "7 Customers in the States can call us on our ..........................-free number. (toll/cost/price)",
+          "8 Give me a .......................... if you want to go to the conference next week. (ping/bing/ring)",
+          "9 There's a public phone where you can use coins or a phone .......................... . (card/note/ticket)"
+        ]
+      },
+      {
+        "id": "48.3",
+        "marks": "8 marks",
+        "instruction": "Write the telephone numbers below in figures. The first one is an example.",
+        "items": [
+          "'one – seven – six, three – two – three – three' | 176 3233",
+          "'oh – one – double two – three, five – six – oh – four – double nine'",
+          "'oh – eight hundred, double seven – double one – double seven'",
+          "'double four, one – eight – one, three – zero – three – zero'",
+          "'one – eight hundred, double five – double five – double five'"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A cellphone   B webcam   C videoconference   D helpline   E hotline   F Freephone   G extension   H payphone"
+    ],
+    "pictures": [
+      "table with answer boxes at the end of each sentence in exercise 48.1",
+      "table with example answer column ('176 3233') for exercise 48.3"
+    ],
+    "unclassified": [
+      "Total 27",
+      "Target 22+",
+      "Your score /27",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 62,\n \"testNumber\": \"48\",\n \"testTitle\": \"Telephoning 1: phones and numbers\",\n \"exercises\": [\n  {\"id\": \"48.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.\",\n   \"items\": [\n    \"1 'Our meeting was in Paris but we linked up with Bill's team in the New York office.'\",\n    \"2 'It's an oh-eight-hundred number so you don't have to pay.'\",\n    \"3 'Good morning, Washington. Good afternoon, Oslo. Can you all see and hear us?'\",\n    \"4 'Yes, she's in her office. I'll put you through to her now.'\",\n    \"5 'If I'm not in the office, call me on my mobile.'\",\n    \"6 'You have to put in at least 20 pence before you can make a call.'\",\n    \"7 'The picture is not very good but it's nice to see who you're talking to over the Internet.'\",\n    \"8 'To order at this special price, call our sales team on 01776 223344 – now!'\",\n    \"9 'I take it with me in the car. But I don't use it when I'm driving.'\",\n    \"10 'If you have any problems, call our technical team on 01473 123123.'\"\n   ]},\n  {\"id\": \"48.2\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n   \"items\": [\n    \"1 I'm out tomorrow morning, so give me a .......................... in the afternoon. (call/phone/telephone)\",\n    \"2 I like this .......................... phone because I can use it in the garden. (moveable/cordless/extended)\",\n    \"3 If they need me at work, they send a message on my .......................... . (pager/reader/text)\",\n    \"4 I have one .......................... for my phone and another for my Internet connection. (wire/cord/line)\",\n    \"5 Jim phoned from Los Angeles. Can you call him .......................... tomorrow? (out/up/down)\",\n    \"6 We have a call .......................... in Dublin that deals with customer enquiries. (office/centre/site)\",\n    \"7 Customers in the States can call us on our ..........................-free number. (toll/cost/price)\",\n    \"8 Give me a .......................... if you want to go to the conference next week. (ping/bing/ring)\",\n    \"9 There's a public phone where you can use coins or a phone .......................... . (card/note/ticket)\"\n   ]},\n  {\"id\": \"48.3\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Write the telephone numbers below in figures. The first one is an example.\",\n   \"items\": [\n    \"'one – seven – six, three – two – three – three' | 176 3233\",\n    \"'oh – one – double two – three, five – six – oh – four – double nine'\",\n    \"'oh – eight hundred, double seven – double one – double seven'\",\n    \"'double four, one – eight – one, three – zero – three – zero'\",\n    \"'one – eight hundred, double five – double five – double five'\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"A cellphone   B webcam   C videoconference   D helpline   E hotline   F Freephone   G extension   H payphone\"\n ],\n \"pictures\": [\n  \"table with answer boxes at the end of each sentence in exercise 48.1\",\n  \"table with example answer column ('176 3233') for exercise 48.3\"\n ],\n \"unclassified\": [\n  \"Total 27\",\n  \"Target 22+\",\n  \"Your score /27\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

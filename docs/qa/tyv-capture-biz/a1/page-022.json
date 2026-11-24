@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 22,
+    "dpi": 300,
+    "renderSha256": "6f7d26aecfdeff96927511be3aafc08815588e78c8ea97c6aaf3a49b343bad71",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T20:15:54.613Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 25,
+    "testNumber": null,
+    "testTitle": "Summary Test 1",
+    "exercises": [
+      {
+        "id": "7",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.",
+        "items": [
+          "0 We used a .........recruitment agency......... to advertise for graduates to train as managers.",
+          "1 Many healthcare workers are paid the ............................ .",
+          "2 I don't have any ............................ but I've got lots of work experience.",
+          "3 I want to be a ............................ like Bill Gates by the time I'm 25.",
+          "4 When he was accused of ............................ he resigned immediately.",
+          "5 I don't like working the ............................ because I can't sleep during the day."
+        ]
+      },
+      {
+        "id": "8",
+        "marks": "8 marks",
+        "instruction": "Complete the sentences below by writing one word in each gap.",
+        "items": [
+          "1 We set up a focus _ _ _ _ _ to discuss our ideas for a new range of hair care products.",
+          "2 We discovered a design _ _ _ _ _ so we had to recall all the cars sold in May and June.",
+          "3 I really wanted to work for a charity, but wages are very low in the voluntary _ _ _ _ _ .",
+          "4 Our sales _ _ _ _ _ _ _ _ for next year is that business will grow by 5%.",
+          "5 The designs are our intellectual _ _ _ _ _ _ _ and they are protected by patents.",
+          "6 When we are working at full _ _ _ _ _ _ _ we can produce 22,000 units per hour.",
+          "7 I found this job in the situations _ _ _ _ _ pages of my local newspaper.",
+          "8 I left the company in 1990 and I've been self- _ _ _ _ _ _ _ ever since."
+        ]
+      },
+      {
+        "id": "9",
+        "marks": "6 marks",
+        "instruction": "In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.",
+        "items": [
+          "0 When the CEO was arrested, our corporate (picture) was severely damaged. .........image.......",
+          "1 The railways were owned by the state, but they were privately in 1984. .....................",
+          "2 I believe the strongest economies are built on free entrepreneur. .....................",
+          "3 Paul has worked in the aerospace industrial for over 20 years. .....................",
+          "4 Making high quality furniture by hand is very labour-expensive. .....................",
+          "5 Our CADCAM system is at the cutting side of technology. .....................",
+          "6 She is training to be a commerce artist in New York. ....................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "recruitment\nsexual\nsoftware\nminimum\npaper\nnight",
+      "tycoon\npolicy\nwage\nagency\nshift\nharassment\nqualifications"
+    ],
+    "pictures": [
+      "two word-boxes joined by a hand-drawn line (matching exercise 7)"
+    ],
+    "unclassified": [
+      "Summary Test 1"
+    ]
+  },
+  "rawModelText": "{\"footer\": 25,\n \"testNumber\": null,\n \"testTitle\": \"Summary Test 1\",\n \"exercises\": [\n  {\"id\": \"7\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.\",\n   \"items\": [\"0 We used a .........recruitment agency......... to advertise for graduates to train as managers.\",\n    \"1 Many healthcare workers are paid the ............................ .\",\n    \"2 I don't have any ............................ but I've got lots of work experience.\",\n    \"3 I want to be a ............................ like Bill Gates by the time I'm 25.\",\n    \"4 When he was accused of ............................ he resigned immediately.\",\n    \"5 I don't like working the ............................ because I can't sleep during the day.\"]},\n  {\"id\": \"8\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete the sentences below by writing one word in each gap.\",\n   \"items\": [\"1 We set up a focus _ _ _ _ _ to discuss our ideas for a new range of hair care products.\",\n    \"2 We discovered a design _ _ _ _ _ so we had to recall all the cars sold in May and June.\",\n    \"3 I really wanted to work for a charity, but wages are very low in the voluntary _ _ _ _ _ .\",\n    \"4 Our sales _ _ _ _ _ _ _ _ for next year is that business will grow by 5%.\",\n    \"5 The designs are our intellectual _ _ _ _ _ _ _ and they are protected by patents.\",\n    \"6 When we are working at full _ _ _ _ _ _ _ we can produce 22,000 units per hour.\",\n    \"7 I found this job in the situations _ _ _ _ _ pages of my local newspaper.\",\n    \"8 I left the company in 1990 and I've been self- _ _ _ _ _ _ _ ever since.\"]},\n  {\"id\": \"9\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.\",\n   \"items\": [\"0 When the CEO was arrested, our corporate (picture) was severely damaged. .........image.......\",\n    \"1 The railways were owned by the state, but they were privately in 1984. .....................\",\n    \"2 I believe the strongest economies are built on free entrepreneur. .....................\",\n    \"3 Paul has worked in the aerospace industrial for over 20 years. .....................\",\n    \"4 Making high quality furniture by hand is very labour-expensive. .....................\",\n    \"5 Our CADCAM system is at the cutting side of technology. .....................\",\n    \"6 She is training to be a commerce artist in New York. .....................\"]}\n ],\n \"boxesAndLists\": [\"recruitment\\nsexual\\nsoftware\\nminimum\\npaper\\nnight\",\n  \"tycoon\\npolicy\\nwage\\nagency\\nshift\\nharassment\\nqualifications\"],\n \"pictures\": [\"two word-boxes joined by a hand-drawn line (matching exercise 7)\"],\n \"unclassified\": [\"Summary Test 1\"]\n}"
+}

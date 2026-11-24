@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "event": "رویداد بازیابی ۳۹ سندباکس — ریست پنهان ۳۹م پلتفرمی — رسیدگی کامل صفرتلفاتی (الگوی ff-only رویدادهای ۶..۳۸)",
+    "date": "2026-11-24",
+    "jalali": "۱۴۰۵/۹/۳",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S08 (گام بعدی مجاز A1-BIZ-S09) — trace 1a20e353c4cc4375 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — الزام پایداری ایستندهٔ بیست‌وسوم پابرجا (SHA256 متن ابلاغ == §۱ سند مرجع = 42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8)",
+    "sessionStartDiscovery": "HEAD محلی روی 193269b (۲۰۲۶-۱۱-۰۸) بازگشته بود — عین الگوی ریست‌های پنهان ۳۱..۳۸ (اسنپ‌شات کهنهٔ .git) — درخت کار = محتوای پسا-S08 (filesystem checkpoint جدیدتر) — divergence ۰/۸ (صفر کامیت یکتای محلی — HEAD پشت ریموت ۸ کامیت = S02..S08) — remote سالم = 48c4136 (ثبت اثبات §۱۰-۷ گام A1-BIZ-S08) — stash محلی صفر (آرشیو بازیابی ۳۸ که در ریست تلف شده بود) — دو شاخهٔ بایگانی ریموت موجود: recovery/rc33-pre-ff-stash-2026-11-23 + archive/recovery27-wt-snapshot-20261121"
+  },
+  "recovery": [
+    "① ایمنی: stash بیمه rc34 با push -u (شامل untracked کپچرها) = 73dd3e191ea875ed58b320e61aae17027f6ef3a6 → push به شاخهٔ Remote backup/recovery/rc34-pre-ff-stash-2026-11-24 (اثبات ls-remote: * [new branch]) — صفرتلفاتی تضمین",
+    "② اثبات صفرتلفاتی پیشا-بازیابی: git diff backup/main --numstat روی کل درخت‌کار = ۱۸۳۵ فایل · ۷۹ افزودنی / ۶۸۷٬۵۴۰ حذفی — فیلتر افزودنی‌ها: هر ۳۴ فایلِ دارای افزودنی از خانوادهٔ «نقشه راه ها/» با الگوی rename {نقشه-راه-ها => }/{چک-لیست-ها => }/{گزارش-ها => } (تعداد افزودنی == تعداد حذفی در هر فایل — آرتیفت تشخیص rename سازمان‌دهی سربرگ ۱۱۸مین که از قبل در ریموت commit شده) ⇒ **صفر محتوای محلی-یگانه** — حذفی‌ها = محتوای کامیت‌های S02..S08 روی ریموت که در چک‌اوت کهنهٔ محلی غایب‌اند (بازیابی‌پذیر از ریموت)",
+    "③ بازگردانی آرشیو از ریموت: stash commit بازیابی ۳۸ (c7337e9 = شاخهٔ Remote recovery/rc33-pre-ff-stash-2026-11-23) با git stash store به stash stack بازگردانده شد (stash@{0} — پیام: rc33 archive restored after hidden reset) — بند ۸ الزام (آرشیو اطمینان بازیابی ۳۸ دوباره در دسترس)",
+    "④ بازیابی اصلی: git reset --hard backup/main (معادل ff-only — 193269b→48c4136 — صفر reset/rebase/force روی تاریخچهٔ ریموت) ⇒ HEAD = 48c413612ebdcd7f6d08547b18499d8c72cc8ac5 = backup/main"
+  ],
+  "postVerification": {
+    "headEqualsRemote": "git rev-parse HEAD == git ls-remote backup refs/heads/main == 48c413612ebdcd7f6d08547b18499d8c72cc8ac5 — برابری بایت‌به‌بیت",
+    "porcelain": "۰ (درخت پاک)",
+    "stashStack": "۲ — stash@{0} = rc33 archive (بازگردانده‌شده) · stash@{1} = rc34 بیمهٔ بازیابی ۳۹ — هر دو در ریموت هم بایگانی (rc33 branch + rc34 branch)",
+    "diskTruthIntact": "A1 = 102/489 پسا-بازیابی == رکورد SNAPSHOT سربرگ ۱۲۵مین — بازشماری ls: biz=93 · elem=3 · pri=3 · upp=3 — کپچرهای S01..S08 بایت‌به‌بیت = ریموت (tracked clean — porcelain صفر روی docs/qa/tyv-capture-biz/)",
+    "a1Index": "docs/qa/tyv-capture-biz/a1-index.json آمار آخرین اجرای S08 (capturedNow=12) بایت‌به‌بیت = ریموت",
+    "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF در کل فرایند بازیابی"
+  },
+  "lesson": "همان الگوی بازیابی‌های ۳۱..۳۸: ریست پنهان پلتفرمی .git را به اسنپ‌شات کهنهٔ 193269b برمی‌گرداند؛ درخت کار از checkpoint فایلی جدیدتر می‌آید؛ TRUTH = remote؛ بازیابی ff-only صفرتلفاتی پس از بیمهٔ stash+push؛ استثنای این رویداد: stash محلی نیز تلف شده بود و از شاخهٔ بایگانی ریموت بازگردانده شد (اولین بار — درس جدید برای الگوی بازیابی: بایگانی stash در ریموت الزامی است)"
+}

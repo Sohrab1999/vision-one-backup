@@ -1,0 +1,80 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 29,
+    "dpi": 300,
+    "renderSha256": "086af93ff539bfcf0f82545113a903b5269db0968bf97c462c9ce3b464328eed",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T04:59:05.450Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 32,
+    "testNumber": "22",
+    "testTitle": "Products and brands",
+    "exercises": [
+      {
+        "id": "22.1",
+        "marks": "6 marks",
+        "instruction": "Match each statement to a word pair from the list. Write the letter of your chosen answer next to the statement. There is one word pair that you don't have to use.",
+        "items": [
+          "A product catalogue    B consumer durables    C generic products",
+          "D product placement    E brand image    F brand recognition    G product lifecycle",
+          "1 If you want a big Hollywood star to wear a shirt with your company's logo on in a film, it will cost you over one million dollars.",
+          "2 The latest edition contains pictures, descriptions and prices of everything that we sell.",
+          "3 In a survey, 72% of shoppers identified our product before those of our competitors.",
+          "4 The dishwashers, washing machines and dryers we produce have three-year guarantees.",
+          "5 We aim to sell 500,000 units in the first year. Then sales will drop quickly to about 15,000 a year. We'll have to launch a new model in four years' time.",
+          "6 Customers buy supermarket own-label versions rather than branded products because they offer better value for money."
+        ]
+      },
+      {
+        "id": "22.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 Our product ........................ includes tables, chairs and cupboards. (group/portfolio/package)",
+          "2 I've always bought Ford cars and I love their new .................... . (mark/make/model)",
+          "3 We will be launching a new product ........................ early next year. (brand/cycle/line)",
+          "4 We want our brand ........................ to be young, fast and exciting. (picture/image/logo)",
+          "5 Fast-moving ........................ goods, such as fresh food, have to be sold quickly. (consumer/customer/client)",
+          "6 The purple colour we use on all our labels is a key part of our ........................ . (branding/marking/positioning)"
+        ]
+      },
+      {
+        "id": "22.3",
+        "marks": "6 marks",
+        "instruction": "In each numbered line, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.",
+        "items": [
+          "0 Our (branding) name is recognized throughout Europe.                    brand",
+          "1 We make men's clothes and our product mixture includes shirts, trousers",
+          "2 and jackets. Next year's product ranger will also include hats and shoes.",
+          "3 We have a clear brand identify. Our customers see our clothes as modern,",
+          "4 but also well made. Our product depositing is between the famous fashion",
+          "5 labels of Italy and the owner-brand products of UK high street shops.",
+          "6 To maintain brand aware, we advertise in men's lifestyle magazines."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 18",
+      "Target 14+"
+    ],
+    "pictures": [
+      "table with answer column for exercise 22.1"
+    ],
+    "unclassified": [
+      "Your score",
+      "/18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 32,\n \"testNumber\": \"22\",\n \"testTitle\": \"Products and brands\",\n \"exercises\": [\n  {\"id\": \"22.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Match each statement to a word pair from the list. Write the letter of your chosen answer next to the statement. There is one word pair that you don't have to use.\",\n   \"items\": [\n    \"A product catalogue    B consumer durables    C generic products\",\n    \"D product placement    E brand image    F brand recognition    G product lifecycle\",\n    \"1 If you want a big Hollywood star to wear a shirt with your company's logo on in a film, it will cost you over one million dollars.\",\n    \"2 The latest edition contains pictures, descriptions and prices of everything that we sell.\",\n    \"3 In a survey, 72% of shoppers identified our product before those of our competitors.\",\n    \"4 The dishwashers, washing machines and dryers we produce have three-year guarantees.\",\n    \"5 We aim to sell 500,000 units in the first year. Then sales will drop quickly to about 15,000 a year. We'll have to launch a new model in four years' time.\",\n    \"6 Customers buy supermarket own-label versions rather than branded products because they offer better value for money.\"\n   ]},\n  {\"id\": \"22.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n   \"items\": [\n    \"1 Our product ........................ includes tables, chairs and cupboards. (group/portfolio/package)\",\n    \"2 I've always bought Ford cars and I love their new .................... . (mark/make/model)\",\n    \"3 We will be launching a new product ........................ early next year. (brand/cycle/line)\",\n    \"4 We want our brand ........................ to be young, fast and exciting. (picture/image/logo)\",\n    \"5 Fast-moving ........................ goods, such as fresh food, have to be sold quickly. (consumer/customer/client)\",\n    \"6 The purple colour we use on all our labels is a key part of our ........................ . (branding/marking/positioning)\"\n   ]},\n  {\"id\": \"22.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"In each numbered line, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.\",\n   \"items\": [\n    \"0 Our (branding) name is recognized throughout Europe.                    brand\",\n    \"1 We make men's clothes and our product mixture includes shirts, trousers\",\n    \"2 and jackets. Next year's product ranger will also include hats and shoes.\",\n    \"3 We have a clear brand identify. Our customers see our clothes as modern,\",\n    \"4 but also well made. Our product depositing is between the famous fashion\",\n    \"5 labels of Italy and the owner-brand products of UK high street shops.\",\n    \"6 To maintain brand aware, we advertise in men's lifestyle magazines.\"\n   ]}\n ],\n \"boxesAndLists\": [\"Total 18\", \"Target 14+\"],\n \"pictures\": [\"table with answer column for exercise 22.1\"],\n \"unclassified\": [\"Your score\", \"/18\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

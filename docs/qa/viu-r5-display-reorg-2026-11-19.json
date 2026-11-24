@@ -1,0 +1,130 @@
+{
+  "generated": "2026-11-19 20:47:48 UTC",
+  "gate": "R5 — بازآرایی نمایشی بدون تغییر داده — فرمان مالک «نقشه راه رو ادامه بده» (trace 1a1f583eda56aa41)",
+  "method": "سنجش مکانیکی روی دادهٔ tracked — عین الگوریتم buildKeySegments نمایشی — صفر تغییر داده",
+  "totals": {
+    "items": 5179,
+    "withKey": 2197,
+    "groups": 448,
+    "groupedItems": 3047,
+    "extraRepeats": 2599,
+    "auditNote": "یافتهٔ ممیزی ۲-۲ الف: ۲٬۹۶۵ آیتم کلید گروهی تکراری (۵۷٪) — سنجش امروز = بلوک‌های پشت‌سرهم ≥۲ آیتم؛ تفاوت تعریف (بلوک vs هر تکرار داخل ریدینگ) صادقانه ثبت شد"
+  },
+  "perBook": {
+    "viu-elem": {
+      "R5_1_groupKeys": {
+        "items": 1085,
+        "withKey": 443,
+        "groups": 122,
+        "groupedItems": 755,
+        "extraRepeats": 633,
+        "largest": {
+          "readingId": "viu-elem-l36",
+          "lesson": 36,
+          "runLen": 17,
+          "answerEn": "2 Vietnamese | 3 Korean | 4 Thai | 5 Iraqi | 6 German | 7 Egyptian | 8 Argentinian | 9 Dut"
+        }
+      },
+      "R5_3_quizContract": {
+        "total": 669,
+        "dist": {
+          "2": 15,
+          "3": 60,
+          "4": 594,
+          "5": 0
+        },
+        "badIdx": 0,
+        "nonGap": 427,
+        "emptyOption": 0,
+        "dupCaseVariant": 0
+      },
+      "R5_2_grammarTopics": {
+        "chapters": 60,
+        "emptyGrammarTopics": 60,
+        "filledGrammarTopics": 0
+      }
+    },
+    "viu-preint": {
+      "R5_1_groupKeys": {
+        "items": 2061,
+        "withKey": 574,
+        "groups": 198,
+        "groupedItems": 1423,
+        "extraRepeats": 1225,
+        "largest": {
+          "readingId": "viu-preint-l80",
+          "lesson": 80,
+          "runLen": 26,
+          "answerEn": "1 speak to | 2 Speaking | 3 My name is | 4 message | 5 out/not here/in a meeting | 6 back "
+        }
+      },
+      "R5_3_quizContract": {
+        "total": 1176,
+        "dist": {
+          "2": 25,
+          "3": 67,
+          "4": 1084,
+          "5": 0
+        },
+        "badIdx": 0,
+        "nonGap": 405,
+        "emptyOption": 0,
+        "dupCaseVariant": 0
+      },
+      "R5_2_grammarTopics": {
+        "chapters": 100,
+        "emptyGrammarTopics": 100,
+        "filledGrammarTopics": 0
+      }
+    },
+    "viu-upper": {
+      "R5_1_groupKeys": {
+        "items": 2033,
+        "withKey": 1180,
+        "groups": 128,
+        "groupedItems": 869,
+        "extraRepeats": 741,
+        "largest": {
+          "readingId": "viu-upper-l63",
+          "lesson": 63,
+          "runLen": 14,
+          "answerEn": "2 Most people believe in life after death. | 3 I was in favour of the proposed changes. | "
+        }
+      },
+      "R5_3_quizContract": {
+        "total": 1027,
+        "dist": {
+          "2": 12,
+          "3": 62,
+          "4": 947,
+          "5": 6
+        },
+        "badIdx": 0,
+        "nonGap": 832,
+        "emptyOption": 0,
+        "dupCaseVariant": 0
+      },
+      "R5_2_grammarTopics": {
+        "chapters": 100,
+        "emptyGrammarTopics": 100,
+        "filledGrammarTopics": 0
+      }
+    }
+  },
+  "R5_2_decision": {
+    "decision": "پنهان در مسیرهای UI (بدون تغییر داده)",
+    "rationale": "پرکردن از سرصفحهٔ درس = تغییر داده ⇒ مستلزم دروازهٔ مستقل مالک + منبع چاپی (O1/O4) — خارج از دامنهٔ «بدون تغییر دادهٔ R5»",
+    "uiPathsFixed": [
+      "contents-view.tsx: بج‌های خالی + متریک «۰ گرامر»",
+      "chapter-view.tsx: متن توصیفی خالی کارت گرامر → fallback صادقانه"
+    ],
+    "zeroSideEffect": "کتاب‌های با grammarTopics پر (vision-one/grade-*) بایت‌به‌بیت رفتار قبلی"
+  },
+  "R5_4_attribution": {
+    "resourcesSectionPresent": true,
+    "viuIsbnCount": 4,
+    "wordAtlasCcBy": true,
+    "faTranslationDisclosure": true,
+    "standingRule": "هر افزودنی آینده با منبع جدید ⇒ به‌روزرسانی اجباری همین بخش «منابع» (قاعدهٔ ماندگار R5-4)"
+  }
+}

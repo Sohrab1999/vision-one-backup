@@ -1,0 +1,80 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 45,
+    "dpi": 300,
+    "renderSha256": "fd862b52dc50618aad4f07ad97e5f2eaac2b66162e80336d2f5ad22336474fbe",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:20:43.118Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 48,
+    "testNumber": "34",
+    "testTitle": "Mergers, takeovers and sell-offs",
+    "exercises": [
+      {
+        "id": "34.1",
+        "marks": "9 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap in each sentence.",
+        "items": [
+          "1 I have a 20% .................. in a small printing company. (invest/interest/input)",
+          "2 Charles Wilson now has a majority .................. in Alicom PLC. (hold/holder/holding)",
+          "3 ProSports and Fit Folk gave details of their new joint ................. . (venture/account/combine)",
+          "4 Kola-Co has made a .................. bid of 21p per share. (kind/friendly/gentle)",
+          "5 Buying out the contracts of senior executives will be a poison .................. for any predator to swallow. (medicine/tablet/pill)",
+          "6 Eastern Water proved to be our white .................. saving us from collapse. (angel/knight/saint)",
+          "7 Their .................. company is a multinational based in New York. (parent/father/family)",
+          "8 We started as a music company but we .................. into television. (diversified/diverted/differed)",
+          "9 We do many things but our .................. activity is publishing. (concern/centre/core)"
+        ]
+      },
+      {
+        "id": "34.2",
+        "marks": "5 marks",
+        "instruction": "In each of the numbered sentences (1–5) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "Our manufacturing company is small but it has lots of assets.",
+          "1 We are worried that we may be pray to a big multinational. ..................",
+          "2 Last year, Anders Holdings made a hostage bid for us. ..................",
+          "3 They wanted to ackquier us as their subsidiary in Europe. ..................",
+          "4 We didn't want to be part of a huge conglomerus so we rejected the bid. ..................",
+          "5 We are now considering a murger with another small engineering firm. .................."
+        ]
+      },
+      {
+        "id": "34.3",
+        "marks": "6 marks",
+        "instruction": "For each sentence, find one word to replace the underlined phrase. Write the word at the end of the sentence. The first two letters have been given to help you.",
+        "items": [
+          "1 The problem is that the company is not concentrating on a few important things. un _ _ _ _ _ _",
+          "2 Robert Bateson now has a bigger than 50% stake in English Petroleum. m a _ _ _ _ _ _",
+          "3 I think that selling off non-core assets is necessary to save the company. d i _ _ _ _ _ _ _ _",
+          "4 Europe Airways has formed an arrangement to work together with Alpha Airlines. a l _ _ _ _ _",
+          "5 Global Electric's latest company that it has bought is Cambridge Electra. a c _ _ _ _ _ _ _ _ _",
+          "6 At the moment, we just make shoes but we want to start doing business in other areas. d i _ _ _ _ _ _ _"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 20",
+      "Target 15+"
+    ],
+    "pictures": [
+      "cartoon of a shoemaker with hammer imagining diversifying into bags, belts, gloves and other leather goods"
+    ],
+    "unclassified": [
+      "Your score",
+      "/20",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 48,\n \"testNumber\": \"34\",\n \"testTitle\": \"Mergers, takeovers and sell-offs\",\n \"exercises\": [\n  {\"id\": \"34.1\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap in each sentence.\",\n   \"items\": [\n    \"1 I have a 20% .................. in a small printing company. (invest/interest/input)\",\n    \"2 Charles Wilson now has a majority .................. in Alicom PLC. (hold/holder/holding)\",\n    \"3 ProSports and Fit Folk gave details of their new joint ................. . (venture/account/combine)\",\n    \"4 Kola-Co has made a .................. bid of 21p per share. (kind/friendly/gentle)\",\n    \"5 Buying out the contracts of senior executives will be a poison .................. for any predator to swallow. (medicine/tablet/pill)\",\n    \"6 Eastern Water proved to be our white .................. saving us from collapse. (angel/knight/saint)\",\n    \"7 Their .................. company is a multinational based in New York. (parent/father/family)\",\n    \"8 We started as a music company but we .................. into television. (diversified/diverted/differed)\",\n    \"9 We do many things but our .................. activity is publishing. (concern/centre/core)\"\n   ]},\n  {\"id\": \"34.2\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"In each of the numbered sentences (1–5) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\n    \"Our manufacturing company is small but it has lots of assets.\",\n    \"1 We are worried that we may be pray to a big multinational. ..................\",\n    \"2 Last year, Anders Holdings made a hostage bid for us. ..................\",\n    \"3 They wanted to ackquier us as their subsidiary in Europe. ..................\",\n    \"4 We didn't want to be part of a huge conglomerus so we rejected the bid. ..................\",\n    \"5 We are now considering a murger with another small engineering firm. ..................\"\n   ]},\n  {\"id\": \"34.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"For each sentence, find one word to replace the underlined phrase. Write the word at the end of the sentence. The first two letters have been given to help you.\",\n   \"items\": [\n    \"1 The problem is that the company is not concentrating on a few important things. un _ _ _ _ _ _\",\n    \"2 Robert Bateson now has a bigger than 50% stake in English Petroleum. m a _ _ _ _ _ _\",\n    \"3 I think that selling off non-core assets is necessary to save the company. d i _ _ _ _ _ _ _ _\",\n    \"4 Europe Airways has formed an arrangement to work together with Alpha Airlines. a l _ _ _ _ _\",\n    \"5 Global Electric's latest company that it has bought is Cambridge Electra. a c _ _ _ _ _ _ _ _ _\",\n    \"6 At the moment, we just make shoes but we want to start doing business in other areas. d i _ _ _ _ _ _ _\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"Total 20\",\n  \"Target 15+\"\n ],\n \"pictures\": [\n  \"cartoon of a shoemaker with hammer imagining diversifying into bags, belts, gloves and other leather goods\"\n ],\n \"unclassified\": [\n  \"Your score\",\n  \"/20\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

@@ -1,0 +1,77 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 47,
+    "dpi": 300,
+    "renderSha256": "dcd36f5d378982753b9b1e0007a86859bb05b5e482585066c769862f2a88bf33",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:21:07.288Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 50,
+    "testNumber": "36",
+    "testTitle": "Financial centres",
+    "exercises": [
+      {
+        "id": "36.1",
+        "marks": "6 marks",
+        "instruction": "Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There are two alternatives that you don't have to use.",
+        "items": [
+          "1 'This is New York's financial centre.'",
+          "2 'We bought euros at $0.94 and sold at $0.98.'",
+          "3 'If I want, I can buy 10,000 shares at $2 in 12 months' time.'",
+          "4 'The government has borrowed £50 billion over a ten-year period.'",
+          "5 'Our contract is to buy 500 ounces of gold at $420 in 30 days, so we hope the price rises.'",
+          "6 'The traders here deal in metals, wheat, rice, orange juice – things like that.'"
+        ]
+      },
+      {
+        "id": "36.2",
+        "marks": "6 marks",
+        "instruction": "Complete each sentence by writing in the gap a word formed from the verb given in brackets { }.",
+        "items": [
+          "1 This bank is one of London's oldest ........................ institutions. (finance)",
+          "2 We deal mainly in commodities and ...................... . (derive)",
+          "3 We have about 60 ......................... buying and selling stocks. (deal)",
+          "4 The ......................... of the company raised £1.4 million. (float)",
+          "5 A ......................... wants to make a quick profit. (speculate)",
+          "6 I invest in .......................... – mainly stocks and bonds. (secure)"
+        ]
+      },
+      {
+        "id": "36.3",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "Pegasus Software looks like a good buy. The company was (1) ............ last year and its shares are (2) ........... on the London stock (3) ............. . When they were (4) ............. , they were valued at 60 pence. Lots of (5) ............. were attracted by the company's strong sales figures. Now the (6) ............. is worth 92 pence.",
+          "1 A bonded B floated C raised",
+          "2 A quoted B signed C noted",
+          "3 A bourse B city C exchange",
+          "4 A issued B started C distributed",
+          "5 A auditors B creditors C investors",
+          "6 A trade B stock C deal"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A Square Mile  B forex  C bourse  D futures contract",
+      "E Wall Street  F commodities exchange  G bonds  H options contract"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Total 18",
+      "Target 14+",
+      "Your score /18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 50,\n \"testNumber\": \"36\",\n \"testTitle\": \"Financial centres\",\n \"exercises\": [\n  {\"id\": \"36.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There are two alternatives that you don't have to use.\",\n   \"items\": [\n    \"1 'This is New York's financial centre.'\",\n    \"2 'We bought euros at $0.94 and sold at $0.98.'\",\n    \"3 'If I want, I can buy 10,000 shares at $2 in 12 months' time.'\",\n    \"4 'The government has borrowed £50 billion over a ten-year period.'\",\n    \"5 'Our contract is to buy 500 ounces of gold at $420 in 30 days, so we hope the price rises.'\",\n    \"6 'The traders here deal in metals, wheat, rice, orange juice – things like that.'\"\n   ]},\n  {\"id\": \"36.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete each sentence by writing in the gap a word formed from the verb given in brackets { }.\",\n   \"items\": [\n    \"1 This bank is one of London's oldest ........................ institutions. (finance)\",\n    \"2 We deal mainly in commodities and ...................... . (derive)\",\n    \"3 We have about 60 ......................... buying and selling stocks. (deal)\",\n    \"4 The ......................... of the company raised £1.4 million. (float)\",\n    \"5 A ......................... wants to make a quick profit. (speculate)\",\n    \"6 I invest in .......................... – mainly stocks and bonds. (secure)\"\n   ]},\n  {\"id\": \"36.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"Pegasus Software looks like a good buy. The company was (1) ............ last year and its shares are (2) ........... on the London stock (3) ............. . When they were (4) ............. , they were valued at 60 pence. Lots of (5) ............. were attracted by the company's strong sales figures. Now the (6) ............. is worth 92 pence.\",\n    \"1 A bonded B floated C raised\",\n    \"2 A quoted B signed C noted\",\n    \"3 A bourse B city C exchange\",\n    \"4 A issued B started C distributed\",\n    \"5 A auditors B creditors C investors\",\n    \"6 A trade B stock C deal\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"A Square Mile  B forex  C bourse  D futures contract\",\n  \"E Wall Street  F commodities exchange  G bonds  H options contract\"\n ],\n \"pictures\": [],\n \"unclassified\": [\n  \"Total 18\",\n  \"Target 14+\",\n  \"Your score /18\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

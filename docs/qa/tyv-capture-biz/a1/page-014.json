@@ -1,0 +1,73 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 14,
+    "dpi": 300,
+    "renderSha256": "128704e1bbb39d58b03c4ae37474532eeeb744b6cf2c974130d6855d54a62c00",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T13:00:20.115Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 17,
+    "testNumber": "11",
+    "testTitle": "Organizations 1",
+    "exercises": [
+      {
+        "id": "11.1",
+        "marks": "5 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.",
+        "items": []
+      },
+      {
+        "id": "11.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'The economy of eastern Europe has changed a lot. Twenty years ago, the main industries were completely nationalized and many companies were owned by the (1) ............ . They did not work well. They were inefficient and (2) ............ . Now governments are trying to (3) ............ them, but it is not easy to find (4) ............ . People don't want to put money into the old companies. However, some people are happy to (5) ............ their money on new businesses and there are signs that a new enterprise (6) ............ is growing.'",
+          "1 A nation B state C country",
+          "2 A automatic B diplomatic C bureaucratic",
+          "3 A privatize B nationalize C enterprise",
+          "4 A corporations B firms C investors",
+          "5 A save B risk C sell",
+          "6 A culture B commerce C concern"
+        ]
+      },
+      {
+        "id": "11.3",
+        "marks": "8 marks",
+        "instruction": "Decide what each statement is about. Write the missing word. (The first letter is given.)",
+        "items": [
+          "1 'We use our initials \"TFT\" inside a blue arrow. It's on all our notepaper.' corporate l _ _ _",
+          "2 'It was a bad idea. We lost a fortune and the company collapsed.' commercial d _ _ _ _ _ _ _",
+          "3 'We're based in the US but we operate in over 30 countries.' m _ _ _ _ _ _ _ _ _ _ _ corporation",
+          "4 'We specialize in helping SMEs.' small or medium e _ _ _ _ _ _ _ _ _",
+          "5 'We want people to see us as expensive – but offering the very best quality.' corporate i _ _ _ _",
+          "6 'We meet once a month and we aim to help local businesses.' c _ _ _ _ _ _ of commerce",
+          "7 'By next year, all our business will take place on the Internet.' electronic c _ _ _ _ _ _ _",
+          "8 'I was a manager, but I'm working my way up and I hope to be a director soon.' corporate l _ _ _ _ _"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "big corporate self e- free enterprise nationalized",
+      "industry commerce employed business enterprise department profits zone",
+      "Total 20 / Target 15+"
+    ],
+    "pictures": [
+      "cartoon of five business people in a meeting around a flip chart"
+    ],
+    "unclassified": [
+      "Your score /20",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 17, \"testNumber\": \"11\", \"testTitle\": \"Organizations 1\", \"exercises\": [{\"id\": \"11.1\", \"marks\": \"5 marks\", \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.\", \"items\": []}, {\"id\": \"11.2\", \"marks\": \"6 marks\", \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\", \"items\": [\"'The economy of eastern Europe has changed a lot. Twenty years ago, the main industries were completely nationalized and many companies were owned by the (1) ............ . They did not work well. They were inefficient and (2) ............ . Now governments are trying to (3) ............ them, but it is not easy to find (4) ............ . People don't want to put money into the old companies. However, some people are happy to (5) ............ their money on new businesses and there are signs that a new enterprise (6) ............ is growing.'\", \"1 A nation B state C country\", \"2 A automatic B diplomatic C bureaucratic\", \"3 A privatize B nationalize C enterprise\", \"4 A corporations B firms C investors\", \"5 A save B risk C sell\", \"6 A culture B commerce C concern\"]}, {\"id\": \"11.3\", \"marks\": \"8 marks\", \"instruction\": \"Decide what each statement is about. Write the missing word. (The first letter is given.)\", \"items\": [\"1 'We use our initials \\\"TFT\\\" inside a blue arrow. It's on all our notepaper.' corporate l _ _ _\", \"2 'It was a bad idea. We lost a fortune and the company collapsed.' commercial d _ _ _ _ _ _ _\", \"3 'We're based in the US but we operate in over 30 countries.' m _ _ _ _ _ _ _ _ _ _ _ corporation\", \"4 'We specialize in helping SMEs.' small or medium e _ _ _ _ _ _ _ _ _\", \"5 'We want people to see us as expensive – but offering the very best quality.' corporate i _ _ _ _\", \"6 'We meet once a month and we aim to help local businesses.' c _ _ _ _ _ _ of commerce\", \"7 'By next year, all our business will take place on the Internet.' electronic c _ _ _ _ _ _ _\", \"8 'I was a manager, but I'm working my way up and I hope to be a director soon.' corporate l _ _ _ _ _\"]}], \"boxesAndLists\": [\"big corporate self e- free enterprise nationalized\", \"industry commerce employed business enterprise department profits zone\", \"Total 20 / Target 15+\"], \"pictures\": [\"cartoon of five business people in a meeting around a flip chart\"], \"unclassified\": [\"Your score /20\", \"Test Your Business Vocabulary in Use\"]}\n```"
+}

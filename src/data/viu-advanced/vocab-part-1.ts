@@ -1,0 +1,317 @@
+// واژگان درس‌های English Vocabulary in Use — Advanced (پارتیت 1) — فاز A5
+// word = عین چاپ کتاب (mini-dict) · meaning = ترجمهٔ ماشینی GLM (کلاس FA-NEW — اثبات صحت ترجمه نیست)
+// pos ثبت نشده — در mini-dict چاپی کتاب چهارم pos چاپ نشده است (runtimeMapping ثبت‌شده)
+import type { VocabWord } from "../types";
+
+type Row = Omit<VocabWord, "lesson"> & { lesson: number; lessonLabel: string };
+
+const ROWS: Row[] = [
+  {
+    word: "cram",
+    meaning: "در یک بازه زمانی کوتاه به‌شدت تمرکز کنی و مطالعه کنی",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "genius",
+    meaning: "شخصی با استعداد ذهنی استثنایی",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "papers",
+    meaning: "سوالات امتحان سال‌های گذشته",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "rote-learning",
+    meaning: "یادگیری صرفاً از طریق تکرار",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "mnemonics",
+    meaning: "/niˈmɒnɪks/ ترفندهایی که به شما کمک می‌کنند چیزی را به خاطر بسپارید، برای مثال: 'i' قبل از 'e' مگر بعد از 'c' یک راهنمای هجای انگلیسی است (مثلاً friend، اما receive)",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "books",
+    meaning: "حداکثر زمان را صرف مطالعه کنی",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "intensively",
+    meaning: "به‌صورت بسیار متمرکز",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "out",
+    meaning: "کاملاً آن را بدانی",
+    lesson: 1,
+    lessonLabel: "درس 1 — برای موفقیت خلاصه‌خوانی: مطالعه و کار آکادمیک",
+  },
+  {
+    word: "for",
+    meaning: "اگر علاقه‌ای به چیزی دارید، آن را خیلی دوست دارید",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "challenging",
+    meaning: "یک کلمه مثبت برای چیزی که هیجان‌انگیز و چالش‌برانگیز است",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "fast-paced",
+    meaning: "اگر محیطی پرهیاهو و شلوغ باشد، چیزها به سرعت در آنجا اتفاق می‌افتد",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "openings",
+    meaning: "مشاغل موجود",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "to",
+    meaning: "اگر به کسی گزارش می‌دهید، او/او رئیس شماست",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "experience",
+    meaning: "تجربه از قبل از این نوع شغل",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "training",
+    meaning: "تمامی آموزشی که برای شغل نیاز دارید",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "prospects",
+    meaning: "فرصت‌های ارتقاء و حرفه‌ای شدن",
+    lesson: 3,
+    lessonLabel: "درس 3 — درخواست شغل",
+  },
+  {
+    word: "number",
+    meaning: "همان موقعیت را دارد / همان شغل را من انجام می‌دهد",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "relationship",
+    meaning: "روش ارتباط و کار کردن با هم",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "collaboration",
+    meaning: "با هم کار کردن برای رسیدن به اهداف مشترک",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "counterpart",
+    meaning: "معادل رسمی‌ترِ همتای مقابل",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "rapport",
+    meaning: "/ræˈpɔː/ ارتباط/رابطه",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "initiative",
+    meaning: "تصمیم‌گیری بدون اینکه به تو گفته شود چه کاری انجام دهی",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "hierarchical",
+    meaning: "/ˌhaɪəˈrɑːkɪkəl/ ساختاری با افراد مهم و کم‌اهمیت‌تر دارد",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "order",
+    meaning: "سیستمی که در آن برخی افراد حق دریافت مزایا/ارتقاء را قبل از دیگران دارند",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "job-share",
+    meaning: "توافقی که در آن دو نفر هر کدام شغل مشترکی را به اشتراک می‌گذارند",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "hot-desking",
+    meaning: "سیاست اشتراک گذاشتن در میزهای دفتر، طوری که افراد هر روز روی میزی که آزاد است می‌نشینند",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "workmates",
+    meaning: "همکارانی که با آن‌ها دوست هستی (به‌ویژه در مشاغل غیرحرفه‌ای); غیررسمی",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "shop",
+    meaning: "درباره کار صحبت کردن; غیررسمی",
+    lesson: 5,
+    lessonLabel: "درس 5 — محل کار: همکاران و روال‌های کاری",
+  },
+  {
+    word: "methodical",
+    meaning: "سیستماتیک، دقیق",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "chauvinistic",
+    meaning: "خیوط patrioic",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "away",
+    meaning: "خیلی هیجان‌زده شده و کنترل را از دست بدهید",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "superficial",
+    meaning: "در مورد مسائل جدی اهمیت قائل نبودن",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "insecure",
+    meaning: "غیر مطمئن، در مورد توانایی‌های خود نامطمئن",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "perfectionist",
+    meaning: "کسی که اگر چیزها 100٪ کامل نباشند راضی نیست",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "tactless",
+    meaning: "میل به گفتن چیزهایی که مردم را ناراحت یا آزرده می‌کند",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "intuitive",
+    meaning: "درک شهودی",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "diligent",
+    meaning: "کار سخت",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "placid",
+    meaning: "آرام، به راحتی هیجان‌زده یا عصبانی نمی‌شود",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "personality",
+    meaning: "شخصیتی که مردم را به سمت شما جذب می‌کند",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "distrustful",
+    meaning: "بدون اعتماد، نسبت به دیگران شکاک",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "shrewd",
+    meaning: "دارای قضاوت خوب",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "supportive",
+    meaning: "کمک یا تشویق کردن برای چیزی",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "down-to-earth",
+    meaning: "عملی و معقول",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "altruistic",
+    meaning: "به فکر دیگران به جای خودتان",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "morose",
+    meaning: "تیره و تار",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "sharp-tongued",
+    meaning: "میل به صحبت کردن به شیوه‌ای شدید و انتقادی",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "naive",
+    meaning: "تجربه زندگی کافی ندارد، خیلی راحت اعتماد می‌کند",
+    lesson: 8,
+    lessonLabel: "درس 8 — توصیف افراد: ویژگی‌های مثبت و منفی",
+  },
+  {
+    word: "null",
+    meaning: "در شرایط عالی، شیک",
+    lesson: 9,
+    lessonLabel: "درس 9 — توصیف افراد: ظاهر و رفتار",
+  },
+  {
+    word: "swarthy",
+    meaning: "تیره‌رنگ، درباره پوست به کار می‌رود",
+    lesson: 9,
+    lessonLabel: "درس 9 — توصیف افراد: ظاهر و رفتار",
+  },
+  {
+    word: "sallow",
+    meaning: "زردرنگ",
+    lesson: 9,
+    lessonLabel: "درس 9 — توصیف افراد: ظاهر و رفتار",
+  },
+  {
+    word: "haggard",
+    meaning: "چهره‌اش بیمار و خسته به نظر می‌رسید",
+    lesson: 9,
+    lessonLabel: "درس 9 — توصیف افراد: ظاهر و رفتار",
+  },
+];
+
+export const VOCAB_PART_1: Row[] = ROWS;
