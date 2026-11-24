@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 46,
+    "dpi": 300,
+    "renderSha256": "6e5f21ded5a694f3e150bb66d766d7575f5deb289fbb8297d11b1eeb6cfbeed7",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:42:50.306Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 45,
+    "testNumber": "39",
+    "testTitle": "Make / made / made",
+    "exercises": [
+      {
+        "id": "39.1",
+        "marks": "10 marks",
+        "instruction": "What is each person making? Write sentences.",
+        "items": [
+          "Example: Ivan",
+          "Ivan is making a noise.",
+          "1 Pam",
+          "2 Tim",
+          "3 Rose",
+          "4 Chris",
+          "5 Isabelle",
+          "6 Phil",
+          "7 Sophie",
+          "8 Vincent",
+          "9 Katy",
+          "10 Nathan"
+        ]
+      },
+      {
+        "id": "39.2",
+        "marks": "10 marks",
+        "instruction": "Put these words in the right column.",
+        "items": [
+          "Do",
+          "Make",
+          "lunch"
+        ]
+      },
+      {
+        "id": "39.3",
+        "marks": "10 marks",
+        "instruction": "There are six mistakes in this letter. Correct them – the first one is done for you.",
+        "items": [
+          "Dear Jane,",
+          "I've had such a busy day. After school I made my homework. I did it very quickly, so I think I probably did a lot of mistakes. Then my friend and I went to a film. The hero died, so it made us feel very happy. But it was a very long film, so it made I feel quite tired too. When I got home I had to make the washing. Then at last I could go to bed.",
+          "I've got to make an exam next week, but let's meet at the weekend.",
+          "Love,",
+          "Annie"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "lunch  your homework  a noise  an appointment  a mistake  some exercises  the housework  the washing  an exam  a choice  the cooking"
+    ],
+    "pictures": [
+      "Example picture: boy playing drums (Ivan)",
+      "Picture 1: kettle pouring tea into teapot (Pam)",
+      "Picture 2: man photocopying papers (Tim)",
+      "Picture 3: woman serving food to girl (Rose)",
+      "Picture 4: video camera (Chris)",
+      "Picture 5: person doing laundry (Isabelle)",
+      "Picture 6: hand writing 'APRIL 16 10.30 Dentist' in diary (Phil)",
+      "Picture 7: hand writing '2+2=5' in notebook (Sophie)",
+      "Picture 8: man cooking at stove (Vincent)",
+      "Picture 9: woman making the bed (Katy)",
+      "Picture 10: coffee pot and two cups (Nathan)",
+      "Two-column table with headers 'Do' and 'Make'"
+    ],
+    "unclassified": [
+      "Your score",
+      "/30",
+      "Test Your English Vocabulary in Use Elementary",
+      "did (handwritten correction above 'made' in letter)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 45,\n \"testNumber\": \"39\",\n \"testTitle\": \"Make / made / made\",\n \"exercises\": [\n   {\"id\": \"39.1\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"What is each person making? Write sentences.\",\n    \"items\": [\"Example: Ivan\", \"Ivan is making a noise.\", \"1 Pam\", \"2 Tim\", \"3 Rose\", \"4 Chris\", \"5 Isabelle\", \"6 Phil\", \"7 Sophie\", \"8 Vincent\", \"9 Katy\", \"10 Nathan\"]},\n   {\"id\": \"39.2\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Put these words in the right column.\",\n    \"items\": [\"Do\", \"Make\", \"lunch\"]},\n   {\"id\": \"39.3\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"There are six mistakes in this letter. Correct them – the first one is done for you.\",\n    \"items\": [\"Dear Jane,\", \"I've had such a busy day. After school I made my homework. I did it very quickly, so I think I probably did a lot of mistakes. Then my friend and I went to a film. The hero died, so it made us feel very happy. But it was a very long film, so it made I feel quite tired too. When I got home I had to make the washing. Then at last I could go to bed.\", \"I've got to make an exam next week, but let's meet at the weekend.\", \"Love,\", \"Annie\"]}\n ],\n \"boxesAndLists\": [\"lunch  your homework  a noise  an appointment  a mistake  some exercises  the housework  the washing  an exam  a choice  the cooking\"],\n \"pictures\": [\"Example picture: boy playing drums (Ivan)\", \"Picture 1: kettle pouring tea into teapot (Pam)\", \"Picture 2: man photocopying papers (Tim)\", \"Picture 3: woman serving food to girl (Rose)\", \"Picture 4: video camera (Chris)\", \"Picture 5: person doing laundry (Isabelle)\", \"Picture 6: hand writing 'APRIL 16 10.30 Dentist' in diary (Phil)\", \"Picture 7: hand writing '2+2=5' in notebook (Sophie)\", \"Picture 8: man cooking at stove (Vincent)\", \"Picture 9: woman making the bed (Katy)\", \"Picture 10: coffee pot and two cups (Nathan)\", \"Two-column table with headers 'Do' and 'Make'\"],\n \"unclassified\": [\"Your score\", \"/30\", \"Test Your English Vocabulary in Use Elementary\", \"did (handwritten correction above 'made' in letter)\"]\n}\n```"
+}
