@@ -1,0 +1,66 @@
+{
+  "step": "A1-BIZ-S02 (بقایای صفحات ۱۹–۲۴ biz) — اولین گام اجرایی نقشهٔ مادر سری TYV",
+  "date": "2026-11-23 (1405/09/02)",
+  "ownerCommand": "«این نقشه راه رو قدم اولش رو شروع کن» + مسیر «نقشه راه ها/سری-TYV/01-نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md» — trace 1a20a04e9dfd4b21 — channel zai-web",
+  "preRecovery36": {
+    "headLocal": "193269b76cf46f9dcb210c71953bd1614c4dc45f (stale — 2026-11-08 era — ریست پنهان ۳۶م، الگوی ۳۱..۳۵)",
+    "remoteMainAfterFetch": "a4c4eb4b4e427e8c6654a326a62b66d224791615 (ثبت اثبات سازمان‌دهی سری TYV — سربرگ ۱۱۸مین)",
+    "porcelain": "32 M + 378 ?? = 410 dirty paths",
+    "divergence": "0/0 — صفر کامیت یکتای محلی"
+  },
+  "recovery36ZeroLossProof": {
+    "method": "Node in-process sha1 blob hashing — git ls-tree -r -z backup/main + cd688a9 decoded — pattern of recoveries 29/32/33/34/35",
+    "phase1LoosePaths": { "dirty": 381, "matchRemote": 374, "differ": 0, "absentRemote": 7 },
+    "absentRemote7": "هفت سند پیشا-سازمان‌دهی TYV — blob هر هفت == درخت تاریخی cd688a9 (پیش از git mv سازمان‌دهی) ⇒ تاریخی-قابل‌بازیابی، نه یگانه",
+    "phase2FullWalk": { "files": 4443, "matchRemote": 4219, "matchHistorical": 7, "uniqueTotal": 217 },
+    "unique217Breakdown": "۱۶۷ skills/ + ۱ .zscripts log + ۱ next-env.d.ts همگی gitignore (/skills/ · *.log · next-env.d.ts) + ۴۸ سند قدیمی N1 نقشه راه ها — هر ۴۸/۴۸ blob در تاریخچهٔ ریموت یافت (git rev-list --objects --all) ⇒ صفر محتوای محلی-یگانه",
+    "missingFromDisk": 0,
+    "safetyNet": "tar czf /tmp/recovery36/dirty-tree-safety-2026-11-23.tar.gz — 1788 فایل — 160,078,357B"
+  },
+  "recovery36": [
+    "git fetch backup (main 193269b→a4c4eb4)",
+    "zero-loss hash verification phases 1+2 (above)",
+    "tar safety net 160MB",
+    "git clean -fd (delete verified-recoverable untracked — restored as tracked by merge)",
+    "git checkout -- . (32 modified — each hash-proven == remote blob)",
+    "git merge --ff-only backup/main → HEAD = a4c4eb4b… (pure fast-forward 193269b→a4c4eb4 — zero reset/rebase/force)"
+  ],
+  "postRecoveryVerify": {
+    "porcelain": 0,
+    "headLocal": "a4c4eb4b4e427e8c6654a326a62b66d224791615 == backup/main (ls-remote)",
+    "a1DiskTruthPreStep": "25/489 (biz 16 · elem 3 · pri 3 · upp 3 — بازشماری page-*.json)",
+    "seriTyvDocs": "7 numbered documents present in «نقشه راه ها/سری-TYV/»"
+  },
+  "stepExecution": {
+    "command": "bun scripts/tyv-a1-vlm-capture.mjs biz 19,20,21,22,23,24 (هم‌گام — درس سندباکس: nohup پس‌زمینه می‌میرد)",
+    "result": "DONE tyv-biz: captured=6 skipped=0 failed=0",
+    "pages": [19, 20, 21, 22, 23, 24],
+    "pageStatus": "6/6 status=ok",
+    "newJsonFiles": ["page-019.json", "page-020.json", "page-021.json", "page-022.json", "page-023.json", "page-024.json"],
+    "provenancePerPage": "renderSha256 + dpi=300 + model (z-ai vision CLI) + promptVersion=tyv-a1-v1 + ownerCommand + attempts + timestamp — کامل روی هر ۶ صفحه",
+    "footers": { "p19": 22, "p20": 23, "p21": 24, "p22": 25, "p23": 26, "p24": 27 },
+    "footerOffset": "+3 پابرجا روی هر ۶ صفحه (pdfPage→printed footer)",
+    "contentHighlights": "p19 تست ۱۶ «Making things» (۳ تمرین/۱۹ آیتم) · p20–p23 Summary Test 1 واحد مرکب چندصفحه‌ای (ریسک ۷ مادر — p20 تمرین‌های ۱–۳ · p21 تمرین‌های ۴–۶ · p22 تمرین‌های ۷–۹ · p23 تمرین ۱۰) · p24 تست ۱۷ «Materials and suppliers»",
+    "batchStats": "۱۶ تمرین / ۱۲۴ آیتم / ۱۸ باکس / ۷ یادداشت تصویر در این دسته"
+  },
+  "postStepDiskTruth": {
+    "a1Total": "31/489",
+    "biz": "22/98 (صفحات 4..18 + 19..24 + 43)",
+    "elem": "3/96",
+    "pri": "3/142",
+    "upp": "3/153",
+    "indexUpdated": "docs/qa/tyv-capture-biz/a1-index.json (capturedNow=6 · skippedExisting=0 · failedNow=[])"
+  },
+  "acceptanceChecklist": {
+    "scriptDoneLine": "DONE tyv-biz: captured=6 skipped=0 failed=0 ✓",
+    "fullProvenancePerNewPage": "✓ (۶/۶)",
+    "a1IndexUpdated": "✓",
+    "failedZero": "✓ (failed=0 — صف فایل ناموفق خالی)",
+    "footerRecordedPerPage": "✓ (۶/۶ — null مجاز اما صفر null در این دسته)",
+    "zeroSrcDbScriptChanges": "✓ (git delta = ۶ JSON + index + اسناد پایداری فقط)",
+    "persistenceCycle": "worklog + SNAPSHOT سربرگ ۱۱۹مین + مادر §۶ + دفتر §۱-۱/§۷ + فهرست + این JSON + دو-کامیتی §۱۰-۷ + ls-remote"
+  },
+  "nextAllowedStep": "A1-BIZ-S03 = bun scripts/tyv-a1-vlm-capture.mjs biz 25,26,27,28,29,30,31,32,33,34,35,36 — سپس S04..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP ⇒ سند دروازهٔ G1",
+  "standingGatesUntouched": "R3-e EXECUTED موج اول standing · FA-REVIEWED awaiting owner adjudication · G5/A5-5 standing · A2..A6 گیت‌دار — صفر wired محصولی",
+  "persistenceProtocol": "two-commit §10-7: content commit → hook auto-push → ls-remote proof → proof-registration commit → final ls-remote"
+}

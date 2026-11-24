@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "phase": "A0 — انگشت‌نگاری intake + پروب ساختاری (فقط‌خواندنی — صفر تغییر دادهٔ محصولی)",
+    "date": "2026-11-22",
+    "jalali": "۱۴۰۵/۹/۲",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71 — channel zai-web",
+    "masterRoadmap": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md",
+    "gate": "A2..A6 گیت‌دار — A5 (ورود قفسه) فقط با فرمان صریح مالک",
+    "tools": ["pdfinfo (poppler)", "pdftotext (poppler)", "pdftoppm 60DPI grayscale (poppler)", "sha256sum"]
+  },
+  "files": [
+    {
+      "name": "Test Your English Vocabulary in Use-Elementary.pdf",
+      "bookId": "tyv-elem",
+      "sha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+      "bytes": 33225451,
+      "pdfInfo": { "pages": 96, "pageSize": "537 x 733.5 pts", "producer": "Adobe Acrobat 8.13 Image Conversion Plug-in", "creator": "Adobe Acrobat 8.13", "pdfVersion": "1.6" },
+      "textLayerProbe": { "charsP1_3": 3, "charsP2_6": 5, "verdict": "اسکن تصویری — بدون لایهٔ متنی قابل‌استخراج ⇒ مسیر A1 = رونویسی VLM" },
+      "verdict": "کتاب متمایز ۱ از ۴"
+    },
+    {
+      "name": "Test Your English Vocabulary in Use-Pre & Int.pdf",
+      "bookId": "tyv-pri",
+      "sha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+      "bytes": 7827018,
+      "pdfInfo": { "pages": 142, "pageSize": "520.28 x 693.23 pts", "producer": "ABBYY FineReader 8.0 Professional Edition", "creator": "Adobe Acrobat 7.0", "pdfVersion": "1.6" },
+      "textLayerProbe": { "charsP1_3": 3, "charsP2_6": 5, "verdict": "اسکن تصویری — بدون لایهٔ متنی قابل‌استخراج ⇒ مسیر A1 = رونویسی VLM" },
+      "verdict": "کتاب متمایز ۲ از ۴"
+    },
+    {
+      "name": "Test Your English Vocabulary in Use-Upper Intermediate.pdf",
+      "bookId": "tyv-upp",
+      "sha256": "e4014bdfb072d27b154d03f6bf3bb148ed2749b1ddca6bd12810a74c22105010",
+      "bytes": 7429470,
+      "pdfInfo": { "pages": 153, "pageSize": "553 x 708 pts", "producer": "ABBYY FineReader", "creator": "", "pdfVersion": "1.6" },
+      "textLayerProbe": { "charsP1_3": 3, "charsP2_6": 5, "verdict": "اسکن تصویری — بدون لایهٔ متنی قابل‌استخراج ⇒ مسیر A1 = رونویسی VLM" },
+      "verdict": "کتاب متمایز ۳ از ۴"
+    },
+    {
+      "name": "Test Your English Vocabulary in Use-Business.pdf",
+      "bookId": "tyv-biz",
+      "sha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+      "bytes": 15371860,
+      "pdfInfo": { "pages": 98, "pageSize": "329.04 x 407.16 pts", "producer": "ABBYY FineReader 8.0 Professional Edition", "creator": "", "pdfVersion": "1.6" },
+      "textLayerProbe": { "charsP1_3": 3, "charsP2_6": 5, "verdict": "اسکن تصویری — بدون لایهٔ متنی قابل‌استخراج ⇒ مسیر A1 = رونویسی VLM" },
+      "verdict": "کتاب متمایز ۴ از ۴"
+    },
+    {
+      "name": "Test Your English Vocabulary in Use-Intermediate.pdf",
+      "bookId": null,
+      "sha256": "7410acee9ddca86cdf1d8aaf346fb89b285d30a8e60fdc0950dc922bf638af1d",
+      "bytes": 15187036,
+      "pdfInfo": { "pages": 98, "pageSize": "329.04 x 407.16 pts", "producer": "ABBYY FineReader 8.0 Professional Edition", "creator": "", "pdfVersion": "1.6" },
+      "textLayerProbe": { "charsP1_3": 3, "charsP2_6": 5, "verdict": "اسکن تصویری — بدون لایهٔ متنی" },
+      "verdict": "نسخهٔ تکراری Business — اثبات در §duplicateProof — دامنهٔ استخراج را افزایش نمی‌دهد"
+    }
+  ],
+  "duplicateProof": {
+    "compared": "Test Your English Vocabulary in Use-Business.pdf ←→ Test Your English Vocabulary in Use-Intermediate.pdf",
+    "method": "pdftoppm -r 60 -gray روی صفحات ۴/۳۰/۶۰ هر دو فایل + مقایسهٔ SHA-256 خروجی‌های PGM",
+    "identicalPageHashes": {
+      "page4": "dacea5a30a5210022f7f6fb7de51463c377315068d7a1cfb6a3e4a404c6bdc60",
+      "page30": "2c6f9a7de3faf64bbe6b54be7d763599e9557254cb820b487d69e1ff3044f156",
+      "page60": "bf5c37375678d5d6377fad084d98ce33c21ff09647b80141904ff4ebb883e6f5"
+    },
+    "corroborating": [
+      "تعداد صفحات یکسان: ۹۸ = ۹۸",
+      "اندازهٔ صفحه یکسان: 329.04 x 407.16 pts",
+      "producer یکسان: ABBYY FineReader 8.0 Professional Edition",
+      "پیوست صفحات آپلودی «Intermediate» در پیام مالک = جلد/محتوای Business",
+      "تفاوت بایت (۱۵٬۳۷۱٬۸۶۰ در برابر ۱۵٬۱۸۷٬۰۳۶) = متادیتا/کانتینر، نه محتوای صفحه"
+    ],
+    "verdict": "نمونهٔ دوم همان اسکن «Test your Business Vocabulary in Use» است — کتاب ششمِ مستقل وجود ندارد؛ اگر مالک کتاب واقعی دیگری تحت نام Intermediate مدنظر دارد، فایل صحیح باید آپلود شود."
+  },
+  "bookRegistry": [
+    {
+      "bookId": "tyv-elem",
+      "title": "Test Your English Vocabulary in Use — Elementary",
+      "edition": "Second Edition",
+      "authors": "Michael McCarthy & Felicity O'Dell",
+      "publisher": "Cambridge University Press",
+      "year": "© 2010",
+      "pdfPages": 96,
+      "tests": 60,
+      "sections": ["People 1–9", "At home 10–13", "School and workplace 14–16", "Leisure 17–24", "The world 25–31", "Social issues 32–35", "Everyday verbs 36–47", "Words and grammar 48–60"],
+      "answerKey": "p.67",
+      "personalDiary": "p.93",
+      "phonemicSymbols": "p.94",
+      "marksPerTest": "/30",
+      "isbnVisible": ["978-0-521-13620-4 (with CD-ROM)", "978-0-521-13617-4 (with answers)", "978-0-521-13619-8 (without answers)", "978-0-521-13621-1 (Test Your … — جلد پشتی)"],
+      "isbnSource": "صفحهٔ کپی‌رایت + جلد پشتی — از پیوست صفحات آپلودی مالک؛ راستی‌آزمایی نهایی صفحه‌محور در A1",
+      "companion": "English Vocabulary in Use — Elementary 2nd ed (قفسهٔ موجود: viu-elem) — مقدمهٔ خود کتاب: «تست‌ها مطابق ۶۰ واحد EVU Elementary»",
+      "roadmapFile": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md"
+    },
+    {
+      "bookId": "tyv-pri",
+      "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate",
+      "edition": "چاپ قدیمی CUP (ISBN جلد پشتی 0-521-77980-4)",
+      "authors": "Stuart Redman & Ruth Gairns",
+      "publisher": "Cambridge University Press",
+      "year": "در پیوست‌ها مشخص نیست — استخراج از صفحهٔ کپی‌رایت در A1",
+      "pdfPages": 142,
+      "tests": 100,
+      "sections": ["Learning 1–6", "Word formation 7–12", "Phrase building 13–26", "Parts of speech (special problems) 27–32", "Connecting and linking 33–36", "Topics 37–68", "Leisure and entertainment 69–73", "Communication and technology 74–77", "Social concerns 78–85", "Tourism 86–89", "Notional concepts 90–95", "Varieties of English 96–100"],
+      "answerKey": "پس از تست ۱۰۰ (≈ p.104 — تأیید دقیق در A1)",
+      "personalDiary": "پس از کلید",
+      "phoneticSymbols": "p.142",
+      "marksPerTest": "/30",
+      "isbnVisible": ["0-521-77980-4 (جلد پشتی)"],
+      "isbnSource": "جلد پشتی — از پیوست صفحات آپلودی مالک",
+      "companion": "English Vocabulary in Use pre-intermediate & intermediate (قفسهٔ موجود: viu-preint) — مقدمهٔ خود کتاب تست‌ها را به واحدهای کتاب مادر می‌بندد، اما چاپ این اسکن قدیمی‌تر است ⇒ نگاشت واحد فقط محتوایی (نه شماره‌ای)",
+      "scanQualityNote": "اسکن با لکه/کیفیت پایین‌تر از بقیه — سنگین‌ترین کتاب برای رونویسی VLM — دوگذر الزامی‌تر",
+      "roadmapFile": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md"
+    },
+    {
+      "bookId": "tyv-upp",
+      "title": "Test Your English Vocabulary in Use — upper-intermediate",
+      "edition": "First published 2001 · 3rd printing 2002",
+      "authors": "Michael McCarthy & Felicity O'Dell",
+      "publisher": "Cambridge University Press",
+      "year": "© 2001",
+      "pdfPages": 153,
+      "tests": 90,
+      "sections": ["Effective vocabulary learning 1", "Word formation 2–11", "Words and pronunciation 12–14", "Connecting and linking words 15–19", "Countables and uncountables 20–25", "Topics 26–53", "Feelings and actions 54–59", "Basic concepts 60–65", "Movement/Texture/Success 66–68", "Idiomatic expressions 69–79", "Phrasal verbs and verb-based expressions 80–84", "Varieties of English 85–90"],
+      "answerKey": "p.100",
+      "phoneticSymbols": "p.149",
+      "marksPerTest": "/40",
+      "isbnVisible": ["0-521-66568-X", "0-521-66435-7 = کتاب مادر EVU upper-intermediate (second edition)"],
+      "isbnSource": "صفحهٔ کپی‌رایت — از پیوست صفحات آپلودی مالک",
+      "companion": "English Vocabulary in Use upper-intermediate 2nd ed (قفسهٔ موجود: viu-upper) — وارسی چاپ دقیق کتاب مادر قفسه در گام A0 مکمل",
+      "extraRule": "مقدمه: تمرین اول هر تست حداکثر ۱۰ نمره — اول انجام شود؛ نمرهٔ <۵ ⇒ کار بیشتر روی همان حوزه",
+      "roadmapFile": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md"
+    },
+    {
+      "bookId": "tyv-biz",
+      "title": "Test your Business Vocabulary in Use",
+      "edition": "CUP",
+      "authors": "George Bethell & Tricia Aspinall",
+      "publisher": "Cambridge University Press",
+      "year": "در پیوست‌ها مشخص نیست — استخراج از صفحهٔ کپی‌رایت در A1",
+      "pdfPages": 98,
+      "tests": "۶۶ تست + Summary Test 1–4 (واحدهای 1–16 / 17–32 / 33–51 / 52–66)",
+      "sections": ["Business jobs 1–16", "Business philosophies 17–32 (واحد ۱۷ = Materials and suppliers)", "Personal finance / Indicators 33–51", "Telephoning 52", "E-mails 53", "Meetings 54–58", "Presentations 59–61", "Negotiations 62–66"],
+      "answerKey": "p.89 (تا p.101)",
+      "acknowledgements": "p.102",
+      "marksPerTest": "هر تست بنر Total + Target (مثلاً Total 22 / Target 16+) — کلید: «یک نمره برای هر پاسخ کامل؛ جمع با Target مقایسه شود»",
+      "isbnVisible": [],
+      "isbnSource": "در پیوست‌های مالک دیده نشد — استخراج از صفحهٔ کپی‌رایت در A1",
+      "companion": "Business Vocabulary in Use (Mascull) — در قفسه نیست ⇒ کتاب مستقل",
+      "roadmapFile": "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md"
+    }
+  ],
+  "nextGates": [
+    "ادامهٔ A1 (مکانیکی — resumable): bun scripts/tyv-a1-vlm-capture.mjs <biz|elem|pri|upp> all",
+    "G1 پس از پوشش کامل ۴۸۹ صفحهٔ ۴ کتاب: گزارش دوگذر census/verify + نرخ [?] — مالک",
+    "A2..A6 گیت‌دار — عین الگوی AVU-3"
+  ]
+}

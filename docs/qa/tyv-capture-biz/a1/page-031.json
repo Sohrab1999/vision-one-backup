@@ -1,0 +1,82 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 31,
+    "dpi": 300,
+    "renderSha256": "3fb2ac46d78f272e08a1e963ee21b214791f44786333573ff44a00df6fde3b5e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T04:59:29.814Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 34,
+    "testNumber": "24",
+    "testTitle": "Place",
+    "exercises": [
+      {
+        "id": "24.1",
+        "marks": "8 marks",
+        "instruction": "Find the word from the list below that best fits each statement. Write the letter of your chosen answer next to the statement. There is one extra word that you don't have to use.",
+        "items": [
+          "1 We buy large quantities of wine directly from the producers and sell to shops and restaurants.",
+          "2 We have a small shop selling newspapers, magazines, sweets and cigarettes.",
+          "3 We opened in Chicago in 1952. We sell coffee, sodas and pastries. And, of course, medicines!",
+          "4 I own the Pizza Express restaurant in our town. I get a lot of help from the parent company.",
+          "5 It is a huge shop and it sells everything – food, clothes, furniture, plants, everything.",
+          "6 We sent out 200,000 letters to car owners last week promoting our new insurance service.",
+          "7 We phone people between 6 and 8 in the evening trying to sell them home security products.",
+          "8 Most big towns in England have a shopping centre but the idea came from the US."
+        ]
+      },
+      {
+        "id": "24.2",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below.",
+        "items": [
+          "1 Mailshots, telemarketing and door-to-door selling are all part of ............................ .",
+          "2 We have about 150 telesales people in our .................................. in Dublin.",
+          "3 We use .................................. to find new customers but most people don't like being approached by companies that they don't know.",
+          "4 The bigger supermarkets don't like .................................. because they offer very low prices.",
+          "5 The 'Body Shop' is a .................................. with branches throughout the UK."
+        ]
+      },
+      {
+        "id": "24.3",
+        "marks": "6 marks",
+        "instruction": "Find the answer to each clue. The first letter is given in each case.",
+        "items": [
+          "1 Disapproving term for direct mail: ................ mail",
+          "2 A shop can also be called a retail .................",
+          "3 Disapproving term for wholesalers",
+          "4 Type of store that sells a wide range of goods",
+          "5 Local shop that's open long hours: ................ store",
+          "6 Wholesalers and retailers are ................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A telemarketing   B mall   C discounter   D hypermarket   E drugstore",
+      "F mailshot   G wholesaler   H retailer   I franchise",
+      "chain\ndeep\ndirect\ncold\ncall",
+      "marketing\ncentre\ncalls\nstore\nprecinct\ndiscounters"
+    ],
+    "pictures": [
+      "word-step grid for exercise 24.3 with first letters j, o, m, d, c, d in staggered rows numbered 1–6"
+    ],
+    "unclassified": [
+      "Total 24",
+      "Target 20+",
+      "Your score",
+      "/24",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 34,\n \"testNumber\": \"24\",\n \"testTitle\": \"Place\",\n \"exercises\": [\n  {\"id\": \"24.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Find the word from the list below that best fits each statement. Write the letter of your chosen answer next to the statement. There is one extra word that you don't have to use.\",\n   \"items\": [\n    \"1 We buy large quantities of wine directly from the producers and sell to shops and restaurants.\",\n    \"2 We have a small shop selling newspapers, magazines, sweets and cigarettes.\",\n    \"3 We opened in Chicago in 1952. We sell coffee, sodas and pastries. And, of course, medicines!\",\n    \"4 I own the Pizza Express restaurant in our town. I get a lot of help from the parent company.\",\n    \"5 It is a huge shop and it sells everything – food, clothes, furniture, plants, everything.\",\n    \"6 We sent out 200,000 letters to car owners last week promoting our new insurance service.\",\n    \"7 We phone people between 6 and 8 in the evening trying to sell them home security products.\",\n    \"8 Most big towns in England have a shopping centre but the idea came from the US.\"\n   ]},\n  {\"id\": \"24.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below.\",\n   \"items\": [\n    \"1 Mailshots, telemarketing and door-to-door selling are all part of ............................ .\",\n    \"2 We have about 150 telesales people in our .................................. in Dublin.\",\n    \"3 We use .................................. to find new customers but most people don't like being approached by companies that they don't know.\",\n    \"4 The bigger supermarkets don't like .................................. because they offer very low prices.\",\n    \"5 The 'Body Shop' is a .................................. with branches throughout the UK.\"\n   ]},\n  {\"id\": \"24.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Find the answer to each clue. The first letter is given in each case.\",\n   \"items\": [\n    \"1 Disapproving term for direct mail: ................ mail\",\n    \"2 A shop can also be called a retail .................\",\n    \"3 Disapproving term for wholesalers\",\n    \"4 Type of store that sells a wide range of goods\",\n    \"5 Local shop that's open long hours: ................ store\",\n    \"6 Wholesalers and retailers are .................\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"A telemarketing   B mall   C discounter   D hypermarket   E drugstore\",\n  \"F mailshot   G wholesaler   H retailer   I franchise\",\n  \"chain\\ndeep\\ndirect\\ncold\\ncall\",\n  \"marketing\\ncentre\\ncalls\\nstore\\nprecinct\\ndiscounters\"\n ],\n \"pictures\": [\n  \"word-step grid for exercise 24.3 with first letters j, o, m, d, c, d in staggered rows numbered 1–6\"\n ],\n \"unclassified\": [\n  \"Total 24\",\n  \"Target 20+\",\n  \"Your score\",\n  \"/24\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

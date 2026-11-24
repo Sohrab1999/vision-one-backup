@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 17,
+    "dpi": 300,
+    "renderSha256": "2e564f10a054159d57a9f4cff362022010c161f4cd7258fc373b2d934898dd70",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T13:00:52.378Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 20,
+    "testNumber": "14",
+    "testTitle": "The development process",
+    "exercises": [
+      {
+        "id": "14.1",
+        "marks": "8 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'We are very excited about our new multimedia range. The original (1) ............ was to produce a large, flat screen that would hang on the wall like a picture. Our (2) ............ research showed us that people don't want huge TVs in their living rooms. 80% of people who filled in our (3) ............ said they wanted one screen to be a TV, a computer monitor, or used to show DVDs. It took us two years to make the (4) ............ . When we showed it to our (5) ............ group, they loved it. There were one or two small (6) ............ , but we solved them easily. We are having a big product (7) ............ next week and our sales (8) ............ is approximately 100,000 units in the first year.'",
+          "1 A design        B concept        C manufacture",
+          "2 A market        B shop           C laboratory",
+          "3 A application   B interview      C questionnaire",
+          "4 A trial         B version        C prototype",
+          "5 A focus         B panel          C thought",
+          "6 A insects       B bugs           C flies",
+          "7 A launch        B survey         C rollout",
+          "8 A team          B department     C forecast"
+        ]
+      },
+      {
+        "id": "14.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 We did a .................... in which we interviewed 200 members of the public. (survey/research)",
+          "2 I am on the .................... panel for Smiths Frozen Meals.  (researcher/consumer)",
+          "3 We hope to produce this medicine on an industrial .................... by 2006.  (size/scale)",
+          "4 Our new drug is .................... against all common forms of malaria.  (effective/active)",
+          "5 In .................... , 90% preferred the taste of our new coffee.   (trials/questionnaires)",
+          "6 We'll see what customers think of the new model after the .................... in April. (rollout/forecast)"
+        ]
+      },
+      {
+        "id": "14.3",
+        "marks": "6 marks",
+        "instruction": "Find a word related to each clue. The first letters of the answers are given.",
+        "items": [
+          "1 Another word meaning 'idea'",
+          "2 The final test version",
+          "3 IT system used for design and manufacture",
+          "4 Another word for a 'fault'",
+          "5 Where scientists develop new drugs",
+          "6 Ask people to return faulty products"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 20 / Target 15+ [?]"
+    ],
+    "pictures": [
+      "cartoon drawing of a man and woman holding a remote control in front of a computer monitor with speakers and stacked devices",
+      "word grid with numbered rows 1-6 showing first letters c, b, C, d, l, r (partially blank answer grid for 14.3)"
+    ],
+    "unclassified": [
+      "Your score /20",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 20,\n \"testNumber\": \"14\",\n \"testTitle\": \"The development process\",\n \"exercises\": [\n  {\"id\": \"14.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\"'We are very excited about our new multimedia range. The original (1) ............ was to produce a large, flat screen that would hang on the wall like a picture. Our (2) ............ research showed us that people don't want huge TVs in their living rooms. 80% of people who filled in our (3) ............ said they wanted one screen to be a TV, a computer monitor, or used to show DVDs. It took us two years to make the (4) ............ . When we showed it to our (5) ............ group, they loved it. There were one or two small (6) ............ , but we solved them easily. We are having a big product (7) ............ next week and our sales (8) ............ is approximately 100,000 units in the first year.'\",\n    \"1 A design        B concept        C manufacture\",\n    \"2 A market        B shop           C laboratory\",\n    \"3 A application   B interview      C questionnaire\",\n    \"4 A trial         B version        C prototype\",\n    \"5 A focus         B panel          C thought\",\n    \"6 A insects       B bugs           C flies\",\n    \"7 A launch        B survey         C rollout\",\n    \"8 A team          B department     C forecast\"]},\n  {\"id\": \"14.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n   \"items\": [\"1 We did a .................... in which we interviewed 200 members of the public. (survey/research)\",\n    \"2 I am on the .................... panel for Smiths Frozen Meals.  (researcher/consumer)\",\n    \"3 We hope to produce this medicine on an industrial .................... by 2006.  (size/scale)\",\n    \"4 Our new drug is .................... against all common forms of malaria.  (effective/active)\",\n    \"5 In .................... , 90% preferred the taste of our new coffee.   (trials/questionnaires)\",\n    \"6 We'll see what customers think of the new model after the .................... in April. (rollout/forecast)\"]},\n  {\"id\": \"14.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Find a word related to each clue. The first letters of the answers are given.\",\n   \"items\": [\"1 Another word meaning 'idea'\",\n    \"2 The final test version\",\n    \"3 IT system used for design and manufacture\",\n    \"4 Another word for a 'fault'\",\n    \"5 Where scientists develop new drugs\",\n    \"6 Ask people to return faulty products\"]}\n ],\n \"boxesAndLists\": [\"Total 20 / Target 15+ [?]\"],\n \"pictures\": [\"cartoon drawing of a man and woman holding a remote control in front of a computer monitor with speakers and stacked devices\", \"word grid with numbered rows 1-6 showing first letters c, b, C, d, l, r (partially blank answer grid for 14.3)\"],\n \"unclassified\": [\"Your score /20\", \"Test Your Business Vocabulary in Use\"]\n}\n```"
+}

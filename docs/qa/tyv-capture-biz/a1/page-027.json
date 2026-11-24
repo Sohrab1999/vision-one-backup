@@ -1,0 +1,83 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 27,
+    "dpi": 300,
+    "renderSha256": "cd1624714a7e607a085b528d9bec09b5c263703ccd14037576f5890af98739d0",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T04:58:45.416Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 30,
+    "testNumber": "20",
+    "testTitle": "Markets and competitors",
+    "exercises": [
+      {
+        "id": "20.1",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap. Put a circle around the letter, A, B or C, of the answer you choose.",
+        "items": [
+          "1 We are well known in America, but now we want to ......................... the European market.",
+          "A compete          B entrance          C penetrate",
+          "2 The world's soft drinks market is .................... by Pepsi and Coca-Cola.",
+          "A dominated          B segmented          C shared",
+          "3 We were ..................... out of business by the large supermarket chains.",
+          "A left          B driven          C abandoned",
+          "4 We bought out our only competitor so we could ......................... the market in coffee.",
+          "A corner          B front          C edge",
+          "5 Our most important market ..................... is men aged from 18 to 30.",
+          "A place          B share          C segment",
+          "6 Competition is ..................... in the fast food business.",
+          "A efficient          B intense          C successful"
+        ]
+      },
+      {
+        "id": "20.2",
+        "marks": "6 marks",
+        "instruction": "Complete each sentence by writing in the gap the correct form of the verb given in brackets ( ).",
+        "items": [
+          "1 In the late 1990s, market .................... in the field of computers was incredible.   (grow)",
+          "2 Our company is the market ..................... in financial software in the UK.   (lead)",
+          "3 Today our market .................... is about 60% and it is still growing.   (share)",
+          "4 We investigated market ..................... and found that there are two main types of user for our product – small to medium companies and private individuals.   (segment)",
+          "5 We can't relax because we face stiff ..................... .   (compete)",
+          "6 Our next target is to become a key ..................... in the US market.   (play)"
+        ]
+      },
+      {
+        "id": "20.3",
+        "marks": "6 marks",
+        "instruction": "Find the answer to each clue to complete the crossword. Some letters have been given to help you.",
+        "items": [
+          "Across",
+          "1 Enter a market",
+          "3 Abandon a market",
+          "6 To be the only seller",
+          "Down",
+          "2 Competitor",
+          "4 Intense",
+          "5 Not tough: _ _ _-key"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "crossword grid with numbered clues 1–6, some letters given (n, v, o, p, z, c)"
+    ],
+    "unclassified": [
+      "Total 18",
+      "Target 14+",
+      "Your score /18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 30,\n \"testNumber\": \"20\",\n \"testTitle\": \"Markets and competitors\",\n \"exercises\": [\n  {\"id\": \"20.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word to fill each gap. Put a circle around the letter, A, B or C, of the answer you choose.\",\n   \"items\": [\n    \"1 We are well known in America, but now we want to ......................... the European market.\",\n    \"A compete          B entrance          C penetrate\",\n    \"2 The world's soft drinks market is .................... by Pepsi and Coca-Cola.\",\n    \"A dominated          B segmented          C shared\",\n    \"3 We were ..................... out of business by the large supermarket chains.\",\n    \"A left          B driven          C abandoned\",\n    \"4 We bought out our only competitor so we could ......................... the market in coffee.\",\n    \"A corner          B front          C edge\",\n    \"5 Our most important market ..................... is men aged from 18 to 30.\",\n    \"A place          B share          C segment\",\n    \"6 Competition is ..................... in the fast food business.\",\n    \"A efficient          B intense          C successful\"\n   ]},\n  {\"id\": \"20.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete each sentence by writing in the gap the correct form of the verb given in brackets ( ).\",\n   \"items\": [\n    \"1 In the late 1990s, market .................... in the field of computers was incredible.   (grow)\",\n    \"2 Our company is the market ..................... in financial software in the UK.   (lead)\",\n    \"3 Today our market .................... is about 60% and it is still growing.   (share)\",\n    \"4 We investigated market ..................... and found that there are two main types of user for our product – small to medium companies and private individuals.   (segment)\",\n    \"5 We can't relax because we face stiff ..................... .   (compete)\",\n    \"6 Our next target is to become a key ..................... in the US market.   (play)\"\n   ]},\n  {\"id\": \"20.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Find the answer to each clue to complete the crossword. Some letters have been given to help you.\",\n   \"items\": [\n    \"Across\",\n    \"1 Enter a market\",\n    \"3 Abandon a market\",\n    \"6 To be the only seller\",\n    \"Down\",\n    \"2 Competitor\",\n    \"4 Intense\",\n    \"5 Not tough: _ _ _-key\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"crossword grid with numbered clues 1–6, some letters given (n, v, o, p, z, c)\"],\n \"unclassified\": [\"Total 18\", \"Target 14+\", \"Your score /18\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

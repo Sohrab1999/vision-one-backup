@@ -1,0 +1,71 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 16,
+    "dpi": 300,
+    "renderSha256": "6d2a5f8b9b054600d2b0697fcd18c76dadee0f2fcf012dc25ab4a48cd649f755",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T13:00:40.237Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 19,
+    "testNumber": "13",
+    "testTitle": "Manufacturing and services",
+    "exercises": [
+      {
+        "id": "13.1",
+        "marks": "7 marks",
+        "instruction": "Match each picture with one of the industries listed in the table. Write the letter of the picture next to the right industry. Some industries may match more than one picture. The first one is an example.",
+        "items": []
+      },
+      {
+        "id": "13.2",
+        "marks": "6 marks",
+        "instruction": "Match each statement with one of the service industries listed in the box. There is one extra industry that you don't have to use. The first one is an example.",
+        "items": [
+          "0 In our shop we sell high quality shoes from Italy. ...... retail ......",
+          "1 We offer low-cost package holidays in Spain, Portugal and France. ..................",
+          "2 We manage the largest, and most modern, private hospital in England. ..................",
+          "3 We have 22 executive flats to sell close to the city's business district. ..................",
+          "4 We currently supply in-flight meals to seven international airlines. ..................",
+          "5 Our health and sports clubs can be found in over 130 hotels in the UK. ..................",
+          "6 We give advice on how to save money or where to invest it. .................."
+        ]
+      },
+      {
+        "id": "13.3",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill each gap.",
+        "items": [
+          "1 I spent 25 years in the US, working in the .................... industry. (automobile/automobiles)",
+          "2 In Britain, shipbuilding and other .................... industries found it hard to survive in the 80s. (light/heavy)",
+          "3 Telecommunications was one of the .................... industries of the 1990s. (growing/growth)",
+          "4 We don't build computers; we just write the .................... . (software/hardware)",
+          "5 We manufacture refrigerators, washing machines and other household .................... . (goods/parts)",
+          "6 Biotechnology is the new, .................... industry of the 21st century. (processing/emerging)"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "defence | A\nconstruction\naerospace\nmedia\npharmaceuticals\ntelecommunications\ntextiles",
+      "catering    financial services    healthcare    leisure    property    retail    telecommunications    tourism"
+    ],
+    "pictures": [
+      "8 labelled drawings A–H: tank, mobile phone, syringe with pills, Concorde aircraft, fabrics/textiles, space shuttle rocket, newspaper 'THE DAILY TIMES', construction worker pointing at building site"
+    ],
+    "unclassified": [
+      "Total 19\nTarget 15+",
+      "Your score /19",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 19,\n \"testNumber\": \"13\",\n \"testTitle\": \"Manufacturing and services\",\n \"exercises\": [\n  {\"id\": \"13.1\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Match each picture with one of the industries listed in the table. Write the letter of the picture next to the right industry. Some industries may match more than one picture. The first one is an example.\",\n   \"items\": []},\n  {\"id\": \"13.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Match each statement with one of the service industries listed in the box. There is one extra industry that you don't have to use. The first one is an example.\",\n   \"items\": [\"0 In our shop we sell high quality shoes from Italy. ...... retail ......\",\n    \"1 We offer low-cost package holidays in Spain, Portugal and France. ..................\",\n    \"2 We manage the largest, and most modern, private hospital in England. ..................\",\n    \"3 We have 22 executive flats to sell close to the city's business district. ..................\",\n    \"4 We currently supply in-flight meals to seven international airlines. ..................\",\n    \"5 Our health and sports clubs can be found in over 130 hotels in the UK. ..................\",\n    \"6 We give advice on how to save money or where to invest it. ..................\"]},\n  {\"id\": \"13.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill each gap.\",\n   \"items\": [\"1 I spent 25 years in the US, working in the .................... industry. (automobile/automobiles)\",\n    \"2 In Britain, shipbuilding and other .................... industries found it hard to survive in the 80s. (light/heavy)\",\n    \"3 Telecommunications was one of the .................... industries of the 1990s. (growing/growth)\",\n    \"4 We don't build computers; we just write the .................... . (software/hardware)\",\n    \"5 We manufacture refrigerators, washing machines and other household .................... . (goods/parts)\",\n    \"6 Biotechnology is the new, .................... industry of the 21st century. (processing/emerging)\"]}\n ],\n \"boxesAndLists\": [\"defence | A\\nconstruction\\naerospace\\nmedia\\npharmaceuticals\\ntelecommunications\\ntextiles\",\n  \"catering    financial services    healthcare    leisure    property    retail    telecommunications    tourism\"],\n \"pictures\": [\"8 labelled drawings A–H: tank, mobile phone, syringe with pills, Concorde aircraft, fabrics/textiles, space shuttle rocket, newspaper 'THE DAILY TIMES', construction worker pointing at building site\"],\n \"unclassified\": [\"Total 19\\nTarget 15+\",\n  \"Your score /19\",\n  \"Test Your Business Vocabulary in Use\"]}\n"
+}

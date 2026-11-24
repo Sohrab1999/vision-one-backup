@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 9,
+    "dpi": 300,
+    "renderSha256": "22f0384f072c4685d7778f97c9ccdd4cdf826aab2bb7c50d14e23dddfcda4526",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T12:59:21.317Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 12,
+    "testNumber": "6",
+    "testTitle": "People and workplaces",
+    "exercises": [
+      {
+        "id": "6.1",
+        "marks": "6 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.",
+        "items": []
+      },
+      {
+        "id": "6.2",
+        "marks": "8 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 The CEO is the head of the ...................... team. (administration/management/organization)",
+          "2 We have 200 people on our ...................... . (recruitment/business/payroll)",
+          "3 Our ...................... department is responsible for recruitment. (personnel/employee/worker)",
+          "4 Our main office is in London but we have ...................... all over the country.",
+          "(places/companies/sites)",
+          "5 I supervise all the ...................... workers on the production line.",
+          "(manual/white-collar/labour)",
+          "6 I am in charge of training in the human ...................... department. (support/resources/staff)",
+          "7 We have a ...................... of 65 in London and about 30 in Paris. (staff/union/headquarters)",
+          "8 You haven't been paid this month? OK, I'll put you through to the ...................... department.",
+          "(pay/salary/finance)"
+        ]
+      },
+      {
+        "id": "6.3",
+        "marks": "6 marks",
+        "instruction": "Write one word in each gap to complete the conversation. The first letter of each word is given. The first one is an example.",
+        "items": [
+          "'Fellow workers, I'm calling for a walk-out[?]....... because the company says that it will not increase our pay by more than 2% this year. That is not good enough so we must take i.................... action now. All workers who are in the u..................... should stop work immediately.'",
+          "'I don't agree. If there is a s................... we won't get paid. We should refuse to work more than 35 hours a week. An o.................... ban would make management listen to us.'",
+          "'That won't be enough. We should also stage a g........-s.......... . If we don't work very quickly, the company will lose money. Then they'll talk to us.'",
+          "'Right, then. Do we all agree?'"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "support / technical / shop / open / head / blue / work",
+      "collar / support / force / office / staff / union / floor / plan"
+    ],
+    "pictures": [
+      "drawing of a tall office building and a low building with trees, with two word-boxes connected by an example line from 'support' to 'support'"
+    ],
+    "unclassified": [
+      "Test 6",
+      "Total 20 / Target 15+",
+      "Your score /20",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 12,\n  \"testNumber\": \"6\",\n  \"testTitle\": \"People and workplaces\",\n  \"exercises\": [\n    {\n      \"id\": \"6.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.\",\n      \"items\": []\n    },\n    {\n      \"id\": \"6.2\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n      \"items\": [\n        \"1 The CEO is the head of the ...................... team. (administration/management/organization)\",\n        \"2 We have 200 people on our ...................... . (recruitment/business/payroll)\",\n        \"3 Our ...................... department is responsible for recruitment. (personnel/employee/worker)\",\n        \"4 Our main office is in London but we have ...................... all over the country.\",\n        \"(places/companies/sites)\",\n        \"5 I supervise all the ...................... workers on the production line.\",\n        \"(manual/white-collar/labour)\",\n        \"6 I am in charge of training in the human ...................... department. (support/resources/staff)\",\n        \"7 We have a ...................... of 65 in London and about 30 in Paris. (staff/union/headquarters)\",\n        \"8 You haven't been paid this month? OK, I'll put you through to the ...................... department.\",\n        \"(pay/salary/finance)\"\n      ]\n    },\n    {\n      \"id\": \"6.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Write one word in each gap to complete the conversation. The first letter of each word is given. The first one is an example.\",\n      \"items\": [\n        \"'Fellow workers, I'm calling for a walk-out[?]....... because the company says that it will not increase our pay by more than 2% this year. That is not good enough so we must take i.................... action now. All workers who are in the u..................... should stop work immediately.'\",\n        \"'I don't agree. If there is a s................... we won't get paid. We should refuse to work more than 35 hours a week. An o.................... ban would make management listen to us.'\",\n        \"'That won't be enough. We should also stage a g........-s.......... . If we don't work very quickly, the company will lose money. Then they'll talk to us.'\",\n        \"'Right, then. Do we all agree?'\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"support / technical / shop / open / head / blue / work\",\n    \"collar / support / force / office / staff / union / floor / plan\"\n  ],\n  \"pictures\": [\n    \"drawing of a tall office building and a low building with trees, with two word-boxes connected by an example line from 'support' to 'support'\"\n  ],\n  \"unclassified\": [\n    \"Test 6\",\n    \"Total 20 / Target 15+\",\n    \"Your score /20\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

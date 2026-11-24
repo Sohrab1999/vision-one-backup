@@ -1,0 +1,83 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 8,
+    "dpi": 300,
+    "renderSha256": "a4c040385d88dfaf60346083489481c39b3d85e532554bcff6d1dcf71fd53b8d",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:25:20.106Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 7,
+    "testNumber": "1",
+    "testTitle": "The family",
+    "exercises": [
+      {
+        "id": "1.1",
+        "marks": "10 marks",
+        "instruction": "Complete these sentences.",
+        "items": [
+          "Example: I'm his sister – he's my brother .................. .",
+          "1 I'm her father – she's my .................. .",
+          "2 He's my mother's brother – he's my .................. .",
+          "3 I'm his mother – he's my .................. .",
+          "4 He's my brother – I'm his .................. .",
+          "5 I'm his daughter – he's my .................. .",
+          "6 She's my mother – she's my son's .................. .",
+          "7 He's my son – he's my mother's .................. .",
+          "8 He's my father – he's my daughter's .................. .",
+          "9 She's my mother's sister – she's my .................. .",
+          "10 They're my father's mother and father – they're my .................. ."
+        ]
+      },
+      {
+        "id": "1.2",
+        "marks": "10 marks",
+        "instruction": "Complete the crossword.",
+        "items": [
+          "Across",
+          "1 If you had only one child, would you like a son or a .................. ?",
+          "4 Your uncle's son.",
+          "7 Mother and father together.",
+          "8 Do you .................. from a big family?",
+          "10 Have you got .................. brothers or sisters?",
+          "Down",
+          "2 Your mother's brother.",
+          "3 Your brother's son.",
+          "5 Girl with the same parents as you.",
+          "6 Your brother's daughters.",
+          "9 A person with no brothers and sisters is an .................. child."
+        ]
+      },
+      {
+        "id": "1.3",
+        "marks": "10 marks",
+        "instruction": "Are these statements correct? Circle the correct answer and correct any wrong sentences.",
+        "items": [
+          "1 My nephew John is my mother's sister's husband. YES NO",
+          "2 My grandfather is my father's father. YES NO",
+          "3 Mary and David are married. Mary is David's husband. YES NO",
+          "4 I'm Philip, this is Nellie. We're married. She's my wife. YES NO",
+          "5 We talk about two wives and two childs. YES NO"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "crossword grid with numbered squares 1-10 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 7,\n  \"testNumber\": \"1\",\n  \"testTitle\": \"The family\",\n  \"exercises\": [\n    {\n      \"id\": \"1.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete these sentences.\",\n      \"items\": [\n        \"Example: I'm his sister – he's my brother .................. .\",\n        \"1 I'm her father – she's my .................. .\",\n        \"2 He's my mother's brother – he's my .................. .\",\n        \"3 I'm his mother – he's my .................. .\",\n        \"4 He's my brother – I'm his .................. .\",\n        \"5 I'm his daughter – he's my .................. .\",\n        \"6 She's my mother – she's my son's .................. .\",\n        \"7 He's my son – he's my mother's .................. .\",\n        \"8 He's my father – he's my daughter's .................. .\",\n        \"9 She's my mother's sister – she's my .................. .\",\n        \"10 They're my father's mother and father – they're my .................. .\"\n      ]\n    },\n    {\n      \"id\": \"1.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete the crossword.\",\n      \"items\": [\n        \"Across\",\n        \"1 If you had only one child, would you like a son or a .................. ?\",\n        \"4 Your uncle's son.\",\n        \"7 Mother and father together.\",\n        \"8 Do you .................. from a big family?\",\n        \"10 Have you got .................. brothers or sisters?\",\n        \"Down\",\n        \"2 Your mother's brother.\",\n        \"3 Your brother's son.\",\n        \"5 Girl with the same parents as you.\",\n        \"6 Your brother's daughters.\",\n        \"9 A person with no brothers and sisters is an .................. child.\"\n      ]\n    },\n    {\n      \"id\": \"1.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Are these statements correct? Circle the correct answer and correct any wrong sentences.\",\n      \"items\": [\n        \"1 My nephew John is my mother's sister's husband. YES NO\",\n        \"2 My grandfather is my father's father. YES NO\",\n        \"3 Mary and David are married. Mary is David's husband. YES NO\",\n        \"4 I'm Philip, this is Nellie. We're married. She's my wife. YES NO\",\n        \"5 We talk about two wives and two childs. YES NO\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"crossword grid with numbered squares 1-10 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)\"\n  ],\n  \"unclassified\": [\n    \"Test Your English Vocabulary in Use Elementary\",\n    \"Your score /30\"\n  ]\n}\n```"
+}

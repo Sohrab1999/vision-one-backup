@@ -1,0 +1,70 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 68,
+    "dpi": 300,
+    "renderSha256": "dadd55fab56a28c4ee3457010d39815eadc320dc4463e8d68c7d6b6a61e28f3b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:57:47.173Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 71,
+    "testNumber": "53",
+    "testTitle": "E-mails",
+    "exercises": [
+      {
+        "id": "53.1",
+        "marks": "6 marks",
+        "instruction": "An e-mail program has the options A–H as shown below. For each situation (1–6) choose the option that the user should choose. Write the letters of the options you choose in the boxes.",
+        "items": [
+          "1 Last week, Henri wrote an e-mail to his brother. Now he wants to get rid of it.",
+          "2 Ivan got an important e-mail from a customer. He wants to send it on to his boss in Paris.",
+          "3 Carla has received an e-mail from Vincent and she wants to send him an answer.",
+          "4 Marie has a report saved on her computer. She wants to send it to John with the e-mail she has written.",
+          "5 Stefan wants to check whether there are any e-mails waiting for him.",
+          "6 Paula wrote an e-mail to Mike, Tim and Lee. Lee wants to send an answer to Paula and the others."
+        ]
+      },
+      {
+        "id": "53.2",
+        "marks": "8 marks",
+        "instruction": "Look at the e-mail below. Then answer questions 1–3.",
+        "items": [
+          "1 How many people did Tom send the e-mail to? ",
+          "2 When Jenny gets this e-mail, will she see that Tom has sent a copy to Sanjay? How do you know? ",
+          "3 In the message, the underlined words are wrong. Write the correct words in the table."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Address Book A",
+      "Delete Message B",
+      "Forward Message C",
+      "Reply D",
+      "Reply to All E",
+      "Attach File F",
+      "Start New E-mail G",
+      "Send and Receive H",
+      "Wrong word | about | attaching | legible | copy | regard",
+      "Right word | | | | |"
+    ],
+    "pictures": [
+      "e-mail program window screenshot (From tom.scott@leeds.ac.uk, To j.corleone@kingmedia.com, Cc jim1@cambcorps.co.uk, helen271@aol.com, Bcc sanjay.patel@leeds.ac.uk, Subject: Management Training Course) with message text to Jenny and 'Best regard / Tom'"
+    ],
+    "unclassified": [
+      "Total 14",
+      "Target 12+",
+      "our score /14",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 71, \"testNumber\": \"53\", \"testTitle\": \"E-mails\", \"exercises\": [{\"id\": \"53.1\", \"marks\": \"6 marks\", \"instruction\": \"An e-mail program has the options A–H as shown below. For each situation (1–6) choose the option that the user should choose. Write the letters of the options you choose in the boxes.\", \"items\": [\"1 Last week, Henri wrote an e-mail to his brother. Now he wants to get rid of it.\", \"2 Ivan got an important e-mail from a customer. He wants to send it on to his boss in Paris.\", \"3 Carla has received an e-mail from Vincent and she wants to send him an answer.\", \"4 Marie has a report saved on her computer. She wants to send it to John with the e-mail she has written.\", \"5 Stefan wants to check whether there are any e-mails waiting for him.\", \"6 Paula wrote an e-mail to Mike, Tim and Lee. Lee wants to send an answer to Paula and the others.\"]}, {\"id\": \"53.2\", \"marks\": \"8 marks\", \"instruction\": \"Look at the e-mail below. Then answer questions 1–3.\", \"items\": [\"1 How many people did Tom send the e-mail to? \", \"2 When Jenny gets this e-mail, will she see that Tom has sent a copy to Sanjay? How do you know? \", \"3 In the message, the underlined words are wrong. Write the correct words in the table.\"]}], \"boxesAndLists\": [\"Address Book A\", \"Delete Message B\", \"Forward Message C\", \"Reply D\", \"Reply to All E\", \"Attach File F\", \"Start New E-mail G\", \"Send and Receive H\", \"Wrong word | about | attaching | legible | copy | regard\", \"Right word | | | | |\"], \"pictures\": [\"e-mail program window screenshot (From tom.scott@leeds.ac.uk, To j.corleone@kingmedia.com, Cc jim1@cambcorps.co.uk, helen271@aol.com, Bcc sanjay.patel@leeds.ac.uk, Subject: Management Training Course) with message text to Jenny and 'Best regard / Tom'\"], \"unclassified\": [\"Total 14\", \"Target 12+\", \"our score /14\", \"Test Your Business Vocabulary in Use\"]}"
+}

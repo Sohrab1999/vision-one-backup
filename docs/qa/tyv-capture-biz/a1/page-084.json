@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 84,
+    "dpi": 300,
+    "renderSha256": "5665a871694cccf18eae55098f744b152066fe87a18c9bdc200addccf542ed2f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:14:02.941Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 87,
+    "testNumber": "4",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "6",
+        "marks": "6 marks",
+        "instruction": "In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.",
+        "items": [
+          "0 I thought yesterday's seminar was very (producing.) ......................productive.",
+          "1 We covered a lot of groaned and I learnt a lot. ........................",
+          "2 I thought the group discusses were particularly useful. ........................",
+          "3 Tania chaired our group and really kept things moved along. ........................",
+          "4 People always want to regress and that wastes time. ........................",
+          "5 A few got quite excited but no one lost their temperature. ........................",
+          "6 I'm looking forward to the follow-up workplace next month. ........................"
+        ]
+      },
+      {
+        "id": "7",
+        "marks": "6 marks",
+        "instruction": "Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)",
+        "items": [
+          "1 A spokesperson said, 'We hope that this is not the start of a trade war.'",
+          "2 Both sides have agreed that they will accept the decision of the panel as binding.",
+          "3 The company said they would launch the new range in April – three months later than expected.",
+          "4 The delicate wage negotiations continue, with both sides careful about making trade-offs.",
+          "5 The company successfully negotiated a deal to supply 22 new aircraft over five years.",
+          "6 A survey showed that employees spend about 40 minutes a day sending messages to friends.",
+          "7 The union agreed to halt industrial action when the employers withdrew their ultimatum."
+        ]
+      },
+      {
+        "id": "8",
+        "marks": "6 marks",
+        "instruction": "For each sentence, find one word to replace the underlined phrase. Write the word at the end of the sentence.",
+        "items": [
+          "1 I'm also sending a copy of this e-mail to Ruth. ....................",
+          "2 When you give a talk, always check the place where the presentation will be held. ....................",
+          "3 We spent one hour trying to produce as many ideas as possible. ....................",
+          "4 The main thing that we want to achieve today is to set next month's sales targets. ....................",
+          "5 The talks finished in a position where neither side would climb down. ....................",
+          "6 We hope to find a solution where both sides accept less than they wanted at first. ...................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Companies crack down on staff e-mails",
+      "Micropaq product launch delayed",
+      "Europe to retaliate by taxing US imports",
+      "Police pay talks enter difficult phase",
+      "Goodwill gesture ends factory stoppage",
+      "Teachers go to arbitration over pay"
+    ],
+    "pictures": [
+      "Six newspaper-style headline boxes each with an empty answer box beside it (exercise 7)"
+    ],
+    "unclassified": [
+      "Summary Test 4"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 87,\n \"testNumber\": \"4\",\n \"testTitle\": null,\n \"exercises\": [\n   {\"id\": \"6\", \"marks\": \"6 marks\",\n    \"instruction\": \"In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.\",\n    \"items\": [\n      \"0 I thought yesterday's seminar was very (producing.) ......................productive.\",\n      \"1 We covered a lot of groaned and I learnt a lot. ........................\",\n      \"2 I thought the group discusses were particularly useful. ........................\",\n      \"3 Tania chaired our group and really kept things moved along. ........................\",\n      \"4 People always want to regress and that wastes time. ........................\",\n      \"5 A few got quite excited but no one lost their temperature. ........................\",\n      \"6 I'm looking forward to the follow-up workplace next month. ........................\"\n    ]},\n   {\"id\": \"7\", \"marks\": \"6 marks\",\n    \"instruction\": \"Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)\",\n    \"items\": [\n      \"1 A spokesperson said, 'We hope that this is not the start of a trade war.'\",\n      \"2 Both sides have agreed that they will accept the decision of the panel as binding.\",\n      \"3 The company said they would launch the new range in April – three months later than expected.\",\n      \"4 The delicate wage negotiations continue, with both sides careful about making trade-offs.\",\n      \"5 The company successfully negotiated a deal to supply 22 new aircraft over five years.\",\n      \"6 A survey showed that employees spend about 40 minutes a day sending messages to friends.\",\n      \"7 The union agreed to halt industrial action when the employers withdrew their ultimatum.\"\n    ]},\n   {\"id\": \"8\", \"marks\": \"6 marks\",\n    \"instruction\": \"For each sentence, find one word to replace the underlined phrase. Write the word at the end of the sentence.\",\n    \"items\": [\n      \"1 I'm also sending a copy of this e-mail to Ruth. ....................\",\n      \"2 When you give a talk, always check the place where the presentation will be held. ....................\",\n      \"3 We spent one hour trying to produce as many ideas as possible. ....................\",\n      \"4 The main thing that we want to achieve today is to set next month's sales targets. ....................\",\n      \"5 The talks finished in a position where neither side would climb down. ....................\",\n      \"6 We hope to find a solution where both sides accept less than they wanted at first. ....................\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"Companies crack down on staff e-mails\",\n   \"Micropaq product launch delayed\",\n   \"Europe to retaliate by taxing US imports\",\n   \"Police pay talks enter difficult phase\",\n   \"Goodwill gesture ends factory stoppage\",\n   \"Teachers go to arbitration over pay\"\n ],\n \"pictures\": [\n   \"Six newspaper-style headline boxes each with an empty answer box beside it (exercise 7)\"\n ],\n \"unclassified\": [\"Summary Test 4\"]\n}\n```"
+}

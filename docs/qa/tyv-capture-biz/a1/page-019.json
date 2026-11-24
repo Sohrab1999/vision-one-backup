@@ -1,0 +1,77 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 19,
+    "dpi": 300,
+    "renderSha256": "a9d904a9ac75364d74444413b7a15d59e0d7e875b819378d667f8c96ad7b0ce2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T20:15:26.351Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 22,
+    "testNumber": "16",
+    "testTitle": "Making things",
+    "exercises": [
+      {
+        "id": "16.1",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 You can buy fresh vegetables and other agricultural .................. in the market. (produce/production)",
+          "2 We are the largest .................. of printing machinery in the UK. (manufacturer/manufacturing)",
+          "3 Their cars are cheap because they .................. them out in huge numbers. (craft/churn)",
+          "4 I started working on the production .................. ten years ago. (plant/line)",
+          "5 There aren't enough skilled workers in the building industry and the .................. is getting worse. (shortage/surplus)",
+          "6 .................. is a problem in the holiday industry with too many hotels and not enough tourists. (Overproduction/Overcapacity)"
+        ]
+      },
+      {
+        "id": "16.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word or phrase to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the answer you choose.",
+        "items": [
+          "'This is where we produce plastic pipes and fittings for the construction industry. This (1) .......... was opened in 2001. Everything is highly (2) .......... with computers controlling all the machines. The system was expensive to buy but it is very (3) .......... . When we are working at (4) .......... capacity, we can produce 200 kilometres of pipe a day. We only employ 20 people in our (5) .......... team so our (6) .......... is very high.'",
+          "1 A shop B plant C works",
+          "2 A automatic B autocratic C automated",
+          "3 A cost-effective B labour-intensive C mass-produced",
+          "4 A full B excess C spare",
+          "5 A making B producing C manufacturing",
+          "6 A intensity B productivity C capacity"
+        ]
+      },
+      {
+        "id": "16.3",
+        "marks": "6 marks",
+        "instruction": "Find the answer to each clue. Some letters are given to help you.",
+        "items": [
+          "1 Too much of something on the market",
+          "2 Machine that does the work of a human",
+          "3 Place where goods are made",
+          "4 Where parts are put together to make a product: .......... line",
+          "5 Where a craftsman makes, for example, pieces of furniture",
+          "6 Not produced by a machine but crafted by a person"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 18",
+      "Target 14+",
+      "Your score /18"
+    ],
+    "pictures": [
+      "word grid (crossword-style) with numbered rows 1-6 and given letters g, t, r, t, f, y, a, y, w, p, h, - m"
+    ],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 22,\n \"testNumber\": \"16\",\n \"testTitle\": \"Making things\",\n \"exercises\": [\n  {\"id\": \"16.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n   \"items\": [\n    \"1 You can buy fresh vegetables and other agricultural .................. in the market. (produce/production)\",\n    \"2 We are the largest .................. of printing machinery in the UK. (manufacturer/manufacturing)\",\n    \"3 Their cars are cheap because they .................. them out in huge numbers. (craft/churn)\",\n    \"4 I started working on the production .................. ten years ago. (plant/line)\",\n    \"5 There aren't enough skilled workers in the building industry and the .................. is getting worse. (shortage/surplus)\",\n    \"6 .................. is a problem in the holiday industry with too many hotels and not enough tourists. (Overproduction/Overcapacity)\"\n   ]},\n  {\"id\": \"16.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word or phrase to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the answer you choose.\",\n   \"items\": [\n    \"'This is where we produce plastic pipes and fittings for the construction industry. This (1) .......... was opened in 2001. Everything is highly (2) .......... with computers controlling all the machines. The system was expensive to buy but it is very (3) .......... . When we are working at (4) .......... capacity, we can produce 200 kilometres of pipe a day. We only employ 20 people in our (5) .......... team so our (6) .......... is very high.'\",\n    \"1 A shop B plant C works\",\n    \"2 A automatic B autocratic C automated\",\n    \"3 A cost-effective B labour-intensive C mass-produced\",\n    \"4 A full B excess C spare\",\n    \"5 A making B producing C manufacturing\",\n    \"6 A intensity B productivity C capacity\"\n   ]},\n  {\"id\": \"16.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Find the answer to each clue. Some letters are given to help you.\",\n   \"items\": [\n    \"1 Too much of something on the market\",\n    \"2 Machine that does the work of a human\",\n    \"3 Place where goods are made\",\n    \"4 Where parts are put together to make a product: .......... line\",\n    \"5 Where a craftsman makes, for example, pieces of furniture\",\n    \"6 Not produced by a machine but crafted by a person\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"Total 18\",\n  \"Target 14+\",\n  \"Your score /18\"\n ],\n \"pictures\": [\n  \"word grid (crossword-style) with numbered rows 1-6 and given letters g, t, r, t, f, y, a, y, w, p, h, - m\"\n ],\n \"unclassified\": [\n  \"Test Your Business Vocabulary in Use\"\n ]\n}\n```"
+}

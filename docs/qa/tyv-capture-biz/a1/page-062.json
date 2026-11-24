@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 62,
+    "dpi": 300,
+    "renderSha256": "57b935230823b882adb685a4c74dac16a52b04dc409220e26b15ee9b99c493d2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:56:36.063Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 65,
+    "testNumber": "51",
+    "testTitle": "Telephoning 4: arrangements",
+    "exercises": [
+      {
+        "id": "51.1",
+        "marks": "11 marks",
+        "instruction": "Here are two telephone conversations. Write one word in each gap to complete the sentences. The first letter has been given to help you.",
+        "items": [
+          "■ Nick, I'm calling to see if we can f..................... a meeting for next week.",
+          "○ OK. I'll just c..................... my diary.",
+          "■ What a............. Tuesday?",
+          "○ Sorry. I've got t.................. go to a meeting in London.",
+          "■ Could you m.................. Wednesday?",
+          "○ No problem. Let's s.................., Wednesday at 10 then.",
+          "■ OK. I look f.................. to seeing you then. Bye.",
+          "○ See you, Nick.",
+          "■ Hello, Ali. It's Maria. Would it be useful for us to meet next week?",
+          "○ Yes, I think so. Would Thursday be s.................. for you?",
+          "■ I won't be a.................. to make Thursday, I'm afraid.",
+          "○ OK then, let's meet on Friday at 9.",
+          "■ That's f.................. . I'll see you then.",
+          "○ OK, Maria. Thanks for c.................. ."
+        ]
+      },
+      {
+        "id": "51.2",
+        "marks": "11 marks",
+        "instruction": "Here are two voicemail messages. Choose the best word from the brackets ( ) to complete each sentence.",
+        "items": [
+          "1 Jacques. It's Paul. I can't ........................ next Monday's meeting after all.",
+          "(being/make/arrive)",
+          "Something has come .................... and I have to fly to Frankfurt. (out/down/up)",
+          ".................... Tuesday be possible for you? (Would/What/Why)",
+          "If not, we'll have to ________ it off until the week after. (let/take/put)",
+          "I'll be in ________ soon. Bye. (touch/calling/speak)",
+          "2 Ellen. It's Stefan. I'm afraid the 22nd won't be .................... .",
+          "(possibility/possible/possibly)",
+          "I'm sorry, but I've .................... to go to Oslo. (have/must/got)",
+          "We're going to have to put it .................... for at least a week. (back/out/behind)",
+          "I'm completely .................... under with the Woodstock contract.",
+          "(rained/snowed/stormed)",
+          "Can we leave it .................... for the time being? (open/shut/fixed)",
+          "Talk to you .................... no doubt. Bye. (now/then/soon)"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 22",
+      "Target 16+"
+    ],
+    "pictures": [
+      "dotted separator line between the two conversations in 51.1",
+      "boxed voicemail message 1 in 51.2",
+      "boxed voicemail message 2 in 51.2"
+    ],
+    "unclassified": [
+      "Your score /22",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 65,\n  \"testNumber\": \"51\",\n  \"testTitle\": \"Telephoning 4: arrangements\",\n  \"exercises\": [\n    {\n      \"id\": \"51.1\",\n      \"marks\": \"11 marks\",\n      \"instruction\": \"Here are two telephone conversations. Write one word in each gap to complete the sentences. The first letter has been given to help you.\",\n      \"items\": [\n        \"■ Nick, I'm calling to see if we can f..................... a meeting for next week.\",\n        \"○ OK. I'll just c..................... my diary.\",\n        \"■ What a............. Tuesday?\",\n        \"○ Sorry. I've got t.................. go to a meeting in London.\",\n        \"■ Could you m.................. Wednesday?\",\n        \"○ No problem. Let's s.................., Wednesday at 10 then.\",\n        \"■ OK. I look f.................. to seeing you then. Bye.\",\n        \"○ See you, Nick.\",\n        \"■ Hello, Ali. It's Maria. Would it be useful for us to meet next week?\",\n        \"○ Yes, I think so. Would Thursday be s.................. for you?\",\n        \"■ I won't be a.................. to make Thursday, I'm afraid.\",\n        \"○ OK then, let's meet on Friday at 9.\",\n        \"■ That's f.................. . I'll see you then.\",\n        \"○ OK, Maria. Thanks for c.................. .\"\n      ]\n    },\n    {\n      \"id\": \"51.2\",\n      \"marks\": \"11 marks\",\n      \"instruction\": \"Here are two voicemail messages. Choose the best word from the brackets ( ) to complete each sentence.\",\n      \"items\": [\n        \"1 Jacques. It's Paul. I can't ........................ next Monday's meeting after all.\",\n        \"(being/make/arrive)\",\n        \"Something has come .................... and I have to fly to Frankfurt. (out/down/up)\",\n        \".................... Tuesday be possible for you? (Would/What/Why)\",\n        \"If not, we'll have to ________ it off until the week after. (let/take/put)\",\n        \"I'll be in ________ soon. Bye. (touch/calling/speak)\",\n        \"2 Ellen. It's Stefan. I'm afraid the 22nd won't be .................... .\",\n        \"(possibility/possible/possibly)\",\n        \"I'm sorry, but I've .................... to go to Oslo. (have/must/got)\",\n        \"We're going to have to put it .................... for at least a week. (back/out/behind)\",\n        \"I'm completely .................... under with the Woodstock contract.\",\n        \"(rained/snowed/stormed)\",\n        \"Can we leave it .................... for the time being? (open/shut/fixed)\",\n        \"Talk to you .................... no doubt. Bye. (now/then/soon)\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Total 22\",\n    \"Target 16+\"\n  ],\n  \"pictures\": [\n    \"dotted separator line between the two conversations in 51.1\",\n    \"boxed voicemail message 1 in 51.2\",\n    \"boxed voicemail message 2 in 51.2\"\n  ],\n  \"unclassified\": [\n    \"Your score /22\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

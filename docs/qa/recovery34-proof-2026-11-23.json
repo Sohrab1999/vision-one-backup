@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "event": "رویداد بازیابی ۳۴ سندباکس — ریست پنهان ۳۴م پلتفرمی — رسیدگی کامل صفرتلفاتی (الگوی ff-only رویدادهای ۶..۳۳)",
+    "date": "2026-11-23",
+    "jalali": "۱۴۰۵/۹/۲",
+    "ownerCommand": "پرسش مالک «نقشه راه در کدام پوشه ثبت شده؟» — trace 1a208df21683c0f1 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — الزام پایداری ایستندهٔ نوزدهم پابرجا (SHA256 متن ابلاغ == §۱ سند مرجع docs/owner-persistence-mandate-2026-11-04.md = 42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8)",
+    "sessionStartDiscovery": "HEAD محلی روی 193269b (۲۰۲۶-۱۱-۰۸) بازگشته بود — عین الگوی ریست‌های پنهان ۳۱/۳۲/۳۳ (اسنپ‌شات کهنهٔ .git) — درخت کار = محتوای کامل پسا-4c643cd — ۴۰۶ مورد dirt ظاهری (۳۲ modified + ۳۷۴ untracked-entry) — divergence ۰/۱۷۷ (صفر کامیت یکتای محلی — HEAD پشت ریموت) — remote سالم = 4c643cd (ثبت اثبات بازیابی ۳۳ + ابلاغ #۱۹ + دفتر گام‌های کوچک TYV)"
+  },
+  "recovery": [
+    "① ایمنی: tar شبکهٔ ایمنی کل dirt (۴۰۶ مسیر → ۱۸۲۰ فایل، ۱۶۰,۶۶۷,۷۵۰ بایت) در /tmp/recovery34/wt-dirty-snapshot.tgz — صفرتلفاتی تضمینی",
+    "② `git fetch backup` — remote از 193269b..4c643cd واکشی شد + شاخهٔ بایگانی بازیابی۳۳ (recovery/rc33-pre-ff-stash-2026-11-23) نمایان شد",
+    "③ راستی‌آزمایی سه فایل حیاتی بایت‌به‌بیت با remote: worklog.md / docs/SNAPSHOT.md / db/custom.db — هر سه SHA256 یکسان",
+    "④ حذف انبوه راستی‌آزمایی‌شده: ۱۷۴۶ فایل untrackedِ همسان با remote-tracked — هر یک با `git hash-object` == blob SHA ریموت تأیید بایت‌به‌بیت شد و سپس حذف (بازیابی‌شدنی از merge) — نتیجه: removed=۱۷۴۶، kept(diff/new)=۰، absent=۰ ⇒ صفر کار unpushed در کل درخت",
+    "⑤ `git stash push` (۳۲ modified — همگی محتوای ریموت) → `git merge --ff-only backup/main` → HEAD=4c643cd → `git stash pop` = no-op («nothing to commit, working tree clean») → stash خودکار drop شد (b26d643c)",
+    "⑥ باتری راستی‌آزمایی پسا-بازیابی (§controls)"
+  ],
+  "zeroLossProof": {
+    "untrackedClassification": "۱۷۴۶ کاندید (remote-tree منهای local-index) → ۱۷۴۶ همسان بایت‌به‌بیت → صفر فایل جدید/متفاوت → صفر تلفات ممکن بود",
+    "trackedMods": "۳۲ فایل modified — git diff backup/main برای هیچ مسیری M نداد (صفر اختلاف محتوا با ریموت) ⇒ تغییرات محلی == محتوای remote",
+    "criticalFilesByteEqualRemote": ["worklog.md", "docs/SNAPSHOT.md", "db/custom.db"],
+    "safetyNetTar": "/tmp/recovery34/wt-dirty-snapshot.tgz — ۴۰۶ مسیر/۱۸۲۰ فایل/۱۶۰,۶۶۷,۷۵۰ بایت"
+  },
+  "postRecoveryState": {
+    "head": "4c643cd653ee49b0c6b0b94f23c2ba10dc5b87c6",
+    "headEqualsRemote": true,
+    "remoteEvidence": "git ls-remote backup refs/heads/main = 4c643cd653ee… == git rev-parse HEAD — divergence ۰/۰",
+    "workingTreeChanges": 0,
+    "stashCount": 0,
+    "lint": "bun run lint = ۰ (exit 0)",
+    "criticalInvariants": {
+      "db": "67bd7e9327f35f3e… / 2,588,672 بایت (== remote بایت‌به‌بیت)",
+      "hookCopies": ".git/hooks/post-commit + scripts/git-hooks/post-commit = ee679bc1b642db0f5ecc… (هر دو == رکورد تاریخی)",
+      "tyvSourcePdfs": {
+        "tyv-biz": "296197b718cf37ff… == رکورد A0",
+        "tyv-elem": "bbe34425b4b2947d… == رکورد A0",
+        "tyv-pri": "89a8cd2c8dba7c58… == رکورد A0",
+        "tyv-upp": "e4014bdfb072d27b… == رکورد A0"
+      }
+    },
+    "a1ProgressDiskTruth": "biz ۱۶/۹۸ (صفحات 4–18+43) · elem ۳/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳ = ۲۵/۴۸۹ کپچر روی دیسک — عین ادعای ثبت‌شدهٔ SNAPSHOT سربرگ ۱۱۵مین",
+    "roadmapFilesIntact": [
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md"
+    ]
+  },
+  "wave2InvariantNote": {
+    "oldRecord": "خط ۶۶۵ `src/lib/word-in-context.ts` — هش سطر a02945d6… (ثبتِ ابلاغ‌های ۱۲-۲۰۲۶-۱۱-۱۴)",
+    "currentCommittedState": "لنگر WAVE2 اکنون خط ۷۰۵: `const WAVE2_UNGRADED_BOOKS: BookId[] = [\"collocations\"];`",
+    "honestInterpretation": "تکامل مشروع committed در تاریخچهٔ tracked پس از ۲۰۲۶-۱۱-۱۴ (موج Dictionary Upgrade/ادغام viu-adv) — نه تلفات بازیابی؛ درخت پاک پسا-بازیابی بایت‌به‌بیت == remote است و محتوای ریموت = عین کامیت‌های تأییدشدهٔ جلسات ۲۲-۲۳ نوامبر"
+  },
+  "controls": {
+    "ffOnly": true,
+    "noResetRebaseForce": true,
+    "zeroProductChanges": true,
+    "zeroSrcDbScriptChangesInThisStep": true,
+    "tarSafetyNet": true,
+    "gatesUntouched": "R3-e موج اول EXECUTED · FA-REVIEWED در انتظار رأی مستقل مالک · G5/A5-5 در انتظار فرمان مالک · A6 گیت‌دار · صف TYV: A1 ادامه (۴۶۴ صفحه باقیمانده) → G1 گیت‌دار"
+  }
+}

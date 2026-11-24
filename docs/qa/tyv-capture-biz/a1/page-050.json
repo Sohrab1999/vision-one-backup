@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 50,
+    "dpi": 300,
+    "renderSha256": "b9cddb2f65bce867e0cfd59ce60c2ff41a7416e71876427888910ab72615f33c",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:37:13.117Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 53,
+    "testNumber": "39",
+    "testTitle": "Indicators 2",
+    "exercises": [
+      {
+        "id": "39.1",
+        "marks": "4 marks",
+        "instruction": "Choose the graph (A–E) which best fits each sentence. You can use each graph more than once.",
+        "items": [
+          "1 'Oil prices skyrocketed last week as fears over supplies grew.'  ................",
+          "2 'The dollar–euro exchange rate remains steady at about 0.98.'  ................",
+          "3 'Telecom shares plummeted on warnings of bad sales figures.'  ................",
+          "4 'The FTSE 100 fell yesterday but bottomed out at 7,900.'  ................",
+          "5 'Adventi Corporation shares advanced to $2.80.'  ................",
+          "6 'Sales at Super Mart have stagnated over the past year.'  ................",
+          "7 'Micro Sun shares soared yesterday on news of a possible bid.'  ................",
+          "8 'The Hang Seng dived yesterday and closed at a five-year low.'  ................"
+        ]
+      },
+      {
+        "id": "39.2",
+        "marks": "8 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 The CAC 40 ....................... at 3,051 before falling back to 2,992.  (advanced/peaked/soared)",
+          "2 Anglia Agro ....................... to 121 pence from a high of 123.  (eased/leapt/jumped)",
+          "3 Our share price rose in the morning but then it levelled ....................... at 62 pence.  (up/down/off)",
+          "4 Internet dealers say they will ....................... the price of a new car by over 10%.  (slash/slump/bust)",
+          "5 It's not bad enough to call it a slump, but we are in a ....................... .  (depression/repression/recession)",
+          "6 ....................... means that growth is slow, but prices are rising quickly.  (Stagnation/Stagflation/Inflation)",
+          "7 United Foods announced it is going to ....................... 1,500 jobs.  (axe/dive/close)",
+          "8 As temperatures rise, the ....................... for air-conditioning units increases.  (boom/surge/demand)"
+        ]
+      },
+      {
+        "id": "39.3",
+        "marks": "8 marks",
+        "instruction": "Find a word related to each clue. The first letters of the answers are given.",
+        "items": [
+          "1 A period of very strong growth",
+          "2 When production falls, growth is ................",
+          "3 A very bad slump",
+          "4 Opposite of a peak"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Five line graphs labelled A, B, C, D, E",
+      "Grid for 39.3 with four rows of boxes starting with letters b, n, d, t (numbered 1–4)"
+    ],
+    "unclassified": [
+      "Total 20",
+      "Target 16+",
+      "Your score /20",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 53,\n  \"testNumber\": \"39\",\n  \"testTitle\": \"Indicators 2\",\n  \"exercises\": [\n    {\n      \"id\": \"39.1\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Choose the graph (A–E) which best fits each sentence. You can use each graph more than once.\",\n      \"items\": [\n        \"1 'Oil prices skyrocketed last week as fears over supplies grew.'  ................\",\n        \"2 'The dollar–euro exchange rate remains steady at about 0.98.'  ................\",\n        \"3 'Telecom shares plummeted on warnings of bad sales figures.'  ................\",\n        \"4 'The FTSE 100 fell yesterday but bottomed out at 7,900.'  ................\",\n        \"5 'Adventi Corporation shares advanced to $2.80.'  ................\",\n        \"6 'Sales at Super Mart have stagnated over the past year.'  ................\",\n        \"7 'Micro Sun shares soared yesterday on news of a possible bid.'  ................\",\n        \"8 'The Hang Seng dived yesterday and closed at a five-year low.'  ................\"\n      ]\n    },\n    {\n      \"id\": \"39.2\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n      \"items\": [\n        \"1 The CAC 40 ....................... at 3,051 before falling back to 2,992.  (advanced/peaked/soared)\",\n        \"2 Anglia Agro ....................... to 121 pence from a high of 123.  (eased/leapt/jumped)\",\n        \"3 Our share price rose in the morning but then it levelled ....................... at 62 pence.  (up/down/off)\",\n        \"4 Internet dealers say they will ....................... the price of a new car by over 10%.  (slash/slump/bust)\",\n        \"5 It's not bad enough to call it a slump, but we are in a ....................... .  (depression/repression/recession)\",\n        \"6 ....................... means that growth is slow, but prices are rising quickly.  (Stagnation/Stagflation/Inflation)\",\n        \"7 United Foods announced it is going to ....................... 1,500 jobs.  (axe/dive/close)\",\n        \"8 As temperatures rise, the ....................... for air-conditioning units increases.  (boom/surge/demand)\"\n      ]\n    },\n    {\n      \"id\": \"39.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Find a word related to each clue. The first letters of the answers are given.\",\n      \"items\": [\n        \"1 A period of very strong growth\",\n        \"2 When production falls, growth is ................\",\n        \"3 A very bad slump\",\n        \"4 Opposite of a peak\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"Five line graphs labelled A, B, C, D, E\",\n    \"Grid for 39.3 with four rows of boxes starting with letters b, n, d, t (numbered 1–4)\"\n  ],\n  \"unclassified\": [\n    \"Total 20\",\n    \"Target 16+\",\n    \"Your score /20\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}
