@@ -7,7 +7,7 @@ import { logEvent } from "../_lib/logger";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-// ── محافظ مصوب N1-2 فاز ۲ (سند: «نقشه راه ها/نقشه-راه-قدم-بعدی-N1-2.md») ──
+// ── محافظ مصوب N1-2 فاز ۲ (سند: «نقشه راه ها/نقشه-راه-ها/نقشه-راه-قدم-بعدی-N1-2.md») ──
 const RATE_LIMIT = 30; // درخواست در دقیقه — مصوب مالک ۲۰۲۶-۱۰-۲۱
 const RATE_WINDOW_MS = 60_000;
 const DAILY_LIMIT = 30; // درخواست در شبانه‌روز تهران — مصوب مالک ۲۰۲۶-۱۰-۲۱
