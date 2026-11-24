@@ -6895,3 +6895,17 @@ SHA کامیت محتوایی این گام = `c18ef7fe31acde6a52154fd1ab12aa16c
 ## ۱۴۰۵/۹/۳ — ۲۰۲۶-۱۱-۲۴ — ثبت اثبات §۱۰-۷ گام A1-BIZ-S03 + بازیابی ۳۷ (صفر تغییر دیگر)
 
 SHA کامیت محتوایی این گام = `33dddf7eaa675dcfc7ef7d875f529daaff70154d` (۲۰ مسیر — والد `9869740eb14ec306a26029802c7a7a4463a4f5b3` = SHA تأییدشدهٔ Remote پیشا-کامیت — divergence ۰/۰ — remote..local=۰) — push خودکار هوک اثبات‌شده: `9869740..33dddf7 main -> main` (لاگ `/tmp/devhook.log` — «auto-push OK») — `git ls-remote backup refs/heads/main` = `33dddf7eaa675dcfc7ef7d875f529daaff70154d` = HEAD محلی بلافاصله پس از کامیت — divergence ۰/۰ — دلتای این کامیت ثبت-اثبات فقط: یک سطر §۲ SNAPSHOT (ثبت SHAها در سطر لحظهٔ اسنپ‌شات ۱۲۰مین) + این بلوک worklog — صفر تغییر دیگر. وضعیت: گام A1-BIZ-S03 COMPLETE — A1 = ۴۳/۴۸۹ (biz ۳۴/۹۸) — گام بعدی مجاز: A1-BIZ-S04 (biz ۳۷–۴۸ — صفحهٔ ۴۳ skip خودکار) — A2..A6/G1..G6 گیت‌دار مالک — توقف گیت‌دار.
+
+## ۱۴۰۵/۹/۳ — ۲۰۲۶-۱۱-۲۴ — ادامهٔ اجرای نقشهٔ مادر سری TYV — گام A1-BIZ-S04 (صفحات ۳۷–۴۸ biz — صفحهٔ ۴۳ skip خودکار) — سربرگ ۱۲۱مین
+
+**۱) فرمان مالک:** «گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول هر دو وضعیت ④ (گام بعدی مجاز S03 — پیشا-اجرا) و ⑥ (گام بعدی مجاز S04 — پسا-اجرای S03؛ دیسک S03 را تأیید می‌کرد) — trace `1a20bfceaf3e9599` — channel `zai-web`.
+
+**۲) پیشا-گام — نشست بدون ریست (اولین پس از الگوی ریست‌های پنهان ۳۱..۳۷):** HEAD محلی = `56b6a936c8d7e12e0f9513f7347888cf451b04fe` (ثبت اثبات §۱۰-۷ گام A1-BIZ-S03 — سربرگ ۱۲۰مین) = `backup/main` (`git ls-remote backup refs/heads/main` — divergence ۰/۰ — ahead=0/behind=0 پس از fetch) — porcelain ۰ — stash ۰ — بازیابی پیشا-گام لازم نشد — دیسک‌حقیقت آغاز = ۴۳/۴۸۹ (biz ۳۴/۹۸ = بازشماری page-*.json: 004–036 + 043) == رکورد SNAPSHOT.
+
+**۳) اجرای گام (طبق §۶ مادر و §۱-۱ دفتر — «گام بعدی مجاز»):** `bun scripts/tyv-a1-vlm-capture.mjs biz 37,38,39,40,41,42,43,44,45,46,47,48` (هم‌گام) ⇒ `DONE tyv-biz: captured=11 skipped=1 failed=0` — صفحهٔ ۴۳ عین پیش‌بینی وضعیت ⑥ گزارش پیشین skip شد (checkpoint/resume — JSON پراب ۲۰۲۶-۱۱-۲۳T06:25 موجود) — ۱۱ JSON NEW `docs/qa/tyv-capture-biz/a1/page-037..042 + page-044..048.json` با پروونانس کامل (renderSha256/DPI=300/tyv-a1-v1/timestamp) — فوترهای چاپی ۴۰..۵۱ (آفست +۳ پابرجا — صفر null) — تست‌های ۳۰..۳۲ و ۳۳..۳۷ یک‌صفحه‌ای مستقل («Assets, liabilities and the balance sheet» … «Trading») + **Summary Test 2 واحد مرکب چهارصفحه‌ای p40–p43** (ریسک ۷ مادر — p43 عضو چهارم از پراب قبلی — ثبت دوگذر G1 — عین الگوی Summary Test 1 p20–p23) — ۳۲ تمرین/۲۱۵ آیتم/۲۶ باکس/۸ یادداشت تصویر — [?] صفر (بهتر از S03) — a1-index به‌روزرسانی (capturedNow=11 · skippedExisting=1 · failedNow=[]).
+
+**۴) دیسک‌حقیقت A1 پس از گام:** **۵۴/۴۸۹** (biz ۴۵/۹۸ · elem ۳/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳) — صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — دلتای گام = ۱۱ JSON کپچر + index + اسناد پایداری (SNAPSHOT سربرگ ۱۲۱مین + §۲ + §۳ + §۴ + §۵ + مادر §۶ + دفتر §۱-۱/§۷ + BIZ §۳/§۴/§۶ + فهرست-مستندات + شواهد JSON NEW `docs/qa/tyv-a1-biz-s04-proof-2026-11-24.json` + این بلوک) — رفتار وب‌اپ تغییر نکرده.
+
+**۵) گام بعدی مجاز:** A1-BIZ-S05 = `bun scripts/tyv-a1-vlm-capture.mjs biz 49,50,51,52,53,54,55,56,57,58,59,60` — سپس S06..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — توقف گیت‌دار.
+
+**۶) کنترل‌ها:** bun run lint = ۰ (exit 0) · چک‌لیست پذیرش دفتر §۱ همگی ✓ (خروجی DONE · پروونانس ۱۱/۱۱ · index · failed=0 · فوتر ۱۱/۱۱ صفر null · صفر تغییر src/db/اسکریپت) — گیت‌های ایستنده دست‌نخورده (R3-e EXECUTED موج اول · FA-REVIEWED AWAITING OWNER · G5/A5-5 AWAITING OWNER).
