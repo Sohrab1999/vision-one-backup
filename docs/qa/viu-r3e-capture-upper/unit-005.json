@@ -1,0 +1,109 @@
+{
+ "unit": 5,
+ "phase": "R3-e",
+ "kind": "dict-samples",
+ "executedAt": "2026-11-22",
+ "provenance": {
+  "sourcePdf": "upload/Vocabulary In Use-Upper Intermediate 2nd Edition.pdf",
+  "pdfSha256": "415fc9856e16afb7…",
+  "pdfPage": 17,
+  "bookPage": 12,
+  "layoutRule": "N=1..15: [2N+7,2N+8] (audit 2026-11-09)",
+  "dpi": 300,
+  "renderTool": "pdftoppm",
+  "visionModel": "z-ai vision CLI (GLM)",
+  "promptKind": "dict-samples",
+  "script": "scripts/viu-r3e-verify-source.mjs",
+  "ownerCommand": "«اینو شروع کن» — trace 1a2043987aa69c95 — ۱۴۰۵/۹/۱"
+ },
+ "result": {
+  "footer": 12,
+  "entries": [
+   {
+    "headword": "ma·lig·nant",
+    "pos": "adj",
+    "phonetic": "/məˈlɪgnənt/",
+    "labels": null,
+    "senses": [
+     {
+      "number": "1",
+      "definition": "(of people or their actions) feeling or showing great desire to harm others; malevolent",
+      "examples": [
+       "a malignant slander, attack, thrust."
+      ]
+     },
+     {
+      "number": "2",
+      "definition": "(a) (of a tumour) growing uncontrollably, and likely to prove fatal: The growth is not malignant. (b) (of diseases) harmful to life.",
+      "examples": []
+     }
+    ],
+    "relatedForms": [
+     {
+      "word": "ma·lig·nancy",
+      "pos": "n",
+      "phonetic": "/-nənsi/",
+      "labels": null,
+      "senses": [
+       {
+        "number": "1",
+        "definition": "[U] state of being malignant.",
+        "examples": []
+       },
+       {
+        "number": "2",
+        "definition": "[C] malignant tumour.",
+        "examples": []
+       }
+      ]
+     },
+     {
+      "word": "ma·lig·nant·ly",
+      "pos": "adv",
+      "phonetic": null,
+      "labels": null,
+      "senses": []
+     }
+    ]
+   },
+   {
+    "headword": "hairy",
+    "pos": null,
+    "phonetic": "/ˈhɛəri/",
+    "labels": null,
+    "senses": [
+     {
+      "number": "1",
+      "definition": "Someone or something that is hairy is covered with hair. [?]",
+      "examples": [
+       "...a plump child with hairy legs...",
+       "...a big, hairy man...",
+       "The function of a mammal's hairy coat is to insulate the body."
+      ]
+     },
+     {
+      "number": "2",
+      "definition": "If you describe a situation as hairy, you mean that it is exciting, worrying, and rather frightening; a very informal use.",
+      "examples": [
+       "It got a little hairy when we drove him to the station with less than two minutes to spare."
+      ]
+     }
+    ],
+    "relatedForms": []
+   }
+  ]
+ },
+ "probe": {
+  "method": "z-ai vision — پروب متمرکز 500DPI (پس از گذر 300DPI)",
+  "executedAt": "2026-11-22",
+  "purpose": "رفع ابهام IPA hairy + دنبالهٔ تعریف حس ۱ + فرم‌های صرفی + حاشیه",
+  "result": "```json\n{\n  \"malignantPhonetic\": \"/məˈlɪgnənt/\",\n  \"hairyPhonetic\": \"/heəri¹/\",\n  \"hairyInflected\": \"hairier, hairiest\",\n  \"hairySense1FullDefinition\": \"Someone or something that is hairy is covered with hair. EG ...a plump child with hairy legs... ...a big, hairy man... The function of a mammal's hairy coat is to insulate the body.\",\n  \"hairyMargin\": \"ADJ QUALIT\",\n  \"malignantSense1FullDefinition\": \"(of people or their actions) feeling or showing great desire to harm others; malevolent: a malignant slander, attack, thrust.\"\n}\n```"
+ },
+ "notes": [
+  "«uncontrol-lably» در اسکن با خط‌شکن حروف چاپی است — census قدیم خط‌شکن را حفظ کرد، روایت تازه پیوسته نوشت؛ برای runtime پیوسته (استاندارد پیوستن خط‌شکن) + ثبت صادقانه",
+  "IPA hairy: چهار خوانش متنوع (/heəri/ census · /heərɪ'/ verify · /ˈhɛəri/ تازه · /heəri¹/ پروب) — هستهٔ پایدار /heəri/ wired شد و نویسهٔ پایانی ناسازگار در گزارش QA ثبت است",
+  "IPA malignant: /məˈlɪgnənt/ در گذر تازه + پروب هم‌خوان؛ census نشان استرس را آپستروف نوشت",
+  "حاشیهٔ کنار hairy: «ADJ QUAL» + مترادف‌ها (verify: nerve-racking, scary؛ پروب: ADJ QUALIT) — حاشیه خارج از دامنهٔ حس‌ها؛ فقط ثبت",
+  "سبک دو مدخل متفاوت است: malignant = دیکشنری سبک Oxford-ish (نقطهٔ هجایی + حس شماره‌دار) · hairy = سبک COBUILD (تعریف جمله‌وار + EG) — صفحهٔ آموزش مقایسهٔ دیکشنری‌ها؛ هر دو با حس چاپی شماره‌دار"
+ ]
+}

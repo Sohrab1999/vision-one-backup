@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 21,
+    "dpi": 300,
+    "renderSha256": "deb3849b236b49130d8e943808b4932ce048a33fbb034d5a3c1799a12ed0c629",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T20:15:44.934Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 24,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "4",
+        "marks": "5 marks",
+        "instruction": "The notice below shows where various departments can be found in the head office of Global Foods PLC. For each statement, decide which floor is needed. Then write the number in the box.",
+        "items": [
+          "'The Internet connection has been down for two hours and I want to know what's happening.'",
+          "'Where do I go for the Directors' meeting?'",
+          "'I need the report on the trials of our new range of frozen vegetables.'",
+          "'I want to ask Sarah about the recruitment drive and the training programme for new employees.'",
+          "'My salary wasn't paid into my bank yesterday and I need to speak to someone about it.'"
+        ]
+      },
+      {
+        "id": "5",
+        "marks": "7 marks",
+        "instruction": "Choose one word from the box to complete each sentence. There is one extra word that you don't have to use.",
+        "items": [
+          "1 Daniel has applied ...................... a job as a software designer.",
+          "2 I start work at 8.30 and I clock ...................... at 5 pm.",
+          "3 Mary was discriminated ...................... because she is a woman.",
+          "4 Tanya is very skilled ...................... using PCs.",
+          "5 George works ...................... the production line at Ford.",
+          "6 There are currently 780,000 people ...................... of work in the UK.",
+          "7 I trained ...................... a teacher but now I sell luxury cars."
+        ]
+      },
+      {
+        "id": "6",
+        "marks": "8 marks",
+        "instruction": "Complete the tables by writing in the British or American English equivalents of the words given.",
+        "items": [
+          "1 stock options — _____ options",
+          "2 automobile industry — ___ industry",
+          "3 labor union — _____ union",
+          "4 flextime — ____________",
+          "5 property — real _________",
+          "6 CV — _________",
+          "7 school leaver — high school ___________",
+          "8 sole trader — sole ______"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "GLOBAL FOODS PLC — Floor 1: Reception; Floor 2: Finance and Accounts; Floor 3: IT; Floor 4: R & D; Floor 5: Marketing and Sales; Floor 6: HR; Floor 7: CEO and Boardroom",
+      "in | out | off | on | as | over | against | for"
+    ],
+    "pictures": [
+      "notice board illustration for exercise 4",
+      "two-column table with 'Floor' header for answers to exercise 4",
+      "two tables with headers 'American/British' and 'British/American' for exercise 6"
+    ],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 24,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"4\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"The notice below shows where various departments can be found in the head office of Global Foods PLC. For each statement, decide which floor is needed. Then write the number in the box.\",\n      \"items\": [\n        \"'The Internet connection has been down for two hours and I want to know what's happening.'\",\n        \"'Where do I go for the Directors' meeting?'\",\n        \"'I need the report on the trials of our new range of frozen vegetables.'\",\n        \"'I want to ask Sarah about the recruitment drive and the training programme for new employees.'\",\n        \"'My salary wasn't paid into my bank yesterday and I need to speak to someone about it.'\"\n      ]\n    },\n    {\n      \"id\": \"5\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Choose one word from the box to complete each sentence. There is one extra word that you don't have to use.\",\n      \"items\": [\n        \"1 Daniel has applied ...................... a job as a software designer.\",\n        \"2 I start work at 8.30 and I clock ...................... at 5 pm.\",\n        \"3 Mary was discriminated ...................... because she is a woman.\",\n        \"4 Tanya is very skilled ...................... using PCs.\",\n        \"5 George works ...................... the production line at Ford.\",\n        \"6 There are currently 780,000 people ...................... of work in the UK.\",\n        \"7 I trained ...................... a teacher but now I sell luxury cars.\"\n      ]\n    },\n    {\n      \"id\": \"6\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the tables by writing in the British or American English equivalents of the words given.\",\n      \"items\": [\n        \"1 stock options — _____ options\",\n        \"2 automobile industry — ___ industry\",\n        \"3 labor union — _____ union\",\n        \"4 flextime — ____________\",\n        \"5 property — real _________\",\n        \"6 CV — _________\",\n        \"7 school leaver — high school ___________\",\n        \"8 sole trader — sole ______\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"GLOBAL FOODS PLC — Floor 1: Reception; Floor 2: Finance and Accounts; Floor 3: IT; Floor 4: R & D; Floor 5: Marketing and Sales; Floor 6: HR; Floor 7: CEO and Boardroom\",\n    \"in | out | off | on | as | over | against | for\"\n  ],\n  \"pictures\": [\n    \"notice board illustration for exercise 4\",\n    \"two-column table with 'Floor' header for answers to exercise 4\",\n    \"two tables with headers 'American/British' and 'British/American' for exercise 6\"\n  ],\n  \"unclassified\": [\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

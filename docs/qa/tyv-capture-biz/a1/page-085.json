@@ -1,0 +1,70 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 85,
+    "dpi": 300,
+    "renderSha256": "1aa8fc75fe7089f22959a2c198e38e15a3a237cbe3129c146368a9fdada6007a",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:41:06.589Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 88,
+    "testNumber": "4",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "9",
+        "marks": "8 marks",
+        "instruction": "Choose the text (A-I) which best fits each gap in the e-mail below. There is one option that you do not have to use.",
+        "items": [
+          "From: (1) .................",
+          "To: (2) .................",
+          "Cc: (3) .................",
+          "Attachments: (4) .................",
+          "Adrian",
+          "(5) ............ Here's the annual report you asked for. Please let me know if you can't read the file.",
+          "I'm copying this to Marian. (6) .............. this report was circulated to the board last May.",
+          "(7) ..............",
+          "(8) ..............",
+          "Nadeem"
+        ]
+      },
+      {
+        "id": "10",
+        "marks": "6 marks",
+        "instruction": "Match each statement (1-6) to one of the terms given below. Write the letter (A-H) in the box next to the statement. There are two terms that you don't have to use.",
+        "items": [
+          "1 To sum up, I want to remind you of the four main points from today's seminar.",
+          "2 I'm Ingrid Jensen and I shall be talking about quality assurance in the 21st century.",
+          "3 Clearly, we all agree that something needs to be done to improve the canteen.",
+          "4 If I can just stop you for a moment, Toni . . .",
+          "5 I'm sorry, I seem to have wandered off the point.",
+          "6 Speak slowly and clearly so that they can hear you at the back of the room."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A Annual_Report_2003.doc\nB Thanks for your e-mail.\nC adrian.scott@edconsult.nl\nD AFAIK\nE N.Mohammed@inter4.org\nF E-mail if you need anything else.\nG Regards\nH send and receive\nI oakley.marian@group7.co.uk",
+      "A digression    B conclusion    C interruption    D consensus\nE gesture    F introduction    G mannerism    H voice projection"
+    ],
+    "pictures": [
+      "e-mail screenshot window (Send Now, Send Later, Save as Draft, Add Attachments, Signature, Options, Revise; From/To/Cc/Bcc/Subject/Attachments fields with gaps 1-4; message body from Adrian to Nadeem)",
+      "Answers row of boxes: 1 ........... 2 ........... 3 .......... 4 .......... 5 ......... 6 .......... 7 .......... 8 .........."
+    ],
+    "unclassified": [
+      "Answers 1 ........... 2 ........... 3 .......... 4 .......... 5 ......... 6 .......... 7 .......... 8 ..........",
+      "This is the end of Summary Test 4.\nUse the Answer key at the back of the book to check your answers.",
+      "our score /75",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 88,\n \"testNumber\": \"4\",\n \"testTitle\": null,\n \"exercises\": [\n  {\"id\": \"9\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Choose the text (A-I) which best fits each gap in the e-mail below. There is one option that you do not have to use.\",\n   \"items\": [\"From: (1) .................\", \"To: (2) .................\", \"Cc: (3) .................\", \"Attachments: (4) .................\", \"Adrian\", \"(5) ............ Here's the annual report you asked for. Please let me know if you can't read the file.\", \"I'm copying this to Marian. (6) .............. this report was circulated to the board last May.\", \"(7) ..............\", \"(8) ..............\", \"Nadeem\"]},\n  {\"id\": \"10\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Match each statement (1-6) to one of the terms given below. Write the letter (A-H) in the box next to the statement. There are two terms that you don't have to use.\",\n   \"items\": [\"1 To sum up, I want to remind you of the four main points from today's seminar.\", \"2 I'm Ingrid Jensen and I shall be talking about quality assurance in the 21st century.\", \"3 Clearly, we all agree that something needs to be done to improve the canteen.\", \"4 If I can just stop you for a moment, Toni . . .\", \"5 I'm sorry, I seem to have wandered off the point.\", \"6 Speak slowly and clearly so that they can hear you at the back of the room.\"]}\n ],\n \"boxesAndLists\": [\"A Annual_Report_2003.doc\\nB Thanks for your e-mail.\\nC adrian.scott@edconsult.nl\\nD AFAIK\\nE N.Mohammed@inter4.org\\nF E-mail if you need anything else.\\nG Regards\\nH send and receive\\nI oakley.marian@group7.co.uk\",\n  \"A digression    B conclusion    C interruption    D consensus\\nE gesture    F introduction    G mannerism    H voice projection\"],\n \"pictures\": [\"e-mail screenshot window (Send Now, Send Later, Save as Draft, Add Attachments, Signature, Options, Revise; From/To/Cc/Bcc/Subject/Attachments fields with gaps 1-4; message body from Adrian to Nadeem)\",\n  \"Answers row of boxes: 1 ........... 2 ........... 3 .......... 4 .......... 5 ......... 6 .......... 7 .......... 8 ..........\"],\n \"unclassified\": [\"Answers 1 ........... 2 ........... 3 .......... 4 .......... 5 ......... 6 .......... 7 .......... 8 ..........\",\n  \"This is the end of Summary Test 4.\\nUse the Answer key at the back of the book to check your answers.\",\n  \"our score /75\",\n  \"Test Your Business Vocabulary in Use\"]\n}"
+}

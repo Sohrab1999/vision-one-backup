@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 55,
+    "dpi": 300,
+    "renderSha256": "73b2383b5791f2f7f987414d30dc154a86ba7fb8d4a8c7f47aa3210ac8a4cb00",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:38:13.813Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 58,
+    "testNumber": "44",
+    "testTitle": "Leadership and management styles",
+    "exercises": [
+      {
+        "id": "44.1",
+        "marks": "10 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B, C or D, of the word you choose.",
+        "items": [
+          "'My name is Laura Garcia and I train people in modern management techniques. Old style managers were (1) ........... . They took all the decisions and told their (2) .......... what to do without talking to them. They were often very (3) .......... from their employees. They (4) .......... their decisions from above and their whole approach was (5) ........... and (6) ........... . A modern manager has to be more (7) ........... and (8) ......... . Decision-making needs to be (9) ......... so everyone should be involved in the process of (10) ......... .'",
+          "1 A authority B authorized C authoritarian D authorizing",
+          "2 A subordinates B superiors C sponsors D speculators",
+          "3 A above B further C long D remote",
+          "4 A imported B imposed C stressed D pressured",
+          "5 A bottom-up B upside-down C inside-out D top-down",
+          "6 A bureaucratic B administrative C organized D restructured",
+          "7 A closed B shut C over D open",
+          "8 A advanced B relaxing C approachable D distant",
+          "9 A decentralized B unfocused C depreciated D restructured",
+          "10 A talking B consultation C speaking D discussing"
+        ]
+      },
+      {
+        "id": "44.2",
+        "marks": "5 marks",
+        "instruction": "Complete each sentence by writing in the gap a word formed from the verb given in brackets ( ).",
+        "items": [
+          "1 I like people in this company to use their ......................... . (initiate)",
+          "2 We believe in ......................... so we let people control their own work. (delegate)",
+          "3 ......................... means letting people make their own decisions. (empower)",
+          "4 We discuss things and even argue but then we reach a ......................... . (consent)",
+          "5 I'm going on a course to develop my ......................... skills. (lead)"
+        ]
+      },
+      {
+        "id": "44.3",
+        "marks": "4 marks",
+        "instruction": "Find the words that match the clues. The first and last letters of the answers are given.",
+        "items": [
+          "1 Talent",
+          "2 Energy and drive",
+          "3 Attractive quality that good leaders have",
+          "4 Leader who can see what the future will be like"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 19",
+      "Target 15+"
+    ],
+    "pictures": [
+      "word grid with rows 1-4 showing first/last letters f/r, d/m, c/a, v/y"
+    ],
+    "unclassified": [
+      "Your score /19",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 58, \"testNumber\": \"44\", \"testTitle\": \"Leadership and management styles\", \"exercises\": [\n{\"id\": \"44.1\", \"marks\": \"10 marks\", \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B, C or D, of the word you choose.\", \"items\": [\n\"'My name is Laura Garcia and I train people in modern management techniques. Old style managers were (1) ........... . They took all the decisions and told their (2) .......... what to do without talking to them. They were often very (3) .......... from their employees. They (4) .......... their decisions from above and their whole approach was (5) ........... and (6) ........... . A modern manager has to be more (7) ........... and (8) ......... . Decision-making needs to be (9) ......... so everyone should be involved in the process of (10) ......... .'\",\n\"1 A authority B authorized C authoritarian D authorizing\",\n\"2 A subordinates B superiors C sponsors D speculators\",\n\"3 A above B further C long D remote\",\n\"4 A imported B imposed C stressed D pressured\",\n\"5 A bottom-up B upside-down C inside-out D top-down\",\n\"6 A bureaucratic B administrative C organized D restructured\",\n\"7 A closed B shut C over D open\",\n\"8 A advanced B relaxing C approachable D distant\",\n\"9 A decentralized B unfocused C depreciated D restructured\",\n\"10 A talking B consultation C speaking D discussing\"]},\n{\"id\": \"44.2\", \"marks\": \"5 marks\", \"instruction\": \"Complete each sentence by writing in the gap a word formed from the verb given in brackets ( ).\", \"items\": [\n\"1 I like people in this company to use their ......................... . (initiate)\",\n\"2 We believe in ......................... so we let people control their own work. (delegate)\",\n\"3 ......................... means letting people make their own decisions. (empower)\",\n\"4 We discuss things and even argue but then we reach a ......................... . (consent)\",\n\"5 I'm going on a course to develop my ......................... skills. (lead)\"]},\n{\"id\": \"44.3\", \"marks\": \"4 marks\", \"instruction\": \"Find the words that match the clues. The first and last letters of the answers are given.\", \"items\": [\n\"1 Talent\",\n\"2 Energy and drive\",\n\"3 Attractive quality that good leaders have\",\n\"4 Leader who can see what the future will be like\"]}\n],\n\"boxesAndLists\": [\"Total 19\", \"Target 15+\"],\n\"pictures\": [\"word grid with rows 1-4 showing first/last letters f/r, d/m, c/a, v/y\"],\n\"unclassified\": [\"Your score /19\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

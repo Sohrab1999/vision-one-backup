@@ -1,0 +1,37 @@
+{
+ "step": "A1-BIZ-S08 (صفحات ۸۵–۹۶ biz) — هشتمین دستهٔ اجرای نقشهٔ مادر سری TYV — تک‌اجرایی بدون ناهنجاری — گذار به بخش Answer key",
+ "date": "2026-11-24 (1405/09/03)",
+ "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S07 (گام بعدی مجاز S08 = biz 85,86,87,88,89,90,91,92,93,94,95,96) — trace 1a20cb5bebe0a6cd — channel zai-web — الزام پایداری ایستندهٔ بیست‌وسوم پابرجا",
+ "sessionStart": {
+  "headLocal": "cbae90021c75b96f3644f3be61323e9aa1a00f57 (= ثبت اثبات §۱۰-۷ گام S07 — سربرگ ۱۲۴مین)",
+  "remoteMain": "cbae90021c75b96f3644f3be61323e9aa1a00f57 (= git ls-remote backup refs/heads/main — divergence ۰/۰)",
+  "porcelain": "۰ (درخت پاک)",
+  "hiddenReset": "صفر — چهارمین نشست متوالی بدون ریست پنهان (بازیابی پیشا-گام لازم نشد)",
+  "stash": "۱ (آرشیو اطمینان بازیابی ۳۸ — بند ۸ الزام — دست‌نخورده)",
+  "diskTruthPreStep": "A1 = 90/489 (biz 81/98 · elem 3/96 · pri 3/142 · upp 3/153) == رکورد SNAPSHOT سربرگ ۱۲۴مین"
+ },
+ "command": "bun scripts/tyv-a1-vlm-capture.mjs biz 85,86,87,88,89,90,91,92,93,94,95,96 (هم‌گام — عین دستور مالک — تک‌اجرایی)",
+ "result": "DONE tyv-biz: captured=12 skipped=0 failed=0",
+ "newPages": {
+  "files": "docs/qa/tyv-capture-biz/a1/page-085..096.json (۱۲ JSON NEW)",
+  "provenance": "۱۲/۱۲ کامل — renderSha256 / DPI=300 / promptVersion=tyv-a1-v1 / status=ok / timestamp — renderSha256 (۱۶ کاراکتر اول): 085=1aa8fc75fe7089f2 · 086=568efd47de61c5fb · 087=bffa4d1af2c25e91 · 088=87341e281846ddb2 · 089=53fb4999ad562917 · 090=6770b7f28a41021f · 091=621be5fe3da4ecc6 · 092=ebdf0030479e8e32 · 093=0c075458eeca3ed5 · 094=34d8164cde115e60 · 095=12fefdd0d2dd5b59 · 096=d0b51158af793b24",
+  "footers": "p85→88 · p86→89 · p87→90 · p88→91 · p89→92 · p90→93 · p91→94 · p92→95 · p93→96 · p94→97 · p95→98 · p96→99 — آفست +۳ پابرجا — صفر null",
+  "structuralTransition": "این دسته = گذار از بدنهٔ تست‌ها به **بخش Answer key**: p85 = صفحهٔ آخر Summary Test 4 («This is the end of Summary Test 4» — testNumber=4) + آغاز Answer key · p86 = عنوان «Answer key» + «How to use the Answer key» (testTitle='Answer key') · p87–p96 = صفحات کلید پاسخ‌ها (testNumber=null — بلوک‌های کلید) — با بلوک‌های «Test N (Target = M+)» و «Interpreting your score for Summary Test 1» (p88) و «Interpreting your score for Summary Test 2» (p92) — کلیدهای Summary Test ها (واحدهای مرکبی ریسک ۷ مادر — ثبت دوگذر G1) — Answer key پس از p96 ادامه دارد (S09 = 97,98)",
+  "counts": {
+   "exercises": 174,
+   "items": 470,
+   "boxesAndLists": 27,
+   "pictures": 4,
+   "unclassified": 167,
+   "unknownTokens": 0
+  },
+  "unclassifiedDetail": "۱۶۷ قلم unclassified = ساختارهای ذاتی بخش Answer key (سطرهای کلید با نقطه‌چین «Answers 1 … 2 …» · بلوک‌های «Test N (Target = M+)» تفسیر نمره · سربرگ‌های اجرایی «Test Your Business Vocabulary in Use» · عناوین بخش) — توزیع: p85×4 · p86×53 · p87×1 · p88×2 · p89×7 · p90×7 · p91×1 · p92×5 · p93×7 · p94×10 · p95×61 · p96×9 — عین خام دست‌نخورده (لایهٔ A1) — ثبت دوگذر G1",
+  "unknownTokenDetail": "[؟] صفر — بهتر از S07 (که [؟] p75 ×۲ «artention» داشت) — صفر توکن نامطمئن در ۱۲ صفحه"
+ },
+ "postStep": {
+  "diskTruth": "A1 = 102/489 (biz 93/98 · elem 3/96 · pri 3/142 · upp 3/153) — بازشماری ls: biz=93 · elem=3 · pri=3 · upp=3",
+  "index": "docs/qa/tyv-capture-biz/a1-index.json — capturedNow=12 · skippedExisting=0 · failedNow=[] — updatedAt 2026-11-24T08:45:01.027Z — previousIndex (S07): capturedPages=12 · updatedAt 2026-11-24T08:14:02.942Z",
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده"
+ },
+ "nextAllowedStep": "A1-BIZ-S09 = bun scripts/tyv-a1-vlm-capture.mjs biz 97,98 + بقایای S01 = صفحات 1,2,3 — سپس ELEM ⇒ PRI ⇒ UPP تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده"
+}

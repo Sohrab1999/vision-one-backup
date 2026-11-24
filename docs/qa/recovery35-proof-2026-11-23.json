@@ -1,0 +1,40 @@
+{
+  "event": "RECOVERY 35 — hidden-reset #35 detected and fully repaired (ff-only, zero-loss)",
+  "date": "2026-11-23 (1405/09/02)",
+  "session": "owner question «نقشه راه استخراج کتاب های TEST YOUR ENGLISH کجاست؟» — channel zai-web — trace 1a2090b601831da9",
+  "preRecovery": {
+    "headLocal": "193269b76cf46f9dcb210c71953bd1614c4dc45f (stale — 2026-11-08 era)",
+    "remoteMainAtStart": "12f27797ca0b01d0ee819bb88ec631a58ee55a3a",
+    "porcelain": "32 M + 375 ?? = 407 dirty paths (collapsed dirs counted as one entry)",
+    "remoteState": "backup/main already at 12f2779 = recovery-34 closure (116th header) — local HEAD rolled back by platform, no local commits lost (divergence 0/0)"
+  },
+  "zeroLossProof": {
+    "method": "Node in-process sha1 blob hashing — git ls-tree -r -z backup/main decoded + every dirty file hashed (no bash quoting; pattern of recoveries 29/32/33/34)",
+    "phase1LoosePaths": { "dirty": 407, "matchRemote": 379, "differ": 0, "absentRemote": "28 — all collapsed untracked directories" },
+    "phase2Recursive": { "files": 1410, "match": 1410, "differ": 0, "absent": 0, "scope": "25 untracked dirs (TYV/VIU captures, qa-shots, src/data/viu-*, public/viu-images, نقشه راه ها subfolders) + 10 loose upload files (9 PDFs incl. Intermediate duplicate + pasted image)" },
+    "conclusion": "ZERO local-unique content — every dirty byte on disk == backup/main blob ⇒ pure pointer rollback; ff-only merge discards nothing",
+    "safetyNet": "tar czf /tmp/recovery35/dirty-tree-406paths-2026-11-23.tar.gz (154 MB) — full dirty-tree insurance before any deletion"
+  },
+  "recovery": [
+    "git fetch backup (main 193269b→12f2779 + archive branches + rc33 branch visible)",
+    "zero-loss hash verification phases 1+2 (above)",
+    "tar safety net 154 MB",
+    "git clean -fd (delete verified-identical untracked — restored as tracked by merge) [command chain timed out at 120s on IO but completed]",
+    "git checkout -- . (32 modified — each hash-proven == remote blob, stash unnecessary; recorded honestly per §9 style)",
+    "git merge --ff-only backup/main → HEAD = 12f27797… (pure fast-forward 193269b→12f2779, zero reset/rebase/force)"
+  ],
+  "postVerify": {
+    "porcelain": 0,
+    "headLocal": "12f27797ca0b01d0ee819bb88ec631a58ee55a3a",
+    "lsRemoteBackupMain": "12f27797ca0b01d0ee819bb88ec631a58ee55a3a — equal (byte-proof)",
+    "dbSha256First16": "67bd7e9327f35f3e == git show backup/main:db/custom.db (matches SNAPSHOT 116th record)",
+    "lint": "bun run lint exit 0",
+    "tyvSourcePdfsVsA0": "5/5 sha256 == docs/qa/tyv-intake-a0-fingerprint-2026-11-22.json (elem bbe34425… · pri 89a8cd2c… · upp e4014bdf… · biz 296197b7… · inter-dup 7410acee…)",
+    "tyvDocsOnDisk": "7 documents in «نقشه راه ها/» present (مادر + 4 book roadmaps + دفتر گام‌های کوچک + Intermediate duplicate note)",
+    "recovery34Artifacts": "docs/qa/recovery34-proof-2026-11-23.json + tyv-a1-probe + tyv-intake-a0 + capture folders all present and tracked"
+  },
+  "ownerQuestionAnswered": "سری TYV — نقشه راه استخراج Test Your English Vocabulary — ثبت در پوشهٔ «نقشه راه ها» ریشهٔ ریپو: ۷ سند tracked (مادر + TYV-BIZ + TYV-ELEM + TYV-PRI + TYV-UPP + دفتر گام‌های کوچک + سند تکراری Intermediate). آرتیافت‌ها در docs/qa/tyv-* (A0 + A1-PROBE + کپچرها). نقشهٔ کیفیت سه‌کتابی VIU: docs/qa/viu-extraction-quality-review-and-roadmap-2026-11-16.md",
+  "standingGatesUntouched": "R3-e EXECUTED standing · FA-REVIEWED awaiting owner adjudication · AVU-3 G5/A5-5 standing · O1..O6 documented · A1 25/489 resumable per دفتر گام‌های کوچک (S02 remainder = biz pages 19–24)",
+  "thisStepDelta": "docs-only: recovery35-proof JSON + SNAPSHOT 117th header + §2 row + worklog block + فهرست-مستندات — zero src/db/hook/WAVE2 changes",
+  "persistenceProtocol": "two-commit §10-7: content commit → hook auto-push → ls-remote proof → proof-registration commit → final ls-remote"
+}

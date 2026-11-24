@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 10,
+    "dpi": 300,
+    "renderSha256": "e2977c12f0a9865d617028264c99dcea3efe505db501544ebb279a32bf3cdffa",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T12:59:34.416Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 13,
+    "testNumber": "7",
+    "testTitle": "The career ladder",
+    "exercises": [
+      {
+        "id": "7.1",
+        "marks": "7 marks",
+        "instruction": "Match each statement with a word from the list below. Write the letter of your chosen answer next to the statement. (There is one extra word that you don't have to use.) The first one is an example.",
+        "items": [
+          "0 We used to have four layers of management but now we have only two.   B",
+          "1 I am an independent software designer. At the moment, I'm working for three companies.",
+          "2 I don't know whether my job here is safe. I could be out of work next month.",
+          "3 In 1999 we had 430 employees. Now there are only 280.",
+          "4 We used to do our printing in-house, but now it's done by a company in Hong Kong.",
+          "5 I was a shop floor supervisor but then they made me manager of the whole production plant.",
+          "6 Our company has been completely reorganized to make it more efficient.",
+          "7 Now that we have reduced our costs, we are making much more money."
+        ]
+      },
+      {
+        "id": "7.2",
+        "marks": "10 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 I didn't like the way the company was being run so I ........................ . (resigned/sacked/terminated)",
+          "2 They laid ........................ 200 people in March and 50 more in September. (on/off/out)",
+          "3 I joined this company because the career ..................... is excellent. (path/way/contract)",
+          "4 I have regular performance ..................... with my manager. (advice/support/reviews)",
+          "5 We now have fewer employees and so the company is much ...................... . (efficient/leaner/fatter)",
+          "6 I have worked my way up and now I am a ..................... manager. (main/old/senior)",
+          "7 She was ..................... for copying company software on to her PC. (fired/promoted/retired)",
+          "8 I was appointed on a ..................... contract so my job isn't very safe. (permanent/full-time/temporary)",
+          "9 When you join a company now you can't expect a ..................... for life. (job/work/career)",
+          "10 If you break the safety rules you can be ..................... immediately. (downsized/dismissed/delayered)"
+        ]
+      },
+      {
+        "id": "7.3",
+        "marks": "7 marks",
+        "instruction": "Write one word in each gap to complete the conversation. The first three letters of each word are given. The first one is an example.",
+        "items": [
+          "'We have to restructure ... our company if we are to survive. We will have a fla................. structure with only two levels of management. We don't want to make anyone red................. . Some of our senior people will take early ret................. . The rest will be offered posts, but they may be at a lower level. No one likes to be dem............... but it is better than being out of work. We hope people will be fle................ and move to different jobs. If anyone decides to hand in their not............... we will help by offering out............... advice. This is a very difficult time for us all.'"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A downsize   B delayer   C restructure   D outsource   E promotion   F freelance   G dismiss   H profit   I insecurity",
+      "Total 24 / Target 17+"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Your score /24",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 13,\n  \"testNumber\": \"7\",\n  \"testTitle\": \"The career ladder\",\n  \"exercises\": [\n    {\n      \"id\": \"7.1\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Match each statement with a word from the list below. Write the letter of your chosen answer next to the statement. (There is one extra word that you don't have to use.) The first one is an example.\",\n      \"items\": [\n        \"0 We used to have four layers of management but now we have only two.   B\",\n        \"1 I am an independent software designer. At the moment, I'm working for three companies.\",\n        \"2 I don't know whether my job here is safe. I could be out of work next month.\",\n        \"3 In 1999 we had 430 employees. Now there are only 280.\",\n        \"4 We used to do our printing in-house, but now it's done by a company in Hong Kong.\",\n        \"5 I was a shop floor supervisor but then they made me manager of the whole production plant.\",\n        \"6 Our company has been completely reorganized to make it more efficient.\",\n        \"7 Now that we have reduced our costs, we are making much more money.\"\n      ]\n    },\n    {\n      \"id\": \"7.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n      \"items\": [\n        \"1 I didn't like the way the company was being run so I ........................ . (resigned/sacked/terminated)\",\n        \"2 They laid ........................ 200 people in March and 50 more in September. (on/off/out)\",\n        \"3 I joined this company because the career ..................... is excellent. (path/way/contract)\",\n        \"4 I have regular performance ..................... with my manager. (advice/support/reviews)\",\n        \"5 We now have fewer employees and so the company is much ...................... . (efficient/leaner/fatter)\",\n        \"6 I have worked my way up and now I am a ..................... manager. (main/old/senior)\",\n        \"7 She was ..................... for copying company software on to her PC. (fired/promoted/retired)\",\n        \"8 I was appointed on a ..................... contract so my job isn't very safe. (permanent/full-time/temporary)\",\n        \"9 When you join a company now you can't expect a ..................... for life. (job/work/career)\",\n        \"10 If you break the safety rules you can be ..................... immediately. (downsized/dismissed/delayered)\"\n      ]\n    },\n    {\n      \"id\": \"7.3\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Write one word in each gap to complete the conversation. The first three letters of each word are given. The first one is an example.\",\n      \"items\": [\n        \"'We have to restructure ... our company if we are to survive. We will have a fla................. structure with only two levels of management. We don't want to make anyone red................. . Some of our senior people will take early ret................. . The rest will be offered posts, but they may be at a lower level. No one likes to be dem............... but it is better than being out of work. We hope people will be fle................ and move to different jobs. If anyone decides to hand in their not............... we will help by offering out............... advice. This is a very difficult time for us all.'\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"A downsize   B delayer   C restructure   D outsource   E promotion   F freelance   G dismiss   H profit   I insecurity\",\n    \"Total 24 / Target 17+\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Your score /24\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

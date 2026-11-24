@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 74,
+    "dpi": 300,
+    "renderSha256": "12d857071e44b1e7092763900adb34355b918ccf3b44def4d8689d6cab6df449",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:11:13.951Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 77,
+    "testNumber": "59",
+    "testTitle": "Presentations 1. preparation and introduction",
+    "exercises": [
+      {
+        "id": "59.1",
+        "marks": "7 marks",
+        "instruction": "Decide which of the alternatives (A–F) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You may have to use an alternative more than once.",
+        "items": [
+          "1 'Professor Gillian Beer will give a paper entitled \"Business Models for the 21st Century\".'",
+          "2 'We'll invite journalists from all the national papers and the top financial magazines.'",
+          "3 'After Terry's speech, we'll uncover the new saloon version and the sports convertible.'",
+          "4 'Now, team, this will be a major project so we thought we'd give you the background.'",
+          "5 'In the next exercise, you can all practise the presentation skills we've talked about.'",
+          "6 'This is the new accounting software I'm going to show you. Can you all see the screen?'",
+          "7 'This is our new range of laptops. They will go on sale throughout Europe from August.'"
+        ]
+      },
+      {
+        "id": "59.2",
+        "marks": "8 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'I am very worried about next week. I am doing a (1) ............ presentation about our new advertising campaign. There will be about 30 people in the (2) ............ – mainly regional sales managers. The (3) ............ is a big hotel in London. They have excellent (4) ............ so I don't have to worry about that. I've prepared the (5) ............ of my talk but I'm still working on my visual (6) ............ . I've tried to (7) ............ the main parts of my talk so I won't have to read from my notes. On Friday, I'm going to (8) ............ the whole thing in front of a few friends from the department.'",
+          "1 A stand-up   B sit-down   C stand-down",
+          "2 A viewing   B crowd   C audience",
+          "3 A position   B venue   C placing",
+          "4 A facilities   B faculties   C functions",
+          "5 A output   B content   C object",
+          "6 A helps   B aids   C supports",
+          "7 A memories   B memory   C memorize",
+          "8 A rehearse   B react   C replay"
+        ]
+      },
+      {
+        "id": "59.3",
+        "marks": "4 marks",
+        "instruction": "Write one word in the gap to complete each sentence. The first two or three letters are given.",
+        "items": [
+          "1 I have planned the str................ of my talk.",
+          "2 First I will in.................. myself.",
+          "3 Then I will out................ what I'm going to talk about.",
+          "4 After I've given the presentation, I will invite people to ask qu.................. ."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A press conference    B product launch    C workshop",
+      "D demonstration    E briefing    F lecture",
+      "Total 19",
+      "Target 16+"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Your score /19",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 77,\n  \"testNumber\": \"59\",\n  \"testTitle\": \"Presentations 1. preparation and introduction\",\n  \"exercises\": [\n    {\n      \"id\": \"59.1\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Decide which of the alternatives (A–F) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You may have to use an alternative more than once.\",\n      \"items\": [\n        \"1 'Professor Gillian Beer will give a paper entitled \\\"Business Models for the 21st Century\\\".'\",\n        \"2 'We'll invite journalists from all the national papers and the top financial magazines.'\",\n        \"3 'After Terry's speech, we'll uncover the new saloon version and the sports convertible.'\",\n        \"4 'Now, team, this will be a major project so we thought we'd give you the background.'\",\n        \"5 'In the next exercise, you can all practise the presentation skills we've talked about.'\",\n        \"6 'This is the new accounting software I'm going to show you. Can you all see the screen?'\",\n        \"7 'This is our new range of laptops. They will go on sale throughout Europe from August.'\"\n      ]\n    },\n    {\n      \"id\": \"59.2\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n      \"items\": [\n        \"'I am very worried about next week. I am doing a (1) ............ presentation about our new advertising campaign. There will be about 30 people in the (2) ............ – mainly regional sales managers. The (3) ............ is a big hotel in London. They have excellent (4) ............ so I don't have to worry about that. I've prepared the (5) ............ of my talk but I'm still working on my visual (6) ............ . I've tried to (7) ............ the main parts of my talk so I won't have to read from my notes. On Friday, I'm going to (8) ............ the whole thing in front of a few friends from the department.'\",\n        \"1 A stand-up   B sit-down   C stand-down\",\n        \"2 A viewing   B crowd   C audience\",\n        \"3 A position   B venue   C placing\",\n        \"4 A facilities   B faculties   C functions\",\n        \"5 A output   B content   C object\",\n        \"6 A helps   B aids   C supports\",\n        \"7 A memories   B memory   C memorize\",\n        \"8 A rehearse   B react   C replay\"\n      ]\n    },\n    {\n      \"id\": \"59.3\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Write one word in the gap to complete each sentence. The first two or three letters are given.\",\n      \"items\": [\n        \"1 I have planned the str................ of my talk.\",\n        \"2 First I will in.................. myself.\",\n        \"3 Then I will out................ what I'm going to talk about.\",\n        \"4 After I've given the presentation, I will invite people to ask qu.................. .\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"A press conference    B product launch    C workshop\",\n    \"D demonstration    E briefing    F lecture\",\n    \"Total 19\",\n    \"Target 16+\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Your score /19\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}
