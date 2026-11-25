@@ -1,0 +1,179 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 76,
+    "dpi": 300,
+    "renderSha256": "3d6d260dcd98a08e3229b16f56caf6b2d23edcdd9a97bf8391087ef4f785f0e8",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:33:10.444Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 75,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "4",
+        "marks": "(12 marks)",
+        "instruction": null,
+        "items": [
+          "(In a small café)",
+          "CUSTOMER: Can I pay by credit card?",
+          "WAITER: Sorry, sir, we don't have a machine.",
+          "CUSTOMER: Oh. Can I write a cheque?",
+          "WAITER: No, I'm sorry, sir, cash only. This is just a small café.",
+          "5 SALLY: I like this sweater. Shall I buy it?",
+          "MARY: Why don't you try it on first and see how it looks on you?",
+          "SALLY: Yes, maybe I should.",
+          "6 (The customer has just bought a scarf)",
+          "SHOP ASSISTANT: There you are, madam. $25, and here's your change, $5. Shall I put it in a (carrier) bag for you?",
+          "CUSTOMER: No, thanks. I'll put it on. It's cold today!",
+          "7 CUSTOMER: I bought this jacket yesterday. It's too big for me.",
+          "Do you have it in a smaller size?"
+        ]
+      },
+      {
+        "id": "18.4",
+        "marks": "(2 marks)",
+        "instruction": null,
+        "items": [
+          "1 b 2 a"
+        ]
+      },
+      {
+        "id": "19.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 key",
+          "2 shower",
+          "3 (tele)phone",
+          "4 luggage",
+          "5 lift",
+          "6 form",
+          "7 bill",
+          "8 reception",
+          "9 hairdryer",
+          "10 mini-bar"
+        ]
+      },
+      {
+        "id": "19.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 have",
+          "2 fill in",
+          "3 sign",
+          "4 Check",
+          "5 have",
+          "6 get",
+          "7 order",
+          "8 book",
+          "9 change",
+          "10 check out"
+        ]
+      },
+      {
+        "id": "19.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 your bill",
+          "2 the lift",
+          "3 a key",
+          "4 a single room",
+          "5 a double room",
+          "6 the (country) code (for Britain)",
+          "7 a wake-up call",
+          "8 reservation/booking",
+          "9 reception",
+          "10 room service"
+        ]
+      },
+      {
+        "id": "20.1",
+        "marks": "(6 marks)",
+        "instruction": null,
+        "items": [
+          "1 d 2 e 3 f 4 b 5 a 6 c"
+        ]
+      },
+      {
+        "id": "20.2",
+        "marks": "(20 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "1 snack",
+          "2 rare; medium; well-done",
+          "3 soft",
+          "4 list",
+          "5 starters; desserts; vegetarian",
+          "6 order"
+        ]
+      },
+      {
+        "id": "20.3",
+        "marks": "(4 marks)",
+        "instruction": null,
+        "items": [
+          "1 new potatoes",
+          "2 salmon fillet",
+          "3 fruit salad",
+          "4 apple pie",
+          "(Note: green salad and fruit pie are also possible.)"
+        ]
+      },
+      {
+        "id": "21.1",
+        "marks": "(10 marks: ½ for the sport and ½ for the right verb – go or play)",
+        "instruction": null,
+        "items": [
+          "1 Do you go running?",
+          "2 Do you go skiing?",
+          "3 Do you play baseball?",
+          "4 Do you play table tennis?",
+          "5 Do you go kayaking?",
+          "6 Do you go motor racing?",
+          "7 Do you go snowboarding?",
+          "8 Do you play rugby?",
+          "9 Do you play basketball?",
+          "10 Do you go swimming?"
+        ]
+      },
+      {
+        "id": "21.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 a swimming pool",
+          "2 a football pitch",
+          "3 a basketball court",
+          "4 skiing/snowboarding",
+          "5 a sports centre",
+          "6 judo, karate (2 marks)",
+          "7 horse racing",
+          "8 tennis / table tennis / badminton",
+          "9 motor racing"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 19",
+      "Test 20",
+      "Test 21",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 75,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\"id\": \"4\", \"marks\": \"(12 marks)\", \"instruction\": null, \"items\": [\n      \"(In a small café)\",\n      \"CUSTOMER: Can I pay by credit card?\",\n      \"WAITER: Sorry, sir, we don't have a machine.\",\n      \"CUSTOMER: Oh. Can I write a cheque?\",\n      \"WAITER: No, I'm sorry, sir, cash only. This is just a small café.\",\n      \"5 SALLY: I like this sweater. Shall I buy it?\",\n      \"MARY: Why don't you try it on first and see how it looks on you?\",\n      \"SALLY: Yes, maybe I should.\",\n      \"6 (The customer has just bought a scarf)\",\n      \"SHOP ASSISTANT: There you are, madam. $25, and here's your change, $5. Shall I put it in a (carrier) bag for you?\",\n      \"CUSTOMER: No, thanks. I'll put it on. It's cold today!\",\n      \"7 CUSTOMER: I bought this jacket yesterday. It's too big for me.\",\n      \"Do you have it in a smaller size?\"\n    ]},\n    {\"id\": \"18.4\", \"marks\": \"(2 marks)\", \"instruction\": null, \"items\": [\n      \"1 b 2 a\"\n    ]},\n    {\"id\": \"19.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\n      \"1 key\", \"2 shower\", \"3 (tele)phone\", \"4 luggage\", \"5 lift\", \"6 form\", \"7 bill\", \"8 reception\", \"9 hairdryer\", \"10 mini-bar\"\n    ]},\n    {\"id\": \"19.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\n      \"1 have\", \"2 fill in\", \"3 sign\", \"4 Check\", \"5 have\", \"6 get\", \"7 order\", \"8 book\", \"9 change\", \"10 check out\"\n    ]},\n    {\"id\": \"19.3\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\n      \"1 your bill\", \"2 the lift\", \"3 a key\", \"4 a single room\", \"5 a double room\", \"6 the (country) code (for Britain)\", \"7 a wake-up call\", \"8 reservation/booking\", \"9 reception\", \"10 room service\"\n    ]},\n    {\"id\": \"20.1\", \"marks\": \"(6 marks)\", \"instruction\": null, \"items\": [\n      \"1 d 2 e 3 f 4 b 5 a 6 c\"\n    ]},\n    {\"id\": \"20.2\", \"marks\": \"(20 marks: 2 each)\", \"instruction\": null, \"items\": [\n      \"1 snack\", \"2 rare; medium; well-done\", \"3 soft\", \"4 list\", \"5 starters; desserts; vegetarian\", \"6 order\"\n    ]},\n    {\"id\": \"20.3\", \"marks\": \"(4 marks)\", \"instruction\": null, \"items\": [\n      \"1 new potatoes\", \"2 salmon fillet\", \"3 fruit salad\", \"4 apple pie\",\n      \"(Note: green salad and fruit pie are also possible.)\"\n    ]},\n    {\"id\": \"21.1\", \"marks\": \"(10 marks: ½ for the sport and ½ for the right verb – go or play)\", \"instruction\": null, \"items\": [\n      \"1 Do you go running?\", \"2 Do you go skiing?\", \"3 Do you play baseball?\", \"4 Do you play table tennis?\", \"5 Do you go kayaking?\", \"6 Do you go motor racing?\", \"7 Do you go snowboarding?\", \"8 Do you play rugby?\", \"9 Do you play basketball?\", \"10 Do you go swimming?\"\n    ]},\n    {\"id\": \"21.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\n      \"1 a swimming pool\", \"2 a football pitch\", \"3 a basketball court\", \"4 skiing/snowboarding\", \"5 a sports centre\", \"6 judo, karate (2 marks)\", \"7 horse racing\", \"8 tennis / table tennis / badminton\", \"9 motor racing\"\n    ]}\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 19\",\n    \"Test 20\",\n    \"Test 21\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

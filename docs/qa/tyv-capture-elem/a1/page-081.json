@@ -1,0 +1,120 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 81,
+    "dpi": 300,
+    "renderSha256": "21140a4fd012bac1afbec167d8b1a09e267cfbd250c5bc8d728a49b1266ec864",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:34:05.877Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 80,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "31.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 [Christmas card]",
+          "2 bank holiday",
+          "3 Yorkshire pudding",
+          "4 royal family",
+          "5 primary school",
+          "6 roast potatoes",
+          "7 Prime Minister",
+          "8 Easter eggs",
+          "9 Christmas tree",
+          "10 Houses of Parliament",
+          "11 chicken tikka masala",
+          "Christmas pudding and Easter card are also possible combinations."
+        ]
+      },
+      {
+        "id": "31.3",
+        "marks": "(5 marks: ½ for each word in the right column)",
+        "instruction": null,
+        "items": []
+      },
+      {
+        "id": "31.4",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 Valentine’s Day",
+          "2 Bonfire Night",
+          "3 (roast) beef",
+          "4 chips",
+          "5 India"
+        ]
+      },
+      {
+        "id": "32.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 murder 5 steal 9 burglary",
+          "2 mug 6 robbery 10 dealer",
+          "3 terrorism / terrorist attack 7 robber",
+          "4 car thief 8 shoplifter"
+        ]
+      },
+      {
+        "id": "32.2",
+        "marks": "(12 marks)",
+        "instruction": null,
+        "items": [
+          "1 burglary; broke; stole/took 4 robbed; robbers",
+          "2 murdered; murderer/killer 5 mugged/robbed",
+          "3 Shoplifting; shoplifters/thieves 6 thief; thefts / car thefts"
+        ]
+      },
+      {
+        "id": "32.3",
+        "marks": "(8 marks)",
+        "instruction": null,
+        "items": [
+          "1 True",
+          "2 False: you have to pay a fine.",
+          "3 False: we call them vandals.",
+          "4 True.",
+          "5 True.",
+          "6 False: we call it a court.",
+          "7 False: we call it a prison.",
+          "8 True."
+        ]
+      },
+      {
+        "id": "33.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "[1 c] 2 k 3 e 4 f 5 d 6 a 7 j 8 b 9 g 10 h 11 i"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Types of school: nursery, private, secondary, state",
+      "Hot things: [bonfire], curry, fireworks, oven",
+      "People: king, Prime Minister, queen"
+    ],
+    "pictures": [
+      "three-column table with headers 'Types of school', 'Hot things', 'People'"
+    ],
+    "unclassified": [
+      "Test 32",
+      "Test 33",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\n\"footer\": 80,\n\"testNumber\": null,\n\"testTitle\": null,\n\"exercises\": [\n{\"id\": \"31.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\n\"1 [Christmas card]\",\n\"2 bank holiday\",\n\"3 Yorkshire pudding\",\n\"4 royal family\",\n\"5 primary school\",\n\"6 roast potatoes\",\n\"7 Prime Minister\",\n\"8 Easter eggs\",\n\"9 Christmas tree\",\n\"10 Houses of Parliament\",\n\"11 chicken tikka masala\",\n\"Christmas pudding and Easter card are also possible combinations.\"\n]},\n{\"id\": \"31.3\", \"marks\": \"(5 marks: ½ for each word in the right column)\", \"instruction\": null, \"items\": []},\n{\"id\": \"31.4\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\n\"1 Valentine’s Day\",\n\"2 Bonfire Night\",\n\"3 (roast) beef\",\n\"4 chips\",\n\"5 India\"\n]},\n{\"id\": \"32.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\n\"1 murder 5 steal 9 burglary\",\n\"2 mug 6 robbery 10 dealer\",\n\"3 terrorism / terrorist attack 7 robber\",\n\"4 car thief 8 shoplifter\"\n]},\n{\"id\": \"32.2\", \"marks\": \"(12 marks)\", \"instruction\": null, \"items\": [\n\"1 burglary; broke; stole/took 4 robbed; robbers\",\n\"2 murdered; murderer/killer 5 mugged/robbed\",\n\"3 Shoplifting; shoplifters/thieves 6 thief; thefts / car thefts\"\n]},\n{\"id\": \"32.3\", \"marks\": \"(8 marks)\", \"instruction\": null, \"items\": [\n\"1 True\",\n\"2 False: you have to pay a fine.\",\n\"3 False: we call them vandals.\",\n\"4 True.\",\n\"5 True.\",\n\"6 False: we call it a court.\",\n\"7 False: we call it a prison.\",\n\"8 True.\"\n]},\n{\"id\": \"33.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\n\"[1 c] 2 k 3 e 4 f 5 d 6 a 7 j 8 b 9 g 10 h 11 i\"\n]}\n],\n\"boxesAndLists\": [\"Types of school: nursery, private, secondary, state\", \"Hot things: [bonfire], curry, fireworks, oven\", \"People: king, Prime Minister, queen\"],\n\"pictures\": [\"three-column table with headers 'Types of school', 'Hot things', 'People'\"],\n\"unclassified\": [\"Test 32\", \"Test 33\", \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

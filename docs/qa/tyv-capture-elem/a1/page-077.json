@@ -1,0 +1,130 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 77,
+    "dpi": 300,
+    "renderSha256": "d3191509fe74af85d0a05e134a399c41d5b05fdabb2384cfd6ad95c4647ca4ff",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:33:22.945Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 76,
+    "testNumber": "22",
+    "testTitle": "Test 22",
+    "exercises": [
+      {
+        "id": "21.3",
+        "marks": "(10 marks: 1 for the correct sport, 1 for a correct reason)",
+        "instruction": null,
+        "items": [
+          "1 Skiing – because all the others are done on/in water.",
+          "2 Running – because all the others use other things to help the person go faster (they use a boat or a horse or a car). / Sailing – it is done on water and all the others are done on land.",
+          "3 Badminton – because all the others use balls. / Baseball – because all the others use nets. / Volleyball – because all the others need a racquet/bat.",
+          "4 Rugby – because all the others use round balls. / Table tennis – because all the others are team sports.",
+          "5 American football – because all the others are played on a court. / Tennis – because all the others are team sports."
+        ]
+      },
+      {
+        "id": "22.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 science fiction",
+          "2 cartoon",
+          "3 thriller",
+          "4 horror",
+          "5 musical",
+          "6 comedy",
+          "7 western",
+          "8 action",
+          "9 romantic comedy or love story (2 marks)"
+        ]
+      },
+      {
+        "id": "22.2",
+        "marks": "(12 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "1 What’s on at the cinema",
+          "2 relax and watch DVDs",
+          "3 I was bored. / It was boring. (‘I was boring’ means you made other people bored!)",
+          "4 to the cinema",
+          "5 I enjoyed it very much",
+          "6 film on TV"
+        ]
+      },
+      {
+        "id": "22.3",
+        "marks": "(8 marks)",
+        "instruction": null,
+        "items": [
+          "1 action",
+          "2 cartoon",
+          "3 science fiction",
+          "4 comedy",
+          "5 romantic comedy/love story",
+          "6 horror",
+          "7 western (sometimes also called cowboy films)",
+          "8 thriller (sometimes also called detective films)"
+        ]
+      },
+      {
+        "id": "23.1",
+        "marks": "(10 marks: 1 for correctly labelling each sentence true or false; 1 for correcting each of the four false statements)",
+        "instruction": null,
+        "items": [
+          "1 True",
+          "2 False: She is playing a computer game.",
+          "3 False: He is watching a film/western on TV.",
+          "4 False: She is gardening.",
+          "5 True",
+          "6 False: He is listening to his MP3 player."
+        ]
+      },
+      {
+        "id": "23.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 having",
+          "2 had",
+          "3 phone",
+          "4 cook",
+          "5 grown",
+          "6 use",
+          "7 watch",
+          "8 talk",
+          "9 stay",
+          "10 download"
+        ]
+      },
+      {
+        "id": "23.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 Grandfather always has a sleep after lunch. / After lunch Grandfather always has a sleep.",
+          "2 I like reading books about famous people.",
+          "3 I usually listen to the radio in my car.",
+          "4 My favourite films are musicals.",
+          "5 My mother has a lot of novels."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 23",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 76,\n \"testNumber\": \"22\",\n \"testTitle\": \"Test 22\",\n \"exercises\": [\n  {\"id\": \"21.3\",\n   \"marks\": \"(10 marks: 1 for the correct sport, 1 for a correct reason)\",\n   \"instruction\": null,\n   \"items\": [\n    \"1 Skiing – because all the others are done on/in water.\",\n    \"2 Running – because all the others use other things to help the person go faster (they use a boat or a horse or a car). / Sailing – it is done on water and all the others are done on land.\",\n    \"3 Badminton – because all the others use balls. / Baseball – because all the others use nets. / Volleyball – because all the others need a racquet/bat.\",\n    \"4 Rugby – because all the others use round balls. / Table tennis – because all the others are team sports.\",\n    \"5 American football – because all the others are played on a court. / Tennis – because all the others are team sports.\"\n   ]},\n  {\"id\": \"22.1\",\n   \"marks\": \"(10 marks)\",\n   \"instruction\": null,\n   \"items\": [\n    \"1 science fiction\",\n    \"2 cartoon\",\n    \"3 thriller\",\n    \"4 horror\",\n    \"5 musical\",\n    \"6 comedy\",\n    \"7 western\",\n    \"8 action\",\n    \"9 romantic comedy or love story (2 marks)\"\n   ]},\n  {\"id\": \"22.2\",\n   \"marks\": \"(12 marks: 2 each)\",\n   \"instruction\": null,\n   \"items\": [\n    \"1 What’s on at the cinema\",\n    \"2 relax and watch DVDs\",\n    \"3 I was bored. / It was boring. (‘I was boring’ means you made other people bored!)\",\n    \"4 to the cinema\",\n    \"5 I enjoyed it very much\",\n    \"6 film on TV\"\n   ]},\n  {\"id\": \"22.3\",\n   \"marks\": \"(8 marks)\",\n   \"instruction\": null,\n   \"items\": [\n    \"1 action\",\n    \"2 cartoon\",\n    \"3 science fiction\",\n    \"4 comedy\",\n    \"5 romantic comedy/love story\",\n    \"6 horror\",\n    \"7 western (sometimes also called cowboy films)\",\n    \"8 thriller (sometimes also called detective films)\"\n   ]},\n  {\"id\": \"23.1\",\n   \"marks\": \"(10 marks: 1 for correctly labelling each sentence true or false; 1 for correcting each of the four false statements)\",\n   \"instruction\": null,\n   \"items\": [\n    \"1 True\",\n    \"2 False: She is playing a computer game.\",\n    \"3 False: He is watching a film/western on TV.\",\n    \"4 False: She is gardening.\",\n    \"5 True\",\n    \"6 False: He is listening to his MP3 player.\"\n   ]},\n  {\"id\": \"23.2\",\n   \"marks\": \"(10 marks)\",\n   \"instruction\": null,\n   \"items\": [\n    \"1 having\",\n    \"2 had\",\n    \"3 phone\",\n    \"4 cook\",\n    \"5 grown\",\n    \"6 use\",\n    \"7 watch\",\n    \"8 talk\",\n    \"9 stay\",\n    \"10 download\"\n   ]},\n  {\"id\": \"23.3\",\n   \"marks\": \"(10 marks)\",\n   \"instruction\": null,\n   \"items\": [\n    \"1 Grandfather always has a sleep after lunch. / After lunch Grandfather always has a sleep.\",\n    \"2 I like reading books about famous people.\",\n    \"3 I usually listen to the radio in my car.\",\n    \"4 My favourite films are musicals.\",\n    \"5 My mother has a lot of novels.\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [],\n \"unclassified\": [\"Test 23\", \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

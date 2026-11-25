@@ -1,0 +1,156 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 75,
+    "dpi": 300,
+    "renderSha256": "81b6d9cbc84753d7ccb4002fe3f7d42e3faf12314ecc8b5d16b444baadf2685f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:32:55.948Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 74,
+    "testNumber": "17-18",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "16.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 Hello.",
+          "2 Hi, can I speak to Ken?",
+          "3 He’s not here right now. Who’s calling?",
+          "4 It’s Joanna. Could you give him a message?",
+          "5 Yeah.",
+          "6 Could you tell him I called and I’ll call back later.",
+          "7 Okay, I’ll tell him.",
+          "8 Thanks.",
+          "9 No problem. Bye.",
+          "10 Bye."
+        ]
+      },
+      {
+        "id": "16.4",
+        "marks": "(4 marks)",
+        "instruction": null,
+        "items": [
+          "1 Where are our holiday photos?",
+          "2 What is your email address?",
+          "3 Can I make a (phone) call?",
+          "4 What is the date on the letter? / What date is on the letter? / On what date was the letter written?"
+        ]
+      },
+      {
+        "id": "17.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 traveller’s cheques",
+          "2 a ticket",
+          "3 currency",
+          "4 a package holiday",
+          "5 nightlife",
+          "6 your luggage",
+          "7 a phrasebook",
+          "8 postcards / emails / text messages",
+          "9 a rucksack (or backpack)",
+          "10 a ferry"
+        ]
+      },
+      {
+        "id": "17.2",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 a large comfortable bus",
+          "2 they look at your passport",
+          "3 a special visa",
+          "4 across the sea",
+          "5 in a suitcase"
+        ]
+      },
+      {
+        "id": "17.3",
+        "marks": "(15 marks)",
+        "instruction": null,
+        "items": [
+          "1 had",
+          "2 flew",
+          "3 ferry",
+          "4 by",
+          "5 by",
+          "6 food",
+          "7 nightlife",
+          "8 speak",
+          "9 phrasebook",
+          "10 going",
+          "11 go",
+          "12 flight",
+          "13 car",
+          "14 traveller’s cheques",
+          "15 currency"
+        ]
+      },
+      {
+        "id": "18.1",
+        "marks": "(8 marks)",
+        "instruction": null,
+        "items": [
+          "1 a butcher / a butcher’s",
+          "2 a baker / a baker’s",
+          "3 a gift shop",
+          "4 a supermarket",
+          "5 a chemist / a chemist’s / a pharmacy",
+          "6 a newsagent / a newsagent’s",
+          "7 a post office",
+          "8 a book shop"
+        ]
+      },
+      {
+        "id": "18.2",
+        "marks": "(8 marks)",
+        "instruction": null,
+        "items": [
+          "1 electrical products / electricals",
+          "2 furniture",
+          "3 cosmetics / beauty",
+          "4 toys",
+          "5 childrenswear / children’s clothes / children’s clothing / kids’ clothes",
+          "6 ladieswear/womenswear or ladies’/women’s clothes/clothing",
+          "7 sports (equipment)",
+          "8 menswear / men’s clothes / men’s clothing"
+        ]
+      },
+      {
+        "id": "18.3",
+        "marks": null,
+        "instruction": null,
+        "items": [
+          "1 CUSTOMER: The shop assistant said I could change it if I kept the receipt.",
+          "2 CUSTOMER: Where can I pay for this, please?",
+          "SHOP ASSISTANT: You can pay at that cash desk / cash register over there.",
+          "(till or counter is also possible)",
+          "3 SHOP ASSISTANT: Can I help you, madam?",
+          "CUSTOMER: Yes, how much does this hat cost?",
+          "SHOP ASSISTANT: Oh, let’s see. Here we are – €35."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 17",
+      "Test 18",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 74,\n  \"testNumber\": \"17-18\",\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"16.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 Hello.\",\n        \"2 Hi, can I speak to Ken?\",\n        \"3 He’s not here right now. Who’s calling?\",\n        \"4 It’s Joanna. Could you give him a message?\",\n        \"5 Yeah.\",\n        \"6 Could you tell him I called and I’ll call back later.\",\n        \"7 Okay, I’ll tell him.\",\n        \"8 Thanks.\",\n        \"9 No problem. Bye.\",\n        \"10 Bye.\"\n      ]\n    },\n    {\n      \"id\": \"16.4\",\n      \"marks\": \"(4 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 Where are our holiday photos?\",\n        \"2 What is your email address?\",\n        \"3 Can I make a (phone) call?\",\n        \"4 What is the date on the letter? / What date is on the letter? / On what date was the letter written?\"\n      ]\n    },\n    {\n      \"id\": \"17.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 traveller’s cheques\",\n        \"2 a ticket\",\n        \"3 currency\",\n        \"4 a package holiday\",\n        \"5 nightlife\",\n        \"6 your luggage\",\n        \"7 a phrasebook\",\n        \"8 postcards / emails / text messages\",\n        \"9 a rucksack (or backpack)\",\n        \"10 a ferry\"\n      ]\n    },\n    {\n      \"id\": \"17.2\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 a large comfortable bus\",\n        \"2 they look at your passport\",\n        \"3 a special visa\",\n        \"4 across the sea\",\n        \"5 in a suitcase\"\n      ]\n    },\n    {\n      \"id\": \"17.3\",\n      \"marks\": \"(15 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 had\",\n        \"2 flew\",\n        \"3 ferry\",\n        \"4 by\",\n        \"5 by\",\n        \"6 food\",\n        \"7 nightlife\",\n        \"8 speak\",\n        \"9 phrasebook\",\n        \"10 going\",\n        \"11 go\",\n        \"12 flight\",\n        \"13 car\",\n        \"14 traveller’s cheques\",\n        \"15 currency\"\n      ]\n    },\n    {\n      \"id\": \"18.1\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 a butcher / a butcher’s\",\n        \"2 a baker / a baker’s\",\n        \"3 a gift shop\",\n        \"4 a supermarket\",\n        \"5 a chemist / a chemist’s / a pharmacy\",\n        \"6 a newsagent / a newsagent’s\",\n        \"7 a post office\",\n        \"8 a book shop\"\n      ]\n    },\n    {\n      \"id\": \"18.2\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 electrical products / electricals\",\n        \"2 furniture\",\n        \"3 cosmetics / beauty\",\n        \"4 toys\",\n        \"5 childrenswear / children’s clothes / children’s clothing / kids’ clothes\",\n        \"6 ladieswear/womenswear or ladies’/women’s clothes/clothing\",\n        \"7 sports (equipment)\",\n        \"8 menswear / men’s clothes / men’s clothing\"\n      ]\n    },\n    {\n      \"id\": \"18.3\",\n      \"marks\": null,\n      \"instruction\": null,\n      \"items\": [\n        \"1 CUSTOMER: The shop assistant said I could change it if I kept the receipt.\",\n        \"2 CUSTOMER: Where can I pay for this, please?\",\n        \"SHOP ASSISTANT: You can pay at that cash desk / cash register over there.\",\n        \"(till or counter is also possible)\",\n        \"3 SHOP ASSISTANT: Can I help you, madam?\",\n        \"CUSTOMER: Yes, how much does this hat cost?\",\n        \"SHOP ASSISTANT: Oh, let’s see. Here we are – €35.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\"Test 17\", \"Test 18\", \"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}
