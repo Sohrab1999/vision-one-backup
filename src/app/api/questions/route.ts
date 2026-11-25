@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { normalizeBookId } from "../_lib/book";
 import { checkRate, rateLimited } from "../_lib/rate-limit";
 import { logEvent } from "../_lib/logger";
+import { stripPrintedExerciseNumber } from "@/lib/display-text";
 
 export const dynamic = "force-dynamic";
 
@@ -170,7 +171,8 @@ export async function GET(req: NextRequest) {
         category: q.category,
         lesson: q.lesson,
         scope: q.scope,
-        text: q.text,
+        // R0-4 — شمارهٔ چاپی تمرین فقط در لایهٔ نمایش جدا می‌شود؛ دادهٔ خام db دست‌نخورده است
+        text: stripPrintedExerciseNumber(q.text, book),
         options,
         answer: q.answer,
         level: q.level,
