@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 76,
+    "dpi": 300,
+    "renderSha256": "f8ed7dc7c53a8b35acfaf4405b00384b3ee2a9a52f8c90098cdc1919fef7d8dd",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:11:45.353Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 79,
+    "testNumber": "61",
+    "testTitle": "Presentations 3: closing and questions",
+    "exercises": [
+      {
+        "id": "61.1",
+        "marks": "6 marks",
+        "instruction": "The statements below were made by presenters responding to questions from the audience. Write one word in the gap to complete each statement.",
+        "items": [
+          "1 'That's a fair p____. This model does assume that inflation is below 2%.'",
+          "2 'I can't tell you the bid price because that's c__________ information.'",
+          "3 'That's not really my f____, but I think that my colleague Simon will be able to help you.'",
+          "4 'Ah. That really goes b_____ the scope of this presentation. Perhaps we can talk afterwards?'",
+          "5 'I'm afraid we've run out of t____. We can return to that after lunch.'",
+          "6 'I'm sorry. I didn't c____ the question. Were you asking about stagflation?'"
+        ]
+      },
+      {
+        "id": "61.2",
+        "marks": "7 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'OK. Let me (1) ............ up what we've done today. (2) ........... , we looked at what makes a good leader. (3) ............ we looked at key leadership skills. Then, last, but by no means (4) ............ , we talked about the consultation process. Are there any final (5) ............ that you'd like to ask? No? Well then, that's a good (6) ............ to stop. (7) ............ you for listening.'",
+          "1 A run        B add        C sum",
+          "2 A Firstly    B Starting   C Openly",
+          "3 A Seconds    B Secondly   C Seconded",
+          "4 A last       B lost       C least",
+          "5 A questions  B answers    C information",
+          "6 A position   B place      C pointer",
+          "7 A Thank      B Thanks     C Thanking"
+        ]
+      },
+      {
+        "id": "61.3",
+        "marks": "5 marks",
+        "instruction": "In each of the numbered sentences (1–5) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "Here is some advice about making a presentation.",
+          "1 Remember to front the audience at all times. Don't turn your back on them.    .....................",
+          "2 Try to make eye contract with some of the participants as you speak.          .....................",
+          "3 Use jesters to stress key points but don't wave your hands around.            .....................",
+          "4 Control any manners you may have. They will distract the audience.            .....................",
+          "5 In my sight, the most important thing is to speak clearly.                    ....................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 18",
+      "Target 14+"
+    ],
+    "pictures": [
+      "cartoon of a presenter standing beside a flip-chart easel with handwritten notes"
+    ],
+    "unclassified": [
+      "Your score",
+      "/18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 79,\n \"testNumber\": \"61\",\n \"testTitle\": \"Presentations 3: closing and questions\",\n \"exercises\": [\n  {\"id\": \"61.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"The statements below were made by presenters responding to questions from the audience. Write one word in the gap to complete each statement.\",\n   \"items\": [\n    \"1 'That's a fair p____. This model does assume that inflation is below 2%.'\",\n    \"2 'I can't tell you the bid price because that's c__________ information.'\",\n    \"3 'That's not really my f____, but I think that my colleague Simon will be able to help you.'\",\n    \"4 'Ah. That really goes b_____ the scope of this presentation. Perhaps we can talk afterwards?'\",\n    \"5 'I'm afraid we've run out of t____. We can return to that after lunch.'\",\n    \"6 'I'm sorry. I didn't c____ the question. Were you asking about stagflation?'\"\n   ]},\n  {\"id\": \"61.2\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"'OK. Let me (1) ............ up what we've done today. (2) ........... , we looked at what makes a good leader. (3) ............ we looked at key leadership skills. Then, last, but by no means (4) ............ , we talked about the consultation process. Are there any final (5) ............ that you'd like to ask? No? Well then, that's a good (6) ............ to stop. (7) ............ you for listening.'\",\n    \"1 A run        B add        C sum\",\n    \"2 A Firstly    B Starting   C Openly\",\n    \"3 A Seconds    B Secondly   C Seconded\",\n    \"4 A last       B lost       C least\",\n    \"5 A questions  B answers    C information\",\n    \"6 A position   B place      C pointer\",\n    \"7 A Thank      B Thanks     C Thanking\"\n   ]},\n  {\"id\": \"61.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"In each of the numbered sentences (1–5) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\n    \"Here is some advice about making a presentation.\",\n    \"1 Remember to front the audience at all times. Don't turn your back on them.    .....................\",\n    \"2 Try to make eye contract with some of the participants as you speak.          .....................\",\n    \"3 Use jesters to stress key points but don't wave your hands around.            .....................\",\n    \"4 Control any manners you may have. They will distract the audience.            .....................\",\n    \"5 In my sight, the most important thing is to speak clearly.                    .....................\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"Total 18\",\n  \"Target 14+\"\n ],\n \"pictures\": [\n  \"cartoon of a presenter standing beside a flip-chart easel with handwritten notes\"\n ],\n \"unclassified\": [\n  \"Your score\",\n  \"/18\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

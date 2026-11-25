@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 11,
+    "dpi": 300,
+    "renderSha256": "13cadedd379a15a5f4b60e7d3a5911af5ef8795647d0b34404c4e6148a956a37",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T19:51:35.212Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 10,
+    "testNumber": "4",
+    "testTitle": "Clothes",
+    "exercises": [
+      {
+        "id": "4.1",
+        "marks": "12 marks",
+        "instruction": "Write the correct word under each picture.",
+        "items": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ]
+      },
+      {
+        "id": "4.2",
+        "marks": "5 marks",
+        "instruction": "Underline the word on the right which has the same vowel sound as the word on the left.",
+        "items": [
+          "Example: shirt        red/girl/here",
+          "1 tie        tea/hear/why",
+          "2 gloves        got/run/road",
+          "3 coat        note/not/hat",
+          "4 boots        foot/boat/suit",
+          "5 scarf        off/half/at"
+        ]
+      },
+      {
+        "id": "4.3",
+        "marks": "5 marks",
+        "instruction": "Which five of these clothes words must always be used in the plural?",
+        "items": []
+      },
+      {
+        "id": "4.4",
+        "marks": "8 marks",
+        "instruction": "Answer the questions.",
+        "items": [
+          "1 Do you get dressed when you go to bed or when you get up?",
+          "2 What can you wear on your finger to show that you are married?",
+          "3 Who normally wears a dress – a man or a woman?",
+          "4 What do you call a jacket and trousers which you wear together?",
+          "5 What is another word for sweater?",
+          "6 Which is correct: 'Robert is wearing an umbrella / is carrying an umbrella / has an umbrella on'?",
+          "7 Which is correct: 'Lisa is using a skirt / Lisa has put a skirt on'?",
+          "8 What is another way of saying 'At night, I take my clothes off and go to bed'?"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "skirt  belt  boots  trainers  socks  coat  hat  T-shirt  scarf  gloves  tie  shirt",
+      "dresses  hats  trousers  jackets  tights  jeans  sweaters  shorts  shoes  sunglasses"
+    ],
+    "pictures": [
+      "12 labelled clothing drawings (1 socks, 2 belt, 3 shirt, 4 tie, 5 boots, 6 skirt, 7 coat, 8 scarf, 9 hat, 10 gloves, 11 T-shirt, 12 trainers), each with a dotted answer line"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n \"footer\": 10,\n \"testNumber\": \"4\",\n \"testTitle\": \"Clothes\",\n \"exercises\": [\n  {\"id\": \"4.1\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Write the correct word under each picture.\",\n   \"items\": [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"10\", \"11\", \"12\"]},\n  {\"id\": \"4.2\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Underline the word on the right which has the same vowel sound as the word on the left.\",\n   \"items\": [\"Example: shirt        red/girl/here\",\n             \"1 tie        tea/hear/why\",\n             \"2 gloves        got/run/road\",\n             \"3 coat        note/not/hat\",\n             \"4 boots        foot/boat/suit\",\n             \"5 scarf        off/half/at\"]},\n  {\"id\": \"4.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Which five of these clothes words must always be used in the plural?\",\n   \"items\": []},\n  {\"id\": \"4.4\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Answer the questions.\",\n   \"items\": [\"1 Do you get dressed when you go to bed or when you get up?\",\n             \"2 What can you wear on your finger to show that you are married?\",\n             \"3 Who normally wears a dress – a man or a woman?\",\n             \"4 What do you call a jacket and trousers which you wear together?\",\n             \"5 What is another word for sweater?\",\n             \"6 Which is correct: 'Robert is wearing an umbrella / is carrying an umbrella / has an umbrella on'?\",\n             \"7 Which is correct: 'Lisa is using a skirt / Lisa has put a skirt on'?\",\n             \"8 What is another way of saying 'At night, I take my clothes off and go to bed'?\"]}\n ],\n \"boxesAndLists\": [\n  \"skirt  belt  boots  trainers  socks  coat  hat  T-shirt  scarf  gloves  tie  shirt\",\n  \"dresses  hats  trousers  jackets  tights  jeans  sweaters  shorts  shoes  sunglasses\"\n ],\n \"pictures\": [\n  \"12 labelled clothing drawings (1 socks, 2 belt, 3 shirt, 4 tie, 5 boots, 6 skirt, 7 coat, 8 scarf, 9 hat, 10 gloves, 11 T-shirt, 12 trainers), each with a dotted answer line\"\n ],\n \"unclassified\": [\n  \"Test Your English Vocabulary in Use Elementary\",\n  \"Your score /30\"\n ]\n}\n```"
+}

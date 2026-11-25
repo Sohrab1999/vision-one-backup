@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 24,
+    "dpi": 300,
+    "renderSha256": "8f12da16fb865602c85cc811d6f1d1dc86fad19f5e42af3805485edaa8bbad17",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:02:13.076Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 23,
+    "testNumber": "17",
+    "testTitle": "Holidays",
+    "exercises": [
+      {
+        "id": "17.1",
+        "marks": "10 marks",
+        "instruction": "Answer these questions.",
+        "items": [
+          "Example: What kind of sport is skiing? ...a winter sport...",
+          "1 What kind of cheques can you use in any country?",
+          "2 What do you need to buy if you want to go on a bus, plane or train?",
+          "3 What are dollars, euros and yen examples of?",
+          "4 What do you call a holiday when you pay for everything (travel, hotel, etc.) together?",
+          "5 If a town has a lot of restaurants, discos and nightclubs, you can say that the .......................... is good.",
+          "6 What do you call all the things that you take with you on holiday?",
+          "7 What do you call a book that tells you lots of useful holiday expressions in another language?",
+          "8 What do people usually send their friends when they are on holiday?",
+          "9 What do you call the big bag you carry on your back on a walking holiday?",
+          "10 What kind of boat can you take your car on?"
+        ]
+      },
+      {
+        "id": "17.2",
+        "marks": "5 marks",
+        "instruction": "Correct the mistakes in these sentences.",
+        "items": [
+          "Example: Take your currency so you can take photos when you’re on holiday.",
+          "Take your camera so you can take photos when you’re on holiday.",
+          "1 A coach is a large comfortable train.",
+          "2 When you go into another country, they look at your phrasebook.",
+          "3 You are only allowed to visit some countries if you have a special postcard.",
+          "4 A ferry takes you across land.",
+          "5 When you go on holiday, you put all the clothes and other things you need in a camera."
+        ]
+      },
+      {
+        "id": "17.3",
+        "marks": "15 marks",
+        "instruction": "Fill the gaps in this dialogue.",
+        "items": [
+          "RICK: Have you been .........on......... holiday this year yet, Meg?",
+          "MEG: Yes, we (1).......................... a fantastic holiday in Russia last month.",
+          "RICK: Great! How did you get there?",
+          "MEG: We (2)......................... from London to Finland and then we took a (3)......................... across the Baltic Sea from Helsinki to St Petersburg. We spent a couple of days there and then we went to Moscow (4)......................... bus. We came home from Moscow (5)......................... train.",
+          "RICK: So, what was it like? What did you think of the local (6).........................?",
+          "MEG: It was delicious! And there was lots of excellent (7)......................... – very good discos and clubs, all open till very late.",
+          "RICK: Do you (8)......................... any Russian?",
+          "MEG: No, but we had a good (9)......................... and that helped us a lot. What about you, Rick?",
+          "RICK: We’re (10)......................... on holiday next week. We’re going to (11)......................... camping. We don’t have to go to the airport to catch a (12)......................... – we’re going in our own (13)......................... and we’re staying in this country, so, of course, we can just use our ordinary money – we don’t need to take any (14)......................... or foreign (15)......................... .",
+          "MEG: Well, I hope you have a wonderful time!"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 23,\n \"testNumber\": \"17\",\n \"testTitle\": \"Holidays\",\n \"exercises\": [\n  {\"id\": \"17.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Answer these questions.\",\n   \"items\": [\n    \"Example: What kind of sport is skiing? ...a winter sport...\",\n    \"1 What kind of cheques can you use in any country?\",\n    \"2 What do you need to buy if you want to go on a bus, plane or train?\",\n    \"3 What are dollars, euros and yen examples of?\",\n    \"4 What do you call a holiday when you pay for everything (travel, hotel, etc.) together?\",\n    \"5 If a town has a lot of restaurants, discos and nightclubs, you can say that the .......................... is good.\",\n    \"6 What do you call all the things that you take with you on holiday?\",\n    \"7 What do you call a book that tells you lots of useful holiday expressions in another language?\",\n    \"8 What do people usually send their friends when they are on holiday?\",\n    \"9 What do you call the big bag you carry on your back on a walking holiday?\",\n    \"10 What kind of boat can you take your car on?\"\n   ]},\n  {\"id\": \"17.2\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Correct the mistakes in these sentences.\",\n   \"items\": [\n    \"Example: Take your currency so you can take photos when you’re on holiday.\",\n    \"Take your camera so you can take photos when you’re on holiday.\",\n    \"1 A coach is a large comfortable train.\",\n    \"2 When you go into another country, they look at your phrasebook.\",\n    \"3 You are only allowed to visit some countries if you have a special postcard.\",\n    \"4 A ferry takes you across land.\",\n    \"5 When you go on holiday, you put all the clothes and other things you need in a camera.\"\n   ]},\n  {\"id\": \"17.3\",\n   \"marks\": \"15 marks\",\n   \"instruction\": \"Fill the gaps in this dialogue.\",\n   \"items\": [\n    \"RICK: Have you been .........on......... holiday this year yet, Meg?\",\n    \"MEG: Yes, we (1).......................... a fantastic holiday in Russia last month.\",\n    \"RICK: Great! How did you get there?\",\n    \"MEG: We (2)......................... from London to Finland and then we took a (3)......................... across the Baltic Sea from Helsinki to St Petersburg. We spent a couple of days there and then we went to Moscow (4)......................... bus. We came home from Moscow (5)......................... train.\",\n    \"RICK: So, what was it like? What did you think of the local (6).........................?\",\n    \"MEG: It was delicious! And there was lots of excellent (7)......................... – very good discos and clubs, all open till very late.\",\n    \"RICK: Do you (8)......................... any Russian?\",\n    \"MEG: No, but we had a good (9)......................... and that helped us a lot. What about you, Rick?\",\n    \"RICK: We’re (10)......................... on holiday next week. We’re going to (11)......................... camping. We don’t have to go to the airport to catch a (12)......................... – we’re going in our own (13)......................... and we’re staying in this country, so, of course, we can just use our ordinary money – we don’t need to take any (14)......................... or foreign (15)......................... .\",\n    \"MEG: Well, I hope you have a wonderful time!\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [],\n \"unclassified\": [\"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}

@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "event": "رویداد بازیابی ۴۰ سندباکس — ریست پنهان ۴۰م پلتفرمی — رسیدگی کامل صفرتلفاتی (الگوی ff-only رویدادهای ۶..۳۹)",
+    "date": "2026-11-24",
+    "jalali": "۱۴۰۵/۹/۳",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی: پایداری کامل پروژه و بازیابی پس از Reset یا حذف Sandbox — ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S09 (گام بعدی مجاز A1-ELEM-S01 = bun scripts/tyv-a1-vlm-capture.mjs elem 1,2,3,4,5,6,7,8,9,10,11,12 — صفحات ۸ و ۱۲ skip خودکار — پراب قبلی) — trace 1a20f12648c22b15 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — الزام پایداری ایستندهٔ بیست‌وچهارم پابرجا (متن ابلاغ مالک == §۱ سند مرجع — SHA256 42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8)",
+    "sessionStartDiscovery": "HEAD محلی روی 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) بازگشته بود — عین الگوی ریست‌های پنهان ۳۱..۳۹ (اسنپ‌شات کهنهٔ .git — این بار عمیق‌ترین بازگشت از ۳۹: ۱۹۹ کامیت پشت ریموت) — درخت کار = محتوای پسا-S09 (filesystem checkpoint جدیدتر) — porcelain ۴۲۱ (M + ?? شامل کپچرها/شواهد S02..S09) — divergence ۰/۱۹۹ (صفر کامیت یکتای محلی — remote..local=۰) — remote سالم = 5a329bf (ثبت اثبات §۱۰-۷ گام A1-BIZ-S09) با والد محتوایی c64b7a9 — stash محلی صفر (تلف‌شده در ریست — الگوی بازیابی ۳۹) — merge-base --is-ancestor 193269b 5a329bf ⇒ تأیید مسیر ff-only"
+  },
+  "recovery": [
+    "① ممیزی صفرتلفاتی پیشا-بازیابی (دو دور): دور ۱ tracked-modified با git diff backup/main --numstat ⇒ ۳۴ فایل دارای افزودنی — همگی خانوادهٔ «نقشه راه ها/» با الگوی rename مسیر-تختِ پیشا-سازمان‌دهی (تعداد افزودنی == تعداد حذفی — آرتیفت تشخیص rename سازمان‌دهی سربرگ ۱۱۸مین که از قبل در ریموت commit شده) · دور ۲ untracked با git ls-files --others --exclude-standard + هش sha1-blob تک‌تک ⇒ **۱۸۴۹ فایل: ۱۷۸۱ ASCII یکسان + ۶۱ فایل یونیکدِ بازممیزی‌شده با مسیر خام (git -c core.quotepath=off — درس جدید این رویداد) ⇒ ۱۸۴۲/۱۸۴۹ matchRemote بایت‌به‌بیت · differ=۰ · absentRemote=۷ + ۱ نشانگر خارجی** — هفت absentRemote همگی اسناد مسیر-تختِ پیشا-سازمان‌دهی TYV (superseded شده با نسخه‌های شماره‌دار سری-TYV در ریموت — کامیت be0231d) + فایل نشانگر خارجی «_⚠️-STALE-COPY-DO-NOT-USE.txt» (متعلق به پوشهٔ کپی‌کهنهٔ بیرون-ریپو — باز-materialize شده با چک‌پوینت فایلی) ⇒ **صفر محتوای محلی-یگانه در کل درخت**",
+    "② ایمنی: stash بیمه rc35 با push -u (شامل تمام untracked + نشانگر + اسناد کهنه) = 3d6bfe0b70189b84249ae1aa7af60d760a43d5ff → push به شاخهٔ Remote backup/recovery/rc35-pre-ff-stash-2026-11-24 (اثبات ls-remote: * [new branch]) — صفرتلفاتی تضمین حتی برای هفت سند superseded و نشانگر",
+    "③ بازگردانی آرشیوهای stash از ریموت (درس بازیابی ۳۹ — بایگانی stash در ریموت الزامی): stash commit شاخهٔ rc33 (بازیابی ۳۸) و rc34 (بازیابی ۳۹) با git stash store به stash stack بازگردانده شدند — stash stack = ۳ (rc33 آرشیو · rc34 آرشیو · rc35 بیمهٔ همین بازیابی) — هر سه در ریموت هم بایگانی (شاخه‌های recovery/rc33 · rc34 · rc35)",
+    "④ بازیابی اصلی: git reset --hard backup/main (معادل ff-only — 193269b→5a329bf — صفر reset/rebase/force روی تاریخچهٔ ریموت — هشت‌فایل آپدیت ۱۹۲۲ فایل) ⇒ HEAD = 5a329bf6c667e8f2e857382ece4f6a59b52c3710 = backup/main — هفت سند superseded و نشانگر خارجی پس از reset در درخت نیستند (فقط در stash بیمهٔ rc35 آرشیو شده‌اند — الگوی درخت-پاک رویدادهای قبلی)"
+  ],
+  "postVerification": {
+    "headEqualsRemote": "git rev-parse HEAD == git ls-remote backup refs/heads/main == 5a329bf6c667e8f2e857382ece4f6a59b52c3710 — برابری بایت‌به‌بیت",
+    "porcelain": "۰ (درخت پاک)",
+    "stashStack": "۳ — stash@{0} = rc34 archive (بازگردانده‌شده) · stash@{1} = rc33 archive (بازگردانده‌شده) · stash@{2} = rc35 بیمهٔ بازیابی ۴۰ — هر سه در ریموت هم بایگانی",
+    "diskTruthIntact": "A1 = 107/489 پسا-بازیابی == رکورد SNAPSHOT سربرگ ۱۲۶مین — بازشماری ls: biz=98 · elem=3 · pri=3 · upp=3 — کپچرهای S01..S09 (biz کامل ۹۸ صفحه) بایت‌به‌بیت = ریموت (tracked clean — porcelain صفر روی docs/qa/tyv-capture-*/)",
+    "a1Index": "a1-index.json چهار کتاب == ریموت (آمار آخرین اجرا — biz: capturedNow=3 از دستور دوم S09 · elem/pri/upp: پراب ۳صفحه‌ای A0)",
+    "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF در کل فرایند بازیابی — رفتار وب‌اپ دست‌نخورده"
+  },
+  "lesson": "همان الگوی بازیابی‌های ۳۱..۳۹: ریست پنهان پلتفرمی .git را به اسنپ‌شات کهنهٔ 193269b برمی‌گرداند؛ درخت کار از checkpoint فایلی جدیدتر می‌آید؛ TRUTH = remote؛ بازیابی ff-only صفرتلفاتی پس از بیمهٔ stash+push. دو درس جدید رویداد ۴۰: (۱) ممیزی هش تک‌تک فایل‌های یونیکد باید با `git -c core.quotepath=off ls-files --others` (مسیر خام UTF-8) انجام شود — خروجی پیش‌فرض quote-escape شده و مسیرهای فارسی را در cat-file نمی‌یابد (دور اول ممیزی این رویداد ۶۷ false-absent ساخت)؛ (۲) ریست این بار تا ۱۹۳۲۶۹ب (پایین‌ترین نقطه) بود — divergence ۰/۱۹۹ — نه ۸ کامیتِ بازیابی ۳۹ ⇒ عمق اسنپ‌شات .git کهنه پلتفرمی متغیر است و هر نشست باید divergence را از صفر با rev-list --count اندازه‌گیری کند نه از روی رویداد قبلی"
+}

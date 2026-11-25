@@ -1,0 +1,98 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 22,
+    "dpi": 300,
+    "renderSha256": "9dffd57231b71af294cd00cede5fd6817cfc432f32c16e7acf9c2fc3e6a5a992",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:01:49.469Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 21,
+    "testNumber": "15",
+    "testTitle": "At school and university",
+    "exercises": [
+      {
+        "id": "15.1",
+        "marks": "10 marks",
+        "instruction": "Which school subject is each person talking about?",
+        "items": [
+          "Example: CARLOS: 'I need it because I want to study in Australia one day.' ............English............",
+          "1 MARK: 'It's my favourite subject because I love learning about other countries.'",
+          "2 SIMONE: 'I like it because I love drawing and painting pictures.'",
+          "3 KIM: 'I think it is very interesting to learn about animals and plants.'",
+          "4 TESSA: 'It's good because we run and jump and aren't sitting at a desk.'",
+          "5 ABDULLAH: 'Numbers are very interesting and I love working with them.'",
+          "6 ALEX: 'I love learning about how people lived in the past.'",
+          "7 DINA: 'I think it is very important to learn all about computers.'",
+          "8 MARIA: 'We study speed and light and movement – it's great.'",
+          "9 PAT: 'We learn songs and sometimes we can play instruments.'",
+          "10 MEENA: 'I enjoy doing experiments in the lab with different chemicals.'"
+        ]
+      },
+      {
+        "id": "15.2",
+        "marks": "10 marks",
+        "instruction": "What are these things called? Put the letters in order to make words and then match the words with the pictures.",
+        "items": [
+          "Example: ENP pen – a",
+          "1 POH",
+          "2 RADOB",
+          "3 LURRE",
+          "4 KNOOTBEO",
+          "5 NPICLE",
+          "6 BURREB",
+          "7 TESACEST",
+          "8 GNARIWD IPN",
+          "9 CENOTIRADOB",
+          "10 PLINCE PHENARRES"
+        ]
+      },
+      {
+        "id": "15.3",
+        "marks": "10 marks",
+        "instruction": "Complete each sentence with a verb in the correct form (e.g. get, got, getting).",
+        "items": [
+          "Example: At the end of a university course, you ............get............ a degree.",
+          "1 Mary likes school but she hates ......................... homework.",
+          "2 The children are ......................... their history textbook.",
+          "3 The teacher asked the children to ......................... a story about their favourite animal.",
+          "4 Children usually ......................... to ride a bike at the age of six or seven.",
+          "5 My brother is ......................... a course in computing this weekend.",
+          "6 When my English course ......................... I have to ......................... an exam.",
+          "7 Everyone hopes to ......................... their exams; no one wants to ......................... .",
+          "8 Mr Jones ......................... my son history."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Picture a: ballpoint pen",
+      "Picture b: pencil sharpener [?] desk lamp-like sharpener",
+      "Picture c: pencil",
+      "Picture d: ruler",
+      "Picture e: drawing pin",
+      "Picture f: noticeboard with papers pinned to it",
+      "Picture g: small notebook",
+      "Picture h: pencil sharpener",
+      "Picture i: eraser/rubber",
+      "Picture j: whiteboard with markers",
+      "Picture k: cassette tape"
+    ],
+    "unclassified": [
+      "www.irlanguage.com",
+      "مجموعه آموزش زبان ایران [?]",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 21,\n  \"testNumber\": \"15\",\n  \"testTitle\": \"At school and university\",\n  \"exercises\": [\n    {\n      \"id\": \"15.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Which school subject is each person talking about?\",\n      \"items\": [\n        \"Example: CARLOS: 'I need it because I want to study in Australia one day.' ............English............\",\n        \"1 MARK: 'It's my favourite subject because I love learning about other countries.'\",\n        \"2 SIMONE: 'I like it because I love drawing and painting pictures.'\",\n        \"3 KIM: 'I think it is very interesting to learn about animals and plants.'\",\n        \"4 TESSA: 'It's good because we run and jump and aren't sitting at a desk.'\",\n        \"5 ABDULLAH: 'Numbers are very interesting and I love working with them.'\",\n        \"6 ALEX: 'I love learning about how people lived in the past.'\",\n        \"7 DINA: 'I think it is very important to learn all about computers.'\",\n        \"8 MARIA: 'We study speed and light and movement – it's great.'\",\n        \"9 PAT: 'We learn songs and sometimes we can play instruments.'\",\n        \"10 MEENA: 'I enjoy doing experiments in the lab with different chemicals.'\"\n      ]\n    },\n    {\n      \"id\": \"15.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"What are these things called? Put the letters in order to make words and then match the words with the pictures.\",\n      \"items\": [\n        \"Example: ENP pen – a\",\n        \"1 POH\",\n        \"2 RADOB\",\n        \"3 LURRE\",\n        \"4 KNOOTBEO\",\n        \"5 NPICLE\",\n        \"6 BURREB\",\n        \"7 TESACEST\",\n        \"8 GNARIWD IPN\",\n        \"9 CENOTIRADOB\",\n        \"10 PLINCE PHENARRES\"\n      ]\n    },\n    {\n      \"id\": \"15.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete each sentence with a verb in the correct form (e.g. get, got, getting).\",\n      \"items\": [\n        \"Example: At the end of a university course, you ............get............ a degree.\",\n        \"1 Mary likes school but she hates ......................... homework.\",\n        \"2 The children are ......................... their history textbook.\",\n        \"3 The teacher asked the children to ......................... a story about their favourite animal.\",\n        \"4 Children usually ......................... to ride a bike at the age of six or seven.\",\n        \"5 My brother is ......................... a course in computing this weekend.\",\n        \"6 When my English course ......................... I have to ......................... an exam.\",\n        \"7 Everyone hopes to ......................... their exams; no one wants to ......................... .\",\n        \"8 Mr Jones ......................... my son history.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"Picture a: ballpoint pen\",\n    \"Picture b: pencil sharpener [?] desk lamp-like sharpener\",\n    \"Picture c: pencil\",\n    \"Picture d: ruler\",\n    \"Picture e: drawing pin\",\n    \"Picture f: noticeboard with papers pinned to it\",\n    \"Picture g: small notebook\",\n    \"Picture h: pencil sharpener\",\n    \"Picture i: eraser/rubber\",\n    \"Picture j: whiteboard with markers\",\n    \"Picture k: cassette tape\"\n  ],\n  \"unclassified\": [\n    \"www.irlanguage.com\",\n    \"مجموعه آموزش زبان ایران [?]\",\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

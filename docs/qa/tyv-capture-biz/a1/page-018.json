@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 18,
+    "dpi": 300,
+    "renderSha256": "0bdd51fd3b582750f47ab009f52689afb52b0740d6ead32418e6bc3de0e0fbe6",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T13:01:00.854Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 21,
+    "testNumber": "15",
+    "testTitle": "Innovation and invention",
+    "exercises": [
+      {
+        "id": "15.1",
+        "marks": "6 marks",
+        "instruction": "Fill the gap in each sentence by writing the correct form of the verb given in brackets. The first one is an example.",
+        "items": [
+          "0 Suzanne King is in charge of product development at Westworld Electronics. (develop)",
+          "1 I want to be a graphic ..................... when I graduate. (design)",
+          "2 I think that the Internet is the greatest ..................... of the past 50 years. (innovate)",
+          "3 We are looking for someone with ..................... of databases and spreadsheets. (know)",
+          "4 Christopher Cockerell was the ..................... of the hovercraft. (invent)",
+          "5 You have to pay a lot to get a good software ..................... . (develop)",
+          "6 Have you seen her ..................... for the new shopping centre? (design)"
+        ]
+      },
+      {
+        "id": "15.2",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.",
+        "items": [
+          "0 We have made a patent application to stop people copying our invention.",
+          "1 Our drug for pain relief is made ..................................... in 32 countries.",
+          "2 I'm in charge of ..................................... at Minnow Technologies.",
+          "3 We use the latest technologies to keep our products at the ..................................... .",
+          "4 We took them to court because the original idea was our ..................................... .",
+          "5 We test all new drugs at our ..................................... in Zurich."
+        ]
+      },
+      {
+        "id": "15.3",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 I bought a PC just five years ago and now it is ..................... . (innovative/obsolete)",
+          "2 Our new engine uses state-of-the-..................... electronics. (art/science)",
+          "3 I think that the ..................... of computer control systems is fascinating. (technology/knowledge)",
+          "4 Advanced, ..................... systems are great, but there is more to go wrong. (low-tech/hi-tech)",
+          "5 I receive a ..................... of 10% on all my books that the publisher sells. (royalty/licence)",
+          "6 Finding out how antibiotics work was a tremendous ..................... . (breakthrough/breakout)"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "patent / product / cutting / research / under / intellectual",
+      "development / licence / property / application / copyright / centre / edge",
+      "Total 22 / Target 16+"
+    ],
+    "pictures": [
+      "line drawing of two scientists in a laboratory, one using a microscope, with lab equipment, beakers and dishes, connecting the two word-boxes",
+      "score box: 'Your score /22'"
+    ],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 21,\n  \"testNumber\": \"15\",\n  \"testTitle\": \"Innovation and invention\",\n  \"exercises\": [\n    {\n      \"id\": \"15.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Fill the gap in each sentence by writing the correct form of the verb given in brackets. The first one is an example.\",\n      \"items\": [\n        \"0 Suzanne King is in charge of product development at Westworld Electronics. (develop)\",\n        \"1 I want to be a graphic ..................... when I graduate. (design)\",\n        \"2 I think that the Internet is the greatest ..................... of the past 50 years. (innovate)\",\n        \"3 We are looking for someone with ..................... of databases and spreadsheets. (know)\",\n        \"4 Christopher Cockerell was the ..................... of the hovercraft. (invent)\",\n        \"5 You have to pay a lot to get a good software ..................... . (develop)\",\n        \"6 Have you seen her ..................... for the new shopping centre? (design)\"\n      ]\n    },\n    {\n      \"id\": \"15.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.\",\n      \"items\": [\n        \"0 We have made a patent application to stop people copying our invention.\",\n        \"1 Our drug for pain relief is made ..................................... in 32 countries.\",\n        \"2 I'm in charge of ..................................... at Minnow Technologies.\",\n        \"3 We use the latest technologies to keep our products at the ..................................... .\",\n        \"4 We took them to court because the original idea was our ..................................... .\",\n        \"5 We test all new drugs at our ..................................... in Zurich.\"\n      ]\n    },\n    {\n      \"id\": \"15.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n      \"items\": [\n        \"1 I bought a PC just five years ago and now it is ..................... . (innovative/obsolete)\",\n        \"2 Our new engine uses state-of-the-..................... electronics. (art/science)\",\n        \"3 I think that the ..................... of computer control systems is fascinating. (technology/knowledge)\",\n        \"4 Advanced, ..................... systems are great, but there is more to go wrong. (low-tech/hi-tech)\",\n        \"5 I receive a ..................... of 10% on all my books that the publisher sells. (royalty/licence)\",\n        \"6 Finding out how antibiotics work was a tremendous ..................... . (breakthrough/breakout)\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"patent / product / cutting / research / under / intellectual\",\n    \"development / licence / property / application / copyright / centre / edge\",\n    \"Total 22 / Target 16+\"\n  ],\n  \"pictures\": [\n    \"line drawing of two scientists in a laboratory, one using a microscope, with lab equipment, beakers and dishes, connecting the two word-boxes\",\n    \"score box: 'Your score /22'\"\n  ],\n  \"unclassified\": [\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-upp",
+    "title": "Test Your English Vocabulary in Use — upper-intermediate (McCarthy & O'Dell — CUP 2001)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Upper Intermediate.pdf",
+    "pdfSha256": "e4014bdfb072d27b154d03f6bf3bb148ed2749b1ddca6bd12810a74c22105010",
+    "pdfPage": 45,
+    "dpi": 300,
+    "renderSha256": "44997ba4f3f13fe755f821ba1c133304f099359f8d27d45ecd765e0d5c6c485b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:23:10.388Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 42,
+    "testNumber": "34",
+    "testTitle": "Education",
+    "exercises": [
+      {
+        "id": "34.1",
+        "marks": "10 marks",
+        "instruction": "The words in the box refer to types of education in Great Britain. Group them according to the age at which people go through them, starting when they are little children.",
+        "items": []
+      },
+      {
+        "id": "34.2",
+        "marks": "8 marks",
+        "instruction": "True or false. Tick (✓) the correct box.",
+        "items": [
+          "1 In Britain, if you say, 'She went to a public school', you mean a private school.",
+          "2 Degrees can be obtained from schools, colleges or universities.",
+          "3 If you are a postgraduate student, you have normally already done your first degree.",
+          "4 To enter a 'grammar school' in Britain, you normally have to pass an exam.",
+          "5 In Britain, A-levels are normally taken at 16 years old.",
+          "6 Teachers at schools and universities are called 'professors'.",
+          "7 In a university, a tutorial usually has fewer students than a seminar.",
+          "8 In Britain, 'junior school' means school for children under five."
+        ]
+      },
+      {
+        "id": "34.3",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps. The first letter is given.",
+        "items": [
+          "1 I failed my exam first time round, so I'm going to r.................. it next month.",
+          "2 I've got to d.................. an exam next week, so I'll be r.................. every evening till then.",
+          "3 BEN: Hi, did you p.................. your geography exam?",
+          "LORNA: Yeah, I did quite well in fact, I got 76%.",
+          "BEN: Oh well done! So they give you a per cent? I thought they gave g.................. .",
+          "LORNA: Yeah, they give you both. Mine was an 'A'. So how about you?",
+          "BEN: Well, we don't have exams, we have c.................. a.................. , so you just have to do coursework, and you get a m.................. for each essay.",
+          "4 MEG: Why did you s.................. classes yesterday?",
+          "ED: Don't tell anyone, but I was out till 3.30 the night before, so I just stayed in bed all day.",
+          "5 I d.................. well in my exams. I was pleased, and so were my parents."
+        ]
+      },
+      {
+        "id": "34.4",
+        "marks": "12 marks",
+        "instruction": "Give a word or phrase that means the following. The first letter of each word is given.",
+        "items": [
+          "1 The age at which children normally leave school for good. s..........-l........... a......",
+          "2 Money given by the government which enables a person to study. g............",
+          "3 A school run and funded by the government. s........... s...........",
+          "4 A university teacher who is not a professor. Give two names. l........... or t ......... ..",
+          "5 Classes that people can go to after work. e.................. c............"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "junior school  college  comprehensive  play-school  grammar school  secondary  university  primary  nursery  sixth form  further"
+    ],
+    "pictures": [
+      "Table with columns: 2–5 years old / 5–12/13 years old / 12/13–18 years old / 18+ years old, with 'junior school' written in italic in the second column",
+      "True/False tick boxes (True and False columns) beside items 1–8 in exercise 34.2"
+    ],
+    "unclassified": [
+      "TEST",
+      "Unit 43",
+      "True False",
+      "Your score /40",
+      "Test Your English Vocabulary in Use (upper-intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 42,\n \"testNumber\": \"34\",\n \"testTitle\": \"Education\",\n \"exercises\": [\n  {\"id\": \"34.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"The words in the box refer to types of education in Great Britain. Group them according to the age at which people go through them, starting when they are little children.\",\n   \"items\": []},\n  {\"id\": \"34.2\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"True or false. Tick (✓) the correct box.\",\n   \"items\": [\n    \"1 In Britain, if you say, 'She went to a public school', you mean a private school.\",\n    \"2 Degrees can be obtained from schools, colleges or universities.\",\n    \"3 If you are a postgraduate student, you have normally already done your first degree.\",\n    \"4 To enter a 'grammar school' in Britain, you normally have to pass an exam.\",\n    \"5 In Britain, A-levels are normally taken at 16 years old.\",\n    \"6 Teachers at schools and universities are called 'professors'.\",\n    \"7 In a university, a tutorial usually has fewer students than a seminar.\",\n    \"8 In Britain, 'junior school' means school for children under five.\"]},\n  {\"id\": \"34.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Fill the gaps. The first letter is given.\",\n   \"items\": [\n    \"1 I failed my exam first time round, so I'm going to r.................. it next month.\",\n    \"2 I've got to d.................. an exam next week, so I'll be r.................. every evening till then.\",\n    \"3 BEN: Hi, did you p.................. your geography exam?\",\n    \"LORNA: Yeah, I did quite well in fact, I got 76%.\",\n    \"BEN: Oh well done! So they give you a per cent? I thought they gave g.................. .\",\n    \"LORNA: Yeah, they give you both. Mine was an 'A'. So how about you?\",\n    \"BEN: Well, we don't have exams, we have c.................. a.................. , so you just have to do coursework, and you get a m.................. for each essay.\",\n    \"4 MEG: Why did you s.................. classes yesterday?\",\n    \"ED: Don't tell anyone, but I was out till 3.30 the night before, so I just stayed in bed all day.\",\n    \"5 I d.................. well in my exams. I was pleased, and so were my parents.\"]},\n  {\"id\": \"34.4\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Give a word or phrase that means the following. The first letter of each word is given.\",\n   \"items\": [\n    \"1 The age at which children normally leave school for good. s..........-l........... a......\",\n    \"2 Money given by the government which enables a person to study. g............\",\n    \"3 A school run and funded by the government. s........... s...........\",\n    \"4 A university teacher who is not a professor. Give two names. l........... or t ......... ..\",\n    \"5 Classes that people can go to after work. e.................. c............\"]}\n ],\n \"boxesAndLists\": [\n  \"junior school  college  comprehensive  play-school  grammar school  secondary  university  primary  nursery  sixth form  further\"\n ],\n \"pictures\": [\n  \"Table with columns: 2–5 years old / 5–12/13 years old / 12/13–18 years old / 18+ years old, with 'junior school' written in italic in the second column\",\n  \"True/False tick boxes (True and False columns) beside items 1–8 in exercise 34.2\"\n ],\n \"unclassified\": [\n  \"TEST\",\n  \"Unit 43\",\n  \"True False\",\n  \"Your score /40\",\n  \"Test Your English Vocabulary in Use (upper-intermediate)\"\n ]\n}\n```"
+}

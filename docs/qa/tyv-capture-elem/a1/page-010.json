@@ -1,0 +1,97 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 10,
+    "dpi": 300,
+    "renderSha256": "3b4e292f3a39fa7587245470ba2e492a0324bb17dd0620959bba966c2bf38425",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T19:51:24.001Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 9,
+    "testNumber": "3",
+    "testTitle": "Parts of the body",
+    "exercises": [
+      {
+        "id": "3.1",
+        "marks": "10 marks",
+        "instruction": "First write the names of the body parts beside the picture. Then find these parts of the body in the word square.",
+        "items": [
+          "Example: tooth",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ]
+      },
+      {
+        "id": "3.2",
+        "marks": "14 marks",
+        "instruction": "Answer these questions about the body.",
+        "items": [
+          "Example: What do we have ten of on our feet? toes",
+          "1 What do you see with and what do you hear with?",
+          "2 What two parts of your body do you regularly cut?",
+          "3 Which two parts of the body do you need to measure before you buy a man's shirt?",
+          "4 What two parts of the body do you need to measure before you buy or make a woman's skirt?",
+          "5 What does the heart move round the body?",
+          "6 What part of the body controls what you do?",
+          "7 What covers all your body?",
+          "8 On your foot you have a big toe. What do you have on your hand?",
+          "9 What part of the body do people often lie on when they sleep?",
+          "10 Is the 'ch' sound at the end of the word stomach pronounced like 'ch' in church or in chemist?"
+        ]
+      },
+      {
+        "id": "3.3",
+        "marks": "6 marks",
+        "instruction": "Correct these sentences.",
+        "items": [
+          "Example: John raised the weights above his bust.",
+          "John raised the weights above his chest.",
+          "1 Her hairs are black.",
+          "2 Paul has a pain in the side.",
+          "3 John has broken two tooths.",
+          "4 Please wash the hands before dinner.",
+          "5 My foots hurt.",
+          "6 The children put the hands up when they want to ask a question."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A T M T O O T H",
+      "S H O U L D E R",
+      "T U U N E C K F",
+      "O M T N M O M I",
+      "M B H O P A R N",
+      "A G E S A L E G",
+      "C A R E K N E E",
+      "H E A R T I P R"
+    ],
+    "pictures": [
+      "outline drawing of a human body with numbered label lines 1–10 and dotted answer lines",
+      "boxed drawing of a smiling mouth with teeth (tooth example)",
+      "8×8 word square grid with TOOTH circled in top row"
+    ],
+    "unclassified": [
+      "Test 3",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 9,\n  \"testNumber\": \"3\",\n  \"testTitle\": \"Parts of the body\",\n  \"exercises\": [\n    {\n      \"id\": \"3.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"First write the names of the body parts beside the picture. Then find these parts of the body in the word square.\",\n      \"items\": [\n        \"Example: tooth\",\n        \"1\",\n        \"2\",\n        \"3\",\n        \"4\",\n        \"5\",\n        \"6\",\n        \"7\",\n        \"8\",\n        \"9\",\n        \"10\"\n      ]\n    },\n    {\n      \"id\": \"3.2\",\n      \"marks\": \"14 marks\",\n      \"instruction\": \"Answer these questions about the body.\",\n      \"items\": [\n        \"Example: What do we have ten of on our feet? toes\",\n        \"1 What do you see with and what do you hear with?\",\n        \"2 What two parts of your body do you regularly cut?\",\n        \"3 Which two parts of the body do you need to measure before you buy a man's shirt?\",\n        \"4 What two parts of the body do you need to measure before you buy or make a woman's skirt?\",\n        \"5 What does the heart move round the body?\",\n        \"6 What part of the body controls what you do?\",\n        \"7 What covers all your body?\",\n        \"8 On your foot you have a big toe. What do you have on your hand?\",\n        \"9 What part of the body do people often lie on when they sleep?\",\n        \"10 Is the 'ch' sound at the end of the word stomach pronounced like 'ch' in church or in chemist?\"\n      ]\n    },\n    {\n      \"id\": \"3.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Correct these sentences.\",\n      \"items\": [\n        \"Example: John raised the weights above his bust.\",\n        \"John raised the weights above his chest.\",\n        \"1 Her hairs are black.\",\n        \"2 Paul has a pain in the side.\",\n        \"3 John has broken two tooths.\",\n        \"4 Please wash the hands before dinner.\",\n        \"5 My foots hurt.\",\n        \"6 The children put the hands up when they want to ask a question.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"A T M T O O T H\",\n    \"S H O U L D E R\",\n    \"T U U N E C K F\",\n    \"O M T N M O M I\",\n    \"M B H O P A R N\",\n    \"A G E S A L E G\",\n    \"C A R E K N E E\",\n    \"H E A R T I P R\"\n  ],\n  \"pictures\": [\n    \"outline drawing of a human body with numbered label lines 1–10 and dotted answer lines\",\n    \"boxed drawing of a smiling mouth with teeth (tooth example)\",\n    \"8×8 word square grid with TOOTH circled in top row\"\n  ],\n  \"unclassified\": [\n    \"Test 3\",\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

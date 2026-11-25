@@ -1,0 +1,72 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 72,
+    "dpi": 300,
+    "renderSha256": "461c4550b5e992851febaafa989606bc98e44ff1a2e0f617e0b7aaf2d28c3d8b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:58:42.537Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 75,
+    "testNumber": "57",
+    "testTitle": "Meetings 4: agreement and disagreement",
+    "exercises": [
+      {
+        "id": "57.1",
+        "marks": "10 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "It's difficult chairing a meeting. When you have a (1) ............ , some people will agree with you but others may (2) ............ . It's OK when it's just a (3) ............ of opinion, but sometimes it turns into an (4) ............ . The important thing is to be (5) ............ whatever happens. If someone gets very (6) ............ or says something rude, keep (7) ............ . Just make your (8) ............ but do not (9) ............ your temper. If you are (10) ............ , then things will just get worse!",
+          "1 A discussion B percussion C repercussion",
+          "2 A reply B refuse C disagree",
+          "3 A different B difference C differently",
+          "4 A agreement B argument C alternative",
+          "5 A courteous B mistaken C absurd",
+          "6 A disagreed B anger C angry",
+          "7 A calm B cold C clear",
+          "8 A place B part C point",
+          "9 A lend B lose C let",
+          "10 A perfect B absolute C impolite"
+        ]
+      },
+      {
+        "id": "57.2",
+        "marks": "7 marks",
+        "instruction": "Complete each statement using one of the words from the box below. (There is one extra word that you don't have to use.) Then decide whether the statement expresses strong agreement (SA), mild agreement (MA), mild disagreement (MD) or strong disagreement (SD). Put a tick (✓) in the right box. The first one is an example.",
+        "items": [
+          "0 I'm ........afraid........ I can't agree with you there, John.",
+          "1 You're ........................ right. We have to reduce our prices.",
+          "2 I'm sorry, Helen, but that's out of the ........................ .",
+          "3 Precisely. I couldn't ........................ more.",
+          "4 I ........................ so, but I'd like to see the latest figures.",
+          "5 That's ........................ . I can't believe you want to pay just £4 an hour.",
+          "6 I can't really go ........................ with that. I think your figures may be wrong.",
+          "7 You may be ........................ there. Let's see what happens."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "along disagree question suppose afraid absurd agree right perfectly"
+    ],
+    "pictures": [
+      "cartoon illustration of people arguing around a meeting table (next to exercise 57.1 options)",
+      "table with SA / MA / MD / SD tick columns for exercise 57.2"
+    ],
+    "unclassified": [
+      "Total 17",
+      "Target 14+",
+      "Your score /17",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 75,\n  \"testNumber\": \"57\",\n  \"testTitle\": \"Meetings 4: agreement and disagreement\",\n  \"exercises\": [\n    {\n      \"id\": \"57.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n      \"items\": [\n        \"It's difficult chairing a meeting. When you have a (1) ............ , some people will agree with you but others may (2) ............ . It's OK when it's just a (3) ............ of opinion, but sometimes it turns into an (4) ............ . The important thing is to be (5) ............ whatever happens. If someone gets very (6) ............ or says something rude, keep (7) ............ . Just make your (8) ............ but do not (9) ............ your temper. If you are (10) ............ , then things will just get worse!\",\n        \"1 A discussion B percussion C repercussion\",\n        \"2 A reply B refuse C disagree\",\n        \"3 A different B difference C differently\",\n        \"4 A agreement B argument C alternative\",\n        \"5 A courteous B mistaken C absurd\",\n        \"6 A disagreed B anger C angry\",\n        \"7 A calm B cold C clear\",\n        \"8 A place B part C point\",\n        \"9 A lend B lose C let\",\n        \"10 A perfect B absolute C impolite\"\n      ]\n    },\n    {\n      \"id\": \"57.2\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Complete each statement using one of the words from the box below. (There is one extra word that you don't have to use.) Then decide whether the statement expresses strong agreement (SA), mild agreement (MA), mild disagreement (MD) or strong disagreement (SD). Put a tick (✓) in the right box. The first one is an example.\",\n      \"items\": [\n        \"0 I'm ........afraid........ I can't agree with you there, John.\",\n        \"1 You're ........................ right. We have to reduce our prices.\",\n        \"2 I'm sorry, Helen, but that's out of the ........................ .\",\n        \"3 Precisely. I couldn't ........................ more.\",\n        \"4 I ........................ so, but I'd like to see the latest figures.\",\n        \"5 That's ........................ . I can't believe you want to pay just £4 an hour.\",\n        \"6 I can't really go ........................ with that. I think your figures may be wrong.\",\n        \"7 You may be ........................ there. Let's see what happens.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"along disagree question suppose afraid absurd agree right perfectly\"\n  ],\n  \"pictures\": [\n    \"cartoon illustration of people arguing around a meeting table (next to exercise 57.1 options)\",\n    \"table with SA / MA / MD / SD tick columns for exercise 57.2\"\n  ],\n  \"unclassified\": [\n    \"Total 17\",\n    \"Target 14+\",\n    \"Your score /17\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

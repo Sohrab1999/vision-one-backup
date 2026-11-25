@@ -1,0 +1,76 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 51,
+    "dpi": 300,
+    "renderSha256": "7b8460e59baf90452eefb7d887f18397dc6bc472a5ac85d808b512048a95e700",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:37:25.258Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 54,
+    "testNumber": "40",
+    "testTitle": "Wrongdoing and corruption",
+    "exercises": [
+      {
+        "id": "40.1",
+        "marks": "6 marks",
+        "instruction": "Decide which of the alternatives (A–G) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There is one alternative that you don't have to use.",
+        "items": [
+          "1 They used the profits from selling drugs to buy houses and land in Europe.",
+          "2 He moved £200 from the company account to his own bank account every week for years.",
+          "3 Net Rail and West Trains secretly agreed to charge the same fares on their busiest routes.",
+          "4 The $100 note was so good it was almost impossible to tell it from a real one.",
+          "5 They offered him $20,000 to give the contract to them and not their rivals.",
+          "6 The CEO was arrested because she sold all her shares just before the price plummeted."
+        ]
+      },
+      {
+        "id": "40.2",
+        "marks": "6 marks",
+        "instruction": "Complete each sentence by writing in the gap a word formed from the verb given in brackets ( ).",
+        "items": [
+          "1 They thought the President was involved in ........................... . (corrupt)",
+          "2 Publishing lies about a company to push down its share price is market ........................... . (rig)",
+          "3 He was found guilty of insider ........................... last year. (deal)",
+          "4 He was accused of ........................... because he gave politicians cash for favours. (bribe)",
+          "5 They made a lot of money ........................... famous brand sports wear. (fake)",
+          "6 She organized the ........................... of postage stamps worth $2 million. (forge)"
+        ]
+      },
+      {
+        "id": "40.3",
+        "marks": "5 marks",
+        "instruction": "In each of the numbered sentences (1–5) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "My name is Laura Rayner and I work for the Finance Sector Authority.",
+          "1 Our job is to regular banking and investment services.",
+          "2 We look at reports of wrongdone in companies.",
+          "3 Some cases are small – like a director taking a 'sweetness' for a favour.",
+          "4 Others are very serious. One scam involved a man who sold $1 million",
+          "5 worth of shares in a company that didn't exist! That's frawd."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A price fixing    B insider trading    C money laundering    D counterfeiting",
+      "E bribery    F racketeering    G embezzlement"
+    ],
+    "pictures": [
+      "two postage stamps each showing a sailing boat and '50¢'; the second is crossed out with a large X"
+    ],
+    "unclassified": [
+      "Total 17 / Target 14+",
+      "Your score /17"
+    ]
+  },
+  "rawModelText": "{\"footer\": 54,\n \"testNumber\": \"40\",\n \"testTitle\": \"Wrongdoing and corruption\",\n \"exercises\": [\n  {\"id\": \"40.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Decide which of the alternatives (A–G) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There is one alternative that you don't have to use.\",\n   \"items\": [\n    \"1 They used the profits from selling drugs to buy houses and land in Europe.\",\n    \"2 He moved £200 from the company account to his own bank account every week for years.\",\n    \"3 Net Rail and West Trains secretly agreed to charge the same fares on their busiest routes.\",\n    \"4 The $100 note was so good it was almost impossible to tell it from a real one.\",\n    \"5 They offered him $20,000 to give the contract to them and not their rivals.\",\n    \"6 The CEO was arrested because she sold all her shares just before the price plummeted.\"\n   ]},\n  {\"id\": \"40.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete each sentence by writing in the gap a word formed from the verb given in brackets ( ).\",\n   \"items\": [\n    \"1 They thought the President was involved in ........................... . (corrupt)\",\n    \"2 Publishing lies about a company to push down its share price is market ........................... . (rig)\",\n    \"3 He was found guilty of insider ........................... last year. (deal)\",\n    \"4 He was accused of ........................... because he gave politicians cash for favours. (bribe)\",\n    \"5 They made a lot of money ........................... famous brand sports wear. (fake)\",\n    \"6 She organized the ........................... of postage stamps worth $2 million. (forge)\"\n   ]},\n  {\"id\": \"40.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"In each of the numbered sentences (1–5) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\n    \"My name is Laura Rayner and I work for the Finance Sector Authority.\",\n    \"1 Our job is to regular banking and investment services.\",\n    \"2 We look at reports of wrongdone in companies.\",\n    \"3 Some cases are small – like a director taking a 'sweetness' for a favour.\",\n    \"4 Others are very serious. One scam involved a man who sold $1 million\",\n    \"5 worth of shares in a company that didn't exist! That's frawd.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"A price fixing    B insider trading    C money laundering    D counterfeiting\",\n  \"E bribery    F racketeering    G embezzlement\"\n ],\n \"pictures\": [\n  \"two postage stamps each showing a sailing boat and '50¢'; the second is crossed out with a large X\"\n ],\n \"unclassified\": [\n  \"Total 17 / Target 14+\",\n  \"Your score /17\"\n ]\n}"
+}

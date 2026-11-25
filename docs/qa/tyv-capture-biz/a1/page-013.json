@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 13,
+    "dpi": 300,
+    "renderSha256": "8664d1fc8ce8068e7281553203212b5ec07fd27c1cf33b919d8fb82fca8fa272",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T13:00:08.504Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 16,
+    "testNumber": "10",
+    "testTitle": "Business people and business leaders",
+    "exercises": [
+      {
+        "id": "10.1",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 The Ford Motor Company was .......................... in 1903. (find/found/founded)",
+          "2 There were 2,700 business .......................... in the UK in the last quarter. (start-ups/get-ups/start-offs)",
+          "3 Sir Richard Branson is one of Britain's .......................... of industry. (bosses/captains/moguls)",
+          "4 Rupert Murdoch is a media .......................... who owns many newspaper and TV companies. (leader/magnate/founder)",
+          "5 That's Angelina Carlito. She's a very successful .......................... . (businessman/businesswoman/business people)",
+          "6 My mother started with one shop and now she heads up a huge business .......................... . (empire/country/world)"
+        ]
+      },
+      {
+        "id": "10.2",
+        "marks": "6 marks",
+        "instruction": "Write one word in each gap to complete this text. The first and last letters of each word are given.",
+        "items": [
+          "'My name is John Forbes. I'm 29 years old and I've just started my fourth company. I guess I am an e ____________r because I am good at e ____________g new businesses. My aim is to g __w a new company until it is big enough to survive and develop. Then I move on. I like taking risks so just managing an organization would be too boring. To tell the truth, I don't have the l ____________p skills necessary. I can't see myself as a software t ____n like Bill Gates. I just want to make the most of the e ________________l skills that I do have.'"
+        ]
+      },
+      {
+        "id": "10.3",
+        "marks": "7 marks",
+        "instruction": "Find the answer to each clue. One or two letters are given in each case.",
+        "items": [
+          "1 Woman or man who has their own company",
+          "2 Owns film studios – perhaps in Hollywood (2 words)",
+          "3 One who started a company",
+          "4 Collective term for TV, radio, newspapers",
+          "5 Owns wells and pipelines – for 'black gold' (2 words)"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 19",
+      "Target 15+"
+    ],
+    "pictures": [
+      "crossword-style grid with numbered rows 1–5 and given letters (b, p, m, m, f, m, o, m), some shaded squares",
+      "cartoon of oil industry scene: pump jacks and derricks, and a fat man in hat and sunglasses smoking a cigar beside a gushing oil well"
+    ],
+    "unclassified": [
+      "Your score /19",
+      "Test Your Business Vocabulary in Use",
+      "www.irlanguage.com",
+      "IR Language [?]",
+      "مرکز تخصصی زبان ایرانیان [?]"
+    ]
+  },
+  "rawModelText": "{\"footer\": 16,\n \"testNumber\": \"10\",\n \"testTitle\": \"Business people and business leaders\",\n \"exercises\": [\n  {\"id\": \"10.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n   \"items\": [\n    \"1 The Ford Motor Company was .......................... in 1903. (find/found/founded)\",\n    \"2 There were 2,700 business .......................... in the UK in the last quarter. (start-ups/get-ups/start-offs)\",\n    \"3 Sir Richard Branson is one of Britain's .......................... of industry. (bosses/captains/moguls)\",\n    \"4 Rupert Murdoch is a media .......................... who owns many newspaper and TV companies. (leader/magnate/founder)\",\n    \"5 That's Angelina Carlito. She's a very successful .......................... . (businessman/businesswoman/business people)\",\n    \"6 My mother started with one shop and now she heads up a huge business .......................... . (empire/country/world)\"\n   ]},\n  {\"id\": \"10.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Write one word in each gap to complete this text. The first and last letters of each word are given.\",\n   \"items\": [\n    \"'My name is John Forbes. I'm 29 years old and I've just started my fourth company. I guess I am an e ____________r because I am good at e ____________g new businesses. My aim is to g __w a new company until it is big enough to survive and develop. Then I move on. I like taking risks so just managing an organization would be too boring. To tell the truth, I don't have the l ____________p skills necessary. I can't see myself as a software t ____n like Bill Gates. I just want to make the most of the e ________________l skills that I do have.'\"\n   ]},\n  {\"id\": \"10.3\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Find the answer to each clue. One or two letters are given in each case.\",\n   \"items\": [\n    \"1 Woman or man who has their own company\",\n    \"2 Owns film studios – perhaps in Hollywood (2 words)\",\n    \"3 One who started a company\",\n    \"4 Collective term for TV, radio, newspapers\",\n    \"5 Owns wells and pipelines – for 'black gold' (2 words)\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"Total 19\",\n  \"Target 15+\"\n ],\n \"pictures\": [\n  \"crossword-style grid with numbered rows 1–5 and given letters (b, p, m, m, f, m, o, m), some shaded squares\",\n  \"cartoon of oil industry scene: pump jacks and derricks, and a fat man in hat and sunglasses smoking a cigar beside a gushing oil well\"\n ],\n \"unclassified\": [\n  \"Your score /19\",\n  \"Test Your Business Vocabulary in Use\",\n  \"www.irlanguage.com\",\n  \"IR Language [?]\",\n  \"مرکز تخصصی زبان ایرانیان [?]\"\n ]\n}"
+}

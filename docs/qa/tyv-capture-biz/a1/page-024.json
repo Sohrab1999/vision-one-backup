@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 24,
+    "dpi": 300,
+    "renderSha256": "02390acb1ebcb27cc725eb8a168d658afd4484e282fc6bae053cc3b7a47fbfaa",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T20:16:08.855Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 27,
+    "testNumber": "17",
+    "testTitle": "Materials and suppliers",
+    "exercises": [
+      {
+        "id": "17.1",
+        "marks": "5 marks",
+        "instruction": "Choose the best word or phrase to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the answer you choose.",
+        "items": [
+          "'We sell parts to more than 100 computer companies. In fact, we are the largest (1) ............ of electronic (2) ............ in the country. We hold huge (3) ............ worth millions of pounds in our (4) ............ in Manchester and Southampton. The big manufacturers use us because we provide a just- (5) ............ service. They order the parts when they need them and we deliver within 24 hours.'",
+          "1 A business        B supplier        C industry",
+          "2 A components      B pieces          C bits",
+          "3 A stocks          B goods           C works",
+          "4 A headquarters    B plants          C warehouses",
+          "5 A in-house        B in-time         C in-case"
+        ]
+      },
+      {
+        "id": "17.2",
+        "marks": "7 marks",
+        "instruction": "Match each statement to a word or phrase from the list. Write the letter of your chosen answer next to the statement.  The first one is an example.",
+        "items": [
+          "0 We also have a small printing department where we print all our own stationery. | G",
+          "1 The steel that we use to make the engines comes from Poland.",
+          "2 We borrowed £20,000 from the bank to cover start-up costs.",
+          "3 At any moment there are about 200 cars on the production line.",
+          "4 We don't have our own drivers – we pay a local company to deliver to our customers.",
+          "5 The most important input is the ideas that come from our R & D department.",
+          "6 We are lucky that we have good managers and a well-trained workforce.",
+          "7 Last week, 2,500 TVs went out of this factory and into the shops."
+        ]
+      },
+      {
+        "id": "17.3",
+        "marks": "6 marks",
+        "instruction": "Find the answer to each clue. Some letters have been given to help you.",
+        "items": [
+          "1 To move stocks from one place to another",
+          "2 Materials, capital, and labour are all ............",
+          "3 Another word for 'paid for'",
+          "4 Buy in services from an outside supplier",
+          "5 'Lean production' means to make things ............",
+          "6 What 'stocks' are called in the US"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 18 | Target 14+",
+      "A raw material      B subcontracting     C capital      D finished goods\nE labour            F work-in-progress   G in-house     H knowledge"
+    ],
+    "pictures": [
+      "crossword-style grid for exercise 17.3 with numbered rows 1–6 and given letters (h, d, i, p, f, c, d, o, s, c, e, f, l, y, i, v, t, r, s)"
+    ],
+    "unclassified": [
+      "Your score /18",
+      "Test Your Business Vocabulary in Use",
+      "www.irlanguage.com [?] (watermark/logo with 'IR Language')"
+    ]
+  },
+  "rawModelText": "{\"footer\": 27,\n \"testNumber\": \"17\",\n \"testTitle\": \"Materials and suppliers\",\n \"exercises\": [\n  {\"id\": \"17.1\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Choose the best word or phrase to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the answer you choose.\",\n   \"items\": [\"'We sell parts to more than 100 computer companies. In fact, we are the largest (1) ............ of electronic (2) ............ in the country. We hold huge (3) ............ worth millions of pounds in our (4) ............ in Manchester and Southampton. The big manufacturers use us because we provide a just- (5) ............ service. They order the parts when they need them and we deliver within 24 hours.'\",\n    \"1 A business        B supplier        C industry\",\n    \"2 A components      B pieces          C bits\",\n    \"3 A stocks          B goods           C works\",\n    \"4 A headquarters    B plants          C warehouses\",\n    \"5 A in-house        B in-time         C in-case\"]},\n  {\"id\": \"17.2\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Match each statement to a word or phrase from the list. Write the letter of your chosen answer next to the statement.  The first one is an example.\",\n   \"items\": [\"0 We also have a small printing department where we print all our own stationery. | G\",\n    \"1 The steel that we use to make the engines comes from Poland.\",\n    \"2 We borrowed £20,000 from the bank to cover start-up costs.\",\n    \"3 At any moment there are about 200 cars on the production line.\",\n    \"4 We don't have our own drivers – we pay a local company to deliver to our customers.\",\n    \"5 The most important input is the ideas that come from our R & D department.\",\n    \"6 We are lucky that we have good managers and a well-trained workforce.\",\n    \"7 Last week, 2,500 TVs went out of this factory and into the shops.\"]},\n  {\"id\": \"17.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Find the answer to each clue. Some letters have been given to help you.\",\n   \"items\": [\"1 To move stocks from one place to another\",\n    \"2 Materials, capital, and labour are all ............\",\n    \"3 Another word for 'paid for'\",\n    \"4 Buy in services from an outside supplier\",\n    \"5 'Lean production' means to make things ............\",\n    \"6 What 'stocks' are called in the US\"]}\n ],\n \"boxesAndLists\": [\"Total 18 | Target 14+\",\n  \"A raw material      B subcontracting     C capital      D finished goods\\nE labour            F work-in-progress   G in-house     H knowledge\"],\n \"pictures\": [\"crossword-style grid for exercise 17.3 with numbered rows 1–6 and given letters (h, d, i, p, f, c, d, o, s, c, e, f, l, y, i, v, t, r, s)\"],\n \"unclassified\": [\"Your score /18\",\n  \"Test Your Business Vocabulary in Use\",\n  \"www.irlanguage.com [?] (watermark/logo with 'IR Language')\"]\n}"
+}

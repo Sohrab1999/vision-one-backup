@@ -1,0 +1,77 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 54,
+    "dpi": 300,
+    "renderSha256": "056e407f666502808b323f414e4f3d723fd09e7d7e3b6a037e7086243c9744fd",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:38:01.919Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 57,
+    "testNumber": "43",
+    "testTitle": "Stress and stress management",
+    "exercises": [
+      {
+        "id": "43.1",
+        "marks": "6 marks",
+        "instruction": "For each sentence, find one word to replace the underlined phrase. Write the word at the end of the sentence. The first two letters have been given to help you.",
+        "items": [
+          "1 I'm a nurse because I want to do something that gives me a lot of satisfaction. re_______",
+          "2 I work hard but my job is very interesting and makes me feel good. st________",
+          "3 My new job is difficult but in an interesting way. ch________",
+          "4 Now I'm a manager I feel that things are difficult and there's a lot to do at work. st______",
+          "5 I started to feel that I couldn't deal with all the pressures of work. ov________",
+          "6 My last boss left the job because of very bad tiredness and stress. bu____"
+        ]
+      },
+      {
+        "id": "43.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap in each sentence.",
+        "items": [
+          "1 I don't like working .................... stress. (behind/under/over)",
+          "2 My doctor said my illness was stress-..................... . (induced/involved/input)",
+          "3 I don't think I can deal with the stresses and .................... at work. (surges/stretches/strains)",
+          "4 He had a .................... breakdown last year but he's much better now. (nerve/nervy/nervous)",
+          "5 I have to get out of the rat .................... before I am burned out. (race/trap/cage)",
+          "6 This job is so competitive I feel as if I'm on a .................... . (timeframe/treadmill/sweatshop)"
+        ]
+      },
+      {
+        "id": "43.3",
+        "marks": "6 marks",
+        "instruction": "In each of the numbered sentences (1–6) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "I've decided to give up my job in the city and move to the country.",
+          "1 I've been completely stressed outwards and it is damaging my health. ....................",
+          "2 I'm so overemployed that I am too tired to sleep at night. ....................",
+          "3 That's why I'm going to change my lifestyling. ....................",
+          "4 I want to spend some qualification time with my family. ....................",
+          "5 Lots of people in London are thinking about backshifting. ....................",
+          "6 They're all looking for a life that is unstrainful. ...................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 18",
+      "Target 14+"
+    ],
+    "pictures": [
+      "cartoon of man relaxing in a deck chair on a tropical beach with palm trees, sun, briefcase beside him"
+    ],
+    "unclassified": [
+      "score 18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 57, \"testNumber\": \"43\", \"testTitle\": \"Stress and stress management\", \"exercises\": [{\"id\": \"43.1\", \"marks\": \"6 marks\", \"instruction\": \"For each sentence, find one word to replace the underlined phrase. Write the word at the end of the sentence. The first two letters have been given to help you.\", \"items\": [\"1 I'm a nurse because I want to do something that gives me a lot of satisfaction. re_______\", \"2 I work hard but my job is very interesting and makes me feel good. st________\", \"3 My new job is difficult but in an interesting way. ch________\", \"4 Now I'm a manager I feel that things are difficult and there's a lot to do at work. st______\", \"5 I started to feel that I couldn't deal with all the pressures of work. ov________\", \"6 My last boss left the job because of very bad tiredness and stress. bu____\"]}, {\"id\": \"43.2\", \"marks\": \"6 marks\", \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap in each sentence.\", \"items\": [\"1 I don't like working .................... stress. (behind/under/over)\", \"2 My doctor said my illness was stress-..................... . (induced/involved/input)\", \"3 I don't think I can deal with the stresses and .................... at work. (surges/stretches/strains)\", \"4 He had a .................... breakdown last year but he's much better now. (nerve/nervy/nervous)\", \"5 I have to get out of the rat .................... before I am burned out. (race/trap/cage)\", \"6 This job is so competitive I feel as if I'm on a .................... . (timeframe/treadmill/sweatshop)\"]}, {\"id\": \"43.3\", \"marks\": \"6 marks\", \"instruction\": \"In each of the numbered sentences (1–6) there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\", \"items\": [\"I've decided to give up my job in the city and move to the country.\", \"1 I've been completely stressed outwards and it is damaging my health. ....................\", \"2 I'm so overemployed that I am too tired to sleep at night. ....................\", \"3 That's why I'm going to change my lifestyling. ....................\", \"4 I want to spend some qualification time with my family. ....................\", \"5 Lots of people in London are thinking about backshifting. ....................\", \"6 They're all looking for a life that is unstrainful. ....................\"]}], \"boxesAndLists\": [\"Total 18\", \"Target 14+\"], \"pictures\": [\"cartoon of man relaxing in a deck chair on a tropical beach with palm trees, sun, briefcase beside him\"], \"unclassified\": [\"score 18\", \"Test Your Business Vocabulary in Use\"]}\n```"
+}

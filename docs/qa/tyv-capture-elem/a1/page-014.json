@@ -1,0 +1,95 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 14,
+    "dpi": 300,
+    "renderSha256": "a449ef84fecd54c6bbfa3bbd84b27f279636296c846a9c79d0410c36b9cd4d64",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:00:07.718Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 13,
+    "testNumber": "7",
+    "testTitle": "Feelings",
+    "exercises": [
+      {
+        "id": "7.1",
+        "marks": "10 marks",
+        "instruction": "How do you feel? Choose the best word from the box.",
+        "items": [
+          "Example: You’ve just had a long holiday with lots of good food and exercise. You feel well.",
+          "1 You haven’t eaten for ten hours.",
+          "2 You went to bed at 2 am and got up at 6 am.",
+          "3 Someone has just broken a window in your new car.",
+          "4 It is a hot day and you haven’t had anything to drink for three hours.",
+          "5 You have a very bad cold.",
+          "6 It is snowing and you do not have a coat with you.",
+          "7 You got very good marks in an important exam.",
+          "8 It is 35°C and you do not have air conditioning.",
+          "9 Your dog has just died.",
+          "10 You see your brother’s photo on the front page of the newspaper."
+        ]
+      },
+      {
+        "id": "7.2",
+        "marks": "4 marks",
+        "instruction": "What are the opposites of these verbs and adjectives?",
+        "items": [
+          "Example: good bad",
+          "1 love    2 cold    3 happy    4 ill"
+        ]
+      },
+      {
+        "id": "7.3",
+        "marks": "6 marks",
+        "instruction": "Correct these sentences.",
+        "items": [
+          "Example: Peter wants that his sister helps him. Peter wants his sister to help him.",
+          "1 I like very much tennis.",
+          "2 I am very happy for your good exam results.",
+          "3 Jack hopes his girlfriend to phone him soon.",
+          "4 I like really ice cream.",
+          "5 My little sister prefers juice from milk.",
+          "6 Grandfather is little tired today."
+        ]
+      },
+      {
+        "id": "7.4",
+        "marks": "10 marks",
+        "instruction": "How do these people look? Use the letters to make a word and finish the sentence.",
+        "items": [
+          "Example: Liz looks O T H. Liz looks hot.",
+          "1 Bonnie looks T U S E P.",
+          "2 Colin looks G A R Y N.",
+          "3 Stan looks D A S.",
+          "4 Katie looks L I L.",
+          "5 Mark looks P E S S I D U R.",
+          "6 Rob looks L C D O.",
+          "7 Nat looks D I R T E.",
+          "8 Clare looks P A P H Y.",
+          "9 Spot looks R I T T Y S H.",
+          "10 Fluffy looks G H U R Y N."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "angry  cold  happy  hot  hungry  ill  sad  surprised  thirsty  tired  well"
+    ],
+    "pictures": [
+      "Row of cartoon people and animals for exercise 7.4 labelled Clare, Mark, Rob, Nat, Colin, Spot (dog), Stan, Katie, Bonnie, Fluffy (cat), Liz"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 13,\n  \"testNumber\": \"7\",\n  \"testTitle\": \"Feelings\",\n  \"exercises\": [\n    {\n      \"id\": \"7.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"How do you feel? Choose the best word from the box.\",\n      \"items\": [\n        \"Example: You’ve just had a long holiday with lots of good food and exercise. You feel well.\",\n        \"1 You haven’t eaten for ten hours.\",\n        \"2 You went to bed at 2 am and got up at 6 am.\",\n        \"3 Someone has just broken a window in your new car.\",\n        \"4 It is a hot day and you haven’t had anything to drink for three hours.\",\n        \"5 You have a very bad cold.\",\n        \"6 It is snowing and you do not have a coat with you.\",\n        \"7 You got very good marks in an important exam.\",\n        \"8 It is 35°C and you do not have air conditioning.\",\n        \"9 Your dog has just died.\",\n        \"10 You see your brother’s photo on the front page of the newspaper.\"\n      ]\n    },\n    {\n      \"id\": \"7.2\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"What are the opposites of these verbs and adjectives?\",\n      \"items\": [\n        \"Example: good bad\",\n        \"1 love    2 cold    3 happy    4 ill\"\n      ]\n    },\n    {\n      \"id\": \"7.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Correct these sentences.\",\n      \"items\": [\n        \"Example: Peter wants that his sister helps him. Peter wants his sister to help him.\",\n        \"1 I like very much tennis.\",\n        \"2 I am very happy for your good exam results.\",\n        \"3 Jack hopes his girlfriend to phone him soon.\",\n        \"4 I like really ice cream.\",\n        \"5 My little sister prefers juice from milk.\",\n        \"6 Grandfather is little tired today.\"\n      ]\n    },\n    {\n      \"id\": \"7.4\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"How do these people look? Use the letters to make a word and finish the sentence.\",\n      \"items\": [\n        \"Example: Liz looks O T H. Liz looks hot.\",\n        \"1 Bonnie looks T U S E P.\",\n        \"2 Colin looks G A R Y N.\",\n        \"3 Stan looks D A S.\",\n        \"4 Katie looks L I L.\",\n        \"5 Mark looks P E S S I D U R.\",\n        \"6 Rob looks L C D O.\",\n        \"7 Nat looks D I R T E.\",\n        \"8 Clare looks P A P H Y.\",\n        \"9 Spot looks R I T T Y S H.\",\n        \"10 Fluffy looks G H U R Y N.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"angry  cold  happy  hot  hungry  ill  sad  surprised  thirsty  tired  well\"\n  ],\n  \"pictures\": [\n    \"Row of cartoon people and animals for exercise 7.4 labelled Clare, Mark, Rob, Nat, Colin, Spot (dog), Stan, Katie, Bonnie, Fluffy (cat), Liz\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 25,
+    "dpi": 300,
+    "renderSha256": "7cefe0b52b875e0b7bbae3af050dc4864b9f9002b77404b1eeae4c1cfdcc04af",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T04:58:25.686Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 28,
+    "testNumber": "18",
+    "testTitle": "Business philosophies",
+    "exercises": [
+      {
+        "id": "18.1",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.",
+        "items": [
+          "0 We regularly upgrade our products because we believe in ...continuous improvement.... ",
+          "1 To test customer service in our stores we send in ..................................... .",
+          "2 We look around the industry for examples of ................................. and then copy them.",
+          "3 I believe that ................................. is all about checking that products match the specs.",
+          "4 We can't afford any mistakes. Our target is to have ................................. .",
+          "5 We make frequent ................................. throughout the manufacturing process."
+        ]
+      },
+      {
+        "id": "18.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the answer you choose.",
+        "items": [
+          "'I'm Sue Carter, production manager at F1 Parts PLC. We make engine parts for high performance cars. Here we believe in (1) ........... quality management. The (2) ........... of each part are given to one-hundredth of a millimetre. At every stage we check that our products (3) ........... to the specs. We try to get it right (4) ........... time because, if there is a defect, (5) ........... is very expensive. We are always looking for ways to improve quality and so our motto is (6) ..........., which comes from Japanese.'",
+          "1 A all          B full          C total",
+          "2 A dimensions   B pieces        C components",
+          "3 A work         B conform       C exact",
+          "4 A one          B first         C last",
+          "5 A reworking    B repairing     C recalling",
+          "6 A aikido       B bonsai        C kaizen"
+        ]
+      },
+      {
+        "id": "18.3",
+        "marks": "6 marks",
+        "instruction": "Write the abbreviations in words.",
+        "items": [
+          "1 TQM  T.....  Q.....  M.....",
+          "2 BPR  B.....  P.....  R ..........."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "continuous\nquality\nmystery\nzero\nspot\nbest",
+      "defects\nimprovement\npractice\ncontrol\nperformance\nshoppers\nchecks"
+    ],
+    "pictures": [
+      "cartoon of a mystery shopper in a trench coat with a question-mark sign at a shop counter"
+    ],
+    "unclassified": [
+      "Total 22",
+      "Target 16+",
+      "Your score /22",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 28,\n  \"testNumber\": \"18\",\n  \"testTitle\": \"Business philosophies\",\n  \"exercises\": [\n    {\n      \"id\": \"18.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.\",\n      \"items\": [\n        \"0 We regularly upgrade our products because we believe in ...continuous improvement.... \",\n        \"1 To test customer service in our stores we send in ..................................... .\",\n        \"2 We look around the industry for examples of ................................. and then copy them.\",\n        \"3 I believe that ................................. is all about checking that products match the specs.\",\n        \"4 We can't afford any mistakes. Our target is to have ................................. .\",\n        \"5 We make frequent ................................. throughout the manufacturing process.\"\n      ]\n    },\n    {\n      \"id\": \"18.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the answer you choose.\",\n      \"items\": [\n        \"'I'm Sue Carter, production manager at F1 Parts PLC. We make engine parts for high performance cars. Here we believe in (1) ........... quality management. The (2) ........... of each part are given to one-hundredth of a millimetre. At every stage we check that our products (3) ........... to the specs. We try to get it right (4) ........... time because, if there is a defect, (5) ........... is very expensive. We are always looking for ways to improve quality and so our motto is (6) ..........., which comes from Japanese.'\",\n        \"1 A all          B full          C total\",\n        \"2 A dimensions   B pieces        C components\",\n        \"3 A work         B conform       C exact\",\n        \"4 A one          B first         C last\",\n        \"5 A reworking    B repairing     C recalling\",\n        \"6 A aikido       B bonsai        C kaizen\"\n      ]\n    },\n    {\n      \"id\": \"18.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Write the abbreviations in words.\",\n      \"items\": [\n        \"1 TQM  T.....  Q.....  M.....\",\n        \"2 BPR  B.....  P.....  R ...........\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"continuous\\nquality\\nmystery\\nzero\\nspot\\nbest\",\n    \"defects\\nimprovement\\npractice\\ncontrol\\nperformance\\nshoppers\\nchecks\"\n  ],\n  \"pictures\": [\n    \"cartoon of a mystery shopper in a trench coat with a question-mark sign at a shop counter\"\n  ],\n  \"unclassified\": [\n    \"Total 22\",\n    \"Target 16+\",\n    \"Your score /22\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

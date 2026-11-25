@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "phase": "A1-PROBE — اعتبارسنجی خط لولهٔ رونویسی VLM صفحه‌محور",
+    "date": "2026-11-22",
+    "jalali": "۱۴۰۵/۹/۲",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "script": "scripts/tyv-a1-vlm-capture.mjs (tracked — checkpoint/resume — بازتولید از Clone صرف با PDFهای مالک)",
+    "dpi": 300,
+    "promptVersion": "tyv-a1-v1",
+    "model": "z-ai vision CLI",
+    "scope": "۳ صفحه × ۴ کتاب متمایز = ۱۲ صفحه از ۴۸۹ صفحهٔ کل (۹۸+۹۶+۱۴۲+۱۵۳)"
+  },
+  "totals": {
+    "pagesAttempted": 12,
+    "statusOk": 12,
+    "visionFailed": 0,
+    "parseFailed": 0,
+    "footersDetected": 11,
+    "footersNull": 1,
+    "exercisesTranscribed": 45,
+    "itemsTranscribed": 320,
+    "pictureNotes": 14,
+    "boxesAndLists": 17
+  },
+  "perBook": {
+    "tyv-biz": { "pages": [4, 6, 43], "results": [
+      { "page": 4, "footer": 7, "test": "1 — Work and jobs", "exercises": 4, "items": 20, "pictures": 1, "boxes": 2 },
+      { "page": 6, "footer": 9, "test": "3 — Recruitment and selection", "exercises": 4, "items": 21, "pictures": 3, "boxes": 2 },
+      { "page": 43, "footer": 46, "test": "Summary Test 2 (ادامه)", "exercises": 2, "items": 12, "pictures": 1, "boxes": 3 }
+    ]},
+    "tyv-elem": { "pages": [8, 12, 40], "results": [
+      { "page": 8, "footer": 7, "test": "1 — The family", "exercises": 3, "items": 28, "pictures": 1, "boxes": 0 },
+      { "page": 12, "footer": 11, "test": "5 — Describing people", "exercises": 4, "items": 21, "pictures": 2, "boxes": 2 },
+      { "page": 40, "footer": 39, "test": "33 — The media", "exercises": 3, "items": 35, "pictures": 2, "boxes": 1 }
+    ]},
+    "tyv-pri": { "pages": [7, 10, 41], "results": [
+      { "page": 7, "footer": 6, "test": "1–3 — Learning and recording vocabulary", "exercises": 6, "items": 46, "pictures": 1, "boxes": 1 },
+      { "page": 10, "footer": null, "test": "6 — Classroom language", "exercises": 5, "items": 23, "pictures": 1, "boxes": 1 },
+      { "page": 41, "footer": 39, "test": "36 — Reason, purpose and result", "exercises": 4, "items": 31, "pictures": 0, "boxes": 1 }
+    ]},
+    "tyv-upp": { "pages": [9, 11, 45], "results": [
+      { "page": 9, "footer": 6, "test": "1 — Names of English language words", "exercises": 4, "items": 31, "pictures": 0, "boxes": 2 },
+      { "page": 11, "footer": 8, "test": "3 — Prefixes", "exercises": 4, "items": 29, "pictures": 1, "boxes": 1 },
+      { "page": 45, "footer": 42, "test": "34 — Education", "exercises": 4, "items": 23, "pictures": 2, "boxes": 1 }
+    ]}
+  },
+  "footerMappingCheck": [
+    { "book": "tyv-biz", "pdfPage": 4, "footer": 7, "expectedByToc": "Test 1 → p.7", "verdict": "تأیید — آفست PDF = کتاب + ۳" },
+    { "book": "tyv-biz", "pdfPage": 6, "footer": 9, "expectedByToc": "Test 3 → p.9", "verdict": "تأیید" },
+    { "book": "tyv-biz", "pdfPage": 43, "footer": 46, "expectedByToc": "ادامهٔ Summary Test 2 (p.43–46)", "verdict": "سازگار — تست‌های چندصفحه‌ای برای A2" },
+    { "book": "tyv-elem", "pdfPage": 8, "footer": 7, "expectedByToc": "Test 1 → p.7", "verdict": "تأیید — آفست PDF = کتاب + ۱" },
+    { "book": "tyv-elem", "pdfPage": 12, "footer": 11, "expectedByToc": "Test 5 → p.11", "verdict": "تأیید" },
+    { "book": "tyv-elem", "pdfPage": 40, "footer": 39, "expectedByToc": "Test 33 → p.39", "verdict": "تأیید" },
+    { "book": "tyv-pri", "pdfPage": 7, "footer": 6, "expectedByToc": "Tests 1–3 → p.6", "verdict": "تأیید — آفست PDF = کتاب + ۱" },
+    { "book": "tyv-pri", "pdfPage": 10, "footer": null, "expectedByToc": "Test 6 → p.9", "verdict": "ناهنجاری ثبت‌شده — فوتر نال؛ دوگذر G1" },
+    { "book": "tyv-pri", "pdfPage": 41, "footer": 39, "expectedByToc": "Test 36 → p.39", "verdict": "تأیید" },
+    { "book": "tyv-upp", "pdfPage": 9, "footer": 6, "expectedByToc": "Test 1 → p.6", "verdict": "تأیید — آفست PDF = کتاب + ۳" },
+    { "book": "tyv-upp", "pdfPage": 11, "footer": 8, "expectedByToc": "Test 3 → p.8", "verdict": "تأیید" },
+    { "book": "tyv-upp", "pdfPage": 45, "footer": 42, "expectedByToc": "Test 34 → p.42", "verdict": "تأیید" }
+  ],
+  "anomalies": [
+    { "book": "tyv-pri", "page": 10, "footer": null, "note": "فوتر چاپی توسط VLM نال گزارش شد (انتظار ۹) — کپچر خودش محتوا را دارد؛ در دوگذر census/verify G1 باید فوتر تصحیح/تأیید شود" },
+    { "book": "tyv-biz", "page": 43, "note": "صفحهٔ ادامهٔ Summary Test 2 — تست‌های چندصفحه‌ای (banner «17–32») باید در A2 به‌عنوان واحد مرکب پارس شوند" }
+  ],
+  "qualityObservation": "رونویسی verbatim روی اسکن‌ها کار می‌کند؛ فرمت JSON پایدار؛ IPA/نقطه‌گذاری عیناً درخواست شده — راستی‌آزمایی متن‌به‌متن در دوگذر G1 انجام می‌شود (پراب، جایگزین دوگذر نیست).",
+  "nextStep": "ادامهٔ A1 = اجرای resumable: «bun scripts/tyv-a1-vlm-capture.mjs <book> all» — باقی‌مانده: ۴۸۹ − ۱۲ = ۴۷۷ صفحه — سپس سند دروازهٔ G1"
+}
