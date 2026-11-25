@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 64,
+    "dpi": 300,
+    "renderSha256": "4f4f11278e3059f62512432a0b9470c49aecb9d3780ce96c20d45285d21b918b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:57:03.148Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 67,
+    "testNumber": null,
+    "testTitle": "Summary Test 3",
+    "exercises": [
+      {
+        "id": "3",
+        "marks": "7 marks",
+        "instruction": "Choose one word from the box to complete each sentence. There is one word that you don't have to use.",
+        "items": [
+          "1 ScotNat Bank has agreed to bail .......................... the troubled company with a £1 million loan.",
+          "2 Renée Latour has a 15% stake ......................... the country's biggest wine exporter.",
+          "3 We have a $20,000 loan which we are paying ......................... over two years.",
+          "4 Ampost Inc. is quoted ........................ the New York stock exchange.",
+          "5 Megacorp shares advanced in heavy trading and finished 85¢ ....................... at $7.35.",
+          "6 There was a delay and now we are four weeks ......................... schedule.",
+          "7 I have been ......................... stress at work and now I'm off sick."
+        ]
+      },
+      {
+        "id": "4",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.",
+        "items": [
+          "0 This project had a ...lead time... of about 12 months.",
+          "1 He had a ......................... and I think it was due to stress at work.",
+          "2 Monday is a ......................... in Thailand so the Bangkok office will be shut.",
+          "3 Call me on my ......................... - 01344 246246.",
+          "4 The sales team has a ......................... and everyone is expected to be forceful.",
+          "5 The dress code is ......................... so I don't have to wear a suit."
+        ]
+      },
+      {
+        "id": "5",
+        "marks": "8 marks",
+        "instruction": "Complete the sentences below by writing one word in each gap. The first letter is given to help you.",
+        "items": [
+          "1 The country's inflation r____ was almost 15% last year.",
+          "2 United Bank's new deposit a_______ pays interest of 4.2%.",
+          "3 Blue c____ saw strong gains on Wall Street yesterday.",
+          "4 I called the helpline at least ten times, but every time I got the engaged t___ .",
+          "5 She was arrested yesterday on charges of insider d_______.",
+          "6 The two airlines announced their joint v_______ after the meeting.",
+          "7 A top-down a_______ to decision-making makes employees feel that they are not valued.",
+          "8 I didn't trust him because he wouldn't make eye c______ with me."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "behind    up    over    under    in    out    on    off",
+      "lead / macho / direct / nervous / smart / public (left-hand word box in exercise 4)",
+      "breakdown / holiday / casual / time / capital / culture / line (right-hand word box in exercise 4)"
+    ],
+    "pictures": [
+      "two shaded word boxes (left and right) with a hand-drawn line joining 'lead' to 'time' in exercise 4"
+    ],
+    "unclassified": [
+      "www.iranguage.com [?]",
+      "Language",
+      "Summary Test 3"
+    ]
+  },
+  "rawModelText": "{\"footer\": 67,\n \"testNumber\": null,\n \"testTitle\": \"Summary Test 3\",\n \"exercises\": [\n  {\"id\": \"3\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Choose one word from the box to complete each sentence. There is one word that you don't have to use.\",\n   \"items\": [\n    \"1 ScotNat Bank has agreed to bail .......................... the troubled company with a £1 million loan.\",\n    \"2 Renée Latour has a 15% stake ......................... the country's biggest wine exporter.\",\n    \"3 We have a $20,000 loan which we are paying ......................... over two years.\",\n    \"4 Ampost Inc. is quoted ........................ the New York stock exchange.\",\n    \"5 Megacorp shares advanced in heavy trading and finished 85¢ ....................... at $7.35.\",\n    \"6 There was a delay and now we are four weeks ......................... schedule.\",\n    \"7 I have been ......................... stress at work and now I'm off sick.\"\n   ]},\n  {\"id\": \"4\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.\",\n   \"items\": [\n    \"0 This project had a ...lead time... of about 12 months.\",\n    \"1 He had a ......................... and I think it was due to stress at work.\",\n    \"2 Monday is a ......................... in Thailand so the Bangkok office will be shut.\",\n    \"3 Call me on my ......................... - 01344 246246.\",\n    \"4 The sales team has a ......................... and everyone is expected to be forceful.\",\n    \"5 The dress code is ......................... so I don't have to wear a suit.\"\n   ]},\n  {\"id\": \"5\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete the sentences below by writing one word in each gap. The first letter is given to help you.\",\n   \"items\": [\n    \"1 The country's inflation r____ was almost 15% last year.\",\n    \"2 United Bank's new deposit a_______ pays interest of 4.2%.\",\n    \"3 Blue c____ saw strong gains on Wall Street yesterday.\",\n    \"4 I called the helpline at least ten times, but every time I got the engaged t___ .\",\n    \"5 She was arrested yesterday on charges of insider d_______.\",\n    \"6 The two airlines announced their joint v_______ after the meeting.\",\n    \"7 A top-down a_______ to decision-making makes employees feel that they are not valued.\",\n    \"8 I didn't trust him because he wouldn't make eye c______ with me.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"behind    up    over    under    in    out    on    off\",\n  \"lead / macho / direct / nervous / smart / public (left-hand word box in exercise 4)\",\n  \"breakdown / holiday / casual / time / capital / culture / line (right-hand word box in exercise 4)\"\n ],\n \"pictures\": [\n  \"two shaded word boxes (left and right) with a hand-drawn line joining 'lead' to 'time' in exercise 4\"\n ],\n \"unclassified\": [\n  \"www.iranguage.com [?]\",\n  \"Language\",\n  \"Summary Test 3\"\n ]\n}"
+}

@@ -1,0 +1,95 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-upp",
+    "title": "Test Your English Vocabulary in Use — upper-intermediate (McCarthy & O'Dell — CUP 2001)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Upper Intermediate.pdf",
+    "pdfSha256": "e4014bdfb072d27b154d03f6bf3bb148ed2749b1ddca6bd12810a74c22105010",
+    "pdfPage": 11,
+    "dpi": 300,
+    "renderSha256": "5089372191fbc1d01d4468122a22b98ebab36da92ac65d5968a196af0b6ce76e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:22:54.315Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 8,
+    "testNumber": "3",
+    "testTitle": "Prefixes",
+    "exercises": [
+      {
+        "id": "3.1",
+        "marks": "10 marks",
+        "instruction": "Read horizontally or vertically (not diagonally) to find the meanings of these prefixes in the word-square.",
+        "items": [
+          "Example: bi as in bicycle",
+          "1 multi as in multi-national",
+          "2 pre as in pre-war",
+          "3 anti as in antisocial",
+          "4 pseudo as in pseudo-scientific",
+          "5 semi as in semi-circle",
+          "6 micro as in microscopic",
+          "7 mono as in monologue",
+          "8 mis as in misunderstand",
+          "9 re as in re-read",
+          "10 sub as in submarine"
+        ]
+      },
+      {
+        "id": "3.2",
+        "marks": "10 marks",
+        "instruction": "Add a prefix to a word in the first statement in order to make an opposite word that completes the responses.",
+        "items": [
+          "Example: That man's locking the door.   No he isn't. He's unlocking it.",
+          "1 He's quite mature for his age.  I don't agree. I think he's        .",
+          "2 I think she's reliable.   No she isn't. She's very        .",
+          "3 Is she wrapping that parcel?   No, she's        it.",
+          "4 Is his handwriting legible?   No, I find it quite        .",
+          "5 Does her father approve of Jack?   No, he        of him.",
+          "6 Do you think he's honest?   No, I'm sure he's        .",
+          "7 Is it convenient to have a chat?   No, sorry, it's a bit        now.",
+          "8 Can I replace the vase I broke?  I'm afraid not – it's        .",
+          "9 Do you like your boss?   No, I        him intensely.",
+          "10 Are these mushrooms edible?   No, I'm pretty sure they're        ."
+        ]
+      },
+      {
+        "id": "3.3",
+        "marks": "10 marks",
+        "instruction": "Use your knowledge of prefixes to write definitions of the underlined words.",
+        "items": [
+          "Although Jim is an (1)ex-soldier, he's only (2)semi-literate When he tries to write a letter, he (3)misspells half the words and his wife has to (4)rewrite it for him His wife used to work in a (5)sub-department of the post office where her main job was (6)redirecting mail Jim's very (7)pro-army but he (8)over-emphasises its good points His wife, on the other hand, is rather (9)anti-army and she (10)undervalues its positive aspects"
+        ]
+      },
+      {
+        "id": "3.4",
+        "marks": "10 marks",
+        "instruction": "Which word is the odd one out in each set?",
+        "items": [
+          "Example: legible, loyal, legal, legitimate   loyal – it forms its opposite with dis- whereas the others use the prefix il-",
+          "1 insert, internal, inedible, income",
+          "2 disobey, disconnect, dismount, dissimilar",
+          "3 uncomfortable, unlock, unfold, unzip",
+          "4 extract, ex-wife, ex-communicate, exhale",
+          "5 reversible, rational, reasonable, relevant"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Word-square grid (9 rows × 8 columns): W L I R W T A S / B I A D R O D O / I N G R O N E B / A G A I N S T E / N H I A G M O F / M A N Y L A E O / T L A D Y L S R / W F O F A L S E / O U N D E R O N — letters T W O circled vertically in first column"
+    ],
+    "pictures": [
+      "word-square grid with circled letters spelling TWO down the first column"
+    ],
+    "unclassified": [
+      "TEST",
+      "➔ Unit 9",
+      "Your score /40",
+      "Test Your English Vocabulary in Use (upper-intermediate)"
+    ]
+  },
+  "rawModelText": "{\n  \"footer\": 8,\n  \"testNumber\": \"3\",\n  \"testTitle\": \"Prefixes\",\n  \"exercises\": [\n    {\n      \"id\": \"3.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Read horizontally or vertically (not diagonally) to find the meanings of these prefixes in the word-square.\",\n      \"items\": [\n        \"Example: bi as in bicycle\",\n        \"1 multi as in multi-national\",\n        \"2 pre as in pre-war\",\n        \"3 anti as in antisocial\",\n        \"4 pseudo as in pseudo-scientific\",\n        \"5 semi as in semi-circle\",\n        \"6 micro as in microscopic\",\n        \"7 mono as in monologue\",\n        \"8 mis as in misunderstand\",\n        \"9 re as in re-read\",\n        \"10 sub as in submarine\"\n      ]\n    },\n    {\n      \"id\": \"3.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Add a prefix to a word in the first statement in order to make an opposite word that completes the responses.\",\n      \"items\": [\n        \"Example: That man's locking the door.   No he isn't. He's unlocking it.\",\n        \"1 He's quite mature for his age.  I don't agree. I think he's        .\",\n        \"2 I think she's reliable.   No she isn't. She's very        .\",\n        \"3 Is she wrapping that parcel?   No, she's        it.\",\n        \"4 Is his handwriting legible?   No, I find it quite        .\",\n        \"5 Does her father approve of Jack?   No, he        of him.\",\n        \"6 Do you think he's honest?   No, I'm sure he's        .\",\n        \"7 Is it convenient to have a chat?   No, sorry, it's a bit        now.\",\n        \"8 Can I replace the vase I broke?  I'm afraid not – it's        .\",\n        \"9 Do you like your boss?   No, I        him intensely.\",\n        \"10 Are these mushrooms edible?   No, I'm pretty sure they're        .\"\n      ]\n    },\n    {\n      \"id\": \"3.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Use your knowledge of prefixes to write definitions of the underlined words.\",\n      \"items\": [\n        \"Although Jim is an (1)ex-soldier, he's only (2)semi-literate When he tries to write a letter, he (3)misspells half the words and his wife has to (4)rewrite it for him His wife used to work in a (5)sub-department of the post office where her main job was (6)redirecting mail Jim's very (7)pro-army but he (8)over-emphasises its good points His wife, on the other hand, is rather (9)anti-army and she (10)undervalues its positive aspects\"\n      ]\n    },\n    {\n      \"id\": \"3.4\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Which word is the odd one out in each set?\",\n      \"items\": [\n        \"Example: legible, loyal, legal, legitimate   loyal – it forms its opposite with dis- whereas the others use the prefix il-\",\n        \"1 insert, internal, inedible, income\",\n        \"2 disobey, disconnect, dismount, dissimilar\",\n        \"3 uncomfortable, unlock, unfold, unzip\",\n        \"4 extract, ex-wife, ex-communicate, exhale\",\n        \"5 reversible, rational, reasonable, relevant\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Word-square grid (9 rows × 8 columns): W L I R W T A S / B I A D R O D O / I N G R O N E B / A G A I N S T E / N H I A G M O F / M A N Y L A E O / T L A D Y L S R / W F O F A L S E / O U N D E R O N — letters T W O circled vertically in first column\"\n  ],\n  \"pictures\": [\n    \"word-square grid with circled letters spelling TWO down the first column\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"➔ Unit 9\",\n    \"Your score /40\",\n    \"Test Your English Vocabulary in Use (upper-intermediate)\"\n  ]\n}"
+}

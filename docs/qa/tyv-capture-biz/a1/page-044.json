@@ -1,0 +1,73 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 44,
+    "dpi": 300,
+    "renderSha256": "9e7556a5171b1cbf3eb365114b5e3a66f4efe475b8a10da79587c4bb3d325ef1",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:20:30.772Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 47,
+    "testNumber": "33",
+    "testTitle": "Success and failure",
+    "exercises": [
+      {
+        "id": "33.1",
+        "marks": "5 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.",
+        "items": [
+          "Bad news for shareholders of Barloni PLC. Jacky Lai, the CEO appointed last year, has failed to turn .................... the ailing company and last month it defaulted .................. its huge $1.2 million debt. There is no hope of finding anyone to bail .................. Barloni so it will be put ...................... receivership next week. When the company is wound .................. , shareholders will get almost nothing."
+        ]
+      },
+      {
+        "id": "33.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "Alicom is a successful company. For the past ten years it has (1) ......... part of its profits as dividends. However, its (2) ........... earnings have been considerable. Its cash (3) ......... are now estimated to be around €20 million. Financial experts say that Alicom has only a small debt to (4) .......... and so may use its cash (5) .......... to buy out one of its rivals. CEO, Angela White, said that the company has no immediate plans to make an (6) .......... , but that it couldn't be ruled out in the future.",
+          "1 A posted          B distributed       C retailled",
+          "2 A retained        B stored            C kept",
+          "3 A shares          B burden            C reserves",
+          "4 A file            B default           C service",
+          "5 A stock           B mountain          C hill",
+          "6 A acquisition     B administration    C application"
+        ]
+      },
+      {
+        "id": "33.3",
+        "marks": "7 marks",
+        "instruction": "In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "1 We need time to reorganize our finances so we're filing for bankruptness.  ..................",
+          "2 That should protect us from our credits for at least six months.  ..................",
+          "3 The truth is we have a debt cries which has been building up for years.  ..................",
+          "4 Yesterday we asked the bank to schedule our debt over ten years.  ..................",
+          "5 If they don't agree, then the company will collide immediately.  ..................",
+          "6 We will have to cease traiding and make all our staff redundant.  ..................",
+          "7 If the bank says yes, then I think that we can make a full recover.  .................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "up   before   out   into   at   round   from   on"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Total 18",
+      "Target 14+",
+      "our score",
+      "/18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 47,\n \"testNumber\": \"33\",\n \"testTitle\": \"Success and failure\",\n \"exercises\": [\n   {\"id\": \"33.1\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.\",\n    \"items\": [\"Bad news for shareholders of Barloni PLC. Jacky Lai, the CEO appointed last year, has failed to turn .................... the ailing company and last month it defaulted .................. its huge $1.2 million debt. There is no hope of finding anyone to bail .................. Barloni so it will be put ...................... receivership next week. When the company is wound .................. , shareholders will get almost nothing.\"]},\n   {\"id\": \"33.2\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n    \"items\": [\"Alicom is a successful company. For the past ten years it has (1) ......... part of its profits as dividends. However, its (2) ........... earnings have been considerable. Its cash (3) ......... are now estimated to be around €20 million. Financial experts say that Alicom has only a small debt to (4) .......... and so may use its cash (5) .......... to buy out one of its rivals. CEO, Angela White, said that the company has no immediate plans to make an (6) .......... , but that it couldn't be ruled out in the future.\",\n     \"1 A posted          B distributed       C retailled\",\n     \"2 A retained        B stored            C kept\",\n     \"3 A shares          B burden            C reserves\",\n     \"4 A file            B default           C service\",\n     \"5 A stock           B mountain          C hill\",\n     \"6 A acquisition     B administration    C application\"]},\n   {\"id\": \"33.3\",\n    \"marks\": \"7 marks\",\n    \"instruction\": \"In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n    \"items\": [\"1 We need time to reorganize our finances so we're filing for bankruptness.  ..................\",\n     \"2 That should protect us from our credits for at least six months.  ..................\",\n     \"3 The truth is we have a debt cries which has been building up for years.  ..................\",\n     \"4 Yesterday we asked the bank to schedule our debt over ten years.  ..................\",\n     \"5 If they don't agree, then the company will collide immediately.  ..................\",\n     \"6 We will have to cease traiding and make all our staff redundant.  ..................\",\n     \"7 If the bank says yes, then I think that we can make a full recover.  ..................\"]}\n ],\n \"boxesAndLists\": [\"up   before   out   into   at   round   from   on\"],\n \"pictures\": [],\n \"unclassified\": [\"Total 18\", \"Target 14+\", \"our score\", \"/18\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

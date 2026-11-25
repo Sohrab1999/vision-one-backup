@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 82,
+    "dpi": 300,
+    "renderSha256": "7b26e9ffb2d26a05593fce20e1a0033702412de5239dab95f8c0257d4b335551",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:13:32.499Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 85,
+    "testNumber": "4",
+    "testTitle": "Summary Test 4",
+    "exercises": [
+      {
+        "id": "1",
+        "marks": "12 marks",
+        "instruction": "For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "1 I got your fax but the last page wasn't ......................... .",
+          "A reading              B legible              C written",
+          "2 Can you send me an e-mail with the data files ......................... ?",
+          "A attached              B fixed              C linked",
+          "3 The directors have called an ......................... general meeting to discuss the debt crisis.",
+          "A ordinary              B external              C extraordinary",
+          "4 Are there any issues arising from the ......................... of the last meeting?",
+          "A hours              B minutes              C seconds",
+          "5 Let's go over the action ......................... agreed at last week's meeting.",
+          "A points              B objectives              C tactics",
+          "6 I'm sorry, but increasing our bank loan is out of the ......................... .",
+          "A question              B opinion              C solution",
+          "7 If we don't find a ......................... , then our negotiations will break down.",
+          "A position              B digression              C compromise",
+          "8 They announced the merger at a press ......................... last night.",
+          "A workshop              B conference              C seminar",
+          "9 She is a good presenter, but she always runs ......................... time.",
+          "A out              B over              C into",
+          "10 In my ......................... , we spend too much on corporate hospitality.",
+          "A view              B thinking              C idea",
+          "11 They said it was their final offer but we ......................... their bluff.",
+          "A conceded              B considered              C called",
+          "12 I'm pleased to say that we reached a ......................... late last night.",
+          "A settlement              B mediation              C concession"
+        ]
+      },
+      {
+        "id": "2",
+        "marks": "6 marks",
+        "instruction": "Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.",
+        "items": [
+          "1 If you give us a discount of 10%,",
+          "2 This has been a very bitter dispute",
+          "3 If we are going to break this deadlock,",
+          "4 I usually start with an anecdote",
+          "5 You may be right there,",
+          "6 Finally, after a lot of haggling,",
+          "a then we both need to make concessions.",
+          "b we agreed on a reasonable price.",
+          "c with strong feelings on both sides.",
+          "d then we'll agree to buy 10,000 units.",
+          "e that covers just about everything.",
+          "f but I'd need to see last month's figures.",
+          "g to gain the audience's attention."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 75",
+      "Target 60+",
+      "Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............"
+    ],
+    "pictures": [
+      "two-column matching table: beginnings 1–6 on left, endings a–g on right",
+      "Answers box with six blank answer slots numbered 1–6"
+    ],
+    "unclassified": [
+      "52–66",
+      "Read the questions carefully. Try to answer them all. This test takes about 45 minutes.",
+      "Summary Test 4"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 85,\n \"testNumber\": \"4\",\n \"testTitle\": \"Summary Test 4\",\n \"exercises\": [\n   {\"id\": \"1\", \"marks\": \"12 marks\",\n    \"instruction\": \"For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.\",\n    \"items\": [\n      \"1 I got your fax but the last page wasn't ......................... .\",\n      \"A reading              B legible              C written\",\n      \"2 Can you send me an e-mail with the data files ......................... ?\",\n      \"A attached              B fixed              C linked\",\n      \"3 The directors have called an ......................... general meeting to discuss the debt crisis.\",\n      \"A ordinary              B external              C extraordinary\",\n      \"4 Are there any issues arising from the ......................... of the last meeting?\",\n      \"A hours              B minutes              C seconds\",\n      \"5 Let's go over the action ......................... agreed at last week's meeting.\",\n      \"A points              B objectives              C tactics\",\n      \"6 I'm sorry, but increasing our bank loan is out of the ......................... .\",\n      \"A question              B opinion              C solution\",\n      \"7 If we don't find a ......................... , then our negotiations will break down.\",\n      \"A position              B digression              C compromise\",\n      \"8 They announced the merger at a press ......................... last night.\",\n      \"A workshop              B conference              C seminar\",\n      \"9 She is a good presenter, but she always runs ......................... time.\",\n      \"A out              B over              C into\",\n      \"10 In my ......................... , we spend too much on corporate hospitality.\",\n      \"A view              B thinking              C idea\",\n      \"11 They said it was their final offer but we ......................... their bluff.\",\n      \"A conceded              B considered              C called\",\n      \"12 I'm pleased to say that we reached a ......................... late last night.\",\n      \"A settlement              B mediation              C concession\"\n    ]},\n   {\"id\": \"2\", \"marks\": \"6 marks\",\n    \"instruction\": \"Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.\",\n    \"items\": [\n      \"1 If you give us a discount of 10%,\",\n      \"2 This has been a very bitter dispute\",\n      \"3 If we are going to break this deadlock,\",\n      \"4 I usually start with an anecdote\",\n      \"5 You may be right there,\",\n      \"6 Finally, after a lot of haggling,\",\n      \"a then we both need to make concessions.\",\n      \"b we agreed on a reasonable price.\",\n      \"c with strong feelings on both sides.\",\n      \"d then we'll agree to buy 10,000 units.\",\n      \"e that covers just about everything.\",\n      \"f but I'd need to see last month's figures.\",\n      \"g to gain the audience's attention.\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"Total 75\",\n   \"Target 60+\",\n   \"Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............\"\n ],\n \"pictures\": [\n   \"two-column matching table: beginnings 1–6 on left, endings a–g on right\",\n   \"Answers box with six blank answer slots numbered 1–6\"\n ],\n \"unclassified\": [\n   \"52–66\",\n   \"Read the questions carefully. Try to answer them all. This test takes about 45 minutes.\",\n   \"Summary Test 4\"\n ]\n}\n```"
+}

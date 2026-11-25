@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 71,
+    "dpi": 300,
+    "renderSha256": "50a011a8c634c3628a948abda2608d75ca1c8942a9479b12a30c12315d6eeed7",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:58:28.220Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 74,
+    "testNumber": "56",
+    "testTitle": "Meetings 3: points of view",
+    "exercises": [
+      {
+        "id": "56.1",
+        "marks": "7 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'It's ten o'clock so let's make a (1) ............ , shall we? As you are (2) ............ , the main (3) ............ of this meeting is to discuss the new marketing campaign. As I (4) ............ it, the whole thing is too fancy and too expensive. I want to know what the (5) ............ feeling is on this. What (6) ............ you, Sam? Why don't you start the ball (7) ............ ?'",
+          "1 A start    B begin    C first",
+          "2 A seeing   B knowing  C aware",
+          "3 A matter   B purpose  C action",
+          "4 A see      B look     C clear",
+          "5 A special  B general  C main",
+          "6 A for      B of       C about",
+          "7 A going    B rolling  C kicking"
+        ]
+      },
+      {
+        "id": "56.2",
+        "marks": "6 marks",
+        "instruction": "In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "1 I'd like to open the discuss about the new office design.",
+          "2 As you knowing, each department is going to have an open plan office.",
+          "3 In my opinions, that's a big mistake and we should think again.",
+          "4 People work better, I belief, when they have their own space.",
+          "5 Of coarse, some people may like it, but everyone in Finance is against it.",
+          "6 What are your reviews on this, Amanda? Do you like the idea?"
+        ]
+      },
+      {
+        "id": "56.3",
+        "marks": "6 marks",
+        "instruction": "The statements below were made at a meeting. Write one word in the gap to complete each statement.",
+        "items": [
+          "1 'OK. It's nine o'clock so let's get down to b................ , shall we?'",
+          "2 'What is the o................ of this meeting? What do we hope to achieve?'",
+          "3 'I've a................ this meeting to discuss our debt crisis.'",
+          "4 'What are your f................ on this, Ali?'",
+          "5 'It's perfectly c................ to me that the decision has been taken already.'",
+          "6 'O................ nobody wants to take a cut in salary, but we may have to.'"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "cartoon illustration of a business meeting with four people around a table, papers and coffee cups, with a clock showing '10:05'"
+    ],
+    "unclassified": [
+      "Total 19",
+      "Target 16+",
+      "Your score",
+      "/19",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 74,\n \"testNumber\": \"56\",\n \"testTitle\": \"Meetings 3: points of view\",\n \"exercises\": [\n  {\"id\": \"56.1\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"'It's ten o'clock so let's make a (1) ............ , shall we? As you are (2) ............ , the main (3) ............ of this meeting is to discuss the new marketing campaign. As I (4) ............ it, the whole thing is too fancy and too expensive. I want to know what the (5) ............ feeling is on this. What (6) ............ you, Sam? Why don't you start the ball (7) ............ ?'\",\n    \"1 A start    B begin    C first\",\n    \"2 A seeing   B knowing  C aware\",\n    \"3 A matter   B purpose  C action\",\n    \"4 A see      B look     C clear\",\n    \"5 A special  B general  C main\",\n    \"6 A for      B of       C about\",\n    \"7 A going    B rolling  C kicking\"\n   ]},\n  {\"id\": \"56.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\n    \"1 I'd like to open the discuss about the new office design.\",\n    \"2 As you knowing, each department is going to have an open plan office.\",\n    \"3 In my opinions, that's a big mistake and we should think again.\",\n    \"4 People work better, I belief, when they have their own space.\",\n    \"5 Of coarse, some people may like it, but everyone in Finance is against it.\",\n    \"6 What are your reviews on this, Amanda? Do you like the idea?\"\n   ]},\n  {\"id\": \"56.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"The statements below were made at a meeting. Write one word in the gap to complete each statement.\",\n   \"items\": [\n    \"1 'OK. It's nine o'clock so let's get down to b................ , shall we?'\",\n    \"2 'What is the o................ of this meeting? What do we hope to achieve?'\",\n    \"3 'I've a................ this meeting to discuss our debt crisis.'\",\n    \"4 'What are your f................ on this, Ali?'\",\n    \"5 'It's perfectly c................ to me that the decision has been taken already.'\",\n    \"6 'O................ nobody wants to take a cut in salary, but we may have to.'\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"cartoon illustration of a business meeting with four people around a table, papers and coffee cups, with a clock showing '10:05'\"],\n \"unclassified\": [\n  \"Total 19\",\n  \"Target 16+\",\n  \"Your score\",\n  \"/19\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

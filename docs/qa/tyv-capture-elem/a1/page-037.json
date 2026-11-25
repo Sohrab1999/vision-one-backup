@@ -1,0 +1,83 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 37,
+    "dpi": 300,
+    "renderSha256": "85015dc1231b1b29aca63dc34a912b68980847d9c113af47a8efc017d9b95867",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:41:15.774Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 36,
+    "testNumber": "30",
+    "testTitle": "Travelling",
+    "exercises": [
+      {
+        "id": "30.1",
+        "marks": "10 marks",
+        "instruction": "Write the type of transport under each picture.",
+        "items": [
+          "Example:",
+          "car",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ]
+      },
+      {
+        "id": "30.2",
+        "marks": "10 marks",
+        "instruction": "Answer the questions.",
+        "items": [
+          "1 You want to find out where a place is. What can you look at?",
+          "2 What do you need to show when you arrive in a new country?",
+          "3 In which part of the train can you buy food / have a meal?",
+          "4 A ticket from A to B and back again is a return ticket. What do we call a ticket from A to B only?",
+          "5 Who checks your suitcases and other bags when you arrive in a new country?",
+          "6 What word means 'suitcases and other bags'?",
+          "7 What can you look at to find the times of buses or trains?",
+          "8 You need a car for your holiday but don't want to use your own car. What can you do?",
+          "9 What type of card do you need to get on a plane?",
+          "10 What do you call the people who work on the plane and bring you meals, etc.?"
+        ]
+      },
+      {
+        "id": "30.3",
+        "marks": "10 marks",
+        "instruction": "Circle the correct answer.",
+        "items": [
+          "1 The plane  (a) grounded  (b) took down  (c) landed  at 6.35.",
+          "2 I need to  (a) fill  (b) tank  (c) put  up my car. Is there a petrol station near here?",
+          "3 The train has just arrived  (a) by  (b) in  (c) at  platform number 5.",
+          "4 The officer  (a) controlled  (b) checked  (c) looked  my passport and said 'Welcome to Bolania.'",
+          "5 I'm going near your house. Can I give you a  (a) lift  (b) drive  (c) carry?"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Row of numbered pictures (1-10): car (example, labelled 'car'), double-decker bus, sailing boat, train at station, plane, motorcycle with sidecar, taxi, helicopter, ferry ship, tram, bicycle, each with dotted line for answer"
+    ],
+    "unclassified": [
+      "Test 30",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 36,\n \"testNumber\": \"30\",\n \"testTitle\": \"Travelling\",\n \"exercises\": [\n   {\"id\": \"30.1\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Write the type of transport under each picture.\",\n    \"items\": [\"Example:\", \"car\", \"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"10\"]},\n   {\"id\": \"30.2\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Answer the questions.\",\n    \"items\": [\n      \"1 You want to find out where a place is. What can you look at?\",\n      \"2 What do you need to show when you arrive in a new country?\",\n      \"3 In which part of the train can you buy food / have a meal?\",\n      \"4 A ticket from A to B and back again is a return ticket. What do we call a ticket from A to B only?\",\n      \"5 Who checks your suitcases and other bags when you arrive in a new country?\",\n      \"6 What word means 'suitcases and other bags'?\",\n      \"7 What can you look at to find the times of buses or trains?\",\n      \"8 You need a car for your holiday but don't want to use your own car. What can you do?\",\n      \"9 What type of card do you need to get on a plane?\",\n      \"10 What do you call the people who work on the plane and bring you meals, etc.?\"]},\n   {\"id\": \"30.3\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Circle the correct answer.\",\n    \"items\": [\n      \"1 The plane  (a) grounded  (b) took down  (c) landed  at 6.35.\",\n      \"2 I need to  (a) fill  (b) tank  (c) put  up my car. Is there a petrol station near here?\",\n      \"3 The train has just arrived  (a) by  (b) in  (c) at  platform number 5.\",\n      \"4 The officer  (a) controlled  (b) checked  (c) looked  my passport and said 'Welcome to Bolania.'\",\n      \"5 I'm going near your house. Can I give you a  (a) lift  (b) drive  (c) carry?\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n   \"Row of numbered pictures (1-10): car (example, labelled 'car'), double-decker bus, sailing boat, train at station, plane, motorcycle with sidecar, taxi, helicopter, ferry ship, tram, bicycle, each with dotted line for answer\"\n ],\n \"unclassified\": [\"Test 30\", \"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}

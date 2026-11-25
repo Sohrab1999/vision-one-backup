@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 20,
+    "dpi": 300,
+    "renderSha256": "7f4e57315f7aff10d37138980a4d496ef43127aa112b69112f6444eae55dcdb0",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:01:22.660Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 19,
+    "testNumber": "13",
+    "testTitle": "In the living room",
+    "exercises": [
+      {
+        "id": "13.1",
+        "marks": "10 marks",
+        "instruction": "Choose words from the box to match the descriptions.",
+        "items": [
+          "Example: You can talk to people on this. phone",
+          "1 You sit on this. (2 words)",
+          "2 You walk on this.",
+          "3 You usually find books on this.",
+          "4 You can watch this.",
+          "5 You close these when it gets dark",
+          "6 You put this on when it gets dark.",
+          "7 You can turn the television on and off with this.",
+          "8 You turn the light off with this.",
+          "9 You can put drinks on this."
+        ]
+      },
+      {
+        "id": "13.2",
+        "marks": "16 marks",
+        "instruction": "Write the name beside each object, then read the text and draw a line from each object to the right place in the sitting room.",
+        "items": [
+          "Example:",
+          "phone",
+          "Look at this sitting room. The phone is on the armchair. There is a TV in the corner next to the door and the remote control is on the sofa. The picture is on the wall near the window and the hi-fi is next to the socket. The radio is on the bookshelf. There is a book on the rug and a lamp on the coffee table. There is a light switch on the wall next to the door."
+        ]
+      },
+      {
+        "id": "13.3",
+        "marks": "4 marks",
+        "instruction": "Complete each sentence with a verb.",
+        "items": [
+          "Example: It's too dark in here. Could you switch the light on , please?",
+          "1 It'll soon be dark. It's time to the curtains.",
+          "2 I'd like to talk to you. Can you the TV , please?",
+          "3 I always like to the news on TV.",
+          "4 When I want to after work, I lie on the sofa and listen to music."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "armchair bookshelf carpet coffee table curtains light light switch phone remote control sofa TV"
+    ],
+    "pictures": [
+      "Large 3-D illustration of a sitting room with objects around it (phone, lamp, remote control, light switch, hi-fi, radio, picture, book, TV) with dotted lines for labels; example line drawn from 'phone' to armchair"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 19,\n \"testNumber\": \"13\",\n \"testTitle\": \"In the living room\",\n \"exercises\": [\n  {\"id\": \"13.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Choose words from the box to match the descriptions.\",\n   \"items\": [\"Example: You can talk to people on this. phone\", \"1 You sit on this. (2 words)\", \"2 You walk on this.\", \"3 You usually find books on this.\", \"4 You can watch this.\", \"5 You close these when it gets dark\", \"6 You put this on when it gets dark.\", \"7 You can turn the television on and off with this.\", \"8 You turn the light off with this.\", \"9 You can put drinks on this.\"]},\n  {\"id\": \"13.2\",\n   \"marks\": \"16 marks\",\n   \"instruction\": \"Write the name beside each object, then read the text and draw a line from each object to the right place in the sitting room.\",\n   \"items\": [\"Example:\", \"phone\", \"Look at this sitting room. The phone is on the armchair. There is a TV in the corner next to the door and the remote control is on the sofa. The picture is on the wall near the window and the hi-fi is next to the socket. The radio is on the bookshelf. There is a book on the rug and a lamp on the coffee table. There is a light switch on the wall next to the door.\"]},\n  {\"id\": \"13.3\",\n   \"marks\": \"4 marks\",\n   \"instruction\": \"Complete each sentence with a verb.\",\n   \"items\": [\"Example: It's too dark in here. Could you switch the light on , please?\", \"1 It'll soon be dark. It's time to the curtains.\", \"2 I'd like to talk to you. Can you the TV , please?\", \"3 I always like to the news on TV.\", \"4 When I want to after work, I lie on the sofa and listen to music.\"]}\n ],\n \"boxesAndLists\": [\"armchair bookshelf carpet coffee table curtains light light switch phone remote control sofa TV\"],\n \"pictures\": [\"Large 3-D illustration of a sitting room with objects around it (phone, lamp, remote control, light switch, hi-fi, radio, picture, book, TV) with dotted lines for labels; example line drawn from 'phone' to armchair\"],\n \"unclassified\": [\"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

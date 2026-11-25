@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 48,
+    "dpi": 300,
+    "renderSha256": "87810047a9573adbf53e44d2e3d0b1ee2453721b7b3b1103017a9fc8c28dcd2f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:21:19.831Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 51,
+    "testNumber": "37",
+    "testTitle": "Trading",
+    "exercises": [
+      {
+        "id": "37.1",
+        "marks": "8 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'The bad news for investors continues. Today the Dow, the NASDAQ and the European (1) ............ all showed heavy loses. Prices on the London FTSE fell to a five-year (2) ............ with banks and insurance companies showing spectacular (3) ............ . Dealers are pessimistic and no one can see an end to this (4) ............ market. Over the past month we have seen more than $20 billion (5) ............ off the value of US stocks. The only good news from Wall Street was a small rise in blue (6) ............ just before the (7) ............ . This late (8) ............ helped the Dow to finish just half of one per cent lower on the day.'",
+          "1 A indices    B prices    C lists        5 A waved    B washed    C wiped",
+          "2 A crash      B low       C barrier      6 A chips    B stocks    C shares",
+          "3 A declines   B trades    C demands      7 A finish   B shut      C close",
+          "4 A bull       B bear      C buffalo      8 A record   B rally     C recover"
+        ]
+      },
+      {
+        "id": "37.2",
+        "marks": "6 marks",
+        "instruction": "In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "1 In Tokyo today, turnoff was very high – especially in the hi-tech sector.",
+          "2 More than half a billion shares changed arms in six hours.",
+          "3 There was a lot of demanding for shares in microchip manufacturers.",
+          "4 Siltel, in particular, made spectacular ganes and was up 8.5% on the day.",
+          "5 The Nikkei 22.5 broke through the 10,000 bar for the first time this year.",
+          "6 Experts are confident that this bull index will continue for some time."
+        ]
+      },
+      {
+        "id": "37.3",
+        "marks": "5 marks",
+        "instruction": "Write one word in each gap to complete the sentences.",
+        "items": [
+          "1 He lost all his money in the stock market ______ of 1987.",
+          "2 Microsun's share ______ rose to $4 yesterday – its highest for two years.",
+          "3 The New York ______ of 'new economy' shares is the NASDAQ.",
+          "4 There was ______ selling in Frankfurt with dealers trying to sell shares at any price.",
+          "5 Yesterday, more than 3% of total market ________________ was lost on Wall Street."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Cartoon illustration of stressed traders/dealers at desks with computer monitors and telephones",
+      "Score box at bottom left reading 'ur score' '/19' (partially cut off, likely 'Your score')"
+    ],
+    "unclassified": [
+      "www.irlanguage.com",
+      "IR Language",
+      "Total 19",
+      "Target 15+",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 51,\n \"testNumber\": \"37\",\n \"testTitle\": \"Trading\",\n \"exercises\": [\n  {\"id\": \"37.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"'The bad news for investors continues. Today the Dow, the NASDAQ and the European (1) ............ all showed heavy loses. Prices on the London FTSE fell to a five-year (2) ............ with banks and insurance companies showing spectacular (3) ............ . Dealers are pessimistic and no one can see an end to this (4) ............ market. Over the past month we have seen more than $20 billion (5) ............ off the value of US stocks. The only good news from Wall Street was a small rise in blue (6) ............ just before the (7) ............ . This late (8) ............ helped the Dow to finish just half of one per cent lower on the day.'\",\n    \"1 A indices    B prices    C lists        5 A waved    B washed    C wiped\",\n    \"2 A crash      B low       C barrier      6 A chips    B stocks    C shares\",\n    \"3 A declines   B trades    C demands      7 A finish   B shut      C close\",\n    \"4 A bull       B bear      C buffalo      8 A record   B rally     C recover\"\n   ]},\n  {\"id\": \"37.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\n    \"1 In Tokyo today, turnoff was very high – especially in the hi-tech sector.\",\n    \"2 More than half a billion shares changed arms in six hours.\",\n    \"3 There was a lot of demanding for shares in microchip manufacturers.\",\n    \"4 Siltel, in particular, made spectacular ganes and was up 8.5% on the day.\",\n    \"5 The Nikkei 22.5 broke through the 10,000 bar for the first time this year.\",\n    \"6 Experts are confident that this bull index will continue for some time.\"\n   ]},\n  {\"id\": \"37.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Write one word in each gap to complete the sentences.\",\n   \"items\": [\n    \"1 He lost all his money in the stock market ______ of 1987.\",\n    \"2 Microsun's share ______ rose to $4 yesterday – its highest for two years.\",\n    \"3 The New York ______ of 'new economy' shares is the NASDAQ.\",\n    \"4 There was ______ selling in Frankfurt with dealers trying to sell shares at any price.\",\n    \"5 Yesterday, more than 3% of total market ________________ was lost on Wall Street.\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n  \"Cartoon illustration of stressed traders/dealers at desks with computer monitors and telephones\",\n  \"Score box at bottom left reading 'ur score' '/19' (partially cut off, likely 'Your score')\"\n ],\n \"unclassified\": [\n  \"www.irlanguage.com\",\n  \"IR Language\",\n  \"Total 19\",\n  \"Target 15+\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

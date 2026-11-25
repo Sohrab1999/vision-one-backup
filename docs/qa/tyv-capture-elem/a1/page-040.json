@@ -1,0 +1,94 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 40,
+    "dpi": 300,
+    "renderSha256": "82d8ab886570d4b823affcb9fcdaeef2f01a8b8d4f3c1486f45f7b21e704a3da",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:25:51.544Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 39,
+    "testNumber": "33",
+    "testTitle": "The media",
+    "exercises": [
+      {
+        "id": "33.1",
+        "marks": "10 marks",
+        "instruction": "Match the words on the left with the definitions on the right.",
+        "items": [
+          "1 news",
+          "2 soap",
+          "3 nature programme",
+          "4 sports programme",
+          "5 talk show",
+          "6 cartoon",
+          "7 documentary",
+          "8 film",
+          "9 channel",
+          "10 reality TV",
+          "11 comic",
+          "a The Simpsons and Mickey Mouse are famous examples of this",
+          "b you can watch this at the cinema or on DVD",
+          "c regular programme about what is happening in the world",
+          "d programme which has interviews with famous people",
+          "e programme about animals or plants",
+          "f programme about, for example, football or the Olympic Games",
+          "g CNN, Eurosport, MTV and BBC1 are examples of this",
+          "h TV programmes that show people living their lives, not actors acting",
+          "i magazine telling stories in pictures",
+          "j serious programme about society or nature",
+          "k TV serial that goes on for years about the lives of a group of people"
+        ]
+      },
+      {
+        "id": "33.2",
+        "marks": "10 marks",
+        "instruction": "Complete the crossword.",
+        "items": [
+          "Example: 1 Our new satellite dish lets us get a lot more channels.",
+          "2 Mum's new .......................... .......................... has a great article on fashion.",
+          "3 She wants to be a ......................... and write articles for sports magazines.",
+          "4 When Pat won the tennis match he had to give an ......................... to the local paper.",
+          "5 The ......................... took notes during the football match and wrote his article later.",
+          "6 I like that ......................... .......................... – there are always interesting guests on it.",
+          "7 Buy the children a ......................... when you are at the newsagent's.",
+          "8 I mainly use my ......................... for going online.",
+          "9 I have to buy a ......................... every morning because I like to know what's going on.",
+          "10 Mum always watches her favourite Australian ......................... before the news.",
+          "11 This programme is boring. Let's try another ......................... ."
+        ]
+      },
+      {
+        "id": "33.3",
+        "marks": "10 marks",
+        "instruction": "Which of these words go together with newspaper and which go together with magazine?",
+        "items": [
+          "Example: news magazine.....",
+          "women's  computer  news  evening  teenage  morning"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "women's  computer  news  evening  teenage  morning"
+    ],
+    "pictures": [
+      "drawing of a satellite dish, labelled 'A satellite dish'",
+      "crossword grid with numbered clues 1–11, letters S, A, T, E, L, L, I, T, E, D, I, S, H filled vertically"
+    ],
+    "unclassified": [
+      "A satellite dish",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 39,\n \"testNumber\": \"33\",\n \"testTitle\": \"The media\",\n \"exercises\": [\n  {\"id\": \"33.1\", \"marks\": \"10 marks\",\n   \"instruction\": \"Match the words on the left with the definitions on the right.\",\n   \"items\": [\"1 news\", \"2 soap\", \"3 nature programme\", \"4 sports programme\", \"5 talk show\", \"6 cartoon\", \"7 documentary\", \"8 film\", \"9 channel\", \"10 reality TV\", \"11 comic\", \"a The Simpsons and Mickey Mouse are famous examples of this\", \"b you can watch this at the cinema or on DVD\", \"c regular programme about what is happening in the world\", \"d programme which has interviews with famous people\", \"e programme about animals or plants\", \"f programme about, for example, football or the Olympic Games\", \"g CNN, Eurosport, MTV and BBC1 are examples of this\", \"h TV programmes that show people living their lives, not actors acting\", \"i magazine telling stories in pictures\", \"j serious programme about society or nature\", \"k TV serial that goes on for years about the lives of a group of people\"]},\n  {\"id\": \"33.2\", \"marks\": \"10 marks\",\n   \"instruction\": \"Complete the crossword.\",\n   \"items\": [\"Example: 1 Our new satellite dish lets us get a lot more channels.\", \"2 Mum's new .......................... .......................... has a great article on fashion.\", \"3 She wants to be a ......................... and write articles for sports magazines.\", \"4 When Pat won the tennis match he had to give an ......................... to the local paper.\", \"5 The ......................... took notes during the football match and wrote his article later.\", \"6 I like that ......................... .......................... – there are always interesting guests on it.\", \"7 Buy the children a ......................... when you are at the newsagent's.\", \"8 I mainly use my ......................... for going online.\", \"9 I have to buy a ......................... every morning because I like to know what's going on.\", \"10 Mum always watches her favourite Australian ......................... before the news.\", \"11 This programme is boring. Let's try another ......................... .\"]},\n  {\"id\": \"33.3\", \"marks\": \"10 marks\",\n   \"instruction\": \"Which of these words go together with newspaper and which go together with magazine?\",\n   \"items\": [\"Example: news magazine.....\", \"women's  computer  news  evening  teenage  morning\"]}\n ],\n \"boxesAndLists\": [\"women's  computer  news  evening  teenage  morning\"],\n \"pictures\": [\"drawing of a satellite dish, labelled 'A satellite dish'\", \"crossword grid with numbered clues 1–11, letters S, A, T, E, L, L, I, T, E, D, I, S, H filled vertically\"],\n \"unclassified\": [\"A satellite dish\", \"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]}\n```"
+}

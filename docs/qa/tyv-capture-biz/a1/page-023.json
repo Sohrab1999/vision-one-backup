@@ -1,0 +1,58 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 23,
+    "dpi": 300,
+    "renderSha256": "52c172dd0cb4edfb237d37d36b78c3f833eae0d9e0e680087353a7057e59113f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T20:16:01.282Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 26,
+    "testNumber": "10",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "10",
+        "marks": "6 marks",
+        "instruction": "Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)",
+        "items": [
+          "1 Members of Saxon National turned out in force today to vote against the controversial proposal to change the status of one of England's oldest building societies.",
+          "2 Trained people are starting to come into the industry but there aren't enough of them and they have little on-site experience.",
+          "3 The idea is to attract businesses to the area by offering low commercial taxes and by lifting many of the legal restrictions on the import and export of goods.",
+          "4 Union spokesperson Harry Evans said that many of his members wanted a total stoppage but this action would send a strong message to the employers.",
+          "5 Liberty Homes PLC announced annual profits of £1.1 million yesterday – an increase of 2.2% on the previous year.",
+          "6 Workers, who on Monday were offered 1.2%, were furious to learn that directors had voted themselves a huge 11.6%.",
+          "7 Restructuring was necessary to save the plant but the scale of the redundancies came as a terrible blow to the workforce."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Fat cats get more",
+      "Board faces demutualization fury",
+      "Northern Enterprise Zone opens",
+      "Western Steel shock: 500 jobs to go",
+      "Skills shortage hits construction targets",
+      "Rail overtime ban to cause travel chaos"
+    ],
+    "pictures": [
+      "small empty answer boxes next to each headline"
+    ],
+    "unclassified": [
+      "This is the end of Summary Test 1.",
+      "Use the Answer key at the back of the book to check your answers.",
+      "Your score",
+      "/75",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 26,\n  \"testNumber\": \"10\",\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"10\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)\",\n      \"items\": [\n        \"1 Members of Saxon National turned out in force today to vote against the controversial proposal to change the status of one of England's oldest building societies.\",\n        \"2 Trained people are starting to come into the industry but there aren't enough of them and they have little on-site experience.\",\n        \"3 The idea is to attract businesses to the area by offering low commercial taxes and by lifting many of the legal restrictions on the import and export of goods.\",\n        \"4 Union spokesperson Harry Evans said that many of his members wanted a total stoppage but this action would send a strong message to the employers.\",\n        \"5 Liberty Homes PLC announced annual profits of £1.1 million yesterday – an increase of 2.2% on the previous year.\",\n        \"6 Workers, who on Monday were offered 1.2%, were furious to learn that directors had voted themselves a huge 11.6%.\",\n        \"7 Restructuring was necessary to save the plant but the scale of the redundancies came as a terrible blow to the workforce.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Fat cats get more\",\n    \"Board faces demutualization fury\",\n    \"Northern Enterprise Zone opens\",\n    \"Western Steel shock: 500 jobs to go\",\n    \"Skills shortage hits construction targets\",\n    \"Rail overtime ban to cause travel chaos\"\n  ],\n  \"pictures\": [\n    \"small empty answer boxes next to each headline\"\n  ],\n  \"unclassified\": [\n    \"This is the end of Summary Test 1.\",\n    \"Use the Answer key at the back of the book to check your answers.\",\n    \"Your score\",\n    \"/75\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

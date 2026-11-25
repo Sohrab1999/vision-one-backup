@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 48,
+    "dpi": 300,
+    "renderSha256": "cf008c728012622f767e0db3f43a9c1ee9e921bb4ad6c2451db7e7e4be5620ac",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:43:15.214Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 47,
+    "testNumber": "41",
+    "testTitle": "Take / took / taken",
+    "exercises": [
+      {
+        "id": "41.1",
+        "marks": "10 marks",
+        "instruction": "How long did it take people to do these things? Make sentences using took.",
+        "items": [
+          "Example: It took Sam half an hour to go/get to work.",
+          "1 Miranda 7.30 – left home to go to work 8.30 – arrived at work",
+          "2 Tony 9.00 – started checking emails 9.20 – finished checking emails",
+          "3 Maggie 19.00 – started doing homework 20.15 – finished doing homework",
+          "4 Jeremy 10.00 – got on plane to fly to Paris 11.30 – arrived in Paris",
+          "5 Julia 12.45 – started eating lunch 12.55 – finished eating lunch",
+          "6 Mark 15.15 – started writing report 17.45 – finished writing report",
+          "7 Angela 18.25 – got on train to go to London 22.05 – arrived in London",
+          "8 Paul 10.00 – started repairing bike 13.30 – finished repairing bike",
+          "9 Rosemary July 1 – started writing story Sept 30 – finished writing story",
+          "10 Ken December 2002– started writing poem December 2010 – finished writing poem"
+        ]
+      },
+      {
+        "id": "41.2",
+        "marks": "10 marks",
+        "instruction": "Use the words below to write full sentences.",
+        "items": [
+          "Example: I / take / French course / last year. I took a French course last year.",
+          "1 I / take / train / when / go / airport / last summer",
+          "2 Anita / take / English exam / tomorrow",
+          "3 Kay / want / take / Greek lessons",
+          "4 Her father / take / bus / the office",
+          "5 Pete / take / underground / to work every day"
+        ]
+      },
+      {
+        "id": "41.3",
+        "marks": "10 marks",
+        "instruction": "Look at the pictures and write the English words beside them. Then choose the right word to fill each gap in the sentences below.",
+        "items": [
+          "Example: It’s raining – take your umbrella with you.",
+          "1 You’ll have time to read on the train, so don’t forget to take a ………………………… .",
+          "2 You’ll want something to eat, so take an ………………………… with you.",
+          "3 You might want to take some photos, so do take your ………………………… .",
+          "4 Take some ………………………… – you may want to buy some postcards.",
+          "5 It’ll be cold in the evening – take a ………………………… with you."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Sam 8.00 – left home to go to work 8.30 – arrived at work",
+      "a ………………………… d ………………………… b ………………………… e ………………………… c umbrella f …………………………"
+    ],
+    "pictures": [
+      "Six labelled line drawings a–f: a) belt, b) money, c) umbrella (word 'umbrella' filled in), d) camera, e) book, f) apple"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "{\"footer\": 47,\n \"testNumber\": \"41\",\n \"testTitle\": \"Take / took / taken\",\n \"exercises\": [\n  {\"id\": \"41.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"How long did it take people to do these things? Make sentences using took.\",\n   \"items\": [\"Example: It took Sam half an hour to go/get to work.\",\n    \"1 Miranda 7.30 – left home to go to work 8.30 – arrived at work\",\n    \"2 Tony 9.00 – started checking emails 9.20 – finished checking emails\",\n    \"3 Maggie 19.00 – started doing homework 20.15 – finished doing homework\",\n    \"4 Jeremy 10.00 – got on plane to fly to Paris 11.30 – arrived in Paris\",\n    \"5 Julia 12.45 – started eating lunch 12.55 – finished eating lunch\",\n    \"6 Mark 15.15 – started writing report 17.45 – finished writing report\",\n    \"7 Angela 18.25 – got on train to go to London 22.05 – arrived in London\",\n    \"8 Paul 10.00 – started repairing bike 13.30 – finished repairing bike\",\n    \"9 Rosemary July 1 – started writing story Sept 30 – finished writing story\",\n    \"10 Ken December 2002– started writing poem December 2010 – finished writing poem\"]},\n  {\"id\": \"41.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Use the words below to write full sentences.\",\n   \"items\": [\"Example: I / take / French course / last year. I took a French course last year.\",\n    \"1 I / take / train / when / go / airport / last summer\",\n    \"2 Anita / take / English exam / tomorrow\",\n    \"3 Kay / want / take / Greek lessons\",\n    \"4 Her father / take / bus / the office\",\n    \"5 Pete / take / underground / to work every day\"]},\n  {\"id\": \"41.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Look at the pictures and write the English words beside them. Then choose the right word to fill each gap in the sentences below.\",\n   \"items\": [\"Example: It’s raining – take your umbrella with you.\",\n    \"1 You’ll have time to read on the train, so don’t forget to take a ………………………… .\",\n    \"2 You’ll want something to eat, so take an ………………………… with you.\",\n    \"3 You might want to take some photos, so do take your ………………………… .\",\n    \"4 Take some ………………………… – you may want to buy some postcards.\",\n    \"5 It’ll be cold in the evening – take a ………………………… with you.\"]}\n ],\n \"boxesAndLists\": [\"Sam 8.00 – left home to go to work 8.30 – arrived at work\",\n  \"a ………………………… d ………………………… b ………………………… e ………………………… c umbrella f …………………………\"],\n \"pictures\": [\"Six labelled line drawings a–f: a) belt, b) money, c) umbrella (word 'umbrella' filled in), d) camera, e) book, f) apple\"],\n \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\", \"Your score /30\"]\n}"
+}

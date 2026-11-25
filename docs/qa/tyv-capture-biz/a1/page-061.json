@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 61,
+    "dpi": 300,
+    "renderSha256": "43706cb8e4a2d223036879c99f69405506cd5762bbb2104ba3c7359924b751e7",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:56:20.166Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 64,
+    "testNumber": "50",
+    "testTitle": "Telephoning 3: messages",
+    "exercises": [
+      {
+        "id": "50.1",
+        "marks": "9 marks",
+        "instruction": "Here are three telephone conversations. Choose the best word from the brackets ( ) to complete each sentence.",
+        "items": [
+          "■ Good morning. This is Pierre Cognet. Could I ......................... to Mr Roberts, please? (tell/speak/phone)",
+          "○ I'm ......................... he's in a meeting. (afraid/scared/unfortunate)",
+          "■ Ah. Could I ......................... a message? (ask/send/leave)",
+          "○ Of course.",
+          "■ Could you ask him to call me ......................... ? My number's 33-1-4776-5821. (back/down/round)",
+          "○ OK. I'll tell him you called.",
+          "■ Thank you.",
+          "■ Hello. Is that Anna?",
+          "○ ......................... . (Saying/Talking/Speaking)",
+          "■ Hi, Anna. This is Alain. Is this a ......................... time to call? (fine/good/best)",
+          "○ Not really, Alain. Could you call back ......................... ? (late/lately/later)",
+          "■ OK. I'll call back after lunch.",
+          "○ That's great. Bye.",
+          "■ Hello. Is that Sven Anderson?",
+          "○ No. Sven's not in the office today. Can I ......................... a message? (make/take/place)",
+          "■ Oh, I'm calling ......................... tomorrow's meeting. I wanted to confirm that it starts at 10. (about/for/to)",
+          "○ Yes, it does. I'll be there too.",
+          "■ Ah, good. Thank you. I'll see you tomorrow then. Bye.",
+          "○ See you tomorrow. Bye."
+        ]
+      },
+      {
+        "id": "50.2",
+        "marks": "5 marks",
+        "instruction": "Here are some telephone conversations where one speaker is checking some information. Tick (√) the correct option. The first one is an example.",
+        "items": [
+          "'Did you say your extension is 607?' 'Six – oh – double seven.' | 607 | 6077 ✓",
+          "'Is that with one N or two at the end?' 'It's double N.' | Hermann | Herman",
+          "'Is that all one word?' 'No. It has a hyphen.' | thompsonclarke@aol.com | thompson-clarke@aol.com",
+          "'Do you know if that's with a capital V?' 'He writes it with a small letter.' | Van Lent | van Lent",
+          "'Was that a P or a B?' 'It's Bravo Alpha 471.' | BA 471 | PA 471",
+          "'Can you repeat the address, please?' 'It's www dot art dot house dot org, forward slash music.' | www.art.house.org/music | www.arthouse.org\\music"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 14",
+      "Target 11+",
+      "Your score /14"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 64,\n \"testNumber\": \"50\",\n \"testTitle\": \"Telephoning 3: messages\",\n \"exercises\": [\n  {\"id\": \"50.1\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"Here are three telephone conversations. Choose the best word from the brackets ( ) to complete each sentence.\",\n   \"items\": [\n    \"■ Good morning. This is Pierre Cognet. Could I ......................... to Mr Roberts, please? (tell/speak/phone)\",\n    \"○ I'm ......................... he's in a meeting. (afraid/scared/unfortunate)\",\n    \"■ Ah. Could I ......................... a message? (ask/send/leave)\",\n    \"○ Of course.\",\n    \"■ Could you ask him to call me ......................... ? My number's 33-1-4776-5821. (back/down/round)\",\n    \"○ OK. I'll tell him you called.\",\n    \"■ Thank you.\",\n    \"■ Hello. Is that Anna?\",\n    \"○ ......................... . (Saying/Talking/Speaking)\",\n    \"■ Hi, Anna. This is Alain. Is this a ......................... time to call? (fine/good/best)\",\n    \"○ Not really, Alain. Could you call back ......................... ? (late/lately/later)\",\n    \"■ OK. I'll call back after lunch.\",\n    \"○ That's great. Bye.\",\n    \"■ Hello. Is that Sven Anderson?\",\n    \"○ No. Sven's not in the office today. Can I ......................... a message? (make/take/place)\",\n    \"■ Oh, I'm calling ......................... tomorrow's meeting. I wanted to confirm that it starts at 10. (about/for/to)\",\n    \"○ Yes, it does. I'll be there too.\",\n    \"■ Ah, good. Thank you. I'll see you tomorrow then. Bye.\",\n    \"○ See you tomorrow. Bye.\"\n   ]},\n  {\"id\": \"50.2\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Here are some telephone conversations where one speaker is checking some information. Tick (√) the correct option. The first one is an example.\",\n   \"items\": [\n    \"'Did you say your extension is 607?' 'Six – oh – double seven.' | 607 | 6077 ✓\",\n    \"'Is that with one N or two at the end?' 'It's double N.' | Hermann | Herman\",\n    \"'Is that all one word?' 'No. It has a hyphen.' | thompsonclarke@aol.com | thompson-clarke@aol.com\",\n    \"'Do you know if that's with a capital V?' 'He writes it with a small letter.' | Van Lent | van Lent\",\n    \"'Was that a P or a B?' 'It's Bravo Alpha 471.' | BA 471 | PA 471\",\n    \"'Can you repeat the address, please?' 'It's www dot art dot house dot org, forward slash music.' | www.art.house.org/music | www.arthouse.org\\\\music\"\n   ]}\n ],\n \"boxesAndLists\": [\"Total 14\", \"Target 11+\", \"Your score /14\"],\n \"pictures\": [],\n \"unclassified\": [\"Test Your Business Vocabulary in Use\"]\n}"
+}

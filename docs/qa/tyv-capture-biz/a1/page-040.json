@@ -1,0 +1,77 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 40,
+    "dpi": 300,
+    "renderSha256": "e5e98f07651ec953595642be16e26f28a26ce6091c9287cd0161febc049ebcb5",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:19:56.529Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 43,
+    "testNumber": "2",
+    "testTitle": "Summary Test 2",
+    "exercises": [
+      {
+        "id": "1",
+        "marks": "12 marks",
+        "instruction": "For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "1 We do our printing in-house but we .................... delivery to a small, local company.\nA supply              B source              C subcontract",
+          "2 We have set up quality .................... as part of our TQM system.\nA circles             B lines               C corners",
+          "3 We need a .................... market economy where the government doesn't try to control prices.\nA base               B low                 C free",
+          "4 Until last year they .................... the market but now they face some stiff competition.\nA penetrated         B dominated           C segmented",
+          "5 Our new .................... protects our eggs on the way to the shops and it looks good on the shelves.\nA production         B packaging           C promotion",
+          "6 If you want to save some money buy .................... products rather than the top brands.\nA generic            B durable             C consumer",
+          "7 If you pay cash for this TV we will give you a 5% .................... .\nA hike               B sale                C discount",
+          "8 Our prices are low because we cut out the .................... and sell directly from the factory.\nA middleman          B marketer            C manufacturer",
+          "9 Customers who use our .................... card get one point for every pound they spend.\nA franchise          B sponsorship         C loyalty",
+          "10 We had nearly 5,000 .................... to our website last week.\nA hits               B visitors            C views",
+          "11 We can increase our profit .................... by reducing our overheads.\nA account            B margin              C costs",
+          "12 We've made a loss for the past three years but we should break .................... this year.\nA even               B up                  C out"
+        ]
+      },
+      {
+        "id": "2",
+        "marks": "6 marks",
+        "instruction": "Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.",
+        "items": [
+          "1 Our only long-term liability is",
+          "2 Syntetic PLC reported a pre-tax",
+          "3 We fell behind with our repayments so",
+          "4 Next time I'm going to trade up to",
+          "5 Now we've got the product right, but",
+          "6 We'll solve our cash flow problem if",
+          "a profit of $1.2 million for last year.",
+          "b the learning curve has been very steep.",
+          "c we can sell the stock in our warehouse.",
+          "d they started undercutting us.",
+          "e a £5,000 bank loan over three years.",
+          "f they sold the house we'd put up as collateral.",
+          "g something at the high end of the range."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 75",
+      "Target 60+",
+      "Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............"
+    ],
+    "pictures": [
+      "two-column matching table with numbered sentence beginnings (1–6) and lettered endings (a–g)"
+    ],
+    "unclassified": [
+      "17–32",
+      "Read the questions carefully. Try to answer them all. This test takes about 45 minutes."
+    ]
+  },
+  "rawModelText": "{\"footer\": 43,\n \"testNumber\": \"2\",\n \"testTitle\": \"Summary Test 2\",\n \"exercises\": [\n  {\"id\": \"1\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"For each sentence, choose the best word to fill the gap from the alternatives given. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"1 We do our printing in-house but we .................... delivery to a small, local company.\\nA supply              B source              C subcontract\",\n    \"2 We have set up quality .................... as part of our TQM system.\\nA circles             B lines               C corners\",\n    \"3 We need a .................... market economy where the government doesn't try to control prices.\\nA base               B low                 C free\",\n    \"4 Until last year they .................... the market but now they face some stiff competition.\\nA penetrated         B dominated           C segmented\",\n    \"5 Our new .................... protects our eggs on the way to the shops and it looks good on the shelves.\\nA production         B packaging           C promotion\",\n    \"6 If you want to save some money buy .................... products rather than the top brands.\\nA generic            B durable             C consumer\",\n    \"7 If you pay cash for this TV we will give you a 5% .................... .\\nA hike               B sale                C discount\",\n    \"8 Our prices are low because we cut out the .................... and sell directly from the factory.\\nA middleman          B marketer            C manufacturer\",\n    \"9 Customers who use our .................... card get one point for every pound they spend.\\nA franchise          B sponsorship         C loyalty\",\n    \"10 We had nearly 5,000 .................... to our website last week.\\nA hits               B visitors            C views\",\n    \"11 We can increase our profit .................... by reducing our overheads.\\nA account            B margin              C costs\",\n    \"12 We've made a loss for the past three years but we should break .................... this year.\\nA even               B up                  C out\"\n   ]},\n  {\"id\": \"2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Match each sentence beginning (1–6) with the correct ending. Write the letter (a–g) of the ending you choose in the box below. There is one extra ending that you don't have to use.\",\n   \"items\": [\n    \"1 Our only long-term liability is\",\n    \"2 Syntetic PLC reported a pre-tax\",\n    \"3 We fell behind with our repayments so\",\n    \"4 Next time I'm going to trade up to\",\n    \"5 Now we've got the product right, but\",\n    \"6 We'll solve our cash flow problem if\",\n    \"a profit of $1.2 million for last year.\",\n    \"b the learning curve has been very steep.\",\n    \"c we can sell the stock in our warehouse.\",\n    \"d they started undercutting us.\",\n    \"e a £5,000 bank loan over three years.\",\n    \"f they sold the house we'd put up as collateral.\",\n    \"g something at the high end of the range.\"\n   ]}\n ],\n \"boxesAndLists\": [\"Total 75\", \"Target 60+\", \"Answers 1 ............ 2 ............ 3 ............ 4 ............ 5 ............ 6 ............\"],\n \"pictures\": [\"two-column matching table with numbered sentence beginnings (1–6) and lettered endings (a–g)\"],\n \"unclassified\": [\"17–32\", \"Read the questions carefully. Try to answer them all. This test takes about 45 minutes.\"]\n}"
+}

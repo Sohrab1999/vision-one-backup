@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 56,
+    "dpi": 300,
+    "renderSha256": "76587ac488c0f34a8ef1853c7b52baa6b41b0492da08ebae91252498e777a314",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:38:24.606Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 59,
+    "testNumber": "45",
+    "testTitle": "Business across cultures 1",
+    "exercises": [
+      {
+        "id": "45.1",
+        "marks": "8 marks",
+        "instruction": "Decide which of the alternatives (A–F) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.",
+        "items": [
+          "1 'All CEOs over the age of 50 use an authoritarian approach to management.'",
+          "2 'The top people were all men and they encouraged an aggressive management style.'",
+          "3 'Our organization has five levels of management.'",
+          "4 'Here we consult employees on all major decisions. We work by consensus.'",
+          "5 'The people on the shop floor say that our managers don't have any leadership skills.'",
+          "6 'I want the people who work for me to be tough. If they are weak they can leave.'",
+          "7 'I like all the people in my team to call me Steve rather than Mr Eastwood.'",
+          "8 'Women make better managers than men because they are better with people.'"
+        ]
+      },
+      {
+        "id": "45.2",
+        "marks": null,
+        "instruction": "Write one word in each gap to complete the sentences.",
+        "items": [
+          "1 We involve everyone in the decision-______ process.",
+          "2 This is not a hierarchical company. We only have two management ______.",
+          "3 We work as a team of ______. The newest employee's ideas are just as important as mine.",
+          "4 The ____-hours culture here puts people under pressure.",
+          "5 I like it here because the company ______ is to encourage people to use their initiative."
+        ]
+      },
+      {
+        "id": "45.3",
+        "marks": null,
+        "instruction": "In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "1 Our new manager is very open and approachive. ........................",
+          "2 We can be family with him, but we still respect him. ........................",
+          "3 My last manager was distant and remove. ........................",
+          "4 He was not excessable and he didn't ask for our opinions. ........................",
+          "5 We had to show him difference even if we did not agree with him. ........................"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A corporate culture    B macho culture    C canteen culture",
+      "D hierarchical structure    E form of address    F stereotype"
+    ],
+    "pictures": [
+      "cartoon of a large boardroom table with four framed portraits on the wall and one small figure seated at the far end"
+    ],
+    "unclassified": [
+      "Total 18",
+      "Target 15+",
+      "score 18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 59,\n \"testNumber\": \"45\",\n \"testTitle\": \"Business across cultures 1\",\n \"exercises\": [\n   {\"id\": \"45.1\",\n    \"marks\": \"8 marks\",\n    \"instruction\": \"Decide which of the alternatives (A–F) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.\",\n    \"items\": [\n      \"1 'All CEOs over the age of 50 use an authoritarian approach to management.'\",\n      \"2 'The top people were all men and they encouraged an aggressive management style.'\",\n      \"3 'Our organization has five levels of management.'\",\n      \"4 'Here we consult employees on all major decisions. We work by consensus.'\",\n      \"5 'The people on the shop floor say that our managers don't have any leadership skills.'\",\n      \"6 'I want the people who work for me to be tough. If they are weak they can leave.'\",\n      \"7 'I like all the people in my team to call me Steve rather than Mr Eastwood.'\",\n      \"8 'Women make better managers than men because they are better with people.'\"\n    ]},\n   {\"id\": \"45.2\",\n    \"marks\": null,\n    \"instruction\": \"Write one word in each gap to complete the sentences.\",\n    \"items\": [\n      \"1 We involve everyone in the decision-______ process.\",\n      \"2 This is not a hierarchical company. We only have two management ______.\",\n      \"3 We work as a team of ______. The newest employee's ideas are just as important as mine.\",\n      \"4 The ____-hours culture here puts people under pressure.\",\n      \"5 I like it here because the company ______ is to encourage people to use their initiative.\"\n    ]},\n   {\"id\": \"45.3\",\n    \"marks\": null,\n    \"instruction\": \"In each line there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n    \"items\": [\n      \"1 Our new manager is very open and approachive. ........................\",\n      \"2 We can be family with him, but we still respect him. ........................\",\n      \"3 My last manager was distant and remove. ........................\",\n      \"4 He was not excessable and he didn't ask for our opinions. ........................\",\n      \"5 We had to show him difference even if we did not agree with him. ........................\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"A corporate culture    B macho culture    C canteen culture\",\n   \"D hierarchical structure    E form of address    F stereotype\"\n ],\n \"pictures\": [\"cartoon of a large boardroom table with four framed portraits on the wall and one small figure seated at the far end\"],\n \"unclassified\": [\"Total 18\", \"Target 15+\", \"score 18\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

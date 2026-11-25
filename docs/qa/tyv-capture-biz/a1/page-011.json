@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 11,
+    "dpi": 300,
+    "renderSha256": "c2d3708ee83ff7e249823da084933dff30750e3deaafab1546cc485b83d7cee9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T12:59:46.414Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 14,
+    "testNumber": "8",
+    "testTitle": "Problems at work",
+    "exercises": [
+      {
+        "id": "8.1",
+        "marks": "6 marks",
+        "instruction": "The symbols represent possible problems at work. Match each statement (1–6) with the right symbol. Write the letter of your chosen answer in the box on the right. You may use each symbol more than once.",
+        "items": [
+          "1 That bottle of acid should be locked in the store room. If it gets on your skin it will burn you.",
+          "2 Only two people smoke in our office, but even that makes it difficult for me to breathe.",
+          "3 This safety guard MUST be in place at all times. Anyone who removes a guard will be sacked.",
+          "4 Last winter it got so cold that we all had to go home until the heating was fixed.",
+          "5 I've got a pain in my fingers and wrists. It must be due to all that data entry we did last month.",
+          "6 Caution! This machine must only be used by a trained operator."
+        ]
+      },
+      {
+        "id": "8.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 I've cut my finger. Can you get the .................... aid kit for me? (health/injury/first)",
+          "2 That pile of waste paper is a fire .................... . (precaution/hazard/exit)",
+          "3 This special keyboard reduces the risk of repetitive .................... injury. (strain/stress/stroke)",
+          "4 There is no smoking here because of the dangers of .................... smoking. (passive/passionate/personal)",
+          "5 I reported the missing fire extinguisher to the health and .................... inspector. (danger/hazards/safety)",
+          "6 The poor air-conditioning system makes it a bad working .................... . (environment/place/zone)"
+        ]
+      },
+      {
+        "id": "8.3",
+        "marks": "8 marks",
+        "instruction": "In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.",
+        "items": [
+          "0 All companies should have a dignity at work (police). .........policy.........",
+          "1 My last manager was a terrible bull. He shouted at us all the time. ......................",
+          "2 Finally, he was sacked for sexual harass because of his remarks to women. ......................",
+          "3 The judge said the company had discriminated about Mary Chambers. ......................",
+          "4 There was a wooden ceiling which prevented her from being promoted. ......................",
+          "5 This was obviously a case of serious woman discrimination. ......................",
+          "6 The company said it had an equal opportune policy but I don't believe it. ......................",
+          "7 I was the only black employee and I was a victim of racism discrimination. ......................",
+          "8 We need some affirmative activation here like they have in America. ......................"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Six hazard symbols labelled A–F: thermometer (A), person smoking (B), hands on keyboard (C), circular saw with guard (D), acid/corrosive bottles (E), flames (F)"
+    ],
+    "unclassified": [
+      "Total 20",
+      "Target 15+",
+      "Your score /20",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 14,\n  \"testNumber\": \"8\",\n  \"testTitle\": \"Problems at work\",\n  \"exercises\": [\n    {\n      \"id\": \"8.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"The symbols represent possible problems at work. Match each statement (1–6) with the right symbol. Write the letter of your chosen answer in the box on the right. You may use each symbol more than once.\",\n      \"items\": [\n        \"1 That bottle of acid should be locked in the store room. If it gets on your skin it will burn you.\",\n        \"2 Only two people smoke in our office, but even that makes it difficult for me to breathe.\",\n        \"3 This safety guard MUST be in place at all times. Anyone who removes a guard will be sacked.\",\n        \"4 Last winter it got so cold that we all had to go home until the heating was fixed.\",\n        \"5 I've got a pain in my fingers and wrists. It must be due to all that data entry we did last month.\",\n        \"6 Caution! This machine must only be used by a trained operator.\"\n      ]\n    },\n    {\n      \"id\": \"8.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n      \"items\": [\n        \"1 I've cut my finger. Can you get the .................... aid kit for me? (health/injury/first)\",\n        \"2 That pile of waste paper is a fire .................... . (precaution/hazard/exit)\",\n        \"3 This special keyboard reduces the risk of repetitive .................... injury. (strain/stress/stroke)\",\n        \"4 There is no smoking here because of the dangers of .................... smoking. (passive/passionate/personal)\",\n        \"5 I reported the missing fire extinguisher to the health and .................... inspector. (danger/hazards/safety)\",\n        \"6 The poor air-conditioning system makes it a bad working .................... . (environment/place/zone)\"\n      ]\n    },\n    {\n      \"id\": \"8.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.\",\n      \"items\": [\n        \"0 All companies should have a dignity at work (police). .........policy.........\",\n        \"1 My last manager was a terrible bull. He shouted at us all the time. ......................\",\n        \"2 Finally, he was sacked for sexual harass because of his remarks to women. ......................\",\n        \"3 The judge said the company had discriminated about Mary Chambers. ......................\",\n        \"4 There was a wooden ceiling which prevented her from being promoted. ......................\",\n        \"5 This was obviously a case of serious woman discrimination. ......................\",\n        \"6 The company said it had an equal opportune policy but I don't believe it. ......................\",\n        \"7 I was the only black employee and I was a victim of racism discrimination. ......................\",\n        \"8 We need some affirmative activation here like they have in America. ......................\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"Six hazard symbols labelled A–F: thermometer (A), person smoking (B), hands on keyboard (C), circular saw with guard (D), acid/corrosive bottles (E), flames (F)\"\n  ],\n  \"unclassified\": [\n    \"Total 20\",\n    \"Target 15+\",\n    \"Your score /20\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

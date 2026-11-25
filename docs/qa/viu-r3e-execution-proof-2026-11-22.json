@@ -1,0 +1,94 @@
+{
+  "phase": "R3-e — اجرای گیت‌دار کامل (STEP 6)",
+  "executedAt": "2026-11-22",
+  "ownerCommand": {
+    "verbatim": "اینو شروع کن (با نقل‌قول کامل توضیح گیت R3-e از پاسخ قبلی + متن کامل الزام پایداری ۱۰بندی — ابلاغ ششم)",
+    "trace": "1a2043987aa69c95",
+    "channel": "zai-web",
+    "date": "۱۴۰۵/۹/۱",
+    "interpretation": "فرمان مستقل، صریح و خاصِ گیت R3-e — فرمان کلی نبود (نقل‌قول دقیق تعریف گیت را در بر داشت) ⇒ شرط ۱ گیت (فرمان مستقل مالک) برقرار. یادداشت صادقانه: واژهٔ تحت‌اللفظی «STEP 6» در فرمان نیامده ولی مرجع‌دهی صریح به همین گیت بود (الگوی «A5 را اجرا کن» فاز A5). شرط ۲ گیت (منبع چاپی): سه PDF tracked مالک = منبع چاپی چاپ دوم (SHA 35ea1b5b…/0dfdab2e…/415fc985…) — راستی‌آزمایی صفحه‌محور علیه همین اسکن انجام شد."
+  },
+  "sourceVerification": {
+    "method": "pdftoppm 300DPI → z-ai vision رونویسی متمرکز → پروب متمرکز 500DPI → cross-check مکانیکی علیه دوگذر R3 (census+verify)",
+    "script": "scripts/viu-r3e-verify-source.mjs",
+    "pages": [
+      {
+        "book": "upper",
+        "unit": 5,
+        "pdfPage": 17,
+        "bookPagePrintedFooter": 12,
+        "pdfSha256": "415fc9856e16afb7…",
+        "result": "2 مدخل نمونهٔ دیکشنری چاپی — ma·lig·nant (حس ۱/۲ + malignancy حس ۱/۲ + malignantly بدون حس) و hairy (حس ۱/۲) — footer=12 اثبات نگاشت"
+      },
+      {
+        "book": "preint",
+        "unit": 3,
+        "pdfPage": 15,
+        "bookPagePrintedFooter": 8,
+        "pdfSha256": "0dfdab2ef0730596…",
+        "result": "1 مدخل نمونهٔ دیکشنری چاپی — seat¹ noun [C] حس ۱ با برچسب موضوعی SIT + ۳ مثال چاپی — footer=8"
+      },
+      {
+        "book": "elem",
+        "unit": 11,
+        "pdfPage": 29,
+        "bookPagePrintedFooter": 26,
+        "pdfSha256": "35ea1b5be92eef4c…",
+        "result": "کنترل منفی قطعی: printedSenseNumbers=false — شماره‌های حس اپراتوری بودند (نوت census) — EXCLUDED"
+      }
+    ],
+    "probes": [
+      "upper 500DPI: malignantPhonetic=/məˈlɪgnənt/ · hairyPhonetic=/heəri¹/ · hairier, hairiest چاپی · تعریف حس ۱ hairy با نقطهٔ پایان + EG چاپی + هر ۳ مثال · حاشیهٔ ADJ QUAL",
+      "preint 500DPI: seat¹ /si:t/ noun [C] 1 SIT something that you sit on + ۳ مثال — seat² فعل چاپ نشده — سبک CALD (تشخیص VLM)"
+    ]
+  },
+  "exclusions": [
+    { "cluster": "elem unit-011 turn down/take off", "reason": "شماره‌های sense توسط اپراتور اضافه شده بودند (نوت census + کنترل منفی چاپی=false)" },
+    { "cluster": "upper unit-086 (عبارت‌های بحث، ۱..۸)", "reason": "اعداد ۱..۸ ساختار تمرین حباب‌ها/فهرست gloss چاپی — حس دیکشنری نیست" },
+    { "cluster": "upper unit-036", "reason": "آرتیفکت ثبت‌شدهٔ census — شماره‌گذاری فهرست واژه" },
+    { "cluster": "upper unit-100", "reason": "آرتیفکت ثبت‌شدهٔ census — تابلوها/نشانه‌ها" }
+  ],
+  "runtime": {
+    "rowsByBook": { "viu-upper": 6, "viu-preint": 1, "viu-elem": 0 },
+    "wordsWithSenses": { "viu-upper": ["ma·lig·nant", "ma·lig·nancy", "hairy"], "viu-preint": ["seat¹"] },
+    "files": [
+      "src/data/types.ts (WordSenseRow NEW)",
+      "src/data/books/types.ts (BookData.senses? NEW)",
+      "src/data/viu-upper/senses.ts (NEW — تولید مکانیکی)",
+      "src/data/viu-preint/senses.ts (NEW — تولید مکانیکی)",
+      "src/data/viu-upper/index.ts (senses wired)",
+      "src/data/viu-preint/index.ts (senses wired)",
+      "src/components/book/word-lookup.tsx (LookupMaps.senses + hit.senses + بلوک فقط‌خواندنی «حس‌های چاپی کتاب — مدخل نمونهٔ دیکشنری»)",
+      "scripts/viu-r3e-build-senses.mjs (NEW — مولد مکانیکی)"
+    ],
+    "mechanicalNormalizations": [
+      "حذف نشانگر ابهام [?] از تعریف hairy حس ۱ (رزولوشن با پروب 500DPI: نقطهٔ پایان چاپی تأیید شد)",
+      "پیوستن خط‌شکن چاپی uncontrol-lably → uncontrollably (استاندارد خواندن خط‌شکن — گذر verify همسو)",
+      "IPA hairy → /heəri/ (هستهٔ پایدار دو گذر هم‌خوان census+پروب؛ چهار خوانش متنوع ثبت شد: /heəri/ · /heərɪ'/ · /ˈhɛəri/ · /heəri¹/)",
+      "IPA malignant → /məˈlɪgnənt/ (گذر تازه + پروب هم‌خوان؛ census نشان استرس را آپستروف نوشت)",
+      "برچسب موضوعی SIT از تعریف seat¹ به فیلد subject منتقل شد (قاعدهٔ مکانیکی واژهٔ تمام‌بزرگ ابتدای تعریف)",
+      "ویرگول «Please,» در seat: دو خوانش تازه مستقل با ویرگول — census کهنه بدون ویرگول — روایت تازه پذیرفته شد"
+    ]
+  },
+  "qa": {
+    "lint": "0 خطا",
+    "tsc": "6 خطا — همه پیشا-موجودی ثبت‌شده (بازی‌ها/form.tsx) — صفر خطا در مسیرهای دست‌خورده",
+    "audit:viu": "پاک — صفر issue — شمارش‌ها عین baseline (words 8870 · quiz 2872 · readings 260)",
+    "browser": [
+      { "shot": "qa-shots/r3e/r3e-01-hairy-popup.png", "what": "پاپ‌آپ واژهٔ hairy (upper درس ۵ متن‌ها)" },
+      { "shot": "qa-shots/r3e/r3e-05-hairy-senses.png", "what": "بلوک حس‌های چاپی hairy — حس ۱/۲ + ۴ مثال چاپی + درس ۵ · صفحهٔ ۱۲ — رندر تمیز" },
+      { "shot": "qa-shots/r3e/r3e-02-seat-popup.png", "what": "پاپ‌آپ seat (preint درس ۳ متن‌ها)" },
+      { "shot": "qa-shots/r3e/r3e-06-mobile-popup.png", "what": "موبایل 390×844 — چیدمان سالم" },
+      { "shot": "qa-shots/r3e/r3e-07-mobile-senses.png", "what": "موبایل — بلوک حس‌های seat¹/hairy کامل و بدون سرریز" },
+      { "shot": "qa-shots/r3e/r3e-04-train-after-click.png", "what": "رگرسیون — پاپ‌آپ واژهٔ معمولی train بدون بلوک حس‌ها" }
+    ],
+    "liveSurfaces": {
+      "verified": ["upper: کلیک hairy در متن درس ۵ ⇒ بلوک حس‌ها", "preint: کلیک seat در متن درس ۳ ⇒ بلوک حس‌ها"],
+      "dormant": "malignant/malignancy: داده wired است ولی واژه در هیچ متن انگلیسی runtime حاضر نیست ⇒ سطح کلیک فعال ندارد (ذکر صادقانه — بلوک با هر رخداد متن آینده ظاهر می‌شود)"
+    },
+    "console": "صفر خطا/هشدار",
+    "devServer": "200 OK در تمام مسیرهای QA"
+  },
+  "rollback": "حذف فیلد اختیاری senses + دو فایل senses.ts + بلوک پاپ‌آپ = بازگشت بایت‌به‌بیت (صفر وابستگی db/SRS — کلید word ثابت — wordFamilies دست‌نخورده)",
+  "gateStatus": "R3-e — EXECUTED (این موج) — دادهٔ حس چاپی کل سه کتاب = همین ۷ سطر (۰٫۱۰٪ رکوردها — عین یافتهٔ ساختاری census) — ادامهٔ موج مستلزم منبع چاپی جدید است"
+}

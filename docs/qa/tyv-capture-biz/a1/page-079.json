@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 79,
+    "dpi": 300,
+    "renderSha256": "6631524e6e5451f5f6c14eed9ba1dc7bac6b0ae13f18dfea38f20f0e417ff30a",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:12:36.082Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 82,
+    "testNumber": "64",
+    "testTitle": "Negotiations 3: Furthering negotiations",
+    "exercises": [
+      {
+        "id": "64.1",
+        "marks": "5 marks",
+        "instruction": "The statements below are about negotiations. Write one word in the gap to complete each statement.",
+        "items": [
+          "1 'She asked a lot of p_____ questions about the new contract.'",
+          "2 'We had to h_____ over the price, but eventually got them for £20 each.'",
+          "3 'We'll pay $200 on c_______ that you deliver by April 1st.'",
+          "4 'We will give you a 5% discount as l___ as you order more than 100 boxes.'",
+          "5 'We will c_____ increasing our offer, provided you agree to call off the strike.'"
+        ]
+      },
+      {
+        "id": "64.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'In a successful negotiation, no one should feel that they have lost. You should reach a win- (1) ............ solution. After one side makes a proposal, the other should make a (2) ..............-offer. If both sides make (3) ............ you can work towards a compromise. By making a goodwill (4) ............ you may get something from the other side. It is this (5) ..............-trading that moves the negotiations along. If you are not prepared to make a (6) ..............-off, there is a chance that the talks will break down.'",
+          "1 A lose   B draw   C win",
+          "2 A counter   B condition   C consensus",
+          "3 A priorities   B objectives   C concessions",
+          "4 A gesture   B mannerism   C etiquette",
+          "5 A bull   B horse   C bear",
+          "6 A business   B work   C trade"
+        ]
+      },
+      {
+        "id": "64.3",
+        "marks": "6 marks",
+        "instruction": "Complete each sentence by writing in the gap a word formed from the verb given in brackets ( ).",
+        "items": [
+          "1 We'll go back and think about your ...................... . (propose)",
+          "2 If you take more than 1,000, we will consider ....................... you a discount. (give)",
+          "3 ......................... that this contract works out, we might offer you more work. (provide)",
+          "4 ......................... that you provide good service, we may agree to buy more cars. (suppose)",
+          "5 If you can finish the project by the end of the year, we could .................... a bonus. (offer)",
+          "6 Good negotiators keep ..................... until they know what the other side really wants. (probe)"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Line drawing of two business people shaking hands, to the right of exercise 64.2"
+    ],
+    "unclassified": [
+      "Total 17",
+      "Target 13+",
+      "Your score /17",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 82,\n  \"testNumber\": \"64\",\n  \"testTitle\": \"Negotiations 3: Furthering negotiations\",\n  \"exercises\": [\n    {\n      \"id\": \"64.1\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"The statements below are about negotiations. Write one word in the gap to complete each statement.\",\n      \"items\": [\n        \"1 'She asked a lot of p_____ questions about the new contract.'\",\n        \"2 'We had to h_____ over the price, but eventually got them for £20 each.'\",\n        \"3 'We'll pay $200 on c_______ that you deliver by April 1st.'\",\n        \"4 'We will give you a 5% discount as l___ as you order more than 100 boxes.'\",\n        \"5 'We will c_____ increasing our offer, provided you agree to call off the strike.'\"\n      ]\n    },\n    {\n      \"id\": \"64.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n      \"items\": [\n        \"'In a successful negotiation, no one should feel that they have lost. You should reach a win- (1) ............ solution. After one side makes a proposal, the other should make a (2) ..............-offer. If both sides make (3) ............ you can work towards a compromise. By making a goodwill (4) ............ you may get something from the other side. It is this (5) ..............-trading that moves the negotiations along. If you are not prepared to make a (6) ..............-off, there is a chance that the talks will break down.'\",\n        \"1 A lose   B draw   C win\",\n        \"2 A counter   B condition   C consensus\",\n        \"3 A priorities   B objectives   C concessions\",\n        \"4 A gesture   B mannerism   C etiquette\",\n        \"5 A bull   B horse   C bear\",\n        \"6 A business   B work   C trade\"\n      ]\n    },\n    {\n      \"id\": \"64.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete each sentence by writing in the gap a word formed from the verb given in brackets ( ).\",\n      \"items\": [\n        \"1 We'll go back and think about your ...................... . (propose)\",\n        \"2 If you take more than 1,000, we will consider ....................... you a discount. (give)\",\n        \"3 ......................... that this contract works out, we might offer you more work. (provide)\",\n        \"4 ......................... that you provide good service, we may agree to buy more cars. (suppose)\",\n        \"5 If you can finish the project by the end of the year, we could .................... a bonus. (offer)\",\n        \"6 Good negotiators keep ..................... until they know what the other side really wants. (probe)\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\"Line drawing of two business people shaking hands, to the right of exercise 64.2\"],\n  \"unclassified\": [\n    \"Total 17\",\n    \"Target 13+\",\n    \"Your score /17\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

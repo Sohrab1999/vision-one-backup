@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 70,
+    "dpi": 300,
+    "renderSha256": "f45e074dddc966aa6e0691cd9c5b43d2be8c6cd30ad08be3466d6af4225cec71",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:58:15.962Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 73,
+    "testNumber": "55",
+    "testTitle": "Meetings 2: the role of the chairperson",
+    "exercises": [
+      {
+        "id": "55.1",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "My name is Stuart Macintosh and I am personal assistant to the CEO of Eastern Oil. He is the (1) ............ of the company's finance committee. I'm responsible for arranging the monthly meetings. I have to prepare the (2) ............ and then I have to (3) ............ it to all the participants. I also have to send copies of the (4) ............ of the last meeting. It's my job to check the (5) ............ , to make sure that the meeting room is suitable and that lunch has been ordered. You have to be a good (6) ............ to do a job like this.",
+          "1 A chairlady    B chairperson    C chairwoman",
+          "2 A diary        B calendar       C agenda",
+          "3 A circulate    B circular       C circle",
+          "4 A hours        B minutes        C seconds",
+          "5 A avenue       B revenue        C venue",
+          "6 A organizer    B organized      C organization"
+        ]
+      },
+      {
+        "id": "55.2",
+        "marks": "8 marks",
+        "instruction": "The statements below were made at a meeting. Write one word in the gap to complete each statement.",
+        "items": [
+          "1 'Juliet, will you t.................. the minutes today?'",
+          "2 'Does everyone agree that the minutes are an accurate r.................. of the last meeting?'",
+          "3 'Are there any m.................. arising?'",
+          "4 'In the a.............. points it says Bob is responsible for writing the report. Is that right?'",
+          "5 'Now, we have a................ 30 minutes to the discussion of point 1, so let's get started.'",
+          "6 'I want to make the p.................. that we are still two people short in the office.'",
+          "7 'We haven't t.................. this issue so we'll discuss it next week and make a decision then.'",
+          "8 'Let's m.................. on to the next point or we won't finish on time.'"
+        ]
+      },
+      {
+        "id": "55.3",
+        "marks": "5 marks",
+        "instruction": "Find a word related to each clue. The first and last letters of the answers are given.",
+        "items": [
+          "1 List of the things to be discussed at a meeting",
+          "2 Keep to this or the meeting will finish late",
+          "3 How the Chair should deal with disagreements",
+          "4 Someone who gets to the meeting after it has started",
+          "5 When someone goes off the point in a discussion"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 19",
+      "Target 16+"
+    ],
+    "pictures": [
+      "word-square grid for 55.3 with rows 1-5 given first and last letters: a/a, t/e, t/y, l/r, d/n"
+    ],
+    "unclassified": [
+      "Your score /19",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 73,\n \"testNumber\": \"55\",\n \"testTitle\": \"Meetings 2: the role of the chairperson\",\n \"exercises\": [\n   {\"id\": \"55.1\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n    \"items\": [\"My name is Stuart Macintosh and I am personal assistant to the CEO of Eastern Oil. He is the (1) ............ of the company's finance committee. I'm responsible for arranging the monthly meetings. I have to prepare the (2) ............ and then I have to (3) ............ it to all the participants. I also have to send copies of the (4) ............ of the last meeting. It's my job to check the (5) ............ , to make sure that the meeting room is suitable and that lunch has been ordered. You have to be a good (6) ............ to do a job like this.\",\n      \"1 A chairlady    B chairperson    C chairwoman\",\n      \"2 A diary        B calendar       C agenda\",\n      \"3 A circulate    B circular       C circle\",\n      \"4 A hours        B minutes        C seconds\",\n      \"5 A avenue       B revenue        C venue\",\n      \"6 A organizer    B organized      C organization\"]},\n   {\"id\": \"55.2\",\n    \"marks\": \"8 marks\",\n    \"instruction\": \"The statements below were made at a meeting. Write one word in the gap to complete each statement.\",\n    \"items\": [\"1 'Juliet, will you t.................. the minutes today?'\",\n      \"2 'Does everyone agree that the minutes are an accurate r.................. of the last meeting?'\",\n      \"3 'Are there any m.................. arising?'\",\n      \"4 'In the a.............. points it says Bob is responsible for writing the report. Is that right?'\",\n      \"5 'Now, we have a................ 30 minutes to the discussion of point 1, so let's get started.'\",\n      \"6 'I want to make the p.................. that we are still two people short in the office.'\",\n      \"7 'We haven't t.................. this issue so we'll discuss it next week and make a decision then.'\",\n      \"8 'Let's m.................. on to the next point or we won't finish on time.'\"]},\n   {\"id\": \"55.3\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Find a word related to each clue. The first and last letters of the answers are given.\",\n    \"items\": [\"1 List of the things to be discussed at a meeting\",\n      \"2 Keep to this or the meeting will finish late\",\n      \"3 How the Chair should deal with disagreements\",\n      \"4 Someone who gets to the meeting after it has started\",\n      \"5 When someone goes off the point in a discussion\"]}\n ],\n \"boxesAndLists\": [\"Total 19\", \"Target 16+\"],\n \"pictures\": [\"word-square grid for 55.3 with rows 1-5 given first and last letters: a/a, t/e, t/y, l/r, d/n\"],\n \"unclassified\": [\"Your score /19\", \"Test Your Business Vocabulary in Use\"]}\n```"
+}

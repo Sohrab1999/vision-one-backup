@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "step": "A1-ELEM-S01",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "date": "2026-11-24",
+    "jalali": "۱۴۰۵/۹/۳",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S09 — trace 1a20f12648c22b15 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "بازیابی ۴۰ پیشا-گام (ریست پنهان ۴۰م — ff-only صفرتلفاتی — HEAD 193269b→5a329bf) — شواهد docs/qa/recovery40-proof-2026-11-24.json — آغاز گام: HEAD = 5a329bf = ریموت · porcelain ۰ · دیسک‌حقیقت آغاز = 107/489 (biz ۹۸/۹۸ · elem ۳/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs elem 1,2,3,4,5,6,7,8,9,10,11,12",
+  "result": {
+    "done": "DONE tyv-elem: captured=10 skipped=2 failed=0 → docs/qa/tyv-capture-elem/a1",
+    "captured": 10,
+    "skippedExisting": 2,
+    "skippedPages": [8, 12],
+    "skippedReason": "صفحات پراب قبلی intake A0 (۲۰۲۶-۱۱-۲۲) — checkpoint/resume — skip خودکار عین پیش‌بینی وضعیت گزارش S09 — نه خطا",
+    "failed": 0,
+    "singleRun": true,
+    "anomalies": "صفر — تک‌اجرایی تمیز (برخلاف S05 که دو اجرا داشت)"
+  },
+  "newPages": {
+    "pages": [1, 2, 3, 4, 5, 6, 7, 9, 10, 11],
+    "files": "page-001..007 + page-009..011.json (۱۰ JSON NEW) — probe page-008 (Test 1 The family) و page-012 (Test 5 Describing people) از قبل موجود — پوشش کامل صفحات ۱–۱۲ بدون شکاف",
+    "provenance": "هر ۱۰ صفحه با پروونانس کامل (renderSha256 · DPI=300 · model=z-ai vision CLI · promptVersion=tyv-a1-v1 · ownerCommand · attempts=≤3 · timestamp)"
+  },
+  "content": {
+    "footerOffset": "+۱ پابرجا (pdfPage−۱) — صفر ناسازگاری در صفحات شماره‌دار",
+    "footers": {
+      "p1": null, "p2": null, "p3": null, "p4": 3, "p5": 4, "p6": 5, "p7": 6, "p9": 8, "p10": 9, "p11": 10,
+      "nullNote": "footer=null ×۳ فقط p1–p3 (جلد و صفحات آغازین بدون شمارهٔ چاپی — ساختاری — مجاز طبق چک‌لیست دفتر §۱ — داوری G1)"
+    },
+    "structure": [
+      "p1 جلد رو (Test Your English Vocabulary in Use — Elementary — SECOND EDITION — ۱ picture + ۷ unclassified)",
+      "p2 صفحهٔ عنوان (۵ unclassified عنوانی + واترمارک چاپی فارسی «مركز آموزش زبان ايرانيان [?]» — همان خانوادهٔ واترمارک irLanguage ثبت‌شده در biz — عین خام دست‌نخورده — کاندید دوگذر G1)",
+      "p3 صفحهٔ copyright/انتشارات (۱۷ unclassified)",
+      "p4–p5 Contents (فهرست کامل ۶۰ تست — p4: ۴۳ boxesAndLists + footer=3 · p5: ادامهٔ فهرست Tests 36–59 با ۳۱ unclassified)",
+      "p6–p7 صفحات مقدمه/Introduction (۲۱ unclassified — خام)",
+      "p8 (پراب قبلی) Test 1 «The family»",
+      "p9 Test 2 «Birth, marriage and death» — ۴ تمرین/۳۶ آیتم",
+      "p10 Test 3 «Parts of the body» — ۳ تمرین/۳۰ آیتم/۸ باکس",
+      "p11 Test 4 «Clothes» — ۴ تمرین/۲۶ آیتم/۲ باکس",
+      "p12 (پراب قبلی) Test 5 «Describing people»"
+    ],
+    "totals": "۱۱ تمرین / ۹۲ آیتم / ۵۴ boxesAndLists / ۸ pictures / ۱ unclassified — [؟] فقط p2 ×۱ (واترمارک چاپی — ثبت دوگذر G1)"
+  },
+  "diskTruthAfter": {
+    "elem": "13/96 (صفحات ۱–۱۲ + پراب ۴۰)",
+    "a1Total": "117/489 (biz ۹۸/۹۸ کامل · elem ۱۳/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳) — بازشماری ls"
+  },
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده — لایهٔ A1 فقط کپچر خام",
+  "nextAllowedStep": "A1-ELEM-S02 = صفحات ۱۳–۲۴ elem (طبق دفتر گام‌های کوچک §۲ — دستهٔ دوم ۱۲صفحه‌ای) — سپس S03..S08 ⇒ PRI S01..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1"
+}

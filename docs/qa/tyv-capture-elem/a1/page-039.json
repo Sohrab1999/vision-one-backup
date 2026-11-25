@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 39,
+    "dpi": 300,
+    "renderSha256": "1c3f058a8b8d99280fed6b37d2823df94493df5c1702e09f1ec18d9a54bc7ace",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:41:38.956Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 38,
+    "testNumber": "32",
+    "testTitle": "Crime",
+    "exercises": [
+      {
+        "id": "32.1",
+        "marks": "10 marks",
+        "instruction": "Complete the grey boxes in the chart.",
+        "items": [
+          "Crime murder mugging 3 ...................... car theft",
+          "Person Example: murderer mugger terrorist 4 ......................",
+          "Action 1 to ...................... somebody 2 to ...................... somebody to attack somebody or a place for political reasons 5 to ...................... a car",
+          "Crime 6 ...................... shoplifting 9 ...................... drug dealing",
+          "Person 7 ...................... 8 ...................... burglar 10 drug ......................",
+          "Action to rob somebody or a place (e.g. a bank) steal things from a shop to break into a house/flat to sell drugs"
+        ]
+      },
+      {
+        "id": "32.2",
+        "marks": "12 marks",
+        "instruction": "Now use words from 32.1 to fill the gaps in these sentences.",
+        "items": [
+          "1 There was a ...................... in our street last night. Somebody ...................... into a house and ...................... a TV set, a DVD player and some cash.",
+          "2 Anna Frane’s dead body was found in the river. She had been ...................... . The ...................... was her ex-boyfriend.",
+          "3 ...................... is very easy in some shops, but many big stores have cameras to catch ...................... .",
+          "4 The bank in the High Street was ...................... yesterday. The ...................... escaped in a blue sports car.",
+          "5 A student was ...................... as she was walking home. A young man took her money and credit cards.",
+          "6 A car ...................... took my car from the office car park. There have been three ...................... there this month."
+        ]
+      },
+      {
+        "id": "32.3",
+        "marks": "8 marks",
+        "instruction": "True or false? Write T for true, F for false. If you write F, say why.",
+        "items": [
+          "1 If you are innocent you are not guilty. ......................",
+          "2 If you do something wrong (e.g. park your car in a ‘no parking’ area) you have to pay a fine. ......................",
+          "3 Sometimes people break and destroy things (e.g. telephone boxes, trees in the park). We call the people who do this crime vandalism. ......................",
+          "4 Arrest means that the police come and take somebody away because they think they are guilty of a crime. ......................",
+          "5 We call violence and criminal actions at football matches hooliganism. ......................",
+          "6 We call the place where people decide whether someone is guilty of a crime a sentence. ......................",
+          "7 We call the place you have to stay in for many years if you are guilty of a bad crime a prisoner. ......................",
+          "8 People who sell illegal drugs are called drug dealers. ......................"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Chart of eight illustrations of crimes (knife attack, bag snatch, armed terrorist, car break-in, robbery at table, shoplifting with DVDs sign, burglar at window, drugs and money)",
+      "'Your score /30' score box at bottom left"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 38,\n \"testNumber\": \"32\",\n \"testTitle\": \"Crime\",\n \"exercises\": [\n  {\"id\": \"32.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Complete the grey boxes in the chart.\",\n   \"items\": [\"Crime murder mugging 3 ...................... car theft\",\n             \"Person Example: murderer mugger terrorist 4 ......................\",\n             \"Action 1 to ...................... somebody 2 to ...................... somebody to attack somebody or a place for political reasons 5 to ...................... a car\",\n             \"Crime 6 ...................... shoplifting 9 ...................... drug dealing\",\n             \"Person 7 ...................... 8 ...................... burglar 10 drug ......................\",\n             \"Action to rob somebody or a place (e.g. a bank) steal things from a shop to break into a house/flat to sell drugs\"]},\n  {\"id\": \"32.2\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Now use words from 32.1 to fill the gaps in these sentences.\",\n   \"items\": [\"1 There was a ...................... in our street last night. Somebody ...................... into a house and ...................... a TV set, a DVD player and some cash.\",\n             \"2 Anna Frane’s dead body was found in the river. She had been ...................... . The ...................... was her ex-boyfriend.\",\n             \"3 ...................... is very easy in some shops, but many big stores have cameras to catch ...................... .\",\n             \"4 The bank in the High Street was ...................... yesterday. The ...................... escaped in a blue sports car.\",\n             \"5 A student was ...................... as she was walking home. A young man took her money and credit cards.\",\n             \"6 A car ...................... took my car from the office car park. There have been three ...................... there this month.\"]},\n  {\"id\": \"32.3\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"True or false? Write T for true, F for false. If you write F, say why.\",\n   \"items\": [\"1 If you are innocent you are not guilty. ......................\",\n             \"2 If you do something wrong (e.g. park your car in a ‘no parking’ area) you have to pay a fine. ......................\",\n             \"3 Sometimes people break and destroy things (e.g. telephone boxes, trees in the park). We call the people who do this crime vandalism. ......................\",\n             \"4 Arrest means that the police come and take somebody away because they think they are guilty of a crime. ......................\",\n             \"5 We call violence and criminal actions at football matches hooliganism. ......................\",\n             \"6 We call the place where people decide whether someone is guilty of a crime a sentence. ......................\",\n             \"7 We call the place you have to stay in for many years if you are guilty of a bad crime a prisoner. ......................\",\n             \"8 People who sell illegal drugs are called drug dealers. ......................\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"Chart of eight illustrations of crimes (knife attack, bag snatch, armed terrorist, car break-in, robbery at table, shoplifting with DVDs sign, burglar at window, drugs and money)\",\n              \"'Your score /30' score box at bottom left\"],\n \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

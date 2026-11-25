@@ -1,0 +1,99 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 54,
+    "dpi": 300,
+    "renderSha256": "9daa39610cc584547a591d4a6cae183720bab8c5495fd44c4ac196bd3ee64697",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:23:28.050Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 53,
+    "testNumber": "47",
+    "testTitle": "Moving",
+    "exercises": [
+      {
+        "id": "47.1",
+        "marks": "10 marks",
+        "instruction": "What is each person doing? Write a sentence, using one of the verbs from the box.",
+        "items": [
+          "Example: He's running.......",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ]
+      },
+      {
+        "id": "47.2",
+        "marks": "10 marks",
+        "instruction": "Choose the correct word to complete each sentence. Circle the correct answer.",
+        "items": [
+          "Example: We'll ......................... a bus to town.    a) arrive  b) take  c) go",
+          "1 Please could you ......................... me the bread.   a) carry  b) pass  c) take",
+          "2 Please be quick or we'll ......................... the train.   a) catch  b) take  c) miss",
+          "3 What time does the plane ......................... in Rome?   a) arrive  b) fly  c) get",
+          "4 He can ......................... a bus.   a) ride  b) drive  c) go",
+          "5 How did you ......................... to Paris?   a) take  b) get  c) arrive",
+          "6 Can you ......................... a horse?   a) drive  b) go  c) ride",
+          "7 Let's ......................... the underground.   a) go  b) take  c) fly",
+          "8 If we run, we'll ......................... the bus.   a) miss  b) go  c) catch",
+          "9 Pilots ......................... planes.   a) fly  b) drive  c) ride",
+          "10 We can ......................... to Munich by train.   a) take  b) pass  c) go"
+        ]
+      },
+      {
+        "id": "47.3",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps with the correct form of the words in the box (e.g. go, goes or going).",
+        "items": [
+          "Example: I love ........going......... places by ship.",
+          "1 At the sports club the children enjoy ......................... round the track, ......................... in the pool and .........................  their bikes.",
+          "2 You need a licence to ......................... a car or ......................... a plane.",
+          "3 On Friday evening we all go ......................... at a nightclub.",
+          "4 We must leave now if we want to ......................... the early train.",
+          "5 Waiters get a lot of exercise. They ......................... miles every day as they .........................  food from the kitchen to the tables.",
+          "6 I don't like heights – I'm afraid of ......................... ."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "carry  climb  dance  drive  fall  fly  jump  ride  run [?]  swim  walk",
+      "carry  catch  dance  drive  fall  fly  go  ride  run  swim  walk"
+    ],
+    "pictures": [
+      "'Example:' line-drawing of a man running (He's running)",
+      "picture 1: man driving a car with '120' sign",
+      "picture 2: boy riding a horse",
+      "picture 3: woman walking in countryside",
+      "picture 4: woman falling down",
+      "picture 5: boy jumping over a hurdle",
+      "picture 6: person falling into water",
+      "picture 7: ballet dancer dancing",
+      "picture 8: pilot flying a small plane",
+      "picture 9: child climbing a tree",
+      "picture 10: man carrying a box / walking with luggage"
+    ],
+    "unclassified": [
+      "www.irlanguage.com",
+      "Language مرکز آموزش زبان ایرانیان",
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 53,\n  \"testNumber\": \"47\",\n  \"testTitle\": \"Moving\",\n  \"exercises\": [\n    {\n      \"id\": \"47.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"What is each person doing? Write a sentence, using one of the verbs from the box.\",\n      \"items\": [\n        \"Example: He's running.......\",\n        \"1\",\n        \"2\",\n        \"3\",\n        \"4\",\n        \"5\",\n        \"6\",\n        \"7\",\n        \"8\",\n        \"9\",\n        \"10\"\n      ]\n    },\n    {\n      \"id\": \"47.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Choose the correct word to complete each sentence. Circle the correct answer.\",\n      \"items\": [\n        \"Example: We'll ......................... a bus to town.    a) arrive  b) take  c) go\",\n        \"1 Please could you ......................... me the bread.   a) carry  b) pass  c) take\",\n        \"2 Please be quick or we'll ......................... the train.   a) catch  b) take  c) miss\",\n        \"3 What time does the plane ......................... in Rome?   a) arrive  b) fly  c) get\",\n        \"4 He can ......................... a bus.   a) ride  b) drive  c) go\",\n        \"5 How did you ......................... to Paris?   a) take  b) get  c) arrive\",\n        \"6 Can you ......................... a horse?   a) drive  b) go  c) ride\",\n        \"7 Let's ......................... the underground.   a) go  b) take  c) fly\",\n        \"8 If we run, we'll ......................... the bus.   a) miss  b) go  c) catch\",\n        \"9 Pilots ......................... planes.   a) fly  b) drive  c) ride\",\n        \"10 We can ......................... to Munich by train.   a) take  b) pass  c) go\"\n      ]\n    },\n    {\n      \"id\": \"47.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Fill the gaps with the correct form of the words in the box (e.g. go, goes or going).\",\n      \"items\": [\n        \"Example: I love ........going......... places by ship.\",\n        \"1 At the sports club the children enjoy ......................... round the track, ......................... in the pool and .........................  their bikes.\",\n        \"2 You need a licence to ......................... a car or ......................... a plane.\",\n        \"3 On Friday evening we all go ......................... at a nightclub.\",\n        \"4 We must leave now if we want to ......................... the early train.\",\n        \"5 Waiters get a lot of exercise. They ......................... miles every day as they .........................  food from the kitchen to the tables.\",\n        \"6 I don't like heights – I'm afraid of ......................... .\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"carry  climb  dance  drive  fall  fly  jump  ride  run [?]  swim  walk\",\n    \"carry  catch  dance  drive  fall  fly  go  ride  run  swim  walk\"\n  ],\n  \"pictures\": [\n    \"'Example:' line-drawing of a man running (He's running)\",\n    \"picture 1: man driving a car with '120' sign\",\n    \"picture 2: boy riding a horse\",\n    \"picture 3: woman walking in countryside\",\n    \"picture 4: woman falling down\",\n    \"picture 5: boy jumping over a hurdle\",\n    \"picture 6: person falling into water\",\n    \"picture 7: ballet dancer dancing\",\n    \"picture 8: pilot flying a small plane\",\n    \"picture 9: child climbing a tree\",\n    \"picture 10: man carrying a box / walking with luggage\"\n  ],\n  \"unclassified\": [\n    \"www.irlanguage.com\",\n    \"Language مرکز آموزش زبان ایرانیان\",\n    \"Test Your English Vocabulary in Use Elementary\",\n    \"Your score /30\"\n  ]\n}\n```"
+}
