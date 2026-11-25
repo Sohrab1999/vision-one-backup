@@ -1,0 +1,70 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 63,
+    "dpi": 300,
+    "renderSha256": "6546f0dd74d8c480aca496ee1e3b9981501695f13cd32da78271bbf1370cd8a2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:56:48.749Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 62,
+    "testNumber": "56",
+    "testTitle": "Common adjectives 2: People",
+    "exercises": [
+      {
+        "id": "56.1",
+        "marks": "10 marks",
+        "instruction": "Put these adjectives into the correct columns.",
+        "items": [
+          "Positive | Negative",
+          "nice"
+        ]
+      },
+      {
+        "id": "56.2",
+        "marks": "10 marks",
+        "instruction": "Circle the correct underlined adjectives in this email.",
+        "items": [
+          "Hi Jenna,",
+          "Before you come with us on our club picnic, let me tell you about some of the people in the group. Harry, our club president, is a (nice)/horrible man – everybody likes him. And I like Karen too – she’s (1) lovely/selfish. I don’t like Brenda – she’s (2) wonderful/horrible, but other people think she’s okay. I don’t want to sit near Robert – he’s a (3) difficult/wonderful person. Henry is always very (4) selfish/kind to me, so we can sit with him, and we all like Jeremy. We think he’s a (5) wonderful/horrible person. Krishnan is always laughing. He’s such a (6) happy/difficult person. Jo is home from university – she’s (7) naughty/intelligent, just like her older sister. The only problem is, she’s bringing her little brother Jack and her little sister Emma with her. Jack is very (8) wonderful/naughty at school. The teacher often has to send him to the head teacher’s office, Jo tells me. The good news is that Emma is a (9) well-behaved/difficult child, and all her teachers like her.",
+          "By the way, it was very (10) kind/stupid of me to forget your mother’s birthday. I hope she wasn’t upset?",
+          "See you Saturday!",
+          "Love,",
+          "Barbara"
+        ]
+      },
+      {
+        "id": "56.3",
+        "marks": "10 marks",
+        "instruction": "Find the opposites of the words in Box A in Box B.",
+        "items": [
+          "A",
+          "B"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "nice kind horrible unhappy wonderful stupid difficult easy-going lovely selfish naughty",
+      "kind happy lovely stupid easy-going",
+      "intelligent difficult unhappy selfish horrible"
+    ],
+    "pictures": [
+      "Two-column table with headers 'Positive' and 'Negative'; 'nice' written in Positive column",
+      "Email window illustration with toolbar icons labelled Delete, Reply, Reply All, Forward, Print containing the email text"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 62,\n \"testNumber\": \"56\",\n \"testTitle\": \"Common adjectives 2: People\",\n \"exercises\": [\n  {\"id\": \"56.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Put these adjectives into the correct columns.\",\n   \"items\": [\"Positive | Negative\", \"nice\"]},\n  {\"id\": \"56.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Circle the correct underlined adjectives in this email.\",\n   \"items\": [\"Hi Jenna,\",\n    \"Before you come with us on our club picnic, let me tell you about some of the people in the group. Harry, our club president, is a (nice)/horrible man – everybody likes him. And I like Karen too – she’s (1) lovely/selfish. I don’t like Brenda – she’s (2) wonderful/horrible, but other people think she’s okay. I don’t want to sit near Robert – he’s a (3) difficult/wonderful person. Henry is always very (4) selfish/kind to me, so we can sit with him, and we all like Jeremy. We think he’s a (5) wonderful/horrible person. Krishnan is always laughing. He’s such a (6) happy/difficult person. Jo is home from university – she’s (7) naughty/intelligent, just like her older sister. The only problem is, she’s bringing her little brother Jack and her little sister Emma with her. Jack is very (8) wonderful/naughty at school. The teacher often has to send him to the head teacher’s office, Jo tells me. The good news is that Emma is a (9) well-behaved/difficult child, and all her teachers like her.\",\n    \"By the way, it was very (10) kind/stupid of me to forget your mother’s birthday. I hope she wasn’t upset?\",\n    \"See you Saturday!\",\n    \"Love,\",\n    \"Barbara\"]},\n  {\"id\": \"56.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Find the opposites of the words in Box A in Box B.\",\n   \"items\": [\"A\", \"B\"]}\n ],\n \"boxesAndLists\": [\"nice kind horrible unhappy wonderful stupid difficult easy-going lovely selfish naughty\",\n  \"kind happy lovely stupid easy-going\",\n  \"intelligent difficult unhappy selfish horrible\"],\n \"pictures\": [\"Two-column table with headers 'Positive' and 'Negative'; 'nice' written in Positive column\",\n  \"Email window illustration with toolbar icons labelled Delete, Reply, Reply All, Forward, Print containing the email text\"],\n \"unclassified\": [\"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

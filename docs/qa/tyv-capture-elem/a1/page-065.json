@@ -1,0 +1,89 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 65,
+    "dpi": 300,
+    "renderSha256": "386a54ec4027f52700944ccf4b3739db3643475953d8b12aad333de9204dfc7b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:57:12.042Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 64,
+    "testNumber": "58",
+    "testTitle": "Prefixes",
+    "exercises": [
+      {
+        "id": "58.1",
+        "marks": "10 marks",
+        "instruction": "Read the instructions. Use a prefix with the word on the left to complete the table.",
+        "items": [
+          "possible | Make an adjective with the opposite meaning. | impossible",
+          "1 war | Make an adjective meaning 'before the war'.",
+          "2 smoking | Make an adjective which means 'you must not smoke here'.",
+          "3 price | Make an adjective that means '50% of the price'.",
+          "4 send | Make a verb that means 'send something again'.",
+          "5 girlfriend | Make a noun that means 'someone who was someone's girlfriend but is not any more'.",
+          "6 happy | Make an adjective with the opposite meaning.",
+          "7 comfortable | Make an adjective with the opposite meaning.",
+          "8 tell | Make a verb that means 'tell something again'.",
+          "9 formal | Make an adjective with the opposite meaning.",
+          "10 finished | Make an adjective with the opposite meaning."
+        ]
+      },
+      {
+        "id": "58.2",
+        "marks": "10 marks",
+        "instruction": "Rewrite the sentences, using a word with the prefix given. Do not change the meaning.",
+        "items": [
+          "Example: Mr Trottman is not popular with the students. (un)",
+          "Mr Trottman is unpopular with the students.",
+          "1 He was the president of the club but he isn't any more. (ex)",
+          "2 I prefer drinks that have no alcohol. (non)",
+          "3 I think you should write your essay again. (re)",
+          "4 He does not seem to be happy in his job. (un)",
+          "5 The restaurant has meals for children which cost only half the normal price. (half)",
+          "6 I don't like to give homework that I haven't finished to my teacher. (un)",
+          "7 The years before they start school are very important for little children. (pre)",
+          "8 It is not possible for anyone to live for 200 years. (im)",
+          "9 You can wear clothes that are not formal to the party. (in)",
+          "10 This chair is not comfortable. (un)"
+        ]
+      },
+      {
+        "id": "58.3",
+        "marks": "10 marks",
+        "instruction": "Correct the mistakes.",
+        "items": [
+          "1 This machine is insafe. Don't use it.",
+          "2 Every sentence in this section has something non-correct in it.",
+          "3 It is inpossible at the moment for human beings to travel to other galaxies.",
+          "4 Do you ever get ex-exam nerves?",
+          "5 I still have some inread books from the library. I must read them.",
+          "6 The lessons are very unformal and we like the teacher very much.",
+          "7 Mike isn't my boss any more. I have a new one. Mike is my pre-boss.",
+          "8 Years ago, you always had to say if you wanted a smoking or unsmoking seat on a plane.",
+          "9 It is only a halfhour drive from here to the airport.",
+          "10 I unaddressed the letter because it was for a person who had moved to a new address."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "table in 58.1 with columns 'Word', 'Instruction', 'Answer'; first row completed by hand with 'impossible'"
+    ],
+    "unclassified": [
+      "Your score",
+      "/30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 64,\n  \"testNumber\": \"58\",\n  \"testTitle\": \"Prefixes\",\n  \"exercises\": [\n    {\n      \"id\": \"58.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Read the instructions. Use a prefix with the word on the left to complete the table.\",\n      \"items\": [\n        \"possible | Make an adjective with the opposite meaning. | impossible\",\n        \"1 war | Make an adjective meaning 'before the war'.\",\n        \"2 smoking | Make an adjective which means 'you must not smoke here'.\",\n        \"3 price | Make an adjective that means '50% of the price'.\",\n        \"4 send | Make a verb that means 'send something again'.\",\n        \"5 girlfriend | Make a noun that means 'someone who was someone's girlfriend but is not any more'.\",\n        \"6 happy | Make an adjective with the opposite meaning.\",\n        \"7 comfortable | Make an adjective with the opposite meaning.\",\n        \"8 tell | Make a verb that means 'tell something again'.\",\n        \"9 formal | Make an adjective with the opposite meaning.\",\n        \"10 finished | Make an adjective with the opposite meaning.\"\n      ]\n    },\n    {\n      \"id\": \"58.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Rewrite the sentences, using a word with the prefix given. Do not change the meaning.\",\n      \"items\": [\n        \"Example: Mr Trottman is not popular with the students. (un)\",\n        \"Mr Trottman is unpopular with the students.\",\n        \"1 He was the president of the club but he isn't any more. (ex)\",\n        \"2 I prefer drinks that have no alcohol. (non)\",\n        \"3 I think you should write your essay again. (re)\",\n        \"4 He does not seem to be happy in his job. (un)\",\n        \"5 The restaurant has meals for children which cost only half the normal price. (half)\",\n        \"6 I don't like to give homework that I haven't finished to my teacher. (un)\",\n        \"7 The years before they start school are very important for little children. (pre)\",\n        \"8 It is not possible for anyone to live for 200 years. (im)\",\n        \"9 You can wear clothes that are not formal to the party. (in)\",\n        \"10 This chair is not comfortable. (un)\"\n      ]\n    },\n    {\n      \"id\": \"58.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Correct the mistakes.\",\n      \"items\": [\n        \"1 This machine is insafe. Don't use it.\",\n        \"2 Every sentence in this section has something non-correct in it.\",\n        \"3 It is inpossible at the moment for human beings to travel to other galaxies.\",\n        \"4 Do you ever get ex-exam nerves?\",\n        \"5 I still have some inread books from the library. I must read them.\",\n        \"6 The lessons are very unformal and we like the teacher very much.\",\n        \"7 Mike isn't my boss any more. I have a new one. Mike is my pre-boss.\",\n        \"8 Years ago, you always had to say if you wanted a smoking or unsmoking seat on a plane.\",\n        \"9 It is only a halfhour drive from here to the airport.\",\n        \"10 I unaddressed the letter because it was for a person who had moved to a new address.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"table in 58.1 with columns 'Word', 'Instruction', 'Answer'; first row completed by hand with 'impossible'\"\n  ],\n  \"unclassified\": [\n    \"Your score\",\n    \"/30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

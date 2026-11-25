@@ -1,0 +1,140 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 69,
+    "dpi": 300,
+    "renderSha256": "5040ce2b3734ef5236f0b6ca142ef82c5dd1fa875e5d162d08230586e3400ba5",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:58:00.930Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 68,
+    "testNumber": "3-5",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "3.1",
+        "marks": "(10 marks: ½ for labelling each picture and ½ for each word found)",
+        "instruction": "",
+        "items": [
+          "1 shoulder",
+          "2 stomach",
+          "3 finger",
+          "4 thumb",
+          "5 knee",
+          "6 nose",
+          "7 mouth",
+          "8 neck",
+          "9 heart",
+          "10 leg"
+        ]
+      },
+      {
+        "id": "3.2",
+        "marks": "(14 marks)",
+        "instruction": "",
+        "items": [
+          "1 eyes; ears",
+          "2 hair; nails",
+          "3 chest; neck",
+          "4 waist; hips",
+          "5 blood",
+          "6 brain",
+          "7 skin",
+          "8 thumb",
+          "9 back/side/front",
+          "10 like 'ch' in chemist"
+        ]
+      },
+      {
+        "id": "3.3",
+        "marks": "(6 marks)",
+        "instruction": "",
+        "items": [
+          "1 Her hair is black.",
+          "2 a pain in his side",
+          "3 two teeth",
+          "4 Please wash your hands",
+          "5 My feet hurt. (or My foot hurts.)",
+          "6 put their hands up"
+        ]
+      },
+      {
+        "id": "4.1",
+        "marks": "(12 marks)",
+        "instruction": "",
+        "items": [
+          "1 socks",
+          "2 belt",
+          "3 shirt",
+          "4 tie",
+          "5 boots",
+          "6 skirt",
+          "7 coat",
+          "8 scarf",
+          "9 hat",
+          "10 gloves",
+          "11 T-shirt",
+          "12 trainers"
+        ]
+      },
+      {
+        "id": "4.2",
+        "marks": "(5 marks)",
+        "instruction": "",
+        "items": [
+          "1 why 2 run 3 note 4 suit 5 half"
+        ]
+      },
+      {
+        "id": "4.3",
+        "marks": "(5 marks)",
+        "instruction": "",
+        "items": [
+          "trousers tights jeans shorts sunglasses"
+        ]
+      },
+      {
+        "id": "4.4",
+        "marks": "(8 marks)",
+        "instruction": "",
+        "items": [
+          "1 when you get up",
+          "2 a ring",
+          "3 a woman",
+          "4 a suit",
+          "5 jumper",
+          "6 Robert is carrying an umbrella.",
+          "7 Lisa has put a skirt on.",
+          "8 At night, I get undressed and go to bed."
+        ]
+      },
+      {
+        "id": "5.1",
+        "marks": "(10 marks: ½ if you do not put the word in all the possible columns)",
+        "instruction": "",
+        "items": []
+      }
+    ],
+    "boxesAndLists": [
+      "A T M T O O T H / S H O U L D E R / T U U N E C K F / O M T N M O M I / M B H O P A R N / A G E S A L E G / C A R E K N E E / H E A R T I P R",
+      "Eyes: dark, green, brown | Skin: dark, fair, brown | Hair: dark, fair, brown, short, long | Height and weight: fat, short, slim, tall, thin*"
+    ],
+    "pictures": [
+      "letter grid (wordsearch answer grid) with circled words: TOOTH, SHOULDER, NECK, LEG, KNEE, HEART"
+    ],
+    "unclassified": [
+      "* We can also talk about 'thin hair' if someone does not have very much hair.",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 68,\n  \"testNumber\": \"3-5\",\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"3.1\",\n      \"marks\": \"(10 marks: ½ for labelling each picture and ½ for each word found)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 shoulder\", \"2 stomach\", \"3 finger\", \"4 thumb\",\n        \"5 knee\", \"6 nose\", \"7 mouth\", \"8 neck\",\n        \"9 heart\", \"10 leg\"\n      ]\n    },\n    {\n      \"id\": \"3.2\",\n      \"marks\": \"(14 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 eyes; ears\", \"2 hair; nails\", \"3 chest; neck\", \"4 waist; hips\",\n        \"5 blood\", \"6 brain\", \"7 skin\",\n        \"8 thumb\", \"9 back/side/front\", \"10 like 'ch' in chemist\"\n      ]\n    },\n    {\n      \"id\": \"3.3\",\n      \"marks\": \"(6 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 Her hair is black.\", \"2 a pain in his side\", \"3 two teeth\",\n        \"4 Please wash your hands\", \"5 My feet hurt. (or My foot hurts.)\", \"6 put their hands up\"\n      ]\n    },\n    {\n      \"id\": \"4.1\",\n      \"marks\": \"(12 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 socks\", \"2 belt\", \"3 shirt\", \"4 tie\", \"5 boots\", \"6 skirt\",\n        \"7 coat\", \"8 scarf\", \"9 hat\", \"10 gloves\", \"11 T-shirt\", \"12 trainers\"\n      ]\n    },\n    {\n      \"id\": \"4.2\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\"1 why 2 run 3 note 4 suit 5 half\"]\n    },\n    {\n      \"id\": \"4.3\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\"trousers tights jeans shorts sunglasses\"]\n    },\n    {\n      \"id\": \"4.4\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 when you get up\", \"2 a ring\", \"3 a woman\", \"4 a suit\",\n        \"5 jumper\", \"6 Robert is carrying an umbrella.\", \"7 Lisa has put a skirt on.\",\n        \"8 At night, I get undressed and go to bed.\"\n      ]\n    },\n    {\n      \"id\": \"5.1\",\n      \"marks\": \"(10 marks: ½ if you do not put the word in all the possible columns)\",\n      \"instruction\": \"\",\n      \"items\": []\n    }\n  ],\n  \"boxesAndLists\": [\n    \"A T M T O O T H / S H O U L D E R / T U U N E C K F / O M T N M O M I / M B H O P A R N / A G E S A L E G / C A R E K N E E / H E A R T I P R\",\n    \"Eyes: dark, green, brown | Skin: dark, fair, brown | Hair: dark, fair, brown, short, long | Height and weight: fat, short, slim, tall, thin*\"\n  ],\n  \"pictures\": [\n    \"letter grid (wordsearch answer grid) with circled words: TOOTH, SHOULDER, NECK, LEG, KNEE, HEART\"\n  ],\n  \"unclassified\": [\n    \"* We can also talk about 'thin hair' if someone does not have very much hair.\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

@@ -1,0 +1,110 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 71,
+    "dpi": 300,
+    "renderSha256": "b30957a32ee7e8abdc5e328005755fd940ca20f7a1189b7615b049032c27beb2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:58:25.826Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 70,
+    "testNumber": "8",
+    "testTitle": "Test 8",
+    "exercises": [
+      {
+        "id": "8.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 Good morning.",
+          "2 Good evening. (Note: Not 'Goodnight'. You say 'Goodnight' when you leave, not when you arrive.)",
+          "3 Cheers, everybody!",
+          "4 Excuse me, please.",
+          "5 Bless you!"
+        ]
+      },
+      {
+        "id": "8.2",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 Hello/Hi",
+          "2 Hi/Hello",
+          "3 How are you?",
+          "4 And you?",
+          "5 Not too bad, thanks.",
+          "6 Happy birthday!",
+          "7 Congratulations!",
+          "8 good luck!",
+          "9 see you soon.",
+          "10 Goodbye."
+        ]
+      },
+      {
+        "id": "8.3",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 LIM: Chinese New Year starts this week.",
+          "DEREK: Oh really? Happy New Year!",
+          "2 DIANE: Here's the newspaper you asked me to get.",
+          "NORBERT: Thanks / Thank you.",
+          "DIANE: No problem.",
+          "3 RUTH: This is my last day in the office till December 28th.",
+          "WILL: Oh, well, I'll say Happy/Merry Christmas, then.",
+          "RUTH: Thanks. You too.",
+          "4 GEOFF: I swam a kilometre today.",
+          "FRAN: Well done! You must be very fit.",
+          "GEOFF: Yeah, I feel good.",
+          "5 BETH: It's my birthday today.",
+          "SONYA: Oh, happy birthday!",
+          "BETH: Thank you."
+        ]
+      },
+      {
+        "id": "9.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 Why",
+          "2 really",
+          "3 mind",
+          "4 up",
+          "5 What",
+          "6 Let's",
+          "7 around",
+          "8 anyway",
+          "9 dear",
+          "10 Absolutely"
+        ]
+      },
+      {
+        "id": "9.2",
+        "marks": "(10 marks: 1 for completing the expression and 1 for matching it to the right situation)",
+        "instruction": "",
+        "items": [
+          "1 Well done!",
+          "2 Hurry up!",
+          "3 Look out!",
+          "4 What a pity!",
+          "5 It doesn't matter!"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 9"
+    ]
+  },
+  "rawModelText": "{\"footer\": 70,\n \"testNumber\": \"8\",\n \"testTitle\": \"Test 8\",\n \"exercises\": [\n   {\"id\": \"8.1\",\n    \"marks\": \"(10 marks)\",\n    \"instruction\": \"\",\n    \"items\": [\"1 Good morning.\", \"2 Good evening. (Note: Not 'Goodnight'. You say 'Goodnight' when you leave, not when you arrive.)\", \"3 Cheers, everybody!\", \"4 Excuse me, please.\", \"5 Bless you!\"]},\n   {\"id\": \"8.2\",\n    \"marks\": \"(10 marks)\",\n    \"instruction\": \"\",\n    \"items\": [\"1 Hello/Hi\", \"2 Hi/Hello\", \"3 How are you?\", \"4 And you?\", \"5 Not too bad, thanks.\", \"6 Happy birthday!\", \"7 Congratulations!\", \"8 good luck!\", \"9 see you soon.\", \"10 Goodbye.\"]},\n   {\"id\": \"8.3\",\n    \"marks\": \"(10 marks)\",\n    \"instruction\": \"\",\n    \"items\": [\"1 LIM: Chinese New Year starts this week.\", \"DEREK: Oh really? Happy New Year!\", \"2 DIANE: Here's the newspaper you asked me to get.\", \"NORBERT: Thanks / Thank you.\", \"DIANE: No problem.\", \"3 RUTH: This is my last day in the office till December 28th.\", \"WILL: Oh, well, I'll say Happy/Merry Christmas, then.\", \"RUTH: Thanks. You too.\", \"4 GEOFF: I swam a kilometre today.\", \"FRAN: Well done! You must be very fit.\", \"GEOFF: Yeah, I feel good.\", \"5 BETH: It's my birthday today.\", \"SONYA: Oh, happy birthday!\", \"BETH: Thank you.\"]},\n   {\"id\": \"9.1\",\n    \"marks\": \"(10 marks)\",\n    \"instruction\": \"\",\n    \"items\": [\"1 Why\", \"2 really\", \"3 mind\", \"4 up\", \"5 What\", \"6 Let's\", \"7 around\", \"8 anyway\", \"9 dear\", \"10 Absolutely\"]},\n   {\"id\": \"9.2\",\n    \"marks\": \"(10 marks: 1 for completing the expression and 1 for matching it to the right situation)\",\n    \"instruction\": \"\",\n    \"items\": [\"1 Well done!\", \"2 Hurry up!\", \"3 Look out!\", \"4 What a pity!\", \"5 It doesn't matter!\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [],\n \"unclassified\": [\"Test 9\"]\n}"
+}
