@@ -21,7 +21,7 @@
 
 ## ۲) اسناد و فایل‌های بررسی‌شده
 
-**اسناد:** `docs/SNAPSHOT.md` · `worklog.md` (انتها) · `نقشه راه ها/نقشه-راه-جامع-توسعه-۲۰۲۶.md` (بخش فاز ۱۴ + یادداشت‌های تاریخ‌دار) · سند مشخصات UX (D1-D8، §۶/§۷/§۱۴/§۱۵/§۱۶، پیوست‌های ب/ب-۲/ب-۳/ب-۴) · QA گام ۱ و ۲ · `نقشه راه ها/گزارش-کشف-نمایش-واژه-در-جمله-واقعی.md` (بندهای ساختار داده §۲).
+**اسناد:** `docs/SNAPSHOT.md` · `worklog.md` (انتها) · `نقشه راه ها/نقشه-راه-جامع-توسعه-۲۰۲۶.md` (بخش فاز ۱۴ + یادداشت‌های تاریخ‌دار) · سند مشخصات UX (D1-D8، §۶/§۷/§۱۴/§۱۵/§۱۶، پیوست‌های ب/ب-۲/ب-۳/ب-۴) · QA گام ۱ و ۲ · `نقشه راه ها/گزارش-ها/گزارش-کشف-نمایش-واژه-در-جمله-واقعی.md` (بندهای ساختار داده §۲).
 
 **کد:** `src/lib/word-in-context.ts` (کامل — ۷۲۲ خط) · `src/components/book/word-context-section.tsx` (کامل) · `src/components/book/word-lookup.tsx` (دو نقطهٔ اتصال — خطوط ۶۷۰ و ۶۷۹) · `src/lib/cross-book-vocab.ts` (GRADE_RANK/UNGRADED_ORDER/proximityRank/isGradedBookId) · `src/data/books/registry.ts` (متای ۱۱ کتاب) · `src/data/{hill-*,collocations}/` (ساختار و نمونه‌ها) · `public/sw.js` (استراتژی کش) · `scripts/qa/word-in-context-wave2-qa.ts` (ادعاهای دامنه).
 

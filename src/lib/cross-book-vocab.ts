@@ -62,7 +62,7 @@ const GRADE_RANK: Partial<Record<BookId, number>> = {
 };
 
 /** ترتیب پایدار کتاب‌های بی‌پایه — همیشه بعد از کتاب‌های مدرسه‌ای */
-const UNGRADED_ORDER: BookId[] = ["collocations", "hill-intro", "hill-elem", "hill-inter", "hill-adv"];
+const UNGRADED_ORDER: BookId[] = ["collocations", "hill-intro", "hill-elem", "hill-inter", "hill-adv", "viu-elem", "viu-preint", "viu-upper", "viu-advanced"];
 
 /** رتبهٔ نزدیکی: هرچه کمتر، نزدیک‌تر. کتاب‌های بی‌پایه همیشه بعد از مدرسه‌ای‌ها (۱۰۰+) */
 export function proximityRank(active: BookId, other: BookId): number {
@@ -206,6 +206,30 @@ const LIGHT_LOADERS: Partial<Record<BookId, () => Promise<BookLightIndex>>> = {
   "hill-adv": async () => {
     const v = await import("../data/hill-adv/vocab");
     return buildIndex(v.VOCAB_ALL, [], [], v.VOCAB_LESSONS);
+  },
+  // VIU Elementary (فاز ۳ + دیکشنری Exact-Sense فاز R3) — فقط ماژول‌های سبک واژگان (عین الگوی کتاب‌های hill)
+  "viu-elem": async () => {
+    const v = await import("../data/viu-elem/vocab");
+    const d = await import("../data/viu-elem/dictionary");
+    return buildIndex(v.VOCAB_ALL, d.DICTIONARY, [], v.VOCAB_LESSONS);
+  },
+  // VIU Pre-int & Int (فاز ۴ + دیکشنری Exact-Sense فاز R3) — فقط ماژول‌های سبک واژگان (عین الگوی کتاب‌های hill)
+  "viu-preint": async () => {
+    const v = await import("../data/viu-preint/vocab");
+    const d = await import("../data/viu-preint/dictionary");
+    return buildIndex(v.VOCAB_ALL, d.DICTIONARY, [], v.VOCAB_LESSONS);
+  },
+  // VIU Upper-intermediate (فاز ۵ + دیکشنری Exact-Sense فاز R3) — فقط ماژول‌های سبک واژگان (عین الگوی کتاب‌های hill)
+  "viu-upper": async () => {
+    const v = await import("../data/viu-upper/vocab");
+    const d = await import("../data/viu-upper/dictionary");
+    return buildIndex(v.VOCAB_ALL, d.DICTIONARY, [], v.VOCAB_LESSONS);
+  },
+  // VIU Advanced (فاز A5 کتاب چهارم) — فقط ماژول‌های سبک واژگان (عین الگوی viu-upper)
+  "viu-advanced": async () => {
+    const v = await import("../data/viu-advanced/vocab");
+    const d = await import("../data/viu-advanced/dictionary");
+    return buildIndex(v.VOCAB_ALL, d.DICTIONARY, [], v.VOCAB_LESSONS);
   },
 };
 
