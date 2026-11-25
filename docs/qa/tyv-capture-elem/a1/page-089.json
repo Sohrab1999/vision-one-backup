@@ -1,0 +1,138 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 89,
+    "dpi": 300,
+    "renderSha256": "9e268b6e5090b83d41d21dc7f69b6c6f6e95a207a82af420f0001f0b70eb97db",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:32:15.918Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 88,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "50.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 June",
+          "2 December",
+          "3 August",
+          "4 January",
+          "5 July",
+          "6 October",
+          "7 February",
+          "8 September",
+          "9 April",
+          "10 November"
+        ]
+      },
+      {
+        "id": "50.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 f   2 k   [3 g]   4 h   5 j   6 d   7 i   8 e   9 b   10 c   11 a"
+        ]
+      },
+      {
+        "id": "50.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 after",
+          "2 in; in",
+          "3 at; on; on; for",
+          "4 in; in",
+          "5 before",
+          "6 in"
+        ]
+      },
+      {
+        "id": "51.1",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 o'clock",
+          "2 hours ago",
+          "3 for two hours / since two o'clock"
+        ]
+      },
+      {
+        "id": "51.2",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 May",
+          "2 March",
+          "3 February",
+          "4 Bill is on holiday for two weeks / for a fortnight.",
+          "5 23 April"
+        ]
+      },
+      {
+        "id": "51.3",
+        "marks": "(10 marks: occasionally and now and then are very similar, so give yourself the mark if you put them the other way round.)",
+        "instruction": null,
+        "items": []
+      },
+      {
+        "id": "51.4",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 never; always",
+          "2 now and then; often",
+          "3 rarely; usually",
+          "4 not often; occasionally",
+          "5 Usually; sometimes"
+        ]
+      },
+      {
+        "id": "51.5",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 At; moment; twice",
+          "2 in a; soon",
+          "3 once; recently",
+          "4 the past",
+          "5 the future"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "every time",
+      "always",
+      "usually",
+      "often",
+      "sometimes",
+      "occasionally",
+      "now and then",
+      "not often",
+      "rarely",
+      "very rarely",
+      "never",
+      "not at all"
+    ],
+    "pictures": [
+      "staircase/frequency-scale diagram with adverbs of frequency labelled on each step, from 'not at all' (bottom) to 'every time' (top)"
+    ],
+    "unclassified": [
+      "Test 50",
+      "Test 51",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 88,\n \"testNumber\": null,\n \"testTitle\": null,\n \"exercises\": [\n  {\"id\": \"50.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 June\", \"2 December\", \"3 August\", \"4 January\", \"5 July\", \"6 October\", \"7 February\", \"8 September\", \"9 April\", \"10 November\"]},\n  {\"id\": \"50.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 f   2 k   [3 g]   4 h   5 j   6 d   7 i   8 e   9 b   10 c   11 a\"]},\n  {\"id\": \"50.3\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 after\", \"2 in; in\", \"3 at; on; on; for\", \"4 in; in\", \"5 before\", \"6 in\"]},\n  {\"id\": \"51.1\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\"1 o'clock\", \"2 hours ago\", \"3 for two hours / since two o'clock\"]},\n  {\"id\": \"51.2\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\"1 May\", \"2 March\", \"3 February\", \"4 Bill is on holiday for two weeks / for a fortnight.\", \"5 23 April\"]},\n  {\"id\": \"51.3\", \"marks\": \"(10 marks: occasionally and now and then are very similar, so give yourself the mark if you put them the other way round.)\", \"instruction\": null, \"items\": []},\n  {\"id\": \"51.4\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\"1 never; always\", \"2 now and then; often\", \"3 rarely; usually\", \"4 not often; occasionally\", \"5 Usually; sometimes\"]},\n  {\"id\": \"51.5\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\"1 At; moment; twice\", \"2 in a; soon\", \"3 once; recently\", \"4 the past\", \"5 the future\"]}\n ],\n \"boxesAndLists\": [\"every time\", \"always\", \"usually\", \"often\", \"sometimes\", \"occasionally\", \"now and then\", \"not often\", \"rarely\", \"very rarely\", \"never\", \"not at all\"],\n \"pictures\": [\"staircase/frequency-scale diagram with adverbs of frequency labelled on each step, from 'not at all' (bottom) to 'every time' (top)\"],\n \"unclassified\": [\"Test 50\", \"Test 51\", \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

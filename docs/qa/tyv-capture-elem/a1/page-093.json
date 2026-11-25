@@ -1,0 +1,108 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 93,
+    "dpi": 300,
+    "renderSha256": "c5c750b610cfeca0e31cb8afea08d0eb5d58e70632137813194944963c7845ec",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:32:58.846Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 92,
+    "testNumber": "60",
+    "testTitle": "Test 60",
+    "exercises": [
+      {
+        "id": "59.2",
+        "marks": "(10 marks: 1 for each word)",
+        "instruction": null,
+        "items": [
+          "1 a hairdryer",
+          "2 a swimmer",
+          "3 a bottle opener",
+          "4 a builder",
+          "5 a traveller",
+          "6 a writer",
+          "7 a cooker",
+          "8 a teacher",
+          "9 a pencil sharpener",
+          "10 a singer"
+        ]
+      },
+      {
+        "id": "59.3",
+        "marks": "(10 marks: 1 for forming the correct word and 1 for matching the phrase to the right picture)",
+        "instruction": null,
+        "items": [
+          "1 happily – d",
+          "2 sunny – c",
+          "3 sandy – b",
+          "4 cooker – e",
+          "5 rainy – f"
+        ]
+      },
+      {
+        "id": "60.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 b",
+          "2 b",
+          "3 a",
+          "4 b",
+          "5 b",
+          "6 a",
+          "7 a",
+          "8 b",
+          "9 b",
+          "10 b"
+        ]
+      },
+      {
+        "id": "60.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 quiet — diet",
+          "2 lose — shoes",
+          "3 quite — fight",
+          "4 felt — belt",
+          "5 loose — juice"
+        ]
+      },
+      {
+        "id": "60.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 I lent her my pen",
+          "2 a really good cook",
+          "3 I fell down the stairs",
+          "4 expecting to fail",
+          "5 borrow your tennis racket",
+          "6 They check your age",
+          "7 said 'Good afternoon' (Note: You say 'Good evening' when you arrive at someone's house between 5 pm and about 8 pm. If you arrive between 12 pm and 5 pm you say 'Good afternoon'. You say 'Good night' when you leave someone's house (after about 9 pm).)",
+          "8 I hope I pass it with a good grade.",
+          "9 I was surprised that nobody checked my ID",
+          "10 Her new flat is quite big"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "table with dark header row, columns 'Word' and 'Same sound', five numbered rows"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 92,\n \"testNumber\": \"60\",\n \"testTitle\": \"Test 60\",\n \"exercises\": [\n  {\"id\": \"59.2\", \"marks\": \"(10 marks: 1 for each word)\", \"instruction\": null, \"items\": [\"1 a hairdryer\", \"2 a swimmer\", \"3 a bottle opener\", \"4 a builder\", \"5 a traveller\", \"6 a writer\", \"7 a cooker\", \"8 a teacher\", \"9 a pencil sharpener\", \"10 a singer\"]},\n  {\"id\": \"59.3\", \"marks\": \"(10 marks: 1 for forming the correct word and 1 for matching the phrase to the right picture)\", \"instruction\": null, \"items\": [\"1 happily – d\", \"2 sunny – c\", \"3 sandy – b\", \"4 cooker – e\", \"5 rainy – f\"]},\n  {\"id\": \"60.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 b\", \"2 b\", \"3 a\", \"4 b\", \"5 b\", \"6 a\", \"7 a\", \"8 b\", \"9 b\", \"10 b\"]},\n  {\"id\": \"60.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 quiet — diet\", \"2 lose — shoes\", \"3 quite — fight\", \"4 felt — belt\", \"5 loose — juice\"]},\n  {\"id\": \"60.3\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 I lent her my pen\", \"2 a really good cook\", \"3 I fell down the stairs\", \"4 expecting to fail\", \"5 borrow your tennis racket\", \"6 They check your age\", \"7 said 'Good afternoon' (Note: You say 'Good evening' when you arrive at someone's house between 5 pm and about 8 pm. If you arrive between 12 pm and 5 pm you say 'Good afternoon'. You say 'Good night' when you leave someone's house (after about 9 pm).)\", \"8 I hope I pass it with a good grade.\", \"9 I was surprised that nobody checked my ID\", \"10 Her new flat is quite big\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"table with dark header row, columns 'Word' and 'Same sound', five numbered rows\"],\n \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}

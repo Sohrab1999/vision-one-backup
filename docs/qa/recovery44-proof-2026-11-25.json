@@ -1,0 +1,61 @@
+{
+  "event": "رویداد بازیابی ۴۴ — ریست پنهان ۴۴م (الگوی ۳۱..۴۳)",
+  "date": "2026-11-25",
+  "trigger": "پیشا-گام A1-ELEM-S08 (فرمان مالک «گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» — trace 1a214229fcb55605)",
+  "hiddenReset": {
+    "localHEADFound": "193269b76cf46f9dcb210c71953bd1614c4dc45f (2026-11-08)",
+    "remoteMainFound": "492e7ab255000317a269cc888ce0c30b4c1f8acb (ثبت اثبات §۱۰-۷ گام A1-ELEM-S07 — پسا-S07)",
+    "divergence": "ahead=0 / behind=213 (behind = 211 بازیابی ۴۳ + 2 کامیت S07: 5aad5e8 محتوایی + 492e7ab ثبت اثبات)",
+    "localUniqueCommits": 0,
+    "ffOnlyPath": true,
+    "workingTreeSurvived": true,
+    "note": "درخت کارِ پسا-S07 (شامل docs/qa/tyv-a1-elem-s07-proof-2026-11-25.json با mtime ۱۷:۳۸ و SNAPSHOT سربرگ ۱۳۳مین) روی دیسک باقی بود؛ فقط .git به عصر ۲۰۲۶-۱۱-۰۸ بازگشته بود"
+  },
+  "audit": {
+    "method": "porcelain -z + core.quotepath=off + --untracked-files=all (جلوگیری از ورودی‌های پوشهٔ فروفرورسته — درس ۴۳) + مقایسهٔ blob-OID دیسک با git ls-tree -r backup/main",
+    "lesson44": "در regex پارس porcelain، کدهای XY با حرف اول فاصله (مثل « M» = تغییر worktree بدون تغییر index) باید پذیرفته شوند؛ regex فقط-حروف‌بزرگ ۳۲ فایل modified را از قلم انداخت و در گذر اول اصلاح شد",
+    "modifiedFiles": { "total": 32, "diskEqualsRemote": 32, "differ": 0 },
+    "untrackedFiles": { "total": 1945, "matchRemote": 1938, "absentRemote": 7, "differ": 0 },
+    "absentRemoteList": [
+      "نقشه راه ها/نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md"
+    ],
+    "absentRemoteNature": "همان ۷ سند مسیر-تخت superseded شناخته‌شده — نسخه‌های شماره‌دار سری-TYV (۷/۷) در ریموت موجود و بایت‌به‌بیت MATCH — هفت سند مذکور در stashهای rc43 و rc44 بایگانی می‌مانند",
+    "captures": { "total": 188, "byteMatch": 188, "differ": 0, "report": { "biz": 98, "elem": 84, "pri": 3, "upp": 3 }, "recordMatch": "دقیقاً برابر رکورد سربرگ ۱۳۳مین (پسا-S07)" },
+    "verdict": "صفر محتوای محلی-یگانه — مسیر ff-only صفرتلفاتی"
+  },
+  "insurance": {
+    "stashRc44": "f6bf50c04ca725f0b7c834df8dce88482b2d5c83",
+    "pushedTo": "refs/heads/recovery/rc44-pre-ff-stash-2026-11-25",
+    "pushProof": "* [new branch] f6bf50c04ca725f0b7c834df8dce88482b2d5c83 -> recovery/rc44-pre-ff-stash-2026-11-25",
+    "stashStackAfterRestore": 7,
+    "stack": [
+      "stash@{0}=rc43=4b9fae59debde075499b104179fc67dc6db30bbe",
+      "stash@{1}=rc42=d01923fde7f8e2bb6e123557624c7435edbef952",
+      "stash@{2}=rc41=67fc50323c9a20a5a68cf844e6e5649ba9ef4fa7",
+      "stash@{3}=rc35=3d6bfe0b70189b84249ae1aa7af60d760a43d5ff",
+      "stash@{4}=rc34=73dd3e191ea875ed58b320e61aae17027f6ef3a6",
+      "stash@{5}=rc33=c7337e9e886e1ae78815acd162c9e010866a8f20",
+      "stash@{6}=rc44=f6bf50c04ca725f0b7c834df8dce88482b2d5c83"
+    ]
+  },
+  "reset": {
+    "command": "git reset --hard backup/main",
+    "resultHEAD": "492e7ab255000317a269cc888ce0c30b4c1f8acb",
+    "remoteMainAfter": "492e7ab255000317a269cc888ce0c30b4c1f8acb",
+    "lsRemoteEquality": "بایت‌به‌بیت — اثبات‌شده",
+    "porcelainAfter": 0,
+    "diffCheck": "پاک"
+  },
+  "diskTruthAfter": {
+    "a1Coverage": "۱۸۸/۴۸۹",
+    "report": { "biz": 98, "elem": 84, "pri": 3, "upp": 3 },
+    "recordMatch": "دقیقاً برابر رکورد سربرگ ۱۳۳مین — وضعیت پسا-S07 بازیابی شد"
+  },
+  "verdict": "بازیابی کامل — صفر تلفات — HEAD=ریموت — درخت پاک — آمادهٔ گام A1-ELEM-S08"
+}
