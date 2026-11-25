@@ -1,0 +1,100 @@
+{
+ "event": "رویداد بازیابی ۴۵ — ریست پنهان ۴۵م (الگوی ۳۱..۴۴)",
+ "date": "2026-11-25",
+ "trigger": "پیشا-گام A1-PRI-S01 (فرمان مالک «گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» — trace 1a2146952b2eef71 و 1a2146a5797eb3ad — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574)",
+ "hiddenReset": {
+  "localHEADFound": "193269b76cf46f9dcb210c71953bd1614c4dc45f (2026-11-08)",
+  "remoteMainFound": "a6cdc60c1546e2152e503e666eaba9f6bf9b3515 (ثبت اثبات §۱۰-۷ گام A1-ELEM-S08 — پسا-S08)",
+  "divergence": "ahead=0 / behind=215 (behind = 213 بازیابی ۴۴ + 2 کامیت S08: 80470f7 محتوایی + a6cdc60 ثبت اثبات)",
+  "localUniqueCommits": 0,
+  "ffOnlyPath": true,
+  "workingTreeSurvived": true,
+  "note": "درخت کارِ پسا-S08 (شامل docs/qa/tyv-a1-elem-s08-proof-2026-11-25.json و ۱۲ JSON کپچر elem page-085..096) روی دیسک باقی بود؛ فقط .git به عصر ۲۰۲۶-۱۱-۰۸ بازگشته بود — عین الگوی ثبت‌شدهٔ بازیابی‌های ۳۱..۴۴"
+ },
+ "audit": {
+  "method": "porcelain -z + core.quotepath=off + --untracked-files=all (درس ۴۳) + مقایسهٔ blob-OID دیسک با git ls-tree -r backup/main",
+  "lesson44Applied": "regex پارس porcelain از ابتدا کدهای XY با حرف اول فاصله (« M») را می‌پذیرفت (درس ثبت‌شدهٔ بازیابی ۴۴ به‌کار رفت — برخلاف گذر اول بازیابی ۴۴، نیازی به اصلاح نبود)",
+  "modifiedFiles": {
+   "total": 32,
+   "diskEqualsRemote": 32,
+   "differ": 0
+  },
+  "untrackedFiles": {
+   "total": 1959,
+   "matchRemote": 1952,
+   "absentRemote": 7,
+   "differ": 0,
+   "growthVsRc44": "+۱۴ = ۱۲ JSON کپچر elem page-085..096 + docs/qa/tyv-a1-elem-s08-proof-2026-11-25.json + docs/qa/recovery44-proof-2026-11-25 — هر ۱۴ در ریموت پسا-S08 موجود و بایت‌به‌بیت MATCH"
+  },
+  "absentRemoteList": [
+   "نقشه راه ها/نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md",
+   "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md",
+   "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md",
+   "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md",
+   "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md",
+   "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md",
+   "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md"
+  ],
+  "absentRemoteNature": "همان ۷ سند مسیر-تخت superseded شناخته‌شده — نسخه‌های شماره‌دار سری-TYV (۷/۷) در ریموت موجود و بایت‌به‌بیت MATCH — هفت سند مذکور اکنون در stash بیمهٔ rc45 بایگانی‌اند (پس از stash push -u از دیسک برداشته شدند — رفتار استاندارد stash)",
+  "captures": {
+   "total": 200,
+   "byteMatch": 200,
+   "differ": 0,
+   "report": {
+    "biz": 98,
+    "elem": 96,
+    "pri": 3,
+    "upp": 3
+   },
+   "recordMatch": "دقیقاً برابر رکورد سربرگ ۱۳۴مین (پسا-S08 — پایان A1 کتاب سوم)"
+  },
+  "verdict": "صفر محتوای محلی-یگانه — مسیر ff-only صفرتلفاتی"
+ },
+ "insurance": {
+  "stashRc45": "b4b4f4ebd9a0024da97bce00c9c812bf68ff0015",
+  "pushedTo": "refs/heads/recovery/rc45-pre-ff-stash-2026-11-25",
+  "pushProof": "* [new branch] stash@{0} -> recovery/rc45-pre-ff-stash-2026-11-25",
+  "remoteArchivesVerified": {
+   "rc33": "c7337e9e886e1ae78815acd162c9e010866a8f20",
+   "rc34": "73dd3e191ea875ed58b320e61aae17027f6ef3a6",
+   "rc35": "3d6bfe0b70189b84249ae1aa7af60d760a43d5ff",
+   "rc41": "67fc50323c9a20a5a68cf844e6e5649ba9ef4fa7",
+   "rc42": "d01923fde7f8e2bb6e123557624c7435edbef952",
+   "rc43": "4b9fae59debde075499b104179fc67dc6db30bbe",
+   "rc44": "f6bf50c04ca725f0b7c834df8dce88482b2d5c83",
+   "note": "هر هفت SHA با مقادیر ثبت‌شده در پیام‌های کامیت بازیابی‌های ۳۳..۴۴ بایت‌به‌بیت مطابقت دارند (git ls-remote) — صفر تلفات آرشیوی"
+  },
+  "stashStackAfterRestore": 8,
+  "stack": [
+   "stash@{0}=rc33=c7337e9e886e1ae78815acd162c9e010866a8f20 (restored)",
+   "stash@{1}=rc34=73dd3e191ea875ed58b320e61aae17027f6ef3a6 (restored)",
+   "stash@{2}=rc35=3d6bfe0b70189b84249ae1aa7af60d760a43d5ff (restored)",
+   "stash@{3}=rc41=67fc50323c9a20a5a68cf844e6e5649ba9ef4fa7 (restored)",
+   "stash@{4}=rc42=d01923fde7f8e2bb6e123557624c7435edbef952 (restored)",
+   "stash@{5}=rc43=4b9fae59debde075499b104179fc67dc6db30bbe (restored)",
+   "stash@{6}=rc44=f6bf50c04ca725f0b7c834df8dce88482b2d5c83 (restored)",
+   "stash@{7}=rc45=b4b4f4ebd9a0024da97bce00c9c812bf68ff0015 (fresh insurance)"
+  ]
+ },
+ "reset": {
+  "command": "git reset --hard backup/main",
+  "resultHEAD": "a6cdc60c1546e2152e503e666eaba9f6bf9b3515",
+  "remoteMainAfter": "a6cdc60c1546e2152e503e666eaba9f6bf9b3515",
+  "lsRemoteEquality": "بایت‌به‌بیت — اثبات‌شده",
+  "porcelainAfter": 0,
+  "diffCheck": "پاک",
+  "checkoutFiles": 2032
+ },
+ "diskTruthAfter": {
+  "a1Coverage": "۲۰۰/۴۸۹",
+  "report": {
+   "biz": 98,
+   "elem": 96,
+   "pri": 3,
+   "upp": 3
+  },
+  "recordMatch": "دقیقاً برابر رکورد سربرگ ۱۳۴مین — وضعیت پسا-S08 بازیابی شد — پایان A1 کتاب سوم",
+  "preStepExistence": "pri page-007/010/041 (سه پراب) موجود — page-001..012 جز ۷ و ۱۰ غایب — صحیح پیشا-S01"
+ },
+ "verdict": "بازیابی کامل — صفر تلفات — HEAD=ریموت — درخت پاک — آمادهٔ گام A1-PRI-S01"
+}

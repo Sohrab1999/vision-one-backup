@@ -1,0 +1,99 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 11,
+    "dpi": 300,
+    "renderSha256": "bf23881a35fbc3774e02bd4d6216bdae52a951eef7d920fd178744086f950896",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T20:44:49.802Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 10,
+    "testNumber": "7",
+    "testTitle": "Prefixes (e.g. un-, dis-, re-)",
+    "exercises": [
+      {
+        "id": "7.1",
+        "marks": "10 marks",
+        "instruction": "Use a prefix from the left and a word from the right and complete the sentences below.",
+        "items": [
+          "1 Nobody at the party talked to us – they were very ........................................ .",
+          "2 I can't read this at all; her handwriting is completely ................................. .",
+          "3 It's a very depressed area and almost 20% of young adults are ................................. .",
+          "4 You can't see where my jacket was mended. The repair is completely ................................. .",
+          "5 I find it very hard to remember the past tense of lots of ................................. verbs.",
+          "6 Bob's so ................................. that he's just not prepared to wait for the right opportunity.",
+          "7 It was very ................................. to go out and leave those two children alone.",
+          "8 It says here we lost £300 last week, but these figures must be ................................. . Check them again, Sue!",
+          "9 His brother steals money and tells lies – he's very ................................. .",
+          "10 She says it can't be done, but I don't accept that. Nothing is ................................. ."
+        ]
+      },
+      {
+        "id": "7.2",
+        "marks": "6 marks",
+        "instruction": "Replace the underlined words and phrases with a word of the same meaning which begins with the prefix given.",
+        "items": [
+          "Example: That child looks very sad.  unhappy...",
+          "1 I'm sure that's against the law.  il.................................",
+          "2 The doctor told me to take off my clothes.  un.................................",
+          "3 We don't have the same opinion about this.  dis.................................",
+          "4 His room is always in a mess.  un.................................",
+          "5 I'm afraid she doesn't like onions.  dis.................................",
+          "6 That was very rude, wasn't it?  im................................."
+        ]
+      },
+      {
+        "id": "7.3",
+        "marks": "5 marks",
+        "instruction": "Match the prefixes in the box with the meanings below. (There are two prefixes for one meaning.)",
+        "items": [
+          "1 do something again",
+          "2 do something badly or incorrectly",
+          "3 reverse an action",
+          "4 do something too much"
+        ]
+      },
+      {
+        "id": "7.4",
+        "marks": "9 marks",
+        "instruction": "Complete these sentences with a suitable verb, using a prefix from 7.3.",
+        "items": [
+          "Example: If she fails her exam, she can retake it in the autumn.",
+          "1 I wrote the wrong answer because I ................................. the question.",
+          "2 When I ................................. I feel even more tired when I wake up.",
+          "3 I got to the hotel at 4.00 but I couldn't ................................. my stuff until later.",
+          "4 I turned left instead of right. Obviously I ................................. what she said.",
+          "5 It's closed for the summer, but it will ................................. in September.",
+          "6 The children were here a minute ago, but now they've ................................. .",
+          "7 John had a key but it wouldn't ................................. the door.",
+          "8 A: It says here £3, but the man asked me for £5.",
+          "B: In that case he has ................................. you.",
+          "9 Do you think I can ................................. my homework if it's not very good?"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "un-  in-  ir-  im-  il-  dis-",
+      "possible  friendly  regular  legible  patient  correct  honest  visible  employed  responsible",
+      "mis-  un-  over-  re-  dis-",
+      "take  pack  do  open  lock  sleep  understand  appear  hear  charge"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 10,\n  \"testNumber\": \"7\",\n  \"testTitle\": \"Prefixes (e.g. un-, dis-, re-)\",\n  \"exercises\": [\n    {\n      \"id\": \"7.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Use a prefix from the left and a word from the right and complete the sentences below.\",\n      \"items\": [\n        \"1 Nobody at the party talked to us – they were very ........................................ .\",\n        \"2 I can't read this at all; her handwriting is completely ................................. .\",\n        \"3 It's a very depressed area and almost 20% of young adults are ................................. .\",\n        \"4 You can't see where my jacket was mended. The repair is completely ................................. .\",\n        \"5 I find it very hard to remember the past tense of lots of ................................. verbs.\",\n        \"6 Bob's so ................................. that he's just not prepared to wait for the right opportunity.\",\n        \"7 It was very ................................. to go out and leave those two children alone.\",\n        \"8 It says here we lost £300 last week, but these figures must be ................................. . Check them again, Sue!\",\n        \"9 His brother steals money and tells lies – he's very ................................. .\",\n        \"10 She says it can't be done, but I don't accept that. Nothing is ................................. .\"\n      ]\n    },\n    {\n      \"id\": \"7.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Replace the underlined words and phrases with a word of the same meaning which begins with the prefix given.\",\n      \"items\": [\n        \"Example: That child looks very sad.  unhappy...\",\n        \"1 I'm sure that's against the law.  il.................................\",\n        \"2 The doctor told me to take off my clothes.  un.................................\",\n        \"3 We don't have the same opinion about this.  dis.................................\",\n        \"4 His room is always in a mess.  un.................................\",\n        \"5 I'm afraid she doesn't like onions.  dis.................................\",\n        \"6 That was very rude, wasn't it?  im.................................\"\n      ]\n    },\n    {\n      \"id\": \"7.3\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Match the prefixes in the box with the meanings below. (There are two prefixes for one meaning.)\",\n      \"items\": [\n        \"1 do something again\",\n        \"2 do something badly or incorrectly\",\n        \"3 reverse an action\",\n        \"4 do something too much\"\n      ]\n    },\n    {\n      \"id\": \"7.4\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Complete these sentences with a suitable verb, using a prefix from 7.3.\",\n      \"items\": [\n        \"Example: If she fails her exam, she can retake it in the autumn.\",\n        \"1 I wrote the wrong answer because I ................................. the question.\",\n        \"2 When I ................................. I feel even more tired when I wake up.\",\n        \"3 I got to the hotel at 4.00 but I couldn't ................................. my stuff until later.\",\n        \"4 I turned left instead of right. Obviously I ................................. what she said.\",\n        \"5 It's closed for the summer, but it will ................................. in September.\",\n        \"6 The children were here a minute ago, but now they've ................................. .\",\n        \"7 John had a key but it wouldn't ................................. the door.\",\n        \"8 A: It says here £3, but the man asked me for £5.\",\n        \"B: In that case he has ................................. you.\",\n        \"9 Do you think I can ................................. my homework if it's not very good?\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"un-  in-  ir-  im-  il-  dis-\",\n    \"possible  friendly  regular  legible  patient  correct  honest  visible  employed  responsible\",\n    \"mis-  un-  over-  re-  dis-\",\n    \"take  pack  do  open  lock  sleep  understand  appear  hear  charge\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

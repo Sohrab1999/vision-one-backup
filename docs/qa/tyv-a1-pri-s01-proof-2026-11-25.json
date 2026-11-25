@@ -1,0 +1,90 @@
+{
+ "meta": {
+  "step": "A1-PRI-S01",
+  "book": "tyv-pri",
+  "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+  "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+  "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+  "date": "2026-11-25",
+  "jalali": "۱۴۰۵/۹/۴",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — گام بعدی مجاز طبق وضعیت ثبت‌شدهٔ پسا-S08 = A1-PRI-S01 (صفحات ۱–۱۲ — دستهٔ اول از ۱۲ دستهٔ PRI — انتظار skip صفحات ۷ و ۱۰ — پراب‌های درون دسته — فایل‌های موجود pri: 7/10/41 — آغاز کتاب چهارم) — trace 1a2146952b2eef71 / 1a2146a5797eb3ad — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+  "sessionPreCheck": "رویداد بازیابی ۴۵ (ریست پنهان ۴۵م — الگوی ۳۱..۴۴): HEAD بازگشته 193269b (۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت = a6cdc60 پسا-S08 — divergence ۰/۲۱۵ (behind = ۲۱۳ بازیابی ۴۴ + ۲ کامیت S08: 80470f7 محتوایی + a6cdc60 ثبت اثبات — ahead=۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only) — درخت کار پسا-S08 روی دیسک باقی بود — ممیزی سه‌دوری blob-OID با porcelain -z + core.quotepath=off + --untracked-files=all (درس ۴۳) و regex پذیرندهٔ XY با حرف اول فاصله (درس ۴۴ — از ابتدا به‌درستی اعمال شد): ۳۲/۳۲ modified disk==remote · ۱۹۵۲/۱۹۵۹ untracked matchRemote بایت‌به‌بیت · differ=۰ · ۷ absentRemote (اسناد مسیر-تخت superseded — نسخه‌های شماره‌دار سری-TYV ۷/۷ MATCH ریموت؛ رشد +۱۴ untracked نسبت به ممیزی rc44 = ۱۲ JSON کپچر elem page-085..096 + دو اثبات S08/recovery44 — همگی MATCH ریموت) · ۲۰۰/۲۰۰ کپچر بایت‌به‌بیت=ریموت (biz 98 · elem 96 · pri 3 · upp 3 == رکورد سربرگ ۱۳۴مین) ⇒ صفر محتوای محلی-یگانه — stash بیمه rc45 = b4b4f4eb بایگانی ریموت recovery/rc45-pre-ff-stash-2026-11-25 (اثبات * [new branch]) + راستی‌آزمایی ls-remote هفت آرشیو rc33..rc44 (هر هفت SHA بایت‌به‌بیت == مقادیر ثبت‌شده در پیام‌های کامیت) + بازگردانی آرشیوهای rc33/rc34/rc35/rc41/rc42/rc43/rc44 به stash stack (۸ stash با rc45) — reset --hard به ریموت ⇒ HEAD = a6cdc60 = ریموت (ls-remote بایت‌به‌بیت) — porcelain ۰ — git diff --check پاک — دیسک‌حقیقت آغاز گام ۲۰۰/۴۸۹ == رکورد سربرگ ۱۳۴مین — وجودسنجی پیشا-گام: pri page-007/010/041 (سه پراب) موجود و page-001..012 جز ۷ و ۱۰ همگی غایب — وضعیت پیشا-گام صحیح — شواهد docs/qa/recovery45-proof-2026-11-25.json"
+ },
+ "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 1,2,3,4,5,6,7,8,9,10,11,12",
+ "runs": [
+  {
+   "run": 1,
+   "mode": "هم‌گام در یک فراخوانی ابزار (عین درس ثبت‌شدهٔ سربرگ ۱۱۵مین — بدون nohup پس‌زمینه)",
+   "result": "page 1..6 ok · page 7 skip · page 8..9 ok · page 10 skip · page 11..12 ok",
+   "summary": "DONE tyv-pri: captured=10 skipped=2 failed=0 → docs/qa/tyv-capture-pri/a1",
+   "skips": [
+    {
+     "page": 7,
+     "nature": "checkpoint/resume — پراب قبلی (فایل page-007.json از پراب ۲۰۲۶-۱۱-۲۲ — عین انتظار صریح مالک «انتظار skip صفحات ۷ و ۱۰»)"
+    },
+    {
+     "page": 10,
+     "nature": "checkpoint/resume — پراب قبلی (فایل page-010.json از پراب ۲۰۲۶-۱۱-۲۲ — عین انتظار صریح مالک)"
+    }
+   ],
+   "failed": []
+  }
+ ],
+ "coverage": {
+  "batchRange": "۱–۱۲",
+  "completeNoGap": true,
+  "newFiles": ["page-001.json","page-002.json","page-003.json","page-004.json","page-005.json","page-006.json","page-008.json","page-009.json","page-011.json","page-012.json"],
+  "skippedExisting": ["page-007.json (پراب)","page-010.json (پراب)"],
+  "provenance": "renderSha256 یکتا ۱۰/۱۰ · DPI=300 · promptVersion=tyv-a1-v1 · attempts=≤3 · status=ok ۱۰/۱۰ · model z-ai vision CLI · timestamp 2026-11-25T20:43..20:45Z"
+ },
+ "contentNotes": {
+  "structure": [
+   "p1 جلد رو — واترمارک چاپی www.irlanguage.com + «مرجع آموزش زبان ایرانیان» (خانوادهٔ irLanguage — عین خام دست‌نخورده — ثبت دوگذر G1) — footer=null ساختاری — ۱ تصویر/۶ unc",
+   "p2 Contents بخش نخست (بخش‌های Learning / Example language …) — footer=null ساختاری — ۳۹ unc",
+   "p3 Contents ادامه (Tests 33–36 بازهٔ Connecting and linking) — footer=۲ (آفست +۱ پابرجا) — ۴۳ unc",
+   "p4 Contents ادامه (Leisure and entertainment — Tests 69–72…) — footer=null ساختاری — ۷۴ unc",
+   "p5 Contents پایانی — footer=۴ — ۲۳ unc",
+   "p6 Introduction «Who is this book for?» (پیوند Tests 1–3 ↔ Units 1–3 کتاب مادر) — footer=null ساختاری — ۱۶ unc",
+   "p7 (پراب) Tests 1–3 واحد ترکیبی «Learning and recording vocabulary» — ۶ تمرین/۴۶ آیتم/۱ باکس/۱ تصویر — footer=۶ — عین نکتهٔ ساختاری §۱ PRI (banner «Tests 1–3» — تجزیهٔ سه‌تایی A2 الزامی)",
+   "p8 Test 4 «English language words» — ۴ تمرین/۳۳ آیتم/۱ تصویر — footer=۷",
+   "p9 Test 5 «Problems with pronunciation» — ۴/۳۲/۸ تصویر (صفحات IPA) — footer=۸",
+   "p10 (پراب) Test 6 «Classroom language» — ۵/۲۳/۱ باکس/۱ تصویر — footer=null (ناهنجاری ثبت‌شدهٔ §۳ PRI از پراب — عین خام — دوگذر G1 الزامی)",
+   "p11 Test 7 «Prefixes (e.g. un-, dis-, re-)» — ۴/۳۲/۴ باکس — footer=۱۰",
+   "p12 Test 8 «Noun suffixes (e.g. -ion, -ity, -ment)» — ۴/۳۷/۱ تصویر — footer=null (نمونهٔ جدید همان خانوادهٔ footer=null صفحات تست PRI — ریسک ۱ §۵ کیفیت اسکن — عین خام — دوگذر G1 الزامی)"
+  ],
+  "testNumbering": "الگوی ثبت‌شدهٔ این کتاب: Tests 1–3 ترکیبی روی p7 + از Test 4 به بعد test=page−۴ (p8=4 · p9=5 · p10=6 · p11=7 · p12=8) — انطباق کامل با فهرست Contents و پراب‌های ۷/۱۰/۴۱",
+  "footers": "فوترهای چاپی ثبت‌شده: p3→2 · p5→4 · p7→6 · p8→7 · p9→8 · p11→10 (آفست +۱ پابرجا — صفر ناسازگاری در پنجرهٔ ۱۲ صفحه‌ای شامل پراب‌ها) — footer=null ×۶ (p1/p2/p4/p6 ساختاری جلد/Contents/مقدمه — داوری G1 · p10/p12 صفحات تست — ناهنجاری خانوادهٔ کیفیت اسکن — دوگذر G1)",
+  "questionMarks": "[؟] صفر در ۱۰ صفحهٔ NEW — واترمارک irLanguage در p1 به‌صورت unclassified خام ثبت شد (بدون پرچم [؟] — ثبت دوگذر G1)",
+  "unclassifiedNature": "unclassified=۲۱۴ در ۱۰ صفحهٔ NEW — ساختار ذاتی صفحات آغازین (جلد/Contents چهاربخشی/Introduction) عین خام دست‌نخورده — لایهٔ A1"
+ },
+ "totals": {
+  "newPages": 10,
+  "exercises": 16,
+  "items": 134,
+  "boxes": 4,
+  "pictures": 11,
+  "unclassified": 214
+ },
+ "diskTruth": {
+  "a1Coverage": "۲۰۱/۴۸۹",
+  "report": { "biz": 98, "elem": 96, "pri": 13, "upp": 3 },
+  "index": "a1-index pri: capturedPages=12 · capturedNow=10 · skippedExisting=2 · failedNow=[] · failedTotal=0 · previousIndex حفظ‌شده (۳ پراب ۲۰۲۶-۱۱-۲۳)"
+ },
+ "docsUpdated": [
+  "docs/SNAPSHOT.md (سربرگ ۱۳۵مین — §۲+§۳+§۴+§۵)",
+  "worklog.md (ورود کامل گام)",
+  "نقشه راه ها/سری-TYV/01-مادر §۶ (بازیابی ۴۵ + به‌روزرسانی زنجیرهٔ گام بعدی مجاز)",
+  "نقشه راه ها/سری-TYV/02-دفتر §۱-۳ (سطر PRI-S01 — با اصلاح صادقانهٔ یادداشت skip سلول: پراب‌های درون S01 فقط ۷/۱۰ — ۴۱ در S04) + §۷ (سطر لاگ)",
+  "نقشه راه ها/سری-TYV/05-PRI §۳/§۴/§۶ (وضعیت A1 = ۱۳/۱۴۲)",
+  "نقشه راه ها/فهرست-مستندات.md (سربرگ)",
+  "شواهد NEW: docs/qa/tyv-a1-pri-s01-proof-2026-11-25.json + docs/qa/recovery45-proof-2026-11-25.json"
+ ],
+ "controls": {
+  "lint": "exit 0",
+  "gitDiffCheck": "پاک",
+  "noImageOrExecutableFiles": true,
+  "dbHookWAVE2Untouched": true,
+  "tokenNeverPrinted": true
+ },
+ "nextStep": "A1-PRI-S02 = bun scripts/tyv-a1-vlm-capture.mjs pri 13,14,15,16,17,18,19,20,21,22,23,24 (صفحات ۱۳–۲۴ — دستهٔ دوم از ۱۲ — بدون skip انتظاری — پراب‌ها فقط ۷/۱۰/۴۱ — از Test 9 به بعد انتظار test=page−۴) ⇒ سپس PRI S03..S12 (S12 = ۱۳۳–۱۴۲ — ۱۰ صفحهٔ پایانی) ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1"
+}

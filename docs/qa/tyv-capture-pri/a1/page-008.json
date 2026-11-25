@@ -1,0 +1,96 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 8,
+    "dpi": 300,
+    "renderSha256": "349348b3b34ee732449ec20d0e3a9e7835168dbde0db2473771372f92704edbe",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T20:44:23.486Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 7,
+    "testNumber": "4",
+    "testTitle": "English language words",
+    "exercises": [
+      {
+        "id": "4.1",
+        "marks": "12 marks",
+        "instruction": "Read the text and identify each underlined part of speech (noun, verb, adjective, etc.). Write your answers in the space below. The first one has been done for you.",
+        "items": [
+          "We (0)walked along the main (1)street between the workers' cottages and (2)the only hotel in the town. A few people (3)passed by — two women (4)in smart suits, a very (5)large man walking a small dog, and (6)a boy pushing his (7)bicycle while singing (8)quietly to himself. The weather was still (9)miserable and (10)we could feel a few drops (11)of rain falling as we (12)turned the corner and saw the station in the distance.",
+          "Example: verb",
+          "1 ................................",
+          "2 ................................",
+          "3 ................................",
+          "4 ................................",
+          "5 ................................",
+          "6 ................................",
+          "7 ................................",
+          "8 ................................",
+          "9 ................................",
+          "10 ................................",
+          "11 ................................",
+          "12 ................................"
+        ]
+      },
+      {
+        "id": "4.2",
+        "marks": "6 marks",
+        "instruction": "Answer these questions.",
+        "items": [
+          "1 Is information an uncountable noun or a plural noun?",
+          "2 Is trousers uncountable or plural?",
+          "3 Is news uncountable or plural?",
+          "4 What kind of verb are get off, put sth. on and look sth. up?",
+          "5 What do we call the base form of a verb such as say, tell or start?",
+          "6 What do we call a group of words (a phrase or even a sentence) with a particular meaning that is different from any of the individual words?"
+        ]
+      },
+      {
+        "id": "4.3",
+        "marks": "7 marks",
+        "instruction": "Complete these sentences with the correct word.",
+        "items": [
+          "1 In the word unfriendly, un- is called a .......................... .",
+          "2 In the word comfortable, -able is called a .......................... .",
+          "3 Fantastic is a .......................... of marvellous.",
+          "4 Large is the .......................... of small.",
+          "5 /dɪˈsaɪd/ and /fænˈtæstɪk/ show words written in .......................... symbols.",
+          "6 The word decide has two .......................... and fantastic has three .......................... .",
+          "7 On the words decide and fantastic, the main .......................... is underlined."
+        ]
+      },
+      {
+        "id": null,
+        "marks": "5 marks",
+        "instruction": "What do we call the punctuation marks that are circled in these sentences?",
+        "items": [
+          "Example: Ⓢhe sat down quietly. capital letter",
+          "1 They arrived on time(.) ......................................",
+          "2 What are you doing(?) ......................................",
+          "3 I lost my ticket(,) so I had to buy another one. ......................................",
+          "4 Most of the students((15 altogether))came to the concert. ......................................",
+          "5 They were all very well(-)dressed. ......................................"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "circled punctuation marks within sentences in exercise 4.4 items"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\n \"footer\": 7,\n \"testNumber\": \"4\",\n \"testTitle\": \"English language words\",\n \"exercises\": [\n  {\"id\": \"4.1\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Read the text and identify each underlined part of speech (noun, verb, adjective, etc.). Write your answers in the space below. The first one has been done for you.\",\n   \"items\": [\n    \"We (0)walked along the main (1)street between the workers' cottages and (2)the only hotel in the town. A few people (3)passed by — two women (4)in smart suits, a very (5)large man walking a small dog, and (6)a boy pushing his (7)bicycle while singing (8)quietly to himself. The weather was still (9)miserable and (10)we could feel a few drops (11)of rain falling as we (12)turned the corner and saw the station in the distance.\",\n    \"Example: verb\",\n    \"1 ................................\", \"2 ................................\", \"3 ................................\",\n    \"4 ................................\", \"5 ................................\", \"6 ................................\",\n    \"7 ................................\", \"8 ................................\", \"9 ................................\",\n    \"10 ................................\", \"11 ................................\", \"12 ................................\"\n   ]},\n  {\"id\": \"4.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Answer these questions.\",\n   \"items\": [\n    \"1 Is information an uncountable noun or a plural noun?\",\n    \"2 Is trousers uncountable or plural?\",\n    \"3 Is news uncountable or plural?\",\n    \"4 What kind of verb are get off, put sth. on and look sth. up?\",\n    \"5 What do we call the base form of a verb such as say, tell or start?\",\n    \"6 What do we call a group of words (a phrase or even a sentence) with a particular meaning that is different from any of the individual words?\"\n   ]},\n  {\"id\": \"4.3\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Complete these sentences with the correct word.\",\n   \"items\": [\n    \"1 In the word unfriendly, un- is called a .......................... .\",\n    \"2 In the word comfortable, -able is called a .......................... .\",\n    \"3 Fantastic is a .......................... of marvellous.\",\n    \"4 Large is the .......................... of small.\",\n    \"5 /dɪˈsaɪd/ and /fænˈtæstɪk/ show words written in .......................... symbols.\",\n    \"6 The word decide has two .......................... and fantastic has three .......................... .\",\n    \"7 On the words decide and fantastic, the main .......................... is underlined.\"\n   ]},\n  {\"id\": null,\n   \"marks\": \"5 marks\",\n   \"instruction\": \"What do we call the punctuation marks that are circled in these sentences?\",\n   \"items\": [\n    \"Example: Ⓢhe sat down quietly. capital letter\",\n    \"1 They arrived on time(.) ......................................\",\n    \"2 What are you doing(?) ......................................\",\n    \"3 I lost my ticket(,) so I had to buy another one. ......................................\",\n    \"4 Most of the students((15 altogether))came to the concert. ......................................\",\n    \"5 They were all very well(-)dressed. ......................................\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"circled punctuation marks within sentences in exercise 4.4 items\"],\n \"unclassified\": [\"TEST\", \"Your score /30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}"
+}

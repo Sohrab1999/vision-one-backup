@@ -1,0 +1,102 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 9,
+    "dpi": 300,
+    "renderSha256": "d63361a278b73e06aad4c2866d3263c05d88b9070a7a87d078769cb48fe027be",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T20:44:36.462Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 8,
+    "testNumber": "5",
+    "testTitle": "Problems with pronunciation",
+    "exercises": [
+      {
+        "id": "5.1",
+        "marks": "8 marks",
+        "instruction": "Match the words in each group that contain the same underlined vowel sound. The first one has been done for you.",
+        "items": [
+          "Group 1: through, hot, enough, spoon, cough, trouble",
+          "Group 2: diet, machine, since, island, police, opposite",
+          "Group 3: accent, fast, potato, palace, calm, razor"
+        ]
+      },
+      {
+        "id": "5.2",
+        "marks": "6 marks",
+        "instruction": "In each line, underline the word which is stressed differently from the other three words.",
+        "items": [
+          "Example: remember  decided  expensive  industry",
+          "1 symptom  sunbathe  palace  prefer",
+          "2 interested  understand  opposite  policy",
+          "3 cathedral  assistance  organise  remember",
+          "4 hyphen  police  decide  machine",
+          "5 accent  virus  machine  desert",
+          "6 advertisement  competition  psychology  grammatical"
+        ]
+      },
+      {
+        "id": "5.3",
+        "marks": "9 marks",
+        "instruction": "Choose the correct pronunciation and answer questions 1–9 using the phonetic symbols.",
+        "items": [
+          "KNIFE /naif/ or /knaif/  AISLE /ail/ or /aisl/  HANDSOME /'hændsəm/ or /'hænsəm/",
+          "FASTEN /'fa:stən/ or /'fa:sən/  WRIST /wrist/ or /rist/  KNEE /kni:/ or /ni:/",
+          "BOMB /bomb/ or /bɒm/  HONEST /'hɒnist/ or /'ɒnist/  LISTEN /'listən/ or /'lisən/",
+          "CHRISTMAS /'krisməs/ or /'kristməs/",
+          "Example: You do this to music or the radio. ..../'lisən/..",
+          "1 This is between your hand and your arm. ..........................",
+          "2 This is where you walk on a plane to get to your seat. ..........................",
+          "3 If you are this, you tell the truth. ..........................",
+          "4 The joint in the middle of your leg. ..........................",
+          "5 If this explodes, it can be very dangerous. ..........................",
+          "6 You can describe an attractive-looking man as this. ..........................",
+          "7 You do this to your seat belt in a car or on a plane. ..........................",
+          "8 You need this for cutting your food. ..........................",
+          "9 A religious festival celebrated towards the end of December. .........................."
+        ]
+      },
+      {
+        "id": "5.4",
+        "marks": "7 marks",
+        "instruction": "All the pictures are of words which contain the /ə/ sound at least once. Label the drawings and circle the (/ə/). Look at the example first.",
+        "items": [
+          "Example: plum b(ə)r ..........",
+          "2 ..........................",
+          "4 ..........................",
+          "6 ..........................",
+          "1 ..........................",
+          "3 ..........................",
+          "5 ..........................",
+          "7 .........................."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "line drawing of a plumber at a sink (example: 'plumb(ə)r')",
+      "drawing of scissors",
+      "drawing of a cinema entrance with 'FILM SHOWING ALIEN' sign",
+      "drawing of a piece of meat / steak",
+      "drawing of an island with palm trees",
+      "drawing of a potato",
+      "drawing of a razor",
+      "drawing of a pilot in a cockpit"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 8,\n  \"testNumber\": \"5\",\n  \"testTitle\": \"Problems with pronunciation\",\n  \"exercises\": [\n    {\n      \"id\": \"5.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Match the words in each group that contain the same underlined vowel sound. The first one has been done for you.\",\n      \"items\": [\n        \"Group 1: through, hot, enough, spoon, cough, trouble\",\n        \"Group 2: diet, machine, since, island, police, opposite\",\n        \"Group 3: accent, fast, potato, palace, calm, razor\"\n      ]\n    },\n    {\n      \"id\": \"5.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"In each line, underline the word which is stressed differently from the other three words.\",\n      \"items\": [\n        \"Example: remember  decided  expensive  industry\",\n        \"1 symptom  sunbathe  palace  prefer\",\n        \"2 interested  understand  opposite  policy\",\n        \"3 cathedral  assistance  organise  remember\",\n        \"4 hyphen  police  decide  machine\",\n        \"5 accent  virus  machine  desert\",\n        \"6 advertisement  competition  psychology  grammatical\"\n      ]\n    },\n    {\n      \"id\": \"5.3\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Choose the correct pronunciation and answer questions 1–9 using the phonetic symbols.\",\n      \"items\": [\n        \"KNIFE /naif/ or /knaif/  AISLE /ail/ or /aisl/  HANDSOME /'hændsəm/ or /'hænsəm/\",\n        \"FASTEN /'fa:stən/ or /'fa:sən/  WRIST /wrist/ or /rist/  KNEE /kni:/ or /ni:/\",\n        \"BOMB /bomb/ or /bɒm/  HONEST /'hɒnist/ or /'ɒnist/  LISTEN /'listən/ or /'lisən/\",\n        \"CHRISTMAS /'krisməs/ or /'kristməs/\",\n        \"Example: You do this to music or the radio. ..../'lisən/..\",\n        \"1 This is between your hand and your arm. ..........................\",\n        \"2 This is where you walk on a plane to get to your seat. ..........................\",\n        \"3 If you are this, you tell the truth. ..........................\",\n        \"4 The joint in the middle of your leg. ..........................\",\n        \"5 If this explodes, it can be very dangerous. ..........................\",\n        \"6 You can describe an attractive-looking man as this. ..........................\",\n        \"7 You do this to your seat belt in a car or on a plane. ..........................\",\n        \"8 You need this for cutting your food. ..........................\",\n        \"9 A religious festival celebrated towards the end of December. ..........................\"\n      ]\n    },\n    {\n      \"id\": \"5.4\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"All the pictures are of words which contain the /ə/ sound at least once. Label the drawings and circle the (/ə/). Look at the example first.\",\n      \"items\": [\n        \"Example: plum b(ə)r ..........\",\n        \"2 ..........................\",\n        \"4 ..........................\",\n        \"6 ..........................\",\n        \"1 ..........................\",\n        \"3 ..........................\",\n        \"5 ..........................\",\n        \"7 ..........................\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"line drawing of a plumber at a sink (example: 'plumb(ə)r')\",\n    \"drawing of scissors\",\n    \"drawing of a cinema entrance with 'FILM SHOWING ALIEN' sign\",\n    \"drawing of a piece of meat / steak\",\n    \"drawing of an island with palm trees\",\n    \"drawing of a potato\",\n    \"drawing of a razor\",\n    \"drawing of a pilot in a cockpit\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}
