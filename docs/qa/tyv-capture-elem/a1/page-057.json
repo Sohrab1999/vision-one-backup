@@ -1,0 +1,82 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 57,
+    "dpi": 300,
+    "renderSha256": "aa6d562ad1a5ae0688d7d16e38d6be6255abe801055ba7e52a998c9f8dafd8ae",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:24:24.262Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 56,
+    "testNumber": "50",
+    "testTitle": "Days, months, seasons",
+    "exercises": [
+      {
+        "id": "50.1",
+        "marks": "10 marks",
+        "instruction": "Which month is this?",
+        "items": [
+          "Example: the 3rd month March ................................",
+          "1 the 6th month ................................",
+          "2 the 12th month ................................",
+          "3 the 8th month ................................",
+          "4 the 1st month ................................",
+          "5 the 7th month ................................",
+          "6 the 10th month ................................",
+          "7 the 2nd month ................................",
+          "8 the 9th month ................................",
+          "9 the 4th month ................................",
+          "10 the 11th month ................................"
+        ]
+      },
+      {
+        "id": "50.2",
+        "marks": "10 marks",
+        "instruction": "Match the words on the left with the definitions on the right.",
+        "items": [
+          "1 afternoon  a the day before today",
+          "2 century  b Saturday and Sunday",
+          "3 day  c the coldest season",
+          "4 evening  d 60 seconds",
+          "5 fortnight  e 7 days",
+          "6 minute  f between 12 pm and 6 pm",
+          "7 tomorrow  g 24 hours",
+          "8 week  h after 6 pm",
+          "9 weekend  i the day after today",
+          "10 winter  j 14 days",
+          "11 yesterday  k 100 years"
+        ]
+      },
+      {
+        "id": "50.3",
+        "marks": "10 marks",
+        "instruction": "Fill the gap with the correct preposition.",
+        "items": [
+          "Example: I had lunch with my aunt ........on........ Saturday.",
+          "1 Today is Monday. So the day ...................... tomorrow is Wednesday.",
+          "2 We had a lovely holiday ...................... the summer last year. We went to France ...................... July.",
+          "3 I am going to stay with Sophie ...................... the weekend. We're going to the cinema ...................... Friday evening and then we're going to see my grandma ...................... Saturday.",
+          "4 There are seven days ...................... a week and 366 days ...................... a leap year.",
+          "5 We had an important meeting the day ...................... yesterday.",
+          "6 My brother's birthday is ...................... the spring."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 56,\n \"testNumber\": \"50\",\n \"testTitle\": \"Days, months, seasons\",\n \"exercises\": [\n  {\"id\": \"50.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Which month is this?\",\n   \"items\": [\"Example: the 3rd month March ................................\", \"1 the 6th month ................................\", \"2 the 12th month ................................\", \"3 the 8th month ................................\", \"4 the 1st month ................................\", \"5 the 7th month ................................\", \"6 the 10th month ................................\", \"7 the 2nd month ................................\", \"8 the 9th month ................................\", \"9 the 4th month ................................\", \"10 the 11th month ................................\"]},\n  {\"id\": \"50.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Match the words on the left with the definitions on the right.\",\n   \"items\": [\"1 afternoon  a the day before today\", \"2 century  b Saturday and Sunday\", \"3 day  c the coldest season\", \"4 evening  d 60 seconds\", \"5 fortnight  e 7 days\", \"6 minute  f between 12 pm and 6 pm\", \"7 tomorrow  g 24 hours\", \"8 week  h after 6 pm\", \"9 weekend  i the day after today\", \"10 winter  j 14 days\", \"11 yesterday  k 100 years\"]},\n  {\"id\": \"50.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Fill the gap with the correct preposition.\",\n   \"items\": [\"Example: I had lunch with my aunt ........on........ Saturday.\", \"1 Today is Monday. So the day ...................... tomorrow is Wednesday.\", \"2 We had a lovely holiday ...................... the summer last year. We went to France ...................... July.\", \"3 I am going to stay with Sophie ...................... the weekend. We're going to the cinema ...................... Friday evening and then we're going to see my grandma ...................... Saturday.\", \"4 There are seven days ...................... a week and 366 days ...................... a leap year.\", \"5 We had an important meeting the day ...................... yesterday.\", \"6 My brother's birthday is ...................... the spring.\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [],\n \"unclassified\": [\"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]}\n```"
+}
