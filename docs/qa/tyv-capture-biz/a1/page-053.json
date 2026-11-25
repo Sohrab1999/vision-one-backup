@@ -1,0 +1,87 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 53,
+    "dpi": 300,
+    "renderSha256": "849bbcefca97fc6efda4efa49324a2435cf1b644a823110f634a9dfc89575d3b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:37:49.149Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 56,
+    "testNumber": "42",
+    "testTitle": "Time and time management",
+    "exercises": [
+      {
+        "id": "42.1",
+        "marks": "8 marks",
+        "instruction": "There is one word which is wrong in each of the numbered sentences (1–8). Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "I'm Eddy Yeung and I'm in charge of building this bridge.",
+          "1 The leader time for preparing this project was six months.",
+          "2 We drew up a three-year frametime for the work to be completed.",
+          "3 At the end of one year, everything was on scheduling.",
+          "4 Then there was a delayment because an important machine broke down.",
+          "5 We had nearly two months of uptime while it was repaired.",
+          "6 As a result, we are now a long way before schedule.",
+          "7 We are working hard to make out time but it is not easy.",
+          "8 You know how it is. Everything takes long than planned."
+        ]
+      },
+      {
+        "id": "42.2",
+        "marks": "6 marks",
+        "instruction": "Look at the chart for building a house. Use the information in the chart to complete the sentences below. Write one word in each gap. The first letter is given to help you.",
+        "items": [
+          "1 The t...................... for this project is four months.",
+          "2 The first s...................... is clearing the site.",
+          "3 Putting in the water and the electricity run in p...................... .",
+          "4 Phases 4 and 5 o...................... with the period for decorating.",
+          "5 C...................... is scheduled for the last week of June.",
+          "6 The builder will get a b...................... payment if the project is finished early."
+        ]
+      },
+      {
+        "id": "42.3",
+        "marks": "5 marks",
+        "instruction": "Find the word that completes each tip on time management. The first and last letters of the answers are given.",
+        "items": [
+          "1 Use a diary or a .............. to plan your week.",
+          "2 If you like computers, use an electronic personal .............. .",
+          "3 Put the things you need to do in order – .............. them!",
+          "4 Don't be .............. , and avoid interruptions.",
+          "5 Balance .............. with time. Don't aim for perfection."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Total 19",
+      "Target 14+",
+      "March April May June",
+      "1 Clear site",
+      "2 Build walls",
+      "3 Put on roof",
+      "4 Services: water",
+      "5 Services: electricity",
+      "6 Decorating",
+      "7 Hand over",
+      "Your score /19"
+    ],
+    "pictures": [
+      "Gantt-style chart grid with columns March, April, May, June and rows 1–7 (Clear site to Hand over), shaded cells",
+      "Word-square grid with rows numbered 1–5, letters c/r, o/r, p/e, d/d, q/y at edges"
+    ],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 56,\n \"testNumber\": \"42\",\n \"testTitle\": \"Time and time management\",\n \"exercises\": [\n   {\"id\": \"42.1\",\n    \"marks\": \"8 marks\",\n    \"instruction\": \"There is one word which is wrong in each of the numbered sentences (1–8). Circle the mistake and write the correct word at the end of the line.\",\n    \"items\": [\n      \"I'm Eddy Yeung and I'm in charge of building this bridge.\",\n      \"1 The leader time for preparing this project was six months.\",\n      \"2 We drew up a three-year frametime for the work to be completed.\",\n      \"3 At the end of one year, everything was on scheduling.\",\n      \"4 Then there was a delayment because an important machine broke down.\",\n      \"5 We had nearly two months of uptime while it was repaired.\",\n      \"6 As a result, we are now a long way before schedule.\",\n      \"7 We are working hard to make out time but it is not easy.\",\n      \"8 You know how it is. Everything takes long than planned.\"\n    ]},\n   {\"id\": \"42.2\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Look at the chart for building a house. Use the information in the chart to complete the sentences below. Write one word in each gap. The first letter is given to help you.\",\n    \"items\": [\n      \"1 The t...................... for this project is four months.\",\n      \"2 The first s...................... is clearing the site.\",\n      \"3 Putting in the water and the electricity run in p...................... .\",\n      \"4 Phases 4 and 5 o...................... with the period for decorating.\",\n      \"5 C...................... is scheduled for the last week of June.\",\n      \"6 The builder will get a b...................... payment if the project is finished early.\"\n    ]},\n   {\"id\": \"42.3\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Find the word that completes each tip on time management. The first and last letters of the answers are given.\",\n    \"items\": [\n      \"1 Use a diary or a .............. to plan your week.\",\n      \"2 If you like computers, use an electronic personal .............. .\",\n      \"3 Put the things you need to do in order – .............. them!\",\n      \"4 Don't be .............. , and avoid interruptions.\",\n      \"5 Balance .............. with time. Don't aim for perfection.\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"Total 19\",\n   \"Target 14+\",\n   \"March April May June\",\n   \"1 Clear site\",\n   \"2 Build walls\",\n   \"3 Put on roof\",\n   \"4 Services: water\",\n   \"5 Services: electricity\",\n   \"6 Decorating\",\n   \"7 Hand over\",\n   \"Your score /19\"\n ],\n \"pictures\": [\n   \"Gantt-style chart grid with columns March, April, May, June and rows 1–7 (Clear site to Hand over), shaded cells\",\n   \"Word-square grid with rows numbered 1–5, letters c/r, o/r, p/e, d/d, q/y at edges\"\n ],\n \"unclassified\": [\n   \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

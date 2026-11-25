@@ -1,0 +1,71 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 49,
+    "dpi": 300,
+    "renderSha256": "dd58be216736cf1830eb099c404be1b83056acda376e182e65c3fb539fcddc82",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:21:54.268Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 48,
+    "testNumber": "42",
+    "testTitle": "Bring / brought / brought",
+    "exercises": [
+      {
+        "id": "42.1",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps with the correct form of take or bring.",
+        "items": [
+          "1 She often comes to see me and always ......................... me flowers.",
+          "2 I’m just ......................... this book back to the library. I’ll be back in half an hour.",
+          "3 She borrowed my camera but she ......................... it back the next day.",
+          "4 Are you going to the kitchen? Will you ......................... me a glass of water?",
+          "5 ......................... this letter to the post office and post it for me, will you?"
+        ]
+      },
+      {
+        "id": "42.2",
+        "marks": "10 marks",
+        "instruction": "What could you say? Use take or bring in your answer. There may be more than one possible answer.",
+        "items": [
+          "1 Your friend has to catch a train. You have a car. Offer to drive them to the station.",
+          "2 A friend is going into town. You have a parcel which you want to post.",
+          "3 You’re having a party at your house. One of your friends plays the guitar. Invite them with their guitar.",
+          "4 You’ve just bought a sweater but the size is wrong. Tell a friend what you’re going to do when you go to town tomorrow.",
+          "5 A good friend is going to Belgium for a few days. You’d like some Belgian chocolates."
+        ]
+      },
+      {
+        "id": "42.3",
+        "marks": "10 marks",
+        "instruction": "Correct five mistakes in these emails.",
+        "items": [
+          "Tuesday 4 March 2010 / Hi Ellen, / Guess what? Tim takes me to the cinema last night and today when I was studying at home he came to see me and took me some flowers! I think he must be in love with me! / Bye, / Marian",
+          "Wednesday 5 March 2010 / Dear Marian, / Yes, I think Tim is in love with you! Why don’t you brought him to our party on Friday so we can all meet him? Oh, and take that new CD you told me about, I’d like to hear it. / Love, / Ellen",
+          "Thursday 6 March 2010 / Hi again Ellen, / Thanks for inviting Tim. He said yes. / I’ll bring the CD to the party tomorrow and I’ll leave it with you. You can take it back when you come to see me on Sunday. / Take care, / Marian."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "email window mock-up with toolbar icons (Delete, Reply, Reply All, Forward, Print) containing first email from Marian",
+      "email window mock-up ('New Message') containing reply email from Ellen",
+      "email window mock-up with toolbar icons (Delete, Reply, Reply All, Forward, Print) containing second email from Marian"
+    ],
+    "unclassified": [
+      "Test 42",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 48, \"testNumber\": \"42\", \"testTitle\": \"Bring / brought / brought\", \"exercises\": [{\"id\": \"42.1\", \"marks\": \"10 marks\", \"instruction\": \"Fill the gaps with the correct form of take or bring.\", \"items\": [\"1 She often comes to see me and always ......................... me flowers.\", \"2 I’m just ......................... this book back to the library. I’ll be back in half an hour.\", \"3 She borrowed my camera but she ......................... it back the next day.\", \"4 Are you going to the kitchen? Will you ......................... me a glass of water?\", \"5 ......................... this letter to the post office and post it for me, will you?\"]}, {\"id\": \"42.2\", \"marks\": \"10 marks\", \"instruction\": \"What could you say? Use take or bring in your answer. There may be more than one possible answer.\", \"items\": [\"1 Your friend has to catch a train. You have a car. Offer to drive them to the station.\", \"2 A friend is going into town. You have a parcel which you want to post.\", \"3 You’re having a party at your house. One of your friends plays the guitar. Invite them with their guitar.\", \"4 You’ve just bought a sweater but the size is wrong. Tell a friend what you’re going to do when you go to town tomorrow.\", \"5 A good friend is going to Belgium for a few days. You’d like some Belgian chocolates.\"]}, {\"id\": \"42.3\", \"marks\": \"10 marks\", \"instruction\": \"Correct five mistakes in these emails.\", \"items\": [\"Tuesday 4 March 2010 / Hi Ellen, / Guess what? Tim takes me to the cinema last night and today when I was studying at home he came to see me and took me some flowers! I think he must be in love with me! / Bye, / Marian\", \"Wednesday 5 March 2010 / Dear Marian, / Yes, I think Tim is in love with you! Why don’t you brought him to our party on Friday so we can all meet him? Oh, and take that new CD you told me about, I’d like to hear it. / Love, / Ellen\", \"Thursday 6 March 2010 / Hi again Ellen, / Thanks for inviting Tim. He said yes. / I’ll bring the CD to the party tomorrow and I’ll leave it with you. You can take it back when you come to see me on Sunday. / Take care, / Marian.\"]}], \"boxesAndLists\": [], \"pictures\": [\"email window mock-up with toolbar icons (Delete, Reply, Reply All, Forward, Print) containing first email from Marian\", \"email window mock-up ('New Message') containing reply email from Ellen\", \"email window mock-up with toolbar icons (Delete, Reply, Reply All, Forward, Print) containing second email from Marian\"], \"unclassified\": [\"Test 42\", \"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]}\n```"
+}

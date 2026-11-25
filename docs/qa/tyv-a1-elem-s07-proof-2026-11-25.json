@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "step": "A1-ELEM-S07",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "date": "2026-11-25",
+    "jalali": "۱۴۰۵/۹/۴",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی: پایداری کامل پروژه و بازیابی پس از Reset یا حذف Sandbox — ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S06 (گام بعدی مجاز A1-ELEM-S07 = bun scripts/tyv-a1-vlm-capture.mjs elem 73,74,75,76,77,78,79,80,81,82,83,84 — صفحات ۷۳–۸۴ — دستهٔ هفتم از ۸ — بدون skip انتظاری — پراب‌ها فقط ۸/۱۲/۴۰ — ادامهٔ Answer key — فوترهای چاپی انتظاری ۷۲..۸۳ تا پایان کلید p.۹۲ = PDF ۹۳) — trace 1a213c347cba74f5 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "نشست تمیز بدون ریست پنهان (چهارمین نشست پیوسته پس از بازیابی ۴۳): HEAD محلی = c83a301a600c07c25bc6623be21bfc8b296fadc0 (ثبت اثبات S06) = ریموت backup/main (ls-remote بایت‌به‌بیت اثبات‌شده — divergence ۰/۰) — porcelain ۰ — git diff --check پاک — stash stack = ۶ همگی بایگانی ریموت (rc43=4b9fae5 · rc42=d01923fd · rc41=67fc503 · rc35=3d6bfe0b · rc34=73dd3e1 · rc33=c7337e9) — دیسک‌حقیقت آغاز گام ۱۷۶/۴۸۹ (biz 98 · elem 72 · pri 3 · upp 3 — بازشماری ls) == رکورد سربرگ ۱۳۲مین — وجودسنجی پیشا-گام: elem page-061..072 همگی در پیته (S06 بسته) و page-073..084 همگی غایب (وضعیت پیشا-گام صحیح — بدون آرتیفکت ناهنجار باقی‌مانده)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs elem 73,74,75,76,77,78,79,80,81,82,83,84",
+  "runs": [
+    {
+      "run": 1,
+      "type": "single clean run",
+      "output": "page 73: ok · page 74: ok · page 75: ok · page 76: ok · page 77: ok · page 78: ok · page 79: ok · page 80: ok · page 81: ok · page 82: ok · page 83: ok · page 84: ok",
+      "done": "DONE tyv-elem: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-elem/a1"
+    }
+  ],
+  "result": {
+    "done": "DONE tyv-elem: captured=12 skipped=0 failed=0",
+    "captured": 12,
+    "skippedExisting": 0,
+    "failed": 0,
+    "finalRun": "تک‌اجرایی تمیز بدون ناهنجاری — پنجمین تک‌اجرایی پیوسته ELEM (S02 · S04 · S06 · این گام) — صفر skip مطابق انتظار صریح مالک (بدون skip انتظاری — پراب‌ها فقط ۸/۱۲/۴۰)",
+    "anomalies": []
+  },
+  "newPages": {
+    "pages": [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84],
+    "files": "docs/qa/tyv-capture-elem/a1/page-073.json .. page-084.json (۱۲ JSON NEW)",
+    "provenance": "کامل ۱۲/۱۲ (renderSha256 یکتا ۱۲/۱۲ · DPI=300 · tyv-a1-v1 · attempts=≤3 · timestamp · status=ok ۱۲/۱۲)"
+  },
+  "content": {
+    "footerOffset": "+1 پابرجا — فوترهای چاپی ۷۲..۸۳ (صفر ناسازگاری — عین انتظار صریح مالک «فوترهای چاپی انتظاری ۷۲..۸۳»)",
+    "structure": [
+      "p73 کلید (فوتر چاپی ۷۲) — ۵تمرین/۲۱آیتم/۰باکس/۱تصویر/۳ unclassified — testNumber=null",
+      "p74 کلید Tests 15–16 (فوتر ۷۳) — ۷/۵۹/۰/۰/۳ — testNumber بازه‌ای 15–16",
+      "p75 کلید Tests 17–18 (فوتر ۷۴) — ۸/۶۷/۰/۰/۳ — testNumber بازه‌ای 17–18",
+      "p76 کلید (فوتر ۷۵ — بلوک‌های کلید) — ۱۰/۷۵/۰/۰/۴ — testNumber=null",
+      "p77 کلید Test 22 (فوتر ۷۶) — ۷/۴۹/۰/۰/۲ — testNumber=22 (برچسب «Test 22»)",
+      "p78 کلید Tests 24–25 (فوتر ۷۷) — ۶/۴۴/۰/۱تصویر/۱ — testNumber=«24, 25» (برچسب «Test 24 / Test 25»)",
+      "p79 کلید (فوتر ۷۸ — بلوک‌های کلید) — ۱۱/۳۶/۰/۰/۵ — testNumber=null",
+      "p80 کلید Test 30 (فوتر ۷۹) — ۶/۴۴/۰/۰/۳ — testNumber=30",
+      "p81 کلید (فوتر ۸۰) — ۷/۳۳/۳باکس/۱تصویر/۳ — testNumber=null (تنها صفحهٔ باکس‌دار این دسته)",
+      "p82 کلید (فوتر ۸۱) — ۹/۵۷/۰/۱تصویر/۴ — testNumber=null",
+      "p83 کلید (فوتر ۸۲) — ۱۱/۴۳/۰/۰/۳ — testNumber=null",
+      "p84 کلید (فوتر ۸۳) — ۷/۴۰/۰/۰/۱ — testNumber=null"
+    ],
+    "transitionNote": "ادامهٔ پیوستهٔ Answer key عین انتظار مالک — کلید خام دست‌نخورده با testNumber=null یا بازه‌ای/چندتایی (15–16 · 17–18 · 22 · «24, 25» · 30) ساختار ذاتی کلید — عین الگوی ثبت‌شدهٔ biz S08 و elem S06 — کلید تا پایان p.۹۲ چاپی = PDF ۹۳ ادامه دارد (باقی‌ماندهٔ کلید در محدودهٔ S08 صفحات ۸۵–۹۶ است) — [؟] صفر · [N/A] صفر",
+    "totals": { "pages": 12, "exercises": 94, "items": 568, "boxesAndLists": 3, "pictures": 4, "unclassified": 35, "unknownMark": 0 }
+  },
+  "indexAfter": {
+    "capturedPages": 12,
+    "capturedNow": 12,
+    "skippedExisting": 0,
+    "failedNow": [],
+    "failedTotal": 0,
+    "probePages": [8, 12, 40],
+    "note": "a1-index پس از تک‌اجرایی تمیز — هیچ آرشیو ناهنجاری در این گام"
+  },
+  "diskTruthAfter": {
+    "elem": "۸۴/۹۶ (باقی‌مانده ۱۲ صفحه — فقط S08 صفحات ۸۵–۹۶ — پایان A1 کتاب سوم)",
+    "a1Total": "۱۸۸/۴۸۹ (biz ۹۸/۹۸ کامل · elem ۸۴/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳)"
+  },
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده — لایهٔ A1 فقط کپچر خام",
+  "nextAllowedStep": "A1-ELEM-S08 = صفحات ۸۵–۹۶ elem (طبق دفتر گام‌های کوچک §۱-۲ — bun scripts/tyv-a1-vlm-capture.mjs elem 85,86,87,88,89,90,91,92,93,94,95,96 — دستهٔ هشتم/آخر از ۸ دسته — بدون skip انتظاری — پراب‌ها فقط ۸/۱۲/۴۰ — پایان Answer key در p.۹۲ چاپی = PDF ۹۳ + سه صفحهٔ پس از کلید PDF ۹۴..۹۶ — پایان A1 کتاب سوم) ⇒ سپس PRI S01..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده"
+}

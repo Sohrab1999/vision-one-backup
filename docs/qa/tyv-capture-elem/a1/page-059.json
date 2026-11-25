@@ -1,0 +1,82 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 59,
+    "dpi": 300,
+    "renderSha256": "93e0c5202c69cc153e2bbecb79a217c90953e0903dac44a695b65b3eceb2c65d",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:27:23.859Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 58,
+    "testNumber": "52",
+    "testTitle": "Places",
+    "exercises": [
+      {
+        "id": "52.1",
+        "marks": "10 marks",
+        "instruction": "Match these words with their opposites.",
+        "items": [
+          "Example: at home – out .........."
+        ]
+      },
+      {
+        "id": "52.2",
+        "marks": "10 marks",
+        "instruction": "Look at the pictures and answer the questions.",
+        "items": [
+          "Example: A E I O U Which letter is in the middle? ..........I..........",
+          "1 What is there on the front of the car?",
+          "2 What is there on the back of the car?",
+          "3 What is there on the side of the car?",
+          "4 What is at the beginning of the path?",
+          "5 Who is in the middle of the path?",
+          "6 What is at the end of the path?",
+          "7 Where is Joe? .................. the kitchen.",
+          "8 Where is the photograph? .................. Lucy's desk.",
+          "9 Where is the boy sitting? .......... the front of the class.",
+          "10 Where is Tokyo? .................. Japan."
+        ]
+      },
+      {
+        "id": "52.3",
+        "marks": "10 marks",
+        "instruction": "Choose the best words from the box to fill the gaps in the email.",
+        "items": [
+          "Hi Mia,",
+          "I'm writing this from my computer at home ......... . No one else is (1) .................. . The children are (2) .................. at a friend's house just down the street, and Will is (3) .................. for a few days.  He's on business (4) .................. , in a small town in the (5) .................. of France. He'll be (6) .................. on Friday.",
+          "He's just sent me an email to say that it's lovely and hot (7) ..................!  I can only see rain from the window on my (8) .................. as I type, and the TV says that it's raining (9) .................. in this country.",
+          "I wanted to plant some flowers at the (10) .................. of our house but it's too wet to be in the garden.",
+          "So I'm just going to read a book until it's time for the children to come home.",
+          "Love,",
+          "Tina"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "at home  back  beginning  bottom  end  front  here  left  out  right  there  top",
+      "abroad  at home  away  back  everywhere  here  left  middle  out  side  there"
+    ],
+    "pictures": [
+      "car with suitcase on the back and a cat on the side",
+      "tree and path with a person sitting in the middle",
+      "man standing in the kitchen",
+      "photograph on Lucy's desk",
+      "classroom scene with boy at front of class (arrow)",
+      "map of Japan with Tokyo marked",
+      "email window screenshot (New Message) with taskbar: start, Outlook Express, New Message"
+    ],
+    "unclassified": [
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 58,\n  \"testNumber\": \"52\",\n  \"testTitle\": \"Places\",\n  \"exercises\": [\n    {\n      \"id\": \"52.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Match these words with their opposites.\",\n      \"items\": [\"Example: at home – out ..........\"]\n    },\n    {\n      \"id\": \"52.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Look at the pictures and answer the questions.\",\n      \"items\": [\n        \"Example: A E I O U Which letter is in the middle? ..........I..........\",\n        \"1 What is there on the front of the car?\",\n        \"2 What is there on the back of the car?\",\n        \"3 What is there on the side of the car?\",\n        \"4 What is at the beginning of the path?\",\n        \"5 Who is in the middle of the path?\",\n        \"6 What is at the end of the path?\",\n        \"7 Where is Joe? .................. the kitchen.\",\n        \"8 Where is the photograph? .................. Lucy's desk.\",\n        \"9 Where is the boy sitting? .......... the front of the class.\",\n        \"10 Where is Tokyo? .................. Japan.\"\n      ]\n    },\n    {\n      \"id\": \"52.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Choose the best words from the box to fill the gaps in the email.\",\n      \"items\": [\n        \"Hi Mia,\",\n        \"I'm writing this from my computer at home ......... . No one else is (1) .................. . The children are (2) .................. at a friend's house just down the street, and Will is (3) .................. for a few days.  He's on business (4) .................. , in a small town in the (5) .................. of France. He'll be (6) .................. on Friday.\",\n        \"He's just sent me an email to say that it's lovely and hot (7) ..................!  I can only see rain from the window on my (8) .................. as I type, and the TV says that it's raining (9) .................. in this country.\",\n        \"I wanted to plant some flowers at the (10) .................. of our house but it's too wet to be in the garden.\",\n        \"So I'm just going to read a book until it's time for the children to come home.\",\n        \"Love,\",\n        \"Tina\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"at home  back  beginning  bottom  end  front  here  left  out  right  there  top\",\n    \"abroad  at home  away  back  everywhere  here  left  middle  out  side  there\"\n  ],\n  \"pictures\": [\n    \"car with suitcase on the back and a cat on the side\",\n    \"tree and path with a person sitting in the middle\",\n    \"man standing in the kitchen\",\n    \"photograph on Lucy's desk\",\n    \"classroom scene with boy at front of class (arrow)\",\n    \"map of Japan with Tokyo marked\",\n    \"email window screenshot (New Message) with taskbar: start, Outlook Express, New Message\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\"\n  ]\n}\n```"
+}

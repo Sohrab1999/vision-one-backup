@@ -1,0 +1,73 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 46,
+    "dpi": 300,
+    "renderSha256": "e6957f5b9315978cf4986f2f4eeb077526dad12345711a0bc6a4c3db3ebd1acb",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:20:56.739Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 49,
+    "testNumber": "35",
+    "testTitle": "Personal finance",
+    "exercises": [
+      {
+        "id": "35.1",
+        "marks": "6 marks",
+        "instruction": "Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There are two alternatives that you don't have to use.",
+        "items": [
+          "1 'You get your own cheque book so, for example, you can pay your bills by post.'",
+          "2 'We borrowed £80,000 from the building society to buy our house.'",
+          "3 'I do all my shopping using plastic and then I pay when I get my monthly statement.'",
+          "4 'It's in both our names so we can both get money out when we want.'",
+          "5 'We are nearly £200 in the red and we are paying a lot of interest on it.'",
+          "6 'We've got about £2,000 saved and the bank pays about 4% interest on it.'"
+        ]
+      },
+      {
+        "id": "35.2",
+        "marks": "10 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'My name is Jenny Logan and I'm in charge of e-banking at ScotWest Bank. We have local (1) .............. like all the other (2) .............. banks, but more and more of our customers are using the Internet. Our \"Internet only\" savings account allows customers to (3) .............. their money 24 hours a day. You can check your account (4) .............. day or night and, if you want, (5) .............. money from one account to another. You don't get a (6) .............. book but you can pay bills electronically. Also we don't send a bank (7) .............. through the post every month because you can print one off at any time. Internet banking is very efficient so our (8) .............. are lower and we pay more (9) .............. on e-accounts. At the moment the (10) .............. is 4%.'",
+          "1 A shops     B branches    C outlets     6 A cheque     B credit      C cash",
+          "2 A high-street B top-end    C mid-range   7 A report     B statement   C invoice",
+          "3 A arrange    B manage      C audit       8 A charges    B debits      C credits",
+          "4 A profit     B total       C balance     9 A overdraft  B dividend    C interest",
+          "5 A dispose    B distribute  C transfer    10 A level     B rate        C share"
+        ]
+      },
+      {
+        "id": "35.3",
+        "marks": "5 marks",
+        "instruction": "Write one word in each gap to complete the sentences.",
+        "items": [
+          "1 We have about $10,000 invested in u _ _ _ _ trusts.",
+          "2 If our building society is demutualized, everyone will get a w _ _ _ _ _ _ _ _ of £250.",
+          "3 The government says that it can't afford to increase the s _ _ _ _ pension by more than 1%.",
+          "4 I am lucky because I am a member of the company pension s _ _ _ _ _ .",
+          "5 Thousands of small i _ _ _ _ _ _ _ _ lost money when the share price collapsed."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A credit card    B current account    C overdraft    D joint account    E debit card    F deposit account    G mortgage    H bank statement",
+      "Total 21    Target 17+",
+      "our score /21"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 49,\n \"testNumber\": \"35\",\n \"testTitle\": \"Personal finance\",\n \"exercises\": [\n  {\"id\": \"35.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There are two alternatives that you don't have to use.\",\n   \"items\": [\n    \"1 'You get your own cheque book so, for example, you can pay your bills by post.'\",\n    \"2 'We borrowed £80,000 from the building society to buy our house.'\",\n    \"3 'I do all my shopping using plastic and then I pay when I get my monthly statement.'\",\n    \"4 'It's in both our names so we can both get money out when we want.'\",\n    \"5 'We are nearly £200 in the red and we are paying a lot of interest on it.'\",\n    \"6 'We've got about £2,000 saved and the bank pays about 4% interest on it.'\"\n   ]},\n  {\"id\": \"35.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"'My name is Jenny Logan and I'm in charge of e-banking at ScotWest Bank. We have local (1) .............. like all the other (2) .............. banks, but more and more of our customers are using the Internet. Our \\\"Internet only\\\" savings account allows customers to (3) .............. their money 24 hours a day. You can check your account (4) .............. day or night and, if you want, (5) .............. money from one account to another. You don't get a (6) .............. book but you can pay bills electronically. Also we don't send a bank (7) .............. through the post every month because you can print one off at any time. Internet banking is very efficient so our (8) .............. are lower and we pay more (9) .............. on e-accounts. At the moment the (10) .............. is 4%.'\",\n    \"1 A shops     B branches    C outlets     6 A cheque     B credit      C cash\",\n    \"2 A high-street B top-end    C mid-range   7 A report     B statement   C invoice\",\n    \"3 A arrange    B manage      C audit       8 A charges    B debits      C credits\",\n    \"4 A profit     B total       C balance     9 A overdraft  B dividend    C interest\",\n    \"5 A dispose    B distribute  C transfer    10 A level     B rate        C share\"\n   ]},\n  {\"id\": \"35.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Write one word in each gap to complete the sentences.\",\n   \"items\": [\n    \"1 We have about $10,000 invested in u _ _ _ _ trusts.\",\n    \"2 If our building society is demutualized, everyone will get a w _ _ _ _ _ _ _ _ of £250.\",\n    \"3 The government says that it can't afford to increase the s _ _ _ _ pension by more than 1%.\",\n    \"4 I am lucky because I am a member of the company pension s _ _ _ _ _ .\",\n    \"5 Thousands of small i _ _ _ _ _ _ _ _ lost money when the share price collapsed.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"A credit card    B current account    C overdraft    D joint account    E debit card    F deposit account    G mortgage    H bank statement\",\n  \"Total 21    Target 17+\",\n  \"our score /21\"\n ],\n \"pictures\": [],\n \"unclassified\": [\"Test Your Business Vocabulary in Use\"]\n}"
+}

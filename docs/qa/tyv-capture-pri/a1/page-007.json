@@ -1,0 +1,125 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 7,
+    "dpi": 300,
+    "renderSha256": "9b3ccc9d44f3e4a6a3e8271c501b07f5b44f4221887e34d895844519c3c9c801",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T06:21:55.850Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 6,
+    "testNumber": "1-3",
+    "testTitle": "Learning and recording vocabulary",
+    "exercises": [
+      {
+        "id": "1-3.1",
+        "marks": "5 marks",
+        "instruction": "Pictures are a good way to record and remember the meaning of certain words. Draw pictures of the following:",
+        "items": [
+          "saucepan",
+          "knife",
+          "finger",
+          "thumb",
+          "smile"
+        ]
+      },
+      {
+        "id": "1-3.2",
+        "marks": "5 marks",
+        "instruction": "You can increase your vocabulary by learning words and their opposites together. Complete the conversations with opposites of the underlined words. Look at the example.",
+        "items": [
+          "Example: Did you like the film?",
+          "No, I hated it.",
+          "1 A: Did they win the match?",
+          "B: No, they ...........................",
+          "2 A: Was the room clean when you arrived?",
+          "B: No, it was very ...........................",
+          "3 A: Do they think inflation will rise?",
+          "B: No, they say it is going to ...........................",
+          "4 A: Were all the staff polite?",
+          "B: No, one of the waiters was very ...........................",
+          "5 A: Did you think the town was beautiful?",
+          "B: No, I thought it was really ..........................."
+        ]
+      },
+      {
+        "id": "1-3.3",
+        "marks": "4 marks",
+        "instruction": "Match each verb on the left with two of the nouns on the right.",
+        "items": [
+          "1 put on",
+          "2 take",
+          "3 do",
+          "4 make",
+          "a mistake",
+          "weight",
+          "a photo",
+          "an exercise",
+          "homework",
+          "half an hour",
+          "your gloves",
+          "a mess"
+        ]
+      },
+      {
+        "id": "1-3.4",
+        "marks": "5 marks",
+        "instruction": "Circle the correct underlined word or phrase.",
+        "items": [
+          "1 If you do something silently, it means you do it noisily / without a noise.",
+          "2 If the price of something rises sharply, it means it rises a lot / a little.",
+          "3 If you revise something, it means you study it / study it again.",
+          "4 If something (e.g. a time or place) suits you, it means that time or place is / isn't convenient for you and acceptable to you.",
+          "5 If you are homesick, it means you are ill / unhappy because you are away from home."
+        ]
+      },
+      {
+        "id": "1-3.5",
+        "marks": "5 marks",
+        "instruction": "Complete this table.",
+        "items": [
+          "Verb | Noun",
+          "explain | ...........................",
+          "........................... | choice",
+          "define | ...........................",
+          "translate | ...........................",
+          "........................... | pronunciation"
+        ]
+      },
+      {
+        "id": "1-3.6",
+        "marks": "6 marks",
+        "instruction": "The pronunciation of new words can be difficult. Is the pronunciation of the underlined letters in each pair of words the same or different?",
+        "items": [
+          "1 homework / lose",
+          "2 loud / doubt",
+          "3 silent / island",
+          "4 ache / choose",
+          "5 weight / receipt",
+          "6 dream / least"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Your score / 30"
+    ],
+    "pictures": [
+      "table for exercise 1-3.5 with Verb and Noun columns"
+    ],
+    "unclassified": [
+      "TESTS",
+      "This first page tests vocabulary from Units 1-3 of English Vocabulary in Use.",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 6,\n  \"testNumber\": \"1-3\",\n  \"testTitle\": \"Learning and recording vocabulary\",\n  \"exercises\": [\n    {\n      \"id\": \"1-3.1\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Pictures are a good way to record and remember the meaning of certain words. Draw pictures of the following:\",\n      \"items\": [\"saucepan\", \"knife\", \"finger\", \"thumb\", \"smile\"]\n    },\n    {\n      \"id\": \"1-3.2\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"You can increase your vocabulary by learning words and their opposites together. Complete the conversations with opposites of the underlined words. Look at the example.\",\n      \"items\": [\n        \"Example: Did you like the film?\",\n        \"No, I hated it.\",\n        \"1 A: Did they win the match?\",\n        \"B: No, they ...........................\",\n        \"2 A: Was the room clean when you arrived?\",\n        \"B: No, it was very ...........................\",\n        \"3 A: Do they think inflation will rise?\",\n        \"B: No, they say it is going to ...........................\",\n        \"4 A: Were all the staff polite?\",\n        \"B: No, one of the waiters was very ...........................\",\n        \"5 A: Did you think the town was beautiful?\",\n        \"B: No, I thought it was really ...........................\"\n      ]\n    },\n    {\n      \"id\": \"1-3.3\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Match each verb on the left with two of the nouns on the right.\",\n      \"items\": [\n        \"1 put on\", \"2 take\", \"3 do\", \"4 make\",\n        \"a mistake\", \"weight\", \"a photo\", \"an exercise\",\n        \"homework\", \"half an hour\", \"your gloves\", \"a mess\"\n      ]\n    },\n    {\n      \"id\": \"1-3.4\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Circle the correct underlined word or phrase.\",\n      \"items\": [\n        \"1 If you do something silently, it means you do it noisily / without a noise.\",\n        \"2 If the price of something rises sharply, it means it rises a lot / a little.\",\n        \"3 If you revise something, it means you study it / study it again.\",\n        \"4 If something (e.g. a time or place) suits you, it means that time or place is / isn't convenient for you and acceptable to you.\",\n        \"5 If you are homesick, it means you are ill / unhappy because you are away from home.\"\n      ]\n    },\n    {\n      \"id\": \"1-3.5\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Complete this table.\",\n      \"items\": [\n        \"Verb | Noun\",\n        \"explain | ...........................\",\n        \"........................... | choice\",\n        \"define | ...........................\",\n        \"translate | ...........................\",\n        \"........................... | pronunciation\"\n      ]\n    },\n    {\n      \"id\": \"1-3.6\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"The pronunciation of new words can be difficult. Is the pronunciation of the underlined letters in each pair of words the same or different?\",\n      \"items\": [\n        \"1 homework / lose\", \"2 loud / doubt\", \"3 silent / island\",\n        \"4 ache / choose\", \"5 weight / receipt\", \"6 dream / least\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\"Your score / 30\"],\n  \"pictures\": [\"table for exercise 1-3.5 with Verb and Noun columns\"],\n  \"unclassified\": [\n    \"TESTS\",\n    \"This first page tests vocabulary from Units 1-3 of English Vocabulary in Use.\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

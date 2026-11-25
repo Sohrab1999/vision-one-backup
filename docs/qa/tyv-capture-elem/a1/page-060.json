@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 60,
+    "dpi": 300,
+    "renderSha256": "58d7b1ea43ff6f4d39516fa833694c45845da712145080d71c62f461307ae9d6",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:25:17.803Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 59,
+    "testNumber": "53",
+    "testTitle": "Manner",
+    "exercises": [
+      {
+        "id": "53.1",
+        "marks": "10 marks",
+        "instruction": "Put pairs of opposite words into the table.",
+        "items": [
+          "right / wrong (Example row printed in table)"
+        ]
+      },
+      {
+        "id": "53.2",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps with an adverb (e.g. wrongly) so that the second sentence means the same as the first.",
+        "items": [
+          "Example: The numbers in this list are wrong.",
+          "This list is .......... wrongly .......... numbered.",
+          "1 He was driving at 140 kilometres per hour.",
+          "He was driving very ......................... .",
+          "2 He shouted her name.",
+          "He said her name very ......................... .",
+          "3 We went past the baby’s bedroom, making very little noise because she was asleep.",
+          "We went past the room very ......................... .",
+          "4 He’s a good pianist.",
+          "He plays the piano really ......................... .",
+          "5 There was ice on the road, so we drove at 20 kilometres per hour.",
+          "We drove very ......................... .",
+          "6 She was very unfriendly when she spoke to us.",
+          "She spoke to us ......................... ......................... very unfriendly ......................... .",
+          "7 I don’t swim for the school team because I’m a bad swimmer.",
+          "I swim very ......................... .",
+          "8 The manager was quick to reply to my letter.",
+          "The manger replied to my letter ......................... .",
+          "9 She looked at me in a very sad way.",
+          "She looked at me very ......................... .",
+          "10 Our teacher is always friendly when she corrects our mistakes.",
+          "She always corrects our mistakes ......................... ......................... ......................... ......................... ."
+        ]
+      },
+      {
+        "id": "53.3",
+        "marks": "10 marks",
+        "instruction": "Answer the questions, using adverb forms of the words in the box. Write full sentences.",
+        "items": [
+          "1 I can’t hear what the child is saying.",
+          "How is the child speaking?",
+          "2 Glen was acting in a way that no one could understand.",
+          "How was Glen acting?",
+          "3 The accident happened in one short moment, and no one was expecting it.",
+          "How did the accident happen?",
+          "4 Pippa passed the exam with no problems at all.",
+          "How did she pass the exam?",
+          "5 He finished the job in less than a minute.",
+          "How did he finish the job?"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Opposites (table with right / wrong example row and empty rows)",
+      "good fast quiet sad friendly right slow bad loud unfriendly wrong happy",
+      "sudden quiet strange quick easy"
+    ],
+    "pictures": [
+      "Opposites table with header 'Opposites' and example 'right' / 'wrong' filled in"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 59, \"testNumber\": \"53\", \"testTitle\": \"Manner\", \"exercises\": [{\"id\": \"53.1\", \"marks\": \"10 marks\", \"instruction\": \"Put pairs of opposite words into the table.\", \"items\": [\"right / wrong (Example row printed in table)\"]}, {\"id\": \"53.2\", \"marks\": \"10 marks\", \"instruction\": \"Fill the gaps with an adverb (e.g. wrongly) so that the second sentence means the same as the first.\", \"items\": [\"Example: The numbers in this list are wrong.\", \"This list is .......... wrongly .......... numbered.\", \"1 He was driving at 140 kilometres per hour.\", \"He was driving very ......................... .\", \"2 He shouted her name.\", \"He said her name very ......................... .\", \"3 We went past the baby’s bedroom, making very little noise because she was asleep.\", \"We went past the room very ......................... .\", \"4 He’s a good pianist.\", \"He plays the piano really ......................... .\", \"5 There was ice on the road, so we drove at 20 kilometres per hour.\", \"We drove very ......................... .\", \"6 She was very unfriendly when she spoke to us.\", \"She spoke to us ......................... ......................... very unfriendly ......................... .\", \"7 I don’t swim for the school team because I’m a bad swimmer.\", \"I swim very ......................... .\", \"8 The manager was quick to reply to my letter.\", \"The manger replied to my letter ......................... .\", \"9 She looked at me in a very sad way.\", \"She looked at me very ......................... .\", \"10 Our teacher is always friendly when she corrects our mistakes.\", \"She always corrects our mistakes ......................... ......................... ......................... ......................... .\"]}, {\"id\": \"53.3\", \"marks\": \"10 marks\", \"instruction\": \"Answer the questions, using adverb forms of the words in the box. Write full sentences.\", \"items\": [\"1 I can’t hear what the child is saying.\", \"How is the child speaking?\", \"2 Glen was acting in a way that no one could understand.\", \"How was Glen acting?\", \"3 The accident happened in one short moment, and no one was expecting it.\", \"How did the accident happen?\", \"4 Pippa passed the exam with no problems at all.\", \"How did she pass the exam?\", \"5 He finished the job in less than a minute.\", \"How did he finish the job?\"]}], \"boxesAndLists\": [\"Opposites (table with right / wrong example row and empty rows)\", \"good fast quiet sad friendly right slow bad loud unfriendly wrong happy\", \"sudden quiet strange quick easy\"], \"pictures\": [\"Opposites table with header 'Opposites' and example 'right' / 'wrong' filled in\"], \"unclassified\": [\"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]}"
+}

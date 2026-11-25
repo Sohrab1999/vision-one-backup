@@ -1,0 +1,151 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 70,
+    "dpi": 300,
+    "renderSha256": "63c510867b4c48b2a3eea43290a2a8c5ac7a31b3a2e20bfe58ca55e0f2565013",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:58:15.792Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 69,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "5.2",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 No, she's got short, dark hair. (2 marks)",
+          "2 No, she's tall and thin/slim. (2 marks)",
+          "3 No, he's/she's old/elderly.",
+          "4 No, he's good-looking.",
+          "5 No, she's got dark/black/brown hair.",
+          "6 No, he's fat/overweight.",
+          "7 No, she's average-looking/ugly.",
+          "8 No, he/she's short."
+        ]
+      },
+      {
+        "id": "5.3",
+        "marks": "(5 marks)",
+        "instruction": "(Note: other answers are possible. Give yourself a mark for each correct answer.)",
+        "items": [
+          "1 He's got a beard/moustache.",
+          "2 He's also got a moustache/beard.",
+          "3 His skin is dark/brown.",
+          "4 He's got short/dark/brown/black hair.",
+          "5 He is good-looking/young."
+        ]
+      },
+      {
+        "id": "5.4",
+        "marks": "(5 marks)",
+        "instruction": "",
+        "items": [
+          "1 How tall are you?",
+          "2 How heavy is the baby?",
+          "3 How much does the child weigh?",
+          "4 What does your new teacher look like?",
+          "5 What colour is her hair?"
+        ]
+      },
+      {
+        "id": "6.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 d    2 e    3 a    4 b    5 c"
+        ]
+      },
+      {
+        "id": "6.2",
+        "marks": "(5 marks)",
+        "instruction": "",
+        "items": [
+          "1 headache    2 malaria    3 asthma    4 cancer    5 cholera"
+        ]
+      },
+      {
+        "id": "6.3",
+        "marks": "(5 marks)",
+        "instruction": "",
+        "items": [
+          "1 cholera    2 asthma    3 cancer    4 headache    5 malaria"
+        ]
+      },
+      {
+        "id": "6.4",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 stressed; relax    5 Exercise",
+          "2 attack; hospital    6 cold",
+          "3 hay fever; sneeze    7 aspirin",
+          "4 diet"
+        ]
+      },
+      {
+        "id": "7.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 You feel hungry.    5 You feel ill.    9 You feel sad.",
+          "2 You feel tired.    6 You feel cold.    10 You feel surprised.",
+          "3 You feel angry.    7 You feel happy.",
+          "4 You feel thirsty.    8 You feel hot."
+        ]
+      },
+      {
+        "id": "7.2",
+        "marks": "(4 marks)",
+        "instruction": "",
+        "items": [
+          "1 hate    2 hot    3 sad/unhappy    4 well"
+        ]
+      },
+      {
+        "id": "7.3",
+        "marks": "(6 marks)",
+        "instruction": "",
+        "items": [
+          "1 I like tennis very much. Or: I very much like tennis.",
+          "2 I am very happy about your good exam results.",
+          "3 Jack hopes his girlfriend will phone him soon. Or: Jack wants his girlfriend to phone him soon.",
+          "4 I really like ice cream.",
+          "5 My little sister prefers juice to milk.",
+          "6 Grandfather is a little tired today."
+        ]
+      },
+      {
+        "id": "7.4",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 Bonnie looks upset.    6 Rob looks cold.",
+          "2 Colin looks angry.    7 Nat looks tired.",
+          "3 Stan looks sad.    8 Clare looks happy.",
+          "4 Katie looks ill.    9 Spot looks thirsty.",
+          "5 Mark looks surprised.    10 Fluffy looks hungry."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 6",
+      "Test 7",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 69,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"5.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 No, she's got short, dark hair. (2 marks)\",\n        \"2 No, she's tall and thin/slim. (2 marks)\",\n        \"3 No, he's/she's old/elderly.\",\n        \"4 No, he's good-looking.\",\n        \"5 No, she's got dark/black/brown hair.\",\n        \"6 No, he's fat/overweight.\",\n        \"7 No, she's average-looking/ugly.\",\n        \"8 No, he/she's short.\"\n      ]\n    },\n    {\n      \"id\": \"5.3\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": \"(Note: other answers are possible. Give yourself a mark for each correct answer.)\",\n      \"items\": [\n        \"1 He's got a beard/moustache.\",\n        \"2 He's also got a moustache/beard.\",\n        \"3 His skin is dark/brown.\",\n        \"4 He's got short/dark/brown/black hair.\",\n        \"5 He is good-looking/young.\"\n      ]\n    },\n    {\n      \"id\": \"5.4\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 How tall are you?\",\n        \"2 How heavy is the baby?\",\n        \"3 How much does the child weigh?\",\n        \"4 What does your new teacher look like?\",\n        \"5 What colour is her hair?\"\n      ]\n    },\n    {\n      \"id\": \"6.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 d    2 e    3 a    4 b    5 c\"\n      ]\n    },\n    {\n      \"id\": \"6.2\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 headache    2 malaria    3 asthma    4 cancer    5 cholera\"\n      ]\n    },\n    {\n      \"id\": \"6.3\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 cholera    2 asthma    3 cancer    4 headache    5 malaria\"\n      ]\n    },\n    {\n      \"id\": \"6.4\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 stressed; relax    5 Exercise\",\n        \"2 attack; hospital    6 cold\",\n        \"3 hay fever; sneeze    7 aspirin\",\n        \"4 diet\"\n      ]\n    },\n    {\n      \"id\": \"7.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 You feel hungry.    5 You feel ill.    9 You feel sad.\",\n        \"2 You feel tired.    6 You feel cold.    10 You feel surprised.\",\n        \"3 You feel angry.    7 You feel happy.\",\n        \"4 You feel thirsty.    8 You feel hot.\"\n      ]\n    },\n    {\n      \"id\": \"7.2\",\n      \"marks\": \"(4 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 hate    2 hot    3 sad/unhappy    4 well\"\n      ]\n    },\n    {\n      \"id\": \"7.3\",\n      \"marks\": \"(6 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 I like tennis very much. Or: I very much like tennis.\",\n        \"2 I am very happy about your good exam results.\",\n        \"3 Jack hopes his girlfriend will phone him soon. Or: Jack wants his girlfriend to phone him soon.\",\n        \"4 I really like ice cream.\",\n        \"5 My little sister prefers juice to milk.\",\n        \"6 Grandfather is a little tired today.\"\n      ]\n    },\n    {\n      \"id\": \"7.4\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 Bonnie looks upset.    6 Rob looks cold.\",\n        \"2 Colin looks angry.    7 Nat looks tired.\",\n        \"3 Stan looks sad.    8 Clare looks happy.\",\n        \"4 Katie looks ill.    9 Spot looks thirsty.\",\n        \"5 Mark looks surprised.    10 Fluffy looks hungry.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 6\",\n    \"Test 7\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

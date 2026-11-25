@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "step": "A1-ELEM-S03",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "date": "2026-11-24",
+    "jalali": "۱۴۰۵/۹/۳",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S02 (گام بعدی مجاز A1-ELEM-S03 = bun scripts/tyv-a1-vlm-capture.mjs elem 25,26,27,28,29,30,31,32,33,34,35,36 — دستهٔ سوم از ۸ دسته — بدون skip انتظاری؛ انتظار Tests 18..29) — trace 1a20f6ff42eeccad — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "نشست تمیز بدون ریست پنهان (دومین نشست پیوسته پس از بازیابی ۴۱) — HEAD = 7c72b8933c3c0516003608e4fa6ece99c2b17781 = ریموت backup/main (ls-remote اثبات‌شده) — divergence ۰/۰ — porcelain ۰ — stash ۴ (همگی بایگانی ریموت) — دیسک‌حقیقت آغاز = 129/489 (biz ۹۸/۹۸ · elem ۲۵/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs elem 25,26,27,28,29,30,31,32,33,34,35,36",
+  "runs": [
+    {
+      "run": 1,
+      "done": "DONE tyv-elem: captured=11 skipped=0 failed=1 → docs/qa/tyv-capture-elem/a1",
+      "captured": 11,
+      "skippedExisting": 0,
+      "failed": 1,
+      "failedPages": [34],
+      "failureKind": "parse-failed (پاسخ vision برگشت ولی JSON.parse رد کرد — Invalid control character at line 31 column 94 — newline خام درون رشتهٔ JSON خروجی مدل — رکورد با status=parse-failed و transcription=null و rawModelText کامل ۲٬۹۷۵ کاراکتر نوشته شد — retry داخلی callVision فقط در خطای CLI فعال است؛ parse-fail بدون exception است ⇒ بدون retry داخلی طبق مکانیزم checkpoint/resume اسکریپت)"
+    },
+    {
+      "run": 2,
+      "repair": "مسیر مکانیکی مجاز عین الگوی مجاز دفتر §۷ (سطر BIZ-S05 p60): آرشیو بایت‌به‌بیت رکورد شکست (sha256 9c61381d46104a503141baf7033d63712e8715e1c74d6767bd2206193ae2253b) → docs/qa/tyv-a1-elem-s03-page034-parsefail-2026-11-24.json + آرشیو index پسا-اجرای اول → docs/qa/tyv-a1-elem-s03-index-after-run1-2026-11-24.json → حذف page-034.json → اجرای مجدد همان دستور (۱۱ صفحهٔ ok skip خودکار checkpoint/resume) — صفر دست‌برد در خروجی مدل",
+      "done": "DONE tyv-elem: captured=1 skipped=11 failed=0 → docs/qa/tyv-capture-elem/a1",
+      "captured": 1,
+      "skippedExisting": 11,
+      "failed": 0,
+      "repairedPage": "p34 ok — Test 27 «In the town» · footer 33 · ۳ تمرین/۲۳ آیتم — هم‌خوان با محتوای raw اجرای شکست (footer 33 · testNumber 27 · testTitle In the town) — بازتولید تازهٔ VLM نه ویرایش"
+    }
+  ],
+  "result": {
+    "done": "جمع دو اجرا: captured=11+1 = ۱۲/۱۲ ok — پوشش کامل صفحات ۲۵–۳۶ بدون شکاف",
+    "captured": 12,
+    "skippedExisting": 0,
+    "failed": 0,
+    "singleRun": false,
+    "anomalies": "ناهنجاری parse p34 در اجرای اول — رفع با مسیر مکانیکی مجاز در دو اجرا (دومین گام با ناهنجاری parse پس از BIZ-S05 p60 — اولین در ELEM)"
+  },
+  "newPages": {
+    "pages": [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
+    "files": "page-025..036.json (۱۲ JSON NEW — p34 در اجرای دوم بازتولید) — پوشش کامل صفحات ۲۵–۳۶ بدون شکاف — ادامهٔ پیوسته از S01+S02 (پوشش ۱–۲۴)",
+    "provenance": "هر ۱۲ صفحه با پروونانس کامل (renderSha256 · DPI=300 · model=z-ai vision CLI · promptVersion=tyv-a1-v1 · ownerCommand · attempts=≤3 · timestamp)"
+  },
+  "content": {
+    "footerOffset": "+۱ پابرجا (pdfPage−۱) — صفر ناسازگاری در ۱۲ صفحهٔ شماره‌دار",
+    "structure": [
+      "p25 Test 18 «Shops and shopping» — ۴ تمرین/۳۶ آیتم/۲ تصویر · footer=24",
+      "p26 Test 19 «In a hotel» — ۳ تمرین/۳۳ آیتم/۱ باکس/۱۱ تصویر · footer=25",
+      "p27 Test 20 «Eating out» — ۳ تمرین/۱۸ آیتم/۷ باکس · footer=26",
+      "p28 Test 21 «Sports» — ۳ تمرین/۱۷ آیتم/۱۱ تصویر · footer=27",
+      "p29 Test 22 «Cinema» — ۳ تمرین/۲۳ آیتم/۱ باکس/۱ تصویر · footer=28",
+      "p30 Test 23 «Free time at home» — ۳ تمرین/۲۱ آیتم/۱ باکس/۱ تصویر · footer=29",
+      "p31 Test 24 «Music and musical instruments» — ۱ تمرین/۸ آیتم/۱ تصویر · footer=30",
+      "p32 Test 25 «Countries and nationalities» — ۳ تمرین/۱۳ آیتم/۱ باکس/۱ تصویر · footer=31",
+      "p33 Test 26 «Weather» — ۳ تمرین/۳۵ آیتم/۱ باکس/۱ تصویر · footer=32",
+      "p34 Test 27 «In the town» — ۳ تمرین/۲۳ آیتم/۶ تصویر · footer=33 (ترمیم در اجرای دوم)",
+      "p35 Test 28 «In the countryside» — ۳ تمرین/۳۸ آیتم · footer=34",
+      "p36 Test 29 «Animals» — ۳ تمرین/۲۸ آیتم/۴ تصویر · footer=35"
+    ],
+    "totals": "۱۲ تست (Tests 18..29 پیوسته — عین انتظار مالک) · ۳۵ تمرین · ۲۹۳ آیتم · ۱۲ باکس · ۳۹ تصویر — [؟] صفر — [N/A] صفر — هم‌خوانی ساختار تست‌های بدنهٔ کتاب ELEM (هر تست یک صفحه — footer پیوسته ۲۴..۳۵)"
+  },
+  "indexAfter": {
+    "capturedPages": 12,
+    "capturedNow": 1,
+    "skippedExisting": 11,
+    "failedNow": [],
+    "failedTotal": 0,
+    "probePages": [8, 12, 40],
+    "note": "capturedPages = طول دستهٔ ۱۲صفحه‌ای (نحوهٔ قبلی پابرجا) — capturedNow/skippedExisting مربوط به آخرین اجرا (دوم)"
+  },
+  "diskTruthAfter": {
+    "elem": "37/96 (صفحات ۱–۳۶ پیوسته + پراب ۴۰)",
+    "a1Total": "141/489 (biz ۹۸/۹۸ کامل · elem ۳۷/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳) — بازشماری ls: biz=98 · elem=37 · pri=3 · upp=3"
+  },
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده — لایهٔ A1 فقط کپچر خام",
+  "nextAllowedStep": "A1-ELEM-S04 = صفحات ۳۷–۴۸ elem (طبق دفتر گام‌های کوچک §۱ — bun scripts/tyv-a1-vlm-capture.mjs elem 37,38,39,40,41,42,43,44,45,46,47,48 — صفحهٔ ۴۰ skip خودکار — پراب؛ انتظار Tests 30..41 بر اساس الگوی test=page−۷ ثبت‌شده در S01..S03) — سپس S05..S08 ⇒ PRI S01..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1"
+}

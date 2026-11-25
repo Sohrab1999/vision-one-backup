@@ -1,0 +1,62 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 57,
+    "dpi": 300,
+    "renderSha256": "d170aacb62222051d7650ce3f16d4d4f4d717661e8c3dc3b7fad0ef2bfaacc50",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:38:36.556Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 60,
+    "testNumber": "46",
+    "testTitle": "Business across cultures 2",
+    "exercises": [
+      {
+        "id": "46.1",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'My name is Daniel Bertolino and I'm a software developer. In our department, we dress (1) .............. . We can't wear shorts or dirty T-shirts so I suppose it's \"(2) .............. casual\". People in Sales have to dress (3) .............. . The men wear dark business (4) .............. and so do the women. They all look the same. It's like a (5) .............. really. At the end of each month we have a (6) .............. Friday. It's strange to see the CEO without a tie on.'",
+          "1 A casualty       B causally       C casually",
+          "2 A smart           B straight       C special",
+          "3 A obligatory      B remotely       C formally",
+          "4 A shirts          B suits          C suites",
+          "5 A uniform         B portfolio      C logo",
+          "6 A dress-up        B dress-down     C dress-in"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "four business cards: Mrs Paula Howard M.A., Customer Services, Provector Insuranc[e], PO Box 274, Ipswich, IP41 6HJ, Tel: 01473 262626; King Media PLC, 1 High Street, Cambridge, CB1 2EU, Charles Caspar, Chief Executive Officer, Tel: +44 1223 662200, E-mail: caspar.c@kingmedia.co.uk; William J Davenport Sr., Vice President, Finance, Global Foods Inc.; Sarah A Moreland BSc, MBA, Head of Marketing"
+    ],
+    "unclassified": [
+      "Total 16",
+      "Target 13+",
+      "46.2  10 marks",
+      "Look at the business cards and labels. Decide whether each statement is 'True' or 'False'. If there is not enough information to decide, tick (√) the 'Does not say' box. Then answer questions 8–10.",
+      "1 Paula Howard is married.",
+      "2 Charles Caspar doesn't have any qualifications.",
+      "3 William Davenport has a son called William.",
+      "4 Mr Davenport's middle name could be Robert.",
+      "5 Paula Howard doesn't have a middle name.",
+      "6 If you meet the CEO of King Media, you should call him Mr Charles.",
+      "7 If you write to Sarah, you could address her as 'Ms S. Moreland'.",
+      "8 What is the family name of the person who works for Provector?  .....................",
+      "9 What qualifications does Sarah Moreland have?  .....................",
+      "10 What is the surname of the CEO of King Media?  .....................",
+      "Your score /16",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 60,\n \"testNumber\": \"46\",\n \"testTitle\": \"Business across cultures 2\",\n \"exercises\": [\n  {\"id\": \"46.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\"'My name is Daniel Bertolino and I'm a software developer. In our department, we dress (1) .............. . We can't wear shorts or dirty T-shirts so I suppose it's \\\"(2) .............. casual\\\". People in Sales have to dress (3) .............. . The men wear dark business (4) .............. and so do the women. They all look the same. It's like a (5) .............. really. At the end of each month we have a (6) .............. Friday. It's strange to see the CEO without a tie on.'\",\n    \"1 A casualty       B causally       C casually\",\n    \"2 A smart           B straight       C special\",\n    \"3 A obligatory      B remotely       C formally\",\n    \"4 A shirts          B suits          C suites\",\n    \"5 A uniform         B portfolio      C logo\",\n    \"6 A dress-up        B dress-down     C dress-in\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"four business cards: Mrs Paula Howard M.A., Customer Services, Provector Insuranc[e], PO Box 274, Ipswich, IP41 6HJ, Tel: 01473 262626; King Media PLC, 1 High Street, Cambridge, CB1 2EU, Charles Caspar, Chief Executive Officer, Tel: +44 1223 662200, E-mail: caspar.c@kingmedia.co.uk; William J Davenport Sr., Vice President, Finance, Global Foods Inc.; Sarah A Moreland BSc, MBA, Head of Marketing\"],\n \"unclassified\": [\"Total 16\",\n  \"Target 13+\",\n  \"46.2  10 marks\",\n  \"Look at the business cards and labels. Decide whether each statement is 'True' or 'False'. If there is not enough information to decide, tick (√) the 'Does not say' box. Then answer questions 8–10.\",\n  \"1 Paula Howard is married.\",\n  \"2 Charles Caspar doesn't have any qualifications.\",\n  \"3 William Davenport has a son called William.\",\n  \"4 Mr Davenport's middle name could be Robert.\",\n  \"5 Paula Howard doesn't have a middle name.\",\n  \"6 If you meet the CEO of King Media, you should call him Mr Charles.\",\n  \"7 If you write to Sarah, you could address her as 'Ms S. Moreland'.\",\n  \"8 What is the family name of the person who works for Provector?  .....................\",\n  \"9 What qualifications does Sarah Moreland have?  .....................\",\n  \"10 What is the surname of the CEO of King Media?  .....................\",\n  \"Your score /16\",\n  \"Test Your Business Vocabulary in Use\"]}"
+}

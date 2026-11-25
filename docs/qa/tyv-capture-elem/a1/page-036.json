@@ -1,0 +1,86 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 36,
+    "dpi": 300,
+    "renderSha256": "1ba0de689877b3889f1f063485954ded9b0aa2f2417cf1daae7f0f63554f252e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:24:54.489Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 35,
+    "testNumber": "29",
+    "testTitle": "Animals",
+    "exercises": [
+      {
+        "id": "29.1",
+        "marks": "10 marks",
+        "instruction": "What are these animals?",
+        "items": [
+          "Example: sheep",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ]
+      },
+      {
+        "id": "29.2",
+        "marks": "10 marks",
+        "instruction": "Which animal word matches these definitions?",
+        "items": [
+          "Example: a young hen ..........chick..........",
+          "1 a young horse",
+          "2 the meat from a hen",
+          "3 a place where you go to see lots of wild animals from different countries",
+          "4 young birds, tortoises and snakes are all born from these",
+          "5 we get this from sheep and use it to make warm clothes",
+          "6 the meat from a pig (2 words)",
+          "7 we drink this and also use it to make cheese and butter",
+          "8 a long thin animal with no legs",
+          "9 the skin of cows – we use it to make shoes and handbags"
+        ]
+      },
+      {
+        "id": "29.3",
+        "marks": "10 marks",
+        "instruction": "Which word does not belong in each group? Explain.",
+        "items": [
+          "Example: hen, monkey, parrot, chick",
+          "Monkey – because the others are all birds.",
+          "1 lion, tiger, horse, cat",
+          "2 elephant, giraffe, snake, cow",
+          "3 calf, lamb, sheep, piglet",
+          "4 fish, tortoise, dog, pig",
+          "5 beef, foal, ham, chicken"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Example: silhouette of a sheep with dotted line answered 'sheep'",
+      "silhouettes 1–4: snake, elephant, horse, tortoise, each with dotted answer line",
+      "silhouettes 5–8: giraffe, cat, cow, parrot, each with dotted answer line",
+      "silhouettes 9–10: monkey, rabbit, each with dotted answer line"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 35,\n  \"testNumber\": \"29\",\n  \"testTitle\": \"Animals\",\n  \"exercises\": [\n    {\n      \"id\": \"29.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"What are these animals?\",\n      \"items\": [\n        \"Example: sheep\",\n        \"1\",\n        \"2\",\n        \"3\",\n        \"4\",\n        \"5\",\n        \"6\",\n        \"7\",\n        \"8\",\n        \"9\",\n        \"10\"\n      ]\n    },\n    {\n      \"id\": \"29.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Which animal word matches these definitions?\",\n      \"items\": [\n        \"Example: a young hen ..........chick..........\",\n        \"1 a young horse\",\n        \"2 the meat from a hen\",\n        \"3 a place where you go to see lots of wild animals from different countries\",\n        \"4 young birds, tortoises and snakes are all born from these\",\n        \"5 we get this from sheep and use it to make warm clothes\",\n        \"6 the meat from a pig (2 words)\",\n        \"7 we drink this and also use it to make cheese and butter\",\n        \"8 a long thin animal with no legs\",\n        \"9 the skin of cows – we use it to make shoes and handbags\"\n      ]\n    },\n    {\n      \"id\": \"29.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Which word does not belong in each group? Explain.\",\n      \"items\": [\n        \"Example: hen, monkey, parrot, chick\",\n        \"Monkey – because the others are all birds.\",\n        \"1 lion, tiger, horse, cat\",\n        \"2 elephant, giraffe, snake, cow\",\n        \"3 calf, lamb, sheep, piglet\",\n        \"4 fish, tortoise, dog, pig\",\n        \"5 beef, foal, ham, chicken\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"Example: silhouette of a sheep with dotted line answered 'sheep'\",\n    \"silhouettes 1–4: snake, elephant, horse, tortoise, each with dotted answer line\",\n    \"silhouettes 5–8: giraffe, cat, cow, parrot, each with dotted answer line\",\n    \"silhouettes 9–10: monkey, rabbit, each with dotted answer line\"\n  ],\n  \"unclassified\": [\n    \"Test Your English Vocabulary in Use Elementary\",\n    \"Your score /30\"\n  ]\n}\n```"
+}

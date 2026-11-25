@@ -1,0 +1,85 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 5,
+    "dpi": 300,
+    "renderSha256": "6e75ce05d7163c4d60706d9e90434865f87fc9d937f289be3ce0d54ff8148033",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T12:56:47.470Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 8,
+    "testNumber": "2",
+    "testTitle": "Ways of working",
+    "exercises": [
+      {
+        "id": "2.1",
+        "marks": "6 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.",
+        "items": []
+      },
+      {
+        "id": "2.2",
+        "marks": "6 marks",
+        "instruction": "Decide whether each statement is about regular office work (OW), teleworking (TW) or shift work (SW). Tick the right box. The first one is an example.",
+        "items": [
+          "0 I'm at work by 8.30 and I leave for home at 5 o'clock.",
+          "1 I work from 10 at night till 6 in the morning for four weeks, then I switch to days.",
+          "2 We turned one of the bedrooms into an office and that's where I do all my work.",
+          "3 When I'm working nights, it's really difficult to sleep during the day.",
+          "4 Some people find the 9-to-5 routine boring, but I like working with other people.",
+          "5 I clock in at 8.55 every day and I'm at my desk till 5 pm.",
+          "6 The difficult thing is that my home is my office so I'm there 24 hours a day."
+        ]
+      },
+      {
+        "id": "2.3",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap. The first one is an example.",
+        "items": [
+          "0 I had a 9-to-5 ............job........... when I left school but I hated it.   (job/work)",
+          "1 We have a ......................... system, but everyone must be here between 10 and 2.   (repetitive/flexitime)",
+          "2 I work from ......................... and simply send my work over the Internet.   (house/home)",
+          "3 I just sit in front of a computer all day, but this work is mentally ......................... .   (tiring/routine)",
+          "4 This is the most ......................... job I've ever had. There is never a boring minute.   (stimulating/repetitive)",
+          "5 We all look forward to 5.30 because then we can ......................... off for the day.   (shift/clock)",
+          "6 The 7.30 train to London is always full of ......................... .   (commuters/telecommuters)"
+        ]
+      },
+      {
+        "id": "2.4",
+        "marks": "6 marks",
+        "instruction": "For each word, write one word which means the opposite. The first two or three letters are given. The first one is an example.",
+        "items": [
+          "0 mentally    physically",
+          "1 easy    ha__        4 dull    ex______",
+          "2 interesting    bo____        5 unstimulating    fas________",
+          "3 varied    rou____        6 undemanding    to____"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "physically / human / problem / day / team / clock / working",
+      "contact / work / on / demanding / commute / shift / solving / hours"
+    ],
+    "pictures": [
+      "cartoon of a woman working at a computer with printer (exercise 2.1)",
+      "two word-boxes joined by a curved line (example word pair physically — demanding)"
+    ],
+    "unclassified": [
+      "Total 24 / Target 17+",
+      "OW TW SW (column headers of table in 2.2)",
+      "Your score /24",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n \"footer\": 8,\n \"testNumber\": \"2\",\n \"testTitle\": \"Ways of working\",\n \"exercises\": [\n  {\"id\": \"2.1\", \"marks\": \"6 marks\",\n   \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) The first one is an example.\",\n   \"items\": []},\n  {\"id\": \"2.2\", \"marks\": \"6 marks\",\n   \"instruction\": \"Decide whether each statement is about regular office work (OW), teleworking (TW) or shift work (SW). Tick the right box. The first one is an example.\",\n   \"items\": [\n    \"0 I'm at work by 8.30 and I leave for home at 5 o'clock.\",\n    \"1 I work from 10 at night till 6 in the morning for four weeks, then I switch to days.\",\n    \"2 We turned one of the bedrooms into an office and that's where I do all my work.\",\n    \"3 When I'm working nights, it's really difficult to sleep during the day.\",\n    \"4 Some people find the 9-to-5 routine boring, but I like working with other people.\",\n    \"5 I clock in at 8.55 every day and I'm at my desk till 5 pm.\",\n    \"6 The difficult thing is that my home is my office so I'm there 24 hours a day.\"\n   ]},\n  {\"id\": \"2.3\", \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap. The first one is an example.\",\n   \"items\": [\n    \"0 I had a 9-to-5 ............job........... when I left school but I hated it.   (job/work)\",\n    \"1 We have a ......................... system, but everyone must be here between 10 and 2.   (repetitive/flexitime)\",\n    \"2 I work from ......................... and simply send my work over the Internet.   (house/home)\",\n    \"3 I just sit in front of a computer all day, but this work is mentally ......................... .   (tiring/routine)\",\n    \"4 This is the most ......................... job I've ever had. There is never a boring minute.   (stimulating/repetitive)\",\n    \"5 We all look forward to 5.30 because then we can ......................... off for the day.   (shift/clock)\",\n    \"6 The 7.30 train to London is always full of ......................... .   (commuters/telecommuters)\"\n   ]},\n  {\"id\": \"2.4\", \"marks\": \"6 marks\",\n   \"instruction\": \"For each word, write one word which means the opposite. The first two or three letters are given. The first one is an example.\",\n   \"items\": [\n    \"0 mentally    physically\",\n    \"1 easy    ha__        4 dull    ex______\",\n    \"2 interesting    bo____        5 unstimulating    fas________\",\n    \"3 varied    rou____        6 undemanding    to____\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"physically / human / problem / day / team / clock / working\",\n  \"contact / work / on / demanding / commute / shift / solving / hours\"\n ],\n \"pictures\": [\n  \"cartoon of a woman working at a computer with printer (exercise 2.1)\",\n  \"two word-boxes joined by a curved line (example word pair physically — demanding)\"\n ],\n \"unclassified\": [\n  \"Total 24 / Target 17+\",\n  \"OW TW SW (column headers of table in 2.2)\",\n  \"Your score /24\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}\n```"
+}

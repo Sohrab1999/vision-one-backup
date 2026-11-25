@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "step": "A1-ELEM-S05",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "date": "2026-11-25",
+    "jalali": "۱۴۰۵/۹/۴",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی: پایداری کامل پروژه و بازیابی پس از Reset یا حذف Sandbox — ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S04 (گام بعدی مجاز A1-ELEM-S05 = bun scripts/tyv-a1-vlm-capture.mjs elem 49,50,51,52,53,54,55,56,57,58,59,60 — دستهٔ پنجم از ۸ دسته — بدون skip انتظاری — پراب‌ها فقط ۸/۱۲/۴۰؛ انتظار Tests 42..53 بر اساس الگوی test=page−۷ ثبت‌شده در S01..S04) — trace 1a211c021b681a39 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "رویداد بازیابی ۴۲ پیش از گام — ریست پنهان پلتفرمی: HEAD محلی روی 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) بازگشته بود — عین الگوی رویدادهای ۳۱..۴۱ — divergence ۲۰۷/۰ (behind/ahead — صفر کامیت یکتای محلی — مسیر ff-only) — porcelain ۴۲۹ (۳۲ M + ۳۹۷ ؟?) — stash محلی صفر (تلف‌شده در ریست — الگوی ۳۹..۴۱) — بازیابی صفرتلفاتی اجرا شد: ممیزی سه‌دور sha256 (کپچرها ۱۵۲/۱۵۲ matchRemote · untracked ۳۶۱ match/۰ differ/۷ absent همگی اسناد تخت superseded با نسخه‌های شماره‌دار سری-TYV ریموت بایت‌به‌بیت · modified ۳۲/۳۲ == ریموت) ⇒ صفر محتوای محلی-یگانه — stash بیمهٔ rc42 = d01923fde7f8e2bb6e123557624c7435edbef952 push به شاخهٔ ریموت backup/recovery/rc42-pre-ff-stash-2026-11-25 (اثبات * [new branch]) — stashهای rc33/34/35/41 از ریموت به stack بازگشت (stack=۵) — reset --hard backup/main ⇒ HEAD = a6412d6be6aa910cc98be972643724e5a018eeb4 = ریموت (ls-remote اثبات‌شده) — درخت پاک ۰ — دیسک‌حقیقت آغاز گام 152/489 == رکورد سربرگ ۱۳۰مین"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs elem 49,50,51,52,53,54,55,56,57,58,59,60",
+  "runs": [
+    {
+      "run": 1,
+      "done": "DONE tyv-elem: captured=11 skipped=0 failed=1 → docs/qa/tyv-capture-elem/a1",
+      "captured": 11,
+      "skippedExisting": 0,
+      "failed": 1,
+      "failedPages": [59],
+      "note": "صفحهٔ ۵۹ parse-failed در اجرای اول — رونویسی VLM موفق اما پارس سخت‌گیرانهٔ JSON شکست خورد — آرتیفکت status=parse-failed با rawModelText کامل نگهداری شد"
+    },
+    {
+      "run": 2,
+      "done": "DONE tyv-elem: captured=0 skipped=12 failed=0 → docs/qa/tyv-capture-elem/a1",
+      "captured": 0,
+      "skippedExisting": 12,
+      "failed": 0,
+      "note": "اجرای بدون-اثر — checkpoint/resume آرتیفکت parse-failed p59 را «موجود» شمرد و skip کرد — این اجرا صفر محصول (درس ثبت‌شده: آرتیفکت parse-failed مسدودکنندهٔ resume است)"
+    },
+    {
+      "run": 3,
+      "done": "بایگانی آرتیفکت → docs/qa/tyv-a1-elem-s05-page059-parsefail-2026-11-25.json + حذف page-059.json از a1 + اجرای مجدد همان دستور",
+      "reRun": "DONE tyv-elem: captured=1 skipped=11 failed=0 → docs/qa/tyv-capture-elem/a1",
+      "captured": 1,
+      "skippedExisting": 11,
+      "failed": 0,
+      "capturedPages": [59],
+      "note": "صفحهٔ ۵۹ در اجرای سوم status=ok — الگوی رفع دواجرایی عین S03 (p34) و BIZ-S05 (p60) — سرنوشت آرتیفکت parse-failed: بایگانی دائمی به‌عنوان شاهد QA + حذف از a1 — محتوای خام run1 در بایگانی حفظ است"
+    }
+  ],
+  "result": {
+    "done": "پوشش کامل صفحات ۴۹–۶۰ بدون شکاف: ۱۲/۱۲ ok + صفر skip + صفر failed — تک‌ناهنجاری p59 در سه اجرا (دواجرای مؤثر + یک اجرای بدون-اثر) عین الگوی شناخته‌شده رفع شد",
+    "captured": 12,
+    "skippedExisting": 0,
+    "failed": 0,
+    "finalRun": "run3",
+    "anomalies": "یک ناهنجاری شناخته‌شده و رفع‌شده: parse-fail p59 (run1) — رفع در run3 با بایگانی+حذف+اجرای مجدد — الگوی سومین تکرار پس از S03/p34 و BIZ-S05/p60 — درس جدید ثبت: checkpoint/resume آرتیفکت parse-failed را skip می‌کند ⇒ رفع نیازمند حذف آرتیفکت پس از بایگانی است"
+  },
+  "newPages": {
+    "pages": [49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60],
+    "files": "page-049..060.json (۱۲ JSON — همه status=ok) — پوشش کامل ۴۹–۶۰ بدون شکاف — ادامهٔ پیوسته از S01+S02+S03+S04 (پوشش ۱–۴۸)",
+    "provenance": "هر ۱۲ صفحه با پروونانس کامل (renderSha256 یکتا ۱۲/۱۲ · DPI=300 · model=z-ai vision CLI · promptVersion=tyv-a1-v1 · ownerCommand · attempts=≤3 · timestamp)"
+  },
+  "content": {
+    "footerOffset": "+۱ پابرجا (pdfPage−۱) — صفر ناسازگاری در پنجرهٔ ۱۲ صفحه‌ای ۴۹–۶۰ (فوترهای چاپی ۴۸..۵۹ پیوسته)",
+    "structure": [
+      "p49 Test 42 «Bring / brought / brought» — ۳ تمرین/۱۳ آیتم/۳ تصویر · footer=48",
+      "p50 Test 43 «Get / got / got» — ۳ تمرین/۳۰ آیتم/۶ تصویر · footer=49",
+      "p51 Test 44 «Phrasal verbs» — ۳ تمرین/۱۳ آیتم/۳ تصویر · footer=50",
+      "p52 Test 45 «Everyday things» — ۴ تمرین/۴۲ آیتم/۱ باکس/۳ تصویر · footer=51",
+      "p53 Test 46 «Talking» — ۴ تمرین/۳۳ آیتم · footer=52",
+      "p54 Test 47 «Moving» — ۳ تمرین/۲۹ آیتم/۲ باکس/۱۱ تصویر · footer=53",
+      "p55 Test 48 «Talking about language» — ۲ تمرین/۲۱ آیتم/۱ باکس/۱ تصویر · footer=54",
+      "p56 Test 49 «Conjunctions and connecting words» — ۳ تمرین/۳۸ آیتم/۱ باکس · footer=55",
+      "p57 Test 50 «Days, months, seasons» — ۳ تمرین/۲۹ آیتم · footer=56",
+      "p58 Test 51 «Time words» — ۱ تمرین/۳ آیتم/۶ باکس/۲ تصویر/۲۳ unclassified · footer=57",
+      "p59 Test 52 «Places» — ۳ تمرین/۱۹ آیتم/۲ باکس/۷ تصویر · footer=58",
+      "p60 Test 53 «Manner» — ۳ تمرین/۳۳ آیتم/۳ باکس/۱ تصویر · footer=59"
+    ],
+    "totals": "۱۲ صفحه: ۱۲ تست (Tests 42..53 پیوسته عین انتظار مالک — الگوی test=page−۷) · ۳۵ تمرین · ۳۰۳ آیتم · ۱۶ باکس · ۳۷ تصویر · ۴۹ unclassified — [؟] صفر — [N/A] صفر — نکتهٔ ساختاری: پیاپی افعال پُرتکرار p49..p51 (Bring/Get + Phrasal verbs) ادامهٔ زنجیرهٔ افعال بی‌قاعدهٔ S04 · p54 تصویرمحور سنگین (۱۱ تصویر) و p58 ساختار جدولی/باکس‌محور با unclassified سنگین (۲۳) — هر دو ریسک ۲ §۵ ELEM — کاندید رأی G3 · p58 تک‌تمرینی (۱ تمرین/۳ آیتم) اما با ۶ باکس و ۲۳ unclassified — صفحهٔ جمع‌بندی واژگان زمان"
+  },
+  "indexAfter": {
+    "capturedPages": 12,
+    "capturedNow": 1,
+    "skippedExisting": 11,
+    "failedNow": [],
+    "failedTotal": 0,
+    "probePages": [8, 12, 40],
+    "note": "capturedPages = طول دستهٔ ۱۲صفحه‌ای (نحؤهٔ قبلی پابرجا) — capturedNow/skippedExisting مربوط به آخرین اجرای مؤثر (run3: فقط p59 NEW — ۱۱ صفحه از run1 skip) — index run1 بایگانی شد: docs/qa/tyv-a1-elem-s05-index-after-run1-2026-11-25.json (capturedNow=11 · skippedExisting=0 · failedNow=[59])"
+  },
+  "diskTruthAfter": {
+    "elem": "60/96 (صفحات ۱–۶۰ پیوسته کامل + پراب‌های ۸/۱۲/۴۰ همگی درون این بازه)",
+    "a1Total": "164/489 (biz 98/98 کامل · elem 60/96 · pri 3/142 · upp 3/153) — بازشماری ls: biz=98 · elem=60 · pri=3 · upp=3"
+  },
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده — لایهٔ A1 فقط کپچر خام",
+  "recovery42": "رویداد بازیابی ۴۲ پیشا-گام — سند کامل: docs/qa/recovery42-proof-2026-11-25.json — الگوی ff-only صفرتلفاتی — صفر دلتای محصول در بازیابی",
+  "nextAllowedStep": "A1-ELEM-S06 = صفحات ۶۱–۷۲ elem (طبق دفتر گام‌های کوچک §۱-۲ — bun scripts/tyv-a1-vlm-capture.mjs elem 61,62,63,64,65,66,67,68,69,70,71,72 — بدون skip انتظاری — پراب‌ها فقط ۸/۱۲/۴۰؛ انتظار Tests 54..65 بر اساس الگوی test=page−۷) — سپس ELEM S07..S08 ⇒ PRI S01..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1"
+}

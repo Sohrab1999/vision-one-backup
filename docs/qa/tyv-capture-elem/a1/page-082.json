@@ -1,0 +1,156 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 82,
+    "dpi": 300,
+    "renderSha256": "14d94fb96f46d5a16e9e84bc2d844ffb2d50529f8de7aad8fdd453871dd2359a",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:34:17.949Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 81,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "33.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "2 WOMENS MAGAZINE [grid answers]"
+        ]
+      },
+      {
+        "id": "33.3",
+        "marks": "(10 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "newspaper: morning, evening",
+          "magazine: women’s, computer, teenage",
+          "These above are the most frequent combinations."
+        ]
+      },
+      {
+        "id": "34.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 It’s broken.",
+          "2 It’s dying.",
+          "3 He’s cut his finger.",
+          "4 It’s not working.",
+          "5 It’s untidy."
+        ]
+      },
+      {
+        "id": "34.2",
+        "marks": "(10 marks: 2 for each phrase)",
+        "instruction": null,
+        "items": [
+          "1 put a plaster on it",
+          "2 Two of the following: repair it / mend it / fix it / throw it away",
+          "3 tidy it (up)",
+          "4 water it / throw it away"
+        ]
+      },
+      {
+        "id": "34.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 crashed",
+          "2 mood",
+          "3 order",
+          "4 apologise",
+          "5 row",
+          "6 lost",
+          "7 look for",
+          "8 untidy; tidy (2 marks)",
+          "9 mend/repair/fix"
+        ]
+      },
+      {
+        "id": "35.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 strike",
+          "2 traffic jam",
+          "3 hurricane",
+          "4 snowstorm",
+          "5 forest fire",
+          "6 flood",
+          "7 pollution",
+          "8 car crash",
+          "9 unemployed people",
+          "10 earthquake"
+        ]
+      },
+      {
+        "id": "35.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 Poor",
+          "2 Unemployed",
+          "3 Homeless",
+          "4 polluted",
+          "5 hungry",
+          "6 rush hour",
+          "7 floods",
+          "8 on strike",
+          "9 crowded",
+          "10 War"
+        ]
+      },
+      {
+        "id": "35.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "air pollution",
+          "car crash",
+          "earthquake",
+          "snowstorm",
+          "forest fire",
+          "rush hour",
+          "traffic jam",
+          "homeless people",
+          "crowded cities",
+          "strong wind"
+        ]
+      },
+      {
+        "id": "36.1",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 He’s having a shower.",
+          "2 They’re / The students are having a lesson.",
+          "3 She’s having a cup of coffee. / She’s having (a) coffee.",
+          "4 They’re having a party.",
+          "5 They’re having lunch / dinner / a meal / something to eat."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "completed crossword-style answer grid with numbered entries: WOMENS MAGAZINE, JOURNALIST, INTERVIEW, REPORTER, TALKSHOW, COMIC, COMPUTER, NEWSPAPER, SOAP, CHANNEL"
+    ],
+    "unclassified": [
+      "Test 34",
+      "Test 35",
+      "Test 36",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 81,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\"id\": \"33.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"2 WOMENS MAGAZINE [grid answers]\"]},\n    {\"id\": \"33.3\", \"marks\": \"(10 marks: 2 each)\", \"instruction\": null, \"items\": [\"newspaper: morning, evening\", \"magazine: women’s, computer, teenage\", \"These above are the most frequent combinations.\"]},\n    {\"id\": \"34.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 It’s broken.\", \"2 It’s dying.\", \"3 He’s cut his finger.\", \"4 It’s not working.\", \"5 It’s untidy.\"]},\n    {\"id\": \"34.2\", \"marks\": \"(10 marks: 2 for each phrase)\", \"instruction\": null, \"items\": [\"1 put a plaster on it\", \"2 Two of the following: repair it / mend it / fix it / throw it away\", \"3 tidy it (up)\", \"4 water it / throw it away\"]},\n    {\"id\": \"34.3\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 crashed\", \"2 mood\", \"3 order\", \"4 apologise\", \"5 row\", \"6 lost\", \"7 look for\", \"8 untidy; tidy (2 marks)\", \"9 mend/repair/fix\"]},\n    {\"id\": \"35.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 strike\", \"2 traffic jam\", \"3 hurricane\", \"4 snowstorm\", \"5 forest fire\", \"6 flood\", \"7 pollution\", \"8 car crash\", \"9 unemployed people\", \"10 earthquake\"]},\n    {\"id\": \"35.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 Poor\", \"2 Unemployed\", \"3 Homeless\", \"4 polluted\", \"5 hungry\", \"6 rush hour\", \"7 floods\", \"8 on strike\", \"9 crowded\", \"10 War\"]},\n    {\"id\": \"35.3\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"air pollution\", \"car crash\", \"earthquake\", \"snowstorm\", \"forest fire\", \"rush hour\", \"traffic jam\", \"homeless people\", \"crowded cities\", \"strong wind\"]},\n    {\"id\": \"36.1\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\"1 He’s having a shower.\", \"2 They’re / The students are having a lesson.\", \"3 She’s having a cup of coffee. / She’s having (a) coffee.\", \"4 They’re having a party.\", \"5 They’re having lunch / dinner / a meal / something to eat.\"]}\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\"completed crossword-style answer grid with numbered entries: WOMENS MAGAZINE, JOURNALIST, INTERVIEW, REPORTER, TALKSHOW, COMIC, COMPUTER, NEWSPAPER, SOAP, CHANNEL\"],\n  \"unclassified\": [\"Test 34\", \"Test 35\", \"Test 36\", \"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}

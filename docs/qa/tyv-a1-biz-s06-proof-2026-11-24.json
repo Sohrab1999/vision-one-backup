@@ -1,0 +1,61 @@
+{
+  "step": "A1-BIZ-S06 (صفحات ۶۱–۷۲ biz) — ششمین دستهٔ اجرای نقشهٔ مادر سری TYV — تک‌اجرایی بدون ناهنجاری",
+  "date": "2026-11-24 (1405/09/03)",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت ⑤ گزارش S05 (گام بعدی مجاز S06) — trace 1a20c1f8db89c8b1 — channel zai-web — الزام پایداری ایستندهٔ بیست‌ویکم پابرجا",
+  "sessionStart": {
+    "headLocal": "3ce4b27b7f98a1c73f84b2afc2ea233c1833c608 (= ثبت اثبات §۱۰-۷ گام A1-BIZ-S05 — سربرگ ۱۲۲مین)",
+    "remoteMain": "3ce4b27b7f98a1c73f84b2afc2ea233c1833c608 (= git ls-remote backup refs/heads/main — divergence 0/0)",
+    "porcelain": 0,
+    "stash": 0,
+    "hiddenReset": "هیچ — سومین نشست متوالی بدون ریست پنهان — بازیابی پیشا-گام لازم نشد",
+    "diskTruthPreStep": "A1 = 66/489 (biz 57/98 · elem 3/96 · pri 3/142 · upp 3/153) == رکورد SNAPSHOT"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs biz 61,62,63,64,65,66,67,68,69,70,71,72 (هم‌گام — عین دستور مالک — تک‌اجرایی)",
+  "result": "DONE tyv-biz: captured=12 skipped=0 failed=0",
+  "newPages": {
+    "files": "docs/qa/tyv-capture-biz/a1/page-061..072.json (۱۲ JSON NEW)",
+    "provenance": "۱۲/۱۲ کامل — renderSha256 / DPI=300 / promptVersion=tyv-a1-v1 / attempts≤3 / timestamp",
+    "footers": "p61→64 · p62→65 · p63→66 · p64→67 · p65→68 · p66→69 · p67→70 · p68→71 · p69→72 · p70→73 · p71→74 · p72→75 — آفست +۳ پابرجا — صفر null",
+    "tests": "۵۰ «Telephoning 3: messages» (p61) · ۵۱ «Telephoning 4: arrangements» (p62) · Summary Test 3 واحد مرکب چهارصفحه‌ای p63–p66 (p63 testNumber=3 · p64 ادامه testNumber=null · p65 ادامه testNumber=null/testTitle=null · p66 testNumber=3) · ۵۲ «Faxes» (p67) · ۵۳ «E-mails» (p68) · ۵۴ «Meetings 1: types of meeting» (p69) · ۵۵ «Meetings 2: the role of the chairperson» (p70) · ۵۶ «Meetings 3: points of view» (p71) · ۵۷ «Meetings 4: agreement and disagreement» (p72)",
+    "summaryTest3Composite": "واحد مرکب چهارصفحه‌ای p63–p66 (pdf) = چاپی 66–69 — ریسک ۷ مادر (ثبت دوگذر G1) — عین الگوی Summary Test 1 (p20–p23 سربرگ ۱۱۹مین) و Summary Test 2 (p40–p43 سربرگ ۱۲۱مین)",
+    "counts": { "exercises": 29, "items": 261, "boxesAndLists": 33, "pictures": 12, "unclassified": 36, "unknownTokens": 1 },
+    "unknownTokenDetail": "[؟] فقط p64 ×۱ — در unclassified: «www.iranguage.com [?]» — واترمارک/آدرس وب چاپی روی صفحهٔ کتاب که VLM علامت‌گذاری کرد (غیرمحتوایی) — ثبت دوگذر G1 — عین الگوی [؟] p35 ×۲ در S03",
+    "perPage": [
+      { "page": 61, "footer": 64, "test": 50, "exercises": 2, "items": 25, "boxes": 3, "pictures": 0, "unclassified": 1 },
+      { "page": 62, "footer": 65, "test": 51, "exercises": 2, "items": 28, "boxes": 2, "pictures": 3, "unclassified": 2 },
+      { "page": 63, "footer": 66, "test": 3, "exercises": 2, "items": 37, "boxes": 3, "pictures": 0, "unclassified": 3 },
+      { "page": 64, "footer": 67, "test": null, "exercises": 3, "items": 21, "boxes": 3, "pictures": 1, "unclassified": 3 },
+      { "page": 65, "footer": 68, "test": null, "exercises": 2, "items": 14, "boxes": 6, "pictures": 1, "unclassified": 1 },
+      { "page": 66, "footer": 69, "test": 3, "exercises": 3, "items": 20, "boxes": 2, "pictures": 1, "unclassified": 3 },
+      { "page": 67, "footer": 70, "test": 52, "exercises": 2, "items": 24, "boxes": 1, "pictures": 0, "unclassified": 4 },
+      { "page": 68, "footer": 71, "test": 53, "exercises": 2, "items": 9, "boxes": 10, "pictures": 1, "unclassified": 4 },
+      { "page": 69, "footer": 72, "test": 54, "exercises": 3, "items": 24, "boxes": 0, "pictures": 1, "unclassified": 4 },
+      { "page": 70, "footer": 73, "test": 55, "exercises": 3, "items": 20, "boxes": 2, "pictures": 1, "unclassified": 2 },
+      { "page": 71, "footer": 74, "test": 56, "exercises": 3, "items": 20, "boxes": 0, "pictures": 1, "unclassified": 5 },
+      { "page": 72, "footer": 75, "test": 57, "exercises": 2, "items": 19, "boxes": 1, "pictures": 2, "unclassified": 4 }
+    ]
+  },
+  "indexStateFinal": "capturedNow=12 · skippedExisting=0 · failedNow=[] — تک‌اجرایی تمیز (برخلاف S05 که دو اجرا داشت)",
+  "diskTruthPostStep": {
+    "a1Total": "78/489",
+    "biz": "69/98 (بازشماری page-*.json = 69)",
+    "elem": "3/96",
+    "pri": "3/142",
+    "upp": "3/153"
+  },
+  "zeroChanges": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده",
+  "acceptanceChecklist": {
+    "items": [
+      { "item": "خروجی DONE تک‌اجرایی (captured=12 skipped=0 failed=0)", "ok": true },
+      { "item": "پروونانس ۱۲/۱۲ کامل", "ok": true },
+      { "item": "a1-index به‌روزرسانی شد (capturedNow=12 · failedNow=[])", "ok": true },
+      { "item": "فوترها ۱۲/۱۲ صفر null (آفست +۳)", "ok": true },
+      { "item": "Summary Test 3 واحد مرکب p63–p66 با ثبت دوگذر G1 (ریسک ۷ مادر)", "ok": true },
+      { "item": "[؟] تک‌موردی p64 صادقانه ثبت شد (واترمارک چاپی — ثبت دوگذر G1)", "ok": true },
+      { "item": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF", "ok": true },
+      { "item": "دیسک‌حقیقت = ۷۸/۴۸۹", "ok": true }
+    ],
+    "allPass": true
+  },
+  "nextStep": "A1-BIZ-S07 = bun scripts/tyv-a1-vlm-capture.mjs biz 73,74,75,76,77,78,79,80,81,82,83,84 — سپس S08..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده"
+}

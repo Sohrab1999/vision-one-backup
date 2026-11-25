@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 83,
+    "dpi": 300,
+    "renderSha256": "970b3e2c8ffcd28f90591ace1ce75cc548d908e442129cc21b448c159cfee014",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:13:47.031Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 86,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "3",
+        "marks": "7 marks",
+        "instruction": "Choose the best word from the box to complete each sentence. There is one extra word that you don't have to use.",
+        "items": [
+          "1 I'll fax the drawings ..................... to you this afternoon.",
+          "2 I'm copying Richard and Ann ..................... on this e-mail.",
+          "3 Can we set ..................... a meeting for next Tuesday?",
+          "4 It was difficult to follow what Anil was saying because he kept wandering ..................... the point.",
+          "5 We said their demand was impossible to meet, but they wouldn't back ..................... .",
+          "6 Can we move ..................... to the next point or are there any other questions?",
+          "7 The union is angry because it says it is being made to negotiate ..................... duress."
+        ]
+      },
+      {
+        "id": "4",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.",
+        "items": [
+          "0 The ......wage negotiations...... between teachers' unions and their employers have broken down.",
+          "1 I've written the notes for my presentation, but I haven't prepared my ..................... .",
+          "2 I try to make ..................... with members of the audience.",
+          "3 There are ..................... between the two sides in this dispute.",
+          "4 The mediator is looking for ..................... so he can propose a compromise.",
+          "5 We hope that these ..................... negotiations will break the stalemate."
+        ]
+      },
+      {
+        "id": "5",
+        "marks": "8 marks",
+        "instruction": "Complete the sentences below by writing one word in each gap. The first letter is given to help you.",
+        "items": [
+          "1 A good chairperson will always listen to both s____ of the argument.",
+          "2 Will you be at the company's annual g______ meeting next week?",
+          "3 I circulated the a______ for the board meeting to all the directors.",
+          "4 In my o______, the new model is far too expensive.",
+          "5 This fax contains confidential i__________.",
+          "6 The meeting was supposed to be today, but it has been p________ until Friday.",
+          "7 Asking people to work at the weekend is out of the q______.",
+          "8 We'll pay your asking price on c________ that you deliver by April."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "down  up  over  under  in  out  on  off",
+      "wage / common / visual / irreconcilable / eleventh / eye",
+      "aids / tactic / contact / negotiations / ground / hour / differences"
+    ],
+    "pictures": [
+      "matching exercise: two boxes of words (left: wage, common, visual, irreconcilable, eleventh, eye; right: aids, tactic, contact, negotiations, ground, hour, differences) with a line connecting 'wage' to 'negotiations'"
+    ],
+    "unclassified": [
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 86, \"testNumber\": null, \"testTitle\": null, \"exercises\": [{\"id\": \"3\", \"marks\": \"7 marks\", \"instruction\": \"Choose the best word from the box to complete each sentence. There is one extra word that you don't have to use.\", \"items\": [\"1 I'll fax the drawings ..................... to you this afternoon.\", \"2 I'm copying Richard and Ann ..................... on this e-mail.\", \"3 Can we set ..................... a meeting for next Tuesday?\", \"4 It was difficult to follow what Anil was saying because he kept wandering ..................... the point.\", \"5 We said their demand was impossible to meet, but they wouldn't back ..................... .\", \"6 Can we move ..................... to the next point or are there any other questions?\", \"7 The union is angry because it says it is being made to negotiate ..................... duress.\"]}, {\"id\": \"4\", \"marks\": \"10 marks\", \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below. The first one is an example.\", \"items\": [\"0 The ......wage negotiations...... between teachers' unions and their employers have broken down.\", \"1 I've written the notes for my presentation, but I haven't prepared my ..................... .\", \"2 I try to make ..................... with members of the audience.\", \"3 There are ..................... between the two sides in this dispute.\", \"4 The mediator is looking for ..................... so he can propose a compromise.\", \"5 We hope that these ..................... negotiations will break the stalemate.\"]}, {\"id\": \"5\", \"marks\": \"8 marks\", \"instruction\": \"Complete the sentences below by writing one word in each gap. The first letter is given to help you.\", \"items\": [\"1 A good chairperson will always listen to both s____ of the argument.\", \"2 Will you be at the company's annual g______ meeting next week?\", \"3 I circulated the a______ for the board meeting to all the directors.\", \"4 In my o______, the new model is far too expensive.\", \"5 This fax contains confidential i__________.\", \"6 The meeting was supposed to be today, but it has been p________ until Friday.\", \"7 Asking people to work at the weekend is out of the q______.\", \"8 We'll pay your asking price on c________ that you deliver by April.\"]}], \"boxesAndLists\": [\"down  up  over  under  in  out  on  off\", \"wage / common / visual / irreconcilable / eleventh / eye\", \"aids / tactic / contact / negotiations / ground / hour / differences\"], \"pictures\": [\"matching exercise: two boxes of words (left: wage, common, visual, irreconcilable, eleventh, eye; right: aids, tactic, contact, negotiations, ground, hour, differences) with a line connecting 'wage' to 'negotiations'\"], \"unclassified\": [\"Test Your Business Vocabulary in Use\"]}"
+}

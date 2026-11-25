@@ -1,0 +1,89 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 62,
+    "dpi": 300,
+    "renderSha256": "0967dd51d8b9523bc284d6cb1de4f4685f092ed61104b8a5048351f71acc98b1",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:56:39.570Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 61,
+    "testNumber": "55",
+    "testTitle": "Common adjectives 1: Good and bad things",
+    "exercises": [
+      {
+        "id": "55.1",
+        "marks": "10 marks",
+        "instruction": "Put these adjectives into the correct columns.",
+        "items": []
+      },
+      {
+        "id": "55.2",
+        "marks": "10 marks",
+        "instruction": "Circle the correct underlined adjective in these sentences.",
+        "items": [
+          "Example: Harry is a nice/dreadful man – nobody likes him.",
+          "1 I love Kay's new car – it's great/awful.",
+          "2 I don't like my boss – he's wonderful/horrible.",
+          "3 Let's go to Max's Restaurant tonight – the food there is nasty/excellent.",
+          "4 Pete didn't enjoy the film – he said it was awful/brilliant.",
+          "5 Sue did very well in her test – the teacher said she wrote a terrible/brilliant essay.",
+          "6 The party was terrible/lovely – everyone had a good time.",
+          "7 Thank you so much – I had a perfect/horrible day.",
+          "8 Jo does very well at school – she usually gets good/bad marks in her class.",
+          "9 We're planning to have a picnic tomorrow – I hope the weather is fine/terrible.",
+          "10 The hotel was awful/marvellous – we'll never go there again."
+        ]
+      },
+      {
+        "id": "55.3",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps in these dialogues. We give you the first letter each time.",
+        "items": [
+          "Example: A: I had a great time at the party last night.",
+          "B: Good................ !",
+          "1 A: Let's meet at 7 – OK?",
+          "B: P .........................",
+          "2 A: What dreadful weather!",
+          "B: Yes, isn't it t..................... ?",
+          "3 A: I'll send you a postcard from our holiday.",
+          "B: L..................... !",
+          "4 A: The film was terrible, wasn't it!",
+          "B: Yes, it was h..................... !",
+          "5 A: The food is good here, isn't it?",
+          "B: Yes, it's m..................... !",
+          "6 A: I'll show you the town tomorrow.",
+          "B: E..................... !",
+          "7 A: I don't like her very much, do you?",
+          "B: No, she's a..................... !",
+          "8 A: I'll help you paint your room if you like.",
+          "B: W..................... !",
+          "9 A: It's a beautiful view, isn't it?",
+          "B: Yes, it's g..................... !",
+          "10 A: Did you enjoy the party?",
+          "B: No, it was d..................... !"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "awful dreadful excellent great horrible lovely marvellous nice perfect terrible wonderful"
+    ],
+    "pictures": [
+      "two-column table headed 'Good' and 'Bad' with handwritten 'awful' in the Bad column"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "{\"footer\": 61,\n \"testNumber\": \"55\",\n \"testTitle\": \"Common adjectives 1: Good and bad things\",\n \"exercises\": [\n  {\"id\": \"55.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Put these adjectives into the correct columns.\",\n   \"items\": []},\n  {\"id\": \"55.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Circle the correct underlined adjective in these sentences.\",\n   \"items\": [\n    \"Example: Harry is a nice/dreadful man – nobody likes him.\",\n    \"1 I love Kay's new car – it's great/awful.\",\n    \"2 I don't like my boss – he's wonderful/horrible.\",\n    \"3 Let's go to Max's Restaurant tonight – the food there is nasty/excellent.\",\n    \"4 Pete didn't enjoy the film – he said it was awful/brilliant.\",\n    \"5 Sue did very well in her test – the teacher said she wrote a terrible/brilliant essay.\",\n    \"6 The party was terrible/lovely – everyone had a good time.\",\n    \"7 Thank you so much – I had a perfect/horrible day.\",\n    \"8 Jo does very well at school – she usually gets good/bad marks in her class.\",\n    \"9 We're planning to have a picnic tomorrow – I hope the weather is fine/terrible.\",\n    \"10 The hotel was awful/marvellous – we'll never go there again.\"\n   ]},\n  {\"id\": \"55.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Fill the gaps in these dialogues. We give you the first letter each time.\",\n   \"items\": [\n    \"Example: A: I had a great time at the party last night.\",\n    \"B: Good................ !\",\n    \"1 A: Let's meet at 7 – OK?\",\n    \"B: P .........................\",\n    \"2 A: What dreadful weather!\",\n    \"B: Yes, isn't it t..................... ?\",\n    \"3 A: I'll send you a postcard from our holiday.\",\n    \"B: L..................... !\",\n    \"4 A: The film was terrible, wasn't it!\",\n    \"B: Yes, it was h..................... !\",\n    \"5 A: The food is good here, isn't it?\",\n    \"B: Yes, it's m..................... !\",\n    \"6 A: I'll show you the town tomorrow.\",\n    \"B: E..................... !\",\n    \"7 A: I don't like her very much, do you?\",\n    \"B: No, she's a..................... !\",\n    \"8 A: I'll help you paint your room if you like.\",\n    \"B: W..................... !\",\n    \"9 A: It's a beautiful view, isn't it?\",\n    \"B: Yes, it's g..................... !\",\n    \"10 A: Did you enjoy the party?\",\n    \"B: No, it was d..................... !\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"awful dreadful excellent great horrible lovely marvellous nice perfect terrible wonderful\"\n ],\n \"pictures\": [\"two-column table headed 'Good' and 'Bad' with handwritten 'awful' in the Bad column\"],\n \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\", \"Your score /30\"]\n}"
+}

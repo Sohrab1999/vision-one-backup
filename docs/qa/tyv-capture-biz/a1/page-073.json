@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 73,
+    "dpi": 300,
+    "renderSha256": "c05e3fa32f7e5bab330b4afda6b345217bee22847780856c9f0dc716f06d9c42",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:10:55.977Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 76,
+    "testNumber": "58",
+    "testTitle": "Meetings 3: discussion techniques",
+    "exercises": [
+      {
+        "id": "58.1",
+        "marks": "7 marks",
+        "instruction": "The statements below were made at a meeting. Write one word in the gap to complete each statement.",
+        "items": [
+          "1 'I take your p.................. about the new logo, but it's too late to change it now.'",
+          "2 'I know what you m................. about Marco, but he is very good with the customers.'",
+          "3 'I can see where you're c................. from on this, but I still want to see the numbers.'",
+          "4 'Sorry to i................. you, but what you've said is against company policy.'",
+          "5 'To go back to what I was saying e................. , we still need to borrow £10,000.'",
+          "6 'If I u................. you correctly, we will not finish the project on time. Is that right?'",
+          "7 'Are you s................. that we should close the Oxford office?'"
+        ]
+      },
+      {
+        "id": "58.2",
+        "marks": "10 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "'Ladies and gentlemen, it's nearly five o'clock. We're (1) ............ out of time so we're going to have to (2) ............ there. Just to (3) ............ up, we came here to decide whether to close the Oxford office or not. I've listened to both (4) ............ of the argument and it is clear that we have not (5) ............ an agreement. There is no (6) ............ at this point so we will just have to agree to (7) ............ for the moment. The working group will try to find a (8) ............ and we will present its suggestions at the next meeting. That's on September 24th at nine o'clock. So, (9) ............ anyone has anything else to add, I'll bring the meeting to a close. Thank you all for (10) ............ .'",
+          "1 A walking B running C moving",
+          "2 A stop B stay C still",
+          "3 A add B equal C sum",
+          "4 A faces B edges C sides",
+          "5 A made B reached C worked",
+          "6 A senses B census C consensus",
+          "7 A disagree B argue C discuss",
+          "8 A compromise B promise C compound",
+          "9 A because B unless C until",
+          "10 A attend B being C coming"
+        ]
+      },
+      {
+        "id": "58.3",
+        "marks": "6 marks",
+        "instruction": "For statements 1–6 below, decide whether the speaker is hedging (H), interrupting (I) or concluding (C). Put a tick (✓) in the right box.",
+        "items": [
+          "1 'Well, I think that's it. Let's leave it there.'",
+          "2 'Can I come in here, Lauren?'",
+          "3 'I understand what you're saying, but I still think it would be difficult.'",
+          "4 'OK. Let's go over what's been said.'",
+          "5 'I see what you mean, but what about the costs?'",
+          "6 'If I can just stop you for a moment, Justin.'"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "table for 58.3 with columns H, I, C and rows 1–6 for ticking",
+      "score box 'Your score /23'"
+    ],
+    "unclassified": [
+      "Total 23",
+      "Target 17+",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 76,\n  \"testNumber\": \"58\",\n  \"testTitle\": \"Meetings 3: discussion techniques\",\n  \"exercises\": [\n    {\n      \"id\": \"58.1\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"The statements below were made at a meeting. Write one word in the gap to complete each statement.\",\n      \"items\": [\n        \"1 'I take your p.................. about the new logo, but it's too late to change it now.'\",\n        \"2 'I know what you m................. about Marco, but he is very good with the customers.'\",\n        \"3 'I can see where you're c................. from on this, but I still want to see the numbers.'\",\n        \"4 'Sorry to i................. you, but what you've said is against company policy.'\",\n        \"5 'To go back to what I was saying e................. , we still need to borrow £10,000.'\",\n        \"6 'If I u................. you correctly, we will not finish the project on time. Is that right?'\",\n        \"7 'Are you s................. that we should close the Oxford office?'\"\n      ]\n    },\n    {\n      \"id\": \"58.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n      \"items\": [\n        \"'Ladies and gentlemen, it's nearly five o'clock. We're (1) ............ out of time so we're going to have to (2) ............ there. Just to (3) ............ up, we came here to decide whether to close the Oxford office or not. I've listened to both (4) ............ of the argument and it is clear that we have not (5) ............ an agreement. There is no (6) ............ at this point so we will just have to agree to (7) ............ for the moment. The working group will try to find a (8) ............ and we will present its suggestions at the next meeting. That's on September 24th at nine o'clock. So, (9) ............ anyone has anything else to add, I'll bring the meeting to a close. Thank you all for (10) ............ .'\",\n        \"1 A walking B running C moving\",\n        \"2 A stop B stay C still\",\n        \"3 A add B equal C sum\",\n        \"4 A faces B edges C sides\",\n        \"5 A made B reached C worked\",\n        \"6 A senses B census C consensus\",\n        \"7 A disagree B argue C discuss\",\n        \"8 A compromise B promise C compound\",\n        \"9 A because B unless C until\",\n        \"10 A attend B being C coming\"\n      ]\n    },\n    {\n      \"id\": \"58.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"For statements 1–6 below, decide whether the speaker is hedging (H), interrupting (I) or concluding (C). Put a tick (✓) in the right box.\",\n      \"items\": [\n        \"1 'Well, I think that's it. Let's leave it there.'\",\n        \"2 'Can I come in here, Lauren?'\",\n        \"3 'I understand what you're saying, but I still think it would be difficult.'\",\n        \"4 'OK. Let's go over what's been said.'\",\n        \"5 'I see what you mean, but what about the costs?'\",\n        \"6 'If I can just stop you for a moment, Justin.'\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"table for 58.3 with columns H, I, C and rows 1–6 for ticking\",\n    \"score box 'Your score /23'\"\n  ],\n  \"unclassified\": [\n    \"Total 23\",\n    \"Target 17+\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

@@ -1,0 +1,3295 @@
+{
+ "generatedBy": "scripts/viu-adv-a5-build.mjs (A5-1)",
+ "policy": "G3 vote ①+②+③ + golden rule — zero fabricated answers; convert-only-what-converts",
+ "units": 101,
+ "counts": {
+  "quizQuestions": 327,
+  "clsM": 18,
+  "clsB": 3,
+  "clsF": 27,
+  "clsFshifted": 0,
+  "readingExercises": 407,
+  "printKeyless": 42,
+  "readingItems": 2180,
+  "keyListings": 81,
+  "vocab": 68,
+  "dictionary": 68,
+  "proseParagraphs": 309,
+  "marginNotes": 183
+ },
+ "perClassExamples": {
+  "M": [
+   "5.2",
+   "7.1",
+   "13.3"
+  ],
+  "B": [
+   "42.1",
+   "51.2",
+   "93.1"
+  ],
+  "F": [
+   "1.4",
+   "2.1",
+   "9.2"
+  ]
+ },
+ "notConvertible": [
+  {
+   "unit": 1,
+   "no": "1.1",
+   "kind": "open",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 1,
+   "no": "1.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 1,
+   "no": "1.3",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 2,
+   "no": "2.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 2,
+   "no": "2.3",
+   "kind": "open",
+   "items": 7,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 2,
+   "no": "2.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 3,
+   "no": "3.1",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 1,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 3,
+   "no": "3.2",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 3,
+   "no": "3.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 3,
+   "no": "3.4",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 4,
+   "no": "4.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 4,
+   "no": "4.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 4,
+   "no": "4.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 4,
+   "no": "4.4",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 5,
+   "no": "5.1",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 5,
+   "no": "5.3",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 5,
+   "no": "5.4",
+   "kind": "bank",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 5,
+   "no": "5.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 6,
+   "no": "6.1",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 6,
+   "no": "6.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 6,
+   "no": "6.3",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 6,
+   "no": "6.4",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 7,
+   "no": "7.2",
+   "kind": "fillIn",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 7,
+   "no": "7.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 7,
+   "no": "7.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 8,
+   "no": "8.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 8,
+   "no": "8.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 8,
+   "no": "8.3",
+   "kind": "fillIn",
+   "items": 12,
+   "rows": 12,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 8,
+   "no": "8.4",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 8,
+   "no": "8.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 8,
+   "no": "8.6",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 9,
+   "no": "9.1",
+   "kind": "open",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 9,
+   "no": "9.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 9,
+   "no": "9.4",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 10,
+   "no": "10.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 10,
+   "no": "10.2",
+   "kind": "bank",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 10,
+   "no": "10.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 10,
+   "no": "10.4",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 10,
+   "no": "10.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 11,
+   "no": "11.1",
+   "kind": "open",
+   "items": 12,
+   "rows": 12,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 11,
+   "no": "11.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 11,
+   "no": "11.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 11,
+   "no": "11.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 12,
+   "no": "12.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 12,
+   "no": "12.2",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 12,
+   "no": "12.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 12,
+   "no": "12.4",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 12,
+   "no": "12.5",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 12,
+   "no": "12.6",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 13,
+   "no": "13.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 13,
+   "no": "13.2",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 13,
+   "no": "13.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 13,
+   "no": "13.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 14,
+   "no": "14.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 14,
+   "no": "14.2",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 14,
+   "no": "14.4",
+   "kind": "fillIn",
+   "items": 12,
+   "rows": 12,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 14,
+   "no": "14.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 15,
+   "no": "15.1",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 15,
+   "no": "15.2",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 15,
+   "no": "15.3",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 15,
+   "no": "15.4",
+   "kind": "fillIn",
+   "items": 2,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 16,
+   "no": "16.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 16,
+   "no": "16.2",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 16,
+   "no": "16.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 16,
+   "no": "16.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 17,
+   "no": "17.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 17,
+   "no": "17.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 17,
+   "no": "17.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 17,
+   "no": "17.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 17,
+   "no": "17.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 18,
+   "no": "18.1",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 18,
+   "no": "18.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 18,
+   "no": "18.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 19,
+   "no": "19.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 19,
+   "no": "19.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 19,
+   "no": "19.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 19,
+   "no": "19.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 20,
+   "no": "20.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 20,
+   "no": "20.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 20,
+   "no": "20.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 20,
+   "no": "20.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 21,
+   "no": "21.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 21,
+   "no": "21.2",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 21,
+   "no": "21.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 21,
+   "no": "21.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 21,
+   "no": "21.5",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 21,
+   "no": "21.6",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 21,
+   "no": "21.7",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 22,
+   "no": "22.1",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 22,
+   "no": "22.2",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 22,
+   "no": "22.3",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 22,
+   "no": "22.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 23,
+   "no": "23.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 23,
+   "no": "23.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 23,
+   "no": "23.3",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 24,
+   "no": "24.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 24,
+   "no": "24.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 24,
+   "no": "24.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 24,
+   "no": "24.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 25,
+   "no": "25.1",
+   "kind": "fillIn",
+   "items": 11,
+   "rows": 11,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 25,
+   "no": "25.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 25,
+   "no": "25.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 26,
+   "no": "26.1",
+   "kind": "open",
+   "items": 9,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 26,
+   "no": "26.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 26,
+   "no": "26.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 27,
+   "no": "27.1",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 27,
+   "no": "27.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 27,
+   "no": "27.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 27,
+   "no": "27.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 28,
+   "no": "28.2",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 28,
+   "no": "28.3",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 28,
+   "no": "28.4",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 28,
+   "no": "28.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 29,
+   "no": "29.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 29,
+   "no": "29.2",
+   "kind": "open",
+   "items": 9,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 29,
+   "no": "29.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 29,
+   "no": "29.4",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 29,
+   "no": "29.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 30,
+   "no": "30.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 30,
+   "no": "30.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 30,
+   "no": "30.3",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 30,
+   "no": "30.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 30,
+   "no": "30.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 31,
+   "no": "31.1",
+   "kind": "open",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 31,
+   "no": "31.3",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 31,
+   "no": "31.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 31,
+   "no": "31.5",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 31,
+   "no": "31.6",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 32,
+   "no": "32.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 32,
+   "no": "32.2",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 32,
+   "no": "32.4",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 32,
+   "no": "32.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 33,
+   "no": "33.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 33,
+   "no": "33.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 33,
+   "no": "33.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 33,
+   "no": "33.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 34,
+   "no": "34.1",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 34,
+   "no": "34.2",
+   "kind": "fillIn",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 34,
+   "no": "34.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 34,
+   "no": "34.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 35,
+   "no": "35.1",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 35,
+   "no": "35.2",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 35,
+   "no": "35.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 35,
+   "no": "35.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 35,
+   "no": "35.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 36,
+   "no": "36.1",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 36,
+   "no": "36.2",
+   "kind": "open",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 36,
+   "no": "36.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 36,
+   "no": "36.4",
+   "kind": "fillIn",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 36,
+   "no": "36.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 37,
+   "no": "37.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 37,
+   "no": "37.2",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 38,
+   "no": "38.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 38,
+   "no": "38.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 38,
+   "no": "38.3",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 38,
+   "no": "38.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 39,
+   "no": "39.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 39,
+   "no": "39.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 39,
+   "no": "39.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 40,
+   "no": "40.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 40,
+   "no": "40.2",
+   "kind": "fillIn",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 40,
+   "no": "40.4",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 41,
+   "no": "41.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 41,
+   "no": "41.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 41,
+   "no": "41.3",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 41,
+   "no": "41.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 41,
+   "no": "41.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 42,
+   "no": "42.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 42,
+   "no": "42.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 42,
+   "no": "42.4",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 43,
+   "no": "43.1",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 43,
+   "no": "43.2",
+   "kind": "open",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 43,
+   "no": "43.4",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 43,
+   "no": "43.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 44,
+   "no": "44.1",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 44,
+   "no": "44.2",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 44,
+   "no": "44.3",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 45,
+   "no": "45.1",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 45,
+   "no": "45.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 45,
+   "no": "45.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 45,
+   "no": "45.4",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 46,
+   "no": "46.1",
+   "kind": "fillIn",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 46,
+   "no": "46.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 46,
+   "no": "46.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 47,
+   "no": "47.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 47,
+   "no": "47.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 47,
+   "no": "47.3",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 47,
+   "no": "47.4",
+   "kind": "fillIn",
+   "items": 3,
+   "rows": 3,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 47,
+   "no": "47.5",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 48,
+   "no": "48.1",
+   "kind": "bank",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 48,
+   "no": "48.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 48,
+   "no": "48.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 48,
+   "no": "48.4",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 49,
+   "no": "49.1",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 49,
+   "no": "49.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 49,
+   "no": "49.4",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 49,
+   "no": "49.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 50,
+   "no": "50.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 50,
+   "no": "50.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 50,
+   "no": "50.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 50,
+   "no": "50.5",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 51,
+   "no": "51.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 51,
+   "no": "51.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 52,
+   "no": "52.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 52,
+   "no": "52.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 52,
+   "no": "52.3",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 52,
+   "no": "52.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 53,
+   "no": "53.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 53,
+   "no": "53.2",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 53,
+   "no": "53.3",
+   "kind": "fillIn",
+   "items": 2,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 53,
+   "no": "53.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 54,
+   "no": "54.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 54,
+   "no": "54.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 54,
+   "no": "54.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 54,
+   "no": "54.4",
+   "kind": "open",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 54,
+   "no": "54.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 55,
+   "no": "55.1",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 55,
+   "no": "55.2",
+   "kind": "open",
+   "items": 11,
+   "rows": 11,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 55,
+   "no": "55.3",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 55,
+   "no": "55.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 56,
+   "no": "56.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 56,
+   "no": "56.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 56,
+   "no": "56.3",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 56,
+   "no": "56.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 57,
+   "no": "57.2",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 57,
+   "no": "57.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 57,
+   "no": "57.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 57,
+   "no": "57.5",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 57,
+   "no": "57.6",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 58,
+   "no": "58.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 58,
+   "no": "58.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 58,
+   "no": "58.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 59,
+   "no": "59.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 59,
+   "no": "59.2",
+   "kind": "open",
+   "items": 1,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 59,
+   "no": "59.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 59,
+   "no": "59.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 60,
+   "no": "60.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 60,
+   "no": "60.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 60,
+   "no": "60.4",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 60,
+   "no": "60.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 61,
+   "no": "61.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 61,
+   "no": "61.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 61,
+   "no": "61.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 61,
+   "no": "61.4",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 61,
+   "no": "61.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 61,
+   "no": "61.6",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 62,
+   "no": "62.1",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 62,
+   "no": "62.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 62,
+   "no": "62.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 62,
+   "no": "62.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 62,
+   "no": "62.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 63,
+   "no": "63.1",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 63,
+   "no": "63.2",
+   "kind": "bank",
+   "items": 9,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 63,
+   "no": "63.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 63,
+   "no": "63.4",
+   "kind": "fillIn",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 64,
+   "no": "64.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 64,
+   "no": "64.2",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 64,
+   "no": "64.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 64,
+   "no": "64.4",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 65,
+   "no": "65.1",
+   "kind": "bank",
+   "items": 0,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 65,
+   "no": "65.2",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 65,
+   "no": "65.3",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 65,
+   "no": "65.5",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 66,
+   "no": "66.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 66,
+   "no": "66.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 66,
+   "no": "66.3",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 67,
+   "no": "67.1",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 67,
+   "no": "67.2",
+   "kind": "open",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 67,
+   "no": "67.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 67,
+   "no": "67.4",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 67,
+   "no": "67.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 68,
+   "no": "68.2",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 68,
+   "no": "68.3",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 69,
+   "no": "69.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 69,
+   "no": "69.3",
+   "kind": "fillIn",
+   "items": 1,
+   "rows": 14,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 69,
+   "no": "69.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 70,
+   "no": "70.2",
+   "kind": "open",
+   "items": 12,
+   "rows": 11,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 70,
+   "no": "70.3",
+   "kind": "open",
+   "items": 3,
+   "rows": 3,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 70,
+   "no": "70.5",
+   "kind": "open",
+   "items": 3,
+   "rows": 3,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 71,
+   "no": "71.1",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 71,
+   "no": "71.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 71,
+   "no": "71.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 71,
+   "no": "71.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 72,
+   "no": "72.1",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 72,
+   "no": "72.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 72,
+   "no": "72.3",
+   "kind": "fillIn",
+   "items": 2,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 73,
+   "no": "73.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 73,
+   "no": "73.2",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 73,
+   "no": "73.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 73,
+   "no": "73.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 74,
+   "no": "74.1",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 74,
+   "no": "74.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 74,
+   "no": "74.3",
+   "kind": "fillIn",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 74,
+   "no": "74.4",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 74,
+   "no": "74.5",
+   "kind": "fillIn",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 75,
+   "no": "75.1",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 75,
+   "no": "75.3",
+   "kind": "open",
+   "items": 2,
+   "rows": 2,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 75,
+   "no": "75.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 75,
+   "no": "75.5",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 76,
+   "no": "76.1",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 76,
+   "no": "76.3",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 76,
+   "no": "76.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 77,
+   "no": "77.1",
+   "kind": "fillIn",
+   "items": 12,
+   "rows": 12,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 77,
+   "no": "77.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 77,
+   "no": "77.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 78,
+   "no": "78.1",
+   "kind": "fillIn",
+   "items": 7,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 78,
+   "no": "78.2",
+   "kind": "bank",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 78,
+   "no": "78.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 79,
+   "no": "79.1",
+   "kind": "fillIn",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 79,
+   "no": "79.2",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 79,
+   "no": "79.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 79,
+   "no": "79.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 79,
+   "no": "79.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 80,
+   "no": "80.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 80,
+   "no": "80.2",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 80,
+   "no": "80.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 81,
+   "no": "81.2",
+   "kind": "fillIn",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 81,
+   "no": "81.3",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 81,
+   "no": "81.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 82,
+   "no": "82.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 82,
+   "no": "82.2",
+   "kind": "bank",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 82,
+   "no": "82.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 82,
+   "no": "82.4",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 82,
+   "no": "82.5",
+   "kind": "fillIn",
+   "items": 2,
+   "rows": 7,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 82,
+   "no": "82.6",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 83,
+   "no": "83.1",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 83,
+   "no": "83.2",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 83,
+   "no": "83.3",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 83,
+   "no": "83.4",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 16,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 83,
+   "no": "83.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 84,
+   "no": "84.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 84,
+   "no": "84.2",
+   "kind": "fillIn",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 84,
+   "no": "84.3",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 84,
+   "no": "84.4",
+   "kind": "fillIn",
+   "items": 7,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 85,
+   "no": "85.1",
+   "kind": "fillIn",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 85,
+   "no": "85.2",
+   "kind": "open",
+   "items": 12,
+   "rows": 12,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 85,
+   "no": "85.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 85,
+   "no": "85.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 86,
+   "no": "86.1",
+   "kind": "fillIn",
+   "items": 12,
+   "rows": 12,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 86,
+   "no": "86.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 86,
+   "no": "86.3",
+   "kind": "open",
+   "items": 10,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 86,
+   "no": "86.4",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 87,
+   "no": "87.1",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 87,
+   "no": "87.2",
+   "kind": "bank",
+   "items": 0,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 87,
+   "no": "87.3",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 87,
+   "no": "87.4",
+   "kind": "open",
+   "items": 7,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 87,
+   "no": "87.5",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 87,
+   "no": "87.6",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 88,
+   "no": "88.1",
+   "kind": "open",
+   "items": 9,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 88,
+   "no": "88.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 88,
+   "no": "88.3",
+   "kind": "open",
+   "items": 9,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 88,
+   "no": "88.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 88,
+   "no": "88.5",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 89,
+   "no": "89.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 89,
+   "no": "89.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 89,
+   "no": "89.6",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 90,
+   "no": "90.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 90,
+   "no": "90.2",
+   "kind": "fillIn",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 90,
+   "no": "90.3",
+   "kind": "bank",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 91,
+   "no": "91.1",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 91,
+   "no": "91.2",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 91,
+   "no": "91.3",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 91,
+   "no": "91.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 91,
+   "no": "91.5",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 91,
+   "no": "91.6",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 92,
+   "no": "92.1",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 92,
+   "no": "92.2",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 92,
+   "no": "92.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 92,
+   "no": "92.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 92,
+   "no": "92.5",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 93,
+   "no": "93.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 93,
+   "no": "93.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 93,
+   "no": "93.4",
+   "kind": "open",
+   "items": 3,
+   "rows": 3,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 94,
+   "no": "94.1",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 94,
+   "no": "94.2",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 94,
+   "no": "94.3",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 94,
+   "no": "94.4",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 94,
+   "no": "94.5",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 95,
+   "no": "95.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 95,
+   "no": "95.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 95,
+   "no": "95.4",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 95,
+   "no": "95.5",
+   "kind": "bank",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 96,
+   "no": "96.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 96,
+   "no": "96.2",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 96,
+   "no": "96.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 96,
+   "no": "96.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 96,
+   "no": "96.6",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "printKeyless"
+  },
+  {
+   "unit": 97,
+   "no": "97.1",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 97,
+   "no": "97.2",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 97,
+   "no": "97.3",
+   "kind": "bank",
+   "items": 0,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 97,
+   "no": "97.4",
+   "kind": "open",
+   "items": 4,
+   "rows": 4,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 97,
+   "no": "97.5",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 98,
+   "no": "98.1",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 98,
+   "no": "98.2",
+   "kind": "fillIn",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 98,
+   "no": "98.3",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 99,
+   "no": "99.1",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 99,
+   "no": "99.2",
+   "kind": "open",
+   "items": 10,
+   "rows": 10,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 99,
+   "no": "99.3",
+   "kind": "open",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 99,
+   "no": "99.4",
+   "kind": "open",
+   "items": 6,
+   "rows": 1,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 100,
+   "no": "100.1",
+   "kind": "fillIn",
+   "items": 6,
+   "rows": 6,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 100,
+   "no": "100.2",
+   "kind": "open",
+   "items": 2,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 100,
+   "no": "100.3",
+   "kind": "open",
+   "items": 9,
+   "rows": 9,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 101,
+   "no": "101.1",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 101,
+   "no": "101.2",
+   "kind": "open",
+   "items": 8,
+   "rows": 8,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 101,
+   "no": "101.3",
+   "kind": "bank",
+   "items": 0,
+   "rows": 0,
+   "reason": "no-mechanical-1:1-or-options"
+  },
+  {
+   "unit": 101,
+   "no": "101.4",
+   "kind": "instruction",
+   "items": 0,
+   "rows": 0,
+   "reason": "keyed-instruction"
+  },
+  {
+   "unit": 101,
+   "no": "101.5",
+   "kind": "open",
+   "items": 5,
+   "rows": 5,
+   "reason": "no-mechanical-1:1-or-options"
+  }
+ ]
+}

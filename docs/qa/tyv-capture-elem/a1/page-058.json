@@ -1,0 +1,73 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 58,
+    "dpi": 300,
+    "renderSha256": "749d9bc037f37b761def2017f54579c23b48876f43b34d04a07470659b48574f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:24:45.185Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 57,
+    "testNumber": "51",
+    "testTitle": "Time words",
+    "exercises": [
+      {
+        "id": "51.1",
+        "marks": "5 marks",
+        "instruction": "Fill the gaps.",
+        "items": [
+          "1 It’s four ........................... in the afternoon now.",
+          "2 Oscar came home at 2 pm. He came home two ..................................... .....................................",
+          "3 Oscar has been home ........................... two ........................... ."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "sometimes    often    usually\nalways    very rarely    never\nrarely    now and then\noccasionally    not often",
+      "ALWAYS / NEVER",
+      "OFTEN / NOW AND THEN",
+      "USUALLY / RARELY",
+      "NOT OFTEN / OCCASIONALLY",
+      "SOMETIMES / USUALLY"
+    ],
+    "pictures": [
+      "clock showing 4 o'clock",
+      "April calendar with Bill's holiday dates circled (16–30 April)"
+    ],
+    "unclassified": [
+      "It’s April now.",
+      "1 Which month is next month?",
+      "2 Which month was last month?",
+      "3 Which month was it two months ago?",
+      "4 How long is Bill on holiday for?",
+      "5 It’s Saturday 16 April today. What date will it be next Saturday?",
+      "How often? Put the words on the steps, from not at all to every time.",
+      "every time",
+      "not at all",
+      "Put the words on the right in the correct places in these sentences.",
+      "1 Millie is afraid of flying so she..................... travels on a plane.\nShe ..................... goes by train.",
+      "2 I meet him ..................... at the sports club, but I don’t see\nhim ..................... .",
+      "3 It ..................... snows in the south of the country. It .....................\nrains instead, because it’s warmer than the north.",
+      "4 NINA:  How often do you buy new clothes?\nRACHEL:  Well, ..................... . I’m a student, so I only have\nenough money to buy clothes ..................... .",
+      "5 ..................... I love studying, but ..................... I start to feel\ntired if I read for a long time.",
+      "Complete the second sentence so that it means the same as the first one in each case.",
+      "1 Right now, Ken takes the bus in the morning and again in the evening.\n.................... the ....................., Ken takes the bus ..................... a day.",
+      "2 I’ll be back after a minute or so. See you in a very short time!\nI’ll be back ..................... ..................... moment.  See you ..................... !",
+      "3 Bill phones his sister every Friday. She was ill a short time ago.\nBill phones his sister ..................... a week.  She was ill ..................... .",
+      "4 Many years ago, people used horses, not cars.\nIn ..................... ..................... , people used horses, not cars.",
+      "5 Many years from now, people will travel to the moon for their holidays.\nIn ..................... ..................... , people will travel to the moon for their holidays.",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 57,\n \"testNumber\": \"51\",\n \"testTitle\": \"Time words\",\n \"exercises\": [\n  {\"id\": \"51.1\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Fill the gaps.\",\n   \"items\": [\"1 It’s four ........................... in the afternoon now.\",\n             \"2 Oscar came home at 2 pm. He came home two ..................................... .....................................\",\n             \"3 Oscar has been home ........................... two ........................... .\"]}\n ],\n \"boxesAndLists\": [\"sometimes    often    usually\\nalways    very rarely    never\\nrarely    now and then\\noccasionally    not often\",\n                   \"ALWAYS / NEVER\",\n                   \"OFTEN / NOW AND THEN\",\n                   \"USUALLY / RARELY\",\n                   \"NOT OFTEN / OCCASIONALLY\",\n                   \"SOMETIMES / USUALLY\"],\n \"pictures\": [\"clock showing 4 o'clock\",\n              \"April calendar with Bill's holiday dates circled (16–30 April)\"],\n \"unclassified\": [\"It’s April now.\",\n                  \"1 Which month is next month?\",\n                  \"2 Which month was last month?\",\n                  \"3 Which month was it two months ago?\",\n                  \"4 How long is Bill on holiday for?\",\n                  \"5 It’s Saturday 16 April today. What date will it be next Saturday?\",\n                  \"How often? Put the words on the steps, from not at all to every time.\",\n                  \"every time\",\n                  \"not at all\",\n                  \"Put the words on the right in the correct places in these sentences.\",\n                  \"1 Millie is afraid of flying so she..................... travels on a plane.\\nShe ..................... goes by train.\",\n                  \"2 I meet him ..................... at the sports club, but I don’t see\\nhim ..................... .\",\n                  \"3 It ..................... snows in the south of the country. It .....................\\nrains instead, because it’s warmer than the north.\",\n                  \"4 NINA:  How often do you buy new clothes?\\nRACHEL:  Well, ..................... . I’m a student, so I only have\\nenough money to buy clothes ..................... .\",\n                  \"5 ..................... I love studying, but ..................... I start to feel\\ntired if I read for a long time.\",\n                  \"Complete the second sentence so that it means the same as the first one in each case.\",\n                  \"1 Right now, Ken takes the bus in the morning and again in the evening.\\n.................... the ....................., Ken takes the bus ..................... a day.\",\n                  \"2 I’ll be back after a minute or so. See you in a very short time!\\nI’ll be back ..................... ..................... moment.  See you ..................... !\",\n                  \"3 Bill phones his sister every Friday. She was ill a short time ago.\\nBill phones his sister ..................... a week.  She was ill ..................... .\",\n                  \"4 Many years ago, people used horses, not cars.\\nIn ..................... ..................... , people used horses, not cars.\",\n                  \"5 Many years from now, people will travel to the moon for their holidays.\\nIn ..................... ..................... , people will travel to the moon for their holidays.\",\n                  \"Your score /30\",\n                  \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

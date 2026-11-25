@@ -1,0 +1,54 @@
+{
+  "event": "رویداد بازیابی ۴۳ — ریست پنهان ۴۳م (الگوی ۳۱..۴۲)",
+  "date": "2026-11-25",
+  "trigger": "پیشا-گام A1-ELEM-S06 (فرمان مالک «گام بعدی رو شروع کن و نقشه راه رو آپدیت کن» — trace 1a21363758ee031d)",
+  "hiddenReset": {
+    "localHEADFound": "193269b76cf46f9dcb210c71953bd1614c4dc45f (2026-11-08)",
+    "remoteMainAfterS05": "66e0a826dc396c1cd085ec2d1fa09161db375fde",
+    "divergence": "ahead=0 / behind=209 (behind = 207 بازیابی ۴۲ + 2 کامیت S05: d7642c7 محتوایی + 66e0a82 ثبت اثبات)",
+    "localUniqueCommits": 0,
+    "localStashAtStart": 0,
+    "ffOnlyPath": true
+  },
+  "audit": {
+    "method": "porcelain -z + core.quotepath=off + گسترش پوشه‌های فروفرورسته + rev-parse/cat-file blob + sha256 بایت‌به‌بیت",
+    "lesson43": "ورودی‌های پوشهٔ فروفرورسته porcelain («dir/») هش tree برمی‌گردانند؛ cat-file blob روی tree شکست می‌خورد — ۲۹ پوشه گسترش یافت به ۱۵۴۶ فایل؛ همچنین blobهای غایب پس از fetch ناقص اول با refetch کامل بازیابی شدند",
+    "porcelainBefore": { "fileEntries": 372, "dirEntries": 29, "dirEntryContents": 1546, "totalRealUntrackedFiles": 1918 },
+    "untrackedFiles": { "total": 1918, "matchRemote": 1911, "absentRemote": 7, "differ": 0 },
+    "absentRemoteList": [
+      "نقشه راه ها/نقشه-راه-TYV-Intermediate-فایل-تکراری-تشخیص-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-BIZ-Business-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-ELEM-Elementary-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-PRI-PreInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-UPP-UpperInt-2026-11-22.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-TYV-دفتر-گام‌های-کوچک-2026-11-23.md",
+      "نقشه راه ها/نقشه-راه-استخراج-باکیفیت-Test-Your-Vocabulary-مادر-چهار-کتاب-2026-11-22.md"
+    ],
+    "absentRemoteNature": "همان ۷ سند مسیر-تخت superseded شناخته‌شده — نسخه‌های شماره‌دار سری-TYV (۷/۷) matchRemote",
+    "modifiedFiles": { "total": 32, "diskEqualsRemote": 32, "differ": 0 },
+    "captures": { "total": 164, "byteMatch": 164, "differ": 0, "report": { "biz": 98, "elem": 60, "pri": 3, "upp": 3 }, "recordMatch": "دقیقاً برابر رکورد سربرگ ۱۳۱مین (پسا-S05)" },
+    "verdict": "صفر محتوای محلی-یگانه — مسیر ff-only صفرتلفاتی"
+  },
+  "insurance": {
+    "stashRc43": "4b9fae59debde075499b104179fc67dc6db30bbe",
+    "pushedTo": "refs/heads/recovery/rc43-pre-ff-stash-2026-11-25",
+    "pushProof": "* [new branch] 4b9fae59debde075499b104179fc67dc6db30bbe -> recovery/rc43-pre-ff-stash-2026-11-25",
+    "restoredArchives": [
+      { "name": "rc33", "sha": "c7337e9e886e1ae78815acd162c9e010866a8f20" },
+      { "name": "rc34", "sha": "73dd3e191ea875ed58b320e61aae17027f6ef3a6" },
+      { "name": "rc35", "sha": "3d6bfe0b70189b84249ae1aa7af60d760a43d5ff" },
+      { "name": "rc41", "sha": "67fc50323c9a20a5a68cf844e6e5649ba9ef4fa7" },
+      { "name": "rc42", "sha": "d01923fde7f8e2bb6e123557624c7435edbef952" }
+    ],
+    "stashStackAfter": 6
+  },
+  "reset": {
+    "command": "git reset --hard backup/main",
+    "headAfter": "66e0a826dc396c1cd085ec2d1fa09161db375fde",
+    "remoteProof": "git ls-remote backup refs/heads/main → 66e0a826dc396c1cd085ec2d1fa09161db375fde (بایت‌به‌بیت برابر)",
+    "porcelainAfter": 0,
+    "diskTruthAtStepStart": "۱۶۴/۴۸۹ (biz ۹۸/۹۸ کامل · elem ۶۰/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳)"
+  },
+  "dataLoss": "صفر — ممیزی بایت‌به‌بیت پیشا-reset + بیمهٔ rc43 در ریموت",
+  "nextStep": "A1-ELEM-S06 = bun scripts/tyv-a1-vlm-capture.mjs elem 61,62,63,64,65,66,67,68,69,70,71,72 (بدون skip انتظاری — انتظار Tests 54..65)"
+}

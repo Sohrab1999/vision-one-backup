@@ -1,0 +1,132 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 68,
+    "dpi": 300,
+    "renderSha256": "3be359d0ccd201bac031f4b23f378ff41689c1b8a200d6bc3850ed913166c288",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:57:47.749Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 67,
+    "testNumber": null,
+    "testTitle": "Answer key",
+    "exercises": [
+      {
+        "id": "1.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 daughter",
+          "2 uncle",
+          "3 son",
+          "4 sister/brother",
+          "5 father",
+          "6 grandmother",
+          "7 grandson",
+          "8 grandfather",
+          "9 aunt",
+          "10 grandparents / grandmother and grandfather"
+        ]
+      },
+      {
+        "id": "1.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "Across: 1 daughter",
+          "4 cousin",
+          "7 parents",
+          "8 come",
+          "10 any",
+          "Down: 2 uncle",
+          "3 nephew",
+          "5 sister",
+          "6 nieces",
+          "9 only"
+        ]
+      },
+      {
+        "id": "1.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 NO (My uncle John is my mother's sister's husband. / My nephew John is my sister's/brother's son.)",
+          "2 YES",
+          "3 NO (Mary is David's wife. / David is Mary's husband.)",
+          "4 YES",
+          "5 NO (two wives and two children)"
+        ]
+      },
+      {
+        "id": "2.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 were",
+          "2 got; to",
+          "3 honeymoon",
+          "4 married",
+          "5 died",
+          "6 of",
+          "7 call; after",
+          "8 ill"
+        ]
+      },
+      {
+        "id": "2.2",
+        "marks": "(4 marks)",
+        "instruction": null,
+        "items": [
+          "1 widowed",
+          "2 married",
+          "3 divorced",
+          "4 single"
+        ]
+      },
+      {
+        "id": "2.3",
+        "marks": "(6 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "1 They are getting married.",
+          "2 A wedding",
+          "3 The honeymoon"
+        ]
+      },
+      {
+        "id": "2.4",
+        "marks": "(10 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "1 How much does/did he weigh?; What are they going to call him? / What are they calling him?",
+          "2 What did he die of?; When is the funeral?",
+          "3 Where did they go on/for (their) honeymoon?"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Notes on the Answer key and marking scheme",
+      "1 Each test has a total of 30 marks.",
+      "2 There is one mark for each correct answer in most exercises. Sometimes there is half ½ a mark or two marks for each correct answer. You will find the total marks for each exercise below the exercise number on the test page, and on the right-hand side in the answer key.",
+      "3 If two answers are given in the key (separated by a slash /), both answers are correct (e.g. 'They're having lunch/dinner').",
+      "4 Where the answer to one of the questions is given in the text as an example, it appears in brackets [...] in the answer key.",
+      "Test 1",
+      "Test 2",
+      "www.irlanguage.com",
+      "IR Language",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 67,\n  \"testNumber\": null,\n  \"testTitle\": \"Answer key\",\n  \"exercises\": [\n    {\n      \"id\": \"1.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 daughter\", \"2 uncle\", \"3 son\", \"4 sister/brother\", \"5 father\",\n        \"6 grandmother\", \"7 grandson\", \"8 grandfather\", \"9 aunt\", \"10 grandparents / grandmother and grandfather\"\n      ]\n    },\n    {\n      \"id\": \"1.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"Across: 1 daughter\", \"4 cousin\", \"7 parents\", \"8 come\", \"10 any\",\n        \"Down: 2 uncle\", \"3 nephew\", \"5 sister\", \"6 nieces\", \"9 only\"\n      ]\n    },\n    {\n      \"id\": \"1.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 NO (My uncle John is my mother's sister's husband. / My nephew John is my sister's/brother's son.)\",\n        \"2 YES\",\n        \"3 NO (Mary is David's wife. / David is Mary's husband.)\",\n        \"4 YES\",\n        \"5 NO (two wives and two children)\"\n      ]\n    },\n    {\n      \"id\": \"2.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 were\", \"2 got; to\", \"3 honeymoon\", \"4 married\", \"5 died\", \"6 of\", \"7 call; after\", \"8 ill\"\n      ]\n    },\n    {\n      \"id\": \"2.2\",\n      \"marks\": \"(4 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 widowed\", \"2 married\", \"3 divorced\", \"4 single\"\n      ]\n    },\n    {\n      \"id\": \"2.3\",\n      \"marks\": \"(6 marks: 2 each)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 They are getting married.\",\n        \"2 A wedding\",\n        \"3 The honeymoon\"\n      ]\n    },\n    {\n      \"id\": \"2.4\",\n      \"marks\": \"(10 marks: 2 each)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 How much does/did he weigh?; What are they going to call him? / What are they calling him?\",\n        \"2 What did he die of?; When is the funeral?\",\n        \"3 Where did they go on/for (their) honeymoon?\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Notes on the Answer key and marking scheme\",\n    \"1 Each test has a total of 30 marks.\",\n    \"2 There is one mark for each correct answer in most exercises. Sometimes there is half ½ a mark or two marks for each correct answer. You will find the total marks for each exercise below the exercise number on the test page, and on the right-hand side in the answer key.\",\n    \"3 If two answers are given in the key (separated by a slash /), both answers are correct (e.g. 'They're having lunch/dinner').\",\n    \"4 Where the answer to one of the questions is given in the text as an example, it appears in brackets [...] in the answer key.\",\n    \"Test 1\",\n    \"Test 2\",\n    \"www.irlanguage.com\",\n    \"IR Language\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

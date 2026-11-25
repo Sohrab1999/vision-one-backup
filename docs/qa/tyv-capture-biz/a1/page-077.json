@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 77,
+    "dpi": 300,
+    "renderSha256": "84a428e12f13efa5d87b1e2f2fcb2a813aa607644a25cdf43669a968ff8519e2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T08:12:03.414Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 80,
+    "testNumber": "62",
+    "testTitle": "Negotiations 1: situations and negotiators",
+    "exercises": [
+      {
+        "id": "62.1",
+        "marks": "5 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one word that you don't have to use.) Then use your word pairs to complete the sentences below.",
+        "items": [
+          "1 This .......................................... is getting worse and now seems likely to lead to a strike.",
+          "2 We think that this compromise is to our .......................................... .",
+          "3 Everyone is hoping that these .................................... discussions will be successful.",
+          "4 The high level of public support is a powerful .................................... for the firefighters.",
+          "5 I believe that .......................................... is the right way to reach agreement about teachers' salaries."
+        ]
+      },
+      {
+        "id": "62.2",
+        "marks": "7 marks",
+        "instruction": "Decide which of the alternatives (A–E) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.",
+        "items": [
+          "1 'We agree that when the new company is formed, there will be no forced redundancies.'",
+          "2 'We've agreed to a rise of 2.5%, but the union also wants a minimum salary of £20,000.'",
+          "3 'If the US taxes our steel exports, we will increase the tax on goods from the US.'",
+          "4 'We start by asking for a very high price, then we negotiate down to a reasonable level.'",
+          "5 'If we order 10,000 units from you, what discount will you offer us?'",
+          "6 'The President of Energon will head the company and I have agreed to stay on as VP.'",
+          "7 'The employers' offer is a joke. Our members deserve at least 8% this year.'"
+        ]
+      },
+      {
+        "id": "62.3",
+        "marks": "5 marks",
+        "instruction": "The statements below are about negotiations. Write one word in the gap to complete each statement. The first letter is given in each case.",
+        "items": [
+          "1 'Raf is a very tough n _ _ _ _ _ _ _ _ _ and always gets the best price.'",
+          "2 'These d _ _ _ _ _ _ _ negotiations could easily fail.'",
+          "3 'This p _ _ _ _ _ _ _ dispute has been going on for over two months now.'",
+          "4 'I'd say that the employers have all the bargaining p _ _ _ _ and will win in the end.'",
+          "5 'Last-m _ _ _ _ _ negotiations are going on to avoid an all-out strike.'"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "eleventh\nlabour\nbargaining\ncollective\nmutual",
+      "chip\ndispute\nadvantage\nsolution\nhour\nbargaining",
+      "A trade dispute    B merger negotiations    C customer–supplier negotiations    D wage negotiations    E bargaining tactic"
+    ],
+    "pictures": [
+      "watermark/logo 'www.iranlanguage.com' with IR Language logo and Persian text"
+    ],
+    "unclassified": [
+      "Total 17",
+      "Target 13+",
+      "Your score",
+      "/17",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 80,\n \"testNumber\": \"62\",\n \"testTitle\": \"Negotiations 1: situations and negotiators\",\n \"exercises\": [\n  {\"id\": \"62.1\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one word that you don't have to use.) Then use your word pairs to complete the sentences below.\",\n   \"items\": [\n    \"1 This .......................................... is getting worse and now seems likely to lead to a strike.\",\n    \"2 We think that this compromise is to our .......................................... .\",\n    \"3 Everyone is hoping that these .................................... discussions will be successful.\",\n    \"4 The high level of public support is a powerful .................................... for the firefighters.\",\n    \"5 I believe that .......................................... is the right way to reach agreement about teachers' salaries.\"\n   ]},\n  {\"id\": \"62.2\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Decide which of the alternatives (A–E) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. You will have to use some alternatives more than once.\",\n   \"items\": [\n    \"1 'We agree that when the new company is formed, there will be no forced redundancies.'\",\n    \"2 'We've agreed to a rise of 2.5%, but the union also wants a minimum salary of £20,000.'\",\n    \"3 'If the US taxes our steel exports, we will increase the tax on goods from the US.'\",\n    \"4 'We start by asking for a very high price, then we negotiate down to a reasonable level.'\",\n    \"5 'If we order 10,000 units from you, what discount will you offer us?'\",\n    \"6 'The President of Energon will head the company and I have agreed to stay on as VP.'\",\n    \"7 'The employers' offer is a joke. Our members deserve at least 8% this year.'\"\n   ]},\n  {\"id\": \"62.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"The statements below are about negotiations. Write one word in the gap to complete each statement. The first letter is given in each case.\",\n   \"items\": [\n    \"1 'Raf is a very tough n _ _ _ _ _ _ _ _ _ and always gets the best price.'\",\n    \"2 'These d _ _ _ _ _ _ _ negotiations could easily fail.'\",\n    \"3 'This p _ _ _ _ _ _ _ dispute has been going on for over two months now.'\",\n    \"4 'I'd say that the employers have all the bargaining p _ _ _ _ and will win in the end.'\",\n    \"5 'Last-m _ _ _ _ _ negotiations are going on to avoid an all-out strike.'\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"eleventh\\nlabour\\nbargaining\\ncollective\\nmutual\",\n  \"chip\\ndispute\\nadvantage\\nsolution\\nhour\\nbargaining\",\n  \"A trade dispute    B merger negotiations    C customer–supplier negotiations    D wage negotiations    E bargaining tactic\"\n ],\n \"pictures\": [\n  \"watermark/logo 'www.iranlanguage.com' with IR Language logo and Persian text\"\n ],\n \"unclassified\": [\n  \"Total 17\",\n  \"Target 13+\",\n  \"Your score\",\n  \"/17\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

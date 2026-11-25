@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 61,
+    "dpi": 300,
+    "renderSha256": "2c94830eef03f205e8f2e7c102e432dacea0fbfd2b4a9cbc8d4378fc9f1340cf",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:56:27.185Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 60,
+    "testNumber": "54",
+    "testTitle": "Common uncountable nouns",
+    "exercises": [
+      {
+        "id": "54.1",
+        "marks": "10 marks",
+        "instruction": "Write the uncountable noun for each picture. We give you the first letter each time.",
+        "items": [
+          "1 i..............................",
+          "2 a..............................",
+          "3 w..............................",
+          "4 f..............................",
+          "5 l.............................."
+        ]
+      },
+      {
+        "id": "54.2",
+        "marks": "10 marks",
+        "instruction": "Put these nouns into two columns: countable and uncountable.",
+        "items": []
+      },
+      {
+        "id": "54.3",
+        "marks": "10 marks",
+        "instruction": "Correct the mistakes.",
+        "items": [
+          "1 Are these furnitures new? I haven't seen them before. (2 marks)",
+          "2 We had a terrible weather last week!",
+          "3 We have ten people coming to lunch, so we'll need three large breads.",
+          "4 Can you give me some advices about English courses in the UK?",
+          "5 The traffics are always very bad around 8 o'clock in the morning.",
+          "6 The news are on TV in five minutes. Shall we watch them? (2 marks)",
+          "7 Rail travels are more interesting than going by air.",
+          "8 I have a lot of works to do before the exam next week."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "banana milk shoe money rice bread traffic apple bus plate butter",
+      "Countable | Uncountable (table with 'banana' written in Countable column)"
+    ],
+    "pictures": [
+      "information symbol (i in black circle) for item 1",
+      "picture of a hotel and sunny resort for item 2",
+      "weather symbols: storm cloud with lightning, sun, rain cloud for item 3",
+      "drawing of chair, table and stool for item 4",
+      "drawing of luggage/bags for item 5",
+      "two-column countable/uncountable table to complete"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 60,\n \"testNumber\": \"54\",\n \"testTitle\": \"Common uncountable nouns\",\n \"exercises\": [\n  {\"id\": \"54.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Write the uncountable noun for each picture. We give you the first letter each time.\",\n   \"items\": [\n    \"1 i..............................\",\n    \"2 a..............................\",\n    \"3 w..............................\",\n    \"4 f..............................\",\n    \"5 l..............................\"\n   ]},\n  {\"id\": \"54.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Put these nouns into two columns: countable and uncountable.\",\n   \"items\": []},\n  {\"id\": \"54.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Correct the mistakes.\",\n   \"items\": [\n    \"1 Are these furnitures new? I haven't seen them before. (2 marks)\",\n    \"2 We had a terrible weather last week!\",\n    \"3 We have ten people coming to lunch, so we'll need three large breads.\",\n    \"4 Can you give me some advices about English courses in the UK?\",\n    \"5 The traffics are always very bad around 8 o'clock in the morning.\",\n    \"6 The news are on TV in five minutes. Shall we watch them? (2 marks)\",\n    \"7 Rail travels are more interesting than going by air.\",\n    \"8 I have a lot of works to do before the exam next week.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"banana milk shoe money rice bread traffic apple bus plate butter\",\n  \"Countable | Uncountable (table with 'banana' written in Countable column)\"\n ],\n \"pictures\": [\n  \"information symbol (i in black circle) for item 1\",\n  \"picture of a hotel and sunny resort for item 2\",\n  \"weather symbols: storm cloud with lightning, sun, rain cloud for item 3\",\n  \"drawing of chair, table and stool for item 4\",\n  \"drawing of luggage/bags for item 5\",\n  \"two-column countable/uncountable table to complete\"\n ],\n \"unclassified\": [\n  \"Test Your English Vocabulary in Use Elementary\",\n  \"Your score /30\"\n ]\n}\n```"
+}

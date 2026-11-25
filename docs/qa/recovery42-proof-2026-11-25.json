@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "event": "رویداد بازیابی ۴۲ سندباکس — ریست پنهان ۴۲م پلتفرمی — رسیدگی کامل صفرتلفاتی (الگوی ff-only رویدادهای ۶..۴۱)",
+    "date": "2026-11-25",
+    "jalali": "۱۴۰۵/۹/۴",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی: پایداری کامل پروژه و بازیابی پس از Reset یا حذف Sandbox — ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S04 (گام بعدی مجاز A1-ELEM-S05 = bun scripts/tyv-a1-vlm-capture.mjs elem 49,50,51,52,53,54,55,56,57,58,59,60 — دستهٔ پنجم از ۸ دسته) — trace 1a211c021b681a39 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — الزام پایداری ایستنده پابرجا",
+    "sessionStartDiscovery": "HEAD محلی روی 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) بازگشته بود — عین الگوی ریست‌های پنهان ۳۱..۴۱ (اسنپ‌شات کهنهٔ .git — بازگشت با عمق رویداد ۴۲: ۲۰۷ کامیت پشت ریموت پس از fetch = ۲۰۱ رویداد ۴۱ + ۶ کامیت S02/S03/S04 محتوایی+ثبت اثبات) — porcelain ۴۲۹ (۳۲ M + ۳۹۷ ؟?) — divergence ۰/۲۰۷ (صفر کامیت یکتای محلی ⇒ مسیر ff-only) — remote سالم = a6412d6 (ثبت اثبات §۱۰-۷ گام A1-ELEM-S04) با والد محتوایی dabdcad (TYV A1-ELEM-S04 صفحات ۳۷–۴۸ — Tests 30..41) — stash محلی صفر (تلف‌شده در ریست — الگوی ۳۹..۴۱) — merge-base ⇒ تأیید مسیر ff-only"
+  },
+  "recovery": [
+    "① ممیزی صفرتلفاتی پیشا-بازیابی (سه دور — با درس ثبت‌شدهٔ رویداد ۴۱: وجودسنجی git cat-file -e پیش از hash و ممیزی NUL-separator برای مسیرهای فارسی/فاصله‌دار): دور ۱ کپچرهای TYV — sha256 تک‌تک ۱۵۲ JSON دیسک (docs/qa/tyv-capture-{biz,elem,pri,upp}/a1/) با git show backup/main ⇒ **۱۵۲/۱۵۲ matchRemote بایت‌به‌بیت · differ=۰ · absentRemote=۰** (biz=98 · elem=48 · pri=3 · upp=3 — دیسک‌حقیقت ۱۵۲/۴۸۹ == رکورد SNAPSHOT سربرگ ۱۳۰مین) · دور ۲ ۳۹۷ untracked با porcelain -z و sha256 ⇒ **۳۶۱ matchRemote · ۷ absentRemote — صفر differ** — هفت absentRemote همگی همان اسناد مسیر-تختِ پیشا-سازمان‌دهی TYV رویداد ۴۱ (نقشه راه ها/…-2026-11-2*.md تخت) — superseded با نسخه‌های شماره‌دار سری-TYV در ریموت (هر ۷ نسخهٔ شماره‌دار روی دیسک و ریموت بایت‌به‌بیت یکسان — ok=7 bad=0) · دور ۳ ۳۲ modified با sha256 ⇒ **۳۲/۳۲ disk==remote** (modified فقط به‌سبب HEAD کهنه) ⇒ **صفر محتوای محلی-یگانه در کل درخت**",
+    "② ایمنی: stash بیمهٔ rc42 با push -u (شامل تمام untracked + اسناد superseded) = d01923fde7f8e2bb6e123557624c7435edbef952 → push به شاخهٔ Remote backup/recovery/rc42-pre-ff-stash-2026-11-25 (اثبات: * [new branch]) — صفرتلفاتی تضمین حتی برای هفت سند superseded",
+    "③ بازگردانی آرشیوهای stash از ریموت (درس بازیابی‌های ۳۹..۴۱): stash commit شاخه‌های rc33 (c7337e9) · rc34 (73dd3e1) · rc35 (3d6bfe0b) · rc41 (67fc503) با git stash store به stash stack بازگردانده شدند — پس از drop بیمهٔ rc42 بازگردانی از ریموت — stash stack = ۵ (rc42 · rc41 · rc35 · rc34 · rc33) — هر پنج در ریموت هم بایگانی (شاخه‌های recovery/rc33 · rc34 · rc35 · rc41 · rc42)",
+    "④ بازیابی اصلی: git reset --hard backup/main (معادل ff-only — 193269b→a6412d6 — صفر reset/rebase/force روی تاریخچهٔ ریموت) ⇒ HEAD = a6412d6be6aa910cc98be972643724e5a018eeb4 = backup/main — هفت سند superseded پس از stash -u در درخت نیستند (فقط در stash بیمهٔ rc42 آرشیو + در stash بیمهٔ rc41 رویداد قبل — الگوی درخت-پاک رویدادهای قبلی) — گام A1-ELEM-S05 بلافاصله پس از بازیابی اجرا شد"
+  ],
+  "postVerification": {
+    "headEqualsRemote": "git rev-parse HEAD == git ls-remote backup refs/heads/main == a6412d6be6aa910cc98be972643724e5a018eeb4 — برابری بایت‌به‌بیت",
+    "porcelain": "پس از بازیابی ۰ — سپس آثار مشروع گام A1-ELEM-S05 (۱۲ JSON صفحهٔ NEW + a1-index.json + شواهد QA) — صفر آلودگی بازیابی",
+    "stashStack": "۵ — rc42 بیمهٔ همین بازیابی · rc41 · rc35 · rc34 · rc33 آرشیو — هر پنج در ریموت هم بایگانی",
+    "diskTruthIntact": "A1 پیشا-گام = 152/489 پسا-بازیابی == رکورد SNAPSHOT سربرگ ۱۳۰مین — بازشماری ls: biz=98 · elem=48 · pri=3 · upp=3 — کپچرهای S01..S04 بایت‌به‌بیت = ریموت — پسا-گام S05 = 164/489",
+    "history": "a6412d6 (ثبت اثبات S04) → dabdcad (محتوایی S04) → 19c6503 (ثبت اثبات S03) — زنجیرهٔ تأییدشدهٔ ریموت کامل روی دیسک",
+    "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF در کل فرایند بازیابی — رفتار وب‌اپ دست‌نخورده"
+  },
+  "lesson": "همان الگوی بازیابی‌های ۳۱..۴۱: ریست پنهان پلتفرمی .git را به اسنپ‌شات کهنهٔ 193269b برمی‌گرداند؛ درخت کار از checkpoint فایلی جدیدتر می‌آید؛ TRUTH = remote؛ بازیابی ff-only صفرتلفاتی پس از بیمهٔ stash+push. درس تثبیت‌شدهٔ رویداد ۴۲: (۱) عمق بازگشت ۲۰۷ کامیت — از رویداد ۴۱ (۲۰۱) جلوتر — سنجهٔ divergence باید در هر نشست از صفر با rev-list --count اندازه گرفته شود نه حدس زده شود؛ (۲) ممیزی untracked با git status --porcelain -z (NUL-separator) الزامی است — split سادهٔ whitespace مسیرهای فارسی/فاصله‌دار را می‌شکند و false-differ/false-absent تولید می‌کند (رویداد ۴۱ هم همین درس را با git show خالی برای مسیرهای absent ثبت کرد)؛ (۳) درس گام‌محور جدید: checkpoint/resume اسکریپت کپچر فایل‌های status=parse-failed را هم «موجود» می‌شمارد و skip می‌کند ⇒ رفع parse-fail = بایگانی آرتیفکت + حذف فایل + اجرای مجدد (الگوی اجرا‌شده در همین نشست برای p59 — سومین تکرار پس از S03/p34 و BIZ-S05/p60)"
+}

@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "script": "scripts/viu-adv-raw-vlm-qa.mjs",
+    "generatedAt": "2026-11-20T14:30:30.364Z",
+    "role": "roadmap §۳-2: VLM as visual QA SAMPLER only (extraction itself is text-based, A1-1)",
+    "requirement": "A1 validation: manual comparison of ≥5 units against pdftoppm renders",
+    "samples": 5,
+    "rendersDpi": 110
+  },
+  "passCount": 3,
+  "allPass": false,
+  "results": [
+    {
+      "unit": 1,
+      "page": "left",
+      "pdfPage": 10,
+      "render": "g1-samples/u1-p10-010.png",
+      "verdict": {
+        "titleMatch": true,
+        "sectionsSeen": "A, B, C all present with headings",
+        "missingBlocks": "None major; section C footnotes 7 and 8 are truncated (missing 'before the end of a college or university course' and 'with the right formal qualifications').",
+        "garbage": "No doubled words or gibberish, but section A body text is interleaved line-by-line with its margin footnotes, and section C mixes sidebar notes into the paragraph flow.",
+        "verdict": "PASS",
+        "notes": "All headings, paragraphs and exercises are present and readable; the main flaw is interleaving of margin glosses with body text in sections A and C, plus two truncated footnotes at the bottom."
+      }
+    },
+    {
+      "unit": 21,
+      "page": "left",
+      "pdfPage": 50,
+      "render": "g1-samples/u21-p50-050.png",
+      "verdict": {
+        "titleMatch": true,
+        "sectionsSeen": "A, B, C all present",
+        "missingBlocks": "none",
+        "garbage": "none; stray 'T' before paragraph is just the drop cap",
+        "verdict": "PASS",
+        "notes": "Title, all three sections, footnotes and metaphor paragraph are faithfully extracted. Only cosmetic issue is the isolated drop-cap letter 'T'."
+      }
+    },
+    {
+      "unit": 49,
+      "page": "right",
+      "pdfPage": 107,
+      "render": "g1-samples/u49-p107-107.png",
+      "verdict": {
+        "titleMatch": false,
+        "sectionsSeen": "49.1, 49.2, 49.3, 49.4, 49.5 all present",
+        "missingBlocks": "'Exercises' page heading absent; text inside the 49.4 illustrations (e.g. 'PERFUME', '50% OFF SHOES', 'SALE', 'BO'S CAFE') is garbled/absent",
+        "garbage": "Interleaved rotated-text soup after 49.4 items ('r Your You al al Loc Loc rist ist Flor Flo...') and again at the end ('ur l Yuor Yo al...')",
+        "verdict": "FAIL",
+        "notes": "All exercise numbers and body text extract cleanly, but the page title 'Exercises' is missing and the rotated/vertical banner text from the images appears as interleaved gibberish twice. Image-embedded labels in 49.4 are also not captured."
+      }
+    },
+    {
+      "unit": 72,
+      "page": "left",
+      "pdfPage": 152,
+      "render": "g1-samples/u72-p152-152.png",
+      "verdict": {
+        "titleMatch": true,
+        "sectionsSeen": "A, B, C plus Common mistakes",
+        "missingBlocks": "none",
+        "garbage": "none",
+        "verdict": "PASS",
+        "notes": "Extraction faithfully captures unit title, all sections, tables, and the Common mistakes box. Minor phonetic transcription differences only."
+      }
+    },
+    {
+      "unit": 96,
+      "page": "right",
+      "pdfPage": 201,
+      "render": "g1-samples/u96-p201-201.png",
+      "verdict": {
+        "titleMatch": false,
+        "sectionsSeen": "96.1–96.6 all present",
+        "missingBlocks": "The 'Exercises' heading at the top of the page is absent from the extraction.",
+        "garbage": "None; text is clean, checkbox glyphs just omitted.",
+        "verdict": "FAIL",
+        "notes": "All exercise blocks and their text match the page faithfully, but the page heading 'Exercises' is missing. This single omission fails the titleMatch requirement."
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 44,
+    "dpi": 300,
+    "renderSha256": "64e6f6b8d30c29deecf4fb933ebbafe66aa38f03ade8992eb74e98da36858fbd",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:42:27.017Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 43,
+    "testNumber": "37",
+    "testTitle": "Go / went / gone",
+    "exercises": [
+      {
+        "id": "37.1",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps with the right word or words.",
+        "items": [
+          "Example: Let's go ............to............ the cinema this evening.",
+          "1 My mother goes to work ...................... bike.",
+          "2 The old lady went .................. .................. the house and .................. the street.",
+          "3 Please go .................. – I don't want you here!",
+          "4 Oliver went .................. the stairs to his bedroom on the top floor.",
+          "5 In the morning I go .................. to my office in the lift but at the end of the day I go .................. the stairs.",
+          "6 I like to go to work .................. car.",
+          "7 We've had a lovely holiday but we have to go .................. home tomorrow.",
+          "8 Is this bus going .................. the railway station?"
+        ]
+      },
+      {
+        "id": "37.2",
+        "marks": "5 marks",
+        "instruction": "Which meaning of go is used in each sentence? Write a, b or c next to each sentence.",
+        "items": [
+          "a move from one place to another    b do an activity    c talk about plans for the future",
+          "Example: I go to work by bike. ..........a..........",
+          "1 Are you going to watch the football match tonight?",
+          "2 Larry goes to Paris on business every year.",
+          "3 I love going sightseeing when I'm on holiday.",
+          "4 What are you going to do next year?",
+          "5 Do you like going shopping?"
+        ]
+      },
+      {
+        "id": "37.3",
+        "marks": "5 marks",
+        "instruction": "Which activity is each person doing? Use an expression with going.",
+        "items": [
+          "Example:",
+          "Dan is going skiing..........."
+        ]
+      },
+      {
+        "id": "37.4",
+        "marks": "10 marks",
+        "instruction": "Look at Jim's diary. What is he going to do each day? Write ten sentences.",
+        "items": [
+          "Example:",
+          "On Monday Jim ............\nis going to have\nlunch with Mary...."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "30 Monday — Have lunch with Mary. Evening – meet Tom and Ricky.",
+      "31 Tuesday — Visit grandmother.",
+      "1 Wednesday — Meet Pat for dinner.",
+      "Thursday 2 — Morning – go swimming. Evening – play table tennis with Mary.",
+      "Friday 3 — Do some housework! Phone Aunt Sally.",
+      "Saturday 4 — Buy Tom's birthday present.",
+      "Sunday 5 — Give Tom his present. Take Mary to Tom's party."
+    ],
+    "pictures": [
+      "37.3: picture of Dan skiing (example)",
+      "37.3 item 1: picture of Nora shopping",
+      "37.3 item 2: picture of Harry climbing into a swimming pool",
+      "37.3 item 3: picture of Mel and Bob dancing at a party",
+      "37.3 item 4: picture of Terry and Sarah taking photos of the Leaning Tower of Pisa",
+      "37.3 item 5: picture of Nick on a beach with a camera",
+      "37.4: two-page spiral-bound diary/planner page with dated entries"
+    ],
+    "unclassified": [
+      "Test 37",
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 43,\n \"testNumber\": \"37\",\n \"testTitle\": \"Go / went / gone\",\n \"exercises\": [\n   {\"id\": \"37.1\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Fill the gaps with the right word or words.\",\n    \"items\": [\n      \"Example: Let's go ............to............ the cinema this evening.\",\n      \"1 My mother goes to work ...................... bike.\",\n      \"2 The old lady went .................. .................. the house and .................. the street.\",\n      \"3 Please go .................. – I don't want you here!\",\n      \"4 Oliver went .................. the stairs to his bedroom on the top floor.\",\n      \"5 In the morning I go .................. to my office in the lift but at the end of the day I go .................. the stairs.\",\n      \"6 I like to go to work .................. car.\",\n      \"7 We've had a lovely holiday but we have to go .................. home tomorrow.\",\n      \"8 Is this bus going .................. the railway station?\"\n    ]},\n   {\"id\": \"37.2\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Which meaning of go is used in each sentence? Write a, b or c next to each sentence.\",\n    \"items\": [\n      \"a move from one place to another    b do an activity    c talk about plans for the future\",\n      \"Example: I go to work by bike. ..........a..........\",\n      \"1 Are you going to watch the football match tonight?\",\n      \"2 Larry goes to Paris on business every year.\",\n      \"3 I love going sightseeing when I'm on holiday.\",\n      \"4 What are you going to do next year?\",\n      \"5 Do you like going shopping?\"\n    ]},\n   {\"id\": \"37.3\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Which activity is each person doing? Use an expression with going.\",\n    \"items\": [\n      \"Example:\",\n      \"Dan is going skiing...........\"\n    ]},\n   {\"id\": \"37.4\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Look at Jim's diary. What is he going to do each day? Write ten sentences.\",\n    \"items\": [\n      \"Example:\",\n      \"On Monday Jim ............\\nis going to have\\nlunch with Mary....\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"30 Monday — Have lunch with Mary. Evening – meet Tom and Ricky.\",\n   \"31 Tuesday — Visit grandmother.\",\n   \"1 Wednesday — Meet Pat for dinner.\",\n   \"Thursday 2 — Morning – go swimming. Evening – play table tennis with Mary.\",\n   \"Friday 3 — Do some housework! Phone Aunt Sally.\",\n   \"Saturday 4 — Buy Tom's birthday present.\",\n   \"Sunday 5 — Give Tom his present. Take Mary to Tom's party.\"\n ],\n \"pictures\": [\n   \"37.3: picture of Dan skiing (example)\",\n   \"37.3 item 1: picture of Nora shopping\",\n   \"37.3 item 2: picture of Harry climbing into a swimming pool\",\n   \"37.3 item 3: picture of Mel and Bob dancing at a party\",\n   \"37.3 item 4: picture of Terry and Sarah taking photos of the Leaning Tower of Pisa\",\n   \"37.3 item 5: picture of Nick on a beach with a camera\",\n   \"37.4: two-page spiral-bound diary/planner page with dated entries\"\n ],\n \"unclassified\": [\n   \"Test 37\",\n   \"Your score /30\",\n   \"Test Your English Vocabulary in Use Elementary\"\n ]\n}\n```"
+}

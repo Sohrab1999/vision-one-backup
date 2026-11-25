@@ -1,0 +1,80 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 42,
+    "dpi": 300,
+    "renderSha256": "3ffcf7e9b569bed206c40d4037d7a78c59da0f56b453fe80825e8c605bcfc80e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:20:19.503Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 45,
+    "testNumber": "2",
+    "testTitle": "Summary Test 2",
+    "exercises": [
+      {
+        "id": "6",
+        "marks": "6 marks",
+        "instruction": "In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.",
+        "items": [
+          "0 We are the market (ladder) with a 48% share of consumer spending. ................ leader",
+          "1 Always try to satisfy customer wants and you'll be successful. ....................",
+          "2 We supply parts to car manufacturers on a just-off-time basis. ....................",
+          "3 To keep quality high we do spotting checks throughout the day. ....................",
+          "4 Retailers buy from holesalers and then sell on to their customers. ....................",
+          "5 Our site has a search machine so you can look for key words. ....................",
+          "6 Last year, our sales turnout was 5% higher than our forecast. ...................."
+        ]
+      },
+      {
+        "id": "7",
+        "marks": "6 marks",
+        "instruction": "Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)",
+        "items": [
+          "1 The new 'Elite' range will have higher specifications and be aimed at buyers with more than £200,000 to spend.",
+          "2 The company announced that it is to issue more shares in order to raise capital for its expansion.",
+          "3 Last year, their share of the market rose to 34% – almost 3% higher than their biggest competitor.",
+          "4 The advantage is that you own the shop, but the parent company provides stock, advertising and advice.",
+          "5 Shareholders were shocked to hear that they would receive just 2¢ for every share as a result of the company's poor performance last year.",
+          "6 The survey shows that average prices rose by 2% last month making the annual rise a massive 18%.",
+          "7 The company reported that their online sales service had moved out of the red for the first time."
+        ]
+      },
+      {
+        "id": "8",
+        "marks": "8 marks",
+        "instruction": "Write the abbreviations below in words. Some words and letters have been given to help you.",
+        "items": [
+          "1 ISP      Internet S_______  P________",
+          "2 B2G      Business To G__________",
+          "3 COGS     Cost Of G_____ S____",
+          "4 FMCG     Fast M______ C________ Goods",
+          "5 BPR      Business P_______ Re-engineering"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Global Net is market leader",
+      "Board faces dividend fury",
+      "No end to housing price boom",
+      "Time to invest in a franchise?",
+      "Music e-tailer records profit",
+      "Anglia Boats to move upmarket"
+    ],
+    "pictures": [
+      "six shaded headline boxes each with an empty answer box beside it"
+    ],
+    "unclassified": [
+      "Summary Test 2"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 45,\n \"testNumber\": \"2\",\n \"testTitle\": \"Summary Test 2\",\n \"exercises\": [\n   {\"id\": \"6\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line. The first one is an example.\",\n    \"items\": [\n      \"0 We are the market (ladder) with a 48% share of consumer spending. ................ leader\",\n      \"1 Always try to satisfy customer wants and you'll be successful. ....................\",\n      \"2 We supply parts to car manufacturers on a just-off-time basis. ....................\",\n      \"3 To keep quality high we do spotting checks throughout the day. ....................\",\n      \"4 Retailers buy from holesalers and then sell on to their customers. ....................\",\n      \"5 Our site has a search machine so you can look for key words. ....................\",\n      \"6 Last year, our sales turnout was 5% higher than our forecast. ....................\"\n    ]},\n   {\"id\": \"7\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Match each headline to a statement. Write the number of the statement you choose in the box next to the headline. (There is one statement that you do not have to use.)\",\n    \"items\": [\n      \"1 The new 'Elite' range will have higher specifications and be aimed at buyers with more than £200,000 to spend.\",\n      \"2 The company announced that it is to issue more shares in order to raise capital for its expansion.\",\n      \"3 Last year, their share of the market rose to 34% – almost 3% higher than their biggest competitor.\",\n      \"4 The advantage is that you own the shop, but the parent company provides stock, advertising and advice.\",\n      \"5 Shareholders were shocked to hear that they would receive just 2¢ for every share as a result of the company's poor performance last year.\",\n      \"6 The survey shows that average prices rose by 2% last month making the annual rise a massive 18%.\",\n      \"7 The company reported that their online sales service had moved out of the red for the first time.\"\n    ]},\n   {\"id\": \"8\",\n    \"marks\": \"8 marks\",\n    \"instruction\": \"Write the abbreviations below in words. Some words and letters have been given to help you.\",\n    \"items\": [\n      \"1 ISP      Internet S_______  P________\",\n      \"2 B2G      Business To G__________\",\n      \"3 COGS     Cost Of G_____ S____\",\n      \"4 FMCG     Fast M______ C________ Goods\",\n      \"5 BPR      Business P_______ Re-engineering\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"Global Net is market leader\",\n   \"Board faces dividend fury\",\n   \"No end to housing price boom\",\n   \"Time to invest in a franchise?\",\n   \"Music e-tailer records profit\",\n   \"Anglia Boats to move upmarket\"\n ],\n \"pictures\": [\n   \"six shaded headline boxes each with an empty answer box beside it\"\n ],\n \"unclassified\": [\"Summary Test 2\"]\n}\n```"
+}

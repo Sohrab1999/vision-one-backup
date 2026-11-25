@@ -1,0 +1,120 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 84,
+    "dpi": 300,
+    "renderSha256": "107e039ddcea4c51297128d5f1f5200d277ae9f6e0b459690e2fef7f7cb6e704",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:34:46.257Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 83,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "6-8",
+        "marks": "(15 marks)",
+        "instruction": null,
+        "items": [
+          "LIZ: I'm doing my washing. All my clothes are dirty.",
+          "6 FATHER: Ivan, do your homework now!",
+          "IVAN: No. Not now. I'll do it later. Please, Dad!",
+          "FATHER: No! I want you to do it now!",
+          "7 MARIA: I do my best to learn all the new words every day.",
+          "ANONA: So do I, but then I forget them again.",
+          "8 In our family, my father does the washing-up every day, my mother does the gardening, but my brother never does anything!"
+        ]
+      },
+      {
+        "id": "39.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 Pam is making (some / a cup of) tea.",
+          "2 Tim is making a photocopy.",
+          "3 Rose is making a choice.",
+          "4 Chris is making a video/film.",
+          "5 Isabelle is making a mess.",
+          "6 Phil is making an appointment (with the dentist).",
+          "7 Sophie is making a mistake.",
+          "8 Vincent is making dinner / lunch / a meal.",
+          "9 Katy is making a/her/the bed.",
+          "10 Nathan is making (some / a cup of) coffee."
+        ]
+      },
+      {
+        "id": "39.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "do: your homework, an exam, the washing, the cooking, some exercises, the housework",
+          "make: [lunch], a noise, an appointment, a mistake, a choice"
+        ]
+      },
+      {
+        "id": "39.3",
+        "marks": "(10 marks: 1 for identifying each mistake and 1 for each correction)",
+        "instruction": null,
+        "items": [
+          "I did it very quickly, so I think I probably made a lot of mistakes. Then my friend and I went to a film. The hero died, so it made us feel very sad/unhappy. But it was a very long film, so it made me feel quite tired too. When I got home I had to do the washing. Then at last I could go to bed.",
+          "I've got to take/do an exam next week, but let's meet at the weekend."
+        ]
+      },
+      {
+        "id": "40.1",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 coming home",
+          "2 come here",
+          "3 coming out of",
+          "4 comes from",
+          "5 come back"
+        ]
+      },
+      {
+        "id": "40.2",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 c  2 e  3 a  4 b  5 d"
+        ]
+      },
+      {
+        "id": "40.3",
+        "marks": "(20 marks: 2 for each corrected mistake)",
+        "instruction": null,
+        "items": [
+          "1 LORNA: Has your brother come back from Germany yet?",
+          "JAMES: Yes, he came home last Friday.",
+          "2 HILDA: Do you know Stockholm? I've never been there.",
+          "RYAN: Yes, I went there last summer for a few days.",
+          "3 STEVE: What nationality is Tanya? Where does she come from?",
+          "FELIX: She comes from Moscow. She's Russian.",
+          "4 ANNA: I was surprised to see Julia in your office.",
+          "NANCY: Yes, she didn't even knock. She just came in.",
+          "5 EVA: Do you know what the English word 'cabbage' means?",
+          "PACO: Yes, it came up in the lesson yesterday. It's a vegetable.",
+          "6 ADA: Would you like to come round to my house this evening to watch a DVD?",
+          "NIK: Yes, but my cousin is staying with me. Can he come along?",
+          "ADA: Of course. He can come too."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 83, \"testNumber\": null, \"testTitle\": null, \"exercises\": [{\"id\": \"6-8\", \"marks\": \"(15 marks)\", \"instruction\": null, \"items\": [\"LIZ: I'm doing my washing. All my clothes are dirty.\", \"6 FATHER: Ivan, do your homework now!\", \"IVAN: No. Not now. I'll do it later. Please, Dad!\", \"FATHER: No! I want you to do it now!\", \"7 MARIA: I do my best to learn all the new words every day.\", \"ANONA: So do I, but then I forget them again.\", \"8 In our family, my father does the washing-up every day, my mother does the gardening, but my brother never does anything!\"]}, {\"id\": \"39.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 Pam is making (some / a cup of) tea.\", \"2 Tim is making a photocopy.\", \"3 Rose is making a choice.\", \"4 Chris is making a video/film.\", \"5 Isabelle is making a mess.\", \"6 Phil is making an appointment (with the dentist).\", \"7 Sophie is making a mistake.\", \"8 Vincent is making dinner / lunch / a meal.\", \"9 Katy is making a/her/the bed.\", \"10 Nathan is making (some / a cup of) coffee.\"]}, {\"id\": \"39.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"do: your homework, an exam, the washing, the cooking, some exercises, the housework\", \"make: [lunch], a noise, an appointment, a mistake, a choice\"]}, {\"id\": \"39.3\", \"marks\": \"(10 marks: 1 for identifying each mistake and 1 for each correction)\", \"instruction\": null, \"items\": [\"I did it very quickly, so I think I probably made a lot of mistakes. Then my friend and I went to a film. The hero died, so it made us feel very sad/unhappy. But it was a very long film, so it made me feel quite tired too. When I got home I had to do the washing. Then at last I could go to bed.\", \"I've got to take/do an exam next week, but let's meet at the weekend.\"]}, {\"id\": \"40.1\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\"1 coming home\", \"2 come here\", \"3 coming out of\", \"4 comes from\", \"5 come back\"]}, {\"id\": \"40.2\", \"marks\": \"(5 marks)\", \"instruction\": null, \"items\": [\"1 c  2 e  3 a  4 b  5 d\"]}, {\"id\": \"40.3\", \"marks\": \"(20 marks: 2 for each corrected mistake)\", \"instruction\": null, \"items\": [\"1 LORNA: Has your brother come back from Germany yet?\", \"JAMES: Yes, he came home last Friday.\", \"2 HILDA: Do you know Stockholm? I've never been there.\", \"RYAN: Yes, I went there last summer for a few days.\", \"3 STEVE: What nationality is Tanya? Where does she come from?\", \"FELIX: She comes from Moscow. She's Russian.\", \"4 ANNA: I was surprised to see Julia in your office.\", \"NANCY: Yes, she didn't even knock. She just came in.\", \"5 EVA: Do you know what the English word 'cabbage' means?\", \"PACO: Yes, it came up in the lesson yesterday. It's a vegetable.\", \"6 ADA: Would you like to come round to my house this evening to watch a DVD?\", \"NIK: Yes, but my cousin is staying with me. Can he come along?\", \"ADA: Of course. He can come too.\"]}], \"boxesAndLists\": [], \"pictures\": [], \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\"]}\n```"
+}
