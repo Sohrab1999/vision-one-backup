@@ -89,13 +89,17 @@ export function ContentsView({
                   <span dir="ltr" className="font-en">{ch.quote.en}</span>
                 </p>
 
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {ch.grammarTopics.map((t) => (
-                    <Badge key={t} variant="outline" className="text-[10px] font-normal">
-                      {t}
-                    </Badge>
-                  ))}
-                </div>
+                {/* R5 — فیلد مردهٔ grammarTopics در ۱۰۰٪ فصل‌های VIU خالی است (یافتهٔ ۲-۴ ممیزی کیفیت)
+                    — تصمیم دروازهٔ مالک: پنهان در مسیرهای UI (بدون تغییر داده — پرکردن مستلزم دروازهٔ مستقل + منبع چاپی است) */}
+                {ch.grammarTopics.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {ch.grammarTopics.map((t) => (
+                      <Badge key={t} variant="outline" className="text-[10px] font-normal">
+                        {t}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
 
                 <div className="mt-4 flex items-center gap-3">
                   <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
@@ -106,10 +110,13 @@ export function ContentsView({
                     <BookOpen size={12} />
                     {total.toLocaleString("fa-IR")} واژه
                   </span>
-                  <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <GraduationCap size={12} />
-                    {ch.grammarTopics.length.toLocaleString("fa-IR")} گرامر
-                  </span>
+                  {/* R5 — متریک مردهٔ «۰ گرامر» فقط وقتی فصل موضوع گرامری واقعی دارد رندر می‌شود */}
+                  {ch.grammarTopics.length > 0 && (
+                    <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                      <GraduationCap size={12} />
+                      {ch.grammarTopics.length.toLocaleString("fa-IR")} گرامر
+                    </span>
+                  )}
                   <div className="mr-auto flex items-center gap-2">
                     <Progress value={pct} className="h-1.5 w-16" />
                     <span className="text-[10px] font-bold text-primary">{pct.toLocaleString("fa-IR")}٪</span>
