@@ -1,0 +1,119 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 78,
+    "dpi": 300,
+    "renderSha256": "14185f03d5f81780a6c77fa6503b6004006e9a973085d798446d1dcc6b708e33",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:33:33.687Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 77,
+    "testNumber": "24, 25",
+    "testTitle": "Test 24 / Test 25",
+    "exercises": [
+      {
+        "id": "24.1",
+        "marks": "(8 marks)",
+        "instruction": null,
+        "items": [
+          "1 drums",
+          "2 flute",
+          "3 violin",
+          "4 cello",
+          "5 trumpet",
+          "6 clarinet",
+          "7 piano",
+          "8 guitar"
+        ]
+      },
+      {
+        "id": "24.2",
+        "marks": "(8 marks: two each)",
+        "instruction": null,
+        "items": [
+          "1 a violinist",
+          "2 a flute-player",
+          "3 a pianist",
+          "4 a trumpet-player"
+        ]
+      },
+      {
+        "id": "24.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 folk",
+          "2 classical",
+          "3 musical",
+          "4 music",
+          "5 band",
+          "6 can't",
+          "7 musician",
+          "8 has",
+          "9 download",
+          "10 to"
+        ]
+      },
+      {
+        "id": "24.4",
+        "marks": "(4 marks)",
+        "instruction": null,
+        "items": [
+          "1 jazz",
+          "2 opera",
+          "3 orchestra",
+          "4 rock"
+        ]
+      },
+      {
+        "id": "25.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "Brazil and Colombia are in South America.",
+          "The USA is in North America.",
+          "Egypt and South Africa are in Africa.",
+          "India and Pakistan are in Asia.",
+          "Spain and Italy are in Europe.",
+          "New Zealand is in Australasia."
+        ]
+      },
+      {
+        "id": "25.2",
+        "marks": "(10 marks: ½ each)",
+        "instruction": null,
+        "items": [
+          "Country Adjective Language",
+          "Argentina Argentinian Spanish",
+          "Canada Canadian French and English",
+          "China Chinese Chinese",
+          "Germany German German",
+          "Japan Japanese Japanese",
+          "Morocco Moroccan Arabic",
+          "Peru Peruvian Spanish",
+          "Portugal Portuguese Portuguese",
+          "Poland Polish Polish",
+          "Thailand Thai Thai",
+          "Tunisia Tunisian Arabic"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "table with columns Country / Adjective / Language (exercise 25.2)"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 77,\n  \"testNumber\": \"24, 25\",\n  \"testTitle\": \"Test 24 / Test 25\",\n  \"exercises\": [\n    {\n      \"id\": \"24.1\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": null,\n      \"items\": [\"1 drums\", \"2 flute\", \"3 violin\", \"4 cello\", \"5 trumpet\", \"6 clarinet\", \"7 piano\", \"8 guitar\"]\n    },\n    {\n      \"id\": \"24.2\",\n      \"marks\": \"(8 marks: two each)\",\n      \"instruction\": null,\n      \"items\": [\"1 a violinist\", \"2 a flute-player\", \"3 a pianist\", \"4 a trumpet-player\"]\n    },\n    {\n      \"id\": \"24.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\"1 folk\", \"2 classical\", \"3 musical\", \"4 music\", \"5 band\", \"6 can't\", \"7 musician\", \"8 has\", \"9 download\", \"10 to\"]\n    },\n    {\n      \"id\": \"24.4\",\n      \"marks\": \"(4 marks)\",\n      \"instruction\": null,\n      \"items\": [\"1 jazz\", \"2 opera\", \"3 orchestra\", \"4 rock\"]\n    },\n    {\n      \"id\": \"25.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"Brazil and Colombia are in South America.\",\n        \"The USA is in North America.\",\n        \"Egypt and South Africa are in Africa.\",\n        \"India and Pakistan are in Asia.\",\n        \"Spain and Italy are in Europe.\",\n        \"New Zealand is in Australasia.\"\n      ]\n    },\n    {\n      \"id\": \"25.2\",\n      \"marks\": \"(10 marks: ½ each)\",\n      \"instruction\": null,\n      \"items\": [\n        \"Country Adjective Language\",\n        \"Argentina Argentinian Spanish\",\n        \"Canada Canadian French and English\",\n        \"China Chinese Chinese\",\n        \"Germany German German\",\n        \"Japan Japanese Japanese\",\n        \"Morocco Moroccan Arabic\",\n        \"Peru Peruvian Spanish\",\n        \"Portugal Portuguese Portuguese\",\n        \"Poland Polish Polish\",\n        \"Thailand Thai Thai\",\n        \"Tunisia Tunisian Arabic\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\"table with columns Country / Adjective / Language (exercise 25.2)\"],\n  \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}

@@ -1,0 +1,76 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 34,
+    "dpi": 300,
+    "renderSha256": "816cb4bd09f86c77dc6ac5ade46732802a95a15182d06e828020c813d43105d6",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:00:02.863Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 37,
+    "testNumber": "27",
+    "testTitle": "Sales and costs",
+    "exercises": [
+      {
+        "id": "27.1",
+        "marks": "8 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 The new model will be ........................ sale in July. (at/on/in)",
+          "2 The shop was having a ...................... so I got these shoes at half price. (sale/sales/sell)",
+          "3 It's easy to ...................... a sale if the product's good and the price is right. (do/make/give)",
+          "4 Last month, ...................... sales reached nearly 1500. (unit/piece/number)",
+          "5 Sales last month were below our ........................ of €120,000. (gross/target/share)",
+          "6 Staff salaries are included in our ........................ costs. (direct/indirect/overhead)",
+          "7 Our basic model has a selling ......................... of £28. (cost/margin/price)",
+          "8 We estimate that sales ...................... next year will be about 5%. (growth/forecast/volume)"
+        ]
+      },
+      {
+        "id": "27.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.",
+        "items": [
+          "'I've just finished ......................... the new computer we are launching next year. Direct ......................... costs will be $480. I estimate our ......................... to be about $20. That gives ......................... costs of $500. We want a .........................-up of about 20% so the sale price will be $600. That gives a ......................... margin of nearly 17%. Not bad.'"
+        ]
+      },
+      {
+        "id": "27.3",
+        "marks": "8 marks",
+        "instruction": "Find the answer to each clue. The first and last letters are given in each case.",
+        "items": [
+          "1 Selling price minus total costs: ........... margin",
+          "2 Abbreviation for the variable costs in making goods",
+          "3 Selling price minus direct costs: ........... margin",
+          "4 Number of things sold: sales ............",
+          "5 Money received from sales",
+          "6 Money received from sales (another word)",
+          "7 Another word for indirect costs",
+          "8 Estimate of next year's sales"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "forecast    production    costing    total    profit    mark    revenue    overheads"
+    ],
+    "pictures": [
+      "word-square/grid with rows numbered 1–8, first and last letters given (n/t, C/S, g/s, v/e, r/e, t/r, e/s, f/t)"
+    ],
+    "unclassified": [
+      "Total 22",
+      "Target 18+",
+      "Your score /22",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 37,\n \"testNumber\": \"27\",\n \"testTitle\": \"Sales and costs\",\n \"exercises\": [\n  {\"id\": \"27.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n   \"items\": [\n    \"1 The new model will be ........................ sale in July. (at/on/in)\",\n    \"2 The shop was having a ...................... so I got these shoes at half price. (sale/sales/sell)\",\n    \"3 It's easy to ...................... a sale if the product's good and the price is right. (do/make/give)\",\n    \"4 Last month, ...................... sales reached nearly 1500. (unit/piece/number)\",\n    \"5 Sales last month were below our ........................ of €120,000. (gross/target/share)\",\n    \"6 Staff salaries are included in our ........................ costs. (direct/indirect/overhead)\",\n    \"7 Our basic model has a selling ......................... of £28. (cost/margin/price)\",\n    \"8 We estimate that sales ...................... next year will be about 5%. (growth/forecast/volume)\"\n   ]},\n  {\"id\": \"27.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.\",\n   \"items\": [\n    \"'I've just finished ......................... the new computer we are launching next year. Direct ......................... costs will be $480. I estimate our ......................... to be about $20. That gives ......................... costs of $500. We want a .........................-up of about 20% so the sale price will be $600. That gives a ......................... margin of nearly 17%. Not bad.'\"\n   ]},\n  {\"id\": \"27.3\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Find the answer to each clue. The first and last letters are given in each case.\",\n   \"items\": [\n    \"1 Selling price minus total costs: ........... margin\",\n    \"2 Abbreviation for the variable costs in making goods\",\n    \"3 Selling price minus direct costs: ........... margin\",\n    \"4 Number of things sold: sales ............\",\n    \"5 Money received from sales\",\n    \"6 Money received from sales (another word)\",\n    \"7 Another word for indirect costs\",\n    \"8 Estimate of next year's sales\"\n   ]}\n ],\n \"boxesAndLists\": [\"forecast    production    costing    total    profit    mark    revenue    overheads\"],\n \"pictures\": [\"word-square/grid with rows numbered 1–8, first and last letters given (n/t, C/S, g/s, v/e, r/e, t/r, e/s, f/t)\"],\n \"unclassified\": [\"Total 22\", \"Target 18+\", \"Your score /22\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

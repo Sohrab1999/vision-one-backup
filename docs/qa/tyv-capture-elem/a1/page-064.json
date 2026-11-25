@@ -1,0 +1,95 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 64,
+    "dpi": 300,
+    "renderSha256": "23b1e75c69473e939b1a721c9bafb1d146a01c39ad8725980d58a0b5e322a9e0",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:57:03.266Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 63,
+    "testNumber": "57",
+    "testTitle": "Words and prepositions",
+    "exercises": [
+      {
+        "id": "57.1",
+        "marks": "10 marks",
+        "instruction": "Match the sentence beginnings on the left with the endings on the right.",
+        "items": [
+          "1 Wait at this stop",
+          "2 Nurses look",
+          "3 I’m looking forward",
+          "4 She thanked him",
+          "5 I’m not very interested",
+          "6 I’ll pay",
+          "7 The child is afraid",
+          "8 I must apologise",
+          "9 Suzie is very good",
+          "10 This coat belongs",
+          "11 James asked the waiter",
+          "a for the lovely flowers.",
+          "b for our train tickets.",
+          "c at playing the violin.",
+          "d to my brother.",
+          "e for arriving late.",
+          "f for the number 10 bus.",
+          "g in politics.",
+          "h for four cups of coffee.",
+          "i after people in hospital.",
+          "j of big dogs.",
+          "k to the holidays."
+        ]
+      },
+      {
+        "id": "57.2",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps in each sentence with the correct preposition.",
+        "items": [
+          "Example: I won’t be long. Please wait ................ for ................ me.",
+          "1 I can’t find my glasses. Can you help me look ........................ them?",
+          "2 Who does that car belong ........................ ?",
+          "3 Jane was very proud ........................ her son when he won first prize.",
+          "4 We’re thinking ........................ going to Spain for our holiday.",
+          "5 Sally is bad ........................ maths but she is very good ........................ English.",
+          "6 I’m looking forward ........................ seeing you soon.",
+          "7 Dick apologised ........................ breaking the window.",
+          "8 Please look ........................ the statue on the right.",
+          "9 I’m not interested ........................ old buildings."
+        ]
+      },
+      {
+        "id": "57.3",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps in this email with the correct verbs or adjectives.",
+        "items": [
+          "Thanks for your email. I (1) ........................ for not replying sooner, but I’ve been very busy. I had a maths exam today. I’m not very (2) ........................ at maths, so I had to do a lot of work for it. I have to (3) ........................ for my results – I won’t get them for a week or two.",
+          "Now I’m free!!! This evening I’m going to (4) ........................ to a new CD which Mum bought me today. We went to the shops together after my exam and I was going to (5) ........................ for it but Mum said she’d buy it for me. She said she was (6) ........................ of me because I’d worked so hard for my exam. I hope she feels the same when I get the results!",
+          "How are things with you? Will you be able to (7) ........................ to my party next month? I hope so! I liked the photo you sent me. Does the skateboard you’re standing on (8) ........................ to you? Aren’t you (9) ........................ of falling off?",
+          "I (10) ........................ forward to your next message.",
+          "Bye for now,",
+          "Natasha"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "email window screenshot ('New Message' window with menu bar and Windows taskbar at bottom) containing the exercise 57.3 text",
+      "hand-drawn curved line connecting item 1 'Wait at this stop' to ending 'f for the number 10 bus.' in exercise 57.1"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score",
+      "/30"
+    ]
+  },
+  "rawModelText": "{\"footer\": 63,\n \"testNumber\": \"57\",\n \"testTitle\": \"Words and prepositions\",\n \"exercises\": [\n   {\"id\": \"57.1\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Match the sentence beginnings on the left with the endings on the right.\",\n    \"items\": [\n      \"1 Wait at this stop\",\n      \"2 Nurses look\",\n      \"3 I’m looking forward\",\n      \"4 She thanked him\",\n      \"5 I’m not very interested\",\n      \"6 I’ll pay\",\n      \"7 The child is afraid\",\n      \"8 I must apologise\",\n      \"9 Suzie is very good\",\n      \"10 This coat belongs\",\n      \"11 James asked the waiter\",\n      \"a for the lovely flowers.\",\n      \"b for our train tickets.\",\n      \"c at playing the violin.\",\n      \"d to my brother.\",\n      \"e for arriving late.\",\n      \"f for the number 10 bus.\",\n      \"g in politics.\",\n      \"h for four cups of coffee.\",\n      \"i after people in hospital.\",\n      \"j of big dogs.\",\n      \"k to the holidays.\"\n    ]},\n   {\"id\": \"57.2\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Fill the gaps in each sentence with the correct preposition.\",\n    \"items\": [\n      \"Example: I won’t be long. Please wait ................ for ................ me.\",\n      \"1 I can’t find my glasses. Can you help me look ........................ them?\",\n      \"2 Who does that car belong ........................ ?\",\n      \"3 Jane was very proud ........................ her son when he won first prize.\",\n      \"4 We’re thinking ........................ going to Spain for our holiday.\",\n      \"5 Sally is bad ........................ maths but she is very good ........................ English.\",\n      \"6 I’m looking forward ........................ seeing you soon.\",\n      \"7 Dick apologised ........................ breaking the window.\",\n      \"8 Please look ........................ the statue on the right.\",\n      \"9 I’m not interested ........................ old buildings.\"\n    ]},\n   {\"id\": \"57.3\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Fill the gaps in this email with the correct verbs or adjectives.\",\n    \"items\": [\n      \"Thanks for your email. I (1) ........................ for not replying sooner, but I’ve been very busy. I had a maths exam today. I’m not very (2) ........................ at maths, so I had to do a lot of work for it. I have to (3) ........................ for my results – I won’t get them for a week or two.\",\n      \"Now I’m free!!! This evening I’m going to (4) ........................ to a new CD which Mum bought me today. We went to the shops together after my exam and I was going to (5) ........................ for it but Mum said she’d buy it for me. She said she was (6) ........................ of me because I’d worked so hard for my exam. I hope she feels the same when I get the results!\",\n      \"How are things with you? Will you be able to (7) ........................ to my party next month? I hope so! I liked the photo you sent me. Does the skateboard you’re standing on (8) ........................ to you? Aren’t you (9) ........................ of falling off?\",\n      \"I (10) ........................ forward to your next message.\",\n      \"Bye for now,\",\n      \"Natasha\"\n    ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n   \"email window screenshot ('New Message' window with menu bar and Windows taskbar at bottom) containing the exercise 57.3 text\",\n   \"hand-drawn curved line connecting item 1 'Wait at this stop' to ending 'f for the number 10 bus.' in exercise 57.1\"\n ],\n \"unclassified\": [\n   \"Test Your English Vocabulary in Use Elementary\",\n   \"Your score\",\n   \"/30\"\n ]\n}"
+}

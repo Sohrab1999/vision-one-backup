@@ -1,0 +1,98 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 18,
+    "dpi": 300,
+    "renderSha256": "c0952b89dcc8bddc625be4c715cd8b73b769c7e91d5bb43a8a2466939305ccb5",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:01:00.902Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 17,
+    "testNumber": "11",
+    "testTitle": "In the kitchen",
+    "exercises": [
+      {
+        "id": "11.1",
+        "marks": "10 marks",
+        "instruction": "Complete the dialogue.",
+        "items": [
+          "MARY: I've got some tomatoes out of the [freezer picture] .......freezer....... . Where is the big red [saucepan picture] (1) ..................... ? I want to make some soup.",
+          "JOHN: Look, it's in the [cupboard picture] (2) ..................... under the [sink picture] (3) ..................... .",
+          "MARY: Oh, so it is. Thanks. Now where's my favourite [knife picture] (4) ..................... for cutting vegetables?",
+          "JOHN: It's right there in front of you. Between the [hob picture] (5) ..................... and the [microwave picture] (6) .....................",
+          "MARY: Thanks. Let's have a [cup picture] (7) ..................... of tea first.",
+          "JOHN: Good idea. I'll make it. Where's the [teapot picture] (8) ..................... ?",
+          "MARY: There, on the [shelf picture] (9) ..................... , next to the [frying pan picture] (10) ..................... ."
+        ]
+      },
+      {
+        "id": "11.2",
+        "marks": "10 marks",
+        "instruction": "Use the picture clues to complete the crossword. The first one is done for you. What is the word in the grey section?",
+        "items": [
+          "1 [cup picture]",
+          "2 [tea towel picture]",
+          "3 [bowl picture]",
+          "4 [plate picture]",
+          "5 [spoon picture]",
+          "6 [tap picture]",
+          "7 [fridge picture]",
+          "8 [cooker picture]",
+          "9 [fork picture]",
+          "10 [table picture]"
+        ]
+      },
+      {
+        "id": "11.3",
+        "marks": "5 marks",
+        "instruction": "Choose the right verbs from the box to complete these questions.",
+        "items": [
+          "Example: Would you like me to ..........do.......... the washing-up?",
+          "1 Can I ..................... with the washing-up?",
+          "2 Where can I ..................... a cup?",
+          "3 Where do these knives ..................... ?",
+          "4 Shall I ..................... the glasses?",
+          "5 Do you ..................... a dishwasher?"
+        ]
+      },
+      {
+        "id": "11.4",
+        "marks": "5 marks",
+        "instruction": "Put the words together to make five compound nouns for things that you find in the kitchen. Example: .......teapot....... ",
+        "items": []
+      }
+    ],
+    "boxesAndLists": [
+      "find   go   do   help   dry   have",
+      "coffee   tea   kitchen   liquid   maker   roll   tea   top   pot   towel   washing-up   work"
+    ],
+    "pictures": [
+      "freezer picture in 11.1",
+      "saucepan picture in 11.1",
+      "cupboard picture in 11.1",
+      "sink picture in 11.1",
+      "knife picture in 11.1",
+      "hob picture in 11.1",
+      "microwave picture in 11.1",
+      "cup picture in 11.1",
+      "teapot picture in 11.1",
+      "shelf picture in 11.1",
+      "frying pan picture in 11.1",
+      "crossword grid with entries 1-10 and picture clues 1-10 (cup, tea towel, bowl, plate, spoon, tap, fridge, cooker, fork, table)"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 17,\n \"testNumber\": \"11\",\n \"testTitle\": \"In the kitchen\",\n \"exercises\": [\n  {\"id\": \"11.1\", \"marks\": \"10 marks\", \"instruction\": \"Complete the dialogue.\", \"items\": [\n   \"MARY: I've got some tomatoes out of the [freezer picture] .......freezer....... . Where is the big red [saucepan picture] (1) ..................... ? I want to make some soup.\",\n   \"JOHN: Look, it's in the [cupboard picture] (2) ..................... under the [sink picture] (3) ..................... .\",\n   \"MARY: Oh, so it is. Thanks. Now where's my favourite [knife picture] (4) ..................... for cutting vegetables?\",\n   \"JOHN: It's right there in front of you. Between the [hob picture] (5) ..................... and the [microwave picture] (6) .....................\",\n   \"MARY: Thanks. Let's have a [cup picture] (7) ..................... of tea first.\",\n   \"JOHN: Good idea. I'll make it. Where's the [teapot picture] (8) ..................... ?\",\n   \"MARY: There, on the [shelf picture] (9) ..................... , next to the [frying pan picture] (10) ..................... .\"\n  ]},\n  {\"id\": \"11.2\", \"marks\": \"10 marks\", \"instruction\": \"Use the picture clues to complete the crossword. The first one is done for you. What is the word in the grey section?\", \"items\": [\n   \"1 [cup picture]\", \"2 [tea towel picture]\", \"3 [bowl picture]\", \"4 [plate picture]\", \"5 [spoon picture]\",\n   \"6 [tap picture]\", \"7 [fridge picture]\", \"8 [cooker picture]\", \"9 [fork picture]\", \"10 [table picture]\"\n  ]},\n  {\"id\": \"11.3\", \"marks\": \"5 marks\", \"instruction\": \"Choose the right verbs from the box to complete these questions.\", \"items\": [\n   \"Example: Would you like me to ..........do.......... the washing-up?\",\n   \"1 Can I ..................... with the washing-up?\",\n   \"2 Where can I ..................... a cup?\",\n   \"3 Where do these knives ..................... ?\",\n   \"4 Shall I ..................... the glasses?\",\n   \"5 Do you ..................... a dishwasher?\"\n  ]},\n  {\"id\": \"11.4\", \"marks\": \"5 marks\", \"instruction\": \"Put the words together to make five compound nouns for things that you find in the kitchen. Example: .......teapot....... \", \"items\": []}\n ],\n \"boxesAndLists\": [\n  \"find   go   do   help   dry   have\",\n  \"coffee   tea   kitchen   liquid   maker   roll   tea   top   pot   towel   washing-up   work\"\n ],\n \"pictures\": [\n  \"freezer picture in 11.1\",\n  \"saucepan picture in 11.1\",\n  \"cupboard picture in 11.1\",\n  \"sink picture in 11.1\",\n  \"knife picture in 11.1\",\n  \"hob picture in 11.1\",\n  \"microwave picture in 11.1\",\n  \"cup picture in 11.1\",\n  \"teapot picture in 11.1\",\n  \"shelf picture in 11.1\",\n  \"frying pan picture in 11.1\",\n  \"crossword grid with entries 1-10 and picture clues 1-10 (cup, tea towel, bowl, plate, spoon, tap, fridge, cooker, fork, table)\"\n ],\n \"unclassified\": [\n  \"Your score /30\",\n  \"Test Your English Vocabulary in Use Elementary\"\n ]\n}"
+}

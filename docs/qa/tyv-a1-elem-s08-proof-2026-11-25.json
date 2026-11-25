@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "step": "A1-ELEM-S08",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "date": "2026-11-25",
+    "jalali": "۱۴۰۵/۹/۴",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی: پایداری کامل پروژه و بازیابی پس از Reset یا حذف Sandbox — ۱۰بندی کامل]» — گام بعدی مجاز طبق وضعیت ثبت‌شدهٔ پسا-S07 = A1-ELEM-S08 (صفحات ۸۵–۹۶ — دستهٔ هشتم/آخر از ۸ — بدون skip انتظاری — پایان Answer key در PDF ۹۳ + سه صفحهٔ پایانی — پایان A1 کتاب سوم) — trace 1a214229fcb55605 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "رویداد بازیابی ۴۴ (ریست پنهان ۴۴م — الگوی ۳۱..۴۳): HEAD بازگشته 193269b (۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت = 492e7ab پسا-S07 — divergence ۰/۲۱۳ (behind = ۲۱۱ بازیابی ۴۳ + ۲ کامیت S07: 5aad5e8 محتوایی + 492e7ab ثبت اثبات — ahead=۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only) — درخت کار پسا-S07 روی دیسک باقی بود — ممیزی سه‌دوری blob-OID با porcelain -z + core.quotepath=off + --untracked-files=all (درس ۴۳) و regex اصلاح‌شدهٔ XY (درس جدید ۴۴: کدهای XY با حرف اول فاصله مثل « M» باید پذیرفته شوند — گذر اول ۳۲ modified را از قلم انداخت): ۳۲/۳۲ modified disk==remote · ۱۹۳۸/۱۹۴۵ untracked matchRemote بایت‌به‌بیت · differ=۰ · ۷ absentRemote (اسناد مسیر-تخت superseded — نسخه‌های شماره‌دار سری-TYV ۷/۷ MATCH ریموت) · ۱۸۸/۱۸۸ کپچر بایت‌به‌بیت=ریموت == رکورد سربرگ ۱۳۳مین ⇒ صفر محتوای محلی-یگانه — stash بیمه rc44 = f6bf50c0 بایگانی ریموت recovery/rc44-pre-ff-stash-2026-11-25 (اثبات * [new branch]) + بازگردانی آرشیوهای rc33/rc34/rc35/rc41/rc42/rc43 به stash stack (۷ stash) — reset --hard به ریموت ⇒ HEAD = 492e7ab = ریموت (ls-remote بایت‌به‌بیت) — porcelain ۰ — git diff --check پاک — دیسک‌حقیقت آغاز گام ۱۸۸/۴۸۹ == رکورد سربرگ ۱۳۳مین — وجودسنجی پیشا-گام: elem page-073..084 همگی در پیته (S07 بسته) و page-085..096 همگی غایب — شواهد docs/qa/recovery44-proof-2026-11-25.json"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs elem 85,86,87,88,89,90,91,92,93,94,95,96",
+  "runs": [
+    {
+      "run": 1,
+      "type": "background nohup (external kill)",
+      "output": "page 85: ok · page 86: ok · page 87: ok",
+      "done": "— بدون سطر DONE — فرایند پس از سه صفحه توسط سندباکس بین فراخوانی‌های ابزار قطع شد (SIGKILL بدون خروجی خطا — ps خالی — عین درس ثبت‌شدهٔ سربرگ ۱۱۵مین «دستهٔ پس‌زمینهٔ nohup می‌میرد ⇒ اجرای هم‌گام» — تأیید مجدد در شرایط واقعی)",
+      "capturedBeforeKill": 3
+    },
+    {
+      "run": 2,
+      "type": "foreground single tool-call (resume)",
+      "output": "page 88: ok · page 89: ok · page 90: ok · page 91: ok · page 92: ok · page 93: ok · page 94: ok · page 95: ok · page 96: ok",
+      "done": "DONE tyv-elem: captured=9 skipped=3 failed=0 → docs/qa/tyv-capture-elem/a1",
+      "note": "۳ skip = checkpoint/resume صفحات run1 (۸۵–۸۷) — نه پراب نه ناهنجاری — اجرای هم‌گام طبق درس ثبت‌شده"
+    }
+  ],
+  "result": {
+    "done": "کل دسته ۱۲/۱۲ ok (run1: ۳ + run2: ۹) — failed=0",
+    "captured": 12,
+    "skippedInFinalRun": 3,
+    "skippedNature": "checkpoint/resume صفحات run1 — نه پراب (پراب‌ها فقط ۸/۱۲/۴۰ و هیچ‌کدام در ۸۵–۹۶ نیستند) — نه ناهنجاری",
+    "failed": 0,
+    "finalRun": "دو اجرا با قطع خارجی run1 — تکمیل هم‌گام run2 — کل دسته ۱۲/۱۲ ok بدون ناهنجاری محتوایی",
+    "anomalies": []
+  },
+  "newPages": {
+    "pages": [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96],
+    "files": "docs/qa/tyv-capture-elem/a1/page-085.json .. page-096.json (۱۲ JSON NEW)",
+    "provenance": "کامل ۱۲/۱۲ (renderSha256 یکتا ۱۲/۱۲ · DPI=300 · tyv-a1-v1 · attempts=≤3 · timestamp · status=ok ۱۲/۱۲)"
+  },
+  "content": {
+    "footerOffset": "+1 پابرجا — فوترهای چاپی ۸۴..۹۴ (صفر ناسازگاری) + PDF ۹۶ footer=null (جلد پشت — ساختاری)",
+    "structure": [
+      "p85 کلید Test 41 (فوتر چاپی ۸۴) — ۵تمرین/۲۴آیتم/۰باکس/۰تصویر/۴ unclassified — testNumber=41",
+      "p86 کلید Tests 43–44 (فوتر ۸۵) — ۶/۵۶/۰/۱تصویر/۳ — testNumber بازه‌ای 43–44",
+      "p87 بلوک‌های کلید (فوتر ۸۶) — ۸/۴۳/۰/۰/۳ — testNumber=null",
+      "p88 بلوک‌های کلید (فوتر ۸۷) — ۹/۵۵/۰/۰/۴ — testNumber=null",
+      "p89 بلوک‌های کلید (فوتر ۸۸) — ۸/۳۵/۱۲باکس/۱تصویر/۳ — testNumber=null",
+      "p90 کلید Test 52 (فوتر ۸۹) — ۸/۵۰/۲باکس/۲تصویر/۴ — testNumber=52",
+      "p91 بلوک‌های کلید (فوتر ۹۰) — ۷/۴۳/۴باکس/۲تصویر/۱ — testNumber=null",
+      "p92 کلید Tests 57–59 (فوتر ۹۱) — ۷/۵۰/۶باکس/۱تصویر/۴ — testNumber بازه‌ای 57–59",
+      "p93 پایان کلید Test 60 (فوتر ۹۲) — ۵/۴۰/۰/۱تصویر/۱ — testNumber=60 (برچسب «Test 60») — پایان Answer key عین انتظار مالک",
+      "p94 «Personal diary» (فوتر ۹۳) — ۰تمرین/۰آیتم/۰باکس/۱تصویر/۱ — صفحهٔ پس از کلید ۱ از ۳",
+      "p95 «Phonemic symbols» (فوتر ۹۴) — ۰/۰/۲باکس/۰/۱ — صفحهٔ پس از کلید ۲ از ۳",
+      "p96 جلد پشت (footer=null) — ۰/۰/۲باکس/۳تصویر/۱۳ — صفحهٔ پس از کلید ۳ از ۳"
+    ],
+    "transitionNote": "پایان Answer key دقیقاً در p.۹۲ چاپی = PDF ۹۳ (کلید Test 60) عین انتظار صریح مالک («پایان Answer key در PDF ۹۳ + سه صفحهٔ پس از کلید PDF ۹۴..۹۶») — کلید خام دست‌نخورده با testNumber=null یا بازه‌ای (43–44 · 52 · 57–59 · 60) ساختار ذاتی کلید — عین الگوی biz S08/S09 و elem S06/S07 — [؟] صفر · [N/A] صفر",
+    "totals": { "pages": 12, "exercises": 63, "items": 396, "boxesAndLists": 28, "pictures": 12, "unclassified": 42, "unknownMark": 0 }
+  },
+  "indexAfter": {
+    "capturedPages": 12,
+    "capturedNow": 9,
+    "skippedExisting": 3,
+    "failedNow": [],
+    "failedTotal": 0,
+    "probePages": [8, 12, 40],
+    "note": "a1-index بازتاب اجرای نهایی (run2) — عین الگوی ثبت‌شدهٔ S05 — ۳ skip = صفحات run1 (checkpoint/resume) — هیچ آرشیو ناهنجاری در این گام"
+  },
+  "diskTruthAfter": {
+    "elem": "۹۶/۹۶ کامل — پایان A1 کتاب سوم — هر ۸ دستهٔ ELEM بسته شد",
+    "a1Total": "۲۰۰/۴۸۹ (biz ۹۸/۹۸ کامل · elem ۹۶/۹۶ کامل · pri ۳/۱۴۲ · upp ۳/۱۵۳)"
+  },
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده — لایهٔ A1 فقط کپچر خام",
+  "nextAllowedStep": "A1-PRI-S01 = صفحات ۱–۱۲ pri (طبق دفتر گام‌های کوچک §۱-۳ — bun scripts/tyv-a1-vlm-capture.mjs pri 1,2,3,4,5,6,7,8,9,10,11,12 — دستهٔ اول از ۱۲ دستهٔ PRI — انتظار skip صفحات ۷ و ۱۰ — پراب‌های درون دسته — فایل‌های موجود pri: 7/10/41 — آغاز کتاب چهارم) ⇒ سپس PRI S02..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده"
+}

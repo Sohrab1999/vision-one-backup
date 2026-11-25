@@ -1,0 +1,93 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 56,
+    "dpi": 300,
+    "renderSha256": "785defb7a6d17c380d1da4a5c9bb32a6a09d55ed3ca9a4b2b4bd4675e44a2645",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:24:05.820Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 55,
+    "testNumber": "49",
+    "testTitle": "Conjunctions and connecting words",
+    "exercises": [
+      {
+        "id": "49.1",
+        "marks": "10 marks",
+        "instruction": "Choose a word from the box to fill the gap in each sentence. Use each word once only.",
+        "items": [
+          "1 .............................. I went to sleep, I set my alarm clock for seven o'clock .............................. I had to get up early to go to the airport.",
+          "2 .............................. I win a lot of money one day, I'll stop working .............................. travel round the world.",
+          "3 You can cross the English Channel by ferry .............................. through the tunnel.",
+          "4 I like apples. I .............................. like oranges, .............................. I don't like bananas.",
+          "5 .............................. she left university she got a job in her uncle's company.",
+          "6 I'm going to study this evening, .............................. please don't phone me.",
+          "7 Phone me .............................. you get to London, so I know you are OK."
+        ]
+      },
+      {
+        "id": "49.2",
+        "marks": "10 marks",
+        "instruction": "Choose the correct explanation. Circle the correct answer.",
+        "items": [
+          "1 BOB: I don't want to marry you because we're too young for marriage.",
+          "SALLY: Hmm.",
+          "a) Bob would like to marry Sally because she is so young.",
+          "b) Bob thinks he and Sally are too young to get married.",
+          "c) Bob thinks he is too young for Sally and he doesn't want to marry her.",
+          "2 HILDA: My hair and face are like my sister's but I'm taller than her.",
+          "EVA: Really?",
+          "a) Hilda likes her sister's hair and face but her sister is smaller.",
+          "b) Hilda's face and hair are similar to her sister's and they are both the same height.",
+          "c) Hilda's face and hair are similar to her sister's but her sister is shorter than she is.",
+          "3 GEORGE: My brother and I both play the guitar but I play the violin too.",
+          "JOE: Oh yes?",
+          "a) George plays one more instrument than his brother.",
+          "b) George plays the violin and his brother plays the violin.",
+          "c) George only plays the violin; his brother only plays the guitar.",
+          "4 JAKE: When I go to university I'll study maths.",
+          "RITA: Mm. Good.",
+          "a) Jake thinks it's possible he will go to university and study maths.",
+          "b) Jake prefers to study maths; he doesn't want to go to university.",
+          "c) Jake has decided he will go to university and study maths.",
+          "5 DENISE: Luke played the piano. He sang as well.",
+          "GUDRUN: Did he?",
+          "a) Luke played the piano and sang very well.",
+          "b) Luke played the piano and sang.",
+          "c) Luke played the piano but didn't sing."
+        ]
+      },
+      {
+        "id": "49.3",
+        "marks": "10 marks",
+        "instruction": "Find five sentences that make sense in this table.",
+        "items": [
+          "I'm going to study abroad",
+          "and I've finished secondary school.",
+          "so I want to learn more about other countries and cultures.",
+          "when I'm really looking forward to it.",
+          "if I will be away from home for three years.",
+          "because I get good grades in my exams."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "when or also so before because and after if but"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 55,\n \"testNumber\": \"49\",\n \"testTitle\": \"Conjunctions and connecting words\",\n \"exercises\": [\n   {\"id\": \"49.1\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Choose a word from the box to fill the gap in each sentence. Use each word once only.\",\n    \"items\": [\n      \"1 .............................. I went to sleep, I set my alarm clock for seven o'clock .............................. I had to get up early to go to the airport.\",\n      \"2 .............................. I win a lot of money one day, I'll stop working .............................. travel round the world.\",\n      \"3 You can cross the English Channel by ferry .............................. through the tunnel.\",\n      \"4 I like apples. I .............................. like oranges, .............................. I don't like bananas.\",\n      \"5 .............................. she left university she got a job in her uncle's company.\",\n      \"6 I'm going to study this evening, .............................. please don't phone me.\",\n      \"7 Phone me .............................. you get to London, so I know you are OK.\"\n    ]},\n   {\"id\": \"49.2\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Choose the correct explanation. Circle the correct answer.\",\n    \"items\": [\n      \"1 BOB: I don't want to marry you because we're too young for marriage.\",\n      \"SALLY: Hmm.\",\n      \"a) Bob would like to marry Sally because she is so young.\",\n      \"b) Bob thinks he and Sally are too young to get married.\",\n      \"c) Bob thinks he is too young for Sally and he doesn't want to marry her.\",\n      \"2 HILDA: My hair and face are like my sister's but I'm taller than her.\",\n      \"EVA: Really?\",\n      \"a) Hilda likes her sister's hair and face but her sister is smaller.\",\n      \"b) Hilda's face and hair are similar to her sister's and they are both the same height.\",\n      \"c) Hilda's face and hair are similar to her sister's but her sister is shorter than she is.\",\n      \"3 GEORGE: My brother and I both play the guitar but I play the violin too.\",\n      \"JOE: Oh yes?\",\n      \"a) George plays one more instrument than his brother.\",\n      \"b) George plays the violin and his brother plays the violin.\",\n      \"c) George only plays the violin; his brother only plays the guitar.\",\n      \"4 JAKE: When I go to university I'll study maths.\",\n      \"RITA: Mm. Good.\",\n      \"a) Jake thinks it's possible he will go to university and study maths.\",\n      \"b) Jake prefers to study maths; he doesn't want to go to university.\",\n      \"c) Jake has decided he will go to university and study maths.\",\n      \"5 DENISE: Luke played the piano. He sang as well.\",\n      \"GUDRUN: Did he?\",\n      \"a) Luke played the piano and sang very well.\",\n      \"b) Luke played the piano and sang.\",\n      \"c) Luke played the piano but didn't sing.\"\n    ]},\n   {\"id\": \"49.3\",\n    \"marks\": \"10 marks\",\n    \"instruction\": \"Find five sentences that make sense in this table.\",\n    \"items\": [\n      \"I'm going to study abroad\",\n      \"and I've finished secondary school.\",\n      \"so I want to learn more about other countries and cultures.\",\n      \"when I'm really looking forward to it.\",\n      \"if I will be away from home for three years.\",\n      \"because I get good grades in my exams.\"\n    ]}\n ],\n \"boxesAndLists\": [\"when or also so before because and after if but\"],\n \"pictures\": [],\n \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\", \"Your score /30\"]\n}\n```"
+}

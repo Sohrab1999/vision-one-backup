@@ -1,0 +1,74 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 67,
+    "dpi": 300,
+    "renderSha256": "d1fa519fc2cc9c4b818d8ae52c1d19be267ef34a4d59681c24d137120791f48c",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:57:36.218Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 70,
+    "testNumber": "52",
+    "testTitle": "Faxes",
+    "exercises": [
+      {
+        "id": "52.1",
+        "marks": "9 marks",
+        "instruction": "Here are three telephone conversations. Choose the best word from the brackets ( ) to complete each sentence.",
+        "items": [
+          "■ Pierre, I'm calling to see if you've finished the drawings.",
+          "○ Yes, Marina. Do you want me to ............................ them by fax?    (e-mail/send/post)",
+          "■ Yes, please. Do you have our fax ............................ ?    (number/address/code)",
+          "○ Is it 570 220?",
+          "■ That's it. Oh, and could you fax ............................ the specifications as well?    (my/me/mine)",
+          "○ I'll ............................ everything I've got.    (fax/faxing/faxed)",
+          "■ That'll be great. Thanks.",
+          "○ Bye, Marina.",
+          "15 minutes later",
+          "■ Pierre, it's Marina again.",
+          "○ Ah, Marina. Did you ............................ my fax?    (accept/get/have)",
+          "■ Yes, but the drawings weren't ............................ .    (read/seen/legible)",
+          "○ OK, I'll ............................ them.    (resend/refax/receive)",
+          "■ Thanks, Pierre.",
+          "15 minutes later",
+          "○ Marina? Pierre here. Was everything OK?",
+          "■ The first ten pages were fine but then the machine ............................ .    (fixed/stayed/jammed)",
+          "○ Ah, so you didn't get the specifications.",
+          "■ No. Can you send them ............................ again?    (through/out/around)",
+          "○ No problem. Let's hope it works this time."
+        ]
+      },
+      {
+        "id": "52.2",
+        "marks": "8 marks",
+        "instruction": "Complete each sentence using two words from the box below. There are two words that you don't have to use.",
+        "items": [
+          "1 When you send a fax you must use the company's standard ............................ ............................ .",
+          "2 You must be very careful when you send a fax containing ............................ ............................ .",
+          "3 If you are not the ............................ ............................ of this fax, please phone 0207 271271.",
+          "4 If you do not receive all the pages, please ............................ the ............................ ."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "advise    sheet    information    fax    sender\nrecipient    intended    machine    cover    confidential"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Total 17",
+      "Target 14+",
+      "Your score\n/17",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 70,\n \"testNumber\": \"52\",\n \"testTitle\": \"Faxes\",\n \"exercises\": [\n  {\"id\": \"52.1\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"Here are three telephone conversations. Choose the best word from the brackets ( ) to complete each sentence.\",\n   \"items\": [\n    \"■ Pierre, I'm calling to see if you've finished the drawings.\",\n    \"○ Yes, Marina. Do you want me to ............................ them by fax?    (e-mail/send/post)\",\n    \"■ Yes, please. Do you have our fax ............................ ?    (number/address/code)\",\n    \"○ Is it 570 220?\",\n    \"■ That's it. Oh, and could you fax ............................ the specifications as well?    (my/me/mine)\",\n    \"○ I'll ............................ everything I've got.    (fax/faxing/faxed)\",\n    \"■ That'll be great. Thanks.\",\n    \"○ Bye, Marina.\",\n    \"15 minutes later\",\n    \"■ Pierre, it's Marina again.\",\n    \"○ Ah, Marina. Did you ............................ my fax?    (accept/get/have)\",\n    \"■ Yes, but the drawings weren't ............................ .    (read/seen/legible)\",\n    \"○ OK, I'll ............................ them.    (resend/refax/receive)\",\n    \"■ Thanks, Pierre.\",\n    \"15 minutes later\",\n    \"○ Marina? Pierre here. Was everything OK?\",\n    \"■ The first ten pages were fine but then the machine ............................ .    (fixed/stayed/jammed)\",\n    \"○ Ah, so you didn't get the specifications.\",\n    \"■ No. Can you send them ............................ again?    (through/out/around)\",\n    \"○ No problem. Let's hope it works this time.\"\n   ]},\n  {\"id\": \"52.2\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete each sentence using two words from the box below. There are two words that you don't have to use.\",\n   \"items\": [\n    \"1 When you send a fax you must use the company's standard ............................ ............................ .\",\n    \"2 You must be very careful when you send a fax containing ............................ ............................ .\",\n    \"3 If you are not the ............................ ............................ of this fax, please phone 0207 271271.\",\n    \"4 If you do not receive all the pages, please ............................ the ............................ .\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"advise    sheet    information    fax    sender\\nrecipient    intended    machine    cover    confidential\"\n ],\n \"pictures\": [],\n \"unclassified\": [\n  \"Total 17\",\n  \"Target 14+\",\n  \"Your score\\n/17\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

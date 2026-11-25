@@ -1,0 +1,85 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 21,
+    "dpi": 300,
+    "renderSha256": "5b2b97afc53304c549742001e1d2414026ca0c07172eced53a112c7bd4de61bd",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:01:34.624Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 20,
+    "testNumber": "14",
+    "testTitle": "Jobs",
+    "exercises": [
+      {
+        "id": "14.1",
+        "marks": "10 marks",
+        "instruction": "What do we call ...",
+        "items": [
+          "1 ... a person who cuts your hair?",
+          "2 ... a person who works in an office and writes letters, answers the phone, etc.?",
+          "3 ... a person who lives in the country and grows food and/or keeps animals for food?",
+          "4 ... a person you go to when you are ill, who examines you, decides what is wrong and gives you medicine?",
+          "5 ... a person who designs and builds bridges, roads, etc.?",
+          "6 ... a person who mends cars and other machines?",
+          "7 ... a person who serves you in a restaurant?",
+          "8 ... a person who cares for sick people in a hospital but is not a doctor?",
+          "9 ... a person who gives you lessons?",
+          "10 ... a person who works in a shop?"
+        ]
+      },
+      {
+        "id": "14.2",
+        "marks": "10 marks",
+        "instruction": "Now use the words from 14.1 to fill the gaps. Use each word once only. Sometimes you will have to use the plural form.",
+        "items": [
+          "1 The .......................... said it would cost €300 to fix my car.",
+          "2 I went for a walk in the countryside and met a .......................... looking after some sheep.",
+          "3 Do you like my hair? I have a new .......................... . I think she’s better than the old one.",
+          "4 Our .......................... said we’re going to have a grammar test next Monday.",
+          "5 You can’t talk to the director but you can leave a message with her .......................... .",
+          "6 While I was studying I worked as a .......................... .......................... in a big store at weekends.",
+          "7 I like the idea of building big bridges and motorways, so I’d like to be an .......................... .",
+          "8 To become a .......................... , you have to study medicine for five years.",
+          "9 The .......................... were very kind to me when I was in hospital. They were always there when I needed them.",
+          "10 The .......................... in that restaurant are very friendly."
+        ]
+      },
+      {
+        "id": "14.3",
+        "marks": "10 marks",
+        "instruction": "True or false? Write T for true, F for false. If you write F, say why.",
+        "items": [
+          "1 A bus driver works in an office.  .........................",
+          "2 ‘What do you do?’ is another way of saying ‘What is your job?’.  .........................",
+          "3 A person who works in a bookshop is called a librarian.  .........................",
+          "4 A person who checks parked cars is called a traffic police.  .........................",
+          "5 If you do your job/profession in your own house or flat, you can say ‘I work at home’ or ‘I work from home.’ Both are correct.  .........................",
+          "6 It is correct to say ‘I have an interesting work.’  .........................",
+          "7 A bank clerk works in a bank.  .........................",
+          "8 If someone asks you about your job, you can say ‘I’m teacher.’  .........................",
+          "9 A person who repairs cars is called a mechanician.  .........................",
+          "10 Doctors and nurses work in hospitals.  ........................."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test",
+      "Your score",
+      "/30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "{\"footer\": 20,\n \"testNumber\": \"14\",\n \"testTitle\": \"Jobs\",\n \"exercises\": [\n  {\"id\": \"14.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"What do we call ...\",\n   \"items\": [\"1 ... a person who cuts your hair?\",\n    \"2 ... a person who works in an office and writes letters, answers the phone, etc.?\",\n    \"3 ... a person who lives in the country and grows food and/or keeps animals for food?\",\n    \"4 ... a person you go to when you are ill, who examines you, decides what is wrong and gives you medicine?\",\n    \"5 ... a person who designs and builds bridges, roads, etc.?\",\n    \"6 ... a person who mends cars and other machines?\",\n    \"7 ... a person who serves you in a restaurant?\",\n    \"8 ... a person who cares for sick people in a hospital but is not a doctor?\",\n    \"9 ... a person who gives you lessons?\",\n    \"10 ... a person who works in a shop?\"]},\n  {\"id\": \"14.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Now use the words from 14.1 to fill the gaps. Use each word once only. Sometimes you will have to use the plural form.\",\n   \"items\": [\"1 The .......................... said it would cost €300 to fix my car.\",\n    \"2 I went for a walk in the countryside and met a .......................... looking after some sheep.\",\n    \"3 Do you like my hair? I have a new .......................... . I think she’s better than the old one.\",\n    \"4 Our .......................... said we’re going to have a grammar test next Monday.\",\n    \"5 You can’t talk to the director but you can leave a message with her .......................... .\",\n    \"6 While I was studying I worked as a .......................... .......................... in a big store at weekends.\",\n    \"7 I like the idea of building big bridges and motorways, so I’d like to be an .......................... .\",\n    \"8 To become a .......................... , you have to study medicine for five years.\",\n    \"9 The .......................... were very kind to me when I was in hospital. They were always there when I needed them.\",\n    \"10 The .......................... in that restaurant are very friendly.\"]},\n  {\"id\": \"14.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"True or false? Write T for true, F for false. If you write F, say why.\",\n   \"items\": [\"1 A bus driver works in an office.  .........................\",\n    \"2 ‘What do you do?’ is another way of saying ‘What is your job?’.  .........................\",\n    \"3 A person who works in a bookshop is called a librarian.  .........................\",\n    \"4 A person who checks parked cars is called a traffic police.  .........................\",\n    \"5 If you do your job/profession in your own house or flat, you can say ‘I work at home’ or ‘I work from home.’ Both are correct.  .........................\",\n    \"6 It is correct to say ‘I have an interesting work.’  .........................\",\n    \"7 A bank clerk works in a bank.  .........................\",\n    \"8 If someone asks you about your job, you can say ‘I’m teacher.’  .........................\",\n    \"9 A person who repairs cars is called a mechanician.  .........................\",\n    \"10 Doctors and nurses work in hospitals.  .........................\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [],\n \"unclassified\": [\"Test\", \"Your score\", \"/30\", \"Test Your English Vocabulary in Use Elementary\"]\n}"
+}

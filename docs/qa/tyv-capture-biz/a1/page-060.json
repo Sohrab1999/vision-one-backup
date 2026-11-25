@@ -1,0 +1,49 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 60,
+    "dpi": 300,
+    "renderSha256": "ce95230fca1f519beb0391f692af159aaf245ebf2c970d7ca30a7c754c9e8617",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:41:48.267Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 63,
+    "testNumber": "49",
+    "testTitle": "Telephoning 2: getting through",
+    "exercises": [
+      {
+        "id": "49.1",
+        "marks": "17 marks",
+        "instruction": "Here are some things you might hear on the phone. Write one word in each gap to complete the messages and conversations.",
+        "items": [
+          "1 'Call me at the office tomorrow. My ....................... line is 01202 818335. If I'm not there, leave a message on my .................. and I'll call you .................... when I get in.'",
+          "2 'All international lines are .................. . Please .................. up and try again later.'",
+          "3 'Can I speak to Anita Singh, please?' 'Oh, I'm sorry. She's not on this .................. ; she's on 227. I'll put you through to the main .................. . Just ask the .................. to transfer you to the Sales Department.'",
+          "4 'Good morning. You are .................. to the King's Theatre ticket hotline. How can I help you?' 'Oh, I think I've got the .................. number. I wanted 470401.' 'Ah, yes. This is 470410.'",
+          "5 'Hello, operator. Can you check a number for me? It's 077 23 23 23. I was talking to someone there but I got .................. off. Now when I call, I just get the .................. tone.'",
+          "6 'Hello, Reception? Can you tell me how to make a call to France?' 'Certainly, sir. Just pick up the phone and .................. \"9\" to get a line. When you hear the .................. tone, dial 00 33 and then the number you want in France.'",
+          "7 'This is the Freedom Credit Card helpline. To check your balance, please press \"1\" on your .................. . To make a payment, press \"2\".'",
+          "8 'Hi, Alex. This is Mario. I got your message yesterday, but I was busy so I couldn't .................. your call. Sorry I missed you. I'll call .................. later.'"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Total 17",
+      "Target 13+",
+      "ur score /17",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 63,\n  \"testNumber\": \"49\",\n  \"testTitle\": \"Telephoning 2: getting through\",\n  \"exercises\": [\n    {\n      \"id\": \"49.1\",\n      \"marks\": \"17 marks\",\n      \"instruction\": \"Here are some things you might hear on the phone. Write one word in each gap to complete the messages and conversations.\",\n      \"items\": [\n        \"1 'Call me at the office tomorrow. My ....................... line is 01202 818335. If I'm not there, leave a message on my .................. and I'll call you .................... when I get in.'\",\n        \"2 'All international lines are .................. . Please .................. up and try again later.'\",\n        \"3 'Can I speak to Anita Singh, please?' 'Oh, I'm sorry. She's not on this .................. ; she's on 227. I'll put you through to the main .................. . Just ask the .................. to transfer you to the Sales Department.'\",\n        \"4 'Good morning. You are .................. to the King's Theatre ticket hotline. How can I help you?' 'Oh, I think I've got the .................. number. I wanted 470401.' 'Ah, yes. This is 470410.'\",\n        \"5 'Hello, operator. Can you check a number for me? It's 077 23 23 23. I was talking to someone there but I got .................. off. Now when I call, I just get the .................. tone.'\",\n        \"6 'Hello, Reception? Can you tell me how to make a call to France?' 'Certainly, sir. Just pick up the phone and .................. \\\"9\\\" to get a line. When you hear the .................. tone, dial 00 33 and then the number you want in France.'\",\n        \"7 'This is the Freedom Credit Card helpline. To check your balance, please press \\\"1\\\" on your .................. . To make a payment, press \\\"2\\\".'\",\n        \"8 'Hi, Alex. This is Mario. I got your message yesterday, but I was busy so I couldn't .................. your call. Sorry I missed you. I'll call .................. later.'\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Total 17\",\n    \"Target 13+\",\n    \"ur score /17\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

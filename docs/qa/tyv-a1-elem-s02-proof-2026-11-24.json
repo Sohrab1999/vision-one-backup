@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "step": "A1-ELEM-S02",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "date": "2026-11-24",
+    "jalali": "۱۴۰۵/۹/۳",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S01 (گام بعدی مجاز A1-ELEM-S02 = bun scripts/tyv-a1-vlm-capture.mjs elem 13,14,15,16,17,18,19,20,21,22,23,24 — دستهٔ دوم از ۸ دسته) — trace 1a20f5781a0cd015 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "بازیابی ۴۱ پیشا-گام (ریست پنهان ۴۱م — ff-only صفرتلفاتی — HEAD 193269b→04daec3 — divergence ۰/۲۰۱) — شواهد docs/qa/recovery41-proof-2026-11-24.json — آغاز گام: HEAD = 04daec3 = ریموت · porcelain ۰ · دیسک‌حقیقت آغاز = 117/489 (biz ۹۸/۹۸ · elem ۱۳/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs elem 13,14,15,16,17,18,19,20,21,22,23,24",
+  "result": {
+    "done": "DONE tyv-elem: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-elem/a1",
+    "captured": 12,
+    "skippedExisting": 0,
+    "failed": 0,
+    "singleRun": true,
+    "anomalies": "صفر — تک‌اجرایی تمیز (برخلاف S05 که دو اجرا داشت) — هیچ صفحهٔ skip نبود (صفحات ۱۳–۲۴ پیشا-گام موجود نبودند — عین پیش‌بینی)"
+  },
+  "newPages": {
+    "pages": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+    "files": "page-013..024.json (۱۲ JSON NEW) — پوشش کامل صفحات ۱۳–۲۴ بدون شکاف — ادامهٔ پیوسته از S01 (پوشش ۱–۱۲)",
+    "provenance": "هر ۱۲ صفحه با پروونانس کامل (renderSha256 · DPI=300 · model=z-ai vision CLI · promptVersion=tyv-a1-v1 · ownerCommand · attempts=≤3 · timestamp)"
+  },
+  "content": {
+    "footerOffset": "+۱ پابرجا (pdfPage−۱) — صفر ناسازگاری در ۱۲ صفحهٔ شماره‌دار",
+    "structure": [
+      "p13 Test 6 «Health and illness» — ۴ تمرین/۲۸ آیتم · footer=12",
+      "p14 Test 7 «Feelings» — ۴ تمرین/۳۱ آیتم · footer=13",
+      "p15 Test 8 «Conversations 1: Greetings and wishes» — ۳ تمرین/۳۴ آیتم · footer=14",
+      "p16 Test 9 «Conversations 2: Useful words and expressions» — ۳ تمرین/۲۷ آیتم · footer=15",
+      "p17 Test 10 «Food and drink» — ۳ تمرین/۳۸ آیتم · footer=16",
+      "p18 Test 11 «In the kitchen» — ۴ تمرین/۲۳ آیتم · footer=17",
+      "p19 Test 12 «In the bedroom and bathroom» — ۳ تمرین/۱۱ آیتم · footer=18",
+      "p20 Test 13 «In the living room» — ۳ تمرین/۱۸ آیتم · footer=19",
+      "p21 Test 14 «Jobs» — ۳ تمرین/۳۰ آیتم · footer=20",
+      "p22 Test 15 «At school and university» — ۳ تمرین/۳۱ آیتم · footer=21",
+      "p23 Test 16 «Communications» — ۴ تمرین/۳۰ آیتم · footer=22",
+      "p24 Test 17 «Holidays» — ۳ تمرین/۲۸ آیتم · footer=23"
+    ],
+    "totals": "۱۲ تست (Tests 6..17 پیوسته) · ۴۰ تمرین · ۳۲۹ آیتم · صفر باکس · صفر picture در transcription — [؟] صفر — [N/A] صفر — هم‌خوانی ساختار تست‌های بدنهٔ کتاب ELEM (هر تست یک صفحه — footer پیوسته ۱۲..۲۳)"
+  },
+  "diskTruthAfter": {
+    "elem": "25/96 (صفحات ۱–۲۴ پیوسته + پراب ۴۰)",
+    "a1Total": "129/489 (biz ۹۸/۹۸ کامل · elem ۲۵/۹۶ · pri ۳/۱۴۲ · upp ۳/۱۵۳) — بازشماری ls"
+  },
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده — لایهٔ A1 فقط کپچر خام",
+  "nextAllowedStep": "A1-ELEM-S03 = صفحات ۲۵–۳۶ elem (طبق دفتر گام‌های کوچک — دستهٔ سوم ۱۲صفحه‌ای) — سپس S04..S08 (صفحهٔ ۴۰ skip خودکار در S04 — پراب) ⇒ PRI S01..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1"
+}

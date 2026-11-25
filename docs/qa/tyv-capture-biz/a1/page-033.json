@@ -1,0 +1,75 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 33,
+    "dpi": 300,
+    "renderSha256": "17911fa900131effbe546614760f1f1e20ba5bbc809135aa1eb8e50685a28b72",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T04:59:53.026Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 36,
+    "testNumber": "26",
+    "testTitle": "The Internet and e-commerce",
+    "exercises": [
+      {
+        "id": "26.1",
+        "marks": "10 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.",
+        "items": [
+          "I'm Justin and I run a chain of bookshops specializing in old and rare books. Last year we started an e- (1) .................... operation. It's been very successful. We have about 4,000 unique (2) .................... and last month our home page had over 15,000 (3) .................... . Visitors use the site's search (4) .................... to look for book titles or authors. They add items to their shopping (5) .................... and, when they've finished, they pay (6) .................... using a credit card. We send the books out by post so we don't have any (7) .................... mile problems like some companies. Since we started (8) .................... we've had more customers in our traditional (9) ....................-and-mortar shops. People see our site while they are (10) .................... the web and that persuades them to come along."
+        ]
+      },
+      {
+        "id": "26.2",
+        "marks": "6 marks",
+        "instruction": "In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "1 E-port is the country's latest Internet serving provider. ..............................",
+          "2 It gives free Internet excess to registered users. ..............................",
+          "3 You can open an accountant by visiting E-port's website. ..............................",
+          "4 The first thing to do is to get your user word from the ISP. ..............................",
+          "5 Then you enter a secret passport so that only you can log on. ..............................",
+          "6 Now you can explore the World Wild Web at any time. .............................."
+        ]
+      },
+      {
+        "id": "26.3",
+        "marks": "9 marks",
+        "instruction": "a) Complete the meaning of each abbreviation.\nb) Decide whether each statement is about B2C, B2B or B2G. Tick (✓) the right box.",
+        "items": [
+          "B2C: business to .................... B2B: business to ....................",
+          "B2G: business to ....................",
+          "1 Members of the public can buy train tickets online.",
+          "2 Last year we paid our business tax directly over the Internet.",
+          "3 We order all our office stationery from our supplier on the web.",
+          "4 All our workshops use e-procurement for the spare parts they need.",
+          "5 We applied for the contract after seeing the details on the Ministry's website.",
+          "6 I order my contact lenses over the Internet and pay with my credit card."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "hits  cart  page  engine  securely  e-tailing.  surfing\nusers  clicks  bricks  first  last  commerce  procurement",
+      "B2C | B2B | B2G"
+    ],
+    "pictures": [
+      "Table for 26.3 with columns B2C, B2B, B2G and rows 1–6, empty tick boxes"
+    ],
+    "unclassified": [
+      "Total 25",
+      "Target 20+",
+      "Your score /25",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 36,\n \"testNumber\": \"26\",\n \"testTitle\": \"The Internet and e-commerce\",\n \"exercises\": [\n  {\"id\": \"26.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given in the box below. There are some words that you don't have to use.\",\n   \"items\": [\"I'm Justin and I run a chain of bookshops specializing in old and rare books. Last year we started an e- (1) .................... operation. It's been very successful. We have about 4,000 unique (2) .................... and last month our home page had over 15,000 (3) .................... . Visitors use the site's search (4) .................... to look for book titles or authors. They add items to their shopping (5) .................... and, when they've finished, they pay (6) .................... using a credit card. We send the books out by post so we don't have any (7) .................... mile problems like some companies. Since we started (8) .................... we've had more customers in our traditional (9) ....................-and-mortar shops. People see our site while they are (10) .................... the web and that persuades them to come along.\"]},\n  {\"id\": \"26.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\"1 E-port is the country's latest Internet serving provider. ..............................\",\n    \"2 It gives free Internet excess to registered users. ..............................\",\n    \"3 You can open an accountant by visiting E-port's website. ..............................\",\n    \"4 The first thing to do is to get your user word from the ISP. ..............................\",\n    \"5 Then you enter a secret passport so that only you can log on. ..............................\",\n    \"6 Now you can explore the World Wild Web at any time. ..............................\"]},\n  {\"id\": \"26.3\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"a) Complete the meaning of each abbreviation.\\nb) Decide whether each statement is about B2C, B2B or B2G. Tick (✓) the right box.\",\n   \"items\": [\"B2C: business to .................... B2B: business to ....................\",\n    \"B2G: business to ....................\",\n    \"1 Members of the public can buy train tickets online.\",\n    \"2 Last year we paid our business tax directly over the Internet.\",\n    \"3 We order all our office stationery from our supplier on the web.\",\n    \"4 All our workshops use e-procurement for the spare parts they need.\",\n    \"5 We applied for the contract after seeing the details on the Ministry's website.\",\n    \"6 I order my contact lenses over the Internet and pay with my credit card.\"]}\n ],\n \"boxesAndLists\": [\"hits  cart  page  engine  securely  e-tailing.  surfing\\nusers  clicks  bricks  first  last  commerce  procurement\",\n  \"B2C | B2B | B2G\"],\n \"pictures\": [\"Table for 26.3 with columns B2C, B2B, B2G and rows 1–6, empty tick boxes\"],\n \"unclassified\": [\"Total 25\", \"Target 20+\", \"Your score /25\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

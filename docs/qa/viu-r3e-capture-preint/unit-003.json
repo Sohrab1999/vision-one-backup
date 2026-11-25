@@ -1,0 +1,53 @@
+{
+ "unit": 3,
+ "phase": "R3-e",
+ "kind": "dict-samples",
+ "executedAt": "2026-11-22",
+ "provenance": {
+  "sourcePdf": "upload/Vocabulary In Use-Pre Int & Int 2nd Edition.pdf",
+  "pdfSha256": "0dfdab2ef0730596…",
+  "pdfPage": 15,
+  "bookPage": 8,
+  "layoutRule": "lesson N = PDF pages [2N+9, 2N+10] (audit 2026-11-09)",
+  "dpi": 300,
+  "renderTool": "pdftoppm",
+  "visionModel": "z-ai vision CLI (GLM)",
+  "promptKind": "dict-samples",
+  "script": "scripts/viu-r3e-verify-source.mjs",
+  "ownerCommand": "«اینو شروع کن» — trace 1a2043987aa69c95 — ۱۴۰۵/۹/۱"
+ },
+ "result": {
+  "footer": 8,
+  "entries": [
+   {
+    "headword": "seat¹",
+    "pos": "noun",
+    "phonetic": "/si:t/",
+    "labels": "[C]",
+    "senses": [
+     {
+      "number": "1",
+      "definition": "SIT [?] something that you sit on",
+      "examples": [
+       "Please, have/take a seat (= sit down).",
+       "I've booked three seats for the cinema tonight.",
+       "the back/front seat of a car"
+      ]
+     }
+    ],
+    "relatedForms": []
+   }
+  ]
+ },
+ "probe": {
+  "method": "z-ai vision — پروب متمرکز 500DPI (پس از گذر 300DPI)",
+  "executedAt": "2026-11-22",
+  "purpose": "تأیید برچسب [C]/شمارهٔ حس/نبود seat² فعل/سبک دیکشنری",
+  "result": "{\"seatEntryAsPrinted\":\"seat¹ /si:t/ noun [C] 1 SIT something that you sit on Please, have/take a seat (= sit down). • I've booked three seats for the cinema tonight. • the back/front seat of a car\",\"isSeatTwoVerbPrinted\":\"false\",\"senseNumberPrinted\":\"true\",\"dictionaryStyle\":\"Cambridge Advanced Learner's Dictionary style\"}"
+ },
+ "notes": [
+  "گذر verify قدیم (viu-r3-capture-preint/verify) mention «[C] 1 [T]» داشت — دو خوانش مستقل تازه (300DPI + پروب 500DPI) [C] را تأیید و [T]/seat² فعل را منتفی کردند؛ خوانش کهنه مبتنی بر وضوح 200DPI بود",
+  "ویرگول «Please,» در دو خوانش تازه حاضر است؛ census قدیم بدون ویرگول — روایت تازه (۲ گذر مستقل) پذیرفته شد",
+  "سبک مدخل: Cambridge Advanced Learner's Dictionary (تشخیص VLM — ثبت صادقانه)"
+ ]
+}

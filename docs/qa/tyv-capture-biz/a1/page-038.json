@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 38,
+    "dpi": 300,
+    "renderSha256": "c53982ba9cb3a9c06fe301ea0b158385d97a296489f0c6b5661c90255f4adc98",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:19:34.920Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 41,
+    "testNumber": "31",
+    "testTitle": "The bottom line",
+    "exercises": [
+      {
+        "id": "31.1",
+        "marks": "8 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "It was announced today that the chemical giant Emronia UK is to be investigated. This follows an (1) .................... which revealed problems in the company's (2) .................... . A company spokesperson said that annual (3) .................... for the past five years had given a (4) .................... and fair picture of Emronia's financial position. He stressed that the company follows British accounting (5) .................... . But expert commentators are not convinced. Last year, Emronia reported a pre-tax (6) .................... of £29.6 million but many think that this was due to (7) .................... accounting – or worse. Giles Merchant, advisor to the Stock Exchange, said that the company was haemorrhaging red (8) .................... but had hidden the size of its liabilities.",
+          "1 A amortization    B accountancy    C audit",
+          "2 A accounts        B assets         C credits",
+          "3 A books           B records        C reports",
+          "4 A false           B good           C true",
+          "5 A results         B rules          C firms",
+          "6 A profit          B budget         C line",
+          "7 A window          B creative       C direct",
+          "8 A blood           B ink            C losses"
+        ]
+      },
+      {
+        "id": "31.2",
+        "marks": "5 marks",
+        "instruction": "Match each word in Box A with one word from Box B to make five word pairs. (There is one word in Box B that you don't have to use.) Then use your word pairs to complete the sentences below.",
+        "items": [
+          "1 The ...................................................... shown in our year's accounts was due to the purchase of a new shop.",
+          "2 The ...................................................... used in the US are different from those in Europe.",
+          "3 At the moment, I'm a ...................................................... but I'm training to be an accountant.",
+          "4 There was no escaping the ...................................................... ; a net loss of €35,000.",
+          "5 After a little bit of ...................................................... , our figures for this year look a lot better."
+        ]
+      },
+      {
+        "id": "31.3",
+        "marks": "5 marks",
+        "instruction": "In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.",
+        "items": [
+          "1 My name is Jane Morton and I am an accountancy in London.    ......................",
+          "2 I prepare the end-of-year accounting for several small businesses.    ......................",
+          "3 They send me their records and I draw up a profit and lost account.    ......................",
+          "4 This shows the growth profit and any charges against the company.    ......................",
+          "5 When these are taken away, you are left with your netting profit for the year.    ......................"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Box A: window    accounting    bottom    exceptional    book",
+      "Box B: line    standards    account    keeper    loss    dressing"
+    ],
+    "pictures": [
+      "Cartoon illustration of a woman with glasses holding banknotes at a desk with papers and a calculator"
+    ],
+    "unclassified": [
+      "Total 18",
+      "Target 14+",
+      "Your score /18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 41,\n \"testNumber\": \"31\",\n \"testTitle\": \"The bottom line\",\n \"exercises\": [\n  {\"id\": \"31.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"It was announced today that the chemical giant Emronia UK is to be investigated. This follows an (1) .................... which revealed problems in the company's (2) .................... . A company spokesperson said that annual (3) .................... for the past five years had given a (4) .................... and fair picture of Emronia's financial position. He stressed that the company follows British accounting (5) .................... . But expert commentators are not convinced. Last year, Emronia reported a pre-tax (6) .................... of £29.6 million but many think that this was due to (7) .................... accounting – or worse. Giles Merchant, advisor to the Stock Exchange, said that the company was haemorrhaging red (8) .................... but had hidden the size of its liabilities.\",\n    \"1 A amortization    B accountancy    C audit\",\n    \"2 A accounts        B assets         C credits\",\n    \"3 A books           B records        C reports\",\n    \"4 A false           B good           C true\",\n    \"5 A results         B rules          C firms\",\n    \"6 A profit          B budget         C line\",\n    \"7 A window          B creative       C direct\",\n    \"8 A blood           B ink            C losses\"\n   ]},\n  {\"id\": \"31.2\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Match each word in Box A with one word from Box B to make five word pairs. (There is one word in Box B that you don't have to use.) Then use your word pairs to complete the sentences below.\",\n   \"items\": [\n    \"1 The ...................................................... shown in our year's accounts was due to the purchase of a new shop.\",\n    \"2 The ...................................................... used in the US are different from those in Europe.\",\n    \"3 At the moment, I'm a ...................................................... but I'm training to be an accountant.\",\n    \"4 There was no escaping the ...................................................... ; a net loss of €35,000.\",\n    \"5 After a little bit of ...................................................... , our figures for this year look a lot better.\"\n   ]},\n  {\"id\": \"31.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"In each sentence, there is one word which is wrong. Circle the mistake and write the correct word at the end of the line.\",\n   \"items\": [\n    \"1 My name is Jane Morton and I am an accountancy in London.    ......................\",\n    \"2 I prepare the end-of-year accounting for several small businesses.    ......................\",\n    \"3 They send me their records and I draw up a profit and lost account.    ......................\",\n    \"4 This shows the growth profit and any charges against the company.    ......................\",\n    \"5 When these are taken away, you are left with your netting profit for the year.    ......................\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"Box A: window    accounting    bottom    exceptional    book\",\n  \"Box B: line    standards    account    keeper    loss    dressing\"\n ],\n \"pictures\": [\n  \"Cartoon illustration of a woman with glasses holding banknotes at a desk with papers and a calculator\"\n ],\n \"unclassified\": [\n  \"Total 18\",\n  \"Target 14+\",\n  \"Your score /18\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

@@ -1,0 +1,95 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 67,
+    "dpi": 300,
+    "renderSha256": "44941d965689e636fce9fe81afb6c0363df0c2c86d4d3877f9f965467225dd98",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T15:57:34.761Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 66,
+    "testNumber": "60",
+    "testTitle": "Words you may confuse",
+    "exercises": [
+      {
+        "id": "60.1",
+        "marks": "10 marks",
+        "instruction": "Circle the correct answer.",
+        "items": [
+          "1 The opposite of loud is ...",
+          "a) quite. b) quiet.",
+          "2 The past tense of fall is ...",
+          "a) felt. b) fell.",
+          "3 The opposite of tight is ...",
+          "a) loose. b) lose.",
+          "4 A cooker is ...",
+          "a) a person. b) a thing.",
+          "5 The opposite of find is ...",
+          "a) loose. b) lose.",
+          "6 The past tense of feel is ...",
+          "a) felt. b) fell.",
+          "7 A police officer .............................. your driving licence.",
+          "a) checks b) controls",
+          "8 Very and .............................. can both be used before big, small, nice, etc.",
+          "a) quiet b) quite",
+          "9 If you need something, you can often .............................. it from a friend.",
+          "a) lend b) borrow",
+          "10 People stand at a bus stop to .............................. a bus.",
+          "a) expect b) wait for"
+        ]
+      },
+      {
+        "id": "60.2",
+        "marks": "10 marks",
+        "instruction": "Choose a word from the box which ends in the same sound as the word in the table.",
+        "items": [
+          "Word | Same sound",
+          "fell | bell",
+          "1 quiet |",
+          "2 lose |",
+          "3 quite |",
+          "4 felt |",
+          "5 loose |"
+        ]
+      },
+      {
+        "id": "60.3",
+        "marks": "10 marks",
+        "instruction": "Correct the mistakes in these sentences.",
+        "items": [
+          "1 I borrowed her my pen and she never gave it back to me.",
+          "2 My brother is a really good cooker. I love eating at his house.",
+          "3 Yesterday I felt down the stairs and hurt my leg.",
+          "4 I haven't done enough work, so I'm waiting to fail my exam.",
+          "5 Can I lend your tennis racket? I'll bring it back tomorrow.",
+          "6 They control your age before you can get into the nightclub. You must be 18.",
+          "7 I arrived at Rod and Fiona's house at 3.30 pm and said 'Good evening' to everyone.",
+          "8 The exam tomorrow is very important, so I expect I pass it with a good grade.",
+          "9 I was surprised that nobody controlled my ID in the bank. They just gave me the money!",
+          "10 Her new flat is quiet big, so she can invite friends to stay."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "shoes belt fight diet juice bell"
+    ],
+    "pictures": [
+      "table with two columns 'Word' and 'Same sound' (rows: fell/bell; 1 quiet; 2 lose; 3 quite; 4 felt; 5 loose)"
+    ],
+    "unclassified": [
+      "Test 60",
+      "Your score",
+      "/30"
+    ]
+  },
+  "rawModelText": "{\"footer\": 66, \"testNumber\": \"60\", \"testTitle\": \"Words you may confuse\", \"exercises\": [{\"id\": \"60.1\", \"marks\": \"10 marks\", \"instruction\": \"Circle the correct answer.\", \"items\": [\"1 The opposite of loud is ...\", \"a) quite. b) quiet.\", \"2 The past tense of fall is ...\", \"a) felt. b) fell.\", \"3 The opposite of tight is ...\", \"a) loose. b) lose.\", \"4 A cooker is ...\", \"a) a person. b) a thing.\", \"5 The opposite of find is ...\", \"a) loose. b) lose.\", \"6 The past tense of feel is ...\", \"a) felt. b) fell.\", \"7 A police officer .............................. your driving licence.\", \"a) checks b) controls\", \"8 Very and .............................. can both be used before big, small, nice, etc.\", \"a) quiet b) quite\", \"9 If you need something, you can often .............................. it from a friend.\", \"a) lend b) borrow\", \"10 People stand at a bus stop to .............................. a bus.\", \"a) expect b) wait for\"]}, {\"id\": \"60.2\", \"marks\": \"10 marks\", \"instruction\": \"Choose a word from the box which ends in the same sound as the word in the table.\", \"items\": [\"Word | Same sound\", \"fell | bell\", \"1 quiet |\", \"2 lose |\", \"3 quite |\", \"4 felt |\", \"5 loose |\"]}, {\"id\": \"60.3\", \"marks\": \"10 marks\", \"instruction\": \"Correct the mistakes in these sentences.\", \"items\": [\"1 I borrowed her my pen and she never gave it back to me.\", \"2 My brother is a really good cooker. I love eating at his house.\", \"3 Yesterday I felt down the stairs and hurt my leg.\", \"4 I haven't done enough work, so I'm waiting to fail my exam.\", \"5 Can I lend your tennis racket? I'll bring it back tomorrow.\", \"6 They control your age before you can get into the nightclub. You must be 18.\", \"7 I arrived at Rod and Fiona's house at 3.30 pm and said 'Good evening' to everyone.\", \"8 The exam tomorrow is very important, so I expect I pass it with a good grade.\", \"9 I was surprised that nobody controlled my ID in the bank. They just gave me the money!\", \"10 Her new flat is quiet big, so she can invite friends to stay.\"]}], \"boxesAndLists\": [\"shoes belt fight diet juice bell\"], \"pictures\": [\"table with two columns 'Word' and 'Same sound' (rows: fell/bell; 1 quiet; 2 lose; 3 quite; 4 felt; 5 loose)\"], \"unclassified\": [\"Test 60\", \"Your score\", \"/30\"]}"
+}

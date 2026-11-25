@@ -1,0 +1,93 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 85,
+    "dpi": 300,
+    "renderSha256": "08c93e8e3bd8db4d0a094821511c2413da7f5d247ff8b821c8824a540e750d3b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:25:09.109Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 84,
+    "testNumber": "41",
+    "testTitle": "Test 41",
+    "exercises": [
+      {
+        "id": "41.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 It took Miranda an/one hour to go/get to work.",
+          "2 It took Tony twenty minutes to check his emails.",
+          "3 It took Maggie an hour and a quarter / an hour and fifteen minutes to do her homework.",
+          "4 It took Jeremy an hour and a half / an hour and thirty minutes / ninety minutes to fly/get to Paris.",
+          "5 It took Julia ten minutes to eat (her) lunch.",
+          "6 It took Mark two and a half hours to write a report.",
+          "7 It took Angela three hours forty minutes to go/get to London.",
+          "8 It took Paul three and a half hours to repair his bike.",
+          "9 It took Rosemary three months to write a story.",
+          "10 It took Ken eight years to write a poem."
+        ]
+      },
+      {
+        "id": "41.2",
+        "marks": "(10 marks: 2 for each sentence. Give yourself 1 mark if you have just one mistake in the sentence.)",
+        "instruction": "",
+        "items": [
+          "1 I took the train when I went to the airport last summer.",
+          "2 Anita is taking an English exam tomorrow. / Anita is going to take an English exam tomorrow.",
+          "3 Kay wants to take (some) Greek lessons.",
+          "4 Her father takes / took / is taking the bus to the office.",
+          "5 Pete takes the underground to work every day."
+        ]
+      },
+      {
+        "id": "41.3",
+        "marks": "(10 marks: 1 for labelling each picture, 1 for completing each sentence)",
+        "instruction": "",
+        "items": [
+          "a scarf    b money    c [umbrella]    d camera    e book    f apple",
+          "1 book    2 apple    3 camera    4 money    5 scarf"
+        ]
+      },
+      {
+        "id": "42.1",
+        "marks": "(10 marks: 1 for each correct choice of take or bring, 1 for each correct verb form)",
+        "instruction": "",
+        "items": [
+          "1 brings    2 taking    3 brought    4 bring    5 Take"
+        ]
+      },
+      {
+        "id": "42.2",
+        "marks": "(10 marks)",
+        "instruction": "These are suggested answers. Yours may be a little different, but you must choose the correct verb, take or bring, to get the marks.",
+        "items": [
+          "1 I’ll take / I can take / Let me take you to the station. / Do you want me to take you to the station?*",
+          "*If you are learning English in Ireland you may hear people saying bring here instead of take.",
+          "2 Will/would/can/could you take this parcel to the post office for me, please?",
+          "3 Would you like to come to our/my party and bring your guitar?",
+          "4 I’m going to take it back and change it / get a different size / get the right size.",
+          "5 Will/would/can/could you bring me back some Belgian chocolates?"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 42",
+      "www.irlanguage.com",
+      "IR Language",
+      "مرجع آموزش زبان فارسیان"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 84,\n  \"testNumber\": \"41\",\n  \"testTitle\": \"Test 41\",\n  \"exercises\": [\n    {\n      \"id\": \"41.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 It took Miranda an/one hour to go/get to work.\",\n        \"2 It took Tony twenty minutes to check his emails.\",\n        \"3 It took Maggie an hour and a quarter / an hour and fifteen minutes to do her homework.\",\n        \"4 It took Jeremy an hour and a half / an hour and thirty minutes / ninety minutes to fly/get to Paris.\",\n        \"5 It took Julia ten minutes to eat (her) lunch.\",\n        \"6 It took Mark two and a half hours to write a report.\",\n        \"7 It took Angela three hours forty minutes to go/get to London.\",\n        \"8 It took Paul three and a half hours to repair his bike.\",\n        \"9 It took Rosemary three months to write a story.\",\n        \"10 It took Ken eight years to write a poem.\"\n      ]\n    },\n    {\n      \"id\": \"41.2\",\n      \"marks\": \"(10 marks: 2 for each sentence. Give yourself 1 mark if you have just one mistake in the sentence.)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 I took the train when I went to the airport last summer.\",\n        \"2 Anita is taking an English exam tomorrow. / Anita is going to take an English exam tomorrow.\",\n        \"3 Kay wants to take (some) Greek lessons.\",\n        \"4 Her father takes / took / is taking the bus to the office.\",\n        \"5 Pete takes the underground to work every day.\"\n      ]\n    },\n    {\n      \"id\": \"41.3\",\n      \"marks\": \"(10 marks: 1 for labelling each picture, 1 for completing each sentence)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"a scarf    b money    c [umbrella]    d camera    e book    f apple\",\n        \"1 book    2 apple    3 camera    4 money    5 scarf\"\n      ]\n    },\n    {\n      \"id\": \"42.1\",\n      \"marks\": \"(10 marks: 1 for each correct choice of take or bring, 1 for each correct verb form)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 brings    2 taking    3 brought    4 bring    5 Take\"\n      ]\n    },\n    {\n      \"id\": \"42.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"These are suggested answers. Yours may be a little different, but you must choose the correct verb, take or bring, to get the marks.\",\n      \"items\": [\n        \"1 I’ll take / I can take / Let me take you to the station. / Do you want me to take you to the station?*\",\n        \"*If you are learning English in Ireland you may hear people saying bring here instead of take.\",\n        \"2 Will/would/can/could you take this parcel to the post office for me, please?\",\n        \"3 Would you like to come to our/my party and bring your guitar?\",\n        \"4 I’m going to take it back and change it / get a different size / get the right size.\",\n        \"5 Will/would/can/could you bring me back some Belgian chocolates?\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 42\",\n    \"www.irlanguage.com\",\n    \"IR Language\",\n    \"مرجع آموزش زبان فارسیان\"\n  ]\n}\n```"
+}

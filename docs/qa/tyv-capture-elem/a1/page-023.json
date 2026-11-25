@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 23,
+    "dpi": 300,
+    "renderSha256": "26891248a30573c1763709beffc3e0e39ed8cccef37f33f123abfc5393e75738",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:02:00.681Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 22,
+    "testNumber": "16",
+    "testTitle": "Communications",
+    "exercises": [
+      {
+        "id": "16.1",
+        "marks": "6 marks",
+        "instruction": "Here are six things we use to help us communicate. Put the letters in order to make words.",
+        "items": [
+          "1 KYDBROAE k............................",
+          "2 TETERL l.....................",
+          "3 LIEBOM HONEP m.................... p......................",
+          "4 TREELT BXO l.................... b......................",
+          "5 PONTELEHE t....................",
+          "6 CREESN s..................."
+        ]
+      },
+      {
+        "id": "16.2",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps in the conversations.",
+        "items": [
+          "1 RORY: What's your a......................... ?",
+          "COLIN: It's 26 Park Road, Shilton, SH4 6BC.",
+          "2 TERRY: I'll ring you at ten o'clock tomorrow.",
+          "MIKE: Okay, if I'm not at home leave a m.......................... on my answerphone.",
+          "3 ROB: How much was your camera?.",
+          "NELL: It's about £200 in the shops. It's cheaper if you buy it o.........................",
+          "4 GARRY: How do I close this program?",
+          "LINDA: Use the m..................... to click on 'EXIT' in the top corner of the screen.",
+          "5 DANA: I want to save my work and take it to college tomorrow. Can you lend me a blank ......................... ?",
+          "ANNE: Yes, sure, there's a box of them next to the computer."
+        ]
+      },
+      {
+        "id": "16.3",
+        "marks": "10 marks",
+        "instruction": "Put these sentences into the correct order to make a typical phone conversation. Write the numbers 1–10 next to the sentences.",
+        "items": [
+          "He's not here right now. Who's calling?",
+          "Hello.",
+          "Okay, I'll tell him.",
+          "Hi, can I speak to Ken?",
+          "Bye.",
+          "It's Joanna. Could you give him a message?",
+          "No problem. Bye.",
+          "Yeah.",
+          "Thanks.",
+          "Could you tell him I called and I'll call back later."
+        ]
+      },
+      {
+        "id": "16.4",
+        "marks": "4 marks",
+        "instruction": "Write questions for these answers. Use the words in brackets.",
+        "items": [
+          "1 They're on the memory stick on my desk. (our holiday photos)",
+          "2 It's Bob dot Jones at Freemail dot com. (email)",
+          "3 Yes, of course you can. The phone is in the kitchen. (make)",
+          "4 24th March. (date, letter)"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 16",
+      "Your score",
+      "/30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 22,\n  \"testNumber\": \"16\",\n  \"testTitle\": \"Communications\",\n  \"exercises\": [\n    {\n      \"id\": \"16.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Here are six things we use to help us communicate. Put the letters in order to make words.\",\n      \"items\": [\n        \"1 KYDBROAE k............................\",\n        \"2 TETERL l.....................\",\n        \"3 LIEBOM HONEP m.................... p......................\",\n        \"4 TREELT BXO l.................... b......................\",\n        \"5 PONTELEHE t....................\",\n        \"6 CREESN s...................\"\n      ]\n    },\n    {\n      \"id\": \"16.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Fill the gaps in the conversations.\",\n      \"items\": [\n        \"1 RORY: What's your a......................... ?\",\n        \"COLIN: It's 26 Park Road, Shilton, SH4 6BC.\",\n        \"2 TERRY: I'll ring you at ten o'clock tomorrow.\",\n        \"MIKE: Okay, if I'm not at home leave a m.......................... on my answerphone.\",\n        \"3 ROB: How much was your camera?.\",\n        \"NELL: It's about £200 in the shops. It's cheaper if you buy it o.........................\",\n        \"4 GARRY: How do I close this program?\",\n        \"LINDA: Use the m..................... to click on 'EXIT' in the top corner of the screen.\",\n        \"5 DANA: I want to save my work and take it to college tomorrow. Can you lend me a blank ......................... ?\",\n        \"ANNE: Yes, sure, there's a box of them next to the computer.\"\n      ]\n    },\n    {\n      \"id\": \"16.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Put these sentences into the correct order to make a typical phone conversation. Write the numbers 1–10 next to the sentences.\",\n      \"items\": [\n        \"He's not here right now. Who's calling?\",\n        \"Hello.\",\n        \"Okay, I'll tell him.\",\n        \"Hi, can I speak to Ken?\",\n        \"Bye.\",\n        \"It's Joanna. Could you give him a message?\",\n        \"No problem. Bye.\",\n        \"Yeah.\",\n        \"Thanks.\",\n        \"Could you tell him I called and I'll call back later.\"\n      ]\n    },\n    {\n      \"id\": \"16.4\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Write questions for these answers. Use the words in brackets.\",\n      \"items\": [\n        \"1 They're on the memory stick on my desk. (our holiday photos)\",\n        \"2 It's Bob dot Jones at Freemail dot com. (email)\",\n        \"3 Yes, of course you can. The phone is in the kitchen. (make)\",\n        \"4 24th March. (date, letter)\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 16\",\n    \"Your score\",\n    \"/30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

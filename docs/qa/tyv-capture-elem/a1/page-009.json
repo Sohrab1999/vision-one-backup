@@ -1,0 +1,100 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 9,
+    "dpi": 300,
+    "renderSha256": "03d50a5f28601191061d6449fff3d3e228dadb34636a9469ed2dd88358e2934f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T19:51:12.867Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 8,
+    "testNumber": "2",
+    "testTitle": "Birth, marriage and death",
+    "exercises": [
+      {
+        "id": "2.1",
+        "marks": "10 marks",
+        "instruction": "Circle the correct underlined word.",
+        "items": [
+          "Example: Bill is / (was) born in London in 1972.",
+          "1 My parents are/were both born in Scotland in 1960.",
+          "2 Kay got/went married to/with Ben last year.",
+          "3 After they got married they went on their wedding/honeymoon to Italy.",
+          "4 My grandparents were marry/married for 40 years.",
+          "5 His grandfather dead/died ten years ago.",
+          "6 He died of/with a heart attack on his 100th birthday.",
+          "7 They are going to call/called the baby Emily from/after her grandmother.",
+          "8 The old man became ill/dead last Sunday."
+        ]
+      },
+      {
+        "id": "2.2",
+        "marks": "4 marks",
+        "instruction": "Look at this form. What is the marital status of the people below?",
+        "items": [
+          "1 Peter's wife died last year. He is .......................... .",
+          "2 Anna has a husband. She is .......................... .",
+          "3 Polly's marriage has broken up. She is .......................... .",
+          "4 Jim does not have a wife. He is .......................... ."
+        ]
+      },
+      {
+        "id": "2.3",
+        "marks": "6 marks",
+        "instruction": "Answer these questions about the picture.",
+        "items": [
+          "1 What are the couple doing? They are .......................... .",
+          "2 What does the picture show? A ..........................",
+          "3 What is the word for the special holiday they will go on after this day? The .........................."
+        ]
+      },
+      {
+        "id": "2.4",
+        "marks": "10 marks",
+        "instruction": "Complete these dialogues.",
+        "items": [
+          "Example: A: Are you married?",
+          "B: Yes.",
+          "A: How long have you been married?",
+          "B: Ten years already. I can't believe it!",
+          "1 A: Clare had a baby boy yesterday.",
+          "B: How .......................... ?",
+          "A: 3 kilos.",
+          "B: What are .......................... ?",
+          "A: Simon, I think. After Clare's father.",
+          "2 A: Jo's uncle is dead.",
+          "B: Oh, I didn't know. When did he die?",
+          "A: Yesterday.",
+          "B: What .......................... ?",
+          "A: He had a heart attack, I think.",
+          "B: When is the .......................... ? I'd like to be there.",
+          "A: It's on Thursday at 10.00 am.",
+          "3 A: Did you enjoy the wedding?",
+          "B: Yes, it was great.",
+          "A: Where did they go .......................... ?",
+          "B: To France. They said it was fantastic."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Application form\nWhat is your marital status?\nTick the correct box.\nsingle [ ] married [ ]\nwidowed [ ] divorced [ ]"
+    ],
+    "pictures": [
+      "drawing of a bride and groom kissing in a stone archway",
+      "'Your score /30' box at bottom left"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 8,\n  \"testNumber\": \"2\",\n  \"testTitle\": \"Birth, marriage and death\",\n  \"exercises\": [\n    {\n      \"id\": \"2.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Circle the correct underlined word.\",\n      \"items\": [\n        \"Example: Bill is / (was) born in London in 1972.\",\n        \"1 My parents are/were both born in Scotland in 1960.\",\n        \"2 Kay got/went married to/with Ben last year.\",\n        \"3 After they got married they went on their wedding/honeymoon to Italy.\",\n        \"4 My grandparents were marry/married for 40 years.\",\n        \"5 His grandfather dead/died ten years ago.\",\n        \"6 He died of/with a heart attack on his 100th birthday.\",\n        \"7 They are going to call/called the baby Emily from/after her grandmother.\",\n        \"8 The old man became ill/dead last Sunday.\"\n      ]\n    },\n    {\n      \"id\": \"2.2\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Look at this form. What is the marital status of the people below?\",\n      \"items\": [\n        \"1 Peter's wife died last year. He is .......................... .\",\n        \"2 Anna has a husband. She is .......................... .\",\n        \"3 Polly's marriage has broken up. She is .......................... .\",\n        \"4 Jim does not have a wife. He is .......................... .\"\n      ]\n    },\n    {\n      \"id\": \"2.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Answer these questions about the picture.\",\n      \"items\": [\n        \"1 What are the couple doing? They are .......................... .\",\n        \"2 What does the picture show? A ..........................\",\n        \"3 What is the word for the special holiday they will go on after this day? The ..........................\"\n      ]\n    },\n    {\n      \"id\": \"2.4\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete these dialogues.\",\n      \"items\": [\n        \"Example: A: Are you married?\",\n        \"B: Yes.\",\n        \"A: How long have you been married?\",\n        \"B: Ten years already. I can't believe it!\",\n        \"1 A: Clare had a baby boy yesterday.\",\n        \"B: How .......................... ?\",\n        \"A: 3 kilos.\",\n        \"B: What are .......................... ?\",\n        \"A: Simon, I think. After Clare's father.\",\n        \"2 A: Jo's uncle is dead.\",\n        \"B: Oh, I didn't know. When did he die?\",\n        \"A: Yesterday.\",\n        \"B: What .......................... ?\",\n        \"A: He had a heart attack, I think.\",\n        \"B: When is the .......................... ? I'd like to be there.\",\n        \"A: It's on Thursday at 10.00 am.\",\n        \"3 A: Did you enjoy the wedding?\",\n        \"B: Yes, it was great.\",\n        \"A: Where did they go .......................... ?\",\n        \"B: To France. They said it was fantastic.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Application form\\nWhat is your marital status?\\nTick the correct box.\\nsingle [ ] married [ ]\\nwidowed [ ] divorced [ ]\"\n  ],\n  \"pictures\": [\n    \"drawing of a bride and groom kissing in a stone archway\",\n    \"'Your score /30' box at bottom left\"\n  ],\n  \"unclassified\": [\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

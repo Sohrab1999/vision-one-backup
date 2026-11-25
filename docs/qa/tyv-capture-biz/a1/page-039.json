@@ -1,0 +1,80 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 39,
+    "dpi": 300,
+    "renderSha256": "e77e14c4934fc6b1f3d385a93e26933f10f16df19be169c3edcf183dfef9ae87",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T05:19:44.153Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 42,
+    "testNumber": "32",
+    "testTitle": "Share capital and debt",
+    "exercises": [
+      {
+        "id": "32.1",
+        "marks": "12 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "When I started my engineering company five years ago I had to (1) ............ a lot of capital. First, I looked around for a (2) ............ and took out a loan. The (3) ............ was £100,000 at an (4) ............ rate of 5.2%. I had to use my house for (5) ............ so that was a big worry. Next I found ten people who wanted to (6) ............ in the business. Each one put (7) ............ £10,000 in return for 1,000 shares. I (8) ............ 12,000 shares so I am the biggest shareholder. Our total (9) ............ is nearly a quarter of a million pounds. We paid our first (10) ............ last year but it wasn't very big. Now we are making a profit, we will start to reduce our (11) ............ . I don't like carrying this much (12) ............ .",
+          "1 A rise  B raise  C rose",
+          "2 A lender  B borrower  C capitalist",
+          "3 A money  B balance  C principal",
+          "4 A account  B interest  C audit",
+          "5 A security  B safety  C salary",
+          "6 A lend  B borrow  C invest",
+          "7 A out  B up  C off",
+          "8 A hold  B pick  C hand",
+          "9 A gearing  B venture  C equity",
+          "10 A division  B divider  C dividend",
+          "11 A borrowing  B lending  C sharing",
+          "12 A capital  B debt  C collateral"
+        ]
+      },
+      {
+        "id": "32.2",
+        "marks": "5 marks",
+        "instruction": "Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There are some alternatives that you don't have to use.",
+        "items": [
+          "1 'We had to find a lender who was prepared to finance an exciting new company.'",
+          "2 'Our lending to companies takes the form of conditional loans or debentures.'",
+          "3 'If you do not keep up with the repayments, we may sell your home to recover our money.'",
+          "4 'The company is highly geared so I wouldn't invest in it.'",
+          "5 'We owe our suppliers $12,000 and we have a loan of $8,000 so the total is about $20,000.'"
+        ]
+      },
+      {
+        "id": "32.3",
+        "marks": "5 marks",
+        "instruction": "Complete each sentence by writing in the gap a noun formed from the verb given in brackets ( ). The first one is an example.",
+        "items": [
+          "0 We charge each ....borrower.... a fee of £200 to arrange a loan.  (borrow)",
+          "1 This year we will pay a ..................... of 25¢ per share.  (divide)",
+          "2 To get the loan we had to use the new lorry as ..................... .  (secure)",
+          "3 We are looking for a ..................... who offers reasonable interest rates.  (lend)",
+          "4 Their debts have grown steadily and now their ..................... is dangerously high.  (gear)",
+          "5 I think that our ..................... is now under control.  (borrow)"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A indebtedness  B equity  C share capital  D bonds\nE leverage  F gross profit  G venture capitalist  H collateral",
+      "Total 22 / Target 18+"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Your score /22",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 42,\n \"testNumber\": \"32\",\n \"testTitle\": \"Share capital and debt\",\n \"exercises\": [\n  {\"id\": \"32.1\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\"When I started my engineering company five years ago I had to (1) ............ a lot of capital. First, I looked around for a (2) ............ and took out a loan. The (3) ............ was £100,000 at an (4) ............ rate of 5.2%. I had to use my house for (5) ............ so that was a big worry. Next I found ten people who wanted to (6) ............ in the business. Each one put (7) ............ £10,000 in return for 1,000 shares. I (8) ............ 12,000 shares so I am the biggest shareholder. Our total (9) ............ is nearly a quarter of a million pounds. We paid our first (10) ............ last year but it wasn't very big. Now we are making a profit, we will start to reduce our (11) ............ . I don't like carrying this much (12) ............ .\",\n    \"1 A rise  B raise  C rose\",\n    \"2 A lender  B borrower  C capitalist\",\n    \"3 A money  B balance  C principal\",\n    \"4 A account  B interest  C audit\",\n    \"5 A security  B safety  C salary\",\n    \"6 A lend  B borrow  C invest\",\n    \"7 A out  B up  C off\",\n    \"8 A hold  B pick  C hand\",\n    \"9 A gearing  B venture  C equity\",\n    \"10 A division  B divider  C dividend\",\n    \"11 A borrowing  B lending  C sharing\",\n    \"12 A capital  B debt  C collateral\"]},\n  {\"id\": \"32.2\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Decide which of the alternatives (A–H) each speaker is talking about. Write the letter of your answer in the box at the end of the sentence. There are some alternatives that you don't have to use.\",\n   \"items\": [\"1 'We had to find a lender who was prepared to finance an exciting new company.'\",\n    \"2 'Our lending to companies takes the form of conditional loans or debentures.'\",\n    \"3 'If you do not keep up with the repayments, we may sell your home to recover our money.'\",\n    \"4 'The company is highly geared so I wouldn't invest in it.'\",\n    \"5 'We owe our suppliers $12,000 and we have a loan of $8,000 so the total is about $20,000.'\"]},\n  {\"id\": \"32.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Complete each sentence by writing in the gap a noun formed from the verb given in brackets ( ). The first one is an example.\",\n   \"items\": [\"0 We charge each ....borrower.... a fee of £200 to arrange a loan.  (borrow)\",\n    \"1 This year we will pay a ..................... of 25¢ per share.  (divide)\",\n    \"2 To get the loan we had to use the new lorry as ..................... .  (secure)\",\n    \"3 We are looking for a ..................... who offers reasonable interest rates.  (lend)\",\n    \"4 Their debts have grown steadily and now their ..................... is dangerously high.  (gear)\",\n    \"5 I think that our ..................... is now under control.  (borrow)\"]}\n ],\n \"boxesAndLists\": [\"A indebtedness  B equity  C share capital  D bonds\\nE leverage  F gross profit  G venture capitalist  H collateral\",\n  \"Total 22 / Target 18+\"],\n \"pictures\": [],\n \"unclassified\": [\"Your score /22\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

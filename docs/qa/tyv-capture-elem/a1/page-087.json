@@ -1,0 +1,132 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 87,
+    "dpi": 300,
+    "renderSha256": "f6ac502b1af45f985f254bb3d2809b2e65919783618ea31c8330b1a89d4c1c1e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:25:34.591Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 86,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "44.3",
+        "marks": "(10 marks: 2 for each corrected mistake)",
+        "instruction": null,
+        "items": [
+          "1 I have to get the train at 7.30 tomorrow morning, so I'll have to get up early.",
+          "2 I went on working until after midnight because I had an exam the next day.",
+          "3 It's raining; put on your raincoat.",
+          "4 They offered her the job but she turned it down.",
+          "5 If you get off the bus at Histon Street, you will see the museum on your left."
+        ]
+      },
+      {
+        "id": "45.1",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 gets up",
+          "2 goes to the bathroom",
+          "3 has a shower",
+          "4 has breakfast",
+          "5 goes to work"
+        ]
+      },
+      {
+        "id": "45.2",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 comes home",
+          "2 makes dinner",
+          "3 has dinner",
+          "4 watches TV",
+          "5 goes to bed"
+        ]
+      },
+      {
+        "id": "45.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 Andy is watching TV.",
+          "2 Andy is having (his) breakfast.",
+          "3 Andy is making dinner / cooking.",
+          "4 Andy is getting up.",
+          "5 Andy is phoning/calling a friend / talking on the phone.",
+          "6 Andy is going to bed.",
+          "7 Andy is having dinner /eating.",
+          "8 Andy is going home / driving home / going to work / driving to work.",
+          "9 Andy is coming/arriving/getting home.",
+          "10 Andy is waking up."
+        ]
+      },
+      {
+        "id": "45.4",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 What time do you go to work?",
+          "2 How often do you clean the house?",
+          "3 What time do you (usually) get up?",
+          "4 How often do you go for a walk?",
+          "5 How often do you wash your clothes?",
+          "6 What time do you (usually) go to bed?",
+          "7 How often do you go to the supermarket?",
+          "8 What time do you (usually) come home?",
+          "9 How often do you go to your friend's house?",
+          "10 How often do you write a letter to your grandmother?"
+        ]
+      },
+      {
+        "id": "46.1",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 b   2 a   3 d   4 e   5 c",
+          "(Note: 1e, 3e, 4b, 4c, 5b, 5c and 5e are also possible.)"
+        ]
+      },
+      {
+        "id": "46.2",
+        "marks": "(5 marks)",
+        "instruction": null,
+        "items": [
+          "1 say   2 told   3 say   4 tell   5 tell"
+        ]
+      },
+      {
+        "id": "46.3",
+        "marks": "(10 marks)",
+        "instruction": "Possible answers:",
+        "items": [
+          "1 Ask somebody the way. / Ask somebody how to get there. / Ask for directions.",
+          "2 Ask somebody the time. / Ask somebody what the time is. / Ask somebody what time it is. / Ask somebody if they have (got) the time.",
+          "3 Ask the teacher (to explain it). / Ask another student to help you. / Ask for a dictionary.",
+          "4 Ask (the waiter) for the bill.",
+          "5 Ask them to turn it down / turn it off."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 45",
+      "Test 46",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 86,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"44.3\",\n      \"marks\": \"(10 marks: 2 for each corrected mistake)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 I have to get the train at 7.30 tomorrow morning, so I'll have to get up early.\",\n        \"2 I went on working until after midnight because I had an exam the next day.\",\n        \"3 It's raining; put on your raincoat.\",\n        \"4 They offered her the job but she turned it down.\",\n        \"5 If you get off the bus at Histon Street, you will see the museum on your left.\"\n      ]\n    },\n    {\n      \"id\": \"45.1\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 gets up\",\n        \"2 goes to the bathroom\",\n        \"3 has a shower\",\n        \"4 has breakfast\",\n        \"5 goes to work\"\n      ]\n    },\n    {\n      \"id\": \"45.2\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 comes home\",\n        \"2 makes dinner\",\n        \"3 has dinner\",\n        \"4 watches TV\",\n        \"5 goes to bed\"\n      ]\n    },\n    {\n      \"id\": \"45.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 Andy is watching TV.\",\n        \"2 Andy is having (his) breakfast.\",\n        \"3 Andy is making dinner / cooking.\",\n        \"4 Andy is getting up.\",\n        \"5 Andy is phoning/calling a friend / talking on the phone.\",\n        \"6 Andy is going to bed.\",\n        \"7 Andy is having dinner /eating.\",\n        \"8 Andy is going home / driving home / going to work / driving to work.\",\n        \"9 Andy is coming/arriving/getting home.\",\n        \"10 Andy is waking up.\"\n      ]\n    },\n    {\n      \"id\": \"45.4\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 What time do you go to work?\",\n        \"2 How often do you clean the house?\",\n        \"3 What time do you (usually) get up?\",\n        \"4 How often do you go for a walk?\",\n        \"5 How often do you wash your clothes?\",\n        \"6 What time do you (usually) go to bed?\",\n        \"7 How often do you go to the supermarket?\",\n        \"8 What time do you (usually) come home?\",\n        \"9 How often do you go to your friend's house?\",\n        \"10 How often do you write a letter to your grandmother?\"\n      ]\n    },\n    {\n      \"id\": \"46.1\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 b   2 a   3 d   4 e   5 c\",\n        \"(Note: 1e, 3e, 4b, 4c, 5b, 5c and 5e are also possible.)\"\n      ]\n    },\n    {\n      \"id\": \"46.2\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 say   2 told   3 say   4 tell   5 tell\"\n      ]\n    },\n    {\n      \"id\": \"46.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"Possible answers:\",\n      \"items\": [\n        \"1 Ask somebody the way. / Ask somebody how to get there. / Ask for directions.\",\n        \"2 Ask somebody the time. / Ask somebody what the time is. / Ask somebody what time it is. / Ask somebody if they have (got) the time.\",\n        \"3 Ask the teacher (to explain it). / Ask another student to help you. / Ask for a dictionary.\",\n        \"4 Ask (the waiter) for the bill.\",\n        \"5 Ask them to turn it down / turn it off.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 45\",\n    \"Test 46\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

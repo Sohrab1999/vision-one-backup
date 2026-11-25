@@ -1,0 +1,69 @@
+{
+  "step": "A1-BIZ-S03 (صفحات ۲۵–۳۶ biz) — دستهٔ دوم اجرای نقشهٔ مادر سری TYV",
+  "date": "2026-11-24 (1405/09/03)",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» با نقل‌قول وضعیت ④ گام بعدی مجاز — trace 1a20be3b82c8cde9 — channel zai-web — الزام پایداری ایستندهٔ نوزدهم پابرجا",
+  "preRecovery37": {
+    "headLocal": "193269b76cf46f9dcb210c71953bd1614c4dc45f (stale — 2026-11-08 era — ریست پنهان ۳۷م، الگوی ۳۱..۳۶)",
+    "remoteMainAfterFetch": "9869740eb14ec306a26029802c7a7a4463a4f5b3 (ثبت اثبات §۱۰-۷ گام A1-BIZ-S02 + بازیابی ۳۶ — سربرگ ۱۱۹مین)",
+    "porcelain": "32 M + 379 ?? = 411 مسیر کثیف (۱۷۹۵ فایل با -uall)",
+    "divergence": "0/0 — صفر کامیت یکتای محلی (185 عقب‌تر از ریموت — remote..local = 0)"
+  },
+  "recovery37ZeroLossProof": {
+    "method": "Node in-process sha1 blob hashing — git ls-tree -r -z backup/main + git status --porcelain -z -uall — عین الگوی بازیابی‌های ۲۹/۳۲/۳۳/۳۴/۳۵/۳۶ (بدون نقل‌قول bash)",
+    "phaseFullWalk": { "dirtyFiles": 1795, "matchRemote": 1788, "differ": 0, "absentRemote": 7 },
+    "absentRemote7": "هفت سند پیشا-سازمان‌دهی TYV در مسیر قدیمی «نقشه راه ها/…» (بدون زیرپوشه/پیشوند) — blob هر هفت در تاریخچهٔ Remote موجود است (کامیت سازمان‌دهی be0231d git mv + بازیابی‌های ۳۴/۳۳/۳۲ ea86450/1d2815f/7f28596) ⇒ تاریخی-قابل‌بازیابی، نه محتوای یگانه",
+    "missingFromDisk": 0,
+    "safetyNet": "tar czf /tmp/recovery37/dirty-tree-1795paths-2026-11-23.tar.gz — 394,992,629B (~395MB) — بیمهٔ کامل پیش از هر حذف"
+  },
+  "recovery37": [
+    "git fetch backup (main 193269b→9869740 + شاخهٔ recovery/rc33-pre-ff-stash-2026-11-23 ریموت نمایان شد)",
+    "zero-loss hash verification (بالا — 1788/1795 match · differ=0 · 7 historical)",
+    "tar safety net ~395MB",
+    "git clean -fd (حذف untracked همسان-اثبات‌شده — با merge به‌صورت tracked بازگردانده شد)",
+    "git checkout -- . (۳۲ فایل modified — هر یک هش-اثبات‌شده == blob ریموت)",
+    "git merge --ff-only backup/main → HEAD = 9869740e… (fast-forward خالص 193269b→9869740 — صفر reset/rebase/force)"
+  ],
+  "postRecoveryVerify": {
+    "porcelain": 0,
+    "headLocal": "9869740eb14ec306a26029802c7a7a4463a4f5b3 == backup/main (git ls-remote backup refs/heads/main — برابری بایت)",
+    "dbSha256First16": "67bd7e9327f35f3e == git show backup/main:db/custom.db (مطابق ثبت SNAPSHOT ۱۱۹مین)",
+    "lint": "bun run lint exit 0",
+    "a1DiskTruthPreStep": "31/489 (biz 22 · elem 3 · pri 3 · upp 3 — بازشماری page-*.json)",
+    "seriTyvDocs": "۷ سند شماره‌دار «نقشه راه ها/سری-TYV/» حاضر و == ریموت"
+  },
+  "stepExecution": {
+    "command": "bun scripts/tyv-a1-vlm-capture.mjs biz 25,26,27,28,29,30,31,32,33,34,35,36 (هم‌گام — درس سندباکس: nohup پس‌زمینه می‌میرد)",
+    "result": "DONE tyv-biz: captured=12 skipped=0 failed=0",
+    "pages": [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
+    "pageStatus": "12/12 status=ok",
+    "newJsonFiles": ["page-025.json", "page-026.json", "page-027.json", "page-028.json", "page-029.json", "page-030.json", "page-031.json", "page-032.json", "page-033.json", "page-034.json", "page-035.json", "page-036.json"],
+    "provenancePerPage": "renderSha256 + dpi=300 + model (z-ai vision CLI) + promptVersion=tyv-a1-v1 + ownerCommand + attempts + timestamp — کامل روی هر ۱۲ صفحه (۱۲/۱۲ provOk)",
+    "footers": { "p25": 28, "p26": 29, "p27": 30, "p28": 31, "p29": 32, "p30": 33, "p31": 34, "p32": 35, "p33": 36, "p34": 37, "p35": 38, "p36": 39 },
+    "footerOffset": "+3 پابرجا روی هر ۱۲ صفحه (pdfPage→printed footer) — ادامهٔ الگوی S02 — صفر فوتر null در این دسته",
+    "contentHighlights": "p25 تست ۱۸ «Business philosophies» · p26 تست ۱۹ «Buyers, sellers and the market» · p27 تست ۲۰ «Markets and competitors» · p28 تست ۲۱ «Marketing and market orientation» (۱ تمرین) · p29 تست ۲۲ «Products and brands» · p30 تست ۲۳ «Price» · p31 تست ۲۴ «Place» · p32 تست ۲۵ «Promotion» · p33 تست ۲۶ «The Internet and e-commerce» · p34 تست ۲۷ «Sales and costs» · p35 تست ۲۸ «Profitability and unprofitability» · p36 تست ۲۹ «Getting paid» — بلوک یکنواخت تست‌های مستقل یک‌صفحه‌ای (برخلاف S02 با Summary Test 1)",
+    "batchStats": "۳۴ تمرین / ۲۰۸ آیتم / ۲۸ باکس / ۱۱ یادداشت تصویر در این دسته — پرچم [?]: فقط p35 (۲ مورد) ⇒ نرخ [?] این دسته ≈ ۱٪ از ۲۰۸ آیتم — ثبت برای دوگذر G1",
+    "attemptsAll": "≤3 — هر ۱۲ صفحه در تلاش اول (بدون backoff) — کل اجرا ~۲ دقیقه (05:58:05..05:00:25Z)"
+  },
+  "postStepDiskTruth": {
+    "a1Total": "43/489",
+    "biz": "34/98 (صفحات 4..36 پیوسته + 43)",
+    "elem": "3/96",
+    "pri": "3/142",
+    "upp": "3/153",
+    "a1FileCountBiz": "34 فایل page-*.json — بازشماری دیسک",
+    "indexUpdated": "docs/qa/tyv-capture-biz/a1-index.json (capturedNow=12 · skippedExisting=0 · failedNow=[] · previousIndex capturedPages=6)"
+  },
+  "acceptanceChecklist": {
+    "scriptDoneLine": "DONE tyv-biz: captured=12 skipped=0 failed=0 ✓",
+    "fullProvenancePerNewPage": "✓ (۱۲/۱۲ — renderSha256/DPI=300/model/promptVersion/ownerCommand/attempts/timestamp)",
+    "a1IndexUpdated": "✓",
+    "failedZero": "✓ (failed=0 — صف فایل ناموفق خالی)",
+    "footerRecordedPerPage": "✓ (۱۲/۱۲ — صفر null در این دسته)",
+    "questionMarkRate": "✓ (فقط p35 ×۲ — ثبت‌شده برای دوگذر G1)",
+    "zeroSrcDbScriptChanges": "✓ (git delta = ۱۲ JSON کپچر + a1-index + اسناد پایداری فقط — صفر src/db/اسکریپت/hook/WAVE2/PDF)",
+    "persistenceCycle": "worklog + SNAPSHOT سربرگ ۱۲۰مین + §۲ + §۴ + مادر §۶ + دفتر §۱-۱/§۷ + BIZ §۳ + فهرست-مستندات + این JSON + دو-کامیتی §۱۰-۷ + ls-remote"
+  },
+  "nextAllowedStep": "A1-BIZ-S04 = bun scripts/tyv-a1-vlm-capture.mjs biz 37,38,39,40,41,42,43,44,45,46,47,48 (صفحهٔ ۴۳ skip خودکار — checkpoint/resume) — سپس S05..S09 biz ⇒ ELEM ⇒ PRI ⇒ UPP تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1",
+  "standingGatesUntouched": "R3-e EXECUTED موج اول standing · FA-REVIEWED awaiting owner adjudication · G5/A5-5 standing · A2..A6 گیت‌دار — صفر wired محصولی — وب‌اپ تغییر نکرده",
+  "persistenceProtocol": "two-commit §10-7: content commit → hook auto-push → ls-remote proof → proof-registration commit → final ls-remote"
+}

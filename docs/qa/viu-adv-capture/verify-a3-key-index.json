@@ -1,0 +1,24 @@
+{
+  "unit": "A3",
+  "ok": true,
+  "issues": [],
+  "checks": {
+    "keyRawByteExact": true,
+    "indexRawByteExact": true,
+    "keyUnitBlocks": 101,
+    "keyAnchors": 413,
+    "keyRows": 2570,
+    "captureKeyed": 413,
+    "capturePrintKeyless": 42,
+    "indexEntries": 3330,
+    "indexWrappedEntries": 19,
+    "indexUnknownQueue": [
+      {
+        "codepoint": "U+E022",
+        "count": 506
+      }
+    ],
+    "intersectionsFile": "docs/qa/viu-adv-a3-intersections-2026-11-21.json"
+  },
+  "note": "Two independent pdftotext extraction passes byte-compared (raw determinism); parse guards: unit sequence, anchor/block agreement, no content before anchor, index boundary crossing, unit range 1..101, zero digit-less index lines."
+}

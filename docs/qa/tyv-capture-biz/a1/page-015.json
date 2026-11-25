@@ -1,0 +1,76 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 15,
+    "dpi": 300,
+    "renderSha256": "b4c11519f70c0b5de47929c34ba4bb5d3fa32a07a18b84ac3438b59af7ab261b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-23T13:00:28.892Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 18,
+    "testNumber": "12",
+    "testTitle": "Organizations 2",
+    "exercises": [
+      {
+        "id": "12.1",
+        "marks": "6 marks",
+        "instruction": "Write the missing word in each sentence.",
+        "items": [
+          "1 I work for myself. I have been s _ _ _ - employed for ten years.",
+          "2 We borrowed £80,000 from the building s _ _ _ _ _ _ to buy our house.",
+          "3 We became a p _ _ _ _ _ limited company last year and since then our share price has risen by 15%.",
+          "4 I work for myself so the tax office classifies me as a s _ _ _ trader.",
+          "5 We are a not-for-p _ _ _ _ _ organization dedicated to providing health services for the poor.",
+          "6 Like lots of charities, we employ a professional to organize our f _ _ _ - raising activities."
+        ]
+      },
+      {
+        "id": "12.2",
+        "marks": "6 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "Aberdeen Reliance is one of the country's smaller life insurance companies. It was set up in 1920 as a (1) ............. . This means that the 15,000 people who have insurance policies with the company are (2) ............. . These, in theory, own all the (3) ............. and there are no (4) ............. . Last year, the board of directors wanted to sell the company to a large American (5) ............. , but first they had to get the policy holders to agree to (6) ............. . This was heavily defeated, proving that many people still value the traditional status of the company.",
+          "1 A mutual       B public       C incorporated",
+          "2 A partners     B directors    C members",
+          "3 A profits      B salaries     C expenses",
+          "4 A customers    B traders      C shareholders",
+          "5 A corporation  B sector       C proprietor",
+          "6 A freelancing  B demutualization  C limiting"
+        ]
+      },
+      {
+        "id": "12.3",
+        "marks": "6 marks",
+        "instruction": "Find the answer to each clue. The first and last letters are given in each case.",
+        "items": [
+          "1 Ltd written in full",
+          "2 What the 'C' stands for in PLC",
+          "3 Someone who works for him/herself – not for one company",
+          "4 Organization owned and run by two or more people",
+          "5 Charities are in this sector of the economy",
+          "6 Money given to a charity"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "crossword-style grid with numbered rows 1–6, first and last letters given (l/d, C/y, f/r, p/p, v/y, d/n)"
+    ],
+    "unclassified": [
+      "Total 18",
+      "Target 14+",
+      "Your score /18",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 18,\n \"testNumber\": \"12\",\n \"testTitle\": \"Organizations 2\",\n \"exercises\": [\n   {\"id\": \"12.1\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Write the missing word in each sentence.\",\n    \"items\": [\n      \"1 I work for myself. I have been s _ _ _ - employed for ten years.\",\n      \"2 We borrowed £80,000 from the building s _ _ _ _ _ _ to buy our house.\",\n      \"3 We became a p _ _ _ _ _ limited company last year and since then our share price has risen by 15%.\",\n      \"4 I work for myself so the tax office classifies me as a s _ _ _ trader.\",\n      \"5 We are a not-for-p _ _ _ _ _ organization dedicated to providing health services for the poor.\",\n      \"6 Like lots of charities, we employ a professional to organize our f _ _ _ - raising activities.\"\n    ]},\n   {\"id\": \"12.2\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n    \"items\": [\n      \"Aberdeen Reliance is one of the country's smaller life insurance companies. It was set up in 1920 as a (1) ............. . This means that the 15,000 people who have insurance policies with the company are (2) ............. . These, in theory, own all the (3) ............. and there are no (4) ............. . Last year, the board of directors wanted to sell the company to a large American (5) ............. , but first they had to get the policy holders to agree to (6) ............. . This was heavily defeated, proving that many people still value the traditional status of the company.\",\n      \"1 A mutual       B public       C incorporated\",\n      \"2 A partners     B directors    C members\",\n      \"3 A profits      B salaries     C expenses\",\n      \"4 A customers    B traders      C shareholders\",\n      \"5 A corporation  B sector       C proprietor\",\n      \"6 A freelancing  B demutualization  C limiting\"\n    ]},\n   {\"id\": \"12.3\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Find the answer to each clue. The first and last letters are given in each case.\",\n    \"items\": [\n      \"1 Ltd written in full\",\n      \"2 What the 'C' stands for in PLC\",\n      \"3 Someone who works for him/herself – not for one company\",\n      \"4 Organization owned and run by two or more people\",\n      \"5 Charities are in this sector of the economy\",\n      \"6 Money given to a charity\"\n    ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"crossword-style grid with numbered rows 1–6, first and last letters given (l/d, C/y, f/r, p/p, v/y, d/n)\"],\n \"unclassified\": [\"Total 18\", \"Target 14+\", \"Your score /18\", \"Test Your Business Vocabulary in Use\"]\n}"
+}

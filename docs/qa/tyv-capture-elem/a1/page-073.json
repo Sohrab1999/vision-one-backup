@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 73,
+    "dpi": 300,
+    "renderSha256": "a75c3ac8363c76251c2fd6daf27023f2f9b40261b38609d2aee862c04f33462a",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:32:30.490Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 72,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "12.3",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "Every morning, when my alarm clock rings (we often say goes off too) I wake up. Then I get up and have a shower and get dressed. I go downstairs and have breakfast. Then I go back to the bathroom and clean/brush my teeth. At the end of the day, at about 11.30, I go upstairs, get undressed and go to bed. I listen to the radio for a while, then I turn off the light (or turn the light off) and fall asleep."
+        ]
+      },
+      {
+        "id": "13.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 armchair; sofa",
+          "2 carpet",
+          "3 bookshelf",
+          "4 TV",
+          "5 curtains",
+          "6 light",
+          "7 remote control",
+          "8 light switch",
+          "9 coffee table"
+        ]
+      },
+      {
+        "id": "13.2",
+        "marks": "(16 marks: 1 for correct name and 1 for correct line)",
+        "instruction": "",
+        "items": []
+      },
+      {
+        "id": "13.3",
+        "marks": "(4 marks)",
+        "instruction": "",
+        "items": [
+          "1 close/shut    2 turn/switch; off    3 watch    4 relax"
+        ]
+      },
+      {
+        "id": "14.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 a hairdresser",
+          "2 a secretary (could also be an administrative assistant or [informal] an admin assistant – see also 14.2 no. 5 below)",
+          "3 a farmer",
+          "4 a doctor",
+          "5 an engineer",
+          "6 a mechanic",
+          "7 a waiter (male or female) / waitress (female)",
+          "8 a nurse",
+          "9 a teacher",
+          "10 a shop assistant"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "living-room illustration with labelled dotted lines: hi-fi, radio, picture, book, TV, lamp, remote control, light switch"
+    ],
+    "unclassified": [
+      "Test 13",
+      "Test 14",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 72,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"12.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\"Every morning, when my alarm clock rings (we often say goes off too) I wake up. Then I get up and have a shower and get dressed. I go downstairs and have breakfast. Then I go back to the bathroom and clean/brush my teeth. At the end of the day, at about 11.30, I go upstairs, get undressed and go to bed. I listen to the radio for a while, then I turn off the light (or turn the light off) and fall asleep.\"]\n    },\n    {\n      \"id\": \"13.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\"1 armchair; sofa\", \"2 carpet\", \"3 bookshelf\", \"4 TV\", \"5 curtains\", \"6 light\", \"7 remote control\", \"8 light switch\", \"9 coffee table\"]\n    },\n    {\n      \"id\": \"13.2\",\n      \"marks\": \"(16 marks: 1 for correct name and 1 for correct line)\",\n      \"instruction\": \"\",\n      \"items\": []\n    },\n    {\n      \"id\": \"13.3\",\n      \"marks\": \"(4 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\"1 close/shut    2 turn/switch; off    3 watch    4 relax\"]\n    },\n    {\n      \"id\": \"14.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\"1 a hairdresser\", \"2 a secretary (could also be an administrative assistant or [informal] an admin assistant – see also 14.2 no. 5 below)\", \"3 a farmer\", \"4 a doctor\", \"5 an engineer\", \"6 a mechanic\", \"7 a waiter (male or female) / waitress (female)\", \"8 a nurse\", \"9 a teacher\", \"10 a shop assistant\"]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"living-room illustration with labelled dotted lines: hi-fi, radio, picture, book, TV, lamp, remote control, light switch\"\n  ],\n  \"unclassified\": [\n    \"Test 13\",\n    \"Test 14\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

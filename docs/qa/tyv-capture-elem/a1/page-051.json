@@ -1,0 +1,70 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 51,
+    "dpi": 300,
+    "renderSha256": "96e4d3f58f1ce7183831594200a286a2c0c0bf5f02678a3d9ebb880f488e5ed2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:22:30.691Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 50,
+    "testNumber": "44",
+    "testTitle": "Phrasal verbs",
+    "exercises": [
+      {
+        "id": "44.1",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps in these magazine horoscopes.",
+        "items": [
+          "Your boss will give you the chance of a much better job this week. Say yes immediately; don't (1)........................ it down. If you (2)........................ on working in your present job for another two or three years, you will have a very interesting career, but if you get impatient and (3)........................ off and look for another job, it could be a big mistake.",
+          "It's time to start a new, active life! Don't stay in bed. Start getting (4)........................ early in the mornings. (5)........................ off the bus before your stop and walk the rest of the way home. In the evenings, (6)........................ the TV off, (7)........................ your coat on and go for a walk. (8)........................ on! Start living!",
+          "You have too much stress in your life. You must learn to relax. Every evening, (9)........................ on the TV, lie on the sofa, (10)........................ off your shoes and forget your problems for an hour."
+        ]
+      },
+      {
+        "id": "44.2",
+        "marks": "10 marks",
+        "instruction": "Match the sentences on the left with the sentences on the right.",
+        "items": [
+          "1 The bus came.                    a She turned it up.",
+          "2 She felt too warm in her thick jacket.    b She turned the light on.",
+          "3 The plane was delayed.           c She took it off.",
+          "4 She couldn't hear the radio.     d She got on it.",
+          "5 It was dark in the room.         e It took off at 4.45 pm."
+        ]
+      },
+      {
+        "id": "44.3",
+        "marks": "10 marks",
+        "instruction": "Correct the mistakes.",
+        "items": [
+          "1 I have to get the train at 7.30 tomorrow morning, so I'll have to go up early.",
+          "2 I went over working until after midnight because I had an exam the next day.",
+          "3 It's raining; put over your raincoat.",
+          "4 They offered her the job but she turned it off.",
+          "5 If you go off the bus at Histon Street, you will see the museum on your left."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "PISCES horoscope heading with fish symbol illustration",
+      "CAPRICORN horoscope heading with goat symbol illustration",
+      "GEMINI horoscope heading with twins symbol illustration"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 50,\n \"testNumber\": \"44\",\n \"testTitle\": \"Phrasal verbs\",\n \"exercises\": [\n  {\"id\": \"44.1\", \"marks\": \"10 marks\", \"instruction\": \"Fill the gaps in these magazine horoscopes.\",\n   \"items\": [\n    \"Your boss will give you the chance of a much better job this week. Say yes immediately; don't (1)........................ it down. If you (2)........................ on working in your present job for another two or three years, you will have a very interesting career, but if you get impatient and (3)........................ off and look for another job, it could be a big mistake.\",\n    \"It's time to start a new, active life! Don't stay in bed. Start getting (4)........................ early in the mornings. (5)........................ off the bus before your stop and walk the rest of the way home. In the evenings, (6)........................ the TV off, (7)........................ your coat on and go for a walk. (8)........................ on! Start living!\",\n    \"You have too much stress in your life. You must learn to relax. Every evening, (9)........................ on the TV, lie on the sofa, (10)........................ off your shoes and forget your problems for an hour.\"\n   ]},\n  {\"id\": \"44.2\", \"marks\": \"10 marks\", \"instruction\": \"Match the sentences on the left with the sentences on the right.\",\n   \"items\": [\n    \"1 The bus came.                    a She turned it up.\",\n    \"2 She felt too warm in her thick jacket.    b She turned the light on.\",\n    \"3 The plane was delayed.           c She took it off.\",\n    \"4 She couldn't hear the radio.     d She got on it.\",\n    \"5 It was dark in the room.         e It took off at 4.45 pm.\"\n   ]},\n  {\"id\": \"44.3\", \"marks\": \"10 marks\", \"instruction\": \"Correct the mistakes.\",\n   \"items\": [\n    \"1 I have to get the train at 7.30 tomorrow morning, so I'll have to go up early.\",\n    \"2 I went over working until after midnight because I had an exam the next day.\",\n    \"3 It's raining; put over your raincoat.\",\n    \"4 They offered her the job but she turned it off.\",\n    \"5 If you go off the bus at Histon Street, you will see the museum on your left.\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n  \"PISCES horoscope heading with fish symbol illustration\",\n  \"CAPRICORN horoscope heading with goat symbol illustration\",\n  \"GEMINI horoscope heading with twins symbol illustration\"\n ],\n \"unclassified\": [\n  \"Your score /30\",\n  \"Test Your English Vocabulary in Use Elementary\"\n ]\n}\n```"
+}

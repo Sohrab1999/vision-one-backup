@@ -1,0 +1,133 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 86,
+    "dpi": 300,
+    "renderSha256": "a990359ef8b4aab3494c393f5a35c624df7b330d67d3f1d768913384a87f3859",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:25:21.569Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 85,
+    "testNumber": "43-44",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "42.3",
+        "marks": "(10 marks: 2 for each corrected mistake)",
+        "instruction": null,
+        "items": [
+          "Tuesday 4 March 2010",
+          "Hi Ellen,",
+          "Guess what? Tim took me to the cinema last night and today when I was studying at home he came to see me and brought me some flowers! I think he must be in love with me!",
+          "Bye,",
+          "Marian",
+          "Wednesday 5 March 2010",
+          "Dear Marian,",
+          "Yes, I think Tim is in love with you! Why don't you bring him to our party on Friday so we can all meet him? Oh, and bring that new CD you told me about, I'd like to hear it.",
+          "Love,",
+          "Ellen",
+          "Thursday 6 March 2010",
+          "Hi again Ellen,",
+          "Thanks for inviting Tim. He said yes.",
+          "I'll bring the CD to the party tomorrow and I'll leave it with you. You can bring it back when you come to see me on Sunday.",
+          "Take care,",
+          "Marian."
+        ]
+      },
+      {
+        "id": "43.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 warm(er)",
+          "2 interesting/exciting",
+          "3 shorter",
+          "4 rich(er)",
+          "5 thin(ner)/slim(mer)",
+          "6 ticket",
+          "7 money/cash",
+          "8 bread/cakes",
+          "9 cards/presents",
+          "10 emails/messages"
+        ]
+      },
+      {
+        "id": "43.2",
+        "marks": "(10 marks: 1 for writing questions with get to correctly and 1 for the correct place)",
+        "instruction": null,
+        "items": [
+          "1 When do/did you get to the station?",
+          "2 What time did you get to the theatre yesterday?",
+          "3 How do I get to the cinema?",
+          "4 When did/does your brother get to the airport on Monday?",
+          "5 How do I get to the restaurant?"
+        ]
+      },
+      {
+        "id": "43.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 are getting",
+          "2 got married",
+          "3 to get",
+          "4 gets home",
+          "5 is getting better",
+          "6 get a job",
+          "7 get to",
+          "8 got back/home",
+          "9 get a newspaper",
+          "10 getting"
+        ]
+      },
+      {
+        "id": "44.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 turn",
+          "2 go",
+          "3 go",
+          "4 up",
+          "5 Get",
+          "6 turn",
+          "7 put",
+          "8 Come / Go",
+          "9 turn",
+          "10 take"
+        ]
+      },
+      {
+        "id": "44.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 d",
+          "2 c",
+          "3 e",
+          "4 a",
+          "5 b"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Three overlapping email windows (email client with Delete, Reply, Reply All, Forward, Print toolbar buttons) containing the three emails of exercise 42.3"
+    ],
+    "unclassified": [
+      "Test 43",
+      "Test 44",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 85,\n  \"testNumber\": \"43-44\",\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"42.3\",\n      \"marks\": \"(10 marks: 2 for each corrected mistake)\",\n      \"instruction\": null,\n      \"items\": [\n        \"Tuesday 4 March 2010\",\n        \"Hi Ellen,\",\n        \"Guess what? Tim took me to the cinema last night and today when I was studying at home he came to see me and brought me some flowers! I think he must be in love with me!\",\n        \"Bye,\",\n        \"Marian\",\n        \"Wednesday 5 March 2010\",\n        \"Dear Marian,\",\n        \"Yes, I think Tim is in love with you! Why don't you bring him to our party on Friday so we can all meet him? Oh, and bring that new CD you told me about, I'd like to hear it.\",\n        \"Love,\",\n        \"Ellen\",\n        \"Thursday 6 March 2010\",\n        \"Hi again Ellen,\",\n        \"Thanks for inviting Tim. He said yes.\",\n        \"I'll bring the CD to the party tomorrow and I'll leave it with you. You can bring it back when you come to see me on Sunday.\",\n        \"Take care,\",\n        \"Marian.\"\n      ]\n    },\n    {\n      \"id\": \"43.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 warm(er)\",\n        \"2 interesting/exciting\",\n        \"3 shorter\",\n        \"4 rich(er)\",\n        \"5 thin(ner)/slim(mer)\",\n        \"6 ticket\",\n        \"7 money/cash\",\n        \"8 bread/cakes\",\n        \"9 cards/presents\",\n        \"10 emails/messages\"\n      ]\n    },\n    {\n      \"id\": \"43.2\",\n      \"marks\": \"(10 marks: 1 for writing questions with get to correctly and 1 for the correct place)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 When do/did you get to the station?\",\n        \"2 What time did you get to the theatre yesterday?\",\n        \"3 How do I get to the cinema?\",\n        \"4 When did/does your brother get to the airport on Monday?\",\n        \"5 How do I get to the restaurant?\"\n      ]\n    },\n    {\n      \"id\": \"43.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 are getting\",\n        \"2 got married\",\n        \"3 to get\",\n        \"4 gets home\",\n        \"5 is getting better\",\n        \"6 get a job\",\n        \"7 get to\",\n        \"8 got back/home\",\n        \"9 get a newspaper\",\n        \"10 getting\"\n      ]\n    },\n    {\n      \"id\": \"44.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 turn\",\n        \"2 go\",\n        \"3 go\",\n        \"4 up\",\n        \"5 Get\",\n        \"6 turn\",\n        \"7 put\",\n        \"8 Come / Go\",\n        \"9 turn\",\n        \"10 take\"\n      ]\n    },\n    {\n      \"id\": \"44.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\n        \"1 d\",\n        \"2 c\",\n        \"3 e\",\n        \"4 a\",\n        \"5 b\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"Three overlapping email windows (email client with Delete, Reply, Reply All, Forward, Print toolbar buttons) containing the three emails of exercise 42.3\"\n  ],\n  \"unclassified\": [\n    \"Test 43\",\n    \"Test 44\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

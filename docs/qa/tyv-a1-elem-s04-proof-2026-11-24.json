@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "step": "A1-ELEM-S04",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "date": "2026-11-24",
+    "jalali": "۱۴۰۵/۹/۳",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی پایداری ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S03 (گام بعدی مجاز A1-ELEM-S04 = bun scripts/tyv-a1-vlm-capture.mjs elem 37,38,39,40,41,42,43,44,45,46,47,48 — دستهٔ چهارم از ۸ دسته — صفحهٔ ۴۰ skip خودکار — پراب؛ انتظار Tests 30..41 بر اساس الگوی test=page−۷ ثبت‌شده در S01..S03) — trace 1a20f80861270ea5 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "نشست تمیز بدون ریست پنهان (سومین نشست پیوسته پس از بازیابی ۴۱) — HEAD = 19c650389918d70587a9f2f48ffe788f269f7d31 (ثبت اثبات S03 — سربرگ ۱۲۹مین) = ریموت backup/main (ls-remote اثبات‌شده) — divergence ۰/۰ — porcelain ۰ — stash ۴ (rc41/rc35/rc34/rc33 — همگی بایگانی شاخه‌های ریموت recovery) — دیسک‌حقیقت آغاز 141/489 (biz 98 · elem 37 · pri 3 · upp 3) == رکورد سربرگ ۱۲۹مین"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs elem 37,38,39,40,41,42,43,44,45,46,47,48",
+  "runs": [
+    {
+      "run": 1,
+      "done": "DONE tyv-elem: captured=11 skipped=1 failed=0 → docs/qa/tyv-capture-elem/a1",
+      "captured": 11,
+      "skippedExisting": 1,
+      "failed": 0,
+      "skippedPages": [40],
+      "skipNote": "صفحهٔ ۴۰ skip خودکار checkpoint/resume — پراب قبلی (شامل پیش‌بینی صریح مالک در فرمان این گام) — نه خطا — مالک فایل دست‌نخورده (mtime ۲۰:۵۹:۱۶ پیشا-گام — پسا-گام همان)"
+    }
+  ],
+  "result": {
+    "done": "تک‌اجرایی تمیز بدون ناهنجاری: ۱۱/۱۱ ok + ۱ skip انتظاری = پوشش کامل صفحات ۳۷–۴۸ بدون شکاف",
+    "captured": 11,
+    "skippedExisting": 1,
+    "failed": 0,
+    "singleRun": true,
+    "anomalies": "هیچ — صفر ناهنجاری (چهارمین گام ELEM و دومین پیاپی بدون ناهنجاری پس از S02)"
+  },
+  "newPages": {
+    "pages": [37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48],
+    "files": "page-037..039.json + page-041..048.json (۱۱ JSON NEW) + page-040.json پراب قبلی دست‌نخورده — پوشش کامل ۳۷–۴۸ بدون شکاف — ادامهٔ پیوسته از S01+S02+S03 (پوشش ۱–۳۶)",
+    "provenance": "هر ۱۱ صفحهٔ NEW با پروونانس کامل (renderSha256 · DPI=300 · model=z-ai vision CLI · promptVersion=tyv-a1-v1 · ownerCommand · attempts=≤3 · timestamp)"
+  },
+  "content": {
+    "footerOffset": "+۱ پابرجا (pdfPage−۱) — صفر ناسازگاری در پنجرهٔ ۱۲ صفحه‌ای ۳۷–۴۸ (فوترهای چاپی ۳۶..۴۷ پیوسته شامل پراب p40)",
+    "structure": [
+      "p37 Test 30 «Travelling» — ۳ تمرین/۲۷ آیتم/۱ تصویر · footer=36",
+      "p38 Test 31 «UK culture» — ۴ تمرین/۲۳ آیتم/۲ باکس/۲ تصویر · footer=37",
+      "p39 Test 32 «Crime» — ۳ تمرین/۲۰ آیتم/۲ تصویر · footer=38",
+      "p40 Test 33 «The media» — (پراب قبلی — دست‌نخورده) ۳ تمرین/۳۵ آیتم/۱ باکس/۲ تصویر · footer=39",
+      "p41 Test 34 «Problems at home and work» — ۳ تمرین/۱۸ آیتم/۱ باکس/۱ تصویر · footer=40",
+      "p42 Test 35 «Global problems» — ۳ تمرین/۲۳ آیتم/۲ باکس/۱ تصویر · footer=41",
+      "p43 Test 36 «Have / had / had» — ۵ تمرین/۳۱ آیتم/۱ باکس/۲ تصویر · footer=42",
+      "p44 Test 37 «Go / went / gone» — ۴ تمرین/۲۰ آیتم/۷ باکس/۷ تصویر · footer=43",
+      "p45 Test 38 «Do / did / done» — ۳ تمرین/۱۸ آیتم/۱ باکس/۱ تصویر · footer=44",
+      "p46 Test 39 «Make / made / made» — ۳ تمرین/۲۰ آیتم/۱ باکس/۱۲ تصویر · footer=45",
+      "p47 Test 40 «Come / came / come» — ۳ تمرین/۳۳ آیتم/۱ تصویر · footer=46",
+      "p48 Test 41 «Take / took / taken» — ۳ تمرین/۲۳ آیتم/۲ باکس/۱ تصویر · footer=47"
+    ],
+    "totals": "۱۱ صفحهٔ NEW: ۱۱ تست (Tests 30..41 پیوسته عین انتظار مالک — الگوی test=page−۷) · ۳۷ تمرین · ۲۵۶ آیتم · ۱۷ باکس · ۳۱ تصویر · ۲۹ unclassified — [؟] صفر — [N/A] صفر — نکتهٔ ساختاری: شش تست پیاپی افعال بی‌قاعدهٔ بنیادی p43..p48 (Have/Go/Do/Make/Come/Take) + p44 و p46 تمرین‌های تصویرمحور سنگین (۷ و ۱۲ تصویر — ریسک ۲ §۵ ELEM — کاندید رأی G3)"
+  },
+  "indexAfter": {
+    "capturedPages": 12,
+    "capturedNow": 11,
+    "skippedExisting": 1,
+    "failedNow": [],
+    "failedTotal": 0,
+    "probePages": [8, 12, 40],
+    "note": "capturedPages = طول دستهٔ ۱۲صفحه‌ای (نحؤهٔ قبلی پابرجا) — capturedNow/skippedExisting مربوط به آخرین (و تنها) اجرا"
+  },
+  "diskTruthAfter": {
+    "elem": "48/96 (صفحات ۱–۴۸ پیوسته کامل + پراب‌های ۸/۱۲/۴۰ همگی درون این بازه)",
+    "a1Total": "152/489 (biz 98/98 کامل · elem 48/96 · pri 3/142 · upp 3/153) — بازشماری ls: biz=98 · elem=48 · pri=3 · upp=3"
+  },
+  "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF — رفتار وب‌اپ تغییر نکرده — لایهٔ A1 فقط کپچر خام",
+  "nextAllowedStep": "A1-ELEM-S05 = صفحات ۴۹–۶۰ elem (طبق دفتر گام‌های کوچک §۱-۲ — bun scripts/tyv-a1-vlm-capture.mjs elem 49,50,51,52,53,54,55,56,57,58,59,60 — بدون skip انتظاری — پراب‌ها فقط ۸/۱۲/۴۰؛ انتظار Tests 42..53 بر اساس الگوی test=page−۷) — سپس ELEM S06..S08 ⇒ PRI S01..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1"
+}

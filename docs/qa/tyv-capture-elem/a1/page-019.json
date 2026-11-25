@@ -1,0 +1,68 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 19,
+    "dpi": 300,
+    "renderSha256": "4d19a5cf87b35d6f0bf17e7c1ad878cdb7552e00c01ee200a9ff1808f77345d7",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:01:11.668Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 18,
+    "testNumber": "12",
+    "testTitle": "In the bedroom and bathroom",
+    "exercises": [
+      {
+        "id": "12.1",
+        "marks": "10 marks",
+        "instruction": "Match the words with the pictures.",
+        "items": []
+      },
+      {
+        "id": "12.2",
+        "marks": "10 marks",
+        "instruction": "Match the words with the explanations.",
+        "items": [
+          "1 You stand under it to wash.",
+          "2 You use it to shave.",
+          "3 You hold it in your hand when you wash.",
+          "4 You clean your teeth with it.",
+          "5 You can put things on it.",
+          "6 You fill it with water and sit in it.",
+          "7 You wash your hair with it.",
+          "8 Babies wear nappies before they learn to use this.",
+          "9 You dry yourself with it.",
+          "10 You can fill it with water to wash your hands."
+        ]
+      },
+      {
+        "id": "12.3",
+        "marks": "10 marks",
+        "instruction": "Correct the mistakes. There are ten.",
+        "items": [
+          "Every morning, when my alarm clock calls I awake up.  Then I go up and do a shower and be dressed. I go downstairs and have breakfast.  Then I go back to the bathroom and wash my teeth.  At the end of the day, at about 11.30, I go upstairs, go undressed and go in bed. I listen to the radio for a while, then I turn the light and go to asleep."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "bedside table   wardrobe   chest of drawers   hairbrush   bed   dressing table   alarm clock   pyjamas   comb   bedside lamp",
+      "bath   shampoo   toilet   towel   shelf   soap   shower   basin   razor   toothpaste"
+    ],
+    "pictures": [
+      "Ten numbered pictures (1–10) to match with words: alarm clock, hairbrush, pyjamas, chest of drawers, bed, bedside lamp, wardrobe, dressing table, comb, bedside table/stool"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 18,\n  \"testNumber\": \"12\",\n  \"testTitle\": \"In the bedroom and bathroom\",\n  \"exercises\": [\n    {\n      \"id\": \"12.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Match the words with the pictures.\",\n      \"items\": []\n    },\n    {\n      \"id\": \"12.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Match the words with the explanations.\",\n      \"items\": [\n        \"1 You stand under it to wash.\",\n        \"2 You use it to shave.\",\n        \"3 You hold it in your hand when you wash.\",\n        \"4 You clean your teeth with it.\",\n        \"5 You can put things on it.\",\n        \"6 You fill it with water and sit in it.\",\n        \"7 You wash your hair with it.\",\n        \"8 Babies wear nappies before they learn to use this.\",\n        \"9 You dry yourself with it.\",\n        \"10 You can fill it with water to wash your hands.\"\n      ]\n    },\n    {\n      \"id\": \"12.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Correct the mistakes. There are ten.\",\n      \"items\": [\n        \"Every morning, when my alarm clock calls I awake up.  Then I go up and do a shower and be dressed. I go downstairs and have breakfast.  Then I go back to the bathroom and wash my teeth.  At the end of the day, at about 11.30, I go upstairs, go undressed and go in bed. I listen to the radio for a while, then I turn the light and go to asleep.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"bedside table   wardrobe   chest of drawers   hairbrush   bed   dressing table   alarm clock   pyjamas   comb   bedside lamp\",\n    \"bath   shampoo   toilet   towel   shelf   soap   shower   basin   razor   toothpaste\"\n  ],\n  \"pictures\": [\n    \"Ten numbered pictures (1–10) to match with words: alarm clock, hairbrush, pyjamas, chest of drawers, bed, bedside lamp, wardrobe, dressing table, comb, bedside table/stool\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

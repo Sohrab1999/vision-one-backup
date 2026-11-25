@@ -1,0 +1,152 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 88,
+    "dpi": 300,
+    "renderSha256": "4fb011e3a6fee08d57a367e8fb1cc014b0e85d9125e2c8fe4e1f3502387eca25",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:32:05.726Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 87,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "46.4",
+        "marks": "(10 marks: 2 for each corrected mistake)",
+        "instruction": null,
+        "items": [
+          "1 Will you answer it",
+          "2 she speaks excellent Danish",
+          "3 he hasn’t replied (to it) / answered it / written back yet",
+          "4 How do you say ‘Milan’ in Italian?",
+          "5 He told me an interesting story"
+        ]
+      },
+      {
+        "id": "47.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 He’s driving (a bus).",
+          "2 He’s riding (a horse).",
+          "3 She’s walking.",
+          "4 She’s falling.",
+          "5 She’s jumping.",
+          "6 He’s swimming.",
+          "7 She’s dancing.",
+          "8 He’s flying (a plane).",
+          "9 He’s climbing (a tree).",
+          "10 He’s carrying a suitcase."
+        ]
+      },
+      {
+        "id": "47.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 b   2 c   3 a   4 b   5 b   6 c   7 b   8 c   9 a   10 c"
+        ]
+      },
+      {
+        "id": "47.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 running; swimming; riding",
+          "2 drive; fly",
+          "3 dancing",
+          "4 catch",
+          "5 walk; carry",
+          "6 falling"
+        ]
+      },
+      {
+        "id": "48.1",
+        "marks": "(20 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "1 paragraph",
+          "2 adverb",
+          "3 dialogue",
+          "4 singular",
+          "5 noun",
+          "6 adjective",
+          "7 sentence",
+          "8 preposition",
+          "9 phrase",
+          "10 plural"
+        ]
+      },
+      {
+        "id": "48.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 boys (boy’s means ‘something the boy has’, for example the boy’s camera; it can also be a contraction for boy is or boy has.)",
+          "2 an adjective (the adverb is nicely)",
+          "3 works",
+          "4 man",
+          "5 door",
+          "6 at",
+          "7 easily",
+          "8 put is a verb",
+          "9 children (the singular is child)",
+          "10 True"
+        ]
+      },
+      {
+        "id": "49.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 Before; because",
+          "2 If; and",
+          "3 or",
+          "4 also; but",
+          "5 After (When or Before would also be possible here.)",
+          "6 so",
+          "7 when"
+        ]
+      },
+      {
+        "id": "49.2",
+        "marks": "(10 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "1 b   2 c   3 a   4 c   5 b"
+        ]
+      },
+      {
+        "id": "49.3",
+        "marks": "(10 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "I’m going to study abroad and I’m really looking forward to it.",
+          "I’m going to study abroad, so I will be away from home for three years.",
+          "I’m going to study abroad when I’ve finished secondary school.",
+          "I’m going to study abroad if I get good grades in my exams.",
+          "I’m going to study abroad because I want to learn more about other countries and cultures."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 47",
+      "Test 48",
+      "Test 49",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 87,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\"id\": \"46.4\", \"marks\": \"(10 marks: 2 for each corrected mistake)\", \"instruction\": null, \"items\": [\"1 Will you answer it\", \"2 she speaks excellent Danish\", \"3 he hasn’t replied (to it) / answered it / written back yet\", \"4 How do you say ‘Milan’ in Italian?\", \"5 He told me an interesting story\"]},\n    {\"id\": \"47.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 He’s driving (a bus).\", \"2 He’s riding (a horse).\", \"3 She’s walking.\", \"4 She’s falling.\", \"5 She’s jumping.\", \"6 He’s swimming.\", \"7 She’s dancing.\", \"8 He’s flying (a plane).\", \"9 He’s climbing (a tree).\", \"10 He’s carrying a suitcase.\"]},\n    {\"id\": \"47.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 b   2 c   3 a   4 b   5 b   6 c   7 b   8 c   9 a   10 c\"]},\n    {\"id\": \"47.3\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 running; swimming; riding\", \"2 drive; fly\", \"3 dancing\", \"4 catch\", \"5 walk; carry\", \"6 falling\"]},\n    {\"id\": \"48.1\", \"marks\": \"(20 marks: 2 each)\", \"instruction\": null, \"items\": [\"1 paragraph\", \"2 adverb\", \"3 dialogue\", \"4 singular\", \"5 noun\", \"6 adjective\", \"7 sentence\", \"8 preposition\", \"9 phrase\", \"10 plural\"]},\n    {\"id\": \"48.2\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 boys (boy’s means ‘something the boy has’, for example the boy’s camera; it can also be a contraction for boy is or boy has.)\", \"2 an adjective (the adverb is nicely)\", \"3 works\", \"4 man\", \"5 door\", \"6 at\", \"7 easily\", \"8 put is a verb\", \"9 children (the singular is child)\", \"10 True\"]},\n    {\"id\": \"49.1\", \"marks\": \"(10 marks)\", \"instruction\": null, \"items\": [\"1 Before; because\", \"2 If; and\", \"3 or\", \"4 also; but\", \"5 After (When or Before would also be possible here.)\", \"6 so\", \"7 when\"]},\n    {\"id\": \"49.2\", \"marks\": \"(10 marks: 2 each)\", \"instruction\": null, \"items\": [\"1 b   2 c   3 a   4 c   5 b\"]},\n    {\"id\": \"49.3\", \"marks\": \"(10 marks: 2 each)\", \"instruction\": null, \"items\": [\"I’m going to study abroad and I’m really looking forward to it.\", \"I’m going to study abroad, so I will be away from home for three years.\", \"I’m going to study abroad when I’ve finished secondary school.\", \"I’m going to study abroad if I get good grades in my exams.\", \"I’m going to study abroad because I want to learn more about other countries and cultures.\"]}\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\"Test 47\", \"Test 48\", \"Test 49\", \"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}

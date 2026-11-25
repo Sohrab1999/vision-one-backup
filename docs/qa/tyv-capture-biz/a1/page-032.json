@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 32,
+    "dpi": 300,
+    "renderSha256": "cd17f248274848302b188bb0daf525a495872460ee12496fcce518682a607771",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T04:59:40.803Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 35,
+    "testNumber": "25",
+    "testTitle": "Promotion",
+    "exercises": [
+      {
+        "id": "25.1",
+        "marks": "6 marks",
+        "instruction": "Complete each sentence by writing in the gap the correct form of the verb given in brackets ( ).",
+        "items": [
+          "1 I work for a large .......................... agency. (advertise)",
+          "2 We have placed a full-page display ......................... in every national newspaper. (advertise)",
+          "3 Product ......................... is very effective if you use a really big sports star. (endorse)",
+          "4 This year we will spend about 2 million dollars on ........................ . (sponsor)",
+          "5 The ......................... of our new product range starts next week. (promote)",
+          "6 The first prize in our .......................... is a week's holiday in Spain. (compete)"
+        ]
+      },
+      {
+        "id": "25.2",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below.",
+        "items": [
+          "1 We sent .............................................. of our new shampoo to 100,000 homes for people to try.",
+          "2 When a customer shows her .......................................... she gets a 2% discount.",
+          "3 We use ........................................ so, for example, if you buy our toothpaste you get a special deal on our toothbrushes.",
+          "4 My ........................................ covers the north of England and Scotland.",
+          "5 The .......................................... on this product range ends on the first of September."
+        ]
+      },
+      {
+        "id": "25.3",
+        "marks": "6 marks",
+        "instruction": "Choose the best word from the brackets ( ) to fill the gap.",
+        "items": [
+          "1 I think that a TV commercial is the best advertising ...................... . (place/medium/agency)",
+          "2 Our magazine offers readers a free .................. every month. (prize/discount/gift)",
+          "3 We value the men and women of our ...................... . (salesmen/salespeople/sales force)",
+          "4 I'm running the advertising ...................... for the launch of our new model.",
+          "(campaign/endorsement/promotion)",
+          "5 I'm Sally Forbes and I'm ...................... manager for Iceberg Frozen Foods.",
+          "(sells/sales/selling)",
+          "6 Most of the ..................... who use our newspaper are small, local businesses.",
+          "(advertisers/adverts/advertising)"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "sales special free loyalty cross",
+      "samples offer product territory promotion card"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Total 22",
+      "Target 17+",
+      "Your score",
+      "/22",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 35,\n  \"testNumber\": \"25\",\n  \"testTitle\": \"Promotion\",\n  \"exercises\": [\n    {\n      \"id\": \"25.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete each sentence by writing in the gap the correct form of the verb given in brackets ( ).\",\n      \"items\": [\n        \"1 I work for a large .......................... agency. (advertise)\",\n        \"2 We have placed a full-page display ......................... in every national newspaper. (advertise)\",\n        \"3 Product ......................... is very effective if you use a really big sports star. (endorse)\",\n        \"4 This year we will spend about 2 million dollars on ........................ . (sponsor)\",\n        \"5 The ......................... of our new product range starts next week. (promote)\",\n        \"6 The first prize in our .......................... is a week's holiday in Spain. (compete)\"\n      ]\n    },\n    {\n      \"id\": \"25.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below.\",\n      \"items\": [\n        \"1 We sent .............................................. of our new shampoo to 100,000 homes for people to try.\",\n        \"2 When a customer shows her .......................................... she gets a 2% discount.\",\n        \"3 We use ........................................ so, for example, if you buy our toothpaste you get a special deal on our toothbrushes.\",\n        \"4 My ........................................ covers the north of England and Scotland.\",\n        \"5 The .......................................... on this product range ends on the first of September.\"\n      ]\n    },\n    {\n      \"id\": \"25.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Choose the best word from the brackets ( ) to fill the gap.\",\n      \"items\": [\n        \"1 I think that a TV commercial is the best advertising ...................... . (place/medium/agency)\",\n        \"2 Our magazine offers readers a free .................. every month. (prize/discount/gift)\",\n        \"3 We value the men and women of our ...................... . (salesmen/salespeople/sales force)\",\n        \"4 I'm running the advertising ...................... for the launch of our new model.\",\n        \"(campaign/endorsement/promotion)\",\n        \"5 I'm Sally Forbes and I'm ...................... manager for Iceberg Frozen Foods.\",\n        \"(sells/sales/selling)\",\n        \"6 Most of the ..................... who use our newspaper are small, local businesses.\",\n        \"(advertisers/adverts/advertising)\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"sales special free loyalty cross\",\n    \"samples offer product territory promotion card\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Total 22\",\n    \"Target 17+\",\n    \"Your score\",\n    \"/22\",\n    \"Test Your Business Vocabulary in Use\"\n  ]\n}\n```"
+}

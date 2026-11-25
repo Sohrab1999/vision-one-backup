@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "event": "رویداد بازیابی ۴۱ سندباکس — ریست پنهان ۴۱م پلتفرمی — رسیدگی کامل صفرتلفاتی (الگوی ff-only رویدادهای ۶..۴۰)",
+    "date": "2026-11-24",
+    "jalali": "۱۴۰۵/۹/۳",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها [الزام حیاتی: پایداری کامل پروژه و بازیابی پس از Reset یا حذف Sandbox — ۱۰بندی کامل]» — با نقل‌قول وضعیت گزارش S01 (گام بعدی مجاز A1-ELEM-S02 = bun scripts/tyv-a1-vlm-capture.mjs elem 13,14,15,16,17,18,19,20,21,22,23,24 — دستهٔ دوم از ۸ دسته) — trace 1a20f5781a0cd015 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — الزام پایداری ایستنده پابرجا",
+    "sessionStartDiscovery": "HEAD محلی روی 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) بازگشته بود — عین الگوی ریست‌های پنهان ۳۱..۴۰ (اسنپ‌شات کهنهٔ .git — این بازگشت با عمق رویداد ۴۰: ۲۰۱ کامیت پشت ریموت پس از fetch) — porcelain ۴۲۳ (۳۲ M + ۳۹۱ ??) — divergence ۰/۲۰۱ (صفر کامیت یکتای محلی) — remote سالم = 04daec3 (ثبت اثبات §۱۰-۷ گام A1-ELEM-S01) با والد محتوایی 6bd7538 و جد 5a329bf (S09) — stash محلی صفر (تلف‌شده در ریست — الگوی ۳۹..۴۰) — merge-base ⇒ تأیید مسیر ff-only"
+  },
+  "recovery": [
+    "① ممیزی صفرتلفاتی پیشا-بازیابی (سه دور): دور ۱ کپچرهای TYV — هش sha256 تک‌تک ۱۱۷ JSON دیسک (docs/qa/tyv-capture-{biz,elem,pri,upp}/a1/) با git show backup/main ⇒ **۱۱۷/۱۱۷ matchRemote بایت‌به‌بیت · differ=۰ · absentRemote=۰** (biz=98 · elem=13 · pri=3 · upp=3 — دیسک‌حقیقت ۱۱۷/۴۸۹ == رکورد SNAPSHOT سربرگ ۱۲۷مین) · دور ۲ ۳۵۵ untracked غیرکپچر با sha256 + git show ⇒ **۳۵۵ matchRemote · ۷ absentRemote — صفر differ** · دور ۳ ۳۲ modified با sha256 ⇒ **۳۲/۳۲ disk==remote** (modified فقط به‌سبب HEAD کهنه) — هفت absentRemote همگی اسناد مسیر-تختِ پیشا-سازمان‌دهی TYV (نقشه راه ها/…-2026-11-2*.md تخت) — superseded با نسخه‌های شماره‌دار سری-TYV در ریموت (هر ۷ نسخهٔ شماره‌دار روی دیسک و ریموت بایت‌به‌بیت یکسان — ok=7 bad=0) + نشانگر خارجی «_⚠️-STALE-COPY-DO-NOT-USE.txt» (EXISTS در ریموت هم — tracked) ⇒ **صفر محتوای محلی-یگانه در کل درخت**",
+    "② ایمنی: stash بیمه rc41 با push -u (شامل تمام untracked + اسناد superseded) = 67fc50323c9a20a5a68cf844e6e5649ba9ef4fa7 → push به شاخهٔ Remote backup/recovery/rc41-pre-ff-stash-2026-11-24 (اثبات: * [new branch]) — صفرتلفاتی تضمین حتی برای هفت سند superseded",
+    "③ بازگردانی آرشیوهای stash از ریموت (درس بازیابی‌های ۳۹..۴۰): stash commit شاخه‌های rc33 (۳d6bfe0b نیست — c7337e9) · rc34 (73dd3e1) · rc35 (3d6bfe0b) · rc41 (67fc503) با git stash store به stash stack بازگردانده شدند — stash stack = ۴ (rc41 · rc35 · rc34 · rc33) — هر چهار در ریموت هم بایگانی (شاخه‌های recovery/rc33 · rc34 · rc35 · rc41)",
+    "④ بازیابی اصلی: git reset --hard backup/main (معادل ff-only — 193269b→04daec3 — صفر reset/rebase/force روی تاریخچهٔ ریموت) ⇒ HEAD = 04daec390d90be367974ed53f72841b0d9fe9b48 = backup/main — هفت سند superseded پس از reset در درخت نیستند (فقط در stash بیمهٔ rc41 آرشیو — الگوی درخت-پاک رویدادهای قبلی) — stash بیمهٔ rc41 پس از push drop شد و بلافاصله با stash store از ریموت به stack بازگشت"
+  ],
+  "postVerification": {
+    "headEqualsRemote": "git rev-parse HEAD == git ls-remote backup refs/heads/main == 04daec390d90be367974ed53f72841b0d9fe9b48 — برابری بایت‌به‌بیت",
+    "porcelain": "پس از بازیابی ۰ — سپس ۱۳ = آثار مشروع گام A1-ELEM-S02 (۱۲ JSON صفحهٔ NEW + a1-index.json) — صفر آلودگی بازیابی",
+    "stashStack": "۴ — rc41 بیمهٔ همین بازیابی · rc35 · rc34 · rc33 آرشیو — هر چهار در ریموت هم بایگانی",
+    "diskTruthIntact": "A1 = 117/489 پسا-بازیابی == رکورد SNAPSHOT سربرگ ۱۲۷مین — بازشماری ls: biz=98 · elem=13 · pri=3 · upp=3 — کپچرهای S01..S09+S01-ELEM بایت‌به‌بیت = ریموت",
+    "history": "04daec3 (ثبت اثبات S01) → 6bd7538 (محتوایی S01) → 5a329bf (ثبت اثبات S09) — زنجیرهٔ تأییدشدهٔ ریموت کامل روی دیسک",
+    "zeroProductDelta": "صفر تغییر src/db/اسکریپت/hook/WAVE2/PDF در کل فرایند بازیابی — رفتار وب‌اپ دست‌نخورده"
+  },
+  "lesson": "همان الگوی بازیابی‌های ۳۱..۴۰: ریست پنهان پلتفرمی .git را به اسنپ‌شات کهنهٔ 193269b برمی‌گرداند؛ درخت کار از checkpoint فایلی جدیدتر می‌آید؛ TRUTH = remote؛ بازیابی ff-only صفرتلفاتی پس از بیمهٔ stash+push. درس تثبیت‌شدهٔ رویداد ۴۱: (۱) sha256sum روی خروجی خالی git show برای مسیرهای فارسیِ absent در ریموت، hash رشتهٔ تهی تولید می‌کند و مقایسهٔ naive می‌تواند absent را differ گزارش دهد — مقایسهٔ صحیح نیازمند وجودسنجی `git cat-file -e` پیش از hash است (در ممیزی این رویداد اصلاح شد و هفت absent واقعی از هفت differ کاذب تفکیک شدند)؛ (۲) هم‌گرایی کپچرها به ریموت با sha256 بایت‌به‌بیت در هر نشست پیشا-گام الزامی است و این بار ۱۱۷/۱۱۷ تأیید شد؛ (۳) عمق بازگشت (۲۰۱ کامیت) از رویداد ۴۰ (۱۹۹) جلوتر — هر نشست باید divergence را با rev-list --count از صفر اندازه بگیرد"
+}

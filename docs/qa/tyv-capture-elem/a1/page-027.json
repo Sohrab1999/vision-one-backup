@@ -1,0 +1,79 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 27,
+    "dpi": 300,
+    "renderSha256": "504cdc07b72c6a11b90f744e71c86be5b3f61dd2b5eb9bad99f1387377d63282",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:23:24.461Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 26,
+    "testNumber": "20",
+    "testTitle": "Eating out",
+    "exercises": [
+      {
+        "id": "20.1",
+        "marks": "6 marks",
+        "instruction": "Where would you hear these phrases? Match the phrases on the left with the places on the right.",
+        "items": [
+          "1 A cheese sandwich to take to eat in the park, please.",
+          "2 A pint of lager, please.",
+          "3 Soup to start, then the chicken and mushrooms, please.",
+          "4 A burger, French fries and a coke, please, to eat here.",
+          "5 One coffee, one tea and two pieces of toast, please.",
+          "6 Where can I find knives and forks, please?"
+        ]
+      },
+      {
+        "id": "20.2",
+        "marks": "20 marks",
+        "instruction": "Fill the gaps.",
+        "items": [
+          "1 At lunchtime I usually don't have a big meal; I just have a ............................ , for example a sandwich or some fruit.",
+          "2 If you order steak in a restaurant you can usually say if you want it ............................ , ............................ or well-............................ .",
+          "3 You don't have to have alcohol in a pub. They also have ............................ drinks like lemonade or coke.",
+          "4 If you want wine with your meal, you can ask the waiter for the wine ............................ .",
+          "5 The restaurant has a tourist menu for only €20. You can choose from a list of ............................ , main courses and ............................ . You can even have a ............................ meal if you don't eat meat.",
+          "6 WAITER: Are you ready to ............................ , madam?",
+          "CUSTOMER: Yes. I'll have tomato salad to start, then the fish, please."
+        ]
+      },
+      {
+        "id": "20.3",
+        "marks": "4 marks",
+        "instruction": "Put the words into pairs. Use each word once only.",
+        "items": [
+          "Example: ...green beans......",
+          "1 .......................................... ..........................................",
+          "2 .......................................... ..........................................",
+          "3 .......................................... ..........................................",
+          "4 .......................................... .........................................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "potatoes  green  salmon  new  salad  apple  beans  pie  fruit  fillet",
+      "a café",
+      "b fast food restaurant",
+      "c self-service restaurant",
+      "d take-away",
+      "e pub/bar",
+      "f restaurant"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 26,\n \"testNumber\": \"20\",\n \"testTitle\": \"Eating out\",\n \"exercises\": [\n   {\"id\": \"20.1\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Where would you hear these phrases? Match the phrases on the left with the places on the right.\",\n    \"items\": [\n      \"1 A cheese sandwich to take to eat in the park, please.\",\n      \"2 A pint of lager, please.\",\n      \"3 Soup to start, then the chicken and mushrooms, please.\",\n      \"4 A burger, French fries and a coke, please, to eat here.\",\n      \"5 One coffee, one tea and two pieces of toast, please.\",\n      \"6 Where can I find knives and forks, please?\"\n    ]},\n   {\"id\": \"20.2\",\n    \"marks\": \"20 marks\",\n    \"instruction\": \"Fill the gaps.\",\n    \"items\": [\n      \"1 At lunchtime I usually don't have a big meal; I just have a ............................ , for example a sandwich or some fruit.\",\n      \"2 If you order steak in a restaurant you can usually say if you want it ............................ , ............................ or well-............................ .\",\n      \"3 You don't have to have alcohol in a pub. They also have ............................ drinks like lemonade or coke.\",\n      \"4 If you want wine with your meal, you can ask the waiter for the wine ............................ .\",\n      \"5 The restaurant has a tourist menu for only €20. You can choose from a list of ............................ , main courses and ............................ . You can even have a ............................ meal if you don't eat meat.\",\n      \"6 WAITER: Are you ready to ............................ , madam?\",\n      \"CUSTOMER: Yes. I'll have tomato salad to start, then the fish, please.\"\n    ]},\n   {\"id\": \"20.3\",\n    \"marks\": \"4 marks\",\n    \"instruction\": \"Put the words into pairs. Use each word once only.\",\n    \"items\": [\n      \"Example: ...green beans......\",\n      \"1 .......................................... ..........................................\",\n      \"2 .......................................... ..........................................\",\n      \"3 .......................................... ..........................................\",\n      \"4 .......................................... ..........................................\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"potatoes  green  salmon  new  salad  apple  beans  pie  fruit  fillet\",\n   \"a café\",\n   \"b fast food restaurant\",\n   \"c self-service restaurant\",\n   \"d take-away\",\n   \"e pub/bar\",\n   \"f restaurant\"\n ],\n \"pictures\": [],\n \"unclassified\": [\"Your score /30\", \"Test Your English Vocabulary in Use Elementary\"]\n}\n```"
+}

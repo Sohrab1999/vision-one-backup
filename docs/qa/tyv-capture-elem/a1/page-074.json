@@ -1,0 +1,141 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 74,
+    "dpi": 300,
+    "renderSha256": "e74b55db07bdf4c2fd396e78af24bf22f9be5b6f6af4af405d47b8d30ccabdbd",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T17:32:42.330Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 73,
+    "testNumber": "15-16",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "14.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 mechanic",
+          "2 farmer",
+          "3 hairdresser",
+          "4 teacher",
+          "5 secretary (or personal assistant or [informal] PA or administrative assistant)",
+          "6 shop assistant",
+          "7 engineer",
+          "8 doctor",
+          "9 nurses",
+          "10 waiters (male or female) / waitresses (female)"
+        ]
+      },
+      {
+        "id": "14.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 False: a bus driver drives a bus.",
+          "2 True",
+          "3 False: a librarian works in a library. A person who works in a bookshop is a shop assistant or (the person who owns it) a bookseller.",
+          "4 False: a traffic warden checks parked cars.",
+          "5 True",
+          "6 False: you can say I have interesting work or I have an interesting job.",
+          "7 True",
+          "8 False: you would say I'm a teacher.",
+          "9 False: a person who repairs cars is called a mechanic.",
+          "10 True"
+        ]
+      },
+      {
+        "id": "15.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 geography",
+          "2 art",
+          "3 biology",
+          "4 physical education / PE",
+          "5 maths, mathematics",
+          "6 history",
+          "7 information (communication) technology / ICT / IT",
+          "8 physics",
+          "9 music",
+          "10 chemistry"
+        ]
+      },
+      {
+        "id": "15.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 OHP – b",
+          "2 board – j or f",
+          "3 ruler – d",
+          "4 notebook – g",
+          "5 pencil – c",
+          "6 rubber – i",
+          "7 cassette – k",
+          "8 drawing pin – e",
+          "9 noticeboard – f",
+          "10 pencil sharpener – h"
+        ]
+      },
+      {
+        "id": "15.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 doing",
+          "2 reading",
+          "3 write",
+          "4 learn",
+          "5 doing",
+          "6 ends/finishes; take/do",
+          "7 pass; fail",
+          "8 teaches"
+        ]
+      },
+      {
+        "id": "16.1",
+        "marks": "(6 marks)",
+        "instruction": null,
+        "items": [
+          "1 keyboard",
+          "2 letter",
+          "3 mobile phone",
+          "4 letter box",
+          "5 telephone",
+          "6 screen"
+        ]
+      },
+      {
+        "id": "16.2",
+        "marks": "(10 marks: 2 each)",
+        "instruction": null,
+        "items": [
+          "1 address",
+          "2 message",
+          "3 online",
+          "4 mouse",
+          "5 CD/disk"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 15",
+      "Test 16",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 73,\n  \"testNumber\": \"15-16\",\n  \"testTitle\": null,\n  \"exercises\": [\n    {\"id\": \"14.2\",\n     \"marks\": \"(10 marks)\",\n     \"instruction\": null,\n     \"items\": [\n       \"1 mechanic\",\n       \"2 farmer\",\n       \"3 hairdresser\",\n       \"4 teacher\",\n       \"5 secretary (or personal assistant or [informal] PA or administrative assistant)\",\n       \"6 shop assistant\",\n       \"7 engineer\",\n       \"8 doctor\",\n       \"9 nurses\",\n       \"10 waiters (male or female) / waitresses (female)\"\n     ]},\n    {\"id\": \"14.3\",\n     \"marks\": \"(10 marks)\",\n     \"instruction\": null,\n     \"items\": [\n       \"1 False: a bus driver drives a bus.\",\n       \"2 True\",\n       \"3 False: a librarian works in a library. A person who works in a bookshop is a shop assistant or (the person who owns it) a bookseller.\",\n       \"4 False: a traffic warden checks parked cars.\",\n       \"5 True\",\n       \"6 False: you can say I have interesting work or I have an interesting job.\",\n       \"7 True\",\n       \"8 False: you would say I'm a teacher.\",\n       \"9 False: a person who repairs cars is called a mechanic.\",\n       \"10 True\"\n     ]},\n    {\"id\": \"15.1\",\n     \"marks\": \"(10 marks)\",\n     \"instruction\": null,\n     \"items\": [\n       \"1 geography\",\n       \"2 art\",\n       \"3 biology\",\n       \"4 physical education / PE\",\n       \"5 maths, mathematics\",\n       \"6 history\",\n       \"7 information (communication) technology / ICT / IT\",\n       \"8 physics\",\n       \"9 music\",\n       \"10 chemistry\"\n     ]},\n    {\"id\": \"15.2\",\n     \"marks\": \"(10 marks)\",\n     \"instruction\": null,\n     \"items\": [\n       \"1 OHP – b\",\n       \"2 board – j or f\",\n       \"3 ruler – d\",\n       \"4 notebook – g\",\n       \"5 pencil – c\",\n       \"6 rubber – i\",\n       \"7 cassette – k\",\n       \"8 drawing pin – e\",\n       \"9 noticeboard – f\",\n       \"10 pencil sharpener – h\"\n     ]},\n    {\"id\": \"15.3\",\n     \"marks\": \"(10 marks)\",\n     \"instruction\": null,\n     \"items\": [\n       \"1 doing\",\n       \"2 reading\",\n       \"3 write\",\n       \"4 learn\",\n       \"5 doing\",\n       \"6 ends/finishes; take/do\",\n       \"7 pass; fail\",\n       \"8 teaches\"\n     ]},\n    {\"id\": \"16.1\",\n     \"marks\": \"(6 marks)\",\n     \"instruction\": null,\n     \"items\": [\n       \"1 keyboard\",\n       \"2 letter\",\n       \"3 mobile phone\",\n       \"4 letter box\",\n       \"5 telephone\",\n       \"6 screen\"\n     ]},\n    {\"id\": \"16.2\",\n     \"marks\": \"(10 marks: 2 each)\",\n     \"instruction\": null,\n     \"items\": [\n       \"1 address\",\n       \"2 message\",\n       \"3 online\",\n       \"4 mouse\",\n       \"5 CD/disk\"\n     ]}\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 15\",\n    \"Test 16\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

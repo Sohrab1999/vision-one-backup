@@ -1,0 +1,77 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-biz",
+    "title": "Test your Business Vocabulary in Use (Bethell & Aspinall — Cambridge University Press)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Business.pdf",
+    "pdfSha256": "296197b718cf37ff8633ee54754a0d1afc64c8779385fb3e3ca1663b4961e837",
+    "pdfPage": 30,
+    "dpi": 300,
+    "renderSha256": "32b4467ccf623b212171a9e4e14083903b2bcfe76ca8d3f956ab4f42a561682d",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T04:59:17.233Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 33,
+    "testNumber": "23",
+    "testTitle": "Price",
+    "exercises": [
+      {
+        "id": "23.1",
+        "marks": "10 marks",
+        "instruction": "Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below.",
+        "items": [
+          "1 Our basic range of tennis rackets is priced at the .......................................... of the market.",
+          "2 For example, our .......................................... racket for beginners is just £20.",
+          "3 Last year, the .......................................... for our most expensive model was £250.",
+          "4 But after last week's .......................................... it is now just £200.",
+          "5 Lots of people start with one of our cheaper rackets and then move .......................................... ."
+        ]
+      },
+      {
+        "id": "23.2",
+        "marks": "7 marks",
+        "instruction": "Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.",
+        "items": [
+          "Homestead is a new company selling consumer durables at low prices. The company has a policy of permanently low (1) ............ . In fact, they guarantee that all branded products will be at least 10% less than the recommended (2) ............ price. For example, a washing machine listed at £380 is on sale at £320. That's a (3) ............ of over 15%. Competitors are angry that the company is using loss (4) ............ to attract customers.  A spokesperson for Homestead admitted that some products were being sold at a (5) ............ but argued that this is standard business practice. 'They just don't like the fact that we are (6) ............ them,' he added. Is this the start of a price (7) ............ ?",
+          "1 A  charging          B  pricing          C  trading",
+          "2 A  retail            B  sale             C  cost",
+          "3 A  charge            B  profit           C  discount",
+          "4 A  dealers           B  leaders          C  traders",
+          "5 A  loser             B  lost             C  loss",
+          "6 A  undercutting      B  discounting      C  overpricing",
+          "7 A  hike              B  war              C  tag"
+        ]
+      },
+      {
+        "id": "23.3",
+        "marks": "5 marks",
+        "instruction": "Find the answer to each clue. One or two letters are given in each case.",
+        "items": [
+          "1 When prices are rising quickly: a price ..............",
+          "2 Not cheap and not expensive",
+          "3 Small, specialized market",
+          "4 Goods between basic and sophisticated",
+          "5 Buy a better model than the one you have"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "price\nlist\nup\nbottom\nentry",
+      "price\ncut\nlevel\nend\nloss\nmarket"
+    ],
+    "pictures": [
+      "small crossword-style answer grid for 23.3 with numbered rows 1–5 and given letters b, m – p, n, m – r, t u"
+    ],
+    "unclassified": [
+      "Total 22",
+      "Target 15+",
+      "Test Your Business Vocabulary in Use"
+    ]
+  },
+  "rawModelText": "{\"footer\": 33,\n \"testNumber\": \"23\",\n \"testTitle\": \"Price\",\n \"exercises\": [\n  {\"id\": \"23.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Draw a line from each word on the left to a word on the right to make a word pair. (There is one extra word that you don't have to use.) Then use your word pairs to complete the sentences below.\",\n   \"items\": [\n    \"1 Our basic range of tennis rackets is priced at the .......................................... of the market.\",\n    \"2 For example, our .......................................... racket for beginners is just £20.\",\n    \"3 Last year, the .......................................... for our most expensive model was £250.\",\n    \"4 But after last week's .......................................... it is now just £200.\",\n    \"5 Lots of people start with one of our cheaper rackets and then move .......................................... .\"\n   ]},\n  {\"id\": \"23.2\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Choose the best word to fill each gap from the alternatives given below. Put a circle around the letter, A, B or C, of the word you choose.\",\n   \"items\": [\n    \"Homestead is a new company selling consumer durables at low prices. The company has a policy of permanently low (1) ............ . In fact, they guarantee that all branded products will be at least 10% less than the recommended (2) ............ price. For example, a washing machine listed at £380 is on sale at £320. That's a (3) ............ of over 15%. Competitors are angry that the company is using loss (4) ............ to attract customers.  A spokesperson for Homestead admitted that some products were being sold at a (5) ............ but argued that this is standard business practice. 'They just don't like the fact that we are (6) ............ them,' he added. Is this the start of a price (7) ............ ?\",\n    \"1 A  charging          B  pricing          C  trading\",\n    \"2 A  retail            B  sale             C  cost\",\n    \"3 A  charge            B  profit           C  discount\",\n    \"4 A  dealers           B  leaders          C  traders\",\n    \"5 A  loser             B  lost             C  loss\",\n    \"6 A  undercutting      B  discounting      C  overpricing\",\n    \"7 A  hike              B  war              C  tag\"\n   ]},\n  {\"id\": \"23.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Find the answer to each clue. One or two letters are given in each case.\",\n   \"items\": [\n    \"1 When prices are rising quickly: a price ..............\",\n    \"2 Not cheap and not expensive\",\n    \"3 Small, specialized market\",\n    \"4 Goods between basic and sophisticated\",\n    \"5 Buy a better model than the one you have\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"price\\nlist\\nup\\nbottom\\nentry\",\n  \"price\\ncut\\nlevel\\nend\\nloss\\nmarket\"\n ],\n \"pictures\": [\n  \"small crossword-style answer grid for 23.3 with numbered rows 1–5 and given letters b, m – p, n, m – r, t u\"\n ],\n \"unclassified\": [\n  \"Total 22\",\n  \"Target 15+\",\n  \"Test Your Business Vocabulary in Use\"\n ]\n}"
+}

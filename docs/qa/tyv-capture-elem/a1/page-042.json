@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 42,
+    "dpi": 300,
+    "renderSha256": "f0b05637ebdf98dec55391c2c5b8cb7a1504503d84bab9eb9cc1b307aa2086ae",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:42:01.613Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 41,
+    "testNumber": "35",
+    "testTitle": "Global problems",
+    "exercises": [
+      {
+        "id": "35.1",
+        "marks": "10 marks",
+        "instruction": "Look at the headlines. Which of the problems in the box will these articles be about?",
+        "items": [
+          "Example: BOMBS DESTROY ENEMY TANKS ................war...............",
+          "1 WORKERS STOP WORKING AT CAR FACTORY",
+          "2 CARS CANNOT MOVE IN CENTRAL LONDON",
+          "3 STRONG WINDS DESTROY TOWN",
+          "4 HEAVY SNOW STOPS TRAINS",
+          "5 MORE TREES BURN IN AUSTRALIA",
+          "6 HOUSES UNDER WATER",
+          "7 FISH DIE IN DIRTY RIVER",
+          "8 ACCIDENT ON MOTORWAY",
+          "9 WORKERS LOSE THEIR JOBS",
+          "10 BUILDINGS FALL IN CALIFORNIA QUAKE"
+        ]
+      },
+      {
+        "id": "35.2",
+        "marks": "10 marks",
+        "instruction": "Which word fills each gap?",
+        "items": [
+          "Example: The traffic j _ _ _ are very bad here in the mornings. ................jams..................",
+          "1 P _ _ _ people don’t have much money.",
+          "2 U _ _ _ _ _ _ _ _ _ people don’t have jobs.",
+          "3 H _ _ _ _ _ _ _ people don’t have a place to live.",
+          "4 If the air is p _ _ _ _ _ _ _ , it is not clean.",
+          "5 If people are h _ _ _ _ _ , they want something to eat.",
+          "6 The busy time for traffic in the morning and evening is called the r _ _ _ h _ _ _ .",
+          "7 There were serious f _ _ _ _ _ last year after some very heavy rain.",
+          "8 The manager wouldn’t agree to raise the workers’ wages and so they decided to go o _ s _ _ _ _ _ .",
+          "9 In summer there are a lot of tourists here and the town is very c _ _ _ _ _ _ .",
+          "10 The American W _ _ of Independence took place at the end of the eighteenth century."
+        ]
+      },
+      {
+        "id": "35.3",
+        "marks": "10 marks",
+        "instruction": "Put the words in the box in pairs.",
+        "items": [
+          "Example: heavy rain................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "car crash  earthquake  flood  forest fire  hurricane  pollution  snowstorm  strike  traffic jam  unemployed people  war",
+      "air  car  cities  crash  crowded  earth  fire  forest  heavy  homeless  hour  jam  people  pollution  quake  rain  rush  snow  storm  strong  traffic  wind"
+    ],
+    "pictures": [
+      "ten newspaper-style headline clippings numbered 1–10 for exercise 35.1, plus one example clipping"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 41,\n  \"testNumber\": \"35\",\n  \"testTitle\": \"Global problems\",\n  \"exercises\": [\n    {\n      \"id\": \"35.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Look at the headlines. Which of the problems in the box will these articles be about?\",\n      \"items\": [\n        \"Example: BOMBS DESTROY ENEMY TANKS ................war...............\",\n        \"1 WORKERS STOP WORKING AT CAR FACTORY\",\n        \"2 CARS CANNOT MOVE IN CENTRAL LONDON\",\n        \"3 STRONG WINDS DESTROY TOWN\",\n        \"4 HEAVY SNOW STOPS TRAINS\",\n        \"5 MORE TREES BURN IN AUSTRALIA\",\n        \"6 HOUSES UNDER WATER\",\n        \"7 FISH DIE IN DIRTY RIVER\",\n        \"8 ACCIDENT ON MOTORWAY\",\n        \"9 WORKERS LOSE THEIR JOBS\",\n        \"10 BUILDINGS FALL IN CALIFORNIA QUAKE\"\n      ]\n    },\n    {\n      \"id\": \"35.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Which word fills each gap?\",\n      \"items\": [\n        \"Example: The traffic j _ _ _ are very bad here in the mornings. ................jams..................\",\n        \"1 P _ _ _ people don’t have much money.\",\n        \"2 U _ _ _ _ _ _ _ _ _ people don’t have jobs.\",\n        \"3 H _ _ _ _ _ _ _ people don’t have a place to live.\",\n        \"4 If the air is p _ _ _ _ _ _ _ , it is not clean.\",\n        \"5 If people are h _ _ _ _ _ , they want something to eat.\",\n        \"6 The busy time for traffic in the morning and evening is called the r _ _ _ h _ _ _ .\",\n        \"7 There were serious f _ _ _ _ _ last year after some very heavy rain.\",\n        \"8 The manager wouldn’t agree to raise the workers’ wages and so they decided to go o _ s _ _ _ _ _ .\",\n        \"9 In summer there are a lot of tourists here and the town is very c _ _ _ _ _ _ .\",\n        \"10 The American W _ _ of Independence took place at the end of the eighteenth century.\"\n      ]\n    },\n    {\n      \"id\": \"35.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Put the words in the box in pairs.\",\n      \"items\": [\n        \"Example: heavy rain.................\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"car crash  earthquake  flood  forest fire  hurricane  pollution  snowstorm  strike  traffic jam  unemployed people  war\",\n    \"air  car  cities  crash  crowded  earth  fire  forest  heavy  homeless  hour  jam  people  pollution  quake  rain  rush  snow  storm  strong  traffic  wind\"\n  ],\n  \"pictures\": [\n    \"ten newspaper-style headline clippings numbered 1–10 for exercise 35.1, plus one example clipping\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

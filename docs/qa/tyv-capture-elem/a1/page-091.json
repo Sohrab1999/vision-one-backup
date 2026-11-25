@@ -1,0 +1,129 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 91,
+    "dpi": 300,
+    "renderSha256": "3b4f5f2ddade327e41563f73363df163d4237949bf98f8e69bddafd15188c8f9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:32:37.795Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 90,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "54.3",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 Is this furniture new? I haven’t seen it before. (2 marks)",
+          "2 We had terrible weather (not ‘a’)",
+          "3 three large loaves of bread",
+          "4 some advice",
+          "5 The traffic is always very bad",
+          "6 The news is on TV in five minutes. Shall we watch it? (2 marks)",
+          "7 Rail travel is more interesting",
+          "8 a lot of work"
+        ]
+      },
+      {
+        "id": "55.1",
+        "marks": "(10 marks: 1 each)",
+        "instruction": "",
+        "items": []
+      },
+      {
+        "id": "55.2",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 great",
+          "2 horrible",
+          "3 excellent",
+          "4 awful",
+          "5 brilliant",
+          "6 lovely",
+          "7 perfect",
+          "8 good",
+          "9 fine",
+          "10 awful"
+        ]
+      },
+      {
+        "id": "55.3",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 Perfect",
+          "2 terrible",
+          "3 Lovely",
+          "4 horrible",
+          "5 marvellous",
+          "6 Excellent",
+          "7 awful",
+          "8 Wonderful",
+          "9 great",
+          "10 dreadful"
+        ]
+      },
+      {
+        "id": "56.1",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": []
+      },
+      {
+        "id": "56.2",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 lovely",
+          "2 horrible",
+          "3 difficult",
+          "4 kind",
+          "5 wonderful",
+          "6 happy",
+          "7 intelligent",
+          "8 naughty",
+          "9 well-behaved",
+          "10 stupid"
+        ]
+      },
+      {
+        "id": "56.3",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "kind – selfish",
+          "happy – unhappy",
+          "lovely – horrible",
+          "stupid – intelligent",
+          "easy-going – difficult"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Test 55",
+      "Good | Bad — excellent, great, lovely, marvellous, nice, perfect, wonderful | dreadful, horrible, terrible",
+      "Test 56",
+      "Positive | Negative — kind, wonderful, easy-going, lovely | horrible, unhappy, stupid, difficult, selfish, naughty"
+    ],
+    "pictures": [
+      "two-column table with dark header row 'Good / Bad' (Test 55)",
+      "two-column table with dark header row 'Positive / Negative' (Test 56)"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 90,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"54.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 Is this furniture new? I haven’t seen it before. (2 marks)\",\n        \"2 We had terrible weather (not ‘a’)\",\n        \"3 three large loaves of bread\",\n        \"4 some advice\",\n        \"5 The traffic is always very bad\",\n        \"6 The news is on TV in five minutes. Shall we watch it? (2 marks)\",\n        \"7 Rail travel is more interesting\",\n        \"8 a lot of work\"\n      ]\n    },\n    {\n      \"id\": \"55.1\",\n      \"marks\": \"(10 marks: 1 each)\",\n      \"instruction\": \"\",\n      \"items\": []\n    },\n    {\n      \"id\": \"55.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 great\",\n        \"2 horrible\",\n        \"3 excellent\",\n        \"4 awful\",\n        \"5 brilliant\",\n        \"6 lovely\",\n        \"7 perfect\",\n        \"8 good\",\n        \"9 fine\",\n        \"10 awful\"\n      ]\n    },\n    {\n      \"id\": \"55.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 Perfect\",\n        \"2 terrible\",\n        \"3 Lovely\",\n        \"4 horrible\",\n        \"5 marvellous\",\n        \"6 Excellent\",\n        \"7 awful\",\n        \"8 Wonderful\",\n        \"9 great\",\n        \"10 dreadful\"\n      ]\n    },\n    {\n      \"id\": \"56.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": []\n    },\n    {\n      \"id\": \"56.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 lovely\",\n        \"2 horrible\",\n        \"3 difficult\",\n        \"4 kind\",\n        \"5 wonderful\",\n        \"6 happy\",\n        \"7 intelligent\",\n        \"8 naughty\",\n        \"9 well-behaved\",\n        \"10 stupid\"\n      ]\n    },\n    {\n      \"id\": \"56.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"kind – selfish\",\n        \"happy – unhappy\",\n        \"lovely – horrible\",\n        \"stupid – intelligent\",\n        \"easy-going – difficult\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Test 55\",\n    \"Good | Bad — excellent, great, lovely, marvellous, nice, perfect, wonderful | dreadful, horrible, terrible\",\n    \"Test 56\",\n    \"Positive | Negative — kind, wonderful, easy-going, lovely | horrible, unhappy, stupid, difficult, selfish, naughty\"\n  ],\n  \"pictures\": [\n    \"two-column table with dark header row 'Good / Bad' (Test 55)\",\n    \"two-column table with dark header row 'Positive / Negative' (Test 56)\"\n  ],\n  \"unclassified\": [\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 50,
+    "dpi": 300,
+    "renderSha256": "becb16363bd61ed967375c9fe3744433b036639f9ec72c0707d9aaedeee6cdb7",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T08:22:13.439Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 49,
+    "testNumber": "43",
+    "testTitle": "Get / got / got",
+    "exercises": [
+      {
+        "id": "43.1",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps in 1–5 with an adjective (e.g. dark, hot, etc.). Fill the gaps in 6–10 with a noun (e.g. stamps, doctor, etc.).",
+        "items": [
+          "Example: If you are ill, you want to get ...well/better... .",
+          "1 If you are cold, you want to get .......................... .",
+          "2 If your life is boring, you want it to get more .......................... .",
+          "3 If your working day is very long, you’d like it to get .......................... .",
+          "4 If you are poor, you’d probably like to get .......................... .",
+          "5 If someone is fat and they eat less and do a lot of exercise they will probably get .......................... .",
+          "Example: If you are hungry, you want to get some food...............",
+          "6 Before you go on a train journey, you have to get a ....................... .",
+          "7 You go to the bank or a cash machine when you want to get some ......................... .",
+          "8 You go to the baker’s when you want to get some ....................... .",
+          "9 When it’s your birthday you probably get some ......................... .",
+          "10 You check your email program to see if you have got any new ......................... ."
+        ]
+      },
+      {
+        "id": "43.2",
+        "marks": "10 marks",
+        "instruction": "Use the words in brackets and the pictures to ask questions with get to.",
+        "items": [
+          "Example: (How / I / ?)",
+          "How do I get to the bank?",
+          "1 (When / you / ?)",
+          "2 (What time / you / yesterday / ? )",
+          "3 (How / I / ?)",
+          "4 (When / your brother / on Monday / ?)",
+          "5 (How / I / ?)"
+        ]
+      },
+      {
+        "id": "43.3",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps using the correct forms of get / phrases with get.",
+        "items": [
+          "Example: Dick is planning to go to university ......to get....... a degree in medicine.",
+          "1 It’s raining and the people at the bus stop .................... wet.",
+          "2 David and Hilary .................... last week. They’re on their honeymoon now.",
+          "3 I’m very thirsty. I’d like .................... a cup of tea now.",
+          "4 My dad usually .................... from work at 6.30.",
+          "5 My grandfather was ill last week but, happily, he .................... now.",
+          "6 I’d like a change. I’d love to .................... in a big international company.",
+          "7 What time do you usually .................... school in the morning?",
+          "8 My brother .................... from the United States yesterday.",
+          "9 I want to know what’s happening in the world. I’m going to the newsagent’s to ....................",
+          "10 I love sending and .................... emails."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "picture of a bank building with cash machine (Example)",
+      "picture of a train station with clock and Departures board (item 1)",
+      "picture of people looking at a castle through a window (item 2)",
+      "picture of a cinema called 'Movie World' (item 3)",
+      "picture of planes at an airport (item 4)",
+      "picture of a café/restaurant called 'Luigi's' (item 5)"
+    ],
+    "unclassified": [
+      "Your score",
+      "/30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 49,\n  \"testNumber\": \"43\",\n  \"testTitle\": \"Get / got / got\",\n  \"exercises\": [\n    {\n      \"id\": \"43.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Fill the gaps in 1–5 with an adjective (e.g. dark, hot, etc.). Fill the gaps in 6–10 with a noun (e.g. stamps, doctor, etc.).\",\n      \"items\": [\n        \"Example: If you are ill, you want to get ...well/better... .\",\n        \"1 If you are cold, you want to get .......................... .\",\n        \"2 If your life is boring, you want it to get more .......................... .\",\n        \"3 If your working day is very long, you’d like it to get .......................... .\",\n        \"4 If you are poor, you’d probably like to get .......................... .\",\n        \"5 If someone is fat and they eat less and do a lot of exercise they will probably get .......................... .\",\n        \"Example: If you are hungry, you want to get some food...............\",\n        \"6 Before you go on a train journey, you have to get a ....................... .\",\n        \"7 You go to the bank or a cash machine when you want to get some ......................... .\",\n        \"8 You go to the baker’s when you want to get some ....................... .\",\n        \"9 When it’s your birthday you probably get some ......................... .\",\n        \"10 You check your email program to see if you have got any new ......................... .\"\n      ]\n    },\n    {\n      \"id\": \"43.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Use the words in brackets and the pictures to ask questions with get to.\",\n      \"items\": [\n        \"Example: (How / I / ?)\",\n        \"How do I get to the bank?\",\n        \"1 (When / you / ?)\",\n        \"2 (What time / you / yesterday / ? )\",\n        \"3 (How / I / ?)\",\n        \"4 (When / your brother / on Monday / ?)\",\n        \"5 (How / I / ?)\"\n      ]\n    },\n    {\n      \"id\": \"43.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Fill the gaps using the correct forms of get / phrases with get.\",\n      \"items\": [\n        \"Example: Dick is planning to go to university ......to get....... a degree in medicine.\",\n        \"1 It’s raining and the people at the bus stop .................... wet.\",\n        \"2 David and Hilary .................... last week. They’re on their honeymoon now.\",\n        \"3 I’m very thirsty. I’d like .................... a cup of tea now.\",\n        \"4 My dad usually .................... from work at 6.30.\",\n        \"5 My grandfather was ill last week but, happily, he .................... now.\",\n        \"6 I’d like a change. I’d love to .................... in a big international company.\",\n        \"7 What time do you usually .................... school in the morning?\",\n        \"8 My brother .................... from the United States yesterday.\",\n        \"9 I want to know what’s happening in the world. I’m going to the newsagent’s to ....................\",\n        \"10 I love sending and .................... emails.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"picture of a bank building with cash machine (Example)\",\n    \"picture of a train station with clock and Departures board (item 1)\",\n    \"picture of people looking at a castle through a window (item 2)\",\n    \"picture of a cinema called 'Movie World' (item 3)\",\n    \"picture of planes at an airport (item 4)\",\n    \"picture of a café/restaurant called 'Luigi's' (item 5)\"\n  ],\n  \"unclassified\": [\n    \"Your score\",\n    \"/30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

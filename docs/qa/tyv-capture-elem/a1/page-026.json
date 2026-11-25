@@ -1,0 +1,100 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 26,
+    "dpi": 300,
+    "renderSha256": "70a3edbaf61937e3bbb982c7deb022ebe50f67486b7e46c4853d898736e728f1",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:23:14.903Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 25,
+    "testNumber": "19",
+    "testTitle": "In a hotel",
+    "exercises": [
+      {
+        "id": "19.1",
+        "marks": "10 marks",
+        "instruction": "Name these things.",
+        "items": [
+          "Example: TV",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10"
+        ]
+      },
+      {
+        "id": "19.2",
+        "marks": "10 marks",
+        "instruction": "Choose a verb from the box to complete these sentences.",
+        "items": [
+          "Example: Could I .......exchange....... some money, please?",
+          "1 I ........................ a reservation for a double room for tonight.",
+          "2 Please could you ........................ this form?",
+          "3 Please ........................ your name at the bottom of the form.",
+          "4 ........................ your bill carefully before you pay it.",
+          "5 Could I ........................ breakfast in my room, please?",
+          "6 To ........................ an outside line, you should dial 0.",
+          "7 I'd like to ........................ room service, please.",
+          "8 I would like to ........................ a room for next weekend, please.",
+          "9 Could I ........................ some dollars into euros, please?",
+          "10 We're ready to leave, so we'd like to ........................ now."
+        ]
+      },
+      {
+        "id": "19.3",
+        "marks": "10 marks",
+        "instruction": "Answer these questions about staying in a hotel.",
+        "items": [
+          "Example: What do you call the evening meal? .......dinner.......",
+          "1 What do you have to pay before you leave the hotel?",
+          "2 What do you probably need if your room is on the ninth floor?",
+          "3 What do you need to open your door?",
+          "4 What do you call a room for one person?",
+          "5 What do you call a room for two people?",
+          "6 If you phone Britain from another country, you must always dial 44 before the telephone number. What is the number 44 called?",
+          "7 What do you ask for if you want to wake up early in the morning?",
+          "8 Complete this sentence: 'I have a ........................ for a double room.' (The sentence means 'I have booked a double room.')",
+          "9 Where do you go when you first arrive at a hotel?",
+          "10 What do you ask for if you want to eat in your room?"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "book   order   change   check   check out   ~~exchange~~   fill in   get   have   have   sign"
+    ],
+    "pictures": [
+      "Example picture of a TV",
+      "picture 1: key with fob numbered 103",
+      "picture 2: shower cubicle",
+      "picture 3: telephone",
+      "picture 4: luggage/suitcases",
+      "picture 5: door",
+      "picture 6: registration card",
+      "picture 7: bill/receipt",
+      "picture 8: reception desk sign",
+      "picture 9: hairdryer",
+      "picture 10: safe/minibar with door open"
+    ],
+    "unclassified": [
+      "Test Your English Vocabulary in Use Elementary",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "{\"footer\": 25,\n \"testNumber\": \"19\",\n \"testTitle\": \"In a hotel\",\n \"exercises\": [\n  {\"id\": \"19.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Name these things.\",\n   \"items\": [\"Example: TV\", \"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"10\"]},\n  {\"id\": \"19.2\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Choose a verb from the box to complete these sentences.\",\n   \"items\": [\"Example: Could I .......exchange....... some money, please?\", \"1 I ........................ a reservation for a double room for tonight.\", \"2 Please could you ........................ this form?\", \"3 Please ........................ your name at the bottom of the form.\", \"4 ........................ your bill carefully before you pay it.\", \"5 Could I ........................ breakfast in my room, please?\", \"6 To ........................ an outside line, you should dial 0.\", \"7 I'd like to ........................ room service, please.\", \"8 I would like to ........................ a room for next weekend, please.\", \"9 Could I ........................ some dollars into euros, please?\", \"10 We're ready to leave, so we'd like to ........................ now.\"]},\n  {\"id\": \"19.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Answer these questions about staying in a hotel.\",\n   \"items\": [\"Example: What do you call the evening meal? .......dinner.......\", \"1 What do you have to pay before you leave the hotel?\", \"2 What do you probably need if your room is on the ninth floor?\", \"3 What do you need to open your door?\", \"4 What do you call a room for one person?\", \"5 What do you call a room for two people?\", \"6 If you phone Britain from another country, you must always dial 44 before the telephone number. What is the number 44 called?\", \"7 What do you ask for if you want to wake up early in the morning?\", \"8 Complete this sentence: 'I have a ........................ for a double room.' (The sentence means 'I have booked a double room.')\", \"9 Where do you go when you first arrive at a hotel?\", \"10 What do you ask for if you want to eat in your room?\"]}\n ],\n \"boxesAndLists\": [\"book   order   change   check   check out   ~~exchange~~   fill in   get   have   have   sign\"],\n \"pictures\": [\"Example picture of a TV\", \"picture 1: key with fob numbered 103\", \"picture 2: shower cubicle\", \"picture 3: telephone\", \"picture 4: luggage/suitcases\", \"picture 5: door\", \"picture 6: registration card\", \"picture 7: bill/receipt\", \"picture 8: reception desk sign\", \"picture 9: hairdryer\", \"picture 10: safe/minibar with door open\"],\n \"unclassified\": [\"Test Your English Vocabulary in Use Elementary\", \"Your score /30\"]\n}"
+}

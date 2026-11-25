@@ -1,0 +1,89 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 15,
+    "dpi": 300,
+    "renderSha256": "99bae2eb7dd8f5bf192d433b1e6fb8bd97a1422ed61052cd1fe2af69d3089cbc",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-24T21:00:19.136Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 14,
+    "testNumber": "8",
+    "testTitle": "Conversations 1: Greetings and wishes",
+    "exercises": [
+      {
+        "id": "8.1",
+        "marks": "10 marks",
+        "instruction": "What do you say?",
+        "items": [
+          "1 You arrive at someone's office at 10 am. — Good ............................... .",
+          "2 You arrive at someone's house at 8 pm. — Good ............................... .",
+          "3 You lift your glass before starting a drink with a group of people. — ............................... , everybody!",
+          "4 You want to get off a bus but there are people in your way. — ............................... , please.",
+          "5 Someone sneezes. — ............................... !"
+        ]
+      },
+      {
+        "id": "8.2",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps in the conversation with these phrases.",
+        "items": [
+          "RON: (1) ............................... , Fiona.",
+          "FIONA: (2) ............................... , Ron.",
+          "RON: (3) ............................... ?",
+          "FIONA: Fine, thanks. (4) ............................... ?",
+          "RON: (5) ............................... . It's my birthday today.",
+          "FIONA: Oh! (6) ............................... !",
+          "RON: Thanks. So, how's university?",
+          "FIONA: Oh, great. In fact I just passed a big exam.",
+          "RON: Oh good! (7) ............................... !",
+          "FIONA: Thanks. The only problem is I've got another one next week.",
+          "RON: Really? Oh well, (8) ............................... !",
+          "FIONA: Thanks. Well, I must go now. Are you going to Anne's party on Saturday?",
+          "RON: Yeah. Well, (9) ............................... , then.",
+          "FIONA: Yes. (10) ............................... . See you at the party.",
+          "RON: Bye."
+        ]
+      },
+      {
+        "id": "8.3",
+        "marks": "10 marks",
+        "instruction": "Correct the mistakes in these conversations.",
+        "items": [
+          "1 LIM: Chinese New Year starts this week.",
+          "DEREK: Oh really? Merry New Year!",
+          "2 DIANE: Here's the newspaper you asked me to get.",
+          "NORBERT: Please.",
+          "DIANE: No problem.",
+          "3 RUTH: This is my last day in the office till December 28th.",
+          "WILL: Oh, well, I'll say Good Christmas, then.",
+          "RUTH: Thanks. You too.",
+          "4 GEOFF: I swam a kilometre today.",
+          "FRAN: Well made! You must be very fit.",
+          "GEOFF: Yeah, I feel good.",
+          "5 BETH: It's my birthday today.",
+          "SONYA: Oh, congratulations!",
+          "BETH: Thank you."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Not too bad, thanks   Goodbye   And you   Hi   Congratulations   How are you   see you soon   Happy birthday   good luck   Hello"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Your score /30",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 14,\n  \"testNumber\": \"8\",\n  \"testTitle\": \"Conversations 1: Greetings and wishes\",\n  \"exercises\": [\n    {\n      \"id\": \"8.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"What do you say?\",\n      \"items\": [\n        \"1 You arrive at someone's office at 10 am. — Good ............................... .\",\n        \"2 You arrive at someone's house at 8 pm. — Good ............................... .\",\n        \"3 You lift your glass before starting a drink with a group of people. — ............................... , everybody!\",\n        \"4 You want to get off a bus but there are people in your way. — ............................... , please.\",\n        \"5 Someone sneezes. — ............................... !\"\n      ]\n    },\n    {\n      \"id\": \"8.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Fill the gaps in the conversation with these phrases.\",\n      \"items\": [\n        \"RON: (1) ............................... , Fiona.\",\n        \"FIONA: (2) ............................... , Ron.\",\n        \"RON: (3) ............................... ?\",\n        \"FIONA: Fine, thanks. (4) ............................... ?\",\n        \"RON: (5) ............................... . It's my birthday today.\",\n        \"FIONA: Oh! (6) ............................... !\",\n        \"RON: Thanks. So, how's university?\",\n        \"FIONA: Oh, great. In fact I just passed a big exam.\",\n        \"RON: Oh good! (7) ............................... !\",\n        \"FIONA: Thanks. The only problem is I've got another one next week.\",\n        \"RON: Really? Oh well, (8) ............................... !\",\n        \"FIONA: Thanks. Well, I must go now. Are you going to Anne's party on Saturday?\",\n        \"RON: Yeah. Well, (9) ............................... , then.\",\n        \"FIONA: Yes. (10) ............................... . See you at the party.\",\n        \"RON: Bye.\"\n      ]\n    },\n    {\n      \"id\": \"8.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Correct the mistakes in these conversations.\",\n      \"items\": [\n        \"1 LIM: Chinese New Year starts this week.\",\n        \"DEREK: Oh really? Merry New Year!\",\n        \"2 DIANE: Here's the newspaper you asked me to get.\",\n        \"NORBERT: Please.\",\n        \"DIANE: No problem.\",\n        \"3 RUTH: This is my last day in the office till December 28th.\",\n        \"WILL: Oh, well, I'll say Good Christmas, then.\",\n        \"RUTH: Thanks. You too.\",\n        \"4 GEOFF: I swam a kilometre today.\",\n        \"FRAN: Well made! You must be very fit.\",\n        \"GEOFF: Yeah, I feel good.\",\n        \"5 BETH: It's my birthday today.\",\n        \"SONYA: Oh, congratulations!\",\n        \"BETH: Thank you.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Not too bad, thanks   Goodbye   And you   Hi   Congratulations   How are you   see you soon   Happy birthday   good luck   Hello\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}

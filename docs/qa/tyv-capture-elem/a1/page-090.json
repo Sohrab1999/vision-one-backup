@@ -1,0 +1,145 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-elem",
+    "title": "Test Your English Vocabulary in Use — Elementary (Second Edition 2010 — McCarthy & O'Dell)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Elementary.pdf",
+    "pdfSha256": "bbe34425b4b2947d510444f0cb9483b5276c62a35f36cc57598389b98baffdad",
+    "pdfPage": 90,
+    "dpi": 300,
+    "renderSha256": "edba474a966281b86469edd99293f07daa83f224eeec4c8b02064b063d31c5fb",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-25T19:32:27.404Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 89,
+    "testNumber": "52",
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "52.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "back – front",
+          "beginning – end",
+          "bottom – top",
+          "here – there",
+          "left – right"
+        ]
+      },
+      {
+        "id": "52.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 a dog",
+          "2 a (suit)case",
+          "3 the number 1",
+          "4 a tree",
+          "5 a boy/child",
+          "6 a house",
+          "7 In",
+          "8 On",
+          "9 At",
+          "10 In"
+        ]
+      },
+      {
+        "id": "52.3",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 here",
+          "2 out",
+          "3 away",
+          "4 abroad",
+          "5 middle",
+          "6 back",
+          "7 there",
+          "8 left",
+          "9 everywhere",
+          "10 side"
+        ]
+      },
+      {
+        "id": "53.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "good – bad",
+          "fast – slow",
+          "quiet – loud",
+          "sad – happy",
+          "friendly – unfriendly"
+        ]
+      },
+      {
+        "id": "53.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 fast",
+          "2 loudly",
+          "3 quietly",
+          "4 well",
+          "5 slowly",
+          "6 in a very unfriendly way",
+          "7 badly",
+          "8 quickly",
+          "9 sadly",
+          "10 in a friendly way"
+        ]
+      },
+      {
+        "id": "53.3",
+        "marks": "(10 marks: 1 mark for choosing the right adjective and 1 for putting it into the adverb form)",
+        "instruction": null,
+        "items": [
+          "1 The child is speaking very quietly.",
+          "2 Glen/He was acting strangely.",
+          "3 The accident happened suddenly.",
+          "4 Pippa/She passed it / the exam easily.",
+          "5 He finished the job quickly."
+        ]
+      },
+      {
+        "id": "54.1",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": [
+          "1 information",
+          "2 accommodation",
+          "3 weather",
+          "4 furniture",
+          "5 luggage"
+        ]
+      },
+      {
+        "id": "54.2",
+        "marks": "(10 marks)",
+        "instruction": null,
+        "items": []
+      }
+    ],
+    "boxesAndLists": [
+      "Opposites: good/bad, fast/slow, quiet/loud, sad/happy, friendly/unfriendly",
+      "Countable / Uncountable: shoe, apple, bus, plate | milk, money, rice, bread, butter, traffic"
+    ],
+    "pictures": [
+      "Two-column table headed 'Opposites' with pairs good/bad, fast/slow, quiet/loud, sad/happy, friendly/unfriendly",
+      "Two-column table headed 'Countable' and 'Uncountable' with words shoe, apple, bus, plate and milk, money, rice, bread, butter, traffic"
+    ],
+    "unclassified": [
+      "Test 52",
+      "Test 53",
+      "Test 54",
+      "Test Your English Vocabulary in Use Elementary"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 89,\n  \"testNumber\": \"52\",\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"52.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\"back – front\", \"beginning – end\", \"bottom – top\", \"here – there\", \"left – right\"]\n    },\n    {\n      \"id\": \"52.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\"1 a dog\", \"2 a (suit)case\", \"3 the number 1\", \"4 a tree\", \"5 a boy/child\", \"6 a house\", \"7 In\", \"8 On\", \"9 At\", \"10 In\"]\n    },\n    {\n      \"id\": \"52.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\"1 here\", \"2 out\", \"3 away\", \"4 abroad\", \"5 middle\", \"6 back\", \"7 there\", \"8 left\", \"9 everywhere\", \"10 side\"]\n    },\n    {\n      \"id\": \"53.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\"good – bad\", \"fast – slow\", \"quiet – loud\", \"sad – happy\", \"friendly – unfriendly\"]\n    },\n    {\n      \"id\": \"53.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\"1 fast\", \"2 loudly\", \"3 quietly\", \"4 well\", \"5 slowly\", \"6 in a very unfriendly way\", \"7 badly\", \"8 quickly\", \"9 sadly\", \"10 in a friendly way\"]\n    },\n    {\n      \"id\": \"53.3\",\n      \"marks\": \"(10 marks: 1 mark for choosing the right adjective and 1 for putting it into the adverb form)\",\n      \"instruction\": null,\n      \"items\": [\"1 The child is speaking very quietly.\", \"2 Glen/He was acting strangely.\", \"3 The accident happened suddenly.\", \"4 Pippa/She passed it / the exam easily.\", \"5 He finished the job quickly.\"]\n    },\n    {\n      \"id\": \"54.1\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": [\"1 information\", \"2 accommodation\", \"3 weather\", \"4 furniture\", \"5 luggage\"]\n    },\n    {\n      \"id\": \"54.2\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": null,\n      \"items\": []\n    }\n  ],\n  \"boxesAndLists\": [\n    \"Opposites: good/bad, fast/slow, quiet/loud, sad/happy, friendly/unfriendly\",\n    \"Countable / Uncountable: shoe, apple, bus, plate | milk, money, rice, bread, butter, traffic\"\n  ],\n  \"pictures\": [\n    \"Two-column table headed 'Opposites' with pairs good/bad, fast/slow, quiet/loud, sad/happy, friendly/unfriendly\",\n    \"Two-column table headed 'Countable' and 'Uncountable' with words shoe, apple, bus, plate and milk, money, rice, bread, butter, traffic\"\n  ],\n  \"unclassified\": [\n    \"Test 52\",\n    \"Test 53\",\n    \"Test 54\",\n    \"Test Your English Vocabulary in Use Elementary\"\n  ]\n}\n```"
+}
