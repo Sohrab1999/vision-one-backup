@@ -1,0 +1,73 @@
+{
+ "meta": {
+  "step": "A1-PRI-S04",
+  "book": "tyv-pri",
+  "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+  "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+  "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+  "date": "2026-11-26",
+  "jalali": "۱۴۰۵/۹/۵",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — گام بعدی مجاز طبق وضعیت ثبت‌شدهٔ پسا-S03 = A1-PRI-S04 (صفحات ۳۷–۴۸ — دستهٔ چهارم از ۱۲ دستهٔ PRI — انتظار skip دقیقاً یک صفحه: ۴۱ = پرابِ ازپیش‌کپچرشده — انتظار Tests 32..43 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود) — trace 1a2182d62b72b495 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+  "sessionPreCheck": "بازیابی ۴۷ (ریست پنهان ۴۷م — الگوی ۳۱..۴۶): HEAD بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت = 1033fec4c9379e499fb7bafad76ef77886daf5e9 پسا-S03 (ثبت اثبات §۱۰-۷) — backup/main tracking-ref نیز 193269b (کل .git به عقب برگشته — عین الگوی ریست‌های پنهان ۴۳..۴۶) — درخت کار پسا-S03 روی دیسک باقی بود (SNAPSHOT سربرگ ۱۳۷مین + کپچرهای pri page-025..036 + page-041 موجود) — divergence ۰/۲۲۲ (behind = ۲۱۷ وضعیت پسا-S01 + ۲ کامیت S02 + ۱ کامیت اتوماسیون پسا-نشست 82f472e + ۲ کامیت S03 = b97e188 محتوایی + 1033fec ثبت اثبات — ahead = ۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only خالص) — ممیزی blob-OID با core.quotepath=false + --untracked-files=all + مقایسهٔ hash-object هر فایل untracked با ۹۳۸۸ OID یکتای reachable از backup/main: ۴۸/۴۸ untracked ARCHIVED بایت‌به‌بیت (۷ سند مسیر-تخت superseded TYV در 82f472e + ۴۱ سند کهنهٔ دورهٔ Vision One در 193269b و اجداد) · LOCAL-ONLY=۰ · differ=۰ · deleted=۰ ⇒ صفر محتوای محلی-یگانه — git reset backup/main (mixed — هرگز فایل‌های درخت کار را بازنویسی نمی‌کند — ایمن‌تر از --hard؛ چون پس از fetch صفر modified tracked بود) ⇒ HEAD = 1033fec = ریموت — porcelain ۴۸ untracked (همگی بایگانی) · صفر modified · صفر deleted — git diff --check پاک — هوک post-commit سالم (sha256 ee679bc1b642db0f… == ثبت‌شدهٔ SNAPSHOT) — stash stack خالی محلی (بایه‌های rc33..rc45 در شاخه‌های ریموت بایگانی‌اند) — دیسک‌حقیقت آغاز گام: pri ۳۷/۱۴۲ (page-001..036 + page-041 پراب) · biz ۹۸/۹۸ · elem ۹۶/۹۶ · upp ۳/۱۵۳ = ۲۳۴/۴۸۹ == رکورد سربرگ ۱۳۷مین — وجودسنجی پیشا-گام: page-037..040 و page-042..048 همگی غایب، page-041 موجود (پراب — skip انتظاری تک‌موردی در همین دسته S04) — شواهد docs/qa/recovery47-proof-2026-11-26.json"
+ },
+ "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 37,38,39,40,41,42,43,44,45,46,47,48",
+ "runs": [
+  {
+   "run": 1,
+   "mode": "هم‌گام در یک فراخوانی ابزار (عین درس ثبت‌شدهٔ سربرگ ۱۱۵مین — بدون nohup پس‌زمینه)",
+   "result": "page 37..40 ok + 42..48 ok (۱۱ سطر ok پیوسته — page 41 بدون سطر = skip انتظاری)",
+   "summary": "DONE tyv-pri: captured=11 skipped=1 failed=0 → docs/qa/tyv-capture-pri/a1",
+   "skips": ["page-041 (پرابِ ازپیش‌کپچرشده — checkpoint/resume — عین انتظار صریح سربرگ ۱۳۷مین نه ناهنجاری)"],
+   "failed": []
+  }
+ ],
+ "coverage": {
+  "batchRange": "۳۷–۴۸ (با skip انتظاری تک‌موردی ۴۱)",
+  "completeNoGap": true,
+  "newFiles": [
+   "page-037.json",
+   "page-038.json",
+   "page-039.json",
+   "page-040.json",
+   "page-042.json",
+   "page-043.json",
+   "page-044.json",
+   "page-045.json",
+   "page-046.json",
+   "page-047.json",
+   "page-048.json"
+  ],
+  "skippedExisting": ["page-041.json (پراب — ازپیش موجود)"],
+  "provenance": "renderSha256 یکتا ۱۱/۱۱ · DPI=300 · promptVersion=tyv-a1-v1 · attempts=≤3 · status=ok ۱۱/۱۱ · model z-ai vision CLI · timestamp 2026-11-26T14:13:30..14:15:38Z"
+ },
+ "patternCheck": {
+  "expected": "Tests 32..43 با test=pdfPage−۵ و فوتر چاپی=pdfPage−۲ هرجا موجود (الگوی اصلاح‌شدهٔ سربرگ ۱۳۶مین — لنگرها: پراب ۴۱ Test36/فوتر39 + پنجرهٔ S02 + Contents p2/p3) — skip انتظاری دقیقاً یک صفحه: ۴۱",
+  "result": "testNumber دقیقاً 32..35 و 37..43 روی p37..p40 و p42..p48 = pdfPage−۵ — ۱۱/۱۱ عین انتظار صریح مالک — صفر mismatch (p41 = Test 36 روی پراب skip انتظاری)",
+  "footers": "فوترهای چاپی 35..46 روی p37..p48 (بدون ۴۱) = pdfPage−۲ — ۱۱/۱۱ — صفر ناسازگاری · صفر footer=null (دومین دستهٔ پیوستهٔ کاملاً سره از نظر فوتر پس از S03) — [؟]=۳ (marks تمرین‌ها) · [N/A]=صفر",
+  "anchors": "پراب ۴۱ (Test 36 «Reason, purpose and result»/فوتر 39) دقیقاً در این دسته بود و عین پیش‌بینی skip شد — تطبیق سه‌ضابطه‌ای کامل: پراب + پنجرهٔ S02 + Contents"
+ },
+ "contentNotes": {
+  "structure": [
+   "p37 Test 32 «Adverbs: frequency and degree» — ۵ تمرین/۱ باکس/۱ تصویر/۳ unc — فوتر ۳۵ — پایان بخش ۴ «Parts of speech (special problems)»",
+   "p38 Test 33 «Time and sequence» — ۴/۰/۰/۴ — فوتر ۳۶ — آغاز بخش ۵ «Connecting and linking» عین Contents p3",
+   "p39 Test 34 «Addition and contrast» — ۳/۱/۰/۳ — فوتر ۳۷",
+   "p40 Test 35 «Similarities, differences and conditions» — ۴/۱/۱/۴ — فوتر ۳۸",
+   "[p41 skip انتظاری پراب — Test 36 «Reason, purpose and result»/فوتر 39 طبق Contents p3]",
+   "p42 Test 37 «The physical world» — ۴/۲/۱/۳ — فوتر ۴۰ — آغاز بخش ۶ «Topics / The world around us» عین Contents p3",
+   "p43 Test 38 «Weather» — ۴/۱/۰/۳ — فوتر ۴۱",
+   "p44 Test 39 «Using the land» — ۳/۱/۲/۳ — فوتر ۴۲",
+   "p45 Test 40 «Animals and insects» — ۳/۹ باکس/۳ تصویر/۳ — فوتر ۴۳",
+   "p46 Test 41 «Countries, nationalities and languages» — ۳/۱/۰/۴ — فوتر ۴۴ — پایان «The world around us»",
+   "p47 Test 42 «The body and what it does» — ۴/۲/۲/۳ — فوتر ۴۵ — آغاز «Topics / People» عین Contents p3",
+   "p48 Test 43 «Describing people's appearance» — ۵/۱/۱/۲ — فوتر ۴۶"
+  ],
+  "totals": "۱۱ صفحهٔ NEW: ۴۲ تمرین/۲۶۰ آیتم/۲۰ باکس/۱۱ تصویر/۳۵ unclassified — ۱۱ تست متمایز Tests 32..35 + 37..43 (بدون تکرار — Test 36 روی پراب ۴۱ skip انتظاری) — [؟]=۳ · [N/A]=صفر — الگوی test=pdfPage−۵ و فوتر=pdf−۲ از p14 تا اینجا بدون استثنا ادامه دارد",
+  "sectionContext": "سه گذار بخشی در این دسته — همگی عین Contents p3 (کپچر pdfPage 3 — فوتر 2): بخش ۵ «Connecting and linking» = Tests 33–36 (صنف Test 36 روی پراب ۴۱ خارج از کپچر NEW) · بخش ۶ «Topics» دو زیربخش: «The world around us» = Tests 37–41 و «People» = Tests 42+ — **شمارهٔ کتاب چاپی Contents p3 (36..46) == فوترهای کپچرشدهٔ S04 بیت‌به‌بیت (۱۱/۱۱ در دسته)** — چهارمین تأیید مستقل الگوی سه‌ضابطه‌ای"
+ },
+ "postState": {
+  "priCaptured": "۴۸/۱۴۲ (page-001..048 شامل page-041 پراب) — بازشماری ls",
+  "a1Total": "۲۴۵/۴۸۹ (biz ۹۸/۹۸ کامل · elem ۹۶/۹۶ کامل · pri ۴۸/۱۴۲ · upp ۳/۱۵۳)",
+  "remainingPri": "۹۴ صفحه (۴۹–۱۴۲) ⇒ S05..S11 (۷ دستهٔ ۱۲تایی) + S12 (۱۰ صفحهٔ پایانی ۱۳۳–۱۴۲)",
+  "nextStep": "A1-PRI-S05 = bun scripts/tyv-a1-vlm-capture.mjs pri 49,50,51,52,53,54,55,56,57,58,59,60 (صفحات ۴۹–۶۰ — دستهٔ پنجم از ۱۲ — بدون skip انتظاری — پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست — انتظار Tests 44..55 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود)"
+ }
+}

@@ -1,0 +1,77 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 44,
+    "dpi": 300,
+    "renderSha256": "b073ab40f2de341a0ef8459570e74c73282d3fc583170b3ddce27d97107881fb",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T14:14:50.766Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 42,
+    "testNumber": "39",
+    "testTitle": "Using the land",
+    "exercises": [
+      {
+        "id": "39.1",
+        "marks": "6 marks",
+        "instruction": "Label the drawing.",
+        "items": [
+          "1 ..........................",
+          "2 ..........................",
+          "3 ..........................",
+          "4 ..........................",
+          "5 ..........................",
+          "6 .........................."
+        ]
+      },
+      {
+        "id": "39.2",
+        "marks": "13 marks",
+        "instruction": "Complete the text using the words in the box. Change the form of the word if necessary.",
+        "items": [
+          "My family owns a large (1).................. in the south of England. When I was 18, I studied (2).................. at college so that I would understand farming better. My brother is in charge of one part of the business and he (3).................. cows and sheep. Some of these are (4).................. and sold for their meat. He also sells (5).................. produce such as milk, butter and cheese. In my part of the business, we have (6).................. such as maize and wheat. We (7).................. vegetables for a few years, but we didn't make enough money at it, so five years ago we (8).................. a lot of apple and pear trees instead. In the late summer we have extra workers to help (9).................. the fruit and (10).................. the wheat.",
+          "Some years are very difficult in farming. Last year, there was no rain for two months, which caused a (11).................. . The (12).................. was very hard and we had to (13).................. the maize every week."
+        ]
+      },
+      {
+        "id": "39.3",
+        "marks": "11 marks",
+        "instruction": "Complete the crossword. When you have finished, the words in the tinted box will spell another word.",
+        "items": [
+          "1 a soft, reddish metal used for electric wires",
+          "2 When we walk, our feet are on the ....... .",
+          "3 Copper, tin and iron are all ....... .",
+          "4 If something is ....... , it is worth a lot of money.",
+          "5 a place where metals are extracted from the earth",
+          "6 a dark grey metal that is magnetic",
+          "7 a softer metal sometimes used to cover other metals",
+          "8 a whitish metal that used to be used for coins and jewellery",
+          "9 money made of metal, not paper",
+          "10 a yellow metal that used to be used for coins and jewellery: it's expensive."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "pick farm agriculture water drought keep slaughter plant grow ground crop harvest dairy"
+    ],
+    "pictures": [
+      "tree drawing with numbered labels 1-6 pointing to parts of the tree, roots, soil and plants",
+      "crossword grid with clues 1-10 and a tinted vertical column"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 42,\n  \"testNumber\": \"39\",\n  \"testTitle\": \"Using the land\",\n  \"exercises\": [\n    {\n      \"id\": \"39.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Label the drawing.\",\n      \"items\": [\n        \"1 ..........................\",\n        \"2 ..........................\",\n        \"3 ..........................\",\n        \"4 ..........................\",\n        \"5 ..........................\",\n        \"6 ..........................\"\n      ]\n    },\n    {\n      \"id\": \"39.2\",\n      \"marks\": \"13 marks\",\n      \"instruction\": \"Complete the text using the words in the box. Change the form of the word if necessary.\",\n      \"items\": [\n        \"My family owns a large (1).................. in the south of England. When I was 18, I studied (2).................. at college so that I would understand farming better. My brother is in charge of one part of the business and he (3).................. cows and sheep. Some of these are (4).................. and sold for their meat. He also sells (5).................. produce such as milk, butter and cheese. In my part of the business, we have (6).................. such as maize and wheat. We (7).................. vegetables for a few years, but we didn't make enough money at it, so five years ago we (8).................. a lot of apple and pear trees instead. In the late summer we have extra workers to help (9).................. the fruit and (10).................. the wheat.\",\n        \"Some years are very difficult in farming. Last year, there was no rain for two months, which caused a (11).................. . The (12).................. was very hard and we had to (13).................. the maize every week.\"\n      ]\n    },\n    {\n      \"id\": \"39.3\",\n      \"marks\": \"11 marks\",\n      \"instruction\": \"Complete the crossword. When you have finished, the words in the tinted box will spell another word.\",\n      \"items\": [\n        \"1 a soft, reddish metal used for electric wires\",\n        \"2 When we walk, our feet are on the ....... .\",\n        \"3 Copper, tin and iron are all ....... .\",\n        \"4 If something is ....... , it is worth a lot of money.\",\n        \"5 a place where metals are extracted from the earth\",\n        \"6 a dark grey metal that is magnetic\",\n        \"7 a softer metal sometimes used to cover other metals\",\n        \"8 a whitish metal that used to be used for coins and jewellery\",\n        \"9 money made of metal, not paper\",\n        \"10 a yellow metal that used to be used for coins and jewellery: it's expensive.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"pick farm agriculture water drought keep slaughter plant grow ground crop harvest dairy\"\n  ],\n  \"pictures\": [\n    \"tree drawing with numbered labels 1-6 pointing to parts of the tree, roots, soil and plants\",\n    \"crossword grid with clues 1-10 and a tinted vertical column\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

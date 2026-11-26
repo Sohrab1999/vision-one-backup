@@ -1,0 +1,95 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 43,
+    "dpi": 300,
+    "renderSha256": "b1d7cf3b734def53d9840299a36d6793691b6037c85daa6927100594c7b3888f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T14:14:38.867Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 41,
+    "testNumber": "38",
+    "testTitle": "Weather",
+    "exercises": [
+      {
+        "id": "38.1",
+        "marks": "8 marks",
+        "instruction": "Complete this table.",
+        "items": [
+          "Noun  Adjective  Noun  Adjective",
+          "sun",
+          "cloud",
+          "ice",
+          "shower",
+          "wind",
+          "fog",
+          "hot",
+          "humid"
+        ]
+      },
+      {
+        "id": "38.2",
+        "marks": "10 marks",
+        "instruction": "Put the words in the first column in order from the hottest (1) to the coldest (6). Put the words in the second column in order from the most gentle (1) to the strongest (4).",
+        "items": [
+          "Column 1  Column 2",
+          "hot  a wind",
+          "not very warm  a gale",
+          "freezing  a breeze",
+          "chilly  a hurricane",
+          "boiling",
+          "warm"
+        ]
+      },
+      {
+        "id": "38.3",
+        "marks": "6 marks",
+        "instruction": "Complete the sentences.",
+        "items": [
+          "1 The weather forecast said there could be some ............................. rain this afternoon, so you will need your coat and your umbrella.",
+          "2 In the summer it's very calm, but in the winter you can get a very ............................ wind coming off the sea.",
+          "3 I was woken up in the night by some incredible thunder and ............................ , and I think it may have hit a tree nearby.",
+          "4 You can't go out in this weather – it's ............................ with rain.",
+          "5 One of the weather forecasters said we would have a ............................ of hot weather.",
+          "6 The wind ............................ all the leaves off the trees yesterday."
+        ]
+      },
+      {
+        "id": "38.4",
+        "marks": "6 marks",
+        "instruction": "Complete the sentences.",
+        "items": [
+          "1 It was so ............................ that I could only see about 50 metres in front of me.",
+          "2 The car didn't stop when I put on the brakes, because the road was so ............................ .",
+          "3 They wanted to know the ............................ so I had to go and find my thermometer.",
+          "4 They don't think it's going to rain all day, but we may get a couple of ............................ this afternoon, so take an umbrella.",
+          "5 ............................ are winds which often reach over 100 km per hour and can destroy trees and buildings quite easily.",
+          "6 It's getting very humid, and the wind is also starting to increase, so I think we could get a ............................ quite soon.",
+          "7 We write –10 °C, but we say ............................ ten degrees centigrade, or ten degrees below ............................ .",
+          "8 It's not so bad in very hot weather if you can feel a gentle ............................ on your face. You often get this near the sea.",
+          "9 It's really hot and unpleasant today – you know, there's 90% ............................ .",
+          "10 There was a lot of sun this morning, but this afternoon it got quite ............................ and was much cooler."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Table with columns Noun/Adjective: sun, cloud, ice, shower, wind, fog, hot, humid"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Total score: / 30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 41, \"testNumber\": \"38\", \"testTitle\": \"Weather\", \"exercises\": [{\"id\": \"38.1\", \"marks\": \"8 marks\", \"instruction\": \"Complete this table.\", \"items\": [\"Noun  Adjective  Noun  Adjective\", \"sun\", \"cloud\", \"ice\", \"shower\", \"wind\", \"fog\", \"hot\", \"humid\"]}, {\"id\": \"38.2\", \"marks\": \"10 marks\", \"instruction\": \"Put the words in the first column in order from the hottest (1) to the coldest (6). Put the words in the second column in order from the most gentle (1) to the strongest (4).\", \"items\": [\"Column 1  Column 2\", \"hot  a wind\", \"not very warm  a gale\", \"freezing  a breeze\", \"chilly  a hurricane\", \"boiling\", \"warm\"]}, {\"id\": \"38.3\", \"marks\": \"6 marks\", \"instruction\": \"Complete the sentences.\", \"items\": [\"1 The weather forecast said there could be some ............................. rain this afternoon, so you will need your coat and your umbrella.\", \"2 In the summer it's very calm, but in the winter you can get a very ............................ wind coming off the sea.\", \"3 I was woken up in the night by some incredible thunder and ............................ , and I think it may have hit a tree nearby.\", \"4 You can't go out in this weather – it's ............................ with rain.\", \"5 One of the weather forecasters said we would have a ............................ of hot weather.\", \"6 The wind ............................ all the leaves off the trees yesterday.\"]}, {\"id\": \"38.4\", \"marks\": \"6 marks\", \"instruction\": \"Complete the sentences.\", \"items\": [\"1 It was so ............................ that I could only see about 50 metres in front of me.\", \"2 The car didn't stop when I put on the brakes, because the road was so ............................ .\", \"3 They wanted to know the ............................ so I had to go and find my thermometer.\", \"4 They don't think it's going to rain all day, but we may get a couple of ............................ this afternoon, so take an umbrella.\", \"5 ............................ are winds which often reach over 100 km per hour and can destroy trees and buildings quite easily.\", \"6 It's getting very humid, and the wind is also starting to increase, so I think we could get a ............................ quite soon.\", \"7 We write –10 °C, but we say ............................ ten degrees centigrade, or ten degrees below ............................ .\", \"8 It's not so bad in very hot weather if you can feel a gentle ............................ on your face. You often get this near the sea.\", \"9 It's really hot and unpleasant today – you know, there's 90% ............................ .\", \"10 There was a lot of sun this morning, but this afternoon it got quite ............................ and was much cooler.\"]}], \"boxesAndLists\": [\"Table with columns Noun/Adjective: sun, cloud, ice, shower, wind, fog, hot, humid\"], \"pictures\": [], \"unclassified\": [\"TEST\", \"Total score: / 30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]}"
+}

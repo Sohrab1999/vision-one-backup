@@ -1,0 +1,88 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 42,
+    "dpi": 300,
+    "renderSha256": "cb939f175fbe7117d564d8b9705ec53c113ddb59dd374cfcc9b97c2322ab76eb",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T14:14:25.578Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 40,
+    "testNumber": "37",
+    "testTitle": "The physical world",
+    "exercises": [
+      {
+        "id": "37.1",
+        "marks": "12 marks",
+        "instruction": "Complete the sentences below using words from the box.",
+        "items": [
+          "1 The Balearics are a .......................... in the Mediterranean.",
+          "2 The Pyrenees is a ......................... between France and Spain.",
+          "3 The Mississippi is the longest ........................... in North America.",
+          "4 Crete is a Greek ........................... in the Aegean.",
+          "5 The Kalahari is a ........................... in Africa.",
+          "6 ........................... Tanganyika is between the Congo and Tanzania.",
+          "7 The Pacific is the largest ........................... in the world.",
+          "8 Mont Blanc is the highest ........................... in France.",
+          "9 Asia is a ...........................",
+          "10 Japan is a ........................... in the Far East.",
+          "11 The Amazon rainforest is a ........................... in South America.",
+          "12 The Red ........................... is in the Middle East."
+        ]
+      },
+      {
+        "id": "37.2",
+        "marks": "6 marks",
+        "instruction": "Complete the sentences.",
+        "items": [
+          "1 The ......................... goes round the sun.",
+          "2 Niagara ......................... are on the border of Canada and the USA.",
+          "3 The North and South ......................... are at opposite ends of the earth.",
+          "4 The ......................... shine in the sky at night.",
+          "5 The ......................... goes round the centre of the earth.",
+          "6 There is a full ......................... every 28 days."
+        ]
+      },
+      {
+        "id": "37.3",
+        "marks": "6 marks",
+        "instruction": "Put the article 'the' where necessary.",
+        "items": [
+          "1 .............. Lake Titikaka 3 .............. Sahara Desert 5 .............. Black Forest",
+          "2 .............. Mount Fuji 4 .............. Atlantic Ocean 6 .............. Europe"
+        ]
+      },
+      {
+        "id": "37.4",
+        "marks": "6 marks",
+        "instruction": "Match the words in the box with the pictures.",
+        "items": [
+          "1 .................... 2 .................... 3 .................... 4 .................... 5 ....................",
+          "6 The general word used to describe these five events is 'natural .........................'."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "mountain river desert ocean\nisland continent jungle group of islands\nLake Sea country mountain range",
+      "flood volcanic eruption earthquake drought hurricane"
+    ],
+    "pictures": [
+      "Five-part illustration of natural disasters: drought, volcanic eruption, flood, earthquake, hurricane"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test Your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\n\"footer\": 40,\n\"testNumber\": \"37\",\n\"testTitle\": \"The physical world\",\n\"exercises\": [\n{\"id\": \"37.1\", \"marks\": \"12 marks\", \"instruction\": \"Complete the sentences below using words from the box.\",\n\"items\": [\n\"1 The Balearics are a .......................... in the Mediterranean.\",\n\"2 The Pyrenees is a ......................... between France and Spain.\",\n\"3 The Mississippi is the longest ........................... in North America.\",\n\"4 Crete is a Greek ........................... in the Aegean.\",\n\"5 The Kalahari is a ........................... in Africa.\",\n\"6 ........................... Tanganyika is between the Congo and Tanzania.\",\n\"7 The Pacific is the largest ........................... in the world.\",\n\"8 Mont Blanc is the highest ........................... in France.\",\n\"9 Asia is a ...........................\",\n\"10 Japan is a ........................... in the Far East.\",\n\"11 The Amazon rainforest is a ........................... in South America.\",\n\"12 The Red ........................... is in the Middle East.\"\n]},\n{\"id\": \"37.2\", \"marks\": \"6 marks\", \"instruction\": \"Complete the sentences.\",\n\"items\": [\n\"1 The ......................... goes round the sun.\",\n\"2 Niagara ......................... are on the border of Canada and the USA.\",\n\"3 The North and South ......................... are at opposite ends of the earth.\",\n\"4 The ......................... shine in the sky at night.\",\n\"5 The ......................... goes round the centre of the earth.\",\n\"6 There is a full ......................... every 28 days.\"\n]},\n{\"id\": \"37.3\", \"marks\": \"6 marks\", \"instruction\": \"Put the article 'the' where necessary.\",\n\"items\": [\n\"1 .............. Lake Titikaka 3 .............. Sahara Desert 5 .............. Black Forest\",\n\"2 .............. Mount Fuji 4 .............. Atlantic Ocean 6 .............. Europe\"\n]},\n{\"id\": \"37.4\", \"marks\": \"6 marks\", \"instruction\": \"Match the words in the box with the pictures.\",\n\"items\": [\n\"1 .................... 2 .................... 3 .................... 4 .................... 5 ....................\",\n\"6 The general word used to describe these five events is 'natural .........................'.\"\n]}\n],\n\"boxesAndLists\": [\n\"mountain river desert ocean\\nisland continent jungle group of islands\\nLake Sea country mountain range\",\n\"flood volcanic eruption earthquake drought hurricane\"\n],\n\"pictures\": [\n\"Five-part illustration of natural disasters: drought, volcanic eruption, flood, earthquake, hurricane\"\n],\n\"unclassified\": [\n\"TEST\",\n\"Your score /30\",\n\"Test Your English Vocabulary in Use (pre-intermediate and intermediate)\"\n]\n}"
+}

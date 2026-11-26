@@ -1,0 +1,80 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 38,
+    "dpi": 300,
+    "renderSha256": "a8b6421c0f0e1698e8933b6b3bcd09084386975f0dd889ca22cd1836de5660c2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T14:13:45.500Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 36,
+    "testNumber": "33",
+    "testTitle": "Time and sequence",
+    "exercises": [
+      {
+        "id": "33.1",
+        "marks": "12 marks",
+        "instruction": "Circle the correct answer(s). There is sometimes more than one.",
+        "items": [
+          "1 I'll let you know ............................ I've made my decision.\n a) when      b) while      c) as soon as",
+          "2 Pete cleaned the kitchen ............................ I did the living room.\n a) when      b) while      c) as soon as",
+          "3 We heard the noise ............................ we were getting ready.\n a) when      b) while      c) as soon as",
+          "4 I got to the gallery ............................ it was closing.\n a) as      b) while      c) just as",
+          "5 It'll get warmer in here ............................ the heating comes on.\n a) when      b) while      c) as soon as",
+          "6 I met them ............................ I was in New York.\n a) when      b) while      c) just as",
+          "7 We made the dinner ............................ John wrote his essay.\n a) when      b) while      c) just as"
+        ]
+      },
+      {
+        "id": "33.2",
+        "marks": "4 marks",
+        "instruction": "Complete this sequence of actions with suitable link words or phrases. Do not use any single word or phrase more than once.",
+        "items": [
+          "A: What did you do for your holiday this year?",
+          "B: Well, (1).......................................... we took the train up to Edinburgh and spent a couple of nights there. (2).......................................... we hired a car and travelled round Scotland for about five days. (3).......................................... we took the train right the way down to the south coast where we stayed with relatives for a few days; and (4).......................................... we came back to London in their car and showed them round for a couple of days. It was very nice."
+        ]
+      },
+      {
+        "id": "33.3",
+        "marks": "6 marks",
+        "instruction": "Read this short text, then answer the questions below.",
+        "items": [
+          "First, we took the wrong turning and ended up in the middle of an industrial estate. Then we got lost and drove round in circles for half an hour before we found the right road. But we got there in the end, and had a very nice meal at their house. After that we all went on to a club.",
+          "1 Could you use 'firstly' in place of 'first'?",
+          "2 Could you say 'before finding' in place of 'before we found'?",
+          "3 Could you say 'before to find' in place of 'before we found'?",
+          "4 Could you say 'besides' in place of 'in the end'?",
+          "5 Could you say 'eventually' in place of 'in the end'?",
+          "6 Could you say 'afterwards' in place of 'after that'?"
+        ]
+      },
+      {
+        "id": "33.4",
+        "marks": "8 marks",
+        "instruction": "Fill the gaps in these dialogues with a single word.",
+        "items": [
+          "1 A: Why is it so cold in here?\n B: Well, for one ................................. the heating isn't on; and for ................................. , someone has left the door open.",
+          "2 A: Why don't we finish the letters and send them off?\n B: Well, to ................................. with, we really need Patricia's help with one or two.\n And ................................. , we haven't got the addresses, so we can't send them."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 36,\n  \"testNumber\": \"33\",\n  \"testTitle\": \"Time and sequence\",\n  \"exercises\": [\n    {\n      \"id\": \"33.1\",\n      \"marks\": \"12 marks\",\n      \"instruction\": \"Circle the correct answer(s). There is sometimes more than one.\",\n      \"items\": [\n        \"1 I'll let you know ............................ I've made my decision.\\n a) when      b) while      c) as soon as\",\n        \"2 Pete cleaned the kitchen ............................ I did the living room.\\n a) when      b) while      c) as soon as\",\n        \"3 We heard the noise ............................ we were getting ready.\\n a) when      b) while      c) as soon as\",\n        \"4 I got to the gallery ............................ it was closing.\\n a) as      b) while      c) just as\",\n        \"5 It'll get warmer in here ............................ the heating comes on.\\n a) when      b) while      c) as soon as\",\n        \"6 I met them ............................ I was in New York.\\n a) when      b) while      c) just as\",\n        \"7 We made the dinner ............................ John wrote his essay.\\n a) when      b) while      c) just as\"\n      ]\n    },\n    {\n      \"id\": \"33.2\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Complete this sequence of actions with suitable link words or phrases. Do not use any single word or phrase more than once.\",\n      \"items\": [\n        \"A: What did you do for your holiday this year?\",\n        \"B: Well, (1).......................................... we took the train up to Edinburgh and spent a couple of nights there. (2).......................................... we hired a car and travelled round Scotland for about five days. (3).......................................... we took the train right the way down to the south coast where we stayed with relatives for a few days; and (4).......................................... we came back to London in their car and showed them round for a couple of days. It was very nice.\"\n      ]\n    },\n    {\n      \"id\": \"33.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Read this short text, then answer the questions below.\",\n      \"items\": [\n        \"First, we took the wrong turning and ended up in the middle of an industrial estate. Then we got lost and drove round in circles for half an hour before we found the right road. But we got there in the end, and had a very nice meal at their house. After that we all went on to a club.\",\n        \"1 Could you use 'firstly' in place of 'first'?\",\n        \"2 Could you say 'before finding' in place of 'before we found'?\",\n        \"3 Could you say 'before to find' in place of 'before we found'?\",\n        \"4 Could you say 'besides' in place of 'in the end'?\",\n        \"5 Could you say 'eventually' in place of 'in the end'?\",\n        \"6 Could you say 'afterwards' in place of 'after that'?\"\n      ]\n    },\n    {\n      \"id\": \"33.4\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Fill the gaps in these dialogues with a single word.\",\n      \"items\": [\n        \"1 A: Why is it so cold in here?\\n B: Well, for one ................................. the heating isn't on; and for ................................. , someone has left the door open.\",\n        \"2 A: Why don't we finish the letters and send them off?\\n B: Well, to ................................. with, we really need Patricia's help with one or two.\\n And ................................. , we haven't got the addresses, so we can't send them.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

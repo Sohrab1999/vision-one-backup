@@ -1,0 +1,29 @@
+{
+ "meta": {
+  "event": "بازیابی ۴۷ — رسیدگی ریست پنهان ۴۷م (الگوی ۳۱..۴۶)",
+  "date": "2026-11-26",
+  "jalali": "۱۴۰۵/۹/۵",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — گام بعدی مجاز طبق وضعیت ثبت‌شدهٔ پسا-S03 = A1-PRI-S04 (صفحات ۳۷–۴۸ pri — دستهٔ چهارم از ۱۲ — انتظار skip دقیقاً یک صفحه: ۴۱ پرابِ ازپیش‌کپچرشده) — trace 1a2182d62b72b495 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+  "hiddenReset": "HEAD بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت = 1033fec4c9379e499fb7bafad76ef77886daf5e9 پسا-S03 (ثبت اثبات §۱۰-۷) — backup/main tracking-ref نیز 193269b (کل .git به عقب برگشته — عین الگوی ریست‌های پنهان ۴۳..۴۶) — درخت کار پسا-S03 روی دیسک باقی بود (SNAPSHOT سربرگ ۱۳۷مین + کپچرهای pri ۰۲۵..۰۳۶ +PRI page-041 موجود)"
+ },
+ "divergence": {
+  "count": "۰/۲۲۲",
+  "detail": "behind = ۲۲۲ (۱۹۳۲۶۹ب..۱۰۳۳فک: ۲۱۷ وضعیت پسا-S01 طبق بازیابی ۴۶ + ۲ کامیت S02 + ۱ کامیت اتوماسیون پسا-نشست 82f472e + ۲ کامیت S03 = b97e188 محتوایی + 1033fec ثبت اثبات) — ahead = ۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only خالص"
+ },
+ "audit": {
+  "method": "ممیزی blob-OID با core.quotepath=false + git status --porcelain --untracked-files=all + مقایسهٔ hash-object هر فایل untracked با مجموعهٔ OIDهای reachable از backup/main (git rev-list --objects — ۹۳۸۸ OID یکتا)",
+  "beforeReset": "porcelain ظاهری: ۳۲+ M (نسبت به HEAD کهنهٔ 193269b) + untracked متعدد — پس از fetch ریموت و reset (mixed) به backup/main: ۴۸ untracked و **صفر modified tracked**",
+  "untrackedAudit": "۴۸/۴۸ untracked ARCHIVED بایت‌به‌بیت در تاریخچهٔ ریموت (blob-OID هر ۴۸ فایل در ۹۳۸۸ OID قابل‌دسترس backup/main موجود) · LOCAL-ONLY = ۰ · differ = ۰ · deleted = ۰ ⇒ صفر محتوای محلی-یگانه — ترکیب: ۷ سند مسیر-تخت superseded TYV (در 82f472e کامیت شده) + ۴۱ سند مسیر-تخت کهنهٔ دورهٔ Vision One (در 193269b و اجداد آن بایگانی)",
+  "resetMethod": "git reset backup/main (mixed — هرگز فایل‌های درخت کار را بازنویسی نمی‌کند — ایمن‌تر از --hard؛ چون پیشا-ممیزی صفر modified tracked پسا-ریموت را نشان داد، هر دو هم‌ارز و بی‌ریسک بودند) ⇒ HEAD = 1033fec = ریموت"
+ },
+ "postState": {
+  "head": "1033fec4c9379e499fb7bafad76ef77886daf5e9",
+  "remote": "backup/main = 1033fec4c9379e499fb7bafad76ef77886daf5e9 (git ls-remote پیشا-fetch اثبات‌شده)",
+  "porcelain": "۴۸ untracked (همگی ARCHIVED — عین اسناد superseded بایگانی) · صفر modified · صفر deleted",
+  "gitDiffCheck": "پاک",
+  "hookSha256": "ee679bc1b642db0f… == ثبت‌شدهٔ SNAPSHOT (هوک post-commit سالم)",
+  "stashStack": "خالی محلی — کل بایه‌های بازیابی rc33..rc45 در شاخه‌های ریموت بایگانی‌اند",
+  "diskTruth": "بازشماری ls: biz=98 · elem=96 · pri=37 (۰۰۱..۰۳۶ + ۰۴۱ پراب) · upp=3 ⇒ ۲۳۴/۴۸۹ == رکورد سربرگ ۱۳۷مین — دقیق"
+ },
+ "conclusion": "بازیابی ۴۷ کامل و صفرتلفاتی — وضعیت آغاز گام A1-PRI-S04 دقیقاً == وضعیت ثبت‌شدهٔ پسا-S03 (سربرگ ۱۳۷مین) — گام بعدی مجاز طبق SNAPSHOT ۱۳۷مین: A1-PRI-S04 = bun scripts/tyv-a1-vlm-capture.mjs pri 37,38,39,40,41,42,43,44,45,46,47,48"
+}

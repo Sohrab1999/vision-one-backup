@@ -1,0 +1,89 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 40,
+    "dpi": 300,
+    "renderSha256": "9dc4ff32526cd41aa02ec5d19333d09bccfe2bb08e8ab959c7929d17ab2c3c87",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T14:14:12.478Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 38,
+    "testNumber": "35",
+    "testTitle": "Similarities, differences and conditions",
+    "exercises": [
+      {
+        "id": "35.1",
+        "marks": null,
+        "instruction": "Look at the pictures, then complete the sentences below using the phrases in the box. Use each phrase once only.",
+        "items": [
+          "1 Anne is .................................. to Barbara.",
+          "2 Diana and Claire are .................................. .",
+          "3 Barbara is .................................. Claire.",
+          "4 Anne is .................................. from Diana, .................................. they .................................. have wavy hair.",
+          "5 .................................. Anne nor Barbara has short hair."
+        ]
+      },
+      {
+        "id": "35.2",
+        "marks": "10 marks",
+        "instruction": "Make five correct and logical sentences using words and phrases from each column. You cannot use a word or phrase more than once.",
+        "items": [
+          "1 You'll lose your umbrella  OTHERWISE  a you're wearing glasses.",
+          "2 I think you'll pass the test  IN CASE  b you keep it in your bag.",
+          "3 You'd better take some money  AS LONG AS  c you don't get too nervous.",
+          "4 You should leave by 7.00  UNLESS  d you have to take a taxi.",
+          "5 You look the same as usual  EXCEPT THAT  e you'll miss the bus."
+        ]
+      },
+      {
+        "id": "35.3",
+        "marks": "8 marks",
+        "instruction": "Do the underlined phrases have the same meaning or a different meaning?",
+        "items": [
+          "1 David and his brother have a lot in common / similar interests.",
+          "2 They made a comparison of / They compared the cost of living in their countries.",
+          "3 Alan and Carole both hate / Neither Alan nor Carole hate cleaning the house.",
+          "4 I'll go to the library if / unless it rains.",
+          "5 Everyone arrived on time apart from / except for Lucy.",
+          "6 Hedda and her brother are quite alike. / Hedda quite likes her brother.",
+          "7 I'll work on Sunday as long as / on condition that I get paid overtime.",
+          "8 I'll take my coat in case / if it's cold."
+        ]
+      },
+      {
+        "id": "35.4",
+        "marks": "5 marks",
+        "instruction": "Complete these sentences with a suitable word or phrase.",
+        "items": [
+          "1 We get on well, although we have .................................. in common.",
+          "2 London is very big .................................. with my home town.",
+          "3 The children were all late .................................. Sue, who was on time.",
+          "4 You'll be late .................................. you hurry.",
+          "5 I'd better do my homework .................................. my teacher will be angry."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "except that    quite alike    neither    very different\nquite unlike    similar    both"
+    ],
+    "pictures": [
+      "Line drawing of four women's faces labelled Anne, Barbara, Claire, Diana"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 38,\n  \"testNumber\": \"35\",\n  \"testTitle\": \"Similarities, differences and conditions\",\n  \"exercises\": [\n    {\n      \"id\": \"35.1\",\n      \"marks\": null,\n      \"instruction\": \"Look at the pictures, then complete the sentences below using the phrases in the box. Use each phrase once only.\",\n      \"items\": [\n        \"1 Anne is .................................. to Barbara.\",\n        \"2 Diana and Claire are .................................. .\",\n        \"3 Barbara is .................................. Claire.\",\n        \"4 Anne is .................................. from Diana, .................................. they .................................. have wavy hair.\",\n        \"5 .................................. Anne nor Barbara has short hair.\"\n      ]\n    },\n    {\n      \"id\": \"35.2\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Make five correct and logical sentences using words and phrases from each column. You cannot use a word or phrase more than once.\",\n      \"items\": [\n        \"1 You'll lose your umbrella  OTHERWISE  a you're wearing glasses.\",\n        \"2 I think you'll pass the test  IN CASE  b you keep it in your bag.\",\n        \"3 You'd better take some money  AS LONG AS  c you don't get too nervous.\",\n        \"4 You should leave by 7.00  UNLESS  d you have to take a taxi.\",\n        \"5 You look the same as usual  EXCEPT THAT  e you'll miss the bus.\"\n      ]\n    },\n    {\n      \"id\": \"35.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Do the underlined phrases have the same meaning or a different meaning?\",\n      \"items\": [\n        \"1 David and his brother have a lot in common / similar interests.\",\n        \"2 They made a comparison of / They compared the cost of living in their countries.\",\n        \"3 Alan and Carole both hate / Neither Alan nor Carole hate cleaning the house.\",\n        \"4 I'll go to the library if / unless it rains.\",\n        \"5 Everyone arrived on time apart from / except for Lucy.\",\n        \"6 Hedda and her brother are quite alike. / Hedda quite likes her brother.\",\n        \"7 I'll work on Sunday as long as / on condition that I get paid overtime.\",\n        \"8 I'll take my coat in case / if it's cold.\"\n      ]\n    },\n    {\n      \"id\": \"35.4\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Complete these sentences with a suitable word or phrase.\",\n      \"items\": [\n        \"1 We get on well, although we have .................................. in common.\",\n        \"2 London is very big .................................. with my home town.\",\n        \"3 The children were all late .................................. Sue, who was on time.\",\n        \"4 You'll be late .................................. you hurry.\",\n        \"5 I'd better do my homework .................................. my teacher will be angry.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"except that    quite alike    neither    very different\\nquite unlike    similar    both\"\n  ],\n  \"pictures\": [\n    \"Line drawing of four women's faces labelled Anne, Barbara, Claire, Diana\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

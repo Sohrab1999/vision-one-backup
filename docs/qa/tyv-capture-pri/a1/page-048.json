@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 48,
+    "dpi": 300,
+    "renderSha256": "1641e398a0defe844f99603c771c24d446799fb4217e5f7e180da07d81c8e580",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T14:15:38.465Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 46,
+    "testNumber": "43",
+    "testTitle": "Describing people's appearance",
+    "exercises": [
+      {
+        "id": "43.1",
+        "marks": "4 marks",
+        "instruction": "Match words from the left and right to form word partnerships. Look at the example first.",
+        "items": [
+          "1 hairy   a hair   hairy chest",
+          "2 blond   b chest   ..........................",
+          "3 medium   c skin   ..........................",
+          "4 broad   d build   ..........................",
+          "5 pale   e shoulders   .........................."
+        ]
+      },
+      {
+        "id": "43.2",
+        "marks": "6 marks",
+        "instruction": "The people here would like to be the opposite of what they are. Complete the sentences.",
+        "items": [
+          "1 'I'm short and fat, but I'd really like to be .......................... and .......................... .'",
+          "2 'I've got curly hair, but I've always wanted .......................... hair.'",
+          "3 'I've got light brown hair, but I'd much prefer to have .......................... brown hair.'",
+          "4 'I'm rather weak, but I wish I were very .......................... like those weightlifters and bodybuilders.'",
+          "5 'I've got a big nose, and I'm losing my hair. People don't find me attractive. Why can't I be .......................... , like Tom Cruise or Keanu Reeves?'"
+        ]
+      },
+      {
+        "id": "43.3",
+        "marks": "6 marks",
+        "instruction": "Find the words that have a similar meaning, then put them in the columns below to show which one in each pair has the more negative meaning.",
+        "items": [
+          "Column 1   Column 2 (more negative)"
+        ]
+      },
+      {
+        "id": "43.4",
+        "marks": "4 marks",
+        "instruction": "Label the features this man has.",
+        "items": [
+          "1 ..........................",
+          "2 ..........................",
+          "3 ..........................",
+          "4 .........................."
+        ]
+      },
+      {
+        "id": "43.5",
+        "marks": "6 marks",
+        "instruction": "Complete the dialogue.",
+        "items": [
+          "A: What does (1) .......................... ?",
+          "B: Well, she's medium height, with long fair hair, and she always looks very elegant.",
+          "A: How (2) .......................... , exactly?",
+          "B: Oh I don't know. Probably about one metre fifty.",
+          "A: And how much (3) .......................... ?",
+          "B: Well I wouldn't really like to ask that question, but I'd guess between fifty and fifty-five kilos."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "slim   ugly   plain   overweight   skinny   fat"
+    ],
+    "pictures": [
+      "line drawing of a man's head and shoulders with numbered pointing lines (1–4) for labelling exercise 43.4"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 46,\n  \"testNumber\": \"43\",\n  \"testTitle\": \"Describing people's appearance\",\n  \"exercises\": [\n    {\n      \"id\": \"43.1\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Match words from the left and right to form word partnerships. Look at the example first.\",\n      \"items\": [\n        \"1 hairy   a hair   hairy chest\",\n        \"2 blond   b chest   ..........................\",\n        \"3 medium   c skin   ..........................\",\n        \"4 broad   d build   ..........................\",\n        \"5 pale   e shoulders   ..........................\"\n      ]\n    },\n    {\n      \"id\": \"43.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"The people here would like to be the opposite of what they are. Complete the sentences.\",\n      \"items\": [\n        \"1 'I'm short and fat, but I'd really like to be .......................... and .......................... .'\",\n        \"2 'I've got curly hair, but I've always wanted .......................... hair.'\",\n        \"3 'I've got light brown hair, but I'd much prefer to have .......................... brown hair.'\",\n        \"4 'I'm rather weak, but I wish I were very .......................... like those weightlifters and bodybuilders.'\",\n        \"5 'I've got a big nose, and I'm losing my hair. People don't find me attractive. Why can't I be .......................... , like Tom Cruise or Keanu Reeves?'\"\n      ]\n    },\n    {\n      \"id\": \"43.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Find the words that have a similar meaning, then put them in the columns below to show which one in each pair has the more negative meaning.\",\n      \"items\": [\n        \"Column 1   Column 2 (more negative)\"\n      ]\n    },\n    {\n      \"id\": \"43.4\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Label the features this man has.\",\n      \"items\": [\n        \"1 ..........................\",\n        \"2 ..........................\",\n        \"3 ..........................\",\n        \"4 ..........................\"\n      ]\n    },\n    {\n      \"id\": \"43.5\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete the dialogue.\",\n      \"items\": [\n        \"A: What does (1) .......................... ?\",\n        \"B: Well, she's medium height, with long fair hair, and she always looks very elegant.\",\n        \"A: How (2) .......................... , exactly?\",\n        \"B: Oh I don't know. Probably about one metre fifty.\",\n        \"A: And how much (3) .......................... ?\",\n        \"B: Well I wouldn't really like to ask that question, but I'd guess between fifty and fifty-five kilos.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"slim   ugly   plain   overweight   skinny   fat\"\n  ],\n  \"pictures\": [\n    \"line drawing of a man's head and shoulders with numbered pointing lines (1–4) for labelling exercise 43.4\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

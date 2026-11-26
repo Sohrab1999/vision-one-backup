@@ -1,0 +1,85 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 47,
+    "dpi": 300,
+    "renderSha256": "c3d9567bbaa9bfedab305b27b5c17120825c37692aeb62cfa00b2e3b710e0844",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T14:15:23.886Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 45,
+    "testNumber": "42",
+    "testTitle": "The body and what it does",
+    "exercises": [
+      {
+        "id": "42.1",
+        "marks": null,
+        "instruction": "Think of a person standing up. Put the parts of the body in order from top to bottom.",
+        "items": []
+      },
+      {
+        "id": "42.2",
+        "marks": null,
+        "instruction": "Label the parts that are missing.",
+        "items": [
+          "1 ..........................",
+          "2 ..........................",
+          "3 ..........................",
+          "4 ..........................",
+          "5 .........................."
+        ]
+      },
+      {
+        "id": "42.3",
+        "marks": null,
+        "instruction": "What is the person doing in each picture? Look at the example first.",
+        "items": [
+          "Example:",
+          "He's nodding his head.",
+          "1 ..............................",
+          "2 ..............................",
+          "3 ..............................",
+          "4 ..............................",
+          "5 .............................."
+        ]
+      },
+      {
+        "id": "42.4",
+        "marks": null,
+        "instruction": "Complete the sentences with a word from the box.",
+        "items": [
+          "1 My mother gets very angry with me when I ......................... my nails.",
+          "2 The President will come into the room and ......................... hands with everyone.",
+          "3 I sometimes forget to ......................... my hair in the morning.",
+          "4 In football team photographs, the players usually ......................... their arms.",
+          "5 Since I hurt my leg in the accident, it's been difficult to ......................... my knees.",
+          "6 I had to ......................... my nose in the middle of the lecture – it was a bit embarrassing.",
+          "7 It's lovely to come up to the mountains and ......................... fresh air."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "neck ankles\nhips forehead\nshoulders waist\nchest thighs\nchin lips\ncheeks eyebrows\nknees",
+      "shake blow fold bite breathe bend comb"
+    ],
+    "pictures": [
+      "Line drawing of a boy (head and upper body) with numbered arrows 1–5 pointing to arm/hand parts",
+      "Six small drawings of faces/head actions for exercise 42.3 (nodding, smiling, laughing, yawning, crying, shaking head)"
+    ],
+    "unclassified": [
+      "HAIR",
+      "HEELS",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 45, \"testNumber\": \"42\", \"testTitle\": \"The body and what it does\", \"exercises\": [{\"id\": \"42.1\", \"marks\": null, \"instruction\": \"Think of a person standing up. Put the parts of the body in order from top to bottom.\", \"items\": []}, {\"id\": \"42.2\", \"marks\": null, \"instruction\": \"Label the parts that are missing.\", \"items\": [\"1 ..........................\", \"2 ..........................\", \"3 ..........................\", \"4 ..........................\", \"5 ..........................\"]}, {\"id\": \"42.3\", \"marks\": null, \"instruction\": \"What is the person doing in each picture? Look at the example first.\", \"items\": [\"Example:\", \"He's nodding his head.\", \"1 ..............................\", \"2 ..............................\", \"3 ..............................\", \"4 ..............................\", \"5 ..............................\"]}, {\"id\": \"42.4\", \"marks\": null, \"instruction\": \"Complete the sentences with a word from the box.\", \"items\": [\"1 My mother gets very angry with me when I ......................... my nails.\", \"2 The President will come into the room and ......................... hands with everyone.\", \"3 I sometimes forget to ......................... my hair in the morning.\", \"4 In football team photographs, the players usually ......................... their arms.\", \"5 Since I hurt my leg in the accident, it's been difficult to ......................... my knees.\", \"6 I had to ......................... my nose in the middle of the lecture – it was a bit embarrassing.\", \"7 It's lovely to come up to the mountains and ......................... fresh air.\"]}], \"boxesAndLists\": [\"neck ankles\\nhips forehead\\nshoulders waist\\nchest thighs\\nchin lips\\ncheeks eyebrows\\nknees\", \"shake blow fold bite breathe bend comb\"], \"pictures\": [\"Line drawing of a boy (head and upper body) with numbered arrows 1–5 pointing to arm/hand parts\", \"Six small drawings of faces/head actions for exercise 42.3 (nodding, smiling, laughing, yawning, crying, shaking head)\"], \"unclassified\": [\"HAIR\", \"HEELS\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]}\n```"
+}
