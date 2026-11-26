@@ -1,0 +1,98 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 92,
+    "dpi": 300,
+    "renderSha256": "bb096d597d95049be21bf23f1a86ab952e81d1fcfeda0806aa5770e4f93ed094",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:32:25.541Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 90,
+    "testNumber": "87",
+    "testTitle": "Hotels",
+    "exercises": [
+      {
+        "id": "87.1",
+        "marks": "8 marks",
+        "instruction": "Complete these descriptions of hotel accommodation.",
+        "items": [
+          "1 A room for one person with one bed is called a ..................................................",
+          "2 A room for two people with one large bed is called a .................................................",
+          "3 A room for two people with two beds is called a ..................................................",
+          "4 If you have breakfast, lunch and dinner, it is called ................................................."
+        ]
+      },
+      {
+        "id": "87.2",
+        "marks": "4 marks",
+        "instruction": "Answer these questions about hotel accommodation in the United Kingdom.",
+        "items": [
+          "1 If a hotel tells you that the room is ensuite, what does that mean?",
+          "2 If you decide to have half board at a hotel, what meals are included?",
+          "3 If you stayed in a four-star hotel, would it be cheap or expensive?",
+          "4 What does B&B stand for?"
+        ]
+      },
+      {
+        "id": "87.3",
+        "marks": "14 marks",
+        "instruction": "Complete these conversations with the correct word.",
+        "items": [
+          "1 GUEST: I'm leaving in ten minutes, so could I pay my .............................. , please?",
+          "RECEPTIONIST: Yes, of course.",
+          "2 GUEST: Is breakfast .............................. in the price of the room?",
+          "RECEPTIONIST: No, I'm afraid breakfast is extra.",
+          "3 GUEST: .............................. me. How do I .............................. to the centre from here?",
+          "RECEPTIONIST: Turn right outside the hotel and just keep walking for about ten minutes.",
+          "4 GUEST: Are you fully .............................. next week?",
+          "RECEPTIONIST: Yes, I'm afraid we are, sir. It's the middle of the tourist .............................. , all the hotels are very busy.",
+          "5 GUEST: Do you have a .............................. ?",
+          "RECEPTIONIST: I'm sorry sir, we only have the stairs, but I'll take your luggage up for you.",
+          "6 GUEST: I'm afraid the central heating in my room isn't .............................. at all.",
+          "RECEPTIONIST: Oh I'm terribly sorry. I'll get someone to look at it.",
+          "GUEST: Thank you. Could they also look at the shower? I think there is something .............................. with it. The water pressure is very low.",
+          "7 GUEST: I'd like to leave for the airport in about ten minutes. Could you .............................. a taxi for me?",
+          "RECEPTIONIST: Yes, of course.",
+          "8 RECEPTIONIST: Do you already have a reservation?",
+          "GUEST: Yes, I .............................. a room three weeks ago.",
+          "9 GUEST: What do I have to do when I arrive?",
+          "RECEPTIONIST: Just check in at .............................. when you get to the hotel.",
+          "10 GUEST: Could you give me an early morning .............................. , please?",
+          "RECEPTIONIST: Yes, of course. What time?",
+          "11 GUEST: We had an excellent waiter, so I gave him a £10 .............................. ."
+        ]
+      },
+      {
+        "id": "87.4",
+        "marks": "4 marks",
+        "instruction": "What are these people called in a hotel?",
+        "items": [
+          "1 The person who works behind the desk as you enter the hotel.",
+          "2 The person who carries luggage to your room.",
+          "3 The person who cleans the rooms.",
+          "4 The person who cooks the meals in the restaurant."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Line drawing of a receptionist behind a desk talking to a guest, next to exercise 87.2"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 90,\n \"testNumber\": \"87\",\n \"testTitle\": \"Hotels\",\n \"exercises\": [\n  {\"id\": \"87.1\", \"marks\": \"8 marks\",\n   \"instruction\": \"Complete these descriptions of hotel accommodation.\",\n   \"items\": [\n    \"1 A room for one person with one bed is called a ..................................................\",\n    \"2 A room for two people with one large bed is called a .................................................\",\n    \"3 A room for two people with two beds is called a ..................................................\",\n    \"4 If you have breakfast, lunch and dinner, it is called .................................................\"]},\n  {\"id\": \"87.2\", \"marks\": \"4 marks\",\n   \"instruction\": \"Answer these questions about hotel accommodation in the United Kingdom.\",\n   \"items\": [\n    \"1 If a hotel tells you that the room is ensuite, what does that mean?\",\n    \"2 If you decide to have half board at a hotel, what meals are included?\",\n    \"3 If you stayed in a four-star hotel, would it be cheap or expensive?\",\n    \"4 What does B&B stand for?\"]},\n  {\"id\": \"87.3\", \"marks\": \"14 marks\",\n   \"instruction\": \"Complete these conversations with the correct word.\",\n   \"items\": [\n    \"1 GUEST: I'm leaving in ten minutes, so could I pay my .............................. , please?\",\n    \"RECEPTIONIST: Yes, of course.\",\n    \"2 GUEST: Is breakfast .............................. in the price of the room?\",\n    \"RECEPTIONIST: No, I'm afraid breakfast is extra.\",\n    \"3 GUEST: .............................. me. How do I .............................. to the centre from here?\",\n    \"RECEPTIONIST: Turn right outside the hotel and just keep walking for about ten minutes.\",\n    \"4 GUEST: Are you fully .............................. next week?\",\n    \"RECEPTIONIST: Yes, I'm afraid we are, sir. It's the middle of the tourist .............................. , all the hotels are very busy.\",\n    \"5 GUEST: Do you have a .............................. ?\",\n    \"RECEPTIONIST: I'm sorry sir, we only have the stairs, but I'll take your luggage up for you.\",\n    \"6 GUEST: I'm afraid the central heating in my room isn't .............................. at all.\",\n    \"RECEPTIONIST: Oh I'm terribly sorry. I'll get someone to look at it.\",\n    \"GUEST: Thank you. Could they also look at the shower? I think there is something .............................. with it. The water pressure is very low.\",\n    \"7 GUEST: I'd like to leave for the airport in about ten minutes. Could you .............................. a taxi for me?\",\n    \"RECEPTIONIST: Yes, of course.\",\n    \"8 RECEPTIONIST: Do you already have a reservation?\",\n    \"GUEST: Yes, I .............................. a room three weeks ago.\",\n    \"9 GUEST: What do I have to do when I arrive?\",\n    \"RECEPTIONIST: Just check in at .............................. when you get to the hotel.\",\n    \"10 GUEST: Could you give me an early morning .............................. , please?\",\n    \"RECEPTIONIST: Yes, of course. What time?\",\n    \"11 GUEST: We had an excellent waiter, so I gave him a £10 .............................. .\"]},\n  {\"id\": \"87.4\", \"marks\": \"4 marks\",\n   \"instruction\": \"What are these people called in a hotel?\",\n   \"items\": [\n    \"1 The person who works behind the desk as you enter the hotel.\",\n    \"2 The person who carries luggage to your room.\",\n    \"3 The person who cleans the rooms.\",\n    \"4 The person who cooks the meals in the restaurant.\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"Line drawing of a receptionist behind a desk talking to a guest, next to exercise 87.2\"],\n \"unclassified\": [\"TEST\", \"Your score\", \"/30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

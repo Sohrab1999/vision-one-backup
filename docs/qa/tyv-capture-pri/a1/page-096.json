@@ -1,0 +1,98 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 96,
+    "dpi": 300,
+    "renderSha256": "b0fa9623471e70c5169ad69f5e8fda9e9835d812fdbd9f115a7da4bac1a702aa",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:33:12.623Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 94,
+    "testNumber": "91",
+    "testTitle": "Numbers",
+    "exercises": [
+      {
+        "id": "91.1",
+        "marks": "16 marks",
+        "instruction": "How do you say these numbers in English? Write your answers after each one.",
+        "items": [
+          "Example: 384 three hundred and eighty-four",
+          "1 212",
+          "2 5330",
+          "3 3,450,000",
+          "4 4.5",
+          "5 0.75",
+          "6 6.05",
+          "7 3½",
+          "8 12¼",
+          "9 1⅓",
+          "10 14 March",
+          "11 August 21",
+          "12 1998",
+          "13 1910",
+          "14 53%",
+          "15 603 3579 (phone number)",
+          "16 –10°"
+        ]
+      },
+      {
+        "id": "91.2",
+        "marks": "3 marks",
+        "instruction": "There are four basic processes in arithmetic. The first one has been given, but what are the other three?",
+        "items": [
+          "1 + = addition        3 × = ..............................",
+          "2 − = ..............................        4 ÷ = .............................."
+        ]
+      },
+      {
+        "id": "91.3",
+        "marks": "6 marks",
+        "instruction": "Using only the numbers and symbols in the box, write out the calculations which produce the answers for each number below. There may be more than one way of calculating an answer, but you only need to provide one correct answer in each case.",
+        "items": [
+          "Example: Eight times twelve is",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ]
+      },
+      {
+        "id": "91.4",
+        "marks": "5 marks",
+        "instruction": "Fill the gaps in these sentences, one word for each gap.",
+        "items": [
+          "1 One, three and five are .............................. numbers; two, four and six are .............................. numbers.",
+          "2 More than 50% is the .............................. ; less than 50% is the .............................. .",
+          "3 If a test has 30 marks and you got 21, you could say this as twenty-one .............................. .............................. thirty."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "×  80  +  240  ÷  2  4.5  128  4  12  −  8"
+    ],
+    "pictures": [
+      "rounded box containing numbers and arithmetic symbols for exercise 91.3"
+    ],
+    "unclassified": [
+      "TEST",
+      "www.irlanguage.com",
+      "IR Language",
+      "مرجع آموزش زبان ایرانیان",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 94,\n  \"testNumber\": \"91\",\n  \"testTitle\": \"Numbers\",\n  \"exercises\": [\n    {\n      \"id\": \"91.1\",\n      \"marks\": \"16 marks\",\n      \"instruction\": \"How do you say these numbers in English? Write your answers after each one.\",\n      \"items\": [\n        \"Example: 384 three hundred and eighty-four\",\n        \"1 212\",\n        \"2 5330\",\n        \"3 3,450,000\",\n        \"4 4.5\",\n        \"5 0.75\",\n        \"6 6.05\",\n        \"7 3½\",\n        \"8 12¼\",\n        \"9 1⅓\",\n        \"10 14 March\",\n        \"11 August 21\",\n        \"12 1998\",\n        \"13 1910\",\n        \"14 53%\",\n        \"15 603 3579 (phone number)\",\n        \"16 –10°\"\n      ]\n    },\n    {\n      \"id\": \"91.2\",\n      \"marks\": \"3 marks\",\n      \"instruction\": \"There are four basic processes in arithmetic. The first one has been given, but what are the other three?\",\n      \"items\": [\n        \"1 + = addition        3 × = ..............................\",\n        \"2 − = ..............................        4 ÷ = ..............................\"\n      ]\n    },\n    {\n      \"id\": \"91.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Using only the numbers and symbols in the box, write out the calculations which produce the answers for each number below. There may be more than one way of calculating an answer, but you only need to provide one correct answer in each case.\",\n      \"items\": [\n        \"Example: Eight times twelve is\",\n        \"1\",\n        \"2\",\n        \"3\",\n        \"4\",\n        \"5\",\n        \"6\"\n      ]\n    },\n    {\n      \"id\": \"91.4\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Fill the gaps in these sentences, one word for each gap.\",\n      \"items\": [\n        \"1 One, three and five are .............................. numbers; two, four and six are .............................. numbers.\",\n        \"2 More than 50% is the .............................. ; less than 50% is the .............................. .\",\n        \"3 If a test has 30 marks and you got 21, you could say this as twenty-one .............................. .............................. thirty.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"×  80  +  240  ÷  2  4.5  128  4  12  −  8\"\n  ],\n  \"pictures\": [\n    \"rounded box containing numbers and arithmetic symbols for exercise 91.3\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"www.irlanguage.com\",\n    \"IR Language\",\n    \"مرجع آموزش زبان ایرانیان\",\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

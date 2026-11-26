@@ -1,0 +1,84 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 91,
+    "dpi": 300,
+    "renderSha256": "dfea89e3cc190e537d496b814b3416972513265a9058793403f4cfade735a8b4",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:32:15.869Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 89,
+    "testNumber": "86",
+    "testTitle": "Air travel",
+    "exercises": [
+      {
+        "id": "86.1",
+        "marks": "5 marks",
+        "instruction": "Replace the underlined words with another word or phrase.",
+        "items": [
+          "1 The plane's engines started up, and it began to move slowly from the airport building towards the runway.",
+          "2 As the passengers were getting on the plane, someone shouted from inside.",
+          "3 When he arrived at the desk, the check-in clerk took his suitcases and checked his ticket.",
+          "4 The flight attendants were extremely helpful and professional.",
+          "5 When we got to Athens, we decided to rent a car for the week."
+        ]
+      },
+      {
+        "id": "86.2",
+        "marks": "8 marks",
+        "instruction": "Match a word from the left with a word from the right to form eight compound nouns.",
+        "items": [
+          "1 seat  a building .....................................",
+          "2 seat  b card .....................................",
+          "3 airline  c luggage .....................................",
+          "4 boarding  d locker .....................................",
+          "5 terminal  e representative .....................................",
+          "6 hand  f number .....................................",
+          "7 overhead  g baggage .....................................",
+          "8 excess  h belt ....................................."
+        ]
+      },
+      {
+        "id": "86.3",
+        "marks": "9 marks",
+        "instruction": "Complete the sentences using a suitable verb.",
+        "items": [
+          "1 The customs officer ................................... my passport and gave it back to me. I ..................................... through to the departure lounge.",
+          "2 A: Do you know your flight times?\nB: Yes, the plane ................................... off at six in the evening and ..................................... just after ten o'clock.",
+          "3 Ladies and gentlemen: would you please ................................... your seat in the upright position and ..................................... your seat belt. Please extinguish all cigarettes. Thank you.",
+          "4 Our flight today will take us over the coast of France and the Bay of Biscay and we will be ..................................... at a height of 9000 metres.",
+          "5 Unfortunately I had to ..................................... excess baggage and it cost me a fortune.",
+          "6 I thought my case was only 15 kg, but when they ..................................... it, it was 23 kg."
+        ]
+      },
+      {
+        "id": "86.4",
+        "marks": "8 marks",
+        "instruction": "Complete the questions.",
+        "items": [
+          "1 You get lost between leaving the plane and collecting your luggage. You see an official walking down the corridor towards you. What do you ask?\nExcuse me, which way is .............................................................. ?",
+          "2 You arrive at the airport with your luggage. You are flying American Airlines. What do you ask as soon as you get into the terminal building?\nExcuse me, where is the .............................................................. American Airlines?",
+          "3 You passed through customs and have been sitting waiting for two hours. Finally, your flight is called and you run to the plane. When you get there, you realise your camera is still where you were sitting. What do you say to the flight attendant?\nOh, dear, I think I ..................................................................................... lounge.",
+          "4 You go to the airport to meet a friend who is arriving from Morocco. When you see them, what do you ask?\nDid .............................................................. flight?"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score / 30",
+      "Test Your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 89,\n \"testNumber\": \"86\",\n \"testTitle\": \"Air travel\",\n \"exercises\": [\n  {\"id\": \"86.1\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Replace the underlined words with another word or phrase.\",\n   \"items\": [\n    \"1 The plane's engines started up, and it began to move slowly from the airport building towards the runway.\",\n    \"2 As the passengers were getting on the plane, someone shouted from inside.\",\n    \"3 When he arrived at the desk, the check-in clerk took his suitcases and checked his ticket.\",\n    \"4 The flight attendants were extremely helpful and professional.\",\n    \"5 When we got to Athens, we decided to rent a car for the week.\"\n   ]},\n  {\"id\": \"86.2\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Match a word from the left with a word from the right to form eight compound nouns.\",\n   \"items\": [\n    \"1 seat  a building .....................................\",\n    \"2 seat  b card .....................................\",\n    \"3 airline  c luggage .....................................\",\n    \"4 boarding  d locker .....................................\",\n    \"5 terminal  e representative .....................................\",\n    \"6 hand  f number .....................................\",\n    \"7 overhead  g baggage .....................................\",\n    \"8 excess  h belt .....................................\"\n   ]},\n  {\"id\": \"86.3\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"Complete the sentences using a suitable verb.\",\n   \"items\": [\n    \"1 The customs officer ................................... my passport and gave it back to me. I ..................................... through to the departure lounge.\",\n    \"2 A: Do you know your flight times?\\nB: Yes, the plane ................................... off at six in the evening and ..................................... just after ten o'clock.\",\n    \"3 Ladies and gentlemen: would you please ................................... your seat in the upright position and ..................................... your seat belt. Please extinguish all cigarettes. Thank you.\",\n    \"4 Our flight today will take us over the coast of France and the Bay of Biscay and we will be ..................................... at a height of 9000 metres.\",\n    \"5 Unfortunately I had to ..................................... excess baggage and it cost me a fortune.\",\n    \"6 I thought my case was only 15 kg, but when they ..................................... it, it was 23 kg.\"\n   ]},\n  {\"id\": \"86.4\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete the questions.\",\n   \"items\": [\n    \"1 You get lost between leaving the plane and collecting your luggage. You see an official walking down the corridor towards you. What do you ask?\\nExcuse me, which way is .............................................................. ?\",\n    \"2 You arrive at the airport with your luggage. You are flying American Airlines. What do you ask as soon as you get into the terminal building?\\nExcuse me, where is the .............................................................. American Airlines?\",\n    \"3 You passed through customs and have been sitting waiting for two hours. Finally, your flight is called and you run to the plane. When you get there, you realise your camera is still where you were sitting. What do you say to the flight attendant?\\nOh, dear, I think I ..................................................................................... lounge.\",\n    \"4 You go to the airport to meet a friend who is arriving from Morocco. When you see them, what do you ask?\\nDid .............................................................. flight?\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [],\n \"unclassified\": [\"TEST\", \"Your score / 30\", \"Test Your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}"
+}

@@ -1,0 +1,78 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 94,
+    "dpi": 300,
+    "renderSha256": "8e35e171b51f1bd3a543f3dc8b9261634322b2fee3054d52ac3d59d748549701",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:32:50.385Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 92,
+    "testNumber": "89",
+    "testTitle": "On the beach and in the country",
+    "exercises": [
+      {
+        "id": "89.1",
+        "marks": "12 marks",
+        "instruction": "Complete the gaps. The first letter of each word has been given.",
+        "items": [
+          "Dear Jackie,",
+          "We're having a wonderful time! We have found a great (1)p.......................... to stay here in the south of Spain, and we have (2)r.......................... a villa with a view of the sea. The children are particularly enjoying being at the (3)s.......................... and we are (4)s.......................... most of our time on the (5)b.........................., which has beautiful golden (6)s.......................... . Poor David is suffering, though. He fell asleep yesterday while he was (7)s.........................., but he hadn't put any (8)s.......................... l.......................... or (9)s.......................... on, so he got (10)s.......................... . Today we're going to another (11)r.......................... nearby, where there are some nice fish restaurants and the chance to do (12)v.......................... water sports such as windsurfing and water skiing. Brilliant!",
+          "See you soon.",
+          "love, Elspeth"
+        ]
+      },
+      {
+        "id": "89.2",
+        "marks": "5 marks",
+        "instruction": "Put the words in these sentences in the correct order.",
+        "items": [
+          "1 a   we   the   go   evenings   stroll   for   in",
+          "2 at   get   it   very   to   is   difficult   away   weekends",
+          "3 I   to   my   up   and   prefer   nothing   put   feet   do",
+          "4 enjoy   really   they   the   and   I   quiet   peace   think",
+          "5 are   picnic   we   countryside   have   a   going   the   in   to"
+        ]
+      },
+      {
+        "id": "89.2 (continued)",
+        "marks": "5 marks",
+        "instruction": "Now match the questions below with a suitable answer from 1–5 above.",
+        "items": [
+          "a Do you like active or relaxing holidays?",
+          "b Have you got any plans for today?",
+          "c Why do they spend so much time in the countryside?",
+          "d Why don't you come down to the seaside and stay with us on Saturday?",
+          "e What do you do after dinner?"
+        ]
+      },
+      {
+        "id": "89.3",
+        "marks": "8 marks",
+        "instruction": "Look at the picture, then complete the text.",
+        "items": [
+          "The man with the (1).......................... .......................... is having problems because it is a very (2).......................... day. In fact, it is so strong it could blow his (3).......................... away too. The sea is very (4).......................... and there are big (5).......................... breaking onto the shore. The (6).......................... is moving dangerously near to the (7).......................... in the sea, just below the (8).......................... ."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "line-drawing of a boat being blown by strong wind on the sea near cliffs and a sailing boat",
+      "'Your score' box with '/30'"
+    ],
+    "unclassified": [
+      "TEST",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 92,\n  \"testNumber\": \"89\",\n  \"testTitle\": \"On the beach and in the country\",\n  \"exercises\": [\n    {\n      \"id\": \"89.1\",\n      \"marks\": \"12 marks\",\n      \"instruction\": \"Complete the gaps. The first letter of each word has been given.\",\n      \"items\": [\n        \"Dear Jackie,\",\n        \"We're having a wonderful time! We have found a great (1)p.......................... to stay here in the south of Spain, and we have (2)r.......................... a villa with a view of the sea. The children are particularly enjoying being at the (3)s.......................... and we are (4)s.......................... most of our time on the (5)b.........................., which has beautiful golden (6)s.......................... . Poor David is suffering, though. He fell asleep yesterday while he was (7)s.........................., but he hadn't put any (8)s.......................... l.......................... or (9)s.......................... on, so he got (10)s.......................... . Today we're going to another (11)r.......................... nearby, where there are some nice fish restaurants and the chance to do (12)v.......................... water sports such as windsurfing and water skiing. Brilliant!\",\n        \"See you soon.\",\n        \"love, Elspeth\"\n      ]\n    },\n    {\n      \"id\": \"89.2\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Put the words in these sentences in the correct order.\",\n      \"items\": [\n        \"1 a   we   the   go   evenings   stroll   for   in\",\n        \"2 at   get   it   very   to   is   difficult   away   weekends\",\n        \"3 I   to   my   up   and   prefer   nothing   put   feet   do\",\n        \"4 enjoy   really   they   the   and   I   quiet   peace   think\",\n        \"5 are   picnic   we   countryside   have   a   going   the   in   to\"\n      ]\n    },\n    {\n      \"id\": \"89.2 (continued)\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Now match the questions below with a suitable answer from 1–5 above.\",\n      \"items\": [\n        \"a Do you like active or relaxing holidays?\",\n        \"b Have you got any plans for today?\",\n        \"c Why do they spend so much time in the countryside?\",\n        \"d Why don't you come down to the seaside and stay with us on Saturday?\",\n        \"e What do you do after dinner?\"\n      ]\n    },\n    {\n      \"id\": \"89.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Look at the picture, then complete the text.\",\n      \"items\": [\n        \"The man with the (1).......................... .......................... is having problems because it is a very (2).......................... day. In fact, it is so strong it could blow his (3).......................... away too. The sea is very (4).......................... and there are big (5).......................... breaking onto the shore. The (6).......................... is moving dangerously near to the (7).......................... in the sea, just below the (8).......................... .\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"line-drawing of a boat being blown by strong wind on the sea near cliffs and a sailing boat\",\n    \"'Your score' box with '/30'\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

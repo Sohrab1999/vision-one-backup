@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 89,
+    "dpi": 300,
+    "renderSha256": "f6661d8a4ce320348964494671ee98d66c66b9522b77b66f9f63777159624502",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:31:53.040Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 87,
+    "testNumber": "34",
+    "testTitle": "War and peace",
+    "exercises": [
+      {
+        "id": "34.1",
+        "marks": "8 marks",
+        "instruction": "Replace the underlined words and phrases with a word from the box in the correct form.",
+        "items": [
+          "The (1) strong disagreement over the (2) land belonging to a country in the eastern part of Yarland has led to fighting and the (3) start of war. Yarland has now been (4) entered by force by Doeland, and the army has (5) taken control of the city of Lugan.The Yarlish soldiers have now (6) gone back as far as the border, but the Doe army is still (7) taking action to damage the city because there are still small groups of Yarlish fighters who are trying to (8) protect it."
+        ]
+      },
+      {
+        "id": "34.2",
+        "marks": "7 marks",
+        "instruction": "Are the underlined words grammatically correct or not? If they are not correct, change them.",
+        "items": [
+          "1 The armies of many European countries contain troop who are doing military service.",
+          "2 The person in charge of the air forces in our country is a woman.",
+          "3 The two sides are now in the middle of peace talks.",
+          "4 We are hoping the ceasefire will last this time, so that the peace negotiations can continue.",
+          "5 We sent aids in the form of medicine and food supply."
+        ]
+      },
+      {
+        "id": "34.3",
+        "marks": "8 marks",
+        "instruction": "What word or phrase is being defined in the sentences below?",
+        "items": [
+          "1 People who are prepared to take violent action to obtain a political aim. ......................",
+          "2 People who are taken prisoner by someone who uses them to try to obtain political demands. ......................",
+          "3 A crime which involves taking control of a means of transport (bus, train or plane) in order to get prisoners. ......................",
+          "4 People who are not in the army or armed forces. ......................",
+          "5 An area where there is fighting between two sides. ......................",
+          "6 To permit a prisoner to go free. ......................",
+          "7 An official agreement between two sides at the end of a war. ......................",
+          "8 To fire large guns and explosives at a place. ......................"
+        ]
+      },
+      {
+        "id": "34.4",
+        "marks": "7 marks",
+        "instruction": "Complete the conversations. You need one word for each gap.",
+        "items": [
+          "1 A: What happened to the soldiers that were taken by the other side? Are they free now?",
+          "B: Yes, they were .......................... last night.",
+          "2 A: Have they got enough food to last through the winter?",
+          "B: No, the situation is very bad. They have ............ ............ ............ everything except rice.",
+          "3 A: Is there any news of the soldiers?",
+          "B: Yes – two of them were .......................... in the fighting and they are in hospital.",
+          "4 A: What about the leader? Is he still alive?",
+          "B: No, I don't think so; someone told me he is .......................... .",
+          "5 A: I think they are going to propose a ceasefire.",
+          "B: Yes, but I don't think the other side will .......................... to it.",
+          "6 A: You must have been very frightened.",
+          "B: Yes, the soldier .......................... a gun in the air and everyone ran away.",
+          "7 A: Why did they take so many hostages?",
+          "B: So that they could .......................... for the release of other terrorists."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "defend conflict territory retreat attack invade outbreak capture"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Your score",
+      "/ 30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "TEST"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 87, \"testNumber\": \"34\", \"testTitle\": \"War and peace\", \"exercises\": [{\"id\": \"34.1\", \"marks\": \"8 marks\", \"instruction\": \"Replace the underlined words and phrases with a word from the box in the correct form.\", \"items\": [\"The (1) strong disagreement over the (2) land belonging to a country in the eastern part of Yarland has led to fighting and the (3) start of war. Yarland has now been (4) entered by force by Doeland, and the army has (5) taken control of the city of Lugan.The Yarlish soldiers have now (6) gone back as far as the border, but the Doe army is still (7) taking action to damage the city because there are still small groups of Yarlish fighters who are trying to (8) protect it.\"]}, {\"id\": \"34.2\", \"marks\": \"7 marks\", \"instruction\": \"Are the underlined words grammatically correct or not? If they are not correct, change them.\", \"items\": [\"1 The armies of many European countries contain troop who are doing military service.\", \"2 The person in charge of the air forces in our country is a woman.\", \"3 The two sides are now in the middle of peace talks.\", \"4 We are hoping the ceasefire will last this time, so that the peace negotiations can continue.\", \"5 We sent aids in the form of medicine and food supply.\"]}, {\"id\": \"34.3\", \"marks\": \"8 marks\", \"instruction\": \"What word or phrase is being defined in the sentences below?\", \"items\": [\"1 People who are prepared to take violent action to obtain a political aim. ......................\", \"2 People who are taken prisoner by someone who uses them to try to obtain political demands. ......................\", \"3 A crime which involves taking control of a means of transport (bus, train or plane) in order to get prisoners. ......................\", \"4 People who are not in the army or armed forces. ......................\", \"5 An area where there is fighting between two sides. ......................\", \"6 To permit a prisoner to go free. ......................\", \"7 An official agreement between two sides at the end of a war. ......................\", \"8 To fire large guns and explosives at a place. ......................\"]}, {\"id\": \"34.4\", \"marks\": \"7 marks\", \"instruction\": \"Complete the conversations. You need one word for each gap.\", \"items\": [\"1 A: What happened to the soldiers that were taken by the other side? Are they free now?\", \"B: Yes, they were .......................... last night.\", \"2 A: Have they got enough food to last through the winter?\", \"B: No, the situation is very bad. They have ............ ............ ............ everything except rice.\", \"3 A: Is there any news of the soldiers?\", \"B: Yes – two of them were .......................... in the fighting and they are in hospital.\", \"4 A: What about the leader? Is he still alive?\", \"B: No, I don't think so; someone told me he is .......................... .\", \"5 A: I think they are going to propose a ceasefire.\", \"B: Yes, but I don't think the other side will .......................... to it.\", \"6 A: You must have been very frightened.\", \"B: Yes, the soldier .......................... a gun in the air and everyone ran away.\", \"7 A: Why did they take so many hostages?\", \"B: So that they could .......................... for the release of other terrorists.\"]}], \"boxesAndLists\": [\"defend conflict territory retreat attack invade outbreak capture\"], \"pictures\": [], \"unclassified\": [\"Your score\", \"/ 30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"TEST\"]}\n```"
+}

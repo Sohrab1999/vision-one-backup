@@ -1,0 +1,96 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 86,
+    "dpi": 300,
+    "renderSha256": "86b8aa30ea3a0216a4bdca6aa1fa2458d48563b366a0754482968a7ae3e3ac93",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:31:11.283Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 84,
+    "testNumber": "81",
+    "testTitle": "Crime",
+    "exercises": [
+      {
+        "id": "81.1",
+        "marks": "6 marks",
+        "instruction": "Complete these sentences using a word from the box.",
+        "items": [
+          "1 He was sent to prison for ............................... after a series of sexual attacks on women.",
+          "2 There was a bank ............................... here last week - they got away with over £1 millio[?]",
+          "3 The ............................... happened during the night while he was away. They broke into the living room and took all the electrical goods.",
+          "4 Car ............................... is one of the most common crimes in our country today.",
+          "5 The police found a dead body, but they don't know if it was an accident or .........................",
+          "6 When the couple were arrested for ............................... outside the department store, the[?] each were wearing five gold watches."
+        ]
+      },
+      {
+        "id": "81.2",
+        "marks": "6 marks",
+        "instruction": "Complete the table with the correct word in each space.",
+        "items": [
+          "theft",
+          "robbery",
+          "murder",
+          "rape",
+          "shoplifting",
+          "burglary"
+        ]
+      },
+      {
+        "id": "81.3",
+        "marks": "9 marks",
+        "instruction": "Replace the underlined word or phrase with a single word.",
+        "items": [
+          "1 The action was against the law, and fortunately he was arrested immediately.",
+          "2 The child took the sweets when the shop assistant wasn't looking.",
+          "3 To protect your jewellery, it's a good idea to get a strong metal box which is hard to open.",
+          "4 We've had a lot of crime in our area, so we've decided to fit a burglar alarm.",
+          "5 The police prefer to stop crime before it happens.",
+          "6 You shouldn't walk about at night on your own; it's dangerous.",
+          "7 He pulled out a knife in an attempt to protect himself from attack.",
+          "8 If you want to protect your home and land, you should ask the police for advice.",
+          "9 Are the police permitted to carry guns in your country?"
+        ]
+      },
+      {
+        "id": "81.4",
+        "marks": "9 marks",
+        "instruction": "Fill each gap with a suitable word.",
+        "items": [
+          "1 When someone ............................... a crime, there are many victims.",
+          "2 The thieves ............................... ............................... the house and stole money and credit cards.",
+          "3 If you are going out in the evening, make sure you leave a light ............................... and ............................... the windows and doors.",
+          "4 When I go on a trip, I usually wear a ............................... ............................... round my waist to put my passport and cash in.",
+          "5 You may need to protect ............................... at night, and some people use a mace spray.",
+          "6 In some countries, there is capital ............................... for certain crimes such as murder.",
+          "7 Killing someone by accident is called ............................... .",
+          "8 You have to keep to the ............................... limit when you are driving in the city.",
+          "9 In some parts of town it's dangerous to go out late ............................... night on your own."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "theft  robbery  murder  rape  shoplifting  burglary"
+    ],
+    "pictures": [
+      "table with columns Crime / Criminal / Crime / Criminal for exercise 81.2"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/ 30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 84,\n  \"testNumber\": \"81\",\n  \"testTitle\": \"Crime\",\n  \"exercises\": [\n    {\n      \"id\": \"81.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete these sentences using a word from the box.\",\n      \"items\": [\n        \"1 He was sent to prison for ............................... after a series of sexual attacks on women.\",\n        \"2 There was a bank ............................... here last week - they got away with over £1 millio[?]\",\n        \"3 The ............................... happened during the night while he was away. They broke into the living room and took all the electrical goods.\",\n        \"4 Car ............................... is one of the most common crimes in our country today.\",\n        \"5 The police found a dead body, but they don't know if it was an accident or .........................\",\n        \"6 When the couple were arrested for ............................... outside the department store, the[?] each were wearing five gold watches.\"\n      ]\n    },\n    {\n      \"id\": \"81.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete the table with the correct word in each space.\",\n      \"items\": [\"theft\", \"robbery\", \"murder\", \"rape\", \"shoplifting\", \"burglary\"]\n    },\n    {\n      \"id\": \"81.3\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Replace the underlined word or phrase with a single word.\",\n      \"items\": [\n        \"1 The action was against the law, and fortunately he was arrested immediately.\",\n        \"2 The child took the sweets when the shop assistant wasn't looking.\",\n        \"3 To protect your jewellery, it's a good idea to get a strong metal box which is hard to open.\",\n        \"4 We've had a lot of crime in our area, so we've decided to fit a burglar alarm.\",\n        \"5 The police prefer to stop crime before it happens.\",\n        \"6 You shouldn't walk about at night on your own; it's dangerous.\",\n        \"7 He pulled out a knife in an attempt to protect himself from attack.\",\n        \"8 If you want to protect your home and land, you should ask the police for advice.\",\n        \"9 Are the police permitted to carry guns in your country?\"\n      ]\n    },\n    {\n      \"id\": \"81.4\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Fill each gap with a suitable word.\",\n      \"items\": [\n        \"1 When someone ............................... a crime, there are many victims.\",\n        \"2 The thieves ............................... ............................... the house and stole money and credit cards.\",\n        \"3 If you are going out in the evening, make sure you leave a light ............................... and ............................... the windows and doors.\",\n        \"4 When I go on a trip, I usually wear a ............................... ............................... round my waist to put my passport and cash in.\",\n        \"5 You may need to protect ............................... at night, and some people use a mace spray.\",\n        \"6 In some countries, there is capital ............................... for certain crimes such as murder.\",\n        \"7 Killing someone by accident is called ............................... .\",\n        \"8 You have to keep to the ............................... limit when you are driving in the city.\",\n        \"9 In some parts of town it's dangerous to go out late ............................... night on your own.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\"theft  robbery  murder  rape  shoplifting  burglary\"],\n  \"pictures\": [\"table with columns Crime / Criminal / Crime / Criminal for exercise 81.2\"],\n  \"unclassified\": [\"TEST\", \"Your score\", \"/ 30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

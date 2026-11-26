@@ -1,0 +1,89 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 90,
+    "dpi": 300,
+    "renderSha256": "ad55763b4ee773b8a454d433e4a1164fac9299383b362f8c4a75567d87e0dcae",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:32:04.555Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 88,
+    "testNumber": "85",
+    "testTitle": "Pollution and the environment",
+    "exercises": [
+      {
+        "id": "85.1",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps to complete these definitions.",
+        "items": [
+          "1 The air, land and water around us is our ................................. .",
+          "2 Dirty air, land and water are all forms of ................................. .",
+          "3 The layer of gases which stop dangerous radiation from the sun reaching the earth is called the ................................. ................................. .",
+          "4 An increase in world temperature which is ................................. by an increase in carbon dioxide is called ................................. ................................. .",
+          "5 Rain that contains dangerous chemicals is called ................................. .................................",
+          "6 A place to put your empty bottles is called a bottle ................................. ."
+        ]
+      },
+      {
+        "id": "85.2",
+        "marks": "6 marks",
+        "instruction": "Use words from each column to make sentences about how we should help the environment:",
+        "items": [
+          "1 .................................................................................................................................",
+          "2 .................................................................................................................................",
+          "3 .................................................................................................................................",
+          "4 .................................................................................................................................",
+          "5 .................................................................................................................................",
+          "6 ................................................................................................................................."
+        ]
+      },
+      {
+        "id": "85.3",
+        "marks": "8 marks",
+        "instruction": "Complete these sentences using the word on the right in the correct form.",
+        "items": [
+          "1 Smoke from factories is ................................. the atmosphere. POLLUTION",
+          "2 This is one of many ................................. problems. ENVIRONMENT",
+          "3 Pollution is very ................................. to people's health. HARM",
+          "4 Fortunately there are now many ................................. groups. CONSERVE",
+          "5 Their aim is the ................................. of all natural things. PROTECT",
+          "6 Pollution is ................................. the environment. DESTRUCTION",
+          "7 The effects of this radiation can be very ................................. . DAMAGE",
+          "8 ................................. waste is a big problem. INDUSTRY"
+        ]
+      },
+      {
+        "id": "85.4",
+        "marks": "6 marks",
+        "instruction": "Fill the gaps in these sentences with words from the box.",
+        "items": [
+          "1 It is very important that we look after natural ................................. such as water and gas.",
+          "2 We need to protect tropical ................................. such as the Amazon.",
+          "3 The company were fined for ................................. dangerous chemicals straight into the sea.",
+          "4 In big cities, two major sources of pollution are car exhaust ................................. and smoke from ................................. chimneys.",
+          "5 There are strict laws about the disposal of nuclear ................................. ."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "Column 1 | Column 2 | Column 3: Try to / Don't | throw away, waste, save, plant, cut down, recycle | aluminium cans, water, trees",
+      "factory    resources    dumping    rain forests    fumes    waste"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 88,\n \"testNumber\": \"85\",\n \"testTitle\": \"Pollution and the environment\",\n \"exercises\": [\n  {\"id\": \"85.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Fill the gaps to complete these definitions.\",\n   \"items\": [\n    \"1 The air, land and water around us is our ................................. .\",\n    \"2 Dirty air, land and water are all forms of ................................. .\",\n    \"3 The layer of gases which stop dangerous radiation from the sun reaching the earth is called the ................................. ................................. .\",\n    \"4 An increase in world temperature which is ................................. by an increase in carbon dioxide is called ................................. ................................. .\",\n    \"5 Rain that contains dangerous chemicals is called ................................. .................................\",\n    \"6 A place to put your empty bottles is called a bottle ................................. .\"\n   ]},\n  {\"id\": \"85.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Use words from each column to make sentences about how we should help the environment:\",\n   \"items\": [\n    \"1 .................................................................................................................................\",\n    \"2 .................................................................................................................................\",\n    \"3 .................................................................................................................................\",\n    \"4 .................................................................................................................................\",\n    \"5 .................................................................................................................................\",\n    \"6 .................................................................................................................................\"\n   ]},\n  {\"id\": \"85.3\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete these sentences using the word on the right in the correct form.\",\n   \"items\": [\n    \"1 Smoke from factories is ................................. the atmosphere. POLLUTION\",\n    \"2 This is one of many ................................. problems. ENVIRONMENT\",\n    \"3 Pollution is very ................................. to people's health. HARM\",\n    \"4 Fortunately there are now many ................................. groups. CONSERVE\",\n    \"5 Their aim is the ................................. of all natural things. PROTECT\",\n    \"6 Pollution is ................................. the environment. DESTRUCTION\",\n    \"7 The effects of this radiation can be very ................................. . DAMAGE\",\n    \"8 ................................. waste is a big problem. INDUSTRY\"\n   ]},\n  {\"id\": \"85.4\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Fill the gaps in these sentences with words from the box.\",\n   \"items\": [\n    \"1 It is very important that we look after natural ................................. such as water and gas.\",\n    \"2 We need to protect tropical ................................. such as the Amazon.\",\n    \"3 The company were fined for ................................. dangerous chemicals straight into the sea.\",\n    \"4 In big cities, two major sources of pollution are car exhaust ................................. and smoke from ................................. chimneys.\",\n    \"5 There are strict laws about the disposal of nuclear ................................. .\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"Column 1 | Column 2 | Column 3: Try to / Don't | throw away, waste, save, plant, cut down, recycle | aluminium cans, water, trees\",\n  \"factory    resources    dumping    rain forests    fumes    waste\"\n ],\n \"pictures\": [],\n \"unclassified\": [\n  \"TEST\",\n  \"Your score /30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

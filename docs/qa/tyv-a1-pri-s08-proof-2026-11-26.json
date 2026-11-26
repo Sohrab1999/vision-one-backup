@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "step": "A1-PRI-S08",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "date": "2026-11-26",
+    "jalali": "۱۴۰۵/۹/۵",
+    "ownerCommand": "«گام بعدی مجاز: A1-PRI-S08 = bun scripts/tyv-a1-vlm-capture.mjs pri 85,86,87,88,89,90,91,92,93,94,95,96 (صفحات ۸۵–۹۶ — دستهٔ هشتم از ۱۲ — بدون skip انتظاری — انتظار Tests 80..91 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — ادامهٔ Social concerns (Tests 80..85 عین Contents p4) + آغاز زیربخش Tourism از Test 86 + آغاز زیربخش Notional concepts از Test 90) ⇒ سپس PRI S09..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e/FA-REVIEWED/G5 دست‌نخورده — توقف گیت‌دار — گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — trace 1a2198d0c0f4fbc9 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "نشست تمیز بدون ریست پنهان: HEAD آغاز = 5965e6c (کامیت ثبت-اثبات §۱۰-۷ پسا-S07) · git status porcelain کاملاً پاک ۰/۰ · شاخه main · دیسک‌حقیقت آغاز گام عین رکورد سربرگ ۱۴۱مین: pri ۸۴/۱۴۲ (page-001..084 — آخرین page-084) · biz ۹۸/۹۸ · elem ۹۶/۹۶ · upp ۳/۱۵۳ = ۲۸۱/۴۸۹ · SNAPSHOT «گام بعدی مجاز» == عین فرمان مالک == A1-PRI-S08 (pri 85..96) — وجودسنجی پیشا-گام: page-085..096 همگی غایب (دقیق) — هوک post-commit سالم ee679bc1b642db0f"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 85,86,87,88,89,90,91,92,93,94,95,96",
+  "runs": [
+    {
+      "stdout": "page 85: ok … page 96: ok — DONE tyv-pri: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-pri/a1",
+      "captured": 12,
+      "skipped": 0,
+      "failed": 0,
+      "verdict": "کل دسته ۱۲/۱۲ ok — تک‌اجرایی هم‌گام تمیز بدون ناهنجاری اجرایی — صفر skip عین انتظار صریح مالک (پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست)"
+    }
+  ],
+  "coverage": {
+    "batchRange": "p85..p96 (دستهٔ هشتم از ۱۲ دستهٔ PRI)",
+    "completeNoGap": true,
+    "newFiles": ["docs/qa/tyv-capture-pri/a1/page-085.json", "…", "docs/qa/tyv-capture-pri/a1/page-096.json"],
+    "skippedExisting": 0,
+    "provenance": "12 JSON NEW page-085..096 (renderSha256 یکتا ۱۲/۱۲ · DPI=300 · tyv-a1-v1 · attempts=≤۳ · status=ok ۱۲/۱۲ · timestamp 2026-11-26T20:30:59..20:33:12Z)"
+  },
+  "patternCheck": {
+    "expected": "Tests 80..91 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — ادامهٔ Social concerns (Tests 80..85 عین Contents p4) + آغاز Tourism از Test 86 + آغاز Notional concepts از Test 90",
+    "result": "test=pdfPage−۵: ۱۱/۱۲ دقیق + ۱ واریانس OCR (p89 «34» به‌جای «84» — جابه‌جایی ۸↔۳ · عنوان «War and peace» صحیح و در تناوب درست p88=Test83/p90=Test85 · کاندید دوگذر G1) — فوتر=pdf−۲: ۱۲/۱۲ دقیق (۸۳..۹۴) · صفر mismatch · صفر footer=null — ششمین دستهٔ پیوستهٔ کاملاً سره فوتر پس از S03..S07 — هشتمین تأیید مستقل الگوی سه‌ضابطه‌ای",
+    "footers": "p85→83 · p86→84 · p87→85 · p88→86 · p89→87 · p90→88 · p91→89 · p92→90 · p93→91 · p94→92 · p95→93 · p96→94 — فوترها دقیقاً == شمارهٔ صفحهٔ کتاب Contents p4",
+    "anchors": {
+      "socialConcernsContinuation": "p85..p90 = Tests 80..85 عین Contents p4 (Law and order · Crime · Politics · Bureaucracy · War and peace · Pollution and the environment)",
+      "tourismStart": "p91 = Test 86 «Air travel» عین Contents p4 (ادامه: Hotels p92 · A sightseeing holiday p93 · On the beach and in the country p94)",
+      "notionalConceptsStart": "p95 = Test 90 «Time» عین Contents p4 (ادامه: Numbers p96)"
+    }
+  },
+  "contentNotes": {
+    "structure": "۱۲ تست متمایز بدون تکرار — p85 Test 80 «Law and order» (۴/۱باکس/۱تصویر/۲unc) · p86 Test 81 «Crime» (۴/۱باکس/۱تصویر/۴unc) · p87 Test 82 «Politics» (۵/۱باکس/۰تصویر/۱unc — تنها صفحهٔ بدون تصویر دسته) · p88 Test 83 «Bureaucracy» (۶/۱باکس/۰تصویر/۴unc — سنگین‌ترین صفحهٔ تمرین‌محور دسته) · p89 Test 84 «War and peace» [OCR testNumber=34] (۴/۱باکس/۰تصویر/۴unc) · p90 Test 85 «Pollution and the environment» (۴/۲باکس/۰تصویر/۳unc) · p91 Test 86 «Air travel» (۴/۰باکس/۰تصویر/۳unc) · p92 Test 87 «Hotels» (۴/۰باکس/۱تصویر/۴unc) · p93 Test 88 «A sightseeing holiday» (۴/۰باکس/۱تصویر/۲unc) · p94 Test 89 «On the beach and in the country» (۴/۰باکس/۲تصویر/۲unc) · p95 Test 90 «Time» (۵/۱باکس/۱تصویر/۴unc) · p96 Test 91 «Numbers» (۴/۱باکس/۱تصویر/۷unc — سنگین‌ترین صفحهٔ unc دسته)",
+    "aggregates": "۵۲ تمرین/۳۲۸ آیتم/۹ باکس/۸ تصویر/۴۰ unclassified — [؟]=۳ (p86×۲ داخل متن آیتم‌ها — نشانهٔ عدم‌قطعیت VLM در انتهای سطرهای ناخوانا «…£1 millio[?]» · «…the[?]» · p93×۱ داخل unclassified «Total score / 30 [?]») · [N/A]=صفر",
+    "subsectionTransitions": "سه گذار مطابق انتظار: تداوم Social concerns در p85..p90 (Tests 80..85) · آغاز Tourism از p91 (Test 86) · آغاز Notional concepts از p95 (Test 90) — همگی عین Contents p4",
+    "ocrVariance": "۱ مورد: p89 testNumber «34» و شناسهٔ تمرین «34.1» در برابر انتظار «84»/«84.1» — خطای تشخیص ۸↔۳ توسط VLM — عنوان «War and peace» صحیح و هم‌خوان تناوب p88=Test83/p90=Test85 — الگوی مشابه واریانس مستند S05 (Test 50 «home I» در برابر «home 1») — کاندید دوگذر G1",
+    "doublePassG1": "۱ کاندید جدید دوگذر G1 (p89 testNumber 34↔84) — مجموع کاندیدهای دوگذر G1 تا پایان S08: پس از جمع‌آوری از S01..S07 + این مورد"
+  },
+  "diskTruthAfter": {
+    "pri": "۹۶/۱۴۲ (page-001..096 — آخرین page-096)",
+    "biz": "۹۸/۹۸ کامل",
+    "elem": "۹۶/۹۶ کامل",
+    "upp": "۳/۱۵۳",
+    "total": "۲۹۳/۴۸۹"
+  },
+  "nextAuthorizedStep": "A1-PRI-S09 = bun scripts/tyv-a1-vlm-capture.mjs pri 97,98,99,100,101,102,103,104,105,106,107,108 (صفحات ۹۷–۱۰۸ — دستهٔ نهم از ۱۲ — بدون skip انتظاری — انتظار Tests 92..103 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — تداوم Notional concepts عین Contents p4/p5 — برای تأیید دقیق گذارهای زیربخشی به Contents مراجعه شود) ⇒ سپس PRI S10..S12 (S12 = ۱۳۳–۱۴۲ — ۱۰ صفحهٔ پایانی) ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e/FA-REVIEWED/G5 دست‌نخورده — توقف گیت‌دار"
+}

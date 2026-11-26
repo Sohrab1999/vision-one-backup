@@ -1,0 +1,96 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 93,
+    "dpi": 300,
+    "renderSha256": "2f460f72470bbcf6915d87425fc32270398eb9069ec5dea529b786fb55bbb0b4",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:32:39.227Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 91,
+    "testNumber": "88",
+    "testTitle": "A sightseeing holiday",
+    "exercises": [
+      {
+        "id": "88.1",
+        "marks": "10 marks",
+        "instruction": "Complete the questions in the dialogue in a suitable way, writing one word for each space.",
+        "items": [
+          "A: Oh, hi, Bill. How was your holiday? Did you (1) ................. ................. ................. time?",
+          "B: Oh, yes, it was fantastic. Thailand is really beautiful and there is so much to do.",
+          "A: Yes, I imagine so. Did you (2) ................. ................. ................. of sightseeing, then?",
+          "B: Yes, all day long! The temples were incredible.",
+          "A: And how about nightlife? Did you (3) ................. ................. ................. the evenings?",
+          "B: Yes – in fact, we went out every evening to eat and to walk around the streets.",
+          "A: But it must have been expensive. Did you (4) ................. ................. ................. of money?",
+          "B: Yes, I'm sorry to say!",
+          "A: So was (5) ................. worth ................. to Thailand, then?",
+          "B: Oh, yes – definitely. It was the holiday of a lifetime."
+        ]
+      },
+      {
+        "id": "88.2",
+        "marks": "8 marks",
+        "instruction": "Put the letters in the correct order and use the words to label the pictures.",
+        "items": [
+          "celaap",
+          "sleact",
+          "rat largely",
+          "chroaldat",
+          "uttsae",
+          "tannoufi",
+          "karmte",
+          "plmtee",
+          "1 ..........................",
+          "2 ..........................",
+          "3 ..........................",
+          "4 ..........................",
+          "5 ..........................",
+          "6 ..........................",
+          "7 ..........................",
+          "8 .........................."
+        ]
+      },
+      {
+        "id": "88.3",
+        "marks": "7 marks",
+        "instruction": "Which words are being defined here?",
+        "items": [
+          "1 If a place is very crowded and full of people, we can say it is .......................... .",
+          "2 If a place has too many tourists, people call it .......................... .",
+          "3 To help you remember your holiday, you can buy typical local products which are called .......................... .",
+          "4 A book which gives you a lot of tourist information about a place is a .......................... .",
+          "5 If a place is full of life and activity, we can say it is .......................... .",
+          "6 Ancient buildings such as temples, castles and palaces are .......................... .......................... .",
+          "7 If a place has a lot of people from different countries and cultures, it is .......................... ."
+        ]
+      },
+      {
+        "id": "88.4",
+        "marks": "5 marks",
+        "instruction": "Put an appropriate verb in the correct form in the gaps.",
+        "items": [
+          "After two weeks in Rome, we spent the last two days in Palermo. We decided to (1) .......................... a look round the town immediately. Unfortunately, it was dark, so we (2) .......................... lost very quickly. Anyway, the next day, we thought it would be better to (3) .......................... on a sightseeing tour, which we did. Anyway, it was the end of a great holiday and we really (4) .......................... ourselves. I think another time it would be worth (5) .......................... a week or two there."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Eight numbered line drawings for labelling exercise 88.2: cathedral, temple, castle, equestrian statue, market stalls, palace, fountain, art gallery"
+    ],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "Total score / 30 [?]"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 91, \"testNumber\": \"88\", \"testTitle\": \"A sightseeing holiday\", \"exercises\": [{\"id\": \"88.1\", \"marks\": \"10 marks\", \"instruction\": \"Complete the questions in the dialogue in a suitable way, writing one word for each space.\", \"items\": [\"A: Oh, hi, Bill. How was your holiday? Did you (1) ................. ................. ................. time?\", \"B: Oh, yes, it was fantastic. Thailand is really beautiful and there is so much to do.\", \"A: Yes, I imagine so. Did you (2) ................. ................. ................. of sightseeing, then?\", \"B: Yes, all day long! The temples were incredible.\", \"A: And how about nightlife? Did you (3) ................. ................. ................. the evenings?\", \"B: Yes – in fact, we went out every evening to eat and to walk around the streets.\", \"A: But it must have been expensive. Did you (4) ................. ................. ................. of money?\", \"B: Yes, I'm sorry to say!\", \"A: So was (5) ................. worth ................. to Thailand, then?\", \"B: Oh, yes – definitely. It was the holiday of a lifetime.\"]}, {\"id\": \"88.2\", \"marks\": \"8 marks\", \"instruction\": \"Put the letters in the correct order and use the words to label the pictures.\", \"items\": [\"celaap\", \"sleact\", \"rat largely\", \"chroaldat\", \"uttsae\", \"tannoufi\", \"karmte\", \"plmtee\", \"1 ..........................\", \"2 ..........................\", \"3 ..........................\", \"4 ..........................\", \"5 ..........................\", \"6 ..........................\", \"7 ..........................\", \"8 ..........................\"]}, {\"id\": \"88.3\", \"marks\": \"7 marks\", \"instruction\": \"Which words are being defined here?\", \"items\": [\"1 If a place is very crowded and full of people, we can say it is .......................... .\", \"2 If a place has too many tourists, people call it .......................... .\", \"3 To help you remember your holiday, you can buy typical local products which are called .......................... .\", \"4 A book which gives you a lot of tourist information about a place is a .......................... .\", \"5 If a place is full of life and activity, we can say it is .......................... .\", \"6 Ancient buildings such as temples, castles and palaces are .......................... .......................... .\", \"7 If a place has a lot of people from different countries and cultures, it is .......................... .\"]}, {\"id\": \"88.4\", \"marks\": \"5 marks\", \"instruction\": \"Put an appropriate verb in the correct form in the gaps.\", \"items\": [\"After two weeks in Rome, we spent the last two days in Palermo. We decided to (1) .......................... a look round the town immediately. Unfortunately, it was dark, so we (2) .......................... lost very quickly. Anyway, the next day, we thought it would be better to (3) .......................... on a sightseeing tour, which we did. Anyway, it was the end of a great holiday and we really (4) .......................... ourselves. I think another time it would be worth (5) .......................... a week or two there.\"]}], \"boxesAndLists\": [], \"pictures\": [\"Eight numbered line drawings for labelling exercise 88.2: cathedral, temple, castle, equestrian statue, market stalls, palace, fountain, art gallery\"], \"unclassified\": [\"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"Total score / 30 [?]\"]}\n```"
+}

@@ -1,0 +1,84 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 85,
+    "dpi": 300,
+    "renderSha256": "99e695e73653481f7bdb80cf6e434cbd8efbb909d862d8ac174db32958d24ede",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:30:59.504Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 83,
+    "testNumber": "80",
+    "testTitle": "Law and order",
+    "exercises": [
+      {
+        "id": "80.1",
+        "marks": "7 marks",
+        "instruction": "Complete the definitions using words in the box.",
+        "items": [
+          "1 This is what takes place in a court of law. A ..........................",
+          "2 The person charged with the crime. The .......................... or the ..........................",
+          "3 The person who represents people in a higher court of law. In England: a .......................... In the USA: an ..........................",
+          "4 The 12 people who listen to evidence and decide if the person is guilty. The ..........................",
+          "5 The person who decides what sentence a criminal will have. The .........................."
+        ]
+      },
+      {
+        "id": "80.2",
+        "marks": "7 marks",
+        "instruction": "Correct the mistakes in the underlined parts of the sentences.",
+        "items": [
+          "1 If you make something illegal, you can get into trouble with the police.",
+          "2 If the police believe you have done something wrong, they will make question you.",
+          "3 If they know for sure that you did something, they will be charged with the crime.",
+          "4 The police may know the person responsible, but it can be hard to prove it on court.",
+          "5 Defendants have to prove that they have not guilty.",
+          "6 Before they decide, the jury have to listen to all the evidences.",
+          "7 At the end of the try, they decide if the person is innocent or not."
+        ]
+      },
+      {
+        "id": "80.3",
+        "marks": "5 marks",
+        "instruction": "Rewrite the sentences using the words on the right (in the correct form) and without changing the meaning. You must also include all the information from the first sentence.",
+        "items": [
+          "1 The police said he was responsible for the crime. The police said .................................................................. COMMIT",
+          "2 I don't think you have done anything against the law. I don't think you .................................................................. BREAK",
+          "3 I hope the police will try to find out what happened in this case. I hope the police .................................................................. INVESTIGATE",
+          "4 The barrister couldn't provide enough facts to show he was guilty. The barrister couldn't .................................................................. PROVE",
+          "5 In the trial, the jury decided he was guilty of the crime. In the trial, he .................................................................. CONVICT"
+        ]
+      },
+      {
+        "id": "80.4",
+        "marks": "6 marks",
+        "instruction": "Complete these sentences with a suitable word.",
+        "items": [
+          "1 When someone is guilty, the judge may give that person a prison ......................... .",
+          "2 Someone kept in prison is called a ......................... , and their room is a ......................... .",
+          "3 Small crimes like illegal parking are called ......................... offences and if someone is found guilty, the ......................... will not be prison, but a ......................... , e.g. £100."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "jury    attorney    defendant    trial    judge    barrister    accused"
+    ],
+    "pictures": [
+      "courtroom illustration: judge on bench, jury box, barrister speaking, defendant in witness box"
+    ],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "Your score / 30"
+    ]
+  },
+  "rawModelText": "{\"footer\": 83,\n \"testNumber\": \"80\",\n \"testTitle\": \"Law and order\",\n \"exercises\": [\n  {\"id\": \"80.1\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Complete the definitions using words in the box.\",\n   \"items\": [\n    \"1 This is what takes place in a court of law. A ..........................\",\n    \"2 The person charged with the crime. The .......................... or the ..........................\",\n    \"3 The person who represents people in a higher court of law. In England: a .......................... In the USA: an ..........................\",\n    \"4 The 12 people who listen to evidence and decide if the person is guilty. The ..........................\",\n    \"5 The person who decides what sentence a criminal will have. The ..........................\"\n   ]},\n  {\"id\": \"80.2\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Correct the mistakes in the underlined parts of the sentences.\",\n   \"items\": [\n    \"1 If you make something illegal, you can get into trouble with the police.\",\n    \"2 If the police believe you have done something wrong, they will make question you.\",\n    \"3 If they know for sure that you did something, they will be charged with the crime.\",\n    \"4 The police may know the person responsible, but it can be hard to prove it on court.\",\n    \"5 Defendants have to prove that they have not guilty.\",\n    \"6 Before they decide, the jury have to listen to all the evidences.\",\n    \"7 At the end of the try, they decide if the person is innocent or not.\"\n   ]},\n  {\"id\": \"80.3\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Rewrite the sentences using the words on the right (in the correct form) and without changing the meaning. You must also include all the information from the first sentence.\",\n   \"items\": [\n    \"1 The police said he was responsible for the crime. The police said .................................................................. COMMIT\",\n    \"2 I don't think you have done anything against the law. I don't think you .................................................................. BREAK\",\n    \"3 I hope the police will try to find out what happened in this case. I hope the police .................................................................. INVESTIGATE\",\n    \"4 The barrister couldn't provide enough facts to show he was guilty. The barrister couldn't .................................................................. PROVE\",\n    \"5 In the trial, the jury decided he was guilty of the crime. In the trial, he .................................................................. CONVICT\"\n   ]},\n  {\"id\": \"80.4\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete these sentences with a suitable word.\",\n   \"items\": [\n    \"1 When someone is guilty, the judge may give that person a prison ......................... .\",\n    \"2 Someone kept in prison is called a ......................... , and their room is a ......................... .\",\n    \"3 Small crimes like illegal parking are called ......................... offences and if someone is found guilty, the ......................... will not be prison, but a ......................... , e.g. £100.\"\n   ]}\n ],\n \"boxesAndLists\": [\"jury    attorney    defendant    trial    judge    barrister    accused\"],\n \"pictures\": [\"courtroom illustration: judge on bench, jury box, barrister speaking, defendant in witness box\"],\n \"unclassified\": [\"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"Your score / 30\"]\n}"
+}

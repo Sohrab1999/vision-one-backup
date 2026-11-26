@@ -1,0 +1,113 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 88,
+    "dpi": 300,
+    "renderSha256": "f2781c50c3da7f71565b212bbe73cc942f9d3864d4be888c7986ed70295ed7fd",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:31:35.505Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 86,
+    "testNumber": "83",
+    "testTitle": "Bureaucracy",
+    "exercises": [
+      {
+        "id": "83.1",
+        "marks": "8 marks",
+        "instruction": "Match the words with a word from the box to give eight different forms or documents.",
+        "items": [
+          "1 identity ..................................",
+          "2 birth ..................................",
+          "3 driving ..................................",
+          "4 application ..................................",
+          "5 exam ..................................",
+          "6 enrolment ..................................",
+          "7 landing ..................................",
+          "8 TV .................................."
+        ]
+      },
+      {
+        "id": "83.2",
+        "marks": "6 marks",
+        "instruction": "What are these forms and documents? (Many of them are from 83.1.)",
+        "items": [
+          "1 You fill this in when you are writing off for a job.",
+          "2 You may have to fill this in (often on a plane) when you enter another country.",
+          "3 This is put in your passport and gives you permission to enter, pass through or leave another country.",
+          "4 This card has your name on it and a photo to show who you are.",
+          "5 You often fill in one of these before you start a course, e.g. if you study English at a language school.",
+          "6 This card states that you are a member of a particular club or organisation."
+        ]
+      },
+      {
+        "id": "83.3",
+        "marks": "4 marks",
+        "instruction": "Fill the gaps with the best word in these sentences.",
+        "items": [
+          "1 A: I've got a ten-year passport but it .................................. in two months' time.",
+          "B: But you're planning to go to Venezuela in October, aren't you?",
+          "A: Yes, I am, so I'd better .......................... it quickly, otherwise I'll be in trouble.",
+          "2 A: When I've completed this form, do I have to .................................. it at the bottom?",
+          "B: Yes, please. Put your .................................. just there, and next to it put today's date."
+        ]
+      },
+      {
+        "id": "83.4",
+        "marks": "4 marks",
+        "instruction": "An official is questioning someone who has just arrived in this country. Complete the questions.",
+        "items": [
+          "1 A: ..................................................................................................................?",
+          "B: July 16th, 1980.",
+          "2 A: ..................................................................................................................?",
+          "B: Single.",
+          "3 A: ..................................................................................................................?",
+          "B: I got here two days ago.",
+          "4 A: ..................................................................................................................?",
+          "B: In ten days' time. My flight is on the 21st."
+        ]
+      },
+      {
+        "id": "83.5",
+        "marks": "4 marks",
+        "instruction": "In written English, the questions in 83.4 are often expressed differently. Complete these expressions.",
+        "items": [
+          "1 Date of .........................",
+          "3 Date of .........................",
+          "2 Marital .........................",
+          "4 Date of ........................."
+        ]
+      },
+      {
+        "id": "83.6",
+        "marks": "4 marks",
+        "instruction": "Find words on the right that have the same meaning as the verbs on the left.",
+        "items": [
+          "1 fill in    a stand in line",
+          "2 queue      b run out",
+          "3 expire     c examine",
+          "4 check      d complete"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "form\ncard\ncertificate\nlicence"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 86,\n  \"testNumber\": \"83\",\n  \"testTitle\": \"Bureaucracy\",\n  \"exercises\": [\n    {\n      \"id\": \"83.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Match the words with a word from the box to give eight different forms or documents.\",\n      \"items\": [\n        \"1 identity ..................................\",\n        \"2 birth ..................................\",\n        \"3 driving ..................................\",\n        \"4 application ..................................\",\n        \"5 exam ..................................\",\n        \"6 enrolment ..................................\",\n        \"7 landing ..................................\",\n        \"8 TV ..................................\"\n      ]\n    },\n    {\n      \"id\": \"83.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"What are these forms and documents? (Many of them are from 83.1.)\",\n      \"items\": [\n        \"1 You fill this in when you are writing off for a job.\",\n        \"2 You may have to fill this in (often on a plane) when you enter another country.\",\n        \"3 This is put in your passport and gives you permission to enter, pass through or leave another country.\",\n        \"4 This card has your name on it and a photo to show who you are.\",\n        \"5 You often fill in one of these before you start a course, e.g. if you study English at a language school.\",\n        \"6 This card states that you are a member of a particular club or organisation.\"\n      ]\n    },\n    {\n      \"id\": \"83.3\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Fill the gaps with the best word in these sentences.\",\n      \"items\": [\n        \"1 A: I've got a ten-year passport but it .................................. in two months' time.\",\n        \"B: But you're planning to go to Venezuela in October, aren't you?\",\n        \"A: Yes, I am, so I'd better .......................... it quickly, otherwise I'll be in trouble.\",\n        \"2 A: When I've completed this form, do I have to .................................. it at the bottom?\",\n        \"B: Yes, please. Put your .................................. just there, and next to it put today's date.\"\n      ]\n    },\n    {\n      \"id\": \"83.4\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"An official is questioning someone who has just arrived in this country. Complete the questions.\",\n      \"items\": [\n        \"1 A: ..................................................................................................................?\",\n        \"B: July 16th, 1980.\",\n        \"2 A: ..................................................................................................................?\",\n        \"B: Single.\",\n        \"3 A: ..................................................................................................................?\",\n        \"B: I got here two days ago.\",\n        \"4 A: ..................................................................................................................?\",\n        \"B: In ten days' time. My flight is on the 21st.\"\n      ]\n    },\n    {\n      \"id\": \"83.5\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"In written English, the questions in 83.4 are often expressed differently. Complete these expressions.\",\n      \"items\": [\n        \"1 Date of .........................\",\n        \"3 Date of .........................\",\n        \"2 Marital .........................\",\n        \"4 Date of .........................\"\n      ]\n    },\n    {\n      \"id\": \"83.6\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Find words on the right that have the same meaning as the verbs on the left.\",\n      \"items\": [\n        \"1 fill in    a stand in line\",\n        \"2 queue      b run out\",\n        \"3 expire     c examine\",\n        \"4 check      d complete\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\"form\\ncard\\ncertificate\\nlicence\"],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}
