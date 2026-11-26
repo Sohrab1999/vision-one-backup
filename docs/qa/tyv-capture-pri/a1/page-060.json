@@ -1,0 +1,105 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 60,
+    "dpi": 300,
+    "renderSha256": "73516dad1f0db3abd7cb32e98b7d1b19e77d8ae7a7235dc02900fca978421702",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:06:33.388Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 58,
+    "testNumber": "55",
+    "testTitle": "Health: injuries",
+    "exercises": [
+      {
+        "id": "55.1",
+        "marks": "5 marks",
+        "instruction": "Label the pictures with words from the box below.",
+        "items": [
+          "1 .......................",
+          "2 .......................",
+          "3 .......................",
+          "4 .......................",
+          "5 ......................."
+        ]
+      },
+      {
+        "id": "55.2",
+        "marks": "4 marks",
+        "instruction": "Countable or uncountable? Put a, an or – (no article) in the gaps.",
+        "items": [
+          "Examples: I've got ...a... headache.        He's got ...–... flu.",
+          "1 I cut my finger but I couldn't find .......... plaster.",
+          "2 His leg is broken so they'll have to put it in .......... plaster.",
+          "3 After the accident both drivers were suffering from .......... concussion.",
+          "4 I've got .......... large bruise on my arm."
+        ]
+      },
+      {
+        "id": "55.3",
+        "marks": "7 marks",
+        "instruction": "There is one word missing in each line of this text. What is the word and where should it go? Look at the example first.",
+        "items": [
+          "There were a couple ↑ very nasty injuries at the game          Example: of...",
+          "today. Two players collided each other as they tried          1 .......................",
+          "to head the ball. One man himself unconscious and          2 .......................",
+          "the other player had a very bad cut his forehead. Fortunately          3 .......................",
+          "an arrived less than ten minutes later and rushed both          4 .......................",
+          "men hospital. The man with the cut received over          5 .......................",
+          "fifteen but was later allowed to go home. The other          6 .......................",
+          "man was kept hospital overnight.          7 ......................."
+        ]
+      },
+      {
+        "id": "55.4",
+        "marks": "8 marks",
+        "instruction": "Complete the sentences.",
+        "items": [
+          "1 The trouble started outside the disco when two groups of youths got into a .................... .",
+          "  One of them was .................... in the back with a knife but the injury was not serious.",
+          "2 The thief had a gun and the shopkeeper was .................... in the leg.",
+          "3 A: I .................... my hand lighting that cigarette.",
+          "  B: Oh, I should think that hurts.",
+          "  A: Yes, it's very .................... .",
+          "4 I dropped a box on my foot. My toes are so .................... that I can't get my shoes on.",
+          "5 She twisted her .................... running for the bus.",
+          "6 I cut my finger and it won't stop .................... ."
+        ]
+      },
+      {
+        "id": "55.5",
+        "marks": "6 marks",
+        "instruction": "Match the words on the left with the words on the right to form six phrases.",
+        "items": [
+          "1 black          a wound          ........................................",
+          "2 swollen        b treatment      ........................................",
+          "3 broken         c ankle          ........................................",
+          "4 blood          d ribs           ........................................",
+          "5 bullet         e eye            ........................................",
+          "6 hospital       f test           ........................................"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "sling    bruise    bandage    stitches    cut"
+    ],
+    "pictures": [
+      "Five line drawings to label: arm in a sling, bandaged hand/wrist, foot with a cut, face with bruise, forehead with stitches"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 58,\n  \"testNumber\": \"55\",\n  \"testTitle\": \"Health: injuries\",\n  \"exercises\": [\n    {\n      \"id\": \"55.1\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Label the pictures with words from the box below.\",\n      \"items\": [\"1 .......................\", \"2 .......................\", \"3 .......................\", \"4 .......................\", \"5 .......................\"]\n    },\n    {\n      \"id\": \"55.2\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Countable or uncountable? Put a, an or – (no article) in the gaps.\",\n      \"items\": [\n        \"Examples: I've got ...a... headache.        He's got ...–... flu.\",\n        \"1 I cut my finger but I couldn't find .......... plaster.\",\n        \"2 His leg is broken so they'll have to put it in .......... plaster.\",\n        \"3 After the accident both drivers were suffering from .......... concussion.\",\n        \"4 I've got .......... large bruise on my arm.\"\n      ]\n    },\n    {\n      \"id\": \"55.3\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"There is one word missing in each line of this text. What is the word and where should it go? Look at the example first.\",\n      \"items\": [\n        \"There were a couple ↑ very nasty injuries at the game          Example: of...\",\n        \"today. Two players collided each other as they tried          1 .......................\",\n        \"to head the ball. One man himself unconscious and          2 .......................\",\n        \"the other player had a very bad cut his forehead. Fortunately          3 .......................\",\n        \"an arrived less than ten minutes later and rushed both          4 .......................\",\n        \"men hospital. The man with the cut received over          5 .......................\",\n        \"fifteen but was later allowed to go home. The other          6 .......................\",\n        \"man was kept hospital overnight.          7 .......................\"\n      ]\n    },\n    {\n      \"id\": \"55.4\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the sentences.\",\n      \"items\": [\n        \"1 The trouble started outside the disco when two groups of youths got into a .................... .\",\n        \"  One of them was .................... in the back with a knife but the injury was not serious.\",\n        \"2 The thief had a gun and the shopkeeper was .................... in the leg.\",\n        \"3 A: I .................... my hand lighting that cigarette.\",\n        \"  B: Oh, I should think that hurts.\",\n        \"  A: Yes, it's very .................... .\",\n        \"4 I dropped a box on my foot. My toes are so .................... that I can't get my shoes on.\",\n        \"5 She twisted her .................... running for the bus.\",\n        \"6 I cut my finger and it won't stop .................... .\"\n      ]\n    },\n    {\n      \"id\": \"55.5\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match the words on the left with the words on the right to form six phrases.\",\n      \"items\": [\n        \"1 black          a wound          ........................................\",\n        \"2 swollen        b treatment      ........................................\",\n        \"3 broken         c ankle          ........................................\",\n        \"4 blood          d ribs           ........................................\",\n        \"5 bullet         e eye            ........................................\",\n        \"6 hospital       f test           ........................................\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\"sling    bruise    bandage    stitches    cut\"],\n  \"pictures\": [\n    \"Five line drawings to label: arm in a sling, bandaged hand/wrist, foot with a cut, face with bruise, forehead with stitches\"\n  ],\n  \"unclassified\": [\"TEST\", \"Your score /30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

@@ -1,0 +1,108 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 55,
+    "dpi": 300,
+    "renderSha256": "769526e8dc8ceb1730308916c5abb341975900507853dd8f7851fc44ee5bd42a",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:05:22.649Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 53,
+    "testNumber": "50",
+    "testTitle": "Around the home I",
+    "exercises": [
+      {
+        "id": "50.1",
+        "marks": "5 marks [?]",
+        "instruction": "Complete the names of these rooms in a house.",
+        "items": [
+          "1 The .......................... room (also called the ..........................) is where people watch TV.",
+          "2 The .......................... room is where people eat meals.",
+          "3 The .......................... is where people cook.",
+          "4 The .......................... is where people wash or have a bath.",
+          "5 The .......................... room is for occasional guests, and often for storing things."
+        ]
+      },
+      {
+        "id": "50.2",
+        "marks": "8 marks [?]",
+        "instruction": "Label the objects in the picture.",
+        "items": [
+          "1 ..........................",
+          "2 ..........................",
+          "3 ..........................",
+          "4 ..........................",
+          "5 ..........................",
+          "6 ..........................",
+          "7 ..........................",
+          "8 .........................."
+        ]
+      },
+      {
+        "id": "50.3",
+        "marks": "4 marks [?]",
+        "instruction": "What kitchen appliances are being defined here?",
+        "items": [
+          "1 It is used to wash clothes. ..........................",
+          "2 It is used to cook food. ..........................",
+          "3 It is used to wash dishes. ..........................",
+          "4 It is used to keep things cold. .........................."
+        ]
+      },
+      {
+        "id": "50.4",
+        "marks": "5 marks",
+        "instruction": "Label the pictures.",
+        "items": [
+          "1 ..........................",
+          "2 ..........................",
+          "3 ..........................",
+          "4 ..........................",
+          "5 .........................."
+        ]
+      },
+      {
+        "id": "50.5",
+        "marks": "7 marks",
+        "instruction": "Choose the best noun on the right to finish each of the sentence beginnings on the left.",
+        "items": [
+          "1 I sat down in",
+          "2 She lay down on",
+          "3 I had a look at",
+          "4 I made",
+          "5 He turned on",
+          "6 I put the pans in",
+          "7 He sat on"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "a some coffee",
+      "b the sink",
+      "c the TV",
+      "d an armchair",
+      "e the sofa",
+      "f a stool",
+      "g the paper"
+    ],
+    "pictures": [
+      "living room scene with numbered arrows 1–8 labelling objects (shelf, armchair, floor/remote control, lamp, sofa, coffee table, flowers)",
+      "five kitchen pictures to label: electric mixer, saucepan, taps, kettle, frying pan (items 1–5)"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 53,\n \"testNumber\": \"50\",\n \"testTitle\": \"Around the home I\",\n \"exercises\": [\n   {\"id\": \"50.1\",\n    \"marks\": \"5 marks [?]\",\n    \"instruction\": \"Complete the names of these rooms in a house.\",\n    \"items\": [\n      \"1 The .......................... room (also called the ..........................) is where people watch TV.\",\n      \"2 The .......................... room is where people eat meals.\",\n      \"3 The .......................... is where people cook.\",\n      \"4 The .......................... is where people wash or have a bath.\",\n      \"5 The .......................... room is for occasional guests, and often for storing things.\"\n    ]},\n   {\"id\": \"50.2\",\n    \"marks\": \"8 marks [?]\",\n    \"instruction\": \"Label the objects in the picture.\",\n    \"items\": [\n      \"1 ..........................\",\n      \"2 ..........................\",\n      \"3 ..........................\",\n      \"4 ..........................\",\n      \"5 ..........................\",\n      \"6 ..........................\",\n      \"7 ..........................\",\n      \"8 ..........................\"\n    ]},\n   {\"id\": \"50.3\",\n    \"marks\": \"4 marks [?]\",\n    \"instruction\": \"What kitchen appliances are being defined here?\",\n    \"items\": [\n      \"1 It is used to wash clothes. ..........................\",\n      \"2 It is used to cook food. ..........................\",\n      \"3 It is used to wash dishes. ..........................\",\n      \"4 It is used to keep things cold. ..........................\"\n    ]},\n   {\"id\": \"50.4\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Label the pictures.\",\n    \"items\": [\n      \"1 ..........................\",\n      \"2 ..........................\",\n      \"3 ..........................\",\n      \"4 ..........................\",\n      \"5 ..........................\"\n    ]},\n   {\"id\": \"50.5\",\n    \"marks\": \"7 marks\",\n    \"instruction\": \"Choose the best noun on the right to finish each of the sentence beginnings on the left.\",\n    \"items\": [\n      \"1 I sat down in\",\n      \"2 She lay down on\",\n      \"3 I had a look at\",\n      \"4 I made\",\n      \"5 He turned on\",\n      \"6 I put the pans in\",\n      \"7 He sat on\"\n    ]}\n ],\n \"boxesAndLists\": [\n   \"a some coffee\",\n   \"b the sink\",\n   \"c the TV\",\n   \"d an armchair\",\n   \"e the sofa\",\n   \"f a stool\",\n   \"g the paper\"\n ],\n \"pictures\": [\n   \"living room scene with numbered arrows 1–8 labelling objects (shelf, armchair, floor/remote control, lamp, sofa, coffee table, flowers)\",\n   \"five kitchen pictures to label: electric mixer, saucepan, taps, kettle, frying pan (items 1–5)\"\n ],\n \"unclassified\": [\n   \"TEST\",\n   \"Your score /30\",\n   \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

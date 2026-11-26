@@ -1,0 +1,69 @@
+{
+ "meta": {
+  "step": "A1-PRI-S05",
+  "book": "tyv-pri",
+  "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+  "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+  "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+  "date": "2026-11-26",
+  "jalali": "۱۴۰۵/۹/۵",
+  "ownerCommand": "«گام بعدی مجاز A1-PRI-S05 = bun scripts/tyv-a1-vlm-capture.mjs pri 49,50,51,52,53,54,55,56,57,58,59,60 (صفحات ۴۹–۶۰ — دستهٔ پنجم از ۱۲ — بدون skip انتظاری — پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست — انتظار Tests 44..55 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود) — گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — trace 1a21894213915ff5 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+  "sessionPreCheck": "بازیابی ۴۸ (ریست پنهان ۴۸م — الگوی ۳۱..۴۷): HEAD بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت = 246e9b5b489583ed1c27002a0fc2124e6f563fed پسا-S04 (ثبت اثبات bc76bea + کامیت اتوماسیون پسا-نشست 246e9b5) — کل .git به عقب برگشته (backup/main tracking-ref نیز 193269b — عین الگوی ریست‌های پنهان ۴۳..۴۷) — درخت کار پسا-S04 روی دیسک باقی بود (SNAPSHOT سربرگ ۱۳۸مین + کپچرهای pri ۰۰۱..۰۴۸ +upp/biz/elem کامل) — divergence ۰/۲۲۵ (behind=۲۲۵: ۲۲۲ بازیابی ۴۷ + ۲ کامیت S04 = a6a4f5b محتوایی + bc76bea ثبت اثبات + ۱ کامیت اتوماسیون پسا-نشست 246e9b5؛ ahead=۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only خالص) — ممیزی blob-OID با core.quotepath=false + git status --porcelain --untracked-files=all: porcelain ظاهری ۳۲ M (نسبت به HEAD کهنهٔ 193269b) + ۲۰۱۱ untracked — پس از fetch ریموت: git diff backup/main = ۲۰۱۱ D (فایل‌های tracked ریموت ناموجود در index کهنه) + ۱ M (فقط mode 100644→100755 — صفر دلتای محتوا) — hash-object تمام ۲۰۱۱ untracked ∈ ۶۳۷۸ blob-OID یکتای reachable از backup/main: ۲۰۱۱/۲۰۱۱ ARCHIVED بایت‌به‌بیت · LOCAL-ONLY=۰ · differ(محتوا)=۰ · deleted=۰ ⇒ صفر محتوای محلی-یگانه — git reset backup/main (mixed — هرگز فایل‌های درخت کار را بازنویسی نمی‌کند) ⇒ HEAD = 246e9b5 = ریموت — porcelain پسا-ریست: صفر modified · صفر untracked · صفر deleted — git diff --check پاک — هوک post-commit سالم (sha256 ee679bc1b642db0f… == ثبت‌شدهٔ SNAPSHOT) — stash stack خالی — دیسک‌حقیقت آغاز گام: pri ۴۸/۱۴۲ (page-001..048 شامل پراب ۴۱) · biz ۹۸/۹۸ · elem ۹۶/۹۶ · upp ۳/۱۵۳ = ۲۴۵/۴۸۹ == رکورد سربرگ ۱۳۸مین — دقیق — شواهد docs/qa/recovery48-proof-2026-11-26.json"
+ },
+ "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 49,50,51,52,53,54,55,56,57,58,59,60",
+ "runs": [
+  {
+   "run": 1,
+   "mode": "هم‌گام در یک فراخوانی ابزار (عین درس ثبت‌شدهٔ سربرگ ۱۱۵مین — بدون nohup پس‌زمینه)",
+   "result": "page 49..60 ok — ۱۲ سطر ok پیوسته — صفر خطا و صفر skip",
+   "summary": "DONE tyv-pri: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-pri/a1",
+   "skips": [],
+   "failed": []
+  }
+ ],
+ "coverage": {
+  "batchRange": "۴۹–۶۰ (بدون skip انتظاری — عین انتظار صریح مالک — پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست)",
+  "completeNoGap": true,
+  "newFiles": [
+   "page-049.json",
+   "page-050.json",
+   "page-051.json",
+   "page-052.json",
+   "page-053.json",
+   "page-054.json",
+   "page-055.json",
+   "page-056.json",
+   "page-057.json",
+   "page-058.json",
+   "page-059.json",
+   "page-060.json"
+  ],
+  "skippedExisting": [],
+  "provenance": "renderSha256 یکتا ۱۲/۱۲ (756f6290/ce1e801c/8c5f3709/3e77b36a/d4fcb7de/4d19a74a/769526e8/dabf4490/67e1c980/8ee2fc7b/cbcfce4f/73516dad) · DPI=300 · promptVersion=tyv-a1-v1 · attempts=≤3 · status=ok ۱۲/۱۲ · model z-ai vision CLI · timestamp 2026-11-26T16:04:07..16:06:33Z"
+ },
+ "patternCheck": {
+  "expected": "Tests 44..55 با test=pdfPage−۵ و فوتر چاپی=pdfPage−۲ هرجا موجود (عین انتظار صریح مالک در سربرگ ۱۳۸مین) — بدون skip انتظاری",
+  "result": "testNumber دقیقاً 44..55 روی p49..p60 = pdfPage−۵ — ۱۲/۱۲ صفر mismatch — عین انتظار صریح مالک — پنجمین دستهٔ متوالی پس از اصلاح الگوی ۱۳۶مین",
+  "footers": "فوترهای چاپی 47..58 روی p49..p60 = pdfPage−۲ — ۱۲/۱۲ — صفر ناسازگاری · صفر footer=null (سومین دستهٔ پیوستهٔ کاملاً سره از نظر فوتر پس از S03/S04) — فوترها دقیقاً == شمارهٔ صفحهٔ کتاب Contents p3 (کتاب صفحهٔ 47..58) — پنجمین تأیید مستقل الگوی سه‌ضابطه‌ای",
+  "anchors": "تطبیق بیت‌به‌بیت Contents p3 == عناوین و فوترهای دسته: Test 44 «Describing character» (صفحهٔ کتاب 47) · Test 45 «Human feelings and actions» (48) · Test 46 «Family and friends» (49) · Test 47 «Ages and stages» (50) · Test 48 «Daily routines» (51) · Test 49 «Homes and buildings» (52) · Test 50 «Around the home 1» (53) · Test 51 «Around the home 2» (54) · Test 52 «Everyday problems» (55) · Test 53 «Money» (56) · Test 54 «Health: illness and disease» (57) · Test 55 «Health: injuries» (58) — ۱۲/۱۲ عین Contents — یادداشت OCR: عنوان کپچرشدهٔ Test 50 «Around the home I» (حرف I) در برابر Contents «Around the home 1» (رقم ۱) — واریانس OCR نویسهٔ واحد — کاندید دوگذر G1 (نوع مشابه یادداشت «artention» biz S07)"
+ },
+ "contentNotes": {
+  "structure": [
+   "p49 Test 44 «Describing character» — ۴ تمرین/۲ باکس/۱ تصویر/۳ unc — فوتر ۴۷ — ادامهٔ زیربخش People عین Contents p3 (پنج تمرین با marks «6 marks [?]» — ریسک ثبت [؟] برای A2)",
+   "p50 Test 45 «Human feelings and actions» — ۵ تمرین/۱ باکس/۰ تصویر/۳ unc — فوتر ۴۸",
+   "p51 Test 46 «Family and friends» — ۳ تمرین/۰ باکس/۱ تصویر/۳ unc — فوتر ۴۹",
+   "p52 Test 47 «Ages and stages» — ۳ تمرین/۰ باکس/۱ تصویر/۴ unc — فوتر ۵۰ — پایان زیربخش People (Contents: Tests 42–47)",
+   "p53 Test 48 «Daily routines» — ۴ تمرین/۰ باکس/۰ تصویر/۴ unc — فوتر ۵۱ — آغاز زیربخش Daily life عین Contents p3 (یک تمرین «8 marks [?]»)",
+   "p54 Test 49 «Homes and buildings» — ۴ تمرین/۰ باکس/۲ تصویر/۲ unc — فوتر ۵۲",
+   "p55 Test 50 «Around the home 1» — ۵ تمرین/۷ باکس/۲ تصویر/۳ unc — فوتر ۵۳ — سنگین‌ترین صفحهٔ باکس‌محور دسته (۷ باکس) — سه تمرین با [؟]",
+   "p56 Test 51 «Around the home 2» — ۴ تمرین/۱ باکس/۱ تصویر/۳ unc — فوتر ۵۴",
+   "p57 Test 52 «Everyday problems» — ۴ تمرین/۱ باکس/۱ تصویر/۳ unc — فوتر ۵۵ — یک تمرین با marks «[?] marks» (بدون عدد — کاندید دوگذر G1)",
+   "p58 Test 53 «Money» — ۴ تمرین/۱ باکس/۳ تصویر/۴ unc — فوتر ۵۶",
+   "p59 Test 54 «Health: illness and disease» — ۴ تمرین/۱ باکس/۱ تصویر/۳ unc — فوتر ۵۷ — دو تمرین با [؟]",
+   "p60 Test 55 «Health: injuries» — ۵ تمرین/۱ باکس/۱ تصویر/۳ unc — فوتر ۵۸"
+  ],
+  "sectionTransitions": "دو گذار زیربخشی عین Contents p3: پایان People در p52 (Test 47 — صفحهٔ کتاب 50) · آغاز Daily life در p53 (Test 48 — صفحهٔ کتاب 51) — People در دستهٔ S04 از p47 آغاز شده بود و اینجا ادامه/پایان یافت — Daily life تا Test 63 ادامه دارد (طبق Contents p3) و در دستهٔ S06 تداوم می‌یابد",
+  "totals": "۴۹ تمرین / ۳۴۶ آیتم / ۱۵ باکس / ۱۴ تصویر / ۳۸ unclassified — [؟]=۱۱ (p49×۴ · p53×۱ · p55×۳ · p57×۱ · p59×۲) · [N/A]=صفر",
+  "noAnomaly": "صفر skip · صفر fail · صفر footer=null · صفر ناهنجاری الگو — اولین دستهٔ PRI با [؟] نامتقارن بالا (۱۱ مورد — بیشتر از S04=۳) — صرفاً ثبت ظاهری marks برای داوری A2 — داوری G1/A2 گیت‌دار"
+ }
+}

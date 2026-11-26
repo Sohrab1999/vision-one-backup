@@ -1,0 +1,102 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 58,
+    "dpi": 300,
+    "renderSha256": "8ee2fc7bcfb6acae542efb9108537f8107e8fdf1979aee76320dd58111ca8a31",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:06:03.274Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 56,
+    "testNumber": "53",
+    "testTitle": "Money",
+    "exercises": [
+      {
+        "id": "53.1",
+        "marks": "5 marks",
+        "instruction": "Put these words in order from (1) the least expensive to (5) the most expensive.",
+        "items": [
+          "quite expensive  □        reasonable  □",
+          "incredibly expensive  □        cheap  □        very expensive  □"
+        ]
+      },
+      {
+        "id": "53.2",
+        "marks": "6 marks",
+        "instruction": "Complete the table below.",
+        "items": [
+          "Verb | Past tense | Past participle",
+          "do | did | done",
+          "buy",
+          "spend",
+          "lend",
+          "sell",
+          "pay",
+          "cost"
+        ]
+      },
+      {
+        "id": "53.3",
+        "marks": "12 marks",
+        "instruction": "Complete these dialogues.",
+        "items": [
+          "1  A: Do you know, I've ................................. over £200 this week on food.",
+          "B: That's a lot. Have you got a big family?",
+          "2  A: Oh no, I've left my money at home. Could you ................................. me £5? I promise",
+          "I'll ................................. you back tomorrow.",
+          "B: No, I can't. I had to ................................. some money myself from my sister.",
+          "3  A: Was the holiday expensive?",
+          "B: No, not really. We ................................. £50 a night for the hotel, and the flight",
+          "................................. us about £150.",
+          "4  A: Are you going away again this year?",
+          "B: No, I can't ................................. another holiday, I'm afraid.",
+          "5  A: You're very careful with your money these days.",
+          "B: Yes, I'm ................................. up for a new mountain bike.",
+          "6  A: Do you know how much those earrings are ................................. ?",
+          "B: Yes, I had them valued at £300.",
+          "7  A: Was it expensive to get your watch repaired?",
+          "B: Yes, they ................................. me £80 to repair the watch and £20 for a new strap.",
+          "8  A: I wouldn't ................................. Paul any money. He ................................. £50 from me",
+          "last month. He said he would give it back, but he hasn't returned any of it."
+        ]
+      },
+      {
+        "id": "53.4",
+        "marks": "7 marks",
+        "instruction": "Complete these definitions using words from the box.",
+        "items": [
+          "1  The amount that people pay for things in a country is called the ........................ of living.",
+          "2  The level of money and comfort people have is called their ........................ of living.",
+          "3  The type of money used in a country is called the ......................... . In the USA it is the",
+          "dollar; in Britain it is called ........................ .",
+          "4  Money can be paper money called ......................... or pieces of metal called ......................... .",
+          "5  To ........................ money means to use money badly."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "sterling    coins    standard    waste    cost    currency    notes"
+    ],
+    "pictures": [
+      "empty checkbox squares after words in 53.1",
+      "three-column table (Verb / Past tense / Past participle) in 53.2 with blank cells",
+      "'TEST' logo box at top left of page"
+    ],
+    "unclassified": [
+      "www.iranguage.com",
+      "IR com Language",
+      "مجوز وزارت آموزش ایران",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 56,\n  \"testNumber\": \"53\",\n  \"testTitle\": \"Money\",\n  \"exercises\": [\n    {\n      \"id\": \"53.1\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Put these words in order from (1) the least expensive to (5) the most expensive.\",\n      \"items\": [\n        \"quite expensive  □        reasonable  □\",\n        \"incredibly expensive  □        cheap  □        very expensive  □\"\n      ]\n    },\n    {\n      \"id\": \"53.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete the table below.\",\n      \"items\": [\n        \"Verb | Past tense | Past participle\",\n        \"do | did | done\",\n        \"buy\",\n        \"spend\",\n        \"lend\",\n        \"sell\",\n        \"pay\",\n        \"cost\"\n      ]\n    },\n    {\n      \"id\": \"53.3\",\n      \"marks\": \"12 marks\",\n      \"instruction\": \"Complete these dialogues.\",\n      \"items\": [\n        \"1  A: Do you know, I've ................................. over £200 this week on food.\",\n        \"B: That's a lot. Have you got a big family?\",\n        \"2  A: Oh no, I've left my money at home. Could you ................................. me £5? I promise\",\n        \"I'll ................................. you back tomorrow.\",\n        \"B: No, I can't. I had to ................................. some money myself from my sister.\",\n        \"3  A: Was the holiday expensive?\",\n        \"B: No, not really. We ................................. £50 a night for the hotel, and the flight\",\n        \"................................. us about £150.\",\n        \"4  A: Are you going away again this year?\",\n        \"B: No, I can't ................................. another holiday, I'm afraid.\",\n        \"5  A: You're very careful with your money these days.\",\n        \"B: Yes, I'm ................................. up for a new mountain bike.\",\n        \"6  A: Do you know how much those earrings are ................................. ?\",\n        \"B: Yes, I had them valued at £300.\",\n        \"7  A: Was it expensive to get your watch repaired?\",\n        \"B: Yes, they ................................. me £80 to repair the watch and £20 for a new strap.\",\n        \"8  A: I wouldn't ................................. Paul any money. He ................................. £50 from me\",\n        \"last month. He said he would give it back, but he hasn't returned any of it.\"\n      ]\n    },\n    {\n      \"id\": \"53.4\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Complete these definitions using words from the box.\",\n      \"items\": [\n        \"1  The amount that people pay for things in a country is called the ........................ of living.\",\n        \"2  The level of money and comfort people have is called their ........................ of living.\",\n        \"3  The type of money used in a country is called the ......................... . In the USA it is the\",\n        \"dollar; in Britain it is called ........................ .\",\n        \"4  Money can be paper money called ......................... or pieces of metal called ......................... .\",\n        \"5  To ........................ money means to use money badly.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"sterling    coins    standard    waste    cost    currency    notes\"\n  ],\n  \"pictures\": [\n    \"empty checkbox squares after words in 53.1\",\n    \"three-column table (Verb / Past tense / Past participle) in 53.2 with blank cells\",\n    \"'TEST' logo box at top left of page\"\n  ],\n  \"unclassified\": [\n    \"www.iranguage.com\",\n    \"IR com Language\",\n    \"مجوز وزارت آموزش ایران\",\n    \"Your score /30\"\n  ]\n}\n```"
+}

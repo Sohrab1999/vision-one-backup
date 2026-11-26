@@ -1,0 +1,89 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 54,
+    "dpi": 300,
+    "renderSha256": "4d19a74a4dd327a53ff0dc63ad86e6e78fb14dcae37cd4ae5b16d06e7ed8ded1",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:05:10.635Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 52,
+    "testNumber": "49",
+    "testTitle": "Homes and buildings",
+    "exercises": [
+      {
+        "id": "49.1",
+        "marks": "13 marks",
+        "instruction": "Label the drawings.",
+        "items": [
+          "1 ........................",
+          "2 ........................",
+          "3 ........................",
+          "4 ........................",
+          "5 ........................",
+          "6 ........................ floor",
+          "7 ........................",
+          "8 ........................",
+          "9 ........................",
+          "10 ........................",
+          "11 A is a ........................ house",
+          "12 B is a ........................ of flat",
+          "13 C are ........................ houses"
+        ]
+      },
+      {
+        "id": "49.2",
+        "marks": "4 marks",
+        "instruction": "Complete the dialogues with a suitable adjective.",
+        "items": [
+          "1 A: It's cold on that side of the room because the window doesn't shut very well. B: Yes, if you sit over there it's very ........................ .",
+          "2 A: Did you go and see that flat in Portland Road, then? B: Yes, it wasn't bad, but the living room was absolutely ........................ ; you couldn't even put a sofa in there.",
+          "3 A: I thought you said your flat was very noisy. B: No, not at all in fact, it's very ........................ .",
+          "4 A: Your office is fantastic - it's absolutely ........................ ! B: Yes, it is big, isn't it!"
+        ]
+      },
+      {
+        "id": "49.3",
+        "marks": "8 marks",
+        "instruction": "Rewrite the sentences using the word on the right. Start with the words you are given. The meaning must stay the same.",
+        "items": [
+          "1 This house is owned by a famous artist. This house ........................................................................................ BELONG",
+          "2 You can see the forest from the top room. The top room ........................................................................................ VIEW",
+          "3 It's easy to keep the house warm. It's easy ........................................................................................ HEAT",
+          "4 The state of the house is terrible. The house ........................................................................................ CONDITION"
+        ]
+      },
+      {
+        "id": "49.4",
+        "marks": "5 marks",
+        "instruction": "Are these sentences true or false?",
+        "items": [
+          "1 A semi-detached house is a house that stands alone and is not joined to any other house.",
+          "2 Rent is the money you pay every week or month to the owner of the flat where you live.",
+          "3 The person that you buy a flat from is called the landlord.",
+          "4 A mortgage is the money you borrow from a bank to buy a house or flat.",
+          "5 A lift is something that carries people up and down inside buildings."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Three labelled drawings A (house with garage), B (block of flats) and C (terraced houses) with numbered parts 1-10, including a circular detail showing a doorbell",
+      "'TEST' banner and shaded exercise numbers as design elements"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 52, \"testNumber\": \"49\", \"testTitle\": \"Homes and buildings\", \"exercises\": [{\"id\": \"49.1\", \"marks\": \"13 marks\", \"instruction\": \"Label the drawings.\", \"items\": [\"1 ........................\", \"2 ........................\", \"3 ........................\", \"4 ........................\", \"5 ........................\", \"6 ........................ floor\", \"7 ........................\", \"8 ........................\", \"9 ........................\", \"10 ........................\", \"11 A is a ........................ house\", \"12 B is a ........................ of flat\", \"13 C are ........................ houses\"]}, {\"id\": \"49.2\", \"marks\": \"4 marks\", \"instruction\": \"Complete the dialogues with a suitable adjective.\", \"items\": [\"1 A: It's cold on that side of the room because the window doesn't shut very well. B: Yes, if you sit over there it's very ........................ .\", \"2 A: Did you go and see that flat in Portland Road, then? B: Yes, it wasn't bad, but the living room was absolutely ........................ ; you couldn't even put a sofa in there.\", \"3 A: I thought you said your flat was very noisy. B: No, not at all in fact, it's very ........................ .\", \"4 A: Your office is fantastic - it's absolutely ........................ ! B: Yes, it is big, isn't it!\"]}, {\"id\": \"49.3\", \"marks\": \"8 marks\", \"instruction\": \"Rewrite the sentences using the word on the right. Start with the words you are given. The meaning must stay the same.\", \"items\": [\"1 This house is owned by a famous artist. This house ........................................................................................ BELONG\", \"2 You can see the forest from the top room. The top room ........................................................................................ VIEW\", \"3 It's easy to keep the house warm. It's easy ........................................................................................ HEAT\", \"4 The state of the house is terrible. The house ........................................................................................ CONDITION\"]}, {\"id\": \"49.4\", \"marks\": \"5 marks\", \"instruction\": \"Are these sentences true or false?\", \"items\": [\"1 A semi-detached house is a house that stands alone and is not joined to any other house.\", \"2 Rent is the money you pay every week or month to the owner of the flat where you live.\", \"3 The person that you buy a flat from is called the landlord.\", \"4 A mortgage is the money you borrow from a bank to buy a house or flat.\", \"5 A lift is something that carries people up and down inside buildings.\"]}], \"boxesAndLists\": [], \"pictures\": [\"Three labelled drawings A (house with garage), B (block of flats) and C (terraced houses) with numbered parts 1-10, including a circular detail showing a doorbell\", \"'TEST' banner and shaded exercise numbers as design elements\"], \"unclassified\": [\"Your score /30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]}\n```"
+}

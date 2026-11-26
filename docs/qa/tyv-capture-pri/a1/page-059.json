@@ -1,0 +1,107 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 59,
+    "dpi": 300,
+    "renderSha256": "cbcfce4f0049acf474710fd6ada2a5758e0dcde19d2fface2a7d77f701677d73",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:06:17.121Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 57,
+    "testNumber": "54",
+    "testTitle": "Health: illness and disease",
+    "exercises": [
+      {
+        "id": "54.1",
+        "marks": "8 marks",
+        "instruction": "Match the sentence halves, using each half once only.",
+        "items": [
+          "1 If someone feels sick",
+          "2 If someone's got flu",
+          "3 If someone has a heart attack",
+          "4 If someone's got diarrhoea",
+          "5 If someone's got hay fever",
+          "6 If someone's got a hangover",
+          "7 If someone is blowing their nose a lot",
+          "8 If someone's got a temperature",
+          "a they may have a cold.",
+          "b they want to go to the toilet.",
+          "c they keep sneezing.",
+          "d they want to vomit.",
+          "e they feel very hot.",
+          "f their muscles ache.",
+          "g they need a doctor immediately.",
+          "h they drank too much beer last night."
+        ]
+      },
+      {
+        "id": "54.2",
+        "marks": "7 marks [?]",
+        "instruction": "Write a sentence describing each person's ache or pain. Begin: He/she's got (a/an) ...",
+        "items": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ]
+      },
+      {
+        "id": "54.3",
+        "marks": "9 marks [?]",
+        "instruction": "Complete the dialogues with a word from the box.",
+        "items": [
+          "A: Oh, dear, my eyes are really (1) ........................... .",
+          "B: Are they?",
+          "A: Yes, and I've got a runny (2) ................................ too.",
+          "B: Hmm, I can see that. Do you suffer from hay (3) ................................ ?",
+          "A: Not usually, no. Maybe I should go and see the doctor.",
+          "B: Yes, then she can give you a (4) ................................. for the chemist's.",
+          "C: Did I tell you I fell and (5) ................................. my knee?",
+          "D: No – did you go and see the doctor?",
+          "C: No, I didn't, but maybe I should, because it still feels very (6) ................................... .",
+          "E: Have you been to the dentist's yet?",
+          "F: Yes, I went yesterday. I had to have two (7) .................................. in my back teeth.",
+          "F: Did he give you an (8) .................................. ?",
+          "F: Yes, he did. I don't like needles, but it was (9) .............................. , so I was very relieved."
+        ]
+      },
+      {
+        "id": "54.4",
+        "marks": "6 marks",
+        "instruction": "Correct the mistakes. There is one in each sentence.",
+        "items": [
+          "1 She's in bed because she's got a flu and she feels sick.",
+          "2 It's horrible when you have a cold and keep blowing the nose.",
+          "3 My back is very pain because I was carrying a heavy suitcase yesterday.",
+          "4 His finger injured when he shut it in the door.",
+          "5 He's got a sore cough and a throat.",
+          "6 I hurt me when I ran into the tree."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "fillings  nose  painful  prescription  painless  sore  fever  hurt  injection"
+    ],
+    "pictures": [
+      "Seven numbered line drawings of people (1–7) showing different aches/pains, for exercise 54.2"
+    ],
+    "unclassified": [
+      "TEST",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 57,\n  \"testNumber\": \"54\",\n  \"testTitle\": \"Health: illness and disease\",\n  \"exercises\": [\n    {\n      \"id\": \"54.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Match the sentence halves, using each half once only.\",\n      \"items\": [\n        \"1 If someone feels sick\",\n        \"2 If someone's got flu\",\n        \"3 If someone has a heart attack\",\n        \"4 If someone's got diarrhoea\",\n        \"5 If someone's got hay fever\",\n        \"6 If someone's got a hangover\",\n        \"7 If someone is blowing their nose a lot\",\n        \"8 If someone's got a temperature\",\n        \"a they may have a cold.\",\n        \"b they want to go to the toilet.\",\n        \"c they keep sneezing.\",\n        \"d they want to vomit.\",\n        \"e they feel very hot.\",\n        \"f their muscles ache.\",\n        \"g they need a doctor immediately.\",\n        \"h they drank too much beer last night.\"\n      ]\n    },\n    {\n      \"id\": \"54.2\",\n      \"marks\": \"7 marks [?]\",\n      \"instruction\": \"Write a sentence describing each person's ache or pain. Begin: He/she's got (a/an) ...\",\n      \"items\": [\n        \"1\",\n        \"2\",\n        \"3\",\n        \"4\",\n        \"5\",\n        \"6\",\n        \"7\"\n      ]\n    },\n    {\n      \"id\": \"54.3\",\n      \"marks\": \"9 marks [?]\",\n      \"instruction\": \"Complete the dialogues with a word from the box.\",\n      \"items\": [\n        \"A: Oh, dear, my eyes are really (1) ........................... .\",\n        \"B: Are they?\",\n        \"A: Yes, and I've got a runny (2) ................................ too.\",\n        \"B: Hmm, I can see that. Do you suffer from hay (3) ................................ ?\",\n        \"A: Not usually, no. Maybe I should go and see the doctor.\",\n        \"B: Yes, then she can give you a (4) ................................. for the chemist's.\",\n        \"C: Did I tell you I fell and (5) ................................. my knee?\",\n        \"D: No – did you go and see the doctor?\",\n        \"C: No, I didn't, but maybe I should, because it still feels very (6) ................................... .\",\n        \"E: Have you been to the dentist's yet?\",\n        \"F: Yes, I went yesterday. I had to have two (7) .................................. in my back teeth.\",\n        \"F: Did he give you an (8) .................................. ?\",\n        \"F: Yes, he did. I don't like needles, but it was (9) .............................. , so I was very relieved.\"\n      ]\n    },\n    {\n      \"id\": \"54.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Correct the mistakes. There is one in each sentence.\",\n      \"items\": [\n        \"1 She's in bed because she's got a flu and she feels sick.\",\n        \"2 It's horrible when you have a cold and keep blowing the nose.\",\n        \"3 My back is very pain because I was carrying a heavy suitcase yesterday.\",\n        \"4 His finger injured when he shut it in the door.\",\n        \"5 He's got a sore cough and a throat.\",\n        \"6 I hurt me when I ran into the tree.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"fillings  nose  painful  prescription  painless  sore  fever  hurt  injection\"\n  ],\n  \"pictures\": [\n    \"Seven numbered line drawings of people (1–7) showing different aches/pains, for exercise 54.2\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\",\n    \"Your score /30\"\n  ]\n}\n```"
+}

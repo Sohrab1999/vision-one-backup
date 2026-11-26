@@ -1,0 +1,85 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 49,
+    "dpi": 300,
+    "renderSha256": "756f6290db23edce65bd9b9cc6b349ca5ce863f8a9767b1cf04ac089ca9c7736",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:04:07.342Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 47,
+    "testNumber": "44",
+    "testTitle": "Describing character",
+    "exercises": [
+      {
+        "id": "44.1",
+        "marks": "6 marks [?]",
+        "instruction": "Find six pairs of words which have a similar meaning.",
+        "items": []
+      },
+      {
+        "id": "44.2",
+        "marks": "6 marks [?]",
+        "instruction": "Agree with the opinions below using a word with the same meaning. The first two letters of each answer are given.",
+        "items": [
+          "1 A: She's always wanted to get to the top in her career, hasn't she?",
+          "B: Yes, she's very am.......................... .",
+          "2 A: She was horrible, wasn't she?",
+          "B: Yes, very un.......................... .",
+          "3 A: He's happy and smiling whenever you see him.",
+          "B: I know, he's always very ch.......................... .",
+          "4 A: The problem is that she can't change any of her ideas and adapt to new ones.",
+          "B: No, she's very in.......................... .",
+          "5 A: Do you honestly think we can depend on that old car of yours?",
+          "B: No, it's very un.......................... – it could break down at any time.",
+          "6 A: He never thinks about other people's feelings, does he?",
+          "B: No, he's very in.......................... ."
+        ]
+      },
+      {
+        "id": "44.3",
+        "marks": "6 marks [?]",
+        "instruction": "Write an opposite for each of these words. Three of them just require a prefix (e.g. un-; dis-); the other three need a completely different word. Look at the examples first.",
+        "items": [
+          "Examples: happy ≠ unhappy    rich ≠ poor",
+          "1 honest ≠ ..........................",
+          "2 generous ≠ ..........................",
+          "3 kind ≠ ..........................",
+          "4 friendly ≠ ..........................",
+          "5 strong ≠ ..........................",
+          "6 optimistic ≠ .........................."
+        ]
+      },
+      {
+        "id": "44.4",
+        "marks": "6 marks [?]",
+        "instruction": "Fill the gaps in the text with suitable words from the box. (There are more words in the box than you need.)",
+        "items": [
+          "I spent the weekend camping with friends but it wasn't very successful. Sally is not very (1).......................... and we had to wait an hour for her to turn up. Apparently she had a problem with the train, but didn't have the common (2).......................... to ring me on my mobile and warn me she would be late. Then, when she finally arrived, she had a friend with her, called Jill. She was quite nice, but so (3).......................... that she didn't really speak to anyone for the first day. She'd got a bit more self- (4).......................... by the end of the weekend. However, she didn't seem to have much (5)..........................: we were only 400 metres from a farm but Jill said she couldn't make tea because we had no water! Bill got angry at that, for no real reason, and poor Jill almost started crying. Bill's problem was that he never really wanted to go camping in the first place, so he was pretty (6).......................... most of the time."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "clever  easy-going  stupid  bright  nervous  thick  horrible  pleasant  tense  nice  relaxed  unpleasant",
+      "sense  punctual  confident  trust  initiative  miserable  timid  sensible  sensitive  shy  cheerful  reserved"
+    ],
+    "pictures": [
+      "three pairs of dotted answer lines with slashes in exercise 44.1, in two columns"
+    ],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "30",
+      "score [?]"
+    ]
+  },
+  "rawModelText": "{\"footer\": 47, \"testNumber\": \"44\", \"testTitle\": \"Describing character\", \"exercises\": [{\"id\": \"44.1\", \"marks\": \"6 marks [?]\", \"instruction\": \"Find six pairs of words which have a similar meaning.\", \"items\": []}, {\"id\": \"44.2\", \"marks\": \"6 marks [?]\", \"instruction\": \"Agree with the opinions below using a word with the same meaning. The first two letters of each answer are given.\", \"items\": [\"1 A: She's always wanted to get to the top in her career, hasn't she?\", \"B: Yes, she's very am.......................... .\", \"2 A: She was horrible, wasn't she?\", \"B: Yes, very un.......................... .\", \"3 A: He's happy and smiling whenever you see him.\", \"B: I know, he's always very ch.......................... .\", \"4 A: The problem is that she can't change any of her ideas and adapt to new ones.\", \"B: No, she's very in.......................... .\", \"5 A: Do you honestly think we can depend on that old car of yours?\", \"B: No, it's very un.......................... – it could break down at any time.\", \"6 A: He never thinks about other people's feelings, does he?\", \"B: No, he's very in.......................... .\"]}, {\"id\": \"44.3\", \"marks\": \"6 marks [?]\", \"instruction\": \"Write an opposite for each of these words. Three of them just require a prefix (e.g. un-; dis-); the other three need a completely different word. Look at the examples first.\", \"items\": [\"Examples: happy ≠ unhappy    rich ≠ poor\", \"1 honest ≠ ..........................\", \"2 generous ≠ ..........................\", \"3 kind ≠ ..........................\", \"4 friendly ≠ ..........................\", \"5 strong ≠ ..........................\", \"6 optimistic ≠ ..........................\"]}, {\"id\": \"44.4\", \"marks\": \"6 marks [?]\", \"instruction\": \"Fill the gaps in the text with suitable words from the box. (There are more words in the box than you need.)\", \"items\": [\"I spent the weekend camping with friends but it wasn't very successful. Sally is not very (1).......................... and we had to wait an hour for her to turn up. Apparently she had a problem with the train, but didn't have the common (2).......................... to ring me on my mobile and warn me she would be late. Then, when she finally arrived, she had a friend with her, called Jill. She was quite nice, but so (3).......................... that she didn't really speak to anyone for the first day. She'd got a bit more self- (4).......................... by the end of the weekend. However, she didn't seem to have much (5)..........................: we were only 400 metres from a farm but Jill said she couldn't make tea because we had no water! Bill got angry at that, for no real reason, and poor Jill almost started crying. Bill's problem was that he never really wanted to go camping in the first place, so he was pretty (6).......................... most of the time.\"]}], \"boxesAndLists\": [\"clever  easy-going  stupid  bright  nervous  thick  horrible  pleasant  tense  nice  relaxed  unpleasant\", \"sense  punctual  confident  trust  initiative  miserable  timid  sensible  sensitive  shy  cheerful  reserved\"], \"pictures\": [\"three pairs of dotted answer lines with slashes in exercise 44.1, in two columns\"], \"unclassified\": [\"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"30\", \"score [?]\"]}"
+}

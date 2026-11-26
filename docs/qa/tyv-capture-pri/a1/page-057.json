@@ -1,0 +1,87 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 57,
+    "dpi": 300,
+    "renderSha256": "67e1c98077fe7abcf9faf1f8358139fa935c4f409bda960c55a252f1131efdda",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:05:48.691Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 55,
+    "testNumber": "52",
+    "testTitle": "Everyday problems",
+    "exercises": [
+      {
+        "id": "52.1",
+        "marks": null,
+        "instruction": "Fill the gaps in these dialogues. Write one word in each gap.",
+        "items": [
+          "1 A: What's the matter?",
+          "B: I don't know. I turned your personal stereo on but it's not ............................ .",
+          "A: Well, I've been using it a lot recently, so it probably needs new ............................ .",
+          "B: Yes, probably.",
+          "2 A: Is that public phone still ............................ of ............................ ?",
+          "B: Yes, it seems so. It's been like that for over a week now.",
+          "3 A: You can't use the washing machine.",
+          "B: Why not?",
+          "A: There's something ............................  ............................ it. The engineer is coming tomorrow."
+        ]
+      },
+      {
+        "id": "52.2",
+        "marks": "9 marks",
+        "instruction": "Look at the pictures and complete the texts.",
+        "items": [
+          "1 I ............................ the cup on the",
+          "floor and I'm afraid it ............................ .",
+          "2 I ............................ some coffee on Pauline's",
+          "skirt, and there's a horrible ............................",
+          "on it. She won't be able to remove it."
+        ]
+      },
+      {
+        "id": "52.3",
+        "marks": "[?] marks",
+        "instruction": "Complete the text using words from the box. Remember to put the verbs in the correct form. There are more words in the box than you need.",
+        "items": [
+          "My husband Pete wasn't in a very good (1)............................ when I left for work this morning. He got up and discovered that we had (2)............................ coffee, so he had to have tea, which he hates. Then he had to iron a shirt before he could go to work. While he was doing that, the phone rang. He ran to answer it and, of course, forgot about the iron. When he came back he had (3)............................ a big hole in one sleeve of his shirt and it was completely (4)............................ ; he'll have to buy a new one. But things (5)............................ even worse: he set off for work, and (6)............................ his briefcase behind with all his notes for a very important business meeting.",
+          "Mind you, I didn't have a great start either: I (7)............................ the children's toys and (8)............................ down the stairs. Fortunately I didn't really hurt myself, but when I got to my feet I (9)............................ I had also knocked a lamp over, and now it's not (10)............................ ."
+        ]
+      },
+      {
+        "id": "52.4",
+        "marks": "6 marks",
+        "instruction": "Circle the correct word.",
+        "items": [
+          "1 I'm afraid I've forgotten / left my notes at home.",
+          "2 I think he must have lost / missed the train – he should be here by now.",
+          "3 She got out / got off the bus and walked to school.",
+          "4 Have you forgotten / left your homework?",
+          "5 I've asked lots of people if they have seen the bag I lost / missed.",
+          "6 This new watch of mine isn't working properly / fine."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "burn      humour      trip over      fall      mood      run      damage\nfinish    recognise   realise        leave     run out of  function  crash\nwork      remark      break          become    forget      get       ruin"
+    ],
+    "pictures": [
+      "Four small line drawings: a person dropping a cup, a broken cup on the floor, a person spilling coffee on someone's skirt, a person bending down picking something up"
+    ],
+    "unclassified": [
+      "TEST",
+      "score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 55,\n \"testNumber\": \"52\",\n \"testTitle\": \"Everyday problems\",\n \"exercises\": [\n  {\"id\": \"52.1\",\n   \"marks\": null,\n   \"instruction\": \"Fill the gaps in these dialogues. Write one word in each gap.\",\n   \"items\": [\n    \"1 A: What's the matter?\",\n    \"B: I don't know. I turned your personal stereo on but it's not ............................ .\",\n    \"A: Well, I've been using it a lot recently, so it probably needs new ............................ .\",\n    \"B: Yes, probably.\",\n    \"2 A: Is that public phone still ............................ of ............................ ?\",\n    \"B: Yes, it seems so. It's been like that for over a week now.\",\n    \"3 A: You can't use the washing machine.\",\n    \"B: Why not?\",\n    \"A: There's something ............................  ............................ it. The engineer is coming tomorrow.\"\n   ]},\n  {\"id\": \"52.2\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"Look at the pictures and complete the texts.\",\n   \"items\": [\n    \"1 I ............................ the cup on the\",\n    \"floor and I'm afraid it ............................ .\",\n    \"2 I ............................ some coffee on Pauline's\",\n    \"skirt, and there's a horrible ............................\",\n    \"on it. She won't be able to remove it.\"\n   ]},\n  {\"id\": \"52.3\",\n   \"marks\": \"[?] marks\",\n   \"instruction\": \"Complete the text using words from the box. Remember to put the verbs in the correct form. There are more words in the box than you need.\",\n   \"items\": [\n    \"My husband Pete wasn't in a very good (1)............................ when I left for work this morning. He got up and discovered that we had (2)............................ coffee, so he had to have tea, which he hates. Then he had to iron a shirt before he could go to work. While he was doing that, the phone rang. He ran to answer it and, of course, forgot about the iron. When he came back he had (3)............................ a big hole in one sleeve of his shirt and it was completely (4)............................ ; he'll have to buy a new one. But things (5)............................ even worse: he set off for work, and (6)............................ his briefcase behind with all his notes for a very important business meeting.\",\n    \"Mind you, I didn't have a great start either: I (7)............................ the children's toys and (8)............................ down the stairs. Fortunately I didn't really hurt myself, but when I got to my feet I (9)............................ I had also knocked a lamp over, and now it's not (10)............................ .\"\n   ]},\n  {\"id\": \"52.4\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Circle the correct word.\",\n   \"items\": [\n    \"1 I'm afraid I've forgotten / left my notes at home.\",\n    \"2 I think he must have lost / missed the train – he should be here by now.\",\n    \"3 She got out / got off the bus and walked to school.\",\n    \"4 Have you forgotten / left your homework?\",\n    \"5 I've asked lots of people if they have seen the bag I lost / missed.\",\n    \"6 This new watch of mine isn't working properly / fine.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"burn      humour      trip over      fall      mood      run      damage\\nfinish    recognise   realise        leave     run out of  function  crash\\nwork      remark      break          become    forget      get       ruin\"\n ],\n \"pictures\": [\n  \"Four small line drawings: a person dropping a cup, a broken cup on the floor, a person spilling coffee on someone's skirt, a person bending down picking something up\"\n ],\n \"unclassified\": [\n  \"TEST\",\n  \"score /30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

@@ -1,0 +1,82 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 56,
+    "dpi": 300,
+    "renderSha256": "dabf4490d52b8b4dadc19c11fdcdbf557a44cdc37e21adbf3d9a27c3375cb79d",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:05:33.592Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 54,
+    "testNumber": "51",
+    "testTitle": "Around the home 2",
+    "exercises": [
+      {
+        "id": "51.1",
+        "marks": "9 marks",
+        "instruction": "Here are some things you find in the bedroom and bathroom, but the letters are jumbled. Put the correct words in the columns below.",
+        "items": [
+          "Bedroom",
+          "Bathroom"
+        ]
+      },
+      {
+        "id": "51.2",
+        "marks": "6 marks",
+        "instruction": "Fill the gaps.",
+        "items": [
+          "I went to a great party last night. I didn't get home till three in the morning. I was so tired, that I didn't put my clothes away - I just (1)......................... them all over the floor. And I forgot to (2)......................... off the light. I (3)......................... to sleep with it on! Luckily I remembered to (4)......................... my alarm, because I had to get up early this morning. Ugh! I've just seen myself in the (5)......................... and I look awful! Maybe I'll look better if I (6)......................... a wash."
+        ]
+      },
+      {
+        "id": "51.3",
+        "marks": "9 marks",
+        "instruction": "Circle the correct answer.",
+        "items": [
+          "1 My jeans were dirty/clean, so I had to do some washing/washing-up.",
+          "2 At the end of the meal the others sat down while I did the washing/washing-up.",
+          "3 I decided I would hoover/polish the dining room table after breakfast.",
+          "4 I did/made the ironing at the weekend.",
+          "5 She put on/put off her clothes.",
+          "6 I hate housework/houseworks.",
+          "7 Quick, get into/go into bed and keep very quiet.",
+          "8 I forgot to do/make my bed this morning."
+        ]
+      },
+      {
+        "id": "51.4",
+        "marks": "6 marks",
+        "instruction": "Match the words on the left with the words on the right to form six nouns.",
+        "items": [
+          "1 chest      a clock",
+          "2 wash       b work",
+          "3 alarm      c rail",
+          "4 bedside    d basin",
+          "5 towel      e of drawers",
+          "6 house      f table"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "malp  wehrso  ayspmaj  woltes  iltote  bredwaor  vutde  habt  lopsliw"
+    ],
+    "pictures": [
+      "Drawing of a person looking at themselves in a mirror, hand on head, with a toothbrush in a holder"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 54,\n  \"testNumber\": \"51\",\n  \"testTitle\": \"Around the home 2\",\n  \"exercises\": [\n    {\n      \"id\": \"51.1\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Here are some things you find in the bedroom and bathroom, but the letters are jumbled. Put the correct words in the columns below.\",\n      \"items\": [\"Bedroom\", \"Bathroom\"]\n    },\n    {\n      \"id\": \"51.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Fill the gaps.\",\n      \"items\": [\n        \"I went to a great party last night. I didn't get home till three in the morning. I was so tired, that I didn't put my clothes away - I just (1)......................... them all over the floor. And I forgot to (2)......................... off the light. I (3)......................... to sleep with it on! Luckily I remembered to (4)......................... my alarm, because I had to get up early this morning. Ugh! I've just seen myself in the (5)......................... and I look awful! Maybe I'll look better if I (6)......................... a wash.\"\n      ]\n    },\n    {\n      \"id\": \"51.3\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Circle the correct answer.\",\n      \"items\": [\n        \"1 My jeans were dirty/clean, so I had to do some washing/washing-up.\",\n        \"2 At the end of the meal the others sat down while I did the washing/washing-up.\",\n        \"3 I decided I would hoover/polish the dining room table after breakfast.\",\n        \"4 I did/made the ironing at the weekend.\",\n        \"5 She put on/put off her clothes.\",\n        \"6 I hate housework/houseworks.\",\n        \"7 Quick, get into/go into bed and keep very quiet.\",\n        \"8 I forgot to do/make my bed this morning.\"\n      ]\n    },\n    {\n      \"id\": \"51.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match the words on the left with the words on the right to form six nouns.\",\n      \"items\": [\n        \"1 chest      a clock\",\n        \"2 wash       b work\",\n        \"3 alarm      c rail\",\n        \"4 bedside    d basin\",\n        \"5 towel      e of drawers\",\n        \"6 house      f table\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"malp  wehrso  ayspmaj  woltes  iltote  bredwaor  vutde  habt  lopsliw\"\n  ],\n  \"pictures\": [\n    \"Drawing of a person looking at themselves in a mirror, hand on head, with a toothbrush in a holder\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

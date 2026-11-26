@@ -1,0 +1,100 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 50,
+    "dpi": 300,
+    "renderSha256": "ce1e801c3cab28ce0417b5814aeafdb5c7e88d60efca0d32a5f5936e39ed80cc",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:04:21.122Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 48,
+    "testNumber": "45",
+    "testTitle": "Human feelings and actions",
+    "exercises": [
+      {
+        "id": "45.1",
+        "marks": "5 marks",
+        "instruction": "Match the words in the box with the definitions below.",
+        "items": [
+          "1 sad and angry because something unpleasant has happened",
+          "2 feeling very satisfied when you (or someone close to you) has done something very well",
+          "3 afraid",
+          "4 uncomfortable and often ashamed because you have done something wrong or stupid in a social situation",
+          "5 angry and unhappy because someone has something you want, or because someone you like or love is showing interest in another person"
+        ]
+      },
+      {
+        "id": "45.2",
+        "marks": "8 marks",
+        "instruction": "Complete the sentences using the correct form of the word on the right.",
+        "items": [
+          "1 Do you believe everyone has a right to ................................... ? HAPPY",
+          "2 It was a terribly ................................... experience. EMBARRASS",
+          "3 I think his ................................... was hurt when she left him. PROUD",
+          "4 Her ................................... was the cause of most of their arguments. JEALOUS",
+          "5 I don't know why he felt such ................................... . ANGRY",
+          "6 They were all moved by the ................................... of the occasion. SAD",
+          "7 I was so ................................... when it happened. EMBARRASS",
+          "8 I don't know why it caused so much ................................... . EMBARRASS"
+        ]
+      },
+      {
+        "id": "45.3",
+        "marks": "6 marks",
+        "instruction": "Complete the sentences below with a suitable word, without using speak, look or walk.",
+        "items": [
+          "1 She ................................... in his ear so no-one would hear.",
+          "2 Please don't ................................... at me in that angry voice.",
+          "3 The soldiers had to ................................... 20 miles back to their camp.",
+          "4 He ................................... at his watch and realised it was time to go.",
+          "5 They had nothing to do so they went for a ................................... through the woods.",
+          "6 She felt very uncomfortable because the two men sitting opposite were ................................... at her."
+        ]
+      },
+      {
+        "id": "45.4",
+        "marks": "6 marks",
+        "instruction": "Match the verbs on the left with the words and phrases on the right.",
+        "items": [
+          "1 clap          a on the door",
+          "2 point         b goodbye",
+          "3 punch         c your finger at someone",
+          "4 knock         d the button",
+          "5 wave          e your hands",
+          "6 press         f someone on the arm"
+        ]
+      },
+      {
+        "id": "45.5",
+        "marks": "5 marks",
+        "instruction": "Some of the words tested on this page are used with particular prepositions. Cover the rest this page and then complete these sentences with the correct preposition.",
+        "items": [
+          "1 He's very jealous .............. his brother.",
+          "2 They knocked .............. the door but no-one answered.",
+          "3 You shouldn't point .............. people.",
+          "4 I'm proud .............. my country.",
+          "5 She glanced .............. the others to see if they had noticed."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "jealous    upset    proud    frightened    embarrassed"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 48,\n  \"testNumber\": \"45\",\n  \"testTitle\": \"Human feelings and actions\",\n  \"exercises\": [\n    {\n      \"id\": \"45.1\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Match the words in the box with the definitions below.\",\n      \"items\": [\n        \"1 sad and angry because something unpleasant has happened\",\n        \"2 feeling very satisfied when you (or someone close to you) has done something very well\",\n        \"3 afraid\",\n        \"4 uncomfortable and often ashamed because you have done something wrong or stupid in a social situation\",\n        \"5 angry and unhappy because someone has something you want, or because someone you like or love is showing interest in another person\"\n      ]\n    },\n    {\n      \"id\": \"45.2\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the sentences using the correct form of the word on the right.\",\n      \"items\": [\n        \"1 Do you believe everyone has a right to ................................... ? HAPPY\",\n        \"2 It was a terribly ................................... experience. EMBARRASS\",\n        \"3 I think his ................................... was hurt when she left him. PROUD\",\n        \"4 Her ................................... was the cause of most of their arguments. JEALOUS\",\n        \"5 I don't know why he felt such ................................... . ANGRY\",\n        \"6 They were all moved by the ................................... of the occasion. SAD\",\n        \"7 I was so ................................... when it happened. EMBARRASS\",\n        \"8 I don't know why it caused so much ................................... . EMBARRASS\"\n      ]\n    },\n    {\n      \"id\": \"45.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete the sentences below with a suitable word, without using speak, look or walk.\",\n      \"items\": [\n        \"1 She ................................... in his ear so no-one would hear.\",\n        \"2 Please don't ................................... at me in that angry voice.\",\n        \"3 The soldiers had to ................................... 20 miles back to their camp.\",\n        \"4 He ................................... at his watch and realised it was time to go.\",\n        \"5 They had nothing to do so they went for a ................................... through the woods.\",\n        \"6 She felt very uncomfortable because the two men sitting opposite were ................................... at her.\"\n      ]\n    },\n    {\n      \"id\": \"45.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match the verbs on the left with the words and phrases on the right.\",\n      \"items\": [\n        \"1 clap          a on the door\",\n        \"2 point         b goodbye\",\n        \"3 punch         c your finger at someone\",\n        \"4 knock         d the button\",\n        \"5 wave          e your hands\",\n        \"6 press         f someone on the arm\"\n      ]\n    },\n    {\n      \"id\": \"45.5\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Some of the words tested on this page are used with particular prepositions. Cover the rest this page and then complete these sentences with the correct preposition.\",\n      \"items\": [\n        \"1 He's very jealous .............. his brother.\",\n        \"2 They knocked .............. the door but no-one answered.\",\n        \"3 You shouldn't point .............. people.\",\n        \"4 I'm proud .............. my country.\",\n        \"5 She glanced .............. the others to see if they had noticed.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"jealous    upset    proud    frightened    embarrassed\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

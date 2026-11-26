@@ -1,0 +1,93 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 51,
+    "dpi": 300,
+    "renderSha256": "8c5f37099ff38625329ebfa3d0eb7faaaf6443ea4dbdd72da6b5b96b0677bd14",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:04:33.930Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 49,
+    "testNumber": "46",
+    "testTitle": "Family and friends",
+    "exercises": [
+      {
+        "id": "46.1",
+        "marks": "11 marks",
+        "instruction": "Read the short text, then complete the sentences below.",
+        "items": [
+          "This is James Thomas Brown; he has no brothers and sisters. His parents died when he was 20 and they left him their house. He married Julia and they had two children, but unfortunately his wife died two years ago. Recently he has fallen in love with Amy who he has known since they were young. She is the sister of a very good friend of his called Mike, who he likes and trusts.",
+          "1 James is his .............................. name.",
+          "2 James Thomas Brown is his .............................. name.",
+          "3 Thomas is his .............................. name.",
+          "4 Brown is his .............................. .",
+          "5 He has no brothers and sisters so he is an .............................. child.",
+          "6 At the age of 20, James .............................. his parents' house.",
+          "7 His wife, Julia, died so he is a .............................. .",
+          "8 The two children and he form a .............................. family.",
+          "9 Amy is his present .............................. .",
+          "10 Mike is a very .............................. friend.",
+          "11 If James marries Amy, she will become the children's .............................. -mother."
+        ]
+      },
+      {
+        "id": "46.2",
+        "marks": "13 marks",
+        "instruction": "Complete the definitions with a suitable word.",
+        "items": [
+          "1 My father's brothers are my .............................. .",
+          "2 My father's sisters are my .............................. .",
+          "3 My sister's husband is my .............................. .",
+          "4 My brother's wife is my .............................. .",
+          "5 My wife's mother is my .............................. .",
+          "6 My aunt and uncle's children are my .............................. .",
+          "7 My parents' parents are my .............................. .",
+          "8 My brother's daughters are my .............................. .",
+          "9 My sister's sons are my .............................. .",
+          "10 My father's first wife, who is still alive, is his .............................. .",
+          "11 My oldest brother died, so his wife is a .............................. .",
+          "12 My mother remarried last year: her new husband is my .............................. .",
+          "13 All of these people are members of my family, so they are my .............................. ."
+        ]
+      },
+      {
+        "id": "46.3",
+        "marks": "5 marks",
+        "instruction": "Match the words on the left with the definitions on the right.",
+        "items": [
+          "1 colleague",
+          "2 partner",
+          "3 ex-boyfriend",
+          "4 best friend",
+          "5 old friend",
+          "6 father-in-law",
+          "a the one friend you feel closest to",
+          "b a man that a woman used to go out with",
+          "c one of the parents of your husband or wife",
+          "d someone you have known well for a long time",
+          "e someone you work with",
+          "f this word is used for the person that someone loves and lives with, without indicating if they are married"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "line drawing of a man with two children (framed illustration)"
+    ],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "/ 30",
+      "Your score"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 49,\n  \"testNumber\": \"46\",\n  \"testTitle\": \"Family and friends\",\n  \"exercises\": [\n    {\n      \"id\": \"46.1\",\n      \"marks\": \"11 marks\",\n      \"instruction\": \"Read the short text, then complete the sentences below.\",\n      \"items\": [\n        \"This is James Thomas Brown; he has no brothers and sisters. His parents died when he was 20 and they left him their house. He married Julia and they had two children, but unfortunately his wife died two years ago. Recently he has fallen in love with Amy who he has known since they were young. She is the sister of a very good friend of his called Mike, who he likes and trusts.\",\n        \"1 James is his .............................. name.\",\n        \"2 James Thomas Brown is his .............................. name.\",\n        \"3 Thomas is his .............................. name.\",\n        \"4 Brown is his .............................. .\",\n        \"5 He has no brothers and sisters so he is an .............................. child.\",\n        \"6 At the age of 20, James .............................. his parents' house.\",\n        \"7 His wife, Julia, died so he is a .............................. .\",\n        \"8 The two children and he form a .............................. family.\",\n        \"9 Amy is his present .............................. .\",\n        \"10 Mike is a very .............................. friend.\",\n        \"11 If James marries Amy, she will become the children's .............................. -mother.\"\n      ]\n    },\n    {\n      \"id\": \"46.2\",\n      \"marks\": \"13 marks\",\n      \"instruction\": \"Complete the definitions with a suitable word.\",\n      \"items\": [\n        \"1 My father's brothers are my .............................. .\",\n        \"2 My father's sisters are my .............................. .\",\n        \"3 My sister's husband is my .............................. .\",\n        \"4 My brother's wife is my .............................. .\",\n        \"5 My wife's mother is my .............................. .\",\n        \"6 My aunt and uncle's children are my .............................. .\",\n        \"7 My parents' parents are my .............................. .\",\n        \"8 My brother's daughters are my .............................. .\",\n        \"9 My sister's sons are my .............................. .\",\n        \"10 My father's first wife, who is still alive, is his .............................. .\",\n        \"11 My oldest brother died, so his wife is a .............................. .\",\n        \"12 My mother remarried last year: her new husband is my .............................. .\",\n        \"13 All of these people are members of my family, so they are my .............................. .\"\n      ]\n    },\n    {\n      \"id\": \"46.3\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Match the words on the left with the definitions on the right.\",\n      \"items\": [\n        \"1 colleague\",\n        \"2 partner\",\n        \"3 ex-boyfriend\",\n        \"4 best friend\",\n        \"5 old friend\",\n        \"6 father-in-law\",\n        \"a the one friend you feel closest to\",\n        \"b a man that a woman used to go out with\",\n        \"c one of the parents of your husband or wife\",\n        \"d someone you have known well for a long time\",\n        \"e someone you work with\",\n        \"f this word is used for the person that someone loves and lives with, without indicating if they are married\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\"line drawing of a man with two children (framed illustration)\"],\n  \"unclassified\": [\"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"/ 30\", \"Your score\"]\n}\n```"
+}

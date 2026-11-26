@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 53,
+    "dpi": 300,
+    "renderSha256": "d4fcb7de1970617d9846966d572072d66b28b3a4ea94d53bc0cb91d404e56e3b",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T16:04:58.472Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 51,
+    "testNumber": "48",
+    "testTitle": "Daily routines",
+    "exercises": [
+      {
+        "id": "48.1",
+        "marks": null,
+        "instruction": "Correct the mistakes in these sentences.",
+        "items": [
+          "1 I live by my own.",
+          "2 I usually go to the bed about midnight.",
+          "3 Most nights I sleep very quickly.",
+          "4 In the morning I have a shower and shave me.",
+          "5 I usually have the breakfast about 7.30.",
+          "6 After breakfast I clean the teeth.",
+          "7 I arrive to work about 8.30.",
+          "8 After work I sometimes make the shopping."
+        ]
+      },
+      {
+        "id": "48.2",
+        "marks": "8 marks [?]",
+        "instruction": "Complete the sentences.",
+        "items": [
+          "1 If I'm very tired in the evening I often have dinner and then I ......................................... asleep on the sofa.",
+          "2 I don't want the cats to go hungry, so I always ......................................... them and give them some water before I go to work.",
+          "3 If I'm going to work at the office in the morning, I usually ......................................... home about 8 am.",
+          "4 At work I have coffee around 11 am, and then I usually take a lunch ......................................... between 12.30 and 1.00, but it's never more than half an hour.",
+          "5 If I go out to a disco in the evening and have a ......................................... night, I have to set my alarm clock, otherwise I never ......................................... in the morning.",
+          "6 I don't go out most evenings. Quite often I ......................................... and watch TV.",
+          "7 I usually have a ......................................... on Sunday mornings as I don't have to get up early and go to work.",
+          "8 I ......................................... cards every Monday evening with my friends, but not for money."
+        ]
+      },
+      {
+        "id": "48.3",
+        "marks": "6 marks",
+        "instruction": "What words are being defined here?",
+        "items": [
+          "1 to sleep too long    to .........................................",
+          "2 a short sleep    a .........................................",
+          "3 a small amount of food between meals    a .........................................",
+          "4 an informal word for a conversation    a .........................................",
+          "5 to wash the dishes    to do the .........................................",
+          "6 a person who cleans for you    a ........................................."
+        ]
+      },
+      {
+        "id": "48.4",
+        "marks": "7 marks",
+        "instruction": "Find the best ending on the right for each verb on the left. Use each verb once only.",
+        "items": [
+          "1 lie    a the housework    ......................................................",
+          "2 get up    b to bed    ......................................................",
+          "3 do    c my own breakfast    ......................................................",
+          "4 go out    d a rest    ......................................................",
+          "5 go    e with friends    ......................................................",
+          "6 have    f in bed    ......................................................",
+          "7 make    g and have breakfast    ......................................................"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 51, \"testNumber\": \"48\", \"testTitle\": \"Daily routines\", \"exercises\": [{\"id\": \"48.1\", \"marks\": null, \"instruction\": \"Correct the mistakes in these sentences.\", \"items\": [\"1 I live by my own.\", \"2 I usually go to the bed about midnight.\", \"3 Most nights I sleep very quickly.\", \"4 In the morning I have a shower and shave me.\", \"5 I usually have the breakfast about 7.30.\", \"6 After breakfast I clean the teeth.\", \"7 I arrive to work about 8.30.\", \"8 After work I sometimes make the shopping.\"]}, {\"id\": \"48.2\", \"marks\": \"8 marks [?]\", \"instruction\": \"Complete the sentences.\", \"items\": [\"1 If I'm very tired in the evening I often have dinner and then I ......................................... asleep on the sofa.\", \"2 I don't want the cats to go hungry, so I always ......................................... them and give them some water before I go to work.\", \"3 If I'm going to work at the office in the morning, I usually ......................................... home about 8 am.\", \"4 At work I have coffee around 11 am, and then I usually take a lunch ......................................... between 12.30 and 1.00, but it's never more than half an hour.\", \"5 If I go out to a disco in the evening and have a ......................................... night, I have to set my alarm clock, otherwise I never ......................................... in the morning.\", \"6 I don't go out most evenings. Quite often I ......................................... and watch TV.\", \"7 I usually have a ......................................... on Sunday mornings as I don't have to get up early and go to work.\", \"8 I ......................................... cards every Monday evening with my friends, but not for money.\"]}, {\"id\": \"48.3\", \"marks\": \"6 marks\", \"instruction\": \"What words are being defined here?\", \"items\": [\"1 to sleep too long    to .........................................\", \"2 a short sleep    a .........................................\", \"3 a small amount of food between meals    a .........................................\", \"4 an informal word for a conversation    a .........................................\", \"5 to wash the dishes    to do the .........................................\", \"6 a person who cleans for you    a .........................................\"]}, {\"id\": \"48.4\", \"marks\": \"7 marks\", \"instruction\": \"Find the best ending on the right for each verb on the left. Use each verb once only.\", \"items\": [\"1 lie    a the housework    ......................................................\", \"2 get up    b to bed    ......................................................\", \"3 do    c my own breakfast    ......................................................\", \"4 go out    d a rest    ......................................................\", \"5 go    e with friends    ......................................................\", \"6 have    f in bed    ......................................................\", \"7 make    g and have breakfast    ......................................................\"]}], \"boxesAndLists\": [], \"pictures\": [], \"unclassified\": [\"TEST\", \"Your score\", \"/30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]}"
+}
