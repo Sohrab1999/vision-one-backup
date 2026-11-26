@@ -1,0 +1,104 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 18,
+    "dpi": 300,
+    "renderSha256": "24da9f842bc93792101c10d7f4fa188ecda13e09dd38c76bd3b9e4edd1c96a11",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:50:20.463Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 16,
+    "testNumber": "13",
+    "testTitle": "Collocation (word partners)",
+    "exercises": [
+      {
+        "id": "13.1",
+        "marks": "8 marks",
+        "instruction": "Correct the mistake in each of these sentences.",
+        "items": [
+          "1 He lost the bus and had to wait for the next one.",
+          "2 I do a lot of mistakes when I'm trying to speak German.",
+          "3 Her mother was very angry because she said a lie.",
+          "4 Unfortunately, I lost the lesson last week because I was sick.",
+          "5 My brother has wide shoulders, so buy him a large size.",
+          "6 Don't get on the car until I've taken all the shopping out.",
+          "7 My father says very funny jokes.",
+          "8 I had a big illness last summer and was in bed for two months."
+        ]
+      },
+      {
+        "id": "13.2",
+        "marks": "7 marks",
+        "instruction": "Complete this speech, by the director of a chain of sports shops, using words from the box.",
+        "items": [
+          "It has been a very difficult year for the company, as I am sure you are all fully (1)........................ . However, the good news is that it is now highly (2)........................ that we will have to close any of our shops or lose any workers. This is thanks to all your hard (3)........................ , and I have to congratulate especially those of you who work in the London branches of our stores who have had great (4)........................ in selling a wide (5)........................ of new ski clothes. The vast (6)........................ of our customers are happy with the service we give them, and it is vitally (7)........................ for us to continue to maintain these high standards in the future. Thank you, everyone."
+        ]
+      },
+      {
+        "id": "13.3",
+        "marks": "8 marks",
+        "instruction": "Are these sentences true? If not, change them to make them true.",
+        "items": [
+          "1 The opposite of a dry wine is a wet wine.",
+          "2 The opposite of dry weather is wet weather.",
+          "3 The opposite of a soft voice is a loud voice.",
+          "4 The opposite of a soft drink is a loud drink.",
+          "5 The opposite of strong coffee is weak coffee.",
+          "6 The opposite of a strong accent is a weak accent.",
+          "7 The opposite of a light smoker is strong smoker.",
+          "8 The opposite of light rain is heavy rain."
+        ]
+      },
+      {
+        "id": "13.4",
+        "marks": "7 marks",
+        "instruction": "Cross out any incorrect collocations. Be careful: in some groups, they are all correct.",
+        "items": [
+          "1 to start a car",
+          "to start a family",
+          "to start a bicycle",
+          "2 a heavy smoker",
+          "a heavy lesson",
+          "heavy traffic",
+          "3 to get into/out of a car",
+          "to get into/out of a taxi",
+          "to get into/out of a bike",
+          "4 to tell a story",
+          "to tell a lie",
+          "to tell the truth",
+          "5 to get on/off a taxi",
+          "to get on/off a bus",
+          "to get on/off a plane",
+          "6 to miss a person",
+          "to miss a train",
+          "to miss a lesson",
+          "7 to run a kilometre",
+          "to run a joke",
+          "to run a business"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "range    success    important    aware    unlikely    majority    work"
+    ],
+    "pictures": [
+      "line drawing of a woman speaking, holding a booklet labelled 'Annual Report', with a speech bubble containing the 13.2 text"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 16,\n  \"testNumber\": \"13\",\n  \"testTitle\": \"Collocation (word partners)\",\n  \"exercises\": [\n    {\n      \"id\": \"13.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Correct the mistake in each of these sentences.\",\n      \"items\": [\n        \"1 He lost the bus and had to wait for the next one.\",\n        \"2 I do a lot of mistakes when I'm trying to speak German.\",\n        \"3 Her mother was very angry because she said a lie.\",\n        \"4 Unfortunately, I lost the lesson last week because I was sick.\",\n        \"5 My brother has wide shoulders, so buy him a large size.\",\n        \"6 Don't get on the car until I've taken all the shopping out.\",\n        \"7 My father says very funny jokes.\",\n        \"8 I had a big illness last summer and was in bed for two months.\"\n      ]\n    },\n    {\n      \"id\": \"13.2\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Complete this speech, by the director of a chain of sports shops, using words from the box.\",\n      \"items\": [\n        \"It has been a very difficult year for the company, as I am sure you are all fully (1)........................ . However, the good news is that it is now highly (2)........................ that we will have to close any of our shops or lose any workers. This is thanks to all your hard (3)........................ , and I have to congratulate especially those of you who work in the London branches of our stores who have had great (4)........................ in selling a wide (5)........................ of new ski clothes. The vast (6)........................ of our customers are happy with the service we give them, and it is vitally (7)........................ for us to continue to maintain these high standards in the future. Thank you, everyone.\"\n      ]\n    },\n    {\n      \"id\": \"13.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Are these sentences true? If not, change them to make them true.\",\n      \"items\": [\n        \"1 The opposite of a dry wine is a wet wine.\",\n        \"2 The opposite of dry weather is wet weather.\",\n        \"3 The opposite of a soft voice is a loud voice.\",\n        \"4 The opposite of a soft drink is a loud drink.\",\n        \"5 The opposite of strong coffee is weak coffee.\",\n        \"6 The opposite of a strong accent is a weak accent.\",\n        \"7 The opposite of a light smoker is strong smoker.\",\n        \"8 The opposite of light rain is heavy rain.\"\n      ]\n    },\n    {\n      \"id\": \"13.4\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Cross out any incorrect collocations. Be careful: in some groups, they are all correct.\",\n      \"items\": [\n        \"1 to start a car\",\n        \"to start a family\",\n        \"to start a bicycle\",\n        \"2 a heavy smoker\",\n        \"a heavy lesson\",\n        \"heavy traffic\",\n        \"3 to get into/out of a car\",\n        \"to get into/out of a taxi\",\n        \"to get into/out of a bike\",\n        \"4 to tell a story\",\n        \"to tell a lie\",\n        \"to tell the truth\",\n        \"5 to get on/off a taxi\",\n        \"to get on/off a bus\",\n        \"to get on/off a plane\",\n        \"6 to miss a person\",\n        \"to miss a train\",\n        \"to miss a lesson\",\n        \"7 to run a kilometre\",\n        \"to run a joke\",\n        \"to run a business\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"range    success    important    aware    unlikely    majority    work\"\n  ],\n  \"pictures\": [\n    \"line drawing of a woman speaking, holding a booklet labelled 'Annual Report', with a speech bubble containing the 13.2 text\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

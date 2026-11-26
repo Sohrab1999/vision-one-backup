@@ -1,0 +1,95 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 13,
+    "dpi": 300,
+    "renderSha256": "85422f990e51eabecfc70ddef0afa8d93fe32ed0ad4f7e32fd04c2ddb440228e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:48:46.788Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 17,
+    "testNumber": "8",
+    "testTitle": "Noun suffixes (e.g. -ion, -ity, -ment)",
+    "exercises": [
+      {
+        "id": "8.1",
+        "marks": "10 marks",
+        "instruction": "Complete the sentences with the correct form of the word on the right.",
+        "items": [
+          "Example: Who made the arrangements for the meeting?  ARRANGE",
+          "1 We had a very heated .................................... in class today.  DISCUSS",
+          "2 I think .................................... is very important.  PUNCTUAL",
+          "3 The .................................... of the festival was excellent.  ORGANISE",
+          "4 Who won the ....................................?  ELECT",
+          "5 He's never been very good at .................................... .  SPELL",
+          "6 Their .................................... is all that matters to me.  HAPPY",
+          "7 The .................................... between them is incredible.  SIMILAR",
+          "8 Has there been much .................................... lately?  IMPROVE",
+          "9 Have they got all the .................................... they need?  INFORM",
+          "10 This animal only appears during the hours of .................................... .  DARK"
+        ]
+      },
+      {
+        "id": "8.2",
+        "marks": "8 marks",
+        "instruction": "Complete the crossword. What is the opposite of the word in the tinted box?",
+        "items": [
+          "1 the opposite of 'clever'",
+          "2 running for pleasure and to keep fit",
+          "3 to 'get better'",
+          "4 to talk about something in a serious way",
+          "5 to choose someone by voting for them",
+          "6 someone who arrives at the right time is this",
+          "7 someone who paints pictures"
+        ]
+      },
+      {
+        "id": "8.3",
+        "marks": "6 marks",
+        "instruction": "Complete these tables and underline the main stress as in the example.",
+        "items": []
+      },
+      {
+        "id": "8.4",
+        "marks": "6 marks",
+        "instruction": "What do we call these people?",
+        "items": [
+          "Example: a person who dances dancer",
+          "1 a person who murders someone",
+          "2 a person who acts",
+          "3 a person who works in economics",
+          "4 a person who farms",
+          "5 a person who translates",
+          "6 a person who employs other people",
+          "7 a person who works in psychology",
+          "8 a person who sings",
+          "9 a person who operates something",
+          "10 a person who plays football",
+          "11 a person who directs films",
+          "12 a person who writes articles in a newspaper [?]"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "The opposite of the word in the box is ............................."
+    ],
+    "pictures": [
+      "crossword grid with numbered clues 1–7, one column in a tinted box",
+      "table with columns: Verb / General noun (educate–education example, manage, translate, hesitate) and Adjective / Noun (popular, weak, stupid)"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 17,\n  \"testNumber\": \"8\",\n  \"testTitle\": \"Noun suffixes (e.g. -ion, -ity, -ment)\",\n  \"exercises\": [\n    {\n      \"id\": \"8.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete the sentences with the correct form of the word on the right.\",\n      \"items\": [\n        \"Example: Who made the arrangements for the meeting?  ARRANGE\",\n        \"1 We had a very heated .................................... in class today.  DISCUSS\",\n        \"2 I think .................................... is very important.  PUNCTUAL\",\n        \"3 The .................................... of the festival was excellent.  ORGANISE\",\n        \"4 Who won the ....................................?  ELECT\",\n        \"5 He's never been very good at .................................... .  SPELL\",\n        \"6 Their .................................... is all that matters to me.  HAPPY\",\n        \"7 The .................................... between them is incredible.  SIMILAR\",\n        \"8 Has there been much .................................... lately?  IMPROVE\",\n        \"9 Have they got all the .................................... they need?  INFORM\",\n        \"10 This animal only appears during the hours of .................................... .  DARK\"\n      ]\n    },\n    {\n      \"id\": \"8.2\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the crossword. What is the opposite of the word in the tinted box?\",\n      \"items\": [\n        \"1 the opposite of 'clever'\",\n        \"2 running for pleasure and to keep fit\",\n        \"3 to 'get better'\",\n        \"4 to talk about something in a serious way\",\n        \"5 to choose someone by voting for them\",\n        \"6 someone who arrives at the right time is this\",\n        \"7 someone who paints pictures\"\n      ]\n    },\n    {\n      \"id\": \"8.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete these tables and underline the main stress as in the example.\",\n      \"items\": []\n    },\n    {\n      \"id\": \"8.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"What do we call these people?\",\n      \"items\": [\n        \"Example: a person who dances dancer\",\n        \"1 a person who murders someone\",\n        \"2 a person who acts\",\n        \"3 a person who works in economics\",\n        \"4 a person who farms\",\n        \"5 a person who translates\",\n        \"6 a person who employs other people\",\n        \"7 a person who works in psychology\",\n        \"8 a person who sings\",\n        \"9 a person who operates something\",\n        \"10 a person who plays football\",\n        \"11 a person who directs films\",\n        \"12 a person who writes articles in a newspaper [?]\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"The opposite of the word in the box is .............................\"\n  ],\n  \"pictures\": [\n    \"crossword grid with numbered clues 1–7, one column in a tinted box\",\n    \"table with columns: Verb / General noun (educate–education example, manage, translate, hesitate) and Adjective / Noun (popular, weak, stupid)\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

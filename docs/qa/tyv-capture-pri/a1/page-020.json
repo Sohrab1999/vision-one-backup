@@ -1,0 +1,93 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 20,
+    "dpi": 300,
+    "renderSha256": "7197528e63e77448cb5e61e9ad38a5ea931ac9a9437d8f7088dc805f6cae3b7f",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:51:00.423Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 18,
+    "testNumber": "15",
+    "testTitle": "Preposition + noun",
+    "exercises": [
+      {
+        "id": "15.1",
+        "marks": "12 marks",
+        "instruction": "Choose the correct preposition to complete these sentences.",
+        "items": [
+          "1 I think it was written ................ Charles Dickens.",
+          "2 We saw a film of it ................ TV.",
+          "3 Did you read that article ................ the paper?",
+          "4 He might take the train, but he’ll probably come ................ coach.",
+          "5 I’m afraid Petra is ................ the phone – do you want to come in and wait?",
+          "6 ................ the morning, I always go ................ a run before breakfast if I’ve got time.",
+          "7 She says she did her homework ................ herself.",
+          "8 Bob Dylan wrote the first one, but the other songs were written ................ the band themselves.",
+          "9 I read something about Tarantino’s new film ................ that magazine.",
+          "10 There’s no noise here ................ night.",
+          "11 Shall we go out ................ a walk?"
+        ]
+      },
+      {
+        "id": "15.2",
+        "marks": "8 marks",
+        "instruction": "Choose a preposition from the left-hand box and a noun from the right-hand box to complete the sentences below.",
+        "items": [
+          "Example: These chocolates are all made ..by.. ..hand.. .",
+          "1 I think they’re away ........... ......................... .",
+          "2 I’m sure he broke it ........... ......................... because he’s a very nice person and would never do anything like that ........... ......................... .",
+          "3 There has been a lot of trouble at the factory and about fifty of the workers have decided to go ........... ......................... from tomorrow.",
+          "4 I took it ........... ......................... because it looks exactly like mine.",
+          "5 We met them ........... ......................... – it was an extraordinary coincidence.",
+          "6 I’d prefer to do it ........... ......................... , because other people make me nervous.",
+          "7 If they aren’t in a hurry, I think they’ll come ........... ......................... ."
+        ]
+      },
+      {
+        "id": "15.3",
+        "marks": "4 marks",
+        "instruction": "Complete these definitions with the correct prepositional phrase.",
+        "items": [
+          "1 If you arrive at the exact time for an appointment, you arrive ........... ......................... .",
+          "2 And if you arrive for an appointment before the time you need to be there, then you arrive ........... ......................... .",
+          "3 If you see a minimum of 20 clients every day, you see ........... ......................... 20.",
+          "4 If you are unemployed and haven’t got a job then you are ........... ........  ................ ."
+        ]
+      },
+      {
+        "id": "15.4",
+        "marks": "6 marks",
+        "instruction": "Circle the correct preposition in these sentences.",
+        "items": [
+          "1 I often go abroad in business / on business.",
+          "2 It took a long time but in the end / at the end we got there.",
+          "3 I’m going to speak to them at the moment / in a moment.",
+          "4 Who knows if it’s true, but that’s what I heard on the radio / in the radio.",
+          "5 We had a vote in the end / at the end of the meeting.",
+          "6 We’ve been in business / on business now for fifteen years."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "on   by",
+      "mistake   strike   hand   purpose   foot\nchance   accident   holiday   my own"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "Your score",
+      "/30",
+      "Test Your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 18,\n \"testNumber\": \"15\",\n \"testTitle\": \"Preposition + noun\",\n \"exercises\": [\n  {\"id\": \"15.1\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Choose the correct preposition to complete these sentences.\",\n   \"items\": [\n    \"1 I think it was written ................ Charles Dickens.\",\n    \"2 We saw a film of it ................ TV.\",\n    \"3 Did you read that article ................ the paper?\",\n    \"4 He might take the train, but he’ll probably come ................ coach.\",\n    \"5 I’m afraid Petra is ................ the phone – do you want to come in and wait?\",\n    \"6 ................ the morning, I always go ................ a run before breakfast if I’ve got time.\",\n    \"7 She says she did her homework ................ herself.\",\n    \"8 Bob Dylan wrote the first one, but the other songs were written ................ the band themselves.\",\n    \"9 I read something about Tarantino’s new film ................ that magazine.\",\n    \"10 There’s no noise here ................ night.\",\n    \"11 Shall we go out ................ a walk?\"\n   ]},\n  {\"id\": \"15.2\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Choose a preposition from the left-hand box and a noun from the right-hand box to complete the sentences below.\",\n   \"items\": [\n    \"Example: These chocolates are all made ..by.. ..hand.. .\",\n    \"1 I think they’re away ........... ......................... .\",\n    \"2 I’m sure he broke it ........... ......................... because he’s a very nice person and would never do anything like that ........... ......................... .\",\n    \"3 There has been a lot of trouble at the factory and about fifty of the workers have decided to go ........... ......................... from tomorrow.\",\n    \"4 I took it ........... ......................... because it looks exactly like mine.\",\n    \"5 We met them ........... ......................... – it was an extraordinary coincidence.\",\n    \"6 I’d prefer to do it ........... ......................... , because other people make me nervous.\",\n    \"7 If they aren’t in a hurry, I think they’ll come ........... ......................... .\"\n   ]},\n  {\"id\": \"15.3\",\n   \"marks\": \"4 marks\",\n   \"instruction\": \"Complete these definitions with the correct prepositional phrase.\",\n   \"items\": [\n    \"1 If you arrive at the exact time for an appointment, you arrive ........... ......................... .\",\n    \"2 And if you arrive for an appointment before the time you need to be there, then you arrive ........... ......................... .\",\n    \"3 If you see a minimum of 20 clients every day, you see ........... ......................... 20.\",\n    \"4 If you are unemployed and haven’t got a job then you are ........... ........  ................ .\"\n   ]},\n  {\"id\": \"15.4\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Circle the correct preposition in these sentences.\",\n   \"items\": [\n    \"1 I often go abroad in business / on business.\",\n    \"2 It took a long time but in the end / at the end we got there.\",\n    \"3 I’m going to speak to them at the moment / in a moment.\",\n    \"4 Who knows if it’s true, but that’s what I heard on the radio / in the radio.\",\n    \"5 We had a vote in the end / at the end of the meeting.\",\n    \"6 We’ve been in business / on business now for fifteen years.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"on   by\",\n  \"mistake   strike   hand   purpose   foot\\nchance   accident   holiday   my own\"\n ],\n \"pictures\": [],\n \"unclassified\": [\n  \"Your score\",\n  \"/30\",\n  \"Test Your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

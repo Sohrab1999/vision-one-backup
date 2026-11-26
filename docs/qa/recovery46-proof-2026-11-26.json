@@ -1,0 +1,33 @@
+{
+ "meta": {
+  "event": "بازیابی ۴۶ — رسیدگی ریست پنهان ۴۶م (الگوی ۳۱..۴۵)",
+  "date": "2026-11-26",
+  "jalali": "۱۴۰۵/۹/۵",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — گام بعدی مجاز طبق وضعیت ثبت‌شدهٔ پسا-S01 = A1-PRI-S02 (صفحات ۱۳–۲۴ pri — دستهٔ دوم از ۱۲ — بدون skip انتظاری) — trace 1a2169478164e391 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+  "hiddenReset": "HEAD بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f (۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت = 167a7ee7e29e3ff39b54812509c4cb58d1e630c9 پسا-S01 — stash stack خالی و backup/main tracking-ref نیز 193269b (کل .git به عقب برگشته — عین الگوی ریست‌های پنهان پیشین) — درخت کار پسا-S01 روی دیسک باقی بود (تمام فایل‌های TYV/کپچرها/اثبات‌ها/SNAPSHOT به‌روز موجود)"
+ },
+ "divergence": {
+  "count": "۰/۲۱۷",
+  "detail": "behind = ۲۱۵ (پس از بازیابی ۴۵) + ۲ کامیت S01 (c53b16e محتوایی + 167a7ee ثبت اثبات) — ahead = ۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only خالص"
+ },
+ "audit": {
+  "method": "ممیزی سه‌دوری blob-OID با git status --porcelain -z + core.quotepath=off + --untracked-files=all (درس ۴۳) و regex پذیرندهٔ XY با حرف اول فاصله (درس ۴۴ — از ابتدا به‌درستی اعمال)",
+  "modified": "۳۲/۳۲ disk==remote بایت‌به‌بیت",
+  "untracked": "۱۹۶۴/۱۹۷۱ matchRemote بایت‌به‌بیت",
+  "differ": 0,
+  "absentRemote": "۷ (اسناد مسیر-تخت superseded — عین الگوی rc45 — نسخه‌های شماره‌دار سری-TYV ۷/۷ MATCH ریموت)",
+  "deleted": 0,
+  "conclusion": "صفر محتوای محلی-یگانه ⇒ بیمه stash لازم نیست — reset --hard فقط فایل‌های tracked هم‌محتوای بایت‌به‌بیت را بازنویسی می‌کند و untracked دست‌نخورده می‌ماند — صفر ریسک از دست رفتن"
+ },
+ "action": "git fetch backup main → git reset --hard backup/main",
+ "result": {
+  "head": "167a7ee7e29e3ff39b54812509c4cb58d1e630c9",
+  "remote": "167a7ee7e29e3ff39b54812509c4cb58d1e630c9 (git ls-remote backup refs/heads/main — بایت‌به‌بیت)",
+  "porcelain": "۷ untracked = همان ۷ سند مسیر-تخت superseded (تغییرنیافته نسبت به پیشا-ریست)",
+  "gitDiffCheck": "پاک",
+  "hook": "post-commit سالم — sha256 ee679bc1… == مقدار ثبت‌شده در پیام‌های کامیت پیشین",
+  "preStepExistence": "pri: page-001..012 + page-041 موجود (۱۳ فایل) — page-013..024 همگی غایب — وضعیت پیشا-گام صحیح برای S02 (بدون skip انتظاری)"
+ },
+ "diskTruthStart": "A1 = ۲۱۰/۴۸۹ (biz ۹۸ · elem ۹۶ · pri ۱۳ · upp ۳) — اصلاح صادقانه: رکوردهای S01 عدد «۲۰۱/۴۸۹» را نوشته بودند که سهوِ جابه‌جایی رقم است (مؤلفه‌های خودشان ۹۸+۹۶+۱۳+۳ = ۲۱۰)",
+ "evidencePointers": ["docs/qa/tyv-a1-pri-s02-proof-2026-11-26.json", "docs/SNAPSHOT.md سربرگ ۱۳۶مین", "worklog.md ورود ۱۴۰۵/۹/۵"]
+}

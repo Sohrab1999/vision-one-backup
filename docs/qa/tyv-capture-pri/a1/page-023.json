@@ -1,0 +1,97 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 23,
+    "dpi": 300,
+    "renderSha256": "45c80a103865ce1b6f067b813266ce4038779742e103be6ccb48dc8624968a9c",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:51:59.869Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 21,
+    "testNumber": "18",
+    "testTitle": "Idioms and fixed expressions",
+    "exercises": [
+      {
+        "id": "18.1",
+        "marks": "8 marks",
+        "instruction": "Match the underlined expressions on the left with a word or expression on the right.",
+        "items": [
+          "1 Hang on a minute!",
+          "2 I can make do with £10.",
+          "3 Never mind, I'll do it later.",
+          "4 I'm a bit tied up at the moment.",
+          "5 Go ahead – I don't need it.",
+          "6 I can't make it to your party, I'm afraid.",
+          "7 Do you feel like a coffee?",
+          "8 Come on – make up your mind!"
+        ]
+      },
+      {
+        "id": "18.2",
+        "marks": "7 marks [?]",
+        "instruction": "Choose a verb from the box on the left and a noun from the box on the right to complete the idiom in the sentences below. Put the verb in the correct tense.",
+        "items": [
+          "Example: I can't speak to him now – please tell him I'll ..give.. him a ..ring.. .",
+          "1 Don't believe anything he tells you – he's just ...................... your ...................... .",
+          "2 He wants me to ...................... an ...................... on the children while he is out.",
+          "3 Come on – ...................... a ...................... on. You're going to be late.",
+          "4 It was cold and raining, and to ...................... ...................... worse, we were already an hour late.",
+          "5 A: Do I have to decide right now?",
+          "B: No, but you'll have to ...................... up your ...................... by tomorrow.",
+          "6 I don't always cook supper. My husband and I ...................... it in ...................... ."
+        ]
+      },
+      {
+        "id": "18.3",
+        "marks": "5 marks",
+        "instruction": "Complete the idioms in the dialogues. Notice that B always agrees with A.",
+        "items": [
+          "1 A: She really likes him, doesn't she?",
+          "B: Yes, she is ...................... about him.",
+          "2 A: They enjoyed themselves at the party, didn't they?",
+          "B: Yes, they had a good ...................... .",
+          "3 A: Did they go the quick way?",
+          "B: Yes, they took a short ...................... .",
+          "4 A: They'll never come back here again, will they?",
+          "B: No, they have gone for ...................... .",
+          "5 A: Do they annoy each other?",
+          "B: Yes, they get on each other's ...................... ."
+        ]
+      },
+      {
+        "id": "18.4",
+        "marks": "5 marks",
+        "instruction": "Circle the correct word.",
+        "items": [
+          "1 I've never been very good at little/small talk.",
+          "2 I couldn't tell you the answer offhand/offhands – I'll have to look it up.",
+          "3 The changes will be good for us in the long/large term.",
+          "4 I don't think they'll come to the exhibition; in/for a start, they aren't really interested in art.",
+          "5 A: What's up/off?",
+          "B: Nothing – why do you ask?"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "give (crossed out), make, pull, keep, get, make, take",
+      "leg, mind, ring (crossed out), move, eye, matters, turns",
+      "a decide, b want, c come, d manage, e wait, f help yourself, g busy, h it doesn't matter"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 21,\n  \"testNumber\": \"18\",\n  \"testTitle\": \"Idioms and fixed expressions\",\n  \"exercises\": [\n    {\n      \"id\": \"18.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Match the underlined expressions on the left with a word or expression on the right.\",\n      \"items\": [\n        \"1 Hang on a minute!\",\n        \"2 I can make do with £10.\",\n        \"3 Never mind, I'll do it later.\",\n        \"4 I'm a bit tied up at the moment.\",\n        \"5 Go ahead – I don't need it.\",\n        \"6 I can't make it to your party, I'm afraid.\",\n        \"7 Do you feel like a coffee?\",\n        \"8 Come on – make up your mind!\"\n      ]\n    },\n    {\n      \"id\": \"18.2\",\n      \"marks\": \"7 marks [?]\",\n      \"instruction\": \"Choose a verb from the box on the left and a noun from the box on the right to complete the idiom in the sentences below. Put the verb in the correct tense.\",\n      \"items\": [\n        \"Example: I can't speak to him now – please tell him I'll ..give.. him a ..ring.. .\",\n        \"1 Don't believe anything he tells you – he's just ...................... your ...................... .\",\n        \"2 He wants me to ...................... an ...................... on the children while he is out.\",\n        \"3 Come on – ...................... a ...................... on. You're going to be late.\",\n        \"4 It was cold and raining, and to ...................... ...................... worse, we were already an hour late.\",\n        \"5 A: Do I have to decide right now?\",\n        \"B: No, but you'll have to ...................... up your ...................... by tomorrow.\",\n        \"6 I don't always cook supper. My husband and I ...................... it in ...................... .\"\n      ]\n    },\n    {\n      \"id\": \"18.3\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Complete the idioms in the dialogues. Notice that B always agrees with A.\",\n      \"items\": [\n        \"1 A: She really likes him, doesn't she?\",\n        \"B: Yes, she is ...................... about him.\",\n        \"2 A: They enjoyed themselves at the party, didn't they?\",\n        \"B: Yes, they had a good ...................... .\",\n        \"3 A: Did they go the quick way?\",\n        \"B: Yes, they took a short ...................... .\",\n        \"4 A: They'll never come back here again, will they?\",\n        \"B: No, they have gone for ...................... .\",\n        \"5 A: Do they annoy each other?\",\n        \"B: Yes, they get on each other's ...................... .\"\n      ]\n    },\n    {\n      \"id\": \"18.4\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Circle the correct word.\",\n      \"items\": [\n        \"1 I've never been very good at little/small talk.\",\n        \"2 I couldn't tell you the answer offhand/offhands – I'll have to look it up.\",\n        \"3 The changes will be good for us in the long/large term.\",\n        \"4 I don't think they'll come to the exhibition; in/for a start, they aren't really interested in art.\",\n        \"5 A: What's up/off?\",\n        \"B: Nothing – why do you ask?\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"give (crossed out), make, pull, keep, get, make, take\",\n    \"leg, mind, ring (crossed out), move, eye, matters, turns\",\n    \"a decide, b want, c come, d manage, e wait, f help yourself, g busy, h it doesn't matter\"\n  ],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

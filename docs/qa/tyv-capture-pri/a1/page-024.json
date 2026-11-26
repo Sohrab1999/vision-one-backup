@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 24,
+    "dpi": 300,
+    "renderSha256": "8829d1bac15e44bf91adf3c978aa49151a205963d8306dc93baa84895c6ad2c7",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:52:15.732Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 22,
+    "testNumber": "19",
+    "testTitle": "Make, do, have, take",
+    "exercises": [
+      {
+        "id": "19.1",
+        "marks": "8 marks",
+        "instruction": "Fill the gaps with the correct verb (make, do, have or take).",
+        "items": [
+          "1 It's a nice restaurant. I ...................... baked fish in a spicy tomato sauce and it was really good.",
+          "2 If he's going to be a dentist, he should ...................... lots of money.",
+          "3 Why did you decide to ...................... a taxi from the airport? The underground is much quicker and cheaper.",
+          "4 We've decided that we're going to ...................... a party at the end of the course.",
+          "5 It's incredibly hot. I think I'm going to ...................... a cold shower.",
+          "6 We don't have much food in the house, so I suppose I'll have to go out and ...................... some shopping.",
+          "7 It's been a busy week, so I'm going to ...................... a rest this weekend.",
+          "8 A: Did you ...................... anything last night?",
+          "B: No, I stayed at home."
+        ]
+      },
+      {
+        "id": "19.2",
+        "marks": "14 marks",
+        "instruction": "Complete these sentences with make or do and a suitable noun.",
+        "items": [
+          "1 The flat is dirty because I never ...................... any ...................... .",
+          "2 My English is terrible. I ......................  ...................... every time I open my mouth and try to speak.",
+          "3 A: How many ...................... do you ...................... at school?",
+          "B: About twelve including two languages and all the sciences.",
+          "4 I ...................... two ...................... yesterday but I don't think I've passed either of them.",
+          "5 It was impossible to work because there was a party in the flat below. They had a disco and they were ...................... so much ...................... .",
+          "6 A: Is she still at university?",
+          "B: Yes. She's studying for her Master's degree, and she's ......................  ...................... in the field of microbiology.",
+          "7 I didn't do very well in my course at first, but I've improved a lot and my teacher says I'm ...................... really good ...................... now."
+        ]
+      },
+      {
+        "id": "19.3",
+        "marks": "4 marks",
+        "instruction": "Cross out the noun on the right which is not used with the verb on the left.",
+        "items": [
+          "1 make homework / friends / a meal / a noise",
+          "2 have a drink / a bath / a party / a noise",
+          "3 take photos / research / a decision / a train",
+          "4 do a mistake / a course / someone a favour / housework"
+        ]
+      },
+      {
+        "id": "19.4",
+        "marks": "4 marks",
+        "instruction": "Rewrite these sentences starting with the words you are given, and without changing the meaning.",
+        "items": [
+          "1 I want something to eat.",
+          "I'm ..................................................... .",
+          "2 I want something to drink.",
+          "I'm ..................................................... .",
+          "3 I didn't know she was pregnant.",
+          "I didn't know she was going ..................................................... .",
+          "4 I really enjoyed Brazil.",
+          "I had a great ..................................................... ."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 22,\n  \"testNumber\": \"19\",\n  \"testTitle\": \"Make, do, have, take\",\n  \"exercises\": [\n    {\n      \"id\": \"19.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Fill the gaps with the correct verb (make, do, have or take).\",\n      \"items\": [\n        \"1 It's a nice restaurant. I ...................... baked fish in a spicy tomato sauce and it was really good.\",\n        \"2 If he's going to be a dentist, he should ...................... lots of money.\",\n        \"3 Why did you decide to ...................... a taxi from the airport? The underground is much quicker and cheaper.\",\n        \"4 We've decided that we're going to ...................... a party at the end of the course.\",\n        \"5 It's incredibly hot. I think I'm going to ...................... a cold shower.\",\n        \"6 We don't have much food in the house, so I suppose I'll have to go out and ...................... some shopping.\",\n        \"7 It's been a busy week, so I'm going to ...................... a rest this weekend.\",\n        \"8 A: Did you ...................... anything last night?\",\n        \"B: No, I stayed at home.\"\n      ]\n    },\n    {\n      \"id\": \"19.2\",\n      \"marks\": \"14 marks\",\n      \"instruction\": \"Complete these sentences with make or do and a suitable noun.\",\n      \"items\": [\n        \"1 The flat is dirty because I never ...................... any ...................... .\",\n        \"2 My English is terrible. I ......................  ...................... every time I open my mouth and try to speak.\",\n        \"3 A: How many ...................... do you ...................... at school?\",\n        \"B: About twelve including two languages and all the sciences.\",\n        \"4 I ...................... two ...................... yesterday but I don't think I've passed either of them.\",\n        \"5 It was impossible to work because there was a party in the flat below. They had a disco and they were ...................... so much ...................... .\",\n        \"6 A: Is she still at university?\",\n        \"B: Yes. She's studying for her Master's degree, and she's ......................  ...................... in the field of microbiology.\",\n        \"7 I didn't do very well in my course at first, but I've improved a lot and my teacher says I'm ...................... really good ...................... now.\"\n      ]\n    },\n    {\n      \"id\": \"19.3\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Cross out the noun on the right which is not used with the verb on the left.\",\n      \"items\": [\n        \"1 make homework / friends / a meal / a noise\",\n        \"2 have a drink / a bath / a party / a noise\",\n        \"3 take photos / research / a decision / a train\",\n        \"4 do a mistake / a course / someone a favour / housework\"\n      ]\n    },\n    {\n      \"id\": \"19.4\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Rewrite these sentences starting with the words you are given, and without changing the meaning.\",\n      \"items\": [\n        \"1 I want something to eat.\",\n        \"I'm ..................................................... .\",\n        \"2 I want something to drink.\",\n        \"I'm ..................................................... .\",\n        \"3 I didn't know she was pregnant.\",\n        \"I didn't know she was going ..................................................... .\",\n        \"4 I really enjoyed Brazil.\",\n        \"I had a great ..................................................... .\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 15,
+    "dpi": 300,
+    "renderSha256": "e6070129981341459862432cfb275db623c820dadf50047a49458c46845af296",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:49:22.661Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": null,
+    "testNumber": "10",
+    "testTitle": "Nouns, verbs and adjectives with the same form (to dream, a dream)",
+    "exercises": [
+      {
+        "id": "10.1",
+        "marks": "8 marks",
+        "instruction": "Label the pictures with verbs from the box.",
+        "items": [
+          "1 ................................",
+          "2 ................................",
+          "3 ................................",
+          "4 ................................",
+          "5 ................................",
+          "6 ................................",
+          "7 ................................",
+          "8 ................................"
+        ]
+      },
+      {
+        "id": "10.1 (follow-up)",
+        "marks": "1 mark",
+        "instruction": "Seven of these verbs can also be used as nouns with no change in form, and one can be used as an adjective with no change in form. Which one?",
+        "items": []
+      },
+      {
+        "id": "10.2",
+        "marks": "6 marks",
+        "instruction": "Match the verbs on the left with the nouns on the right.",
+        "items": [
+          "1 answer      4 guess      a  the dishes      d  the perfume",
+          "2 damage      5 smell      b  the phone       e  the answer",
+          "3 dry         6 push       c  the button      f  the side of the car"
+        ]
+      },
+      {
+        "id": "10.2 (follow-up)",
+        "marks": "1 mark",
+        "instruction": "Which of these verbs can also be used as an adjective?",
+        "items": []
+      },
+      {
+        "id": "10.3",
+        "marks": "14 marks",
+        "instruction": "Rewrite the sentences below. Use the underlined verbs as nouns and include a verb from the box. Make any changes that are necessary. Look at the examples first.",
+        "items": [
+          "Examples:  Let's walk for a bit, then rest.  Let's walk for a bit, then have a rest.",
+          "Don't brake too suddenly.  Don't put on the brakes too suddenly.",
+          "1 Did you reply to the invitation? .................................................................",
+          "2 Could you look at this report for me? ..........................................................",
+          "3 People diet for all sorts of reasons. ..........................................................",
+          "4 If you don't know the answer, just guess. .....................................................",
+          "5 Someone pushed me and I fell over. ...........................................................",
+          "6 We had to queue for ages. .................................................................",
+          "7 Why don't you ring her when she gets back? ..................................................."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "laugh    pull    taste    smile    dream    clean    queue    ache",
+      "have (×3)    give (×2)    wait    go on    send    put on"
+    ],
+    "pictures": [
+      "8 numbered line drawings: girl's face, man pulling dog on lead, man holding cheek (toothache), laughing man, person dreaming of bicycle, queue of people, person washing/dog in bath, person tasting food from bowl"
+    ],
+    "unclassified": [
+      "TEST 10",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": null,\n  \"testNumber\": \"10\",\n  \"testTitle\": \"Nouns, verbs and adjectives with the same form (to dream, a dream)\",\n  \"exercises\": [\n    {\n      \"id\": \"10.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Label the pictures with verbs from the box.\",\n      \"items\": [\n        \"1 ................................\",\n        \"2 ................................\",\n        \"3 ................................\",\n        \"4 ................................\",\n        \"5 ................................\",\n        \"6 ................................\",\n        \"7 ................................\",\n        \"8 ................................\"\n      ]\n    },\n    {\n      \"id\": \"10.1 (follow-up)\",\n      \"marks\": \"1 mark\",\n      \"instruction\": \"Seven of these verbs can also be used as nouns with no change in form, and one can be used as an adjective with no change in form. Which one?\",\n      \"items\": []\n    },\n    {\n      \"id\": \"10.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match the verbs on the left with the nouns on the right.\",\n      \"items\": [\n        \"1 answer      4 guess      a  the dishes      d  the perfume\",\n        \"2 damage      5 smell      b  the phone       e  the answer\",\n        \"3 dry         6 push       c  the button      f  the side of the car\"\n      ]\n    },\n    {\n      \"id\": \"10.2 (follow-up)\",\n      \"marks\": \"1 mark\",\n      \"instruction\": \"Which of these verbs can also be used as an adjective?\",\n      \"items\": []\n    },\n    {\n      \"id\": \"10.3\",\n      \"marks\": \"14 marks\",\n      \"instruction\": \"Rewrite the sentences below. Use the underlined verbs as nouns and include a verb from the box. Make any changes that are necessary. Look at the examples first.\",\n      \"items\": [\n        \"Examples:  Let's walk for a bit, then rest.  Let's walk for a bit, then have a rest.\",\n        \"Don't brake too suddenly.  Don't put on the brakes too suddenly.\",\n        \"1 Did you reply to the invitation? .................................................................\",\n        \"2 Could you look at this report for me? ..........................................................\",\n        \"3 People diet for all sorts of reasons. ..........................................................\",\n        \"4 If you don't know the answer, just guess. .....................................................\",\n        \"5 Someone pushed me and I fell over. ...........................................................\",\n        \"6 We had to queue for ages. .................................................................\",\n        \"7 Why don't you ring her when she gets back? ...................................................\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"laugh    pull    taste    smile    dream    clean    queue    ache\",\n    \"have (×3)    give (×2)    wait    go on    send    put on\"\n  ],\n  \"pictures\": [\n    \"8 numbered line drawings: girl's face, man pulling dog on lead, man holding cheek (toothache), laughing man, person dreaming of bicycle, queue of people, person washing/dog in bath, person tasting food from bowl\"\n  ],\n  \"unclassified\": [\n    \"TEST 10\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

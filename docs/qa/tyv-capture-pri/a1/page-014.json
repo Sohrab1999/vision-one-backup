@@ -1,0 +1,108 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 14,
+    "dpi": 300,
+    "renderSha256": "3ab46cc9fccf9d833afafa2510169cb2ba8cee034b533bc8f7d981861a5307bb",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:49:05.392Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 12,
+    "testNumber": "9",
+    "testTitle": "Adjective suffixes (e.g. -able, -ful, -y)",
+    "exercises": [
+      {
+        "id": "9.1",
+        "marks": "9 marks",
+        "instruction": "Add the correct suffix: -able or -ible.",
+        "items": [
+          "1 The food was ined.......... .",
+          "2 The coffee was undrink.......... .",
+          "3 My bed is very comfort.......... .",
+          "4 Her shoes were very unsuit.......... .",
+          "5 The film was very enjoy.......... .",
+          "6 My working hours are very flex.......... .",
+          "7 The buses are usually reli.......... .",
+          "8 The doctor's writing was incomprehens.......... .",
+          "9 These cups are unbreak.......... ."
+        ]
+      },
+      {
+        "id": "9.2",
+        "marks": "5 marks",
+        "instruction": "Complete the following dialogues with adjectives ending in -less.",
+        "items": [
+          "1 A: Did you find the book useful?",
+          "B: No, it was completely ................................. .",
+          "2 A: Did the injection hurt?",
+          "B: No, fortunately it was ................................. .",
+          "3 A: Has he got somewhere to live?",
+          "B: No, the poor man is ................................. .",
+          "4 A: That was a very silly mistake, wasn't it?",
+          "B: Yes, it was ................................. of me – I wasn't concentrating.",
+          "5 A: Dorothy never thinks about other people; she didn't even phone to say she wasn't coming tonight.",
+          "B: Yes, I agree – she's really quite ................................. ."
+        ]
+      },
+      {
+        "id": "9.3",
+        "marks": "7 marks",
+        "instruction": "Circle the correct word.",
+        "items": [
+          "1 He can play ten musical/music instruments.",
+          "2 It is an economic/economical car to run: it can do 20 kilometres on a litre of petrol.",
+          "3 I'm not sure if this sweater is washing/washable or not.",
+          "4 My sister is very knowledgeable/knowledge about gardening, but I'm afraid I don't know the first thing about it.",
+          "5 He's a member of one of the extreme politic/political parties, but I can't remember which.",
+          "6 People say that you have to be very created/creative to be successful in advertising.",
+          "7 I didn't think it was a very attracted/attractive place."
+        ]
+      },
+      {
+        "id": "9.4",
+        "marks": "5 marks",
+        "instruction": "Rewrite the sentences using an adjective formed from the words in italics. The meaning must stay the same.",
+        "items": [
+          "Example: When the sun comes out, I always feel better.",
+          "When it is sunny, I always feel better.",
+          "1 There is too much cloud to see the stars tonight.",
+          "It .................................................................................................................................",
+          "2 If there is still fog in an hour, we will have to cancel the trip.",
+          "If it ..............................................................................................................................",
+          "3 There's a lot of industry in the town.",
+          "It's a very ....................................................................................................................",
+          "4 There is a lot of dirt in that corner of the room.",
+          "That corner of the room .............................................................................................",
+          "5 She knows about the dangers of drugs.",
+          "She knows that ..........................................................................................................."
+        ]
+      },
+      {
+        "id": "9.5",
+        "marks": "4 marks",
+        "instruction": "Which four nouns below form adjectives with the suffix -ful?",
+        "items": [
+          "pain    help    home    thought    fame    care"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 12,\n \"testNumber\": \"9\",\n \"testTitle\": \"Adjective suffixes (e.g. -able, -ful, -y)\",\n \"exercises\": [\n  {\"id\": \"9.1\",\n   \"marks\": \"9 marks\",\n   \"instruction\": \"Add the correct suffix: -able or -ible.\",\n   \"items\": [\n    \"1 The food was ined.......... .\",\n    \"2 The coffee was undrink.......... .\",\n    \"3 My bed is very comfort.......... .\",\n    \"4 Her shoes were very unsuit.......... .\",\n    \"5 The film was very enjoy.......... .\",\n    \"6 My working hours are very flex.......... .\",\n    \"7 The buses are usually reli.......... .\",\n    \"8 The doctor's writing was incomprehens.......... .\",\n    \"9 These cups are unbreak.......... .\"\n   ]},\n  {\"id\": \"9.2\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Complete the following dialogues with adjectives ending in -less.\",\n   \"items\": [\n    \"1 A: Did you find the book useful?\",\n    \"B: No, it was completely ................................. .\",\n    \"2 A: Did the injection hurt?\",\n    \"B: No, fortunately it was ................................. .\",\n    \"3 A: Has he got somewhere to live?\",\n    \"B: No, the poor man is ................................. .\",\n    \"4 A: That was a very silly mistake, wasn't it?\",\n    \"B: Yes, it was ................................. of me – I wasn't concentrating.\",\n    \"5 A: Dorothy never thinks about other people; she didn't even phone to say she wasn't coming tonight.\",\n    \"B: Yes, I agree – she's really quite ................................. .\"\n   ]},\n  {\"id\": \"9.3\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Circle the correct word.\",\n   \"items\": [\n    \"1 He can play ten musical/music instruments.\",\n    \"2 It is an economic/economical car to run: it can do 20 kilometres on a litre of petrol.\",\n    \"3 I'm not sure if this sweater is washing/washable or not.\",\n    \"4 My sister is very knowledgeable/knowledge about gardening, but I'm afraid I don't know the first thing about it.\",\n    \"5 He's a member of one of the extreme politic/political parties, but I can't remember which.\",\n    \"6 People say that you have to be very created/creative to be successful in advertising.\",\n    \"7 I didn't think it was a very attracted/attractive place.\"\n   ]},\n  {\"id\": \"9.4\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Rewrite the sentences using an adjective formed from the words in italics. The meaning must stay the same.\",\n   \"items\": [\n    \"Example: When the sun comes out, I always feel better.\",\n    \"When it is sunny, I always feel better.\",\n    \"1 There is too much cloud to see the stars tonight.\",\n    \"It .................................................................................................................................\",\n    \"2 If there is still fog in an hour, we will have to cancel the trip.\",\n    \"If it ..............................................................................................................................\",\n    \"3 There's a lot of industry in the town.\",\n    \"It's a very ....................................................................................................................\",\n    \"4 There is a lot of dirt in that corner of the room.\",\n    \"That corner of the room .............................................................................................\",\n    \"5 She knows about the dangers of drugs.\",\n    \"She knows that ...........................................................................................................\"\n   ]},\n  {\"id\": \"9.5\",\n   \"marks\": \"4 marks\",\n   \"instruction\": \"Which four nouns below form adjectives with the suffix -ful?\",\n   \"items\": [\"pain    help    home    thought    fame    care\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [],\n \"unclassified\": [\"TEST\", \"Your score\", \"/30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

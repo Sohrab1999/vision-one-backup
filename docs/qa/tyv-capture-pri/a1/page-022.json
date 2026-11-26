@@ -1,0 +1,84 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 22,
+    "dpi": 300,
+    "renderSha256": "9c4ade669b518d55194eeb53164dcc7541a063a4d758e2972ee367e06a75f1f2",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T06:51:42.718Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 20,
+    "testNumber": "17",
+    "testTitle": "Phrasal verbs 2",
+    "exercises": [
+      {
+        "id": "17.1",
+        "marks": "8 marks",
+        "instruction": "Correct any mistakes in these sentences. Be careful: some are correct.",
+        "items": [
+          "1 She got the train off and went into the coffee bar.",
+          "2 Take your shoes off.",
+          "3 A: Mum, where are my shoes?",
+          "B: Here they are. Put on them quickly!",
+          "4 I've decided to stay this weekend in.",
+          "5 The children are growing quickly up.",
+          "6 Lie down over there.",
+          "7 Could you turn the TV on, please?",
+          "8 I woke at 7 o'clock up."
+        ]
+      },
+      {
+        "id": "17.2",
+        "marks": "12 marks",
+        "instruction": "Describe each picture with a sentence containing a phrasal verb.",
+        "items": [
+          "1 ..................................................",
+          "3 ..................................................",
+          "5 ..................................................",
+          "2 ..................................................",
+          "4 ..................................................",
+          "6 .................................................."
+        ]
+      },
+      {
+        "id": "17.3",
+        "marks": "10 marks",
+        "instruction": "Replace the underlined verbs in these sentences with a more informal phrasal verb with the same meaning. Make any necessary changes to the sentences.",
+        "items": [
+          "Example: I've got to collect my car from the garage at 4.00.     pick up",
+          "1 This programme's boring. Can we change to another channel?",
+          "2 I heard she lost her job, but I couldn't discover any more details.",
+          "3 Could you increase the volume on the television? I can't hear it.",
+          "4 It doesn't have to be a true story – you can invent it.",
+          "5 Thieves entered the art gallery illegally and stole a Picasso.",
+          "6 We're late because the car stopped working on the way.",
+          "7 He opened the door and entered.",
+          "8 The price of meat has increased a lot this year.",
+          "9 Do that page of exercises again, but this time, omit the middle one.",
+          "10 I just can't manage in London on £80 a week."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "six drawings for exercise 17.2: a plane taking off; a person stubbing out a cigarette next to a no-smoking sign; a dog lying in front of a fire; a person getting off a bus; two people looking under the bonnet of a car; a person picking up toys",
+      "numbered blank answer lines 1–6 below each picture"
+    ],
+    "unclassified": [
+      "TEST",
+      "These exercises also test some of the phrasal verbs from Test 16.",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n \"footer\": 20,\n \"testNumber\": \"17\",\n \"testTitle\": \"Phrasal verbs 2\",\n \"exercises\": [\n  {\"id\": \"17.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Correct any mistakes in these sentences. Be careful: some are correct.\",\n   \"items\": [\n    \"1 She got the train off and went into the coffee bar.\",\n    \"2 Take your shoes off.\",\n    \"3 A: Mum, where are my shoes?\",\n    \"B: Here they are. Put on them quickly!\",\n    \"4 I've decided to stay this weekend in.\",\n    \"5 The children are growing quickly up.\",\n    \"6 Lie down over there.\",\n    \"7 Could you turn the TV on, please?\",\n    \"8 I woke at 7 o'clock up.\"\n   ]},\n  {\"id\": \"17.2\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Describe each picture with a sentence containing a phrasal verb.\",\n   \"items\": [\n    \"1 ..................................................\",\n    \"3 ..................................................\",\n    \"5 ..................................................\",\n    \"2 ..................................................\",\n    \"4 ..................................................\",\n    \"6 ..................................................\"\n   ]},\n  {\"id\": \"17.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Replace the underlined verbs in these sentences with a more informal phrasal verb with the same meaning. Make any necessary changes to the sentences.\",\n   \"items\": [\n    \"Example: I've got to collect my car from the garage at 4.00.     pick up\",\n    \"1 This programme's boring. Can we change to another channel?\",\n    \"2 I heard she lost her job, but I couldn't discover any more details.\",\n    \"3 Could you increase the volume on the television? I can't hear it.\",\n    \"4 It doesn't have to be a true story – you can invent it.\",\n    \"5 Thieves entered the art gallery illegally and stole a Picasso.\",\n    \"6 We're late because the car stopped working on the way.\",\n    \"7 He opened the door and entered.\",\n    \"8 The price of meat has increased a lot this year.\",\n    \"9 Do that page of exercises again, but this time, omit the middle one.\",\n    \"10 I just can't manage in London on £80 a week.\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n  \"six drawings for exercise 17.2: a plane taking off; a person stubbing out a cigarette next to a no-smoking sign; a dog lying in front of a fire; a person getting off a bus; two people looking under the bonnet of a car; a person picking up toys\",\n  \"numbered blank answer lines 1–6 below each picture\"\n ],\n \"unclassified\": [\n  \"TEST\",\n  \"These exercises also test some of the phrasal verbs from Test 16.\",\n  \"Your score /30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}\n```"
+}
