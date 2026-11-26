@@ -1,0 +1,103 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 31,
+    "dpi": 300,
+    "renderSha256": "7439bbc85100b3d2a88b5a06be6e0b4e82b9b527816b232c1c0b9c7bb3f4e378",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:20:18.276Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 29,
+    "testNumber": "26",
+    "testTitle": "Specific situations and special occasions",
+    "exercises": [
+      {
+        "id": "26.1",
+        "marks": "15 marks",
+        "instruction": "Look at the words and phrases in bold in the following dialogues. Are they correct or incorrect? If there is a mistake, correct it.",
+        "items": [
+          "1 In a restaurant. It's 8pm:",
+          "A: Goodnight sir. Have you reserved a table?",
+          "B: Yes, a table for four. The name's Robson.",
+          "2 Meeting someone for the first time:",
+          "A: How do you do?",
+          "B: Fine, thank you.",
+          "3 To someone on their birthday:",
+          "A: Many happy returns.",
+          "B: Thank you.",
+          "4 In the office on Friday afternoon:",
+          "A: Have a nice weekend.",
+          "B: Yes, same for you.",
+          "5 Saying goodbye to a friend:",
+          "A: Bye. See you soon.",
+          "B: Bye.",
+          "6 Speaking to a friend:",
+          "A: Oh, no! I've failed my exam again!",
+          "B: Oh, hard luck."
+        ]
+      },
+      {
+        "id": "26.2",
+        "marks": "13 marks",
+        "instruction": "Complete these explanations. Each gap represents one word.",
+        "items": [
+          "1 We often say '........................ ........................' to wish people well before an exam.",
+          "2 When we have an alcoholic drink with friends (especially the first one), we sometimes hold up our glasses and say '........................' before we start drinking.",
+          "3 We often say '........................ ........................' to people when they sneeze and they can answer by saying '........................ ........................'.",
+          "4 When we want to get past someone in a crowded place we usually say '........................ ........................, please.'",
+          "5 When someone wants to warn or tell you about a danger or an accident that might happen, they shout '........................ out!'",
+          "6 If you don't know the answer to something, you can say, 'I've no .........................'",
+          "7 On January 1st, in many countries people say '........................ ........................ Year.'"
+        ]
+      },
+      {
+        "id": "26.3",
+        "marks": "4 marks",
+        "instruction": "Find another way to say the expressions on the left.",
+        "items": [
+          "1 You passed. Congratulations!",
+          "You passed. Well .............................. !",
+          "2 Goodbye. Nice to meet you.",
+          "Goodbye. Nice to have .............................. .",
+          "3 That's your coat. I'm very sorry.",
+          "That's your coat. I beg your .............................. .",
+          "4 Hi. How are you?",
+          "Hi. How's it .............................. ?"
+        ]
+      },
+      {
+        "id": "26.4",
+        "marks": "8 marks",
+        "instruction": "True or false? If an answer is false, change it to make it true.",
+        "items": [
+          "1 When we meet people for the first time in a formal situation we can say How do you do? or How are you?",
+          "2 When people say How are you? a common response is Not bad. How about you?",
+          "3 Cheerio is another way of saying 'Hello'.",
+          "4 When we go to bed we often say Goodnight to other people.",
+          "5 We can say Sorry if we don't hear what someone says and we want them to repeat it.",
+          "6 British people say Good morning up to lunchtime, but in the afternoon they say Good day.",
+          "7 The French say Bon appetit before a meal, but there isn't a similar expression in English.",
+          "8 To wish someone well at Christmas or on their birthday, we can say Merry Christmas or Merry Birthday."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "30",
+      "score",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 29,\n  \"testNumber\": \"26\",\n  \"testTitle\": \"Specific situations and special occasions\",\n  \"exercises\": [\n    {\n      \"id\": \"26.1\",\n      \"marks\": \"15 marks\",\n      \"instruction\": \"Look at the words and phrases in bold in the following dialogues. Are they correct or incorrect? If there is a mistake, correct it.\",\n      \"items\": [\n        \"1 In a restaurant. It's 8pm:\",\n        \"A: Goodnight sir. Have you reserved a table?\",\n        \"B: Yes, a table for four. The name's Robson.\",\n        \"2 Meeting someone for the first time:\",\n        \"A: How do you do?\",\n        \"B: Fine, thank you.\",\n        \"3 To someone on their birthday:\",\n        \"A: Many happy returns.\",\n        \"B: Thank you.\",\n        \"4 In the office on Friday afternoon:\",\n        \"A: Have a nice weekend.\",\n        \"B: Yes, same for you.\",\n        \"5 Saying goodbye to a friend:\",\n        \"A: Bye. See you soon.\",\n        \"B: Bye.\",\n        \"6 Speaking to a friend:\",\n        \"A: Oh, no! I've failed my exam again!\",\n        \"B: Oh, hard luck.\"\n      ]\n    },\n    {\n      \"id\": \"26.2\",\n      \"marks\": \"13 marks\",\n      \"instruction\": \"Complete these explanations. Each gap represents one word.\",\n      \"items\": [\n        \"1 We often say '........................ ........................' to wish people well before an exam.\",\n        \"2 When we have an alcoholic drink with friends (especially the first one), we sometimes hold up our glasses and say '........................' before we start drinking.\",\n        \"3 We often say '........................ ........................' to people when they sneeze and they can answer by saying '........................ ........................'.\",\n        \"4 When we want to get past someone in a crowded place we usually say '........................ ........................, please.'\",\n        \"5 When someone wants to warn or tell you about a danger or an accident that might happen, they shout '........................ out!'\",\n        \"6 If you don't know the answer to something, you can say, 'I've no .........................'\",\n        \"7 On January 1st, in many countries people say '........................ ........................ Year.'\"\n      ]\n    },\n    {\n      \"id\": \"26.3\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Find another way to say the expressions on the left.\",\n      \"items\": [\n        \"1 You passed. Congratulations!\",\n        \"You passed. Well .............................. !\",\n        \"2 Goodbye. Nice to meet you.\",\n        \"Goodbye. Nice to have .............................. .\",\n        \"3 That's your coat. I'm very sorry.\",\n        \"That's your coat. I beg your .............................. .\",\n        \"4 Hi. How are you?\",\n        \"Hi. How's it .............................. ?\"\n      ]\n    },\n    {\n      \"id\": \"26.4\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"True or false? If an answer is false, change it to make it true.\",\n      \"items\": [\n        \"1 When we meet people for the first time in a formal situation we can say How do you do? or How are you?\",\n        \"2 When people say How are you? a common response is Not bad. How about you?\",\n        \"3 Cheerio is another way of saying 'Hello'.\",\n        \"4 When we go to bed we often say Goodnight to other people.\",\n        \"5 We can say Sorry if we don't hear what someone says and we want them to repeat it.\",\n        \"6 British people say Good morning up to lunchtime, but in the afternoon they say Good day.\",\n        \"7 The French say Bon appetit before a meal, but there isn't a similar expression in English.\",\n        \"8 To wish someone well at Christmas or on their birthday, we can say Merry Christmas or Merry Birthday.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"30\",\n    \"score\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

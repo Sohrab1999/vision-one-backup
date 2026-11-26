@@ -1,0 +1,88 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 34,
+    "dpi": 300,
+    "renderSha256": "d712e1b24959e2b08cf0f72f08d4dc52f82212dec7b324407dd0eae8b558bf58",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:21:09.844Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 32,
+    "testNumber": "29",
+    "testTitle": "Verb patterns",
+    "exercises": [
+      {
+        "id": "29.1",
+        "marks": "6 marks",
+        "instruction": "Match the verbs in the box with the correct definition below.",
+        "items": [
+          "1 demand something strongly",
+          "2 successfully change someone's opinion about something",
+          "3 hold someone responsible for something that goes wrong",
+          "4 say sorry",
+          "5 tell someone of a possible danger",
+          "6 say you are not happy or satisfied with something"
+        ]
+      },
+      {
+        "id": "29.2",
+        "marks": "12 marks",
+        "instruction": "Report these sentences, starting with the verbs you are given. Make any changes that are necessary, but the meaning must stay the same. In each sentence the speaker is talking to you.",
+        "items": [
+          "1 'The course was a waste of time.' She told ............",
+          "2 'Could you leave by the side door?' She asked ............",
+          "3 'I think you should buy another one.' She advised ............",
+          "4 'Why don't we do the exercise later?' She suggested ............",
+          "5 'Please don't go near the rocks.' She warned ............",
+          "6 'Don't tell anyone.' She insisted ............"
+        ]
+      },
+      {
+        "id": "29.3",
+        "marks": "8 marks",
+        "instruction": "Is the underlined word in these sentences correct? If not, cross it out.",
+        "items": [
+          "1 She said me it was a great idea.",
+          "2 He explained me what to do.",
+          "3 They told us there were dangerous animals in the fields.",
+          "4 One of them suggested us a picnic.",
+          "5 I persuaded them to leave.",
+          "6 The hotel confirmed us our reservation for the weekend.",
+          "7 She proposed us a very interesting new plan.",
+          "8 They wanted me to stay."
+        ]
+      },
+      {
+        "id": "29.4",
+        "marks": "4 marks",
+        "instruction": "Complete these sentences with a preposition.",
+        "items": [
+          "1 She blamed him .................. the accident.",
+          "2 He insisted .................. paying for the damage.",
+          "3 She apologised .................. shouting at him.",
+          "4 They complained .................. the faulty traffic lights."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "blame    complain    warn    insist    apologise    persuade"
+    ],
+    "pictures": [
+      "Four small cartoon drawings illustrating exercise 29.4: car accident with people arguing; couple exchanging money; two people talking; traffic policeman showing lights to couple"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 32,\n \"testNumber\": \"29\",\n \"testTitle\": \"Verb patterns\",\n \"exercises\": [\n  {\"id\": \"29.1\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Match the verbs in the box with the correct definition below.\",\n   \"items\": [\n    \"1 demand something strongly\",\n    \"2 successfully change someone's opinion about something\",\n    \"3 hold someone responsible for something that goes wrong\",\n    \"4 say sorry\",\n    \"5 tell someone of a possible danger\",\n    \"6 say you are not happy or satisfied with something\"\n   ]},\n  {\"id\": \"29.2\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Report these sentences, starting with the verbs you are given. Make any changes that are necessary, but the meaning must stay the same. In each sentence the speaker is talking to you.\",\n   \"items\": [\n    \"1 'The course was a waste of time.' She told ............\",\n    \"2 'Could you leave by the side door?' She asked ............\",\n    \"3 'I think you should buy another one.' She advised ............\",\n    \"4 'Why don't we do the exercise later?' She suggested ............\",\n    \"5 'Please don't go near the rocks.' She warned ............\",\n    \"6 'Don't tell anyone.' She insisted ............\"\n   ]},\n  {\"id\": \"29.3\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Is the underlined word in these sentences correct? If not, cross it out.\",\n   \"items\": [\n    \"1 She said me it was a great idea.\",\n    \"2 He explained me what to do.\",\n    \"3 They told us there were dangerous animals in the fields.\",\n    \"4 One of them suggested us a picnic.\",\n    \"5 I persuaded them to leave.\",\n    \"6 The hotel confirmed us our reservation for the weekend.\",\n    \"7 She proposed us a very interesting new plan.\",\n    \"8 They wanted me to stay.\"\n   ]},\n  {\"id\": \"29.4\",\n   \"marks\": \"4 marks\",\n   \"instruction\": \"Complete these sentences with a preposition.\",\n   \"items\": [\n    \"1 She blamed him .................. the accident.\",\n    \"2 He insisted .................. paying for the damage.\",\n    \"3 She apologised .................. shouting at him.\",\n    \"4 They complained .................. the faulty traffic lights.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"blame    complain    warn    insist    apologise    persuade\"\n ],\n \"pictures\": [\n  \"Four small cartoon drawings illustrating exercise 29.4: car accident with people arguing; couple exchanging money; two people talking; traffic policeman showing lights to couple\"\n ],\n \"unclassified\": [\n  \"Your score /30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

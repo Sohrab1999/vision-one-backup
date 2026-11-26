@@ -1,0 +1,100 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 26,
+    "dpi": 300,
+    "renderSha256": "0576174c21558eedb8c26023ff282822a3eb77e76e5444b510a8423841f0f250",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:18:45.087Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 24,
+    "testNumber": "21",
+    "testTitle": "Get: uses and expressions",
+    "exercises": [
+      {
+        "id": "21.1",
+        "marks": "10 marks",
+        "instruction": "Match the word get in sentences in 1–10 with the meanings in the diagram. There are two sentences for each meaning.",
+        "items": [
+          "Example: If you get there before me, make the sandwiches.  reach / arrive",
+          "1 Did you get the postcard I sent you from Hawaii?",
+          "2 We got to the restaurant at about 8.00.",
+          "3 I need to get some money from the bank – see you in twenty minutes.",
+          "4 The film suddenly got interesting when Nicole Kidman appeared.",
+          "5 She didn’t get to the airport on time, so she missed the plane.",
+          "6 I got this jacket in a sale – what do you think of it?",
+          "7 Come on, let’s go – I’m getting cold.",
+          "8 He got $100 for a morning’s work.",
+          "9 He got a seat in the front row because he knew the director.",
+          "10 Can you get a cloth? There’s water all over the table."
+        ]
+      },
+      {
+        "id": "21.2",
+        "marks": "6 marks",
+        "instruction": "Write an expression using get + past participle for each of the phrases below.",
+        "items": [
+          "1 put your clothes on = get ..............................",
+          "2 take your clothes off = get ..............................",
+          "3 change into different clothes = get ..............................",
+          "4 lose your way = get ..............................",
+          "5 separate legally from your husband/wife = get ..............................",
+          "6 marry someone = get .............................."
+        ]
+      },
+      {
+        "id": "21.3",
+        "marks": "8 marks",
+        "instruction": "Find the best ending on the right for each of the sentence beginnings on the left.",
+        "items": [
+          "1 If you don’t put enough clothes on  a you probably don’t get better at it.",
+          "2 If you don’t work hard at something  b things get busy.",
+          "3 If you work too many hours  c you get hungry.",
+          "4 If you suddenly get a lot of work  d you get tired.",
+          "5 If you start to recover from an illness  e it often gets dark.",
+          "6 If you don’t eat all day  f you get better.",
+          "7 If you don’t go to bed when you have flu  g you get cold.",
+          "8 If there is going to be a storm  h it gets worse."
+        ]
+      },
+      {
+        "id": "21.4",
+        "marks": "6 marks",
+        "instruction": "Replace the underlined phrase with an expression using get.",
+        "items": [
+          "1 I don’t have a good relationship with my brother.",
+          "2 Hello! How are things going with your new car?",
+          "3 Where I live, it’s difficult to meet and make friends with the neighbours.",
+          "4 I’ve decided to throw away all my old football magazines.",
+          "5 I hate getting out of bed in the mornings.",
+          "6 I’m going out in a few minutes, so I’d better go and change my clothes and put on my make-up."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "OBTAIN",
+      "RECEIVE",
+      "BECOME",
+      "REACH / ARRIVE",
+      "FETCH / GO AND BRING BACK"
+    ],
+    "pictures": [
+      "Diagram: star labelled GET with lines connecting to five meaning boxes (OBTAIN, RECEIVE, BECOME, REACH / ARRIVE, FETCH / GO AND BRING BACK)"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 24,\n  \"testNumber\": \"21\",\n  \"testTitle\": \"Get: uses and expressions\",\n  \"exercises\": [\n    {\n      \"id\": \"21.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Match the word get in sentences in 1–10 with the meanings in the diagram. There are two sentences for each meaning.\",\n      \"items\": [\n        \"Example: If you get there before me, make the sandwiches.  reach / arrive\",\n        \"1 Did you get the postcard I sent you from Hawaii?\",\n        \"2 We got to the restaurant at about 8.00.\",\n        \"3 I need to get some money from the bank – see you in twenty minutes.\",\n        \"4 The film suddenly got interesting when Nicole Kidman appeared.\",\n        \"5 She didn’t get to the airport on time, so she missed the plane.\",\n        \"6 I got this jacket in a sale – what do you think of it?\",\n        \"7 Come on, let’s go – I’m getting cold.\",\n        \"8 He got $100 for a morning’s work.\",\n        \"9 He got a seat in the front row because he knew the director.\",\n        \"10 Can you get a cloth? There’s water all over the table.\"\n      ]\n    },\n    {\n      \"id\": \"21.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Write an expression using get + past participle for each of the phrases below.\",\n      \"items\": [\n        \"1 put your clothes on = get ..............................\",\n        \"2 take your clothes off = get ..............................\",\n        \"3 change into different clothes = get ..............................\",\n        \"4 lose your way = get ..............................\",\n        \"5 separate legally from your husband/wife = get ..............................\",\n        \"6 marry someone = get ..............................\"\n      ]\n    },\n    {\n      \"id\": \"21.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Find the best ending on the right for each of the sentence beginnings on the left.\",\n      \"items\": [\n        \"1 If you don’t put enough clothes on  a you probably don’t get better at it.\",\n        \"2 If you don’t work hard at something  b things get busy.\",\n        \"3 If you work too many hours  c you get hungry.\",\n        \"4 If you suddenly get a lot of work  d you get tired.\",\n        \"5 If you start to recover from an illness  e it often gets dark.\",\n        \"6 If you don’t eat all day  f you get better.\",\n        \"7 If you don’t go to bed when you have flu  g you get cold.\",\n        \"8 If there is going to be a storm  h it gets worse.\"\n      ]\n    },\n    {\n      \"id\": \"21.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Replace the underlined phrase with an expression using get.\",\n      \"items\": [\n        \"1 I don’t have a good relationship with my brother.\",\n        \"2 Hello! How are things going with your new car?\",\n        \"3 Where I live, it’s difficult to meet and make friends with the neighbours.\",\n        \"4 I’ve decided to throw away all my old football magazines.\",\n        \"5 I hate getting out of bed in the mornings.\",\n        \"6 I’m going out in a few minutes, so I’d better go and change my clothes and put on my make-up.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"OBTAIN\",\n    \"RECEIVE\",\n    \"BECOME\",\n    \"REACH / ARRIVE\",\n    \"FETCH / GO AND BRING BACK\"\n  ],\n  \"pictures\": [\n    \"Diagram: star labelled GET with lines connecting to five meaning boxes (OBTAIN, RECEIVE, BECOME, REACH / ARRIVE, FETCH / GO AND BRING BACK)\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

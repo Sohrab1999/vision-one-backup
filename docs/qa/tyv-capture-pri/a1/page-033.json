@@ -1,0 +1,97 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 33,
+    "dpi": 300,
+    "renderSha256": "cad2decd84b34f30e4a2bd62697afcfc2a37d27436ea3938f503872185d7ee94",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:20:51.578Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 31,
+    "testNumber": "28",
+    "testTitle": "Verbs + -ing form or infinitive",
+    "exercises": [
+      {
+        "id": "28.1",
+        "marks": "8 marks",
+        "instruction": "Are these verbs followed by the -ing form or the infinitive?",
+        "items": [
+          "finish  refuse  avoid  seem",
+          "hope  imagine  decide  admit"
+        ]
+      },
+      {
+        "id": "28.2",
+        "marks": "6 marks",
+        "instruction": "Circle the correct answers. There are two in each question.",
+        "items": [
+          "1 He ................................. going out at night.",
+          "a) enjoys  b) can't stand  c) wants",
+          "2 They ................................. to finish work at 7.00.",
+          "a) imagined  b) expected  c) managed",
+          "3 I ................................. to work on Sunday.",
+          "a) decided  b) felt like  c) offered",
+          "4 Would you ................................. to help him?",
+          "a) avoid  b) refuse  c) promise",
+          "5 She ................................. to go to the bank.",
+          "a) meant  b) forgot  c) didn't mind",
+          "6 She ................................. to know a lot about computers.",
+          "a) seems  b) denies  c) wants"
+        ]
+      },
+      {
+        "id": "28.3",
+        "marks": "8 marks",
+        "instruction": "Complete the definitions below with the correct verb from the box.",
+        "items": [
+          "1 If you ................................. doing something, it means you stop doing it.",
+          "2 If you ................................. doing something, it means you hate doing it.",
+          "3 If you ................................. to do something, it means you do it, but it isn't easy.",
+          "4 If you ................................. doing something, it means you say that you didn't do it.",
+          "5 If you ................................. someone do something, it means you tell or force them to do it.",
+          "6 If you ................................. to do something, it means you don't forget to do it.",
+          "7 If you ................................. someone do something, it means that you permit them to do it.",
+          "8 If you ................................. someone to do something, it means that you permit them to do it."
+        ]
+      },
+      {
+        "id": "28.4",
+        "marks": "8 marks",
+        "instruction": "Rewrite the sentences using the two words on the right. Add, change or remove any other words to make the English grammatically correct.",
+        "items": [
+          "Example: I said I would go in ten minutes, but he made me go immediately.",
+          "I promised to go in ten minutes but he forced me .................................  PROMISE / FORCE",
+          "to go immediately.",
+          "1 He likes playing football, but he doesn't think he will get a place on the team.",
+          "He ..........................................................................................................  ENJOY / EXPECT",
+          "2 He says he took the money, but he says he didn't hit the guard.",
+          "He ..........................................................................................................  ADMIT / DENY",
+          "3 She will help us today, but she isn't prepared to come tomorrow.",
+          "She ........................................................................................................  OFFER / REFUSE",
+          "4 I would like to go out, but my parents won't allow me to use the car.",
+          "I ............................................................................................................  FEEL LIKE / LET"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "allow  remember  can't stand  manage\nlet  make  deny  give up"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Total score",
+      "30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 31,\n \"testNumber\": \"28\",\n \"testTitle\": \"Verbs + -ing form or infinitive\",\n \"exercises\": [\n  {\"id\": \"28.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Are these verbs followed by the -ing form or the infinitive?\",\n   \"items\": [\"finish  refuse  avoid  seem\", \"hope  imagine  decide  admit\"]},\n  {\"id\": \"28.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Circle the correct answers. There are two in each question.\",\n   \"items\": [\n    \"1 He ................................. going out at night.\",\n    \"a) enjoys  b) can't stand  c) wants\",\n    \"2 They ................................. to finish work at 7.00.\",\n    \"a) imagined  b) expected  c) managed\",\n    \"3 I ................................. to work on Sunday.\",\n    \"a) decided  b) felt like  c) offered\",\n    \"4 Would you ................................. to help him?\",\n    \"a) avoid  b) refuse  c) promise\",\n    \"5 She ................................. to go to the bank.\",\n    \"a) meant  b) forgot  c) didn't mind\",\n    \"6 She ................................. to know a lot about computers.\",\n    \"a) seems  b) denies  c) wants\"]},\n  {\"id\": \"28.3\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete the definitions below with the correct verb from the box.\",\n   \"items\": [\n    \"1 If you ................................. doing something, it means you stop doing it.\",\n    \"2 If you ................................. doing something, it means you hate doing it.\",\n    \"3 If you ................................. to do something, it means you do it, but it isn't easy.\",\n    \"4 If you ................................. doing something, it means you say that you didn't do it.\",\n    \"5 If you ................................. someone do something, it means you tell or force them to do it.\",\n    \"6 If you ................................. to do something, it means you don't forget to do it.\",\n    \"7 If you ................................. someone do something, it means that you permit them to do it.\",\n    \"8 If you ................................. someone to do something, it means that you permit them to do it.\"]},\n  {\"id\": \"28.4\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Rewrite the sentences using the two words on the right. Add, change or remove any other words to make the English grammatically correct.\",\n   \"items\": [\n    \"Example: I said I would go in ten minutes, but he made me go immediately.\",\n    \"I promised to go in ten minutes but he forced me .................................  PROMISE / FORCE\",\n    \"to go immediately.\",\n    \"1 He likes playing football, but he doesn't think he will get a place on the team.\",\n    \"He ..........................................................................................................  ENJOY / EXPECT\",\n    \"2 He says he took the money, but he says he didn't hit the guard.\",\n    \"He ..........................................................................................................  ADMIT / DENY\",\n    \"3 She will help us today, but she isn't prepared to come tomorrow.\",\n    \"She ........................................................................................................  OFFER / REFUSE\",\n    \"4 I would like to go out, but my parents won't allow me to use the car.\",\n    \"I ............................................................................................................  FEEL LIKE / LET\"]}\n ],\n \"boxesAndLists\": [\"allow  remember  can't stand  manage\\nlet  make  deny  give up\"],\n \"pictures\": [],\n \"unclassified\": [\"TEST\", \"Total score\", \"30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

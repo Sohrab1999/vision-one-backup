@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 29,
+    "dpi": 300,
+    "renderSha256": "24e7750aaddc484a985265c7afc0143c826c1fc58f03ae7ba11960a8dad9eb5e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:19:43.193Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 27,
+    "testNumber": "24",
+    "testTitle": "Requests, invitations and suggestions",
+    "exercises": [
+      {
+        "id": "24.1",
+        "marks": "15 marks",
+        "instruction": "Expand the notes into correct sentences by adding one more word after each slash (/). Look at the example first.",
+        "items": [
+          "Example:  A: Can I take / this chair?",
+          "B:  Yes, go / ahead.",
+          "1  A: Could /      borrow /      pen /      five minutes?",
+          "B: Yes, /      yourself.",
+          "2  A: Could /      give /      that book /      there?",
+          "B: Yes, /      course. Here you are.",
+          "3  A: I /      wondering /      I /      use your bike for half an hour?",
+          "B: Well, I /      rather/      didn’t actually. I may need it myself.",
+          "4  A: Do you /      you could /      lend /      some CDs?",
+          "B: I /      I could, but I haven’t got any.",
+          "5  A: Mary, /      you like /      go /      this evening?",
+          "B: I /      love /      but I’m /      I can’t.",
+          "6  A: Would you /      if I /      the afternoon off? I don’t feel very well.",
+          "B: No, please do go home.",
+          "7  A: Can /      give /      a hand?",
+          "B: I /      afraid /      , just at the moment. I have /      go out."
+        ]
+      },
+      {
+        "id": "24.2",
+        "marks": "5 marks",
+        "instruction": "Complete these dialogues by writing one or two words in each gap.",
+        "items": [
+          "1  A: Why don’t we buy her a new suitcase for her holiday?",
+          "B:  Yes, ......................... a good idea.",
+          "2  A: Do you want to go and buy one now?",
+          "B:  Yes, ......................... you like.",
+          "3  A: Do you want the blue one?",
+          "B:  I don’t ......................... . You choose.",
+          "4  A: OK, let’s have the blue one. It’s £60 – that’s £30 each.",
+          "B:  You won’t believe this, but I haven’t got any money ......................... me at all.",
+          "5  A: I’ll lend you the money. You can give it back to me tonight.",
+          "B:  I’m ......................... , but I won’t be able to get to the bank by then. Is tomorrow OK?"
+        ]
+      },
+      {
+        "id": "24.3",
+        "marks": "10 marks",
+        "instruction": "Replace the underlined words and phrases using words from the box. Add, change or remove any other words to make the English grammatically correct.",
+        "items": [
+          "1  A: What do you want to do at the weekend?",
+          "2  B: Uh, let me think. OK, why don’t we go to the beach?",
+          "3  A: Yeah, great. And tonight? Do you want to see that film?",
+          "4  B: I think I’d rather stay in, actually.",
+          "5  A: Yes, OK, that’s fine with me."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "how about      I’d prefer      evening      mind      shall"
+    ],
+    "pictures": [
+      "line drawing of two women looking at a suitcase (next to exercise 24.2)"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 27,\n  \"testNumber\": \"24\",\n  \"testTitle\": \"Requests, invitations and suggestions\",\n  \"exercises\": [\n    {\n      \"id\": \"24.1\",\n      \"marks\": \"15 marks\",\n      \"instruction\": \"Expand the notes into correct sentences by adding one more word after each slash (/). Look at the example first.\",\n      \"items\": [\n        \"Example:  A: Can I take / this chair?\",\n        \"B:  Yes, go / ahead.\",\n        \"1  A: Could /      borrow /      pen /      five minutes?\",\n        \"B: Yes, /      yourself.\",\n        \"2  A: Could /      give /      that book /      there?\",\n        \"B: Yes, /      course. Here you are.\",\n        \"3  A: I /      wondering /      I /      use your bike for half an hour?\",\n        \"B: Well, I /      rather/      didn’t actually. I may need it myself.\",\n        \"4  A: Do you /      you could /      lend /      some CDs?\",\n        \"B: I /      I could, but I haven’t got any.\",\n        \"5  A: Mary, /      you like /      go /      this evening?\",\n        \"B: I /      love /      but I’m /      I can’t.\",\n        \"6  A: Would you /      if I /      the afternoon off? I don’t feel very well.\",\n        \"B: No, please do go home.\",\n        \"7  A: Can /      give /      a hand?\",\n        \"B: I /      afraid /      , just at the moment. I have /      go out.\"\n      ]\n    },\n    {\n      \"id\": \"24.2\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Complete these dialogues by writing one or two words in each gap.\",\n      \"items\": [\n        \"1  A: Why don’t we buy her a new suitcase for her holiday?\",\n        \"B:  Yes, ......................... a good idea.\",\n        \"2  A: Do you want to go and buy one now?\",\n        \"B:  Yes, ......................... you like.\",\n        \"3  A: Do you want the blue one?\",\n        \"B:  I don’t ......................... . You choose.\",\n        \"4  A: OK, let’s have the blue one. It’s £60 – that’s £30 each.\",\n        \"B:  You won’t believe this, but I haven’t got any money ......................... me at all.\",\n        \"5  A: I’ll lend you the money. You can give it back to me tonight.\",\n        \"B:  I’m ......................... , but I won’t be able to get to the bank by then. Is tomorrow OK?\"\n      ]\n    },\n    {\n      \"id\": \"24.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Replace the underlined words and phrases using words from the box. Add, change or remove any other words to make the English grammatically correct.\",\n      \"items\": [\n        \"1  A: What do you want to do at the weekend?\",\n        \"2  B: Uh, let me think. OK, why don’t we go to the beach?\",\n        \"3  A: Yeah, great. And tonight? Do you want to see that film?\",\n        \"4  B: I think I’d rather stay in, actually.\",\n        \"5  A: Yes, OK, that’s fine with me.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\"how about      I’d prefer      evening      mind      shall\"],\n  \"pictures\": [\"line drawing of two women looking at a suitcase (next to exercise 24.2)\"],\n  \"unclassified\": [\"TEST\", \"Your score\", \"/30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

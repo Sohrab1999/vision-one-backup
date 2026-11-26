@@ -1,0 +1,81 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 25,
+    "dpi": 300,
+    "renderSha256": "07875a0ddb5b2597dba82064493d9fbb19c1b8234987acac7ef051fcf2fc3d49",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:18:26.194Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 23,
+    "testNumber": "20",
+    "testTitle": "Give, keep, break, catch, see",
+    "exercises": [
+      {
+        "id": "20.1",
+        "marks": "16 marks",
+        "instruction": "Complete the sentences below with a verb from box A and a noun from box B.",
+        "items": [
+          "1 I need a bit of help with this thing. Could you possibly ......................... me a ......................... ?",
+          "2 It's too far to walk. Why don't we ......................... the ......................... ? They run every few minutes, so we shouldn't have to wait long.",
+          "3 Why don't you wear these gloves? They'll ......................... your ......................... warm.",
+          "4 I think I ......................... a ......................... yesterday because I've been sneezing all morning, I've got a sore throat, and I feel terrible.",
+          "5 Everyone ......................... the ......................... at some time in their lives. For most people it is driving above the speed limit or parking illegally.",
+          "6 I ......................... breaking ......................... . Last week I smashed three, and soon we won't have anything to drink out of.",
+          "7 She threw the ......................... to me and I tried to ......................... it. Unfortunately I dropped it and I also hurt my finger.",
+          "8 We have to be careful with money, so we ......................... a ......................... of everything we spend and write it down in this book."
+        ]
+      },
+      {
+        "id": "20.2",
+        "marks": "8 marks",
+        "instruction": "Complete the phrases in italics.",
+        "items": [
+          "1 If you keep ......................... ......................... with someone, it means you remember to write to or phone them on a regular basis.",
+          "2 If you say something to ......................... the ......................... , it means you say something to make people feel more relaxed in a situation when they first meet you and other strangers for the first time.",
+          "3 If someone says to you, please ......................... my ......................... to Jane, it means they want you to say 'hello' to Jane when you see her (because they can't).",
+          "4 If you say that you don't see the ......................... ......................... doing something, it means you don't see any reason to do it. It just seems a stupid thing to do."
+        ]
+      },
+      {
+        "id": "20.3",
+        "marks": "6 marks",
+        "instruction": "Complete these dialogues with a suitable verb.",
+        "items": [
+          "1 A: What shall we do if they can't take our order?",
+          "B: I don't know. I'll ......................... what John says.",
+          "2 A: Put this coat on – it'll ......................... you dry if it rains.",
+          "B: Thanks.",
+          "3 A: If you put the white next to the yellow, the white looks dirty.",
+          "B: Yes, I ......................... what you mean.",
+          "4 A: He only needs to play for England three more times and he'll ......................... the record.",
+          "B: I know. It's fantastic.",
+          "5 A: I'll ......................... you a ring about eight.",
+          "B: Could you phone a bit later? I'll be having dinner at eight.",
+          "6 A: What's the matter?",
+          "B: I don't know but I ......................... getting headaches. I think I should make an appointment to see the doctor."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "A: break, give, keep, catch",
+      "B: train, hand, ball, record, hands, glasses, law, cold"
+    ],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 23,\n \"testNumber\": \"20\",\n \"testTitle\": \"Give, keep, break, catch, see\",\n \"exercises\": [\n  {\"id\": \"20.1\",\n   \"marks\": \"16 marks\",\n   \"instruction\": \"Complete the sentences below with a verb from box A and a noun from box B.\",\n   \"items\": [\n    \"1 I need a bit of help with this thing. Could you possibly ......................... me a ......................... ?\",\n    \"2 It's too far to walk. Why don't we ......................... the ......................... ? They run every few minutes, so we shouldn't have to wait long.\",\n    \"3 Why don't you wear these gloves? They'll ......................... your ......................... warm.\",\n    \"4 I think I ......................... a ......................... yesterday because I've been sneezing all morning, I've got a sore throat, and I feel terrible.\",\n    \"5 Everyone ......................... the ......................... at some time in their lives. For most people it is driving above the speed limit or parking illegally.\",\n    \"6 I ......................... breaking ......................... . Last week I smashed three, and soon we won't have anything to drink out of.\",\n    \"7 She threw the ......................... to me and I tried to ......................... it. Unfortunately I dropped it and I also hurt my finger.\",\n    \"8 We have to be careful with money, so we ......................... a ......................... of everything we spend and write it down in this book.\"\n   ]},\n  {\"id\": \"20.2\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete the phrases in italics.\",\n   \"items\": [\n    \"1 If you keep ......................... ......................... with someone, it means you remember to write to or phone them on a regular basis.\",\n    \"2 If you say something to ......................... the ......................... , it means you say something to make people feel more relaxed in a situation when they first meet you and other strangers for the first time.\",\n    \"3 If someone says to you, please ......................... my ......................... to Jane, it means they want you to say 'hello' to Jane when you see her (because they can't).\",\n    \"4 If you say that you don't see the ......................... ......................... doing something, it means you don't see any reason to do it. It just seems a stupid thing to do.\"\n   ]},\n  {\"id\": \"20.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete these dialogues with a suitable verb.\",\n   \"items\": [\n    \"1 A: What shall we do if they can't take our order?\",\n    \"B: I don't know. I'll ......................... what John says.\",\n    \"2 A: Put this coat on – it'll ......................... you dry if it rains.\",\n    \"B: Thanks.\",\n    \"3 A: If you put the white next to the yellow, the white looks dirty.\",\n    \"B: Yes, I ......................... what you mean.\",\n    \"4 A: He only needs to play for England three more times and he'll ......................... the record.\",\n    \"B: I know. It's fantastic.\",\n    \"5 A: I'll ......................... you a ring about eight.\",\n    \"B: Could you phone a bit later? I'll be having dinner at eight.\",\n    \"6 A: What's the matter?\",\n    \"B: I don't know but I ......................... getting headaches. I think I should make an appointment to see the doctor.\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"A: break, give, keep, catch\",\n  \"B: train, hand, ball, record, hands, glasses, law, cold\"\n ],\n \"pictures\": [],\n \"unclassified\": [\n  \"TEST\",\n  \"Your score /30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

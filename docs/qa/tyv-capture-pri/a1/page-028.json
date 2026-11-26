@@ -1,0 +1,102 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 28,
+    "dpi": 300,
+    "renderSha256": "6e0b9dd96efaedd46699aa63ae7a238d5c768d5eefe9a980b8ef9b0bc1c05ae4",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:19:27.099Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 26,
+    "testNumber": "23",
+    "testTitle": "Apologies, excuses and thanks",
+    "exercises": [
+      {
+        "id": "23.1",
+        "marks": "8 marks",
+        "instruction": "Complete these different ways of saying sorry in the following situations. You will need one or two words for each gap.",
+        "items": [
+          "1 I’m really sorry .............................. late.",
+          "2 Was that your foot I stepped on? I .............................. your pardon.",
+          "3 I’m sorry to .............................. you waiting, but I won’t be .............................. now.",
+          "4 I must .............................. for .............................. late.",
+          "5 Dear Mr Patterson",
+          "Please .............................. our .............................. for the mistake in your order. Unfortunately you received equipment that should have gone to an address in London, and …"
+        ]
+      },
+      {
+        "id": "23.2",
+        "marks": "8 marks",
+        "instruction": "Write correct responses in each of the situations below, using the words in the box (in the correct form), and starting with the words you are given.",
+        "items": [
+          "1 A: Were they held up?",
+          "B: Yes, they .................................................. .",
+          "2 A: This room is very untidy.",
+          "B: It’s OK, I .................................................. .",
+          "3 A: Can we do anything about these problems?",
+          "B: Yes, we can .................................................. .",
+          "4 A: I thought they were having a meeting yesterday.",
+          "B: They were, but several people were ill so they had to .................................................. ."
+        ]
+      },
+      {
+        "id": "23.3",
+        "marks": "4 marks",
+        "instruction": "Here are four different ways of reassuring people. Complete each phrase with a single word.",
+        "items": [
+          "A: I’m terribly sorry.",
+          "B: That’s OK. Don’t .............................. .",
+          "Never .............................. .",
+          "It doesn’t .............................. .",
+          "No .............................. ."
+        ]
+      },
+      {
+        "id": "23.4",
+        "marks": "8 marks",
+        "instruction": "There is one word missing in each of A’s lines in this dialogue. Put the word at the end of the line and show where it goes in the line with an arrow like this (↑).",
+        "items": [
+          "Example: A: Thank you ↑ coming to see me.        for....",
+          "B: No problem.",
+          "1 A: I’m really sorry the mess in here.        ..................",
+          "B: What happened?",
+          "2 A: I spilt some coffee, but it’s OK, I’ll clear it.        ..................",
+          "B: Do you want some help?",
+          "3 A: Well, that’s very kind you, but I can do it.        ..................",
+          "B: OK. Shall I post these letters for you, then?",
+          "4 A: Oh, thanks lot.        .................."
+        ]
+      },
+      {
+        "id": "23.5",
+        "marks": "2 marks",
+        "instruction": "Complete the last word in this text. The first letter of the answer is given.",
+        "items": [
+          "You visit another country where you meet people who are very kind to you. They look after you and take you out. At the end of your stay you thank them for their h.............................. ."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "sort something out     cancel     delay     clear something up"
+    ],
+    "pictures": [
+      "cartoon drawing of two men's faces next to exercise 23.3 (one man speaking, one man with glasses)"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 26,\n \"testNumber\": \"23\",\n \"testTitle\": \"Apologies, excuses and thanks\",\n \"exercises\": [\n  {\"id\": \"23.1\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete these different ways of saying sorry in the following situations. You will need one or two words for each gap.\",\n   \"items\": [\n    \"1 I’m really sorry .............................. late.\",\n    \"2 Was that your foot I stepped on? I .............................. your pardon.\",\n    \"3 I’m sorry to .............................. you waiting, but I won’t be .............................. now.\",\n    \"4 I must .............................. for .............................. late.\",\n    \"5 Dear Mr Patterson\",\n    \"Please .............................. our .............................. for the mistake in your order. Unfortunately you received equipment that should have gone to an address in London, and …\"\n   ]},\n  {\"id\": \"23.2\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Write correct responses in each of the situations below, using the words in the box (in the correct form), and starting with the words you are given.\",\n   \"items\": [\n    \"1 A: Were they held up?\",\n    \"B: Yes, they .................................................. .\",\n    \"2 A: This room is very untidy.\",\n    \"B: It’s OK, I .................................................. .\",\n    \"3 A: Can we do anything about these problems?\",\n    \"B: Yes, we can .................................................. .\",\n    \"4 A: I thought they were having a meeting yesterday.\",\n    \"B: They were, but several people were ill so they had to .................................................. .\"\n   ]},\n  {\"id\": \"23.3\",\n   \"marks\": \"4 marks\",\n   \"instruction\": \"Here are four different ways of reassuring people. Complete each phrase with a single word.\",\n   \"items\": [\n    \"A: I’m terribly sorry.\",\n    \"B: That’s OK. Don’t .............................. .\",\n    \"Never .............................. .\",\n    \"It doesn’t .............................. .\",\n    \"No .............................. .\"\n   ]},\n  {\"id\": \"23.4\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"There is one word missing in each of A’s lines in this dialogue. Put the word at the end of the line and show where it goes in the line with an arrow like this (↑).\",\n   \"items\": [\n    \"Example: A: Thank you ↑ coming to see me.        for....\",\n    \"B: No problem.\",\n    \"1 A: I’m really sorry the mess in here.        ..................\",\n    \"B: What happened?\",\n    \"2 A: I spilt some coffee, but it’s OK, I’ll clear it.        ..................\",\n    \"B: Do you want some help?\",\n    \"3 A: Well, that’s very kind you, but I can do it.        ..................\",\n    \"B: OK. Shall I post these letters for you, then?\",\n    \"4 A: Oh, thanks lot.        ..................\"\n   ]},\n  {\"id\": \"23.5\",\n   \"marks\": \"2 marks\",\n   \"instruction\": \"Complete the last word in this text. The first letter of the answer is given.\",\n   \"items\": [\n    \"You visit another country where you meet people who are very kind to you. They look after you and take you out. At the end of your stay you thank them for their h.............................. .\"\n   ]}\n ],\n \"boxesAndLists\": [\n  \"sort something out     cancel     delay     clear something up\"\n ],\n \"pictures\": [\n  \"cartoon drawing of two men's faces next to exercise 23.3 (one man speaking, one man with glasses)\"\n ],\n \"unclassified\": [\n  \"TEST\",\n  \"Your score\",\n  \"/30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}\n```"
+}

@@ -1,0 +1,86 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 36,
+    "dpi": 300,
+    "renderSha256": "191e1cded07c2743645134a46ab378b5f580c4d5c6ec1e4c9e0c094713109e2a",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:21:48.081Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 34,
+    "testNumber": "31",
+    "testTitle": "Prepositions: place",
+    "exercises": [
+      {
+        "id": "31.1",
+        "marks": "10 marks",
+        "instruction": "Correct any mistakes with prepositions in these sentences. Be careful: some are correct.",
+        "items": [
+          "1 She doesn't live in London any longer.",
+          "2 The food is in the table.",
+          "3 I'm just going to make a phone call but I'll see you on work.",
+          "4 Don't put those books on the floor.",
+          "5 We're staying at a very nice area.",
+          "6 They should be in the party tonight if you want to see them.",
+          "7 Put the keys at your pocket.",
+          "8 I said I'd see her at the end of the road.",
+          "9 I always sit in the table for dinner.",
+          "10 We can play on the garden."
+        ]
+      },
+      {
+        "id": "31.2",
+        "marks": "10 marks",
+        "instruction": "Complete the sentences below.",
+        "items": [
+          "1 Down the stairs is the opposite of .................. the stairs.",
+          "2 Into the room is the opposite of .................. the room.",
+          "3 We drove under the bridge is the opposite of we drove .................. the bridge.",
+          "4 We flew above the clouds is the opposite of we flew .................. the clouds.",
+          "5 In front of the school is the opposite of .................. the school.",
+          "Complete these sentences with the correct preposition/prepositional phrase from above.",
+          "6 The money fell .................. my pocket.",
+          "7 If you stand ............................ me, I can't see the picture.",
+          "8 The cat was frightened and ran .................. that tree over there.",
+          "9 I'm on the top floor and at the moment the flat .................. me is empty.",
+          "10 We are going to fly .................. the city and then land at the airport."
+        ]
+      },
+      {
+        "id": "31.3",
+        "marks": "10 marks",
+        "instruction": "Complete these sentences with suitable prepositions.",
+        "items": [
+          "1 I ran .................. the house but stopped when I saw a big dog.",
+          "2 John came over and sat .................. me.",
+          "3 Ten minutes later Rosa joined us and sat down .................. us.",
+          "4 I'm sure the post office is just .................. the bank.",
+          "5 The cat suddenly ran .................. the road. It must have seen something on the other side.",
+          "6 We walked along the road, .................. a church and then came to a park.",
+          "7 They must have walked .................. the river for about five miles.",
+          "8 We wanted to go .................. the town using the bypass, but we never saw the road, so we had to drive right .................. the middle of the town.",
+          "9 The station is quite .................. here: about a ten-minute walk at the most, I'd say."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "numbered illustrations 1-5 for exercise 31.3: person at door with dog, two people sitting, three people sitting, 'Post Office' and 'Bank' signs, cat running across road"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "TEST",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n \"footer\": 34,\n \"testNumber\": \"31\",\n \"testTitle\": \"Prepositions: place\",\n \"exercises\": [\n  {\"id\": \"31.1\", \"marks\": \"10 marks\",\n   \"instruction\": \"Correct any mistakes with prepositions in these sentences. Be careful: some are correct.\",\n   \"items\": [\n    \"1 She doesn't live in London any longer.\",\n    \"2 The food is in the table.\",\n    \"3 I'm just going to make a phone call but I'll see you on work.\",\n    \"4 Don't put those books on the floor.\",\n    \"5 We're staying at a very nice area.\",\n    \"6 They should be in the party tonight if you want to see them.\",\n    \"7 Put the keys at your pocket.\",\n    \"8 I said I'd see her at the end of the road.\",\n    \"9 I always sit in the table for dinner.\",\n    \"10 We can play on the garden.\"\n   ]},\n  {\"id\": \"31.2\", \"marks\": \"10 marks\",\n   \"instruction\": \"Complete the sentences below.\",\n   \"items\": [\n    \"1 Down the stairs is the opposite of .................. the stairs.\",\n    \"2 Into the room is the opposite of .................. the room.\",\n    \"3 We drove under the bridge is the opposite of we drove .................. the bridge.\",\n    \"4 We flew above the clouds is the opposite of we flew .................. the clouds.\",\n    \"5 In front of the school is the opposite of .................. the school.\",\n    \"Complete these sentences with the correct preposition/prepositional phrase from above.\",\n    \"6 The money fell .................. my pocket.\",\n    \"7 If you stand ............................ me, I can't see the picture.\",\n    \"8 The cat was frightened and ran .................. that tree over there.\",\n    \"9 I'm on the top floor and at the moment the flat .................. me is empty.\",\n    \"10 We are going to fly .................. the city and then land at the airport.\"\n   ]},\n  {\"id\": \"31.3\", \"marks\": \"10 marks\",\n   \"instruction\": \"Complete these sentences with suitable prepositions.\",\n   \"items\": [\n    \"1 I ran .................. the house but stopped when I saw a big dog.\",\n    \"2 John came over and sat .................. me.\",\n    \"3 Ten minutes later Rosa joined us and sat down .................. us.\",\n    \"4 I'm sure the post office is just .................. the bank.\",\n    \"5 The cat suddenly ran .................. the road. It must have seen something on the other side.\",\n    \"6 We walked along the road, .................. a church and then came to a park.\",\n    \"7 They must have walked .................. the river for about five miles.\",\n    \"8 We wanted to go .................. the town using the bypass, but we never saw the road, so we had to drive right .................. the middle of the town.\",\n    \"9 The station is quite .................. here: about a ten-minute walk at the most, I'd say.\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n  \"numbered illustrations 1-5 for exercise 31.3: person at door with dog, two people sitting, three people sitting, 'Post Office' and 'Bank' signs, cat running across road\"\n ],\n \"unclassified\": [\"Your score /30\", \"TEST\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

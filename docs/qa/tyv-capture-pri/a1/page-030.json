@@ -1,0 +1,86 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 30,
+    "dpi": 300,
+    "renderSha256": "986872a94f69012c5d517e9fd848a7f78ff3808c8e51446343b15383aaad31b5",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T08:19:59.273Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 28,
+    "testNumber": "25",
+    "testTitle": "Opinions, agreeing and disagreeing",
+    "exercises": [
+      {
+        "id": "25.1",
+        "marks": "8 marks",
+        "instruction": "Find eight mistakes in this dialogue and correct them.",
+        "items": [
+          "A: What do you think for this idea to stop free eye tests?",
+          "B: I think it's not a good idea. In my meaning, people will just stop going to the optician's.",
+          "C: I'm afraid but I total disagree.",
+          "A: Yes, it's written in one newspaper that most people are happy to pay for an eye test.",
+          "B: You can be right, but don't you think it's more complicated than that?",
+          "C: Yes, I'm agree, that's true."
+        ]
+      },
+      {
+        "id": "25.2",
+        "marks": "6 marks",
+        "instruction": "Organise sentences a–f into a logical dialogue.",
+        "items": [
+          "a As far as I'm concerned, that's long enough.",
+          "b Yes, you could be right about education, but don't forget they've only been in power for six months.",
+          "c Why's that?",
+          "d How do you feel about the new government?",
+          "e Well, I don't think they've done much to improve schools.",
+          "f Personally I don't think they're any better than the last one."
+        ]
+      },
+      {
+        "id": "25.3",
+        "marks": "10 marks",
+        "instruction": "Rewrite the sentences using the word on the right. Start with the words you are given. The meaning must stay the same.",
+        "items": [
+          "1 What do you think of his new plan? What .............................................................................. ? FEELINGS",
+          "2 Well, in my opinion, more people should go to university. Well, .............................................................................. CONCERNED",
+          "3 You know, the paper says he is still missing. You know, .............................................................................. ACCORDING",
+          "4 I agree with you. I .............................................................................. RIGHT",
+          "5 I partly agree with you. I .............................................................................. EXTENT"
+        ]
+      },
+      {
+        "id": "25.4",
+        "marks": "6 marks",
+        "instruction": "Complete the dialogue with suitable phrases.",
+        "items": [
+          "A: (1) .............................................. of the new underground system here?",
+          "B: Well, (2) .............................. , I find it quite comfortable and quick.",
+          "A: I (3).............................. that it's quick, but it does seem a bit expensive.",
+          "B: I agree with you to (4): .............................................. , but it's still cheaper than in many countries.",
+          "A: Really? But (5) .............................................. the newspapers, this government doesn't spend nearly enough on public transport.",
+          "B: I'm sorry, but I just (6) .............................................................. true."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "cartoon illustration of six passengers sitting in an underground train, next to exercise 25.4"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 28,\n  \"testNumber\": \"25\",\n  \"testTitle\": \"Opinions, agreeing and disagreeing\",\n  \"exercises\": [\n    {\n      \"id\": \"25.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Find eight mistakes in this dialogue and correct them.\",\n      \"items\": [\n        \"A: What do you think for this idea to stop free eye tests?\",\n        \"B: I think it's not a good idea. In my meaning, people will just stop going to the optician's.\",\n        \"C: I'm afraid but I total disagree.\",\n        \"A: Yes, it's written in one newspaper that most people are happy to pay for an eye test.\",\n        \"B: You can be right, but don't you think it's more complicated than that?\",\n        \"C: Yes, I'm agree, that's true.\"\n      ]\n    },\n    {\n      \"id\": \"25.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Organise sentences a–f into a logical dialogue.\",\n      \"items\": [\n        \"a As far as I'm concerned, that's long enough.\",\n        \"b Yes, you could be right about education, but don't forget they've only been in power for six months.\",\n        \"c Why's that?\",\n        \"d How do you feel about the new government?\",\n        \"e Well, I don't think they've done much to improve schools.\",\n        \"f Personally I don't think they're any better than the last one.\"\n      ]\n    },\n    {\n      \"id\": \"25.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Rewrite the sentences using the word on the right. Start with the words you are given. The meaning must stay the same.\",\n      \"items\": [\n        \"1 What do you think of his new plan? What .............................................................................. ? FEELINGS\",\n        \"2 Well, in my opinion, more people should go to university. Well, .............................................................................. CONCERNED\",\n        \"3 You know, the paper says he is still missing. You know, .............................................................................. ACCORDING\",\n        \"4 I agree with you. I .............................................................................. RIGHT\",\n        \"5 I partly agree with you. I .............................................................................. EXTENT\"\n      ]\n    },\n    {\n      \"id\": \"25.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete the dialogue with suitable phrases.\",\n      \"items\": [\n        \"A: (1) .............................................. of the new underground system here?\",\n        \"B: Well, (2) .............................. , I find it quite comfortable and quick.\",\n        \"A: I (3).............................. that it's quick, but it does seem a bit expensive.\",\n        \"B: I agree with you to (4): .............................................. , but it's still cheaper than in many countries.\",\n        \"A: Really? But (5) .............................................. the newspapers, this government doesn't spend nearly enough on public transport.\",\n        \"B: I'm sorry, but I just (6) .............................................................. true.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"cartoon illustration of six passengers sitting in an underground train, next to exercise 25.4\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}
