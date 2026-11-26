@@ -1,0 +1,84 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 74,
+    "dpi": 300,
+    "renderSha256": "b73e804f347e4da4c58c5a3dac23da960a2e37e3633522235ecf3df6826155bf",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:58:21.426Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 72,
+    "testNumber": "69",
+    "testTitle": "Hobbies",
+    "exercises": [
+      {
+        "id": "69.1",
+        "marks": "12 marks",
+        "instruction": "Complete the sentences with the correct verb and noun, using the pictures to help you. Look at the example first.",
+        "items": [
+          "Example: I've ...played... the ...guitar... for ten years.",
+          "1 I've ......................... ......................... since I was nine.",
+          "2 I learned to ......................... ......................... at school.",
+          "3 We often ......................... ......................... in the summer.",
+          "4 We used to ......................... ......................... in the evening.",
+          "5 Do you ......................... a musical ......................... ?",
+          "6 She ......................... rare old ......................... ."
+        ]
+      },
+      {
+        "id": "69.2",
+        "marks": "6 marks",
+        "instruction": "Complete the definitions.",
+        "items": [
+          "1 You need good boots and all the right equipment for rock ......................... .",
+          "2 Running in a park or round the streets to keep fit is called ......................... .",
+          "3 Walking long distances in the countryside or on hills is called ......................... .",
+          "4 A hobby is an activity you do in your .......................... time.",
+          "5 Very old objects and pieces of furniture are known as ......................... .",
+          "6 Chess and Monopoly are both examples of ......................... games."
+        ]
+      },
+      {
+        "id": "69.3",
+        "marks": "12 marks",
+        "instruction": "Rewrite these sentences. Start with the words you are given and include the words on the right. The meaning must stay the same.",
+        "items": [
+          "Example: She likes swimming.",
+          "She is keen on swimming. KEEN",
+          "1 He really enjoys DIY.",
+          "He ............................................................................ MAD",
+          "2 I make all my dresses myself.",
+          "I ............................................................................ OWN",
+          "3 We stopped it because it was just too expensive as a hobby.",
+          "We ............................................................................ GIVE U: [?]",
+          "4 She became a member of the tennis club last year.",
+          "She ............................................................................ JOIN",
+          "5 I very often go camping in the mountains.",
+          "I ............................................................................ DO",
+          "6 I started photography when I was a teenager.",
+          "I ............................................................................ TAKE U: [?]"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Numbered illustrations: guitar, three stamps (1), chess pieces (2), tent (3), playing cards (4), saxophone, flute and violin (5), box with coins/tokens (6)"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n \"footer\": 72,\n \"testNumber\": \"69\",\n \"testTitle\": \"Hobbies\",\n \"exercises\": [\n  {\"id\": \"69.1\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Complete the sentences with the correct verb and noun, using the pictures to help you. Look at the example first.\",\n   \"items\": [\n    \"Example: I've ...played... the ...guitar... for ten years.\",\n    \"1 I've ......................... ......................... since I was nine.\",\n    \"2 I learned to ......................... ......................... at school.\",\n    \"3 We often ......................... ......................... in the summer.\",\n    \"4 We used to ......................... ......................... in the evening.\",\n    \"5 Do you ......................... a musical ......................... ?\",\n    \"6 She ......................... rare old ......................... .\"\n   ]},\n  {\"id\": \"69.2\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete the definitions.\",\n   \"items\": [\n    \"1 You need good boots and all the right equipment for rock ......................... .\",\n    \"2 Running in a park or round the streets to keep fit is called ......................... .\",\n    \"3 Walking long distances in the countryside or on hills is called ......................... .\",\n    \"4 A hobby is an activity you do in your .......................... time.\",\n    \"5 Very old objects and pieces of furniture are known as ......................... .\",\n    \"6 Chess and Monopoly are both examples of ......................... games.\"\n   ]},\n  {\"id\": \"69.3\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Rewrite these sentences. Start with the words you are given and include the words on the right. The meaning must stay the same.\",\n   \"items\": [\n    \"Example: She likes swimming.\",\n    \"She is keen on swimming. KEEN\",\n    \"1 He really enjoys DIY.\",\n    \"He ............................................................................ MAD\",\n    \"2 I make all my dresses myself.\",\n    \"I ............................................................................ OWN\",\n    \"3 We stopped it because it was just too expensive as a hobby.\",\n    \"We ............................................................................ GIVE U: [?]\",\n    \"4 She became a member of the tennis club last year.\",\n    \"She ............................................................................ JOIN\",\n    \"5 I very often go camping in the mountains.\",\n    \"I ............................................................................ DO\",\n    \"6 I started photography when I was a teenager.\",\n    \"I ............................................................................ TAKE U: [?]\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n  \"Numbered illustrations: guitar, three stamps (1), chess pieces (2), tent (3), playing cards (4), saxophone, flute and violin (5), box with coins/tokens (6)\"\n ],\n \"unclassified\": [\n  \"TEST\",\n  \"Your score\",\n  \"/30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}\n```"
+}

@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "step": "A1-PRI-S07",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "date": "2026-11-26",
+    "jalali": "۱۴۰۵/۹/۵",
+    "ownerCommand": "«گام بعدی مجاز: A1-PRI-S07 = bun scripts/tyv-a1-vlm-capture.mjs pri 73,74,75,76,77,78,79,80,81,82,83,84 (صفحات ۷۳–۸۴ — دستهٔ هفتم از ۱۲ — بدون skip انتظاری — انتظار Tests 68..79 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — آغاز زیربخش Sales and marketing از Test 68 عین Contents p3: Test 68 کتاب 71 → pdf 76) ⇒ سپس PRI S08..S12 (S12 = ۱۳۳–۱۴۲ — ۱۰ صفحهٔ پایانی) ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده — توقف گیت‌دار — گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — trace 1a2196b6d7967e1d — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "بازیابی ۴۹ پیشا-گام (الگوی ۳۱..۴۸): سندباکس بازسازی شده و .git محلی به کامیت قدیمی 193269b (دورهٔ O6) برگشته بود در حالی که فایل‌های working tree وضعیت S06-era داشتند — ۴۱۶ untracked + ۳۲ modified — راستی‌آزمایی صفرتلفاتی: fetch backup → اثبات برابری بایت‌به‌بیت درخت stage شده با backup/main (تنها دلتا: bit مجوز اجرا یک فایل نقشهٔ راه 100644→100755 — آرتیفکت filesystem سندباکس — صفر تفاوت محتوایی) → chmod 644 نرمال‌ساز + reset mixed به ریموت 43c862d (هرگز working tree را دست نزد) — خروجی: porcelain ۰/۰ · HEAD = 43c862d = ریموت backup/main با git ls-remote بایت‌به‌بیت · هوک post-commit سالم ee679bc1b642db0f · دیسک‌حقیقت آغاز گام: pri ۷۲/۱۴۲ (page-001..072 شامل پراب‌های ۷/۱۰/۴۱) · biz ۹۸/۹۸ · elem ۹۶/۹۶ · upp ۳/۱۵۳ = ۲۶۹/۴۸۹ == رکورد SNAPSHOT سربرگ ۱۴۰مین — بدون stash بیمه (مطابق بازیابی ۴۶: صفر محتوای محلی-یگانه اثبات‌شده) — وجودسنجی پیشا-گام: page-073..084 همگی غایب (دقیق) — گام بعدی مجاز SNAPSHOT == عین فرمان مالک == A1-PRI-S07",
+    "guidanceArithmeticNote": "دقیقهٔ صادقانه: متن راهنمای مالک/سربرگ ۱۴۰مین «Test 68 کتاب 71 → pdf 76» با آفست +۵ محاسبه شده بود (خلط آفست شمارهٔ تست با آفست فوتر) — لنگر واقعی Contents p3 [41] «Test 68 Sales and marketing … 71» یعنی صفحهٔ کتاب ۷۱ و با الگوی پابرجای فوتر=pdf−۲ ⇒ pdf ۷۳ — کپچر واقعی عین همین: Test 68 روی pdf 73 با فوتر ۷۱ — ماهیت پیش‌بینی (رسیدن Test 68 «Sales and marketing» در این دسته) دقیقاً محقق شد؛ فقط عدد pdf ۷۶ در راهنما خطای محاسبه بود — صفر اثر عملیاتی (Test 68 در بازهٔ دستهٔ S07 ۷۳..۸۴ بود)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 73,74,75,76,77,78,79,80,81,82,83,84",
+  "runs": [
+    {
+      "run": 1,
+      "mode": "هم‌گام در یک فراخوانی ابزار (عین درس ثبت‌شدهٔ سربرگ ۱۱۵مین — بدون nohup پس‌زمینه)",
+      "result": "page 73..84 ok — ۱۲ سطر ok پیوسته — صفر خطا و صفر skip — عین انتظار صریح مالک (بدون skip انتظاری در این دسته — پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست)",
+      "summary": "DONE tyv-pri: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-pri/a1",
+      "skips": [],
+      "failed": []
+    }
+  ],
+  "coverage": {
+    "batchRange": "۷۳–۸۴ (بدون skip انتظاری — عین انتظار صریح مالک)",
+    "completeNoGap": true,
+    "newFiles": [
+      "page-073.json",
+      "page-074.json",
+      "page-075.json",
+      "page-076.json",
+      "page-077.json",
+      "page-078.json",
+      "page-079.json",
+      "page-080.json",
+      "page-081.json",
+      "page-082.json",
+      "page-083.json",
+      "page-084.json"
+    ],
+    "skippedExisting": [],
+    "provenance": "renderSha256 یکتا ۱۲/۱۲ (7d841af3/b73e804f/0d5c4a0c/2042f434/60a2a550/8b5346e0/f30f665b/ab6435f6/d35b6167/5f610056/6e72055a/8e0081ca) · DPI=300 · promptVersion=tyv-a1-v1 · attempts=≤3 · status=ok ۱۲/۱۲ · model z-ai vision CLI · timestamp 2026-11-26T19:58:10..20:00:18Z"
+  },
+  "patternCheck": {
+    "expected": "Tests 68..79 با test=pdfPage−۵ و فوتر چاپی=pdfPage−۲ هرجا موجود (عین انتظار صریح مالک) — بدون skip انتظاری — آغاز «Sales and marketing» از Test 68 عین Contents p3",
+    "result": "testNumber دقیقاً 68..79 روی p73..p84 = pdfPage−۵ — ۱۲/۱۲ صفر mismatch — عین انتظار صریح مالک — هفتمین دستهٔ متوالی پس از اصلاح الگوی ۱۳۶مین",
+    "footers": "فوترهای چاپی 71..82 روی p73..p84 = pdfPage−۲ — ۱۲/۱۲ — صفر ناسازگاری · صفر footer=null (پنجمین دستهٔ پیوستهٔ کاملاً سره از نظر فوتر پس از S03/S04/S05/S06) — فوترها دقیقاً == شمارهٔ صفحهٔ کتاب Contents p3/p4 — هفتمین تأیید مستقل الگوی سه‌ضابطه‌ای",
+    "anchors": "تطبیق بیت‌به‌بیت Contents p3/p4 == عناوین و فوترهای دسته: Test 68 «Sales and marketing» (صفحهٔ کتاب ۷۱ — عین Contents p3 [41] — دقیقاً لنگر فرمان مالک) · Test 69 «Hobbies» (72) · Test 70 «Sport 1: games, people and places» (73) · Test 71 «Sport 2: winning, losing and scoring» (74) · Test 72 «Cinema and theatre» (75) · Test 73 «Music, art and literature» (76) · Test 74 «Newspapers» (77) · Test 75 «Television» (78) · Test 76 «On the phone» (79) · Test 77 «Computers» (80) · Test 78 «Education: school» (81) · Test 79 «Education: university» (82) — ۱۲/۱۲ عین Contents p3/p4 — صفر واریانس OCR عنوان در این دسته"
+  },
+  "contentNotes": {
+    "structure": [
+      "p73 Test 68 «Sales and marketing» — ۵ تمرین/۲۹ آیتم/۱ باکس/۲ تصویر/۱ unc — فوتر ۷۱ — لنگر فرمان مالک عین Contents p3 [41] — عنوان Test 68؛ کتاب‌شناسی زیربخش Contents: آخرین تست زیربخش Work (Tests 63–68) — کم‌ترین unc دسته",
+      "p74 Test 69 «Hobbies» — ۳ تمرین/۲۷ آیتم/۰ باکس/۱ تصویر/۴ unc — فوتر ۷۲ — آغاز زیربخش Leisure and entertainment (Tests 69–73) عین Contents p4 [0]",
+      "p75 Test 70 «Sport 1: games, people and places» — ۴ تمرین/۲۱ آیتم/۰ باکس/۱۰ تصویر/۲ unc — فوتر ۷۳ — سنگین‌ترین صفحهٔ تصویرمحور دسته (۱۰ تصویر — کاندید رأی G3 ریسک ۲)",
+      "p76 Test 71 «Sport 2: winning, losing and scoring» — ۴ تمرین/۲۳ آیتم/۱ باکس/۳ تصویر/۳ unc — فوتر ۷۴",
+      "p77 Test 72 «Cinema and theatre» — ۴ تمرین/۲۶ آیتم/۱ باکس/۱ تصویر/۳ unc — فوتر ۷۵",
+      "p78 Test 73 «Music, art and literature» — ۴ تمرین/۲۹ آیتم/۰ باکس/۱ تصویر/۳ unc — فوتر ۷۶ — پایان زیربخش Leisure and entertainment",
+      "p79 Test 74 «Newspapers» — ۴ تمرین/۲۵ آیتم/۱ باکس/۱ تصویر/۳ unc — فوتر ۷۷ — آغاز زیربخش Communication and technology (Tests 74–77) عین Contents p4 [6]",
+      "p80 Test 75 «Television» — ۴ تمرین/۲۲ آیتم/۱ باکس/۱ تصویر/۳ unc — فوتر ۷۸",
+      "p81 Test 76 «On the phone» — ۳ تمرین/۳۳ آیتم/۰ باکس/۲ تصویر/۳ unc — فوتر ۷۹ — سنگین‌ترین صفحهٔ آیتم‌محور دسته (۳۳ آیتم)",
+      "p82 Test 77 «Computers» — ۴ تمرین/۲۹ آیتم/۱ باکس/۱ تصویر/۳ unc — فوتر ۸۰ — پایان زیربخش Communication and technology",
+      "p83 Test 78 «Education: school» — ۴ تمرین/۲۷ آیتم/۰ باکس/۱ تصویر/۳ unc — فوتر ۸۱ — آغاز زیربخش Social concerns (Tests 78–85) عین Contents p4 [11]",
+      "p84 Test 79 «Education: university» — ۴ تمرین/۲۲ آیتم/۰ باکس/۱ تصویر/۳ unc — فوتر ۸۲"
+    ],
+    "aggregates": "۴۷ تمرین/۳۱۳ آیتم/۶ باکس/۲۵ تصویر/۳۴ unclassified — [؟]=صفر · [N/A]=صفر — JSON سالم ۱۲/۱۲",
+    "subsectionTransitions": "چهار لنگر ساختاری عین Contents p3/p4: ①Test 68 «Sales and marketing» (pdf 73 — عنوان لنگر فرمان مالک — آخرین تست Work 63–68) ②آغاز Leisure and entertainment از Test 69 (pdf 74) ③آغاز Communication and technology از Test 74 (pdf 79) ④آغاز Social concerns از Test 78 (pdf 83)",
+    "ocrVariance": "صفر — ۱۲/۱۲ عنوان عیناً == Contents p3/p4 — برخلاف واریانس «home I» سربرگ ۱۳۹مین",
+    "doublePassG1": "صفر کاندید جدید دوگذر G1 در این دسته"
+  },
+  "diskTruthAfter": {
+    "pri": "۸۴/۱۴۲ (page-001..084 — شامل پراب‌های ۷/۱۰/۴۱)",
+    "biz": "۹۸/۹۸",
+    "elem": "۹۶/۹۶",
+    "upp": "۳/۱۵۳",
+    "total": "۲۸۱/۴۸۹"
+  },
+  "nextAuthorizedStep": "A1-PRI-S08 = bun scripts/tyv-a1-vlm-capture.mjs pri 85,86,87,88,89,90,91,92,93,94,95,96 (صفحات ۸۵–۹۶ — دستهٔ هشتم از ۱۲ — بدون skip انتظاری — انتظار Tests 80..91 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — لنگرهای Contents p4: ادامهٔ Social concerns (Tests 80..85: Law and order کتاب ۸۳/Crime ۸۴/Politics ۸۵/Bureaucracy ۸۶/War and peace ۸۷/Pollution and the environment ۸۸) + آغاز زیربخش Tourism از Test 86 کتاب ۸۹ (pdf 91): Air travel ۸۹/Hotels ۹۰/A sightseeing holiday ۹۱/On the beach and in the country ۹۲ + آغاز زیربخش Notional concepts از Test 90 کتاب ۹۳ (pdf 95): Time ۹۳/Numbers ۹۴/Distance, size and dimension ۹۵) ⇒ سپس PRI S09..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1"
+}

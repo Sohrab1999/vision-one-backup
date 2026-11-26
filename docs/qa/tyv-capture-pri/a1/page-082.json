@@ -1,0 +1,94 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 82,
+    "dpi": 300,
+    "renderSha256": "5f6100564654fc210b0028ea1936771b9f9a9bedad03aaf481830ba2e17df46c",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:59:54.642Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 80,
+    "testNumber": "77",
+    "testTitle": "Computers",
+    "exercises": [
+      {
+        "id": "77.1",
+        "marks": "7 marks",
+        "instruction": "Label the items in the picture.",
+        "items": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ]
+      },
+      {
+        "id": "77.2",
+        "marks": "5 marks",
+        "instruction": "Match the verbs on the left with an appropriate word on the right. Use each word once only [?]",
+        "items": [
+          "1 to operate a a new document",
+          "2 to click b a computer",
+          "3 to open c data",
+          "4 to save d a back-up copy",
+          "5 to make e on an icon"
+        ]
+      },
+      {
+        "id": "77.3",
+        "marks": "9 marks",
+        "instruction": "Complete the sentences with a word from the box.",
+        "items": [
+          "1 If you click on .................., the computer will store the data for you.",
+          "2 If you click on .................., you will have two versions of something.",
+          "3 If you click on .................., the computer will take something out.",
+          "4 If you click on .................., it will put in something you wanted to move.",
+          "5 If you click on .................., you can get a paper copy.",
+          "6 If the computer has a .................. because there is a software problem, it could ..................",
+          "7 If your computer is very slow, it may need more ..................",
+          "8 If you want to work on a plane or train, you need to use a .................. computer."
+        ]
+      },
+      {
+        "id": "77.4",
+        "marks": "9 marks",
+        "instruction": "Are these sentences true or false? If they are false, change them to make them true.",
+        "items": [
+          "1 Many business people use word processing to arrange numbers and financial informati[?]",
+          "2 A graphics program helps you to produce symbols and pictures.",
+          "3 People who are computer-literate find computers hard to use.",
+          "4 You can send e-mail via the Internet.",
+          "5 Hardware is the program you need to work the machine.",
+          "6 If your machine is user-friendly, it is easy for a beginner to use.",
+          "7 A database lets you look at and change around a lot of information quickly.",
+          "8 It's easy to take the hard disk out of the computer.",
+          "9 If your computer has a bug, there is a problem with the software."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "virus   memory   save   print   laptop   cut   crash   copy   paste"
+    ],
+    "pictures": [
+      "Line drawing of a computer set-up (monitor, keyboard, mouse, printer, disks, floppy disks) with numbered labels 1-7 to fill in"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test Your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 80,\n  \"testNumber\": \"77\",\n  \"testTitle\": \"Computers\",\n  \"exercises\": [\n    {\n      \"id\": \"77.1\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"Label the items in the picture.\",\n      \"items\": [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\"]\n    },\n    {\n      \"id\": \"77.2\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Match the verbs on the left with an appropriate word on the right. Use each word once only [?]\",\n      \"items\": [\n        \"1 to operate a a new document\",\n        \"2 to click b a computer\",\n        \"3 to open c data\",\n        \"4 to save d a back-up copy\",\n        \"5 to make e on an icon\"\n      ]\n    },\n    {\n      \"id\": \"77.3\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Complete the sentences with a word from the box.\",\n      \"items\": [\n        \"1 If you click on .................., the computer will store the data for you.\",\n        \"2 If you click on .................., you will have two versions of something.\",\n        \"3 If you click on .................., the computer will take something out.\",\n        \"4 If you click on .................., it will put in something you wanted to move.\",\n        \"5 If you click on .................., you can get a paper copy.\",\n        \"6 If the computer has a .................. because there is a software problem, it could ..................\",\n        \"7 If your computer is very slow, it may need more ..................\",\n        \"8 If you want to work on a plane or train, you need to use a .................. computer.\"\n      ]\n    },\n    {\n      \"id\": \"77.4\",\n      \"marks\": \"9 marks\",\n      \"instruction\": \"Are these sentences true or false? If they are false, change them to make them true.\",\n      \"items\": [\n        \"1 Many business people use word processing to arrange numbers and financial informati[?]\",\n        \"2 A graphics program helps you to produce symbols and pictures.\",\n        \"3 People who are computer-literate find computers hard to use.\",\n        \"4 You can send e-mail via the Internet.\",\n        \"5 Hardware is the program you need to work the machine.\",\n        \"6 If your machine is user-friendly, it is easy for a beginner to use.\",\n        \"7 A database lets you look at and change around a lot of information quickly.\",\n        \"8 It's easy to take the hard disk out of the computer.\",\n        \"9 If your computer has a bug, there is a problem with the software.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"virus   memory   save   print   laptop   cut   crash   copy   paste\"\n  ],\n  \"pictures\": [\n    \"Line drawing of a computer set-up (monitor, keyboard, mouse, printer, disks, floppy disks) with numbered labels 1-7 to fill in\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test Your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

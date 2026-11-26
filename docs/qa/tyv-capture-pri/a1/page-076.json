@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 76,
+    "dpi": 300,
+    "renderSha256": "2042f4347d5eaa437fc0d018737a71e7e45db917882c53c1ce81878f9defda80",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:58:45.596Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 74,
+    "testNumber": "71",
+    "testTitle": "Sport 2: winning, losing and scoring",
+    "exercises": [
+      {
+        "id": "71.1",
+        "marks": "6 marks",
+        "instruction": "Fill the gaps with a suitable word. The sentences are about football.",
+        "items": [
+          "1 The papers said that the team ......................... well and were very unlucky to lose.",
+          "2 From the Nou Camp Stadium we understand it is one–......................... to Barcelona at the moment but we don't know who ......................... the goal.",
+          "3 The ......................... of this match will play Real Madrid in the final.",
+          "4 A: What was the final ......................... , do you know?",
+          "B: It finished 1–1, which is disappointing, but probably a fair ......................... ."
+        ]
+      },
+      {
+        "id": "71.2",
+        "marks": "8 marks",
+        "instruction": "Rewrite the sentences using the words on the right (in the correct form) and without changing the meaning. You must also include all the information from the first sentence.",
+        "items": [
+          "1 Brazil beat Spain 2–0.  LOSE",
+          "2 Holland beat Denmark 3–2.  WIN",
+          "3 The game between Peru and Italy finished 2–2.  DRAW",
+          "4 England are leading 1–0.  LATES[?]"
+        ]
+      },
+      {
+        "id": "71.3",
+        "marks": "9 marks",
+        "instruction": "Fill the gaps in the sentences below with words from the box, which are all used in a number of different sports. You will need to put the verbs into the correct form as well.",
+        "items": [
+          "1 Beckham has just been ......................... for a late ......................... on Bergkamp. This is already his third yellow card of the season.",
+          "2 If they win, they'll improve their ......................... position from sixth to third.",
+          "3 We've just heard from Monza that Schumacher has moved up into second place o[?] the twenty-third ......................... of the race.",
+          "4 Roberto Carlos got the goal with a wonderful free ......................... from just outside the England ......................... area.",
+          "5 Sampras is playing well enough to win the ......................... .",
+          "6 Whitman already has eight baskets and that's worth sixteen ......................... .",
+          "7 Hingis ......................... badly, but still managed to win the game."
+        ]
+      },
+      {
+        "id": "71.4",
+        "marks": "7 marks",
+        "instruction": "Write down answers to these questions.",
+        "items": [
+          "1 What comes between the quarter final and the final?",
+          "2 What do we call this type of competition?",
+          "3 In a game of football, if the two teams finish 2–2 after ninety minutes, they may play a further 30 minutes. What is this called?",
+          "4 If the score is still 2–2 after this 30 minutes, there is a special method to find a winner. What is it called?",
+          "5 In tennis if the score reaches 6–6, they play one final game. What is this called?",
+          "6 In tennis men play a maximum of five, women play a maximum of three. What are they?",
+          "7 We do not say fifteen–zero (15–0) in tennis. What do we say?"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "kick  tackle  points  book  serve\npenalty  league  lap  championship"
+    ],
+    "pictures": [
+      "small football illustrations next to items 71.3 1–4",
+      "checkered racing flag illustration next to 71.3 item 3",
+      "basketball illustration next to 71.3 item 6"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test Your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 74,\n \"testNumber\": \"71\",\n \"testTitle\": \"Sport 2: winning, losing and scoring\",\n \"exercises\": [\n   {\"id\": \"71.1\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Fill the gaps with a suitable word. The sentences are about football.\",\n    \"items\": [\n      \"1 The papers said that the team ......................... well and were very unlucky to lose.\",\n      \"2 From the Nou Camp Stadium we understand it is one–......................... to Barcelona at the moment but we don't know who ......................... the goal.\",\n      \"3 The ......................... of this match will play Real Madrid in the final.\",\n      \"4 A: What was the final ......................... , do you know?\",\n      \"B: It finished 1–1, which is disappointing, but probably a fair ......................... .\"\n    ]},\n   {\"id\": \"71.2\",\n    \"marks\": \"8 marks\",\n    \"instruction\": \"Rewrite the sentences using the words on the right (in the correct form) and without changing the meaning. You must also include all the information from the first sentence.\",\n    \"items\": [\n      \"1 Brazil beat Spain 2–0.  LOSE\",\n      \"2 Holland beat Denmark 3–2.  WIN\",\n      \"3 The game between Peru and Italy finished 2–2.  DRAW\",\n      \"4 England are leading 1–0.  LATES[?]\"\n    ]},\n   {\"id\": \"71.3\",\n    \"marks\": \"9 marks\",\n    \"instruction\": \"Fill the gaps in the sentences below with words from the box, which are all used in a number of different sports. You will need to put the verbs into the correct form as well.\",\n    \"items\": [\n      \"1 Beckham has just been ......................... for a late ......................... on Bergkamp. This is already his third yellow card of the season.\",\n      \"2 If they win, they'll improve their ......................... position from sixth to third.\",\n      \"3 We've just heard from Monza that Schumacher has moved up into second place o[?] the twenty-third ......................... of the race.\",\n      \"4 Roberto Carlos got the goal with a wonderful free ......................... from just outside the England ......................... area.\",\n      \"5 Sampras is playing well enough to win the ......................... .\",\n      \"6 Whitman already has eight baskets and that's worth sixteen ......................... .\",\n      \"7 Hingis ......................... badly, but still managed to win the game.\"\n    ]},\n   {\"id\": \"71.4\",\n    \"marks\": \"7 marks\",\n    \"instruction\": \"Write down answers to these questions.\",\n    \"items\": [\n      \"1 What comes between the quarter final and the final?\",\n      \"2 What do we call this type of competition?\",\n      \"3 In a game of football, if the two teams finish 2–2 after ninety minutes, they may play a further 30 minutes. What is this called?\",\n      \"4 If the score is still 2–2 after this 30 minutes, there is a special method to find a winner. What is it called?\",\n      \"5 In tennis if the score reaches 6–6, they play one final game. What is this called?\",\n      \"6 In tennis men play a maximum of five, women play a maximum of three. What are they?\",\n      \"7 We do not say fifteen–zero (15–0) in tennis. What do we say?\"\n    ]}\n ],\n \"boxesAndLists\": [\"kick  tackle  points  book  serve\\npenalty  league  lap  championship\"],\n \"pictures\": [\"small football illustrations next to items 71.3 1–4\", \"checkered racing flag illustration next to 71.3 item 3\", \"basketball illustration next to 71.3 item 6\"],\n \"unclassified\": [\"TEST\", \"Your score /30\", \"Test Your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}\n```"
+}

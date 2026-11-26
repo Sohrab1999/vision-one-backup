@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 83,
+    "dpi": 300,
+    "renderSha256": "6e72055ac709049cc4b043ca7c2aed927d823bd051c211e4d34d5ab2f1386a7e",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:00:05.643Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 81,
+    "testNumber": "78",
+    "testTitle": "Education: school",
+    "exercises": [
+      {
+        "id": "78.1",
+        "marks": "8 marks",
+        "instruction": "Complete this description of a typical school education in many parts of Britain. Age",
+        "items": [
+          "3 Some children go to ..................... school.",
+          "5 Everyone starts ..................... school.",
+          "11 Children go on to ..................... school. Some of these are called grammar schools, others are called ..................... i.e. with mixed ability.",
+          "16 By law, children can ..................... school at this age and ..................... a job, but many ..................... at school for two more years.",
+          "18 If they pass their exams, many ..................... to university."
+        ]
+      },
+      {
+        "id": "78.2",
+        "marks": "6 marks",
+        "instruction": "True or false? If the sentence is false, change it to make it true, using the space below.",
+        "items": [
+          "1 In England public schools are the same as state schools.",
+          "2 Children at school are called 'pupils'.",
+          "3 In British schools PE is short for 'practical education'.",
+          "4 In Britain, the academic year is usually divided into two terms.",
+          "5 The working day is divided into lessons, with morning and afternoon breaks.",
+          "6 The plan for each day's work is called the school schedule."
+        ]
+      },
+      {
+        "id": "78.3",
+        "marks": "8 marks",
+        "instruction": "Correct the mistake in each sentence.",
+        "items": [
+          "1 I'd like to go to the university to study medicine.",
+          "2 Economics are very difficult to understand.",
+          "3 Physic is not a popular subject.",
+          "4 I'm not interested in politic.",
+          "5 She was tired after her lesson so she went to the bed.",
+          "6 How many subjects did you make at school?",
+          "7 She went out of school when she was sixteen.",
+          "8 I went to college with eighteen years."
+        ]
+      },
+      {
+        "id": "78.4",
+        "marks": "8 marks",
+        "instruction": "Complete the names of eight school subjects from the letters you are given.",
+        "items": [
+          "1 Ge.....................",
+          "2 Hi.....................",
+          "3 Sc.....................",
+          "4 Ma.....................",
+          "5 Fr.....................",
+          "6 Mu.....................",
+          "7 Inf..................... Te.....................",
+          "8 Rel..................... Ed....................."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "hand-drawn school timetable grid with columns MONDAY, TUESDAY, WEDNESDAY and rows 9-10, 10-11, BREAK, 11-15-12-15, containing abbreviations Ge, Hi, Sc, Ma, Fr, Mu, Inf, Te, English, Rel Ed"
+    ],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "Your score",
+      "/30"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 81,\n  \"testNumber\": \"78\",\n  \"testTitle\": \"Education: school\",\n  \"exercises\": [\n    {\n      \"id\": \"78.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete this description of a typical school education in many parts of Britain. Age\",\n      \"items\": [\n        \"3 Some children go to ..................... school.\",\n        \"5 Everyone starts ..................... school.\",\n        \"11 Children go on to ..................... school. Some of these are called grammar schools, others are called ..................... i.e. with mixed ability.\",\n        \"16 By law, children can ..................... school at this age and ..................... a job, but many ..................... at school for two more years.\",\n        \"18 If they pass their exams, many ..................... to university.\"\n      ]\n    },\n    {\n      \"id\": \"78.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"True or false? If the sentence is false, change it to make it true, using the space below.\",\n      \"items\": [\n        \"1 In England public schools are the same as state schools.\",\n        \"2 Children at school are called 'pupils'.\",\n        \"3 In British schools PE is short for 'practical education'.\",\n        \"4 In Britain, the academic year is usually divided into two terms.\",\n        \"5 The working day is divided into lessons, with morning and afternoon breaks.\",\n        \"6 The plan for each day's work is called the school schedule.\"\n      ]\n    },\n    {\n      \"id\": \"78.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Correct the mistake in each sentence.\",\n      \"items\": [\n        \"1 I'd like to go to the university to study medicine.\",\n        \"2 Economics are very difficult to understand.\",\n        \"3 Physic is not a popular subject.\",\n        \"4 I'm not interested in politic.\",\n        \"5 She was tired after her lesson so she went to the bed.\",\n        \"6 How many subjects did you make at school?\",\n        \"7 She went out of school when she was sixteen.\",\n        \"8 I went to college with eighteen years.\"\n      ]\n    },\n    {\n      \"id\": \"78.4\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the names of eight school subjects from the letters you are given.\",\n      \"items\": [\n        \"1 Ge.....................\",\n        \"2 Hi.....................\",\n        \"3 Sc.....................\",\n        \"4 Ma.....................\",\n        \"5 Fr.....................\",\n        \"6 Mu.....................\",\n        \"7 Inf..................... Te.....................\",\n        \"8 Rel..................... Ed.....................\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"hand-drawn school timetable grid with columns MONDAY, TUESDAY, WEDNESDAY and rows 9-10, 10-11, BREAK, 11-15-12-15, containing abbreviations Ge, Hi, Sc, Ma, Fr, Mu, Inf, Te, English, Rel Ed\"\n  ],\n  \"unclassified\": [\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\",\n    \"Your score\",\n    \"/30\"\n  ]\n}\n```"
+}

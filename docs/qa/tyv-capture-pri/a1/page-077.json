@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 77,
+    "dpi": 300,
+    "renderSha256": "60a2a550789420c5ba0373cd22ac7e3d159f26e5c701bb6f1546405fd07f6ca1",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:58:57.174Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 75,
+    "testNumber": "72",
+    "testTitle": "Cinema and theatre",
+    "exercises": [
+      {
+        "id": "72.1",
+        "marks": "6 marks",
+        "instruction": "Label the numbered parts in the picture with words from the box.",
+        "items": [
+          "1 ...................................",
+          "2 ...................................",
+          "3 ...................................",
+          "4 ...................................",
+          "5 ...................................",
+          "6 ..................................."
+        ]
+      },
+      {
+        "id": "72.2",
+        "marks": "2 marks",
+        "instruction": "Complete these sentences and dialogues. Write one word in each gap.",
+        "items": [
+          "1 There was a ...................... of hundreds of actors in Titanic - but the ...................... of the film, Leonardo diCaprio and Kate Winslet, both became very famous.",
+          "2 Steven Spielberg is the famous film ...................... who made ET and Schindler's List.",
+          "3 A: When you see an English film in your country, do they have ...................... across the bottom of the screen?\nB: Sometimes. But a lot of the films are ...................... and have Spanish actors speaking the part in Spanish.",
+          "4 A: Have you seen Oliver Stone's Platoon?\nB: No. What kind of film is it?\nA: It's a ...................... film, set in Vietnam in the late 1960s.",
+          "5 We went to the theatre to see a ...................... by a new dramatist.",
+          "6 Have you seen the papers? The new Alan Parker film has got fantastic ......................; most of the ...................... think it is the best film he has ever made.",
+          "7 A: Have you seen Andrew Lloyd Webber's new ......................? It has some great songs.\nB: Yes, I went yesterday. The evening ...................... was fully booked but I managed to get two tickets for the matinee.",
+          "8 At the end of the show, the ...................... stood up and clapped."
+        ]
+      },
+      {
+        "id": "72.3",
+        "marks": "6 marks",
+        "instruction": "Match adjectives on the left (often used to describe films) with the best definition on the right.",
+        "items": [
+          "1 moving            a exciting and very interesting",
+          "2 slow              b not serious but enjoyable",
+          "3 violent           c producing strong emotions, often of sadness",
+          "4 good fun          d has a big effect on our emotions",
+          "5 powerful          e includes lots of scenes with fighting and death",
+          "6 gripping          f boring"
+        ]
+      },
+      {
+        "id": "72.4",
+        "marks": "6 marks",
+        "instruction": "What do we call the following types of film?",
+        "items": [
+          "1 a film that makes you laugh",
+          "2 a film with cowboys",
+          "3 a film such as Dracula",
+          "4 a film about the future",
+          "5 a very exciting film, often including some kind of crime",
+          "6 the kind of film that often has Sylvester Stallone or Arnold Schwarzenegger"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "circle\nstage\naisle\ncurtains\nstalls\nrows of\nseats"
+    ],
+    "pictures": [
+      "line drawing of a theatre auditorium with numbered arrows (1-6) pointing to seats, balconies, curtains, stage area"
+    ],
+    "unclassified": [
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 75,\n  \"testNumber\": \"72\",\n  \"testTitle\": \"Cinema and theatre\",\n  \"exercises\": [\n    {\n      \"id\": \"72.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Label the numbered parts in the picture with words from the box.\",\n      \"items\": [\n        \"1 ...................................\",\n        \"2 ...................................\",\n        \"3 ...................................\",\n        \"4 ...................................\",\n        \"5 ...................................\",\n        \"6 ...................................\"\n      ]\n    },\n    {\n      \"id\": \"72.2\",\n      \"marks\": \"2 marks\",\n      \"instruction\": \"Complete these sentences and dialogues. Write one word in each gap.\",\n      \"items\": [\n        \"1 There was a ...................... of hundreds of actors in Titanic - but the ...................... of the film, Leonardo diCaprio and Kate Winslet, both became very famous.\",\n        \"2 Steven Spielberg is the famous film ...................... who made ET and Schindler's List.\",\n        \"3 A: When you see an English film in your country, do they have ...................... across the bottom of the screen?\\nB: Sometimes. But a lot of the films are ...................... and have Spanish actors speaking the part in Spanish.\",\n        \"4 A: Have you seen Oliver Stone's Platoon?\\nB: No. What kind of film is it?\\nA: It's a ...................... film, set in Vietnam in the late 1960s.\",\n        \"5 We went to the theatre to see a ...................... by a new dramatist.\",\n        \"6 Have you seen the papers? The new Alan Parker film has got fantastic ......................; most of the ...................... think it is the best film he has ever made.\",\n        \"7 A: Have you seen Andrew Lloyd Webber's new ......................? It has some great songs.\\nB: Yes, I went yesterday. The evening ...................... was fully booked but I managed to get two tickets for the matinee.\",\n        \"8 At the end of the show, the ...................... stood up and clapped.\"\n      ]\n    },\n    {\n      \"id\": \"72.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match adjectives on the left (often used to describe films) with the best definition on the right.\",\n      \"items\": [\n        \"1 moving            a exciting and very interesting\",\n        \"2 slow              b not serious but enjoyable\",\n        \"3 violent           c producing strong emotions, often of sadness\",\n        \"4 good fun          d has a big effect on our emotions\",\n        \"5 powerful          e includes lots of scenes with fighting and death\",\n        \"6 gripping          f boring\"\n      ]\n    },\n    {\n      \"id\": \"72.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"What do we call the following types of film?\",\n      \"items\": [\n        \"1 a film that makes you laugh\",\n        \"2 a film with cowboys\",\n        \"3 a film such as Dracula\",\n        \"4 a film about the future\",\n        \"5 a very exciting film, often including some kind of crime\",\n        \"6 the kind of film that often has Sylvester Stallone or Arnold Schwarzenegger\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"circle\\nstage\\naisle\\ncurtains\\nstalls\\nrows of\\nseats\"\n  ],\n  \"pictures\": [\n    \"line drawing of a theatre auditorium with numbered arrows (1-6) pointing to seats, balconies, curtains, stage area\"\n  ],\n  \"unclassified\": [\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

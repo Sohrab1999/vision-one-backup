@@ -1,0 +1,87 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 80,
+    "dpi": 300,
+    "renderSha256": "ab6435f60cac1c5c13cda5a055d94893df658bbf524f589d87cb4cc782e3fdc9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:59:31.139Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 78,
+    "testNumber": "75",
+    "testTitle": "Television",
+    "exercises": [
+      {
+        "id": "75.1",
+        "marks": "4 marks",
+        "instruction": "Complete the sentences with a word from the box.",
+        "items": [
+          "In Britain you have to have a TV (1).......................... and the money from it pays for the BBC. BBC 1 and BBC 2 are (2)............................ channels, but if you have a satellite (3)............................ , you can get satellite TV like Sky. Some people prefer to have (4)............................ TV to satellite."
+        ]
+      },
+      {
+        "id": "75.2",
+        "marks": "8 marks",
+        "instruction": "Complete the definitions with a suitable word. The first letter has been given.",
+        "items": [
+          "1 A TV advertisement shown between programmes: a c............................ .",
+          "2 A number of programmes about the same characters which makes people laugh: a c............................ s............................ .",
+          "3 A programme which is on TV several times a week and follows the lives of a group of characters: a s............................ o............................ .",
+          "4 A programme about a social or political situation which is in the news at the moment: a c............................ a............................ programme.",
+          "5 A number of programmes about a group of people in various situations which is intende[?] to be exciting and interesting: a d............................ s............................ .",
+          "6 A programme with factual information, sometimes about a place, wildlife, a social problem, etc: a d............................ .",
+          "7 A programme in which people have to answer questions or play games to win a prize: a q............................ show.",
+          "8 A programme where a presenter talks to famous people about their lives and careers: a c............................ show."
+        ]
+      },
+      {
+        "id": "75.3",
+        "marks": "8 marks",
+        "instruction": "Complete the questions in the dialogue below.",
+        "items": [
+          "1 A: What ...................................... tonight?",
+          "B: Well, there's an interview with the Prime Minister on BBC 1 and there's a Robert de Niro film on ITV.",
+          "2 A: What ............................... the film ............................... ?",
+          "B: At 10.30 – after the news.",
+          "3 A: How long ..................................... ?",
+          "B: About two hours, I think. Oh, I forgot! There's football on Channel 5 at 7.00 – it's Manchester United versus Barcelona.",
+          "4 A: Is ................................. ?",
+          "B: No, I think it's just the recorded highlights – the match is in the afternoon."
+        ]
+      },
+      {
+        "id": "75.4",
+        "marks": "10 marks",
+        "instruction": "Correct the mistake in each sentence.",
+        "items": [
+          "1 If your television isn't working, perhaps you have forgotten to plug it.",
+          "2 Oh, dear, this is such a boring film – look, the news is about to start on the other chann[?] Could you turn down?",
+          "3 Turn the TV up, will you – the children are trying to go to sleep.",
+          "4 Don't turn the TV on – I'm watching it.",
+          "5 The baby loves the TV. She's always trying to switch it down."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "dish    terrestrial    licence    cable"
+    ],
+    "pictures": [
+      "line drawing of a man sitting reading a TV magazine while a boy with glasses holds a remote control beside a TV"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 78,\n  \"testNumber\": \"75\",\n  \"testTitle\": \"Television\",\n  \"exercises\": [\n    {\n      \"id\": \"75.1\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Complete the sentences with a word from the box.\",\n      \"items\": [\n        \"In Britain you have to have a TV (1).......................... and the money from it pays for the BBC. BBC 1 and BBC 2 are (2)............................ channels, but if you have a satellite (3)............................ , you can get satellite TV like Sky. Some people prefer to have (4)............................ TV to satellite.\"\n      ]\n    },\n    {\n      \"id\": \"75.2\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the definitions with a suitable word. The first letter has been given.\",\n      \"items\": [\n        \"1 A TV advertisement shown between programmes: a c............................ .\",\n        \"2 A number of programmes about the same characters which makes people laugh: a c............................ s............................ .\",\n        \"3 A programme which is on TV several times a week and follows the lives of a group of characters: a s............................ o............................ .\",\n        \"4 A programme about a social or political situation which is in the news at the moment: a c............................ a............................ programme.\",\n        \"5 A number of programmes about a group of people in various situations which is intende[?] to be exciting and interesting: a d............................ s............................ .\",\n        \"6 A programme with factual information, sometimes about a place, wildlife, a social problem, etc: a d............................ .\",\n        \"7 A programme in which people have to answer questions or play games to win a prize: a q............................ show.\",\n        \"8 A programme where a presenter talks to famous people about their lives and careers: a c............................ show.\"\n      ]\n    },\n    {\n      \"id\": \"75.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the questions in the dialogue below.\",\n      \"items\": [\n        \"1 A: What ...................................... tonight?\",\n        \"B: Well, there's an interview with the Prime Minister on BBC 1 and there's a Robert de Niro film on ITV.\",\n        \"2 A: What ............................... the film ............................... ?\",\n        \"B: At 10.30 – after the news.\",\n        \"3 A: How long ..................................... ?\",\n        \"B: About two hours, I think. Oh, I forgot! There's football on Channel 5 at 7.00 – it's Manchester United versus Barcelona.\",\n        \"4 A: Is ................................. ?\",\n        \"B: No, I think it's just the recorded highlights – the match is in the afternoon.\"\n      ]\n    },\n    {\n      \"id\": \"75.4\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Correct the mistake in each sentence.\",\n      \"items\": [\n        \"1 If your television isn't working, perhaps you have forgotten to plug it.\",\n        \"2 Oh, dear, this is such a boring film – look, the news is about to start on the other chann[?] Could you turn down?\",\n        \"3 Turn the TV up, will you – the children are trying to go to sleep.\",\n        \"4 Don't turn the TV on – I'm watching it.\",\n        \"5 The baby loves the TV. She's always trying to switch it down.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"dish    terrestrial    licence    cable\"\n  ],\n  \"pictures\": [\n    \"line drawing of a man sitting reading a TV magazine while a boy with glasses holds a remote control beside a TV\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

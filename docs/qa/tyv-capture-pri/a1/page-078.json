@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 78,
+    "dpi": 300,
+    "renderSha256": "8b5346e03dc754193b73e30d340b77fde49bea7357bf863fd88ab6f65dbbb349",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:59:07.397Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 76,
+    "testNumber": "73",
+    "testTitle": "Music, art and literature",
+    "exercises": [
+      {
+        "id": "73.1",
+        "marks": "5 marks",
+        "instruction": "Circle the correct answer.",
+        "items": [
+          "1 He is a well-known composer/compositor.",
+          "2 Do you like classic/classical music?",
+          "3 Have you seen the latest exhibition/exposition?",
+          "4 Do you play a music/musical instrument?",
+          "5 I've never heard of him. Is he a very well-known sculpture/sculptor?"
+        ]
+      },
+      {
+        "id": "73.2",
+        "marks": "7 marks",
+        "instruction": "Label these musical instruments.",
+        "items": [
+          "1 ..............................",
+          "2 ..............................",
+          "3 ..............................",
+          "4 ..............................",
+          "5 ..............................",
+          "6 ..............................",
+          "7 .............................."
+        ]
+      },
+      {
+        "id": "73.3",
+        "marks": "12 marks",
+        "instruction": "What do we call ...",
+        "items": [
+          "1 ... a person who writes symphonies or concertos?",
+          "2 ... a person who writes novels?",
+          "3 ... a person who writes poems?",
+          "4 ... a person who writes plays?",
+          "5 ... the very large group of musicians that includes string and wind instruments?",
+          "6 ... the person who stands in front of and leads this large groups of musicians?",
+          "7 ... music played by people such as Louis Armstrong and Miles Davis?",
+          "8 ... music played by people such as The Spice Girls or Robbie Williams?",
+          "9 ... a pop star who is not part of a group?",
+          "10 ... a painting of a person?",
+          "11 ... a painting of part of the countryside?",
+          "12 ... a painting that is not realistic?"
+        ]
+      },
+      {
+        "id": "73.4",
+        "marks": "6 marks",
+        "instruction": "Fill the gaps in these sentences.",
+        "items": [
+          "1 Which is your favourite .............................. – The Magic Flute by Mozart or La Bohème by Puccini?",
+          "2 A: If you go to the National .............................. , you'll see some marvellous paintings by Rembrandt.",
+          "B: Oh wonderful. He is one of my favourite .............................. .",
+          "3 Her novels are a bit too long for me, but I have read a couple of her .............................. stories.",
+          "4 He's a singer-songwriter, so he .............................. and .............................. his own songs."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "Seven musical instruments to label: violin and cello (1), electric guitar (2), grand piano (3), flute (4), saxophone (6), drum kit (7)"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 76,\n \"testNumber\": \"73\",\n \"testTitle\": \"Music, art and literature\",\n \"exercises\": [\n   {\"id\": \"73.1\",\n    \"marks\": \"5 marks\",\n    \"instruction\": \"Circle the correct answer.\",\n    \"items\": [\n      \"1 He is a well-known composer/compositor.\",\n      \"2 Do you like classic/classical music?\",\n      \"3 Have you seen the latest exhibition/exposition?\",\n      \"4 Do you play a music/musical instrument?\",\n      \"5 I've never heard of him. Is he a very well-known sculpture/sculptor?\"\n    ]},\n   {\"id\": \"73.2\",\n    \"marks\": \"7 marks\",\n    \"instruction\": \"Label these musical instruments.\",\n    \"items\": [\n      \"1 ..............................\",\n      \"2 ..............................\",\n      \"3 ..............................\",\n      \"4 ..............................\",\n      \"5 ..............................\",\n      \"6 ..............................\",\n      \"7 ..............................\"\n    ]},\n   {\"id\": \"73.3\",\n    \"marks\": \"12 marks\",\n    \"instruction\": \"What do we call ...\",\n    \"items\": [\n      \"1 ... a person who writes symphonies or concertos?\",\n      \"2 ... a person who writes novels?\",\n      \"3 ... a person who writes poems?\",\n      \"4 ... a person who writes plays?\",\n      \"5 ... the very large group of musicians that includes string and wind instruments?\",\n      \"6 ... the person who stands in front of and leads this large groups of musicians?\",\n      \"7 ... music played by people such as Louis Armstrong and Miles Davis?\",\n      \"8 ... music played by people such as The Spice Girls or Robbie Williams?\",\n      \"9 ... a pop star who is not part of a group?\",\n      \"10 ... a painting of a person?\",\n      \"11 ... a painting of part of the countryside?\",\n      \"12 ... a painting that is not realistic?\"\n    ]},\n   {\"id\": \"73.4\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Fill the gaps in these sentences.\",\n    \"items\": [\n      \"1 Which is your favourite .............................. – The Magic Flute by Mozart or La Bohème by Puccini?\",\n      \"2 A: If you go to the National .............................. , you'll see some marvellous paintings by Rembrandt.\",\n      \"B: Oh wonderful. He is one of my favourite .............................. .\",\n      \"3 Her novels are a bit too long for me, but I have read a couple of her .............................. stories.\",\n      \"4 He's a singer-songwriter, so he .............................. and .............................. his own songs.\"\n    ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n   \"Seven musical instruments to label: violin and cello (1), electric guitar (2), grand piano (3), flute (4), saxophone (6), drum kit (7)\"\n ],\n \"unclassified\": [\n   \"TEST\",\n   \"Your score /30\",\n   \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

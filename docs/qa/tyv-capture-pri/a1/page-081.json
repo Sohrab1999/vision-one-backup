@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 81,
+    "dpi": 300,
+    "renderSha256": "d35b61676696777b416a95aed03962d7cdc4b5b4dfbe202a6de23ba238e404c4",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:59:43.419Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 79,
+    "testNumber": "76",
+    "testTitle": "On the phone",
+    "exercises": [
+      {
+        "id": "76.1",
+        "marks": "8 marks [?]",
+        "instruction": "Correct the mistakes in these telephone conversations. There are 3 mistakes in the first and 5 in the second.",
+        "items": [
+          "1 A: Hello.",
+          "B: Are you Susan?",
+          "A: Yes.",
+          "B: Oh hi. I am Maria.",
+          "A: Hello, Maria. How are you?",
+          "B: Thank you. And you?",
+          "2 A: Hello?",
+          "B: Hello. Is it Mr Fantini?",
+          "A: Yes, I am speaking.",
+          "B: Oh good morning. Here is Pierre Kaufmann.",
+          "I tried to phone earlier, but the line was occupied.",
+          "A: Yes. I did a lot of calls this morning."
+        ]
+      },
+      {
+        "id": "76.2",
+        "marks": "10 marks [?]",
+        "instruction": "Fill the gaps in these sentences with the correct word.",
+        "items": [
+          "1 When I got home last night there were four messages on my ............................ .",
+          "2 You can put the information in the post if you like, but it would be much quicker if you sent it by ............................ . I'll give you the number.",
+          "3 I tried to ............................ through to you from a public phone ............................ but the first one was out of order, and the second one I tried only took phone ............................ , and I haven't got one.",
+          "4 If I'm not in the office, you can always reach me on my ............................ .",
+          "5 I tried to ring Mary but she was already ............................ the phone to her sister.",
+          "6 If you don't know the number, you can find out from Directory ............................ .",
+          "7 A: Did you phone your parents?",
+          "B: Yes, but I had to make a ............................ charge call as I didn't have any money.",
+          "8 I had trouble getting through; in the end I had to go through the ............................ ."
+        ]
+      },
+      {
+        "id": "76.3",
+        "marks": "12 marks",
+        "instruction": "Complete the phrases in these telephone conversations.",
+        "items": [
+          "1 A: Hello?",
+          "B: Oh could I speak to Alex?",
+          "A: Sorry, there's no Alex living here. I think you've got ........................................... .",
+          "2 A: Hello?",
+          "B: Hello. Could I speak to Mrs Peterson, please?",
+          "A: I'm afraid ................................. at the moment, and she won't ................................. until much later this afternoon. Would you like to .................................?",
+          "B: Yes, could you tell her that Sandra rang, and that I'll ................................. a ring this evening at home.",
+          "3 A: Good morning. The Sheraton Hotel. How may I help you?",
+          "B: Yes, I'd like to speak to the manager.",
+          "A: Who's calling, please?",
+          "B: My name is Errington – James Errington.",
+          "A: Right, Mr Errington, if you could hold the line, I'll see if he's busy. ... Uh Mr Ratcliffe can speak to you now Mr Errington. I'll just ................................. through."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "two drawings of people speaking on the phone next to dialogue 76.1 item 1",
+      "two drawings of men speaking on the phone next to dialogue 76.1 item 2"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 79, \"testNumber\": \"76\", \"testTitle\": \"On the phone\", \"exercises\": [{\"id\": \"76.1\", \"marks\": \"8 marks [?]\", \"instruction\": \"Correct the mistakes in these telephone conversations. There are 3 mistakes in the first and 5 in the second.\", \"items\": [\"1 A: Hello.\", \"B: Are you Susan?\", \"A: Yes.\", \"B: Oh hi. I am Maria.\", \"A: Hello, Maria. How are you?\", \"B: Thank you. And you?\", \"2 A: Hello?\", \"B: Hello. Is it Mr Fantini?\", \"A: Yes, I am speaking.\", \"B: Oh good morning. Here is Pierre Kaufmann.\", \"I tried to phone earlier, but the line was occupied.\", \"A: Yes. I did a lot of calls this morning.\"]}, {\"id\": \"76.2\", \"marks\": \"10 marks [?]\", \"instruction\": \"Fill the gaps in these sentences with the correct word.\", \"items\": [\"1 When I got home last night there were four messages on my ............................ .\", \"2 You can put the information in the post if you like, but it would be much quicker if you sent it by ............................ . I'll give you the number.\", \"3 I tried to ............................ through to you from a public phone ............................ but the first one was out of order, and the second one I tried only took phone ............................ , and I haven't got one.\", \"4 If I'm not in the office, you can always reach me on my ............................ .\", \"5 I tried to ring Mary but she was already ............................ the phone to her sister.\", \"6 If you don't know the number, you can find out from Directory ............................ .\", \"7 A: Did you phone your parents?\", \"B: Yes, but I had to make a ............................ charge call as I didn't have any money.\", \"8 I had trouble getting through; in the end I had to go through the ............................ .\"]}, {\"id\": \"76.3\", \"marks\": \"12 marks\", \"instruction\": \"Complete the phrases in these telephone conversations.\", \"items\": [\"1 A: Hello?\", \"B: Oh could I speak to Alex?\", \"A: Sorry, there's no Alex living here. I think you've got ........................................... .\", \"2 A: Hello?\", \"B: Hello. Could I speak to Mrs Peterson, please?\", \"A: I'm afraid ................................. at the moment, and she won't ................................. until much later this afternoon. Would you like to .................................?\", \"B: Yes, could you tell her that Sandra rang, and that I'll ................................. a ring this evening at home.\", \"3 A: Good morning. The Sheraton Hotel. How may I help you?\", \"B: Yes, I'd like to speak to the manager.\", \"A: Who's calling, please?\", \"B: My name is Errington – James Errington.\", \"A: Right, Mr Errington, if you could hold the line, I'll see if he's busy. ... Uh Mr Ratcliffe can speak to you now Mr Errington. I'll just ................................. through.\"]}], \"boxesAndLists\": [], \"pictures\": [\"two drawings of people speaking on the phone next to dialogue 76.1 item 1\", \"two drawings of men speaking on the phone next to dialogue 76.1 item 2\"], \"unclassified\": [\"TEST\", \"Your score /30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]}\n```"
+}

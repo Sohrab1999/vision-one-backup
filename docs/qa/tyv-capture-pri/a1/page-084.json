@@ -1,0 +1,85 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 84,
+    "dpi": 300,
+    "renderSha256": "8e0081ca61cce25d50fbbe858fdc35996bec014e312ea97adc933b30c4af2d85",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T20:00:18.474Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 82,
+    "testNumber": "79",
+    "testTitle": "Education: university",
+    "exercises": [
+      {
+        "id": "79.1",
+        "marks": "10 marks",
+        "instruction": "Complete these definitions of subjects people study at university.",
+        "items": [
+          "1 the study of the human mind and people’s behaviour ...........................",
+          "2 the study of how buildings are designed and constructed ............................",
+          "3 the study of the activities of government ..........................",
+          "4 the study of theories about existence, knowledge and thought ..........................",
+          "5 the scientific study of substances and how they react ..........................",
+          "6 the design and building of machines, roads and bridges ............................",
+          "7 the study of how to treat illness and injuries ...........................",
+          "8 the study of farming: producing crops and keeping animals ...........................",
+          "9 the study of the rules of a country ..........................",
+          "10 the study of the way society is organised ..........................."
+        ]
+      },
+      {
+        "id": "79.2",
+        "marks": "4 marks",
+        "instruction": "Write the abbreviations in full. Look at the example first.",
+        "items": [
+          "Example: MPhil stands for Master of Philosophy",
+          "1 BA stands for ..........................................................",
+          "2 BSc stands for ..........................................................",
+          "3 MA stands for ...........................................................",
+          "4 PhD stands for .........................................................."
+        ]
+      },
+      {
+        "id": "79.3",
+        "marks": "10 marks",
+        "instruction": "Complete the text with appropriate verbs in the correct form.",
+        "items": [
+          "When he was 8, my brother’s main ambition in life was to (1) ..................... to university. He was very hard-working and (2) ..................... well at school. He (3) ..................... three ‘A’ levels at the age of 18, and fortunately he (4) ..................... them all. In fact, he got such high marks that he managed to (5) ..................... a place at a very good university, where he decided to (6) ..................... biology. The course (7) ..................... three years, and at the end he (8) ..................... a very good degree. As a result, he got the chance to go on to postgraduate studies, and he is now (9) ..................... research at Bristol University. Last month he was asked to (10) ..................... a lecture to a group of young doctors."
+        ]
+      },
+      {
+        "id": "79.4",
+        "marks": "6 marks",
+        "instruction": "Are these sentences true or false? If they are false, correct them.",
+        "items": [
+          "1 A grant is the money some students receive from a government to pay for education, food and accommodation.",
+          "2 A graduate is someone who has not yet finished their first degree.",
+          "3 An MA is a degree that you get on an undergraduate degree course.",
+          "4 At university the people who teach you are called lecturers.",
+          "5 Tuition is the cost of the teaching of your course.",
+          "6 A postgraduate is a second degree course."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "line drawing of a woman holding a photograph of a young man in graduation gown, with a speech balloon containing the 79.3 gap-fill text"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 82,\n \"testNumber\": \"79\",\n \"testTitle\": \"Education: university\",\n \"exercises\": [\n  {\"id\": \"79.1\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Complete these definitions of subjects people study at university.\",\n   \"items\": [\n    \"1 the study of the human mind and people’s behaviour ...........................\",\n    \"2 the study of how buildings are designed and constructed ............................\",\n    \"3 the study of the activities of government ..........................\",\n    \"4 the study of theories about existence, knowledge and thought ..........................\",\n    \"5 the scientific study of substances and how they react ..........................\",\n    \"6 the design and building of machines, roads and bridges ............................\",\n    \"7 the study of how to treat illness and injuries ...........................\",\n    \"8 the study of farming: producing crops and keeping animals ...........................\",\n    \"9 the study of the rules of a country ..........................\",\n    \"10 the study of the way society is organised ...........................\"\n   ]},\n  {\"id\": \"79.2\",\n   \"marks\": \"4 marks\",\n   \"instruction\": \"Write the abbreviations in full. Look at the example first.\",\n   \"items\": [\n    \"Example: MPhil stands for Master of Philosophy\",\n    \"1 BA stands for ..........................................................\",\n    \"2 BSc stands for ..........................................................\",\n    \"3 MA stands for ...........................................................\",\n    \"4 PhD stands for ..........................................................\"\n   ]},\n  {\"id\": \"79.3\",\n   \"marks\": \"10 marks\",\n   \"instruction\": \"Complete the text with appropriate verbs in the correct form.\",\n   \"items\": [\n    \"When he was 8, my brother’s main ambition in life was to (1) ..................... to university. He was very hard-working and (2) ..................... well at school. He (3) ..................... three ‘A’ levels at the age of 18, and fortunately he (4) ..................... them all. In fact, he got such high marks that he managed to (5) ..................... a place at a very good university, where he decided to (6) ..................... biology. The course (7) ..................... three years, and at the end he (8) ..................... a very good degree. As a result, he got the chance to go on to postgraduate studies, and he is now (9) ..................... research at Bristol University. Last month he was asked to (10) ..................... a lecture to a group of young doctors.\"\n   ]},\n  {\"id\": \"79.4\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Are these sentences true or false? If they are false, correct them.\",\n   \"items\": [\n    \"1 A grant is the money some students receive from a government to pay for education, food and accommodation.\",\n    \"2 A graduate is someone who has not yet finished their first degree.\",\n    \"3 An MA is a degree that you get on an undergraduate degree course.\",\n    \"4 At university the people who teach you are called lecturers.\",\n    \"5 Tuition is the cost of the teaching of your course.\",\n    \"6 A postgraduate is a second degree course.\"\n   ]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\n  \"line drawing of a woman holding a photograph of a young man in graduation gown, with a speech balloon containing the 79.3 gap-fill text\"\n ],\n \"unclassified\": [\n  \"TEST\",\n  \"Your score /30\",\n  \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}"
+}

@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 75,
+    "dpi": 300,
+    "renderSha256": "0d5c4a0c703d7df49c9e6a2e6c20851a63e7537992f6683bae6f2a3c81168c13",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T19:58:33.178Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 73,
+    "testNumber": "70",
+    "testTitle": "Sport 1: games, people and places",
+    "exercises": [
+      {
+        "id": "70.1",
+        "marks": null,
+        "instruction": "Label the equipment and name the sport it is used in. Look at the example first.",
+        "items": [
+          "Example: a goal used in football",
+          "1 .....................................",
+          "2 .....................................",
+          "3 .....................................",
+          "4 .....................................",
+          "5 .....................................",
+          "6 .....................................",
+          "7 .....................................",
+          "8 ....................................."
+        ]
+      },
+      {
+        "id": "70.2",
+        "marks": "5 marks [?]",
+        "instruction": "Fill the gaps with a suitable word.",
+        "items": [
+          "1 I love sport. In the summer I ......................... tennis and in the winter I ......................... a lot of skiing.",
+          "2 There was a ......................... of 70,000 for the last game at Wembley ......................... .",
+          "3 It wasn't a dirty game but the ......................... still booked five players in the second half.",
+          "4 At the end of the game about 500 ......................... climbed over the fence and ran onto the ......................... to cheer the players off and celebrate their 2–0 victory.",
+          "5 In the final of the tennis, the problem started when the ......................... overruled the linesman and gave the point to Hingis."
+        ]
+      },
+      {
+        "id": "70.3",
+        "marks": "6 marks",
+        "instruction": "Match a word from the left with a word from the right to find the names of six places where different sports take place.",
+        "items": [
+          "1 swimming    a pitch",
+          "2 tennis      b ring",
+          "3 golf        c pool",
+          "4 rugby       d track",
+          "5 race        e course",
+          "6 boxing      f court"
+        ]
+      },
+      {
+        "id": "70.4",
+        "marks": "4 marks",
+        "instruction": "Complete the text using the pictures to help you. Put the verbs in the correct form.",
+        "items": [
+          "Zanetti (1)......................... the ball back to his goalkeeper who (2)......................... it fifty metres upfield. Simeone won the ball and (3)......................... to Roberto Baggio. With great skill, Baggio then beat two defenders down the right and crossed the ball for Ronaldo to (4)......................... a spectacular goal."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "football goal with net (labelled example in 70.1)",
+      "drawing of a rugby ball (70.1, item 1)",
+      "drawing of a crash helmet (70.1, item 3)",
+      "drawing of two ski poles (70.1, item 5)",
+      "drawing of a tennis racket and ball (70.1, item 7)",
+      "drawing of a table-tennis bat and ball (70.1, item 2)",
+      "drawing of a golf bag with clubs and ball (70.1, item 4)",
+      "drawing of a pair of football boots (70.1, item 6)",
+      "drawing of boxing shorts and gloves near ropes (70.1, item 8)",
+      "football scene with numbered players and ball (1–4) for exercise 70.4"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 73,\n  \"testNumber\": \"70\",\n  \"testTitle\": \"Sport 1: games, people and places\",\n  \"exercises\": [\n    {\n      \"id\": \"70.1\",\n      \"marks\": null,\n      \"instruction\": \"Label the equipment and name the sport it is used in. Look at the example first.\",\n      \"items\": [\n        \"Example: a goal used in football\",\n        \"1 .....................................\",\n        \"2 .....................................\",\n        \"3 .....................................\",\n        \"4 .....................................\",\n        \"5 .....................................\",\n        \"6 .....................................\",\n        \"7 .....................................\",\n        \"8 .....................................\"\n      ]\n    },\n    {\n      \"id\": \"70.2\",\n      \"marks\": \"5 marks [?]\",\n      \"instruction\": \"Fill the gaps with a suitable word.\",\n      \"items\": [\n        \"1 I love sport. In the summer I ......................... tennis and in the winter I ......................... a lot of skiing.\",\n        \"2 There was a ......................... of 70,000 for the last game at Wembley ......................... .\",\n        \"3 It wasn't a dirty game but the ......................... still booked five players in the second half.\",\n        \"4 At the end of the game about 500 ......................... climbed over the fence and ran onto the ......................... to cheer the players off and celebrate their 2–0 victory.\",\n        \"5 In the final of the tennis, the problem started when the ......................... overruled the linesman and gave the point to Hingis.\"\n      ]\n    },\n    {\n      \"id\": \"70.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Match a word from the left with a word from the right to find the names of six places where different sports take place.\",\n      \"items\": [\n        \"1 swimming    a pitch\",\n        \"2 tennis      b ring\",\n        \"3 golf        c pool\",\n        \"4 rugby       d track\",\n        \"5 race        e course\",\n        \"6 boxing      f court\"\n      ]\n    },\n    {\n      \"id\": \"70.4\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"Complete the text using the pictures to help you. Put the verbs in the correct form.\",\n      \"items\": [\n        \"Zanetti (1)......................... the ball back to his goalkeeper who (2)......................... it fifty metres upfield. Simeone won the ball and (3)......................... to Roberto Baggio. With great skill, Baggio then beat two defenders down the right and crossed the ball for Ronaldo to (4)......................... a spectacular goal.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"football goal with net (labelled example in 70.1)\",\n    \"drawing of a rugby ball (70.1, item 1)\",\n    \"drawing of a crash helmet (70.1, item 3)\",\n    \"drawing of two ski poles (70.1, item 5)\",\n    \"drawing of a tennis racket and ball (70.1, item 7)\",\n    \"drawing of a table-tennis bat and ball (70.1, item 2)\",\n    \"drawing of a golf bag with clubs and ball (70.1, item 4)\",\n    \"drawing of a pair of football boots (70.1, item 6)\",\n    \"drawing of boxing shorts and gloves near ropes (70.1, item 8)\",\n    \"football scene with numbered players and ball (1–4) for exercise 70.4\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}
