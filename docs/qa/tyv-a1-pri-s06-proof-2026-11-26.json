@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "step": "A1-PRI-S06",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "date": "2026-11-26",
+    "jalali": "۱۴۰۵/۹/۵",
+    "ownerCommand": "«گام بعدی مجاز A1-PRI-S06 = bun scripts/tyv-a1-vlm-capture.mjs pri 61,62,63,64,65,66,67,68,69,70,71,72 (صفحات ۶۱–۷۲ — دستهٔ ششم از ۱۲ — بدون skip انتظاری — انتظار Tests 56..67 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — تداوم Daily life) ⇒ سپس PRI S07..S12 ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e / FA-REVIEWED / G5 دست‌نخورده — توقف گیت‌دار — گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل — trace 1a218eaed2108aad — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574",
+    "sessionPreCheck": "نشست تمیز بدون ریست پنهان (پس از بازیابی ۴۸ گام S05 — الگوی ۳۱..۴۸): HEAD آغاز نشست = ef6b0e25b64344b95d6fa6487bfac5aa064482c9 (ثبت اثبات §۱۰-۷ گام S05) == ریموت backup/main با git ls-remote (بایت‌به‌بیت) — درخت کار کاملاً پاک (porcelain ۰/۰) — هوک post-commit سالم — stash خالی — دیسک‌حقیقت آغاز گام: pri ۶۰/۱۴۲ (page-001..060 شامل پراب‌های ۷/۱۰/۴۱) · biz ۹۸/۹۸ · elem ۹۶/۹۶ · upp ۳/۱۵۳ = ۲۵۷/۴۸۹ == رکورد SNAPSHOT سربرگ ۱۳۹مین — وجودسنجی پیشا-گام: page-061..072 همگی غایب (دقیق) — گام بعدی مجاز SNAPSHOT == عین فرمان مالک == A1-PRI-S06"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 61,62,63,64,65,66,67,68,69,70,71,72",
+  "runs": [
+    {
+      "run": 1,
+      "mode": "هم‌گام در یک فراخوانی ابزار (عین درس ثبت‌شدهٔ سربرگ ۱۱۵مین — بدون nohup پس‌زمینه)",
+      "result": "page 61..72 ok — ۱۲ سطر ok پیوسته — صفر خطا و صفر skip — عین انتظار صریح مالک (بدون skip انتظاری در این دسته)",
+      "summary": "DONE tyv-pri: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-pri/a1",
+      "skips": [],
+      "failed": []
+    }
+  ],
+  "coverage": {
+    "batchRange": "۶۱–۷۲ (بدون skip انتظاری — عین انتظار صریح مالک — پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست)",
+    "completeNoGap": true,
+    "newFiles": [
+      "page-061.json",
+      "page-062.json",
+      "page-063.json",
+      "page-064.json",
+      "page-065.json",
+      "page-066.json",
+      "page-067.json",
+      "page-068.json",
+      "page-069.json",
+      "page-070.json",
+      "page-071.json",
+      "page-072.json"
+    ],
+    "skippedExisting": [],
+    "provenance": "renderSha256 یکتا ۱۲/۱۲ (9bfd639c/6f1e06ff/625e4f55/61396839/d08e3130/0eddb9c1/88773a2b/731c0713/0bda75c4/17f06ed7/147ce7ac/ccd58be6) · DPI=300 · promptVersion=tyv-a1-v1 · attempts=≤3 · status=ok ۱۲/۱۲ · model z-ai vision CLI · timestamp 2026-11-26T17:34:01..17:36:07Z"
+  },
+  "patternCheck": {
+    "expected": "Tests 56..67 با test=pdfPage−۵ و فوتر چاپی=pdfPage−۲ هرجا موجود (عین انتظار صریح مالک) — بدون skip انتظاری — تداوم Daily life عین Contents p3",
+    "result": "testNumber دقیقاً 56..67 روی p61..p72 = pdfPage−۵ — ۱۲/۱۲ صفر mismatch — عین انتظار صریح مالک — ششمین دستهٔ متوالی پس از اصلاح الگوی ۱۳۶مین",
+    "footers": "فوترهای چاپی 59..70 روی p61..p72 = pdfPage−۲ — ۱۲/۱۲ — صفر ناسازگاری · صفر footer=null (چهارمین دستهٔ پیوستهٔ کاملاً سره از نظر فوتر پس از S03/S04/S05) — فوترها دقیقاً == شمارهٔ صفحهٔ کتاب Contents p3 (کتاب صفحهٔ 59..70) — ششمین تأیید مستقل الگوی سه‌ضابطه‌ای",
+    "anchors": "تطبیق بیت‌به‌بیت Contents p3 == عناوین و فوترهای دسته: Test 56 «Clothes» (صفحهٔ کتاب 59) · Test 57 «Shops and shopping» (60) · Test 58 «Food» (61) · Test 59 «Cooking and restaurants» (62) · Test 60 «Town and country» (63) · Test 61 «On the road» (64) · Test 62 «Transport» (65) · Test 63 «Work: duties, conditions and pay» (66) · Test 64 «Jobs» (67) · Test 65 «The career ladder» (68) · Test 66 «In the office and in the factory» (69) · Test 67 «Business and finance» (70) — ۱۲/۱۲ عین Contents — صفر واریانس OCR عنوان در این دسته (برخلاف واریانس «home I» S05)"
+  },
+  "contentNotes": {
+    "structure": [
+      "p61 Test 56 «Clothes» — ۳ تمرین/۳۰ آیتم/۰ باکس/۲ تصویر/۳ unc — فوتر ۵۹ — تداوم زیربخش Daily life عین Contents p3",
+      "p62 Test 57 «Shops and shopping» — ۴ تمرین/۳۱ آیتم/۰ باکس/۰ تصویر/۳ unc — فوتر ۶۰",
+      "p63 Test 58 «Food» — ۳ تمرین/۲۷ آیتم/۰ باکس/۲ تصویر/۳ unc — فوتر ۶۱",
+      "p64 Test 59 «Cooking and restaurants» — ۴ تمرین/۲۷ آیتم/۰ باکس/۱ تصویر/۴ unc — فوتر ۶۲",
+      "p65 Test 60 «Town and country» — ۴ تمرین/۲۳ آیتم/۰ باکس/۱ تصویر/۳ unc — فوتر ۶۳",
+      "p66 Test 61 «On the road» — ۳ تمرین/۲۷ آیتم/۱ باکس/۱ تصویر/۴ unc — فوتر ۶۴",
+      "p67 Test 62 «Transport» — ۴ تمرین/۳۹ آیتم/۶ باکس/۱ تصویر/۲ unc — فوتر ۶۵ — سنگین‌ترین صفحهٔ باکس‌محور دسته (۶ باکس)",
+      "p68 Test 63 «Work: duties, conditions and pay» — ۵ تمرین/۴۲ آیتم/۰ باکس/۱ تصویر/۳ unc — فوتر ۶۶ — سنگین‌ترین صفحهٔ آیتم‌محور دسته (۴۲ آیتم) — گذار زیربخشی Daily life → Work عین Contents p3 (Work: Tests 63–67)",
+      "p69 Test 64 «Jobs» — ۴ تمرین/۲۰ آیتم/۰ باکس/۱ تصویر/۴ unc — فوتر ۶۷",
+      "p70 Test 65 «The career ladder» — ۴ تمرین/۳۶ آیتم/۰ باکس/۰ تصویر/۲ unc — فوتر ۶۸ — تنها صفحهٔ بدون تصویر دسته",
+      "p71 Test 66 «In the office and in the factory» — ۴ تمرین/۲۴ آیتم/۶ باکس/۱ تصویر/۳ unc — فوتر ۶۹",
+      "p72 Test 67 «Business and finance» — ۴ تمرین/۱۹ آیتم/۰ باکس/۱ تصویر/۳ unc — فوتر ۷۰ — پایان زیربخش Work (Contents: Tests 63–67)"
+    ],
+    "totals": "۱۲ تست متمایز بدون تکرار — ۴۶ تمرین/۳۴۵ آیتم/۱۳ باکس/۱۲ تصویر/۳۷ unclassified — [؟]=صفر · [N/A]=صفر — صفر واریانس marks (همهٔ تمرین‌ها با الگوی عددی «N marks»)",
+    "transitions": "تداوم Daily life در p61..p67 (Tests 56..62 — عین Contents p3: Daily life = Tests 48..62) — یک گذار زیربخشی: Daily life → Work در p68 (Test 63) عین Contents p3 — پایان Work در p72 (Test 67) — Test 68 «Sales and marketing» (کتاب 71 → pdf 76) به دستهٔ S07 تعلق دارد",
+    "g1Candidates": "صفر کاندید دوگذر G1 جدید در این دسته (صفر [؟] · صفر واریانس OCR عنوان · صفر marks بدون عدد)"
+  },
+  "indexUpdate": {
+    "file": "docs/qa/tyv-capture-pri/a1-index.json",
+    "capturedNow": 12,
+    "skippedExisting": 0,
+    "failedTotal": 0,
+    "capturedPagesAfter": 72,
+    "pagesTotal": 142
+  },
+  "diskTruthAfter": {
+    "biz": "۹۸/۹۸ کامل",
+    "elem": "۹۶/۹۶ کامل",
+    "pri": "۷۲/۱۴۲",
+    "upp": "۳/۱۵۳",
+    "total": "۲۶۹/۴۸۹",
+    "remainingPri": "۷۰ صفحه: ۷۳–۱۴۲ (S07..S12 — S12 = ۱۳۳–۱۴۲ ده صفحه)",
+    "remainingTotal": "۲۲۰ صفحه: pri ۷۳–۱۴۲ (۷۰) + upp ۴–۱۵۳ (۱۵۰)"
+  },
+  "controls": {
+    "lint": "bun run lint — exit 0 — صفر خطا",
+    "gitDiffCheck": "پاک",
+    "imageExecutableFiles": "صفر فایل تصویری/اجرایی NEW — دلتا فقط JSON کپچر + اسناد مستنداتی",
+    "dbHookWave2": "db/هوک/WAVE2 دست‌نخورده",
+    "tokenLeak": "توکن در هیچ خروجی چاپ نشد"
+  },
+  "nextAuthorizedStep": "A1-PRI-S07 = bun scripts/tyv-a1-vlm-capture.mjs pri 73,74,75,76,77,78,79,80,81,82,83,84 (صفحات ۷۳–۸۴ — دستهٔ هفتم از ۱۲ — بدون skip انتظاری — انتظار Tests 68..79 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — آغاز زیربخش Sales and marketing از Test 68 عین Contents p3)"
+}

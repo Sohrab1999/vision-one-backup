@@ -1,0 +1,91 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 64,
+    "dpi": 300,
+    "renderSha256": "61396839cb33e0c8976639229c161d1fcc9049422e22f23a25d5d9dd569c37c9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:34:37.090Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 62,
+    "testNumber": "59",
+    "testTitle": "Cooking and restaurants",
+    "exercises": [
+      {
+        "id": "59.1",
+        "marks": "5 marks",
+        "instruction": "Label the pictures with the different ways of cooking.",
+        "items": [
+          "1 ........................ ",
+          " 2 ......................... ",
+          " 3 ................... ",
+          " 4 ......................... ",
+          " 5 ....................... "
+        ]
+      },
+      {
+        "id": "59.2",
+        "marks": "14 marks",
+        "instruction": "Fill the gaps in these sentences with the correct noun, verb or adjective.",
+        "items": [
+          "1  You will need to put the meat in the ................................. for half an hour at 200 degrees centigrade, then reduce the temperature to 180 for the rest of the cooking time.",
+          "2  When people go out for a meal in Britain, they often have three .............................. : a .................................. , a ................................. , and a dessert.",
+          "3  If you are cooking steak, you need to turn up the ................................. so that your pan i[?] really hot before you put the meat in.",
+          "4  When I pay for my meal, I usually leave 10% for the waiter if .................................. is no[?] included.",
+          "5  There are basically four ways of cooking steak: ................................. , medium- .................................. , medium, or ................................. . I like my steak medium.",
+          "6  The trouble with fattening food is that it makes you ................................. weight if you're not very careful.",
+          "7  Have you asked the waiter for the ................................. and the wine list?",
+          "8  I'm not very keen on curry: it's too hot and ................................. for me.",
+          "9  The chicken is cooked in a white wine and cream ................................. .",
+          "10  It's a very simple restaurant but the food is delicious and everything is .................................-made."
+        ]
+      },
+      {
+        "id": "59.3",
+        "marks": "6 marks",
+        "instruction": "Complete Column 2 with a word that is the opposite of the word in Column 1. The first one has been done for you.",
+        "items": [
+          "Column 1                                                Column 2",
+          "  strong coffee                                    weak ................. coffee",
+          "1  tough meat                                     ......................... meat",
+          "2  fatty meat                                     ......................... meat",
+          "3  sweet oranges     is/are the opposite of     ......................... oranges",
+          "4  tasteless food                                 ......................... food",
+          "5  cooked onions                                  ......................... onions",
+          "6  stale bread                                    ......................... bread"
+        ]
+      },
+      {
+        "id": "59.4",
+        "marks": "5 marks",
+        "instruction": "Replace the underlined word(s) in these sentences with (an)other word(s) with the same meaning.",
+        "items": [
+          "1  Do you always leave money for the waiter?",
+          "2  It's a very popular restaurant, so you may need to reserve a table one or two weeks before you go there.",
+          "3  Do you want a drink before the meal?",
+          "4  Have you already paid the money for the meal?"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "row of 5 line drawings of cooking methods: saucepan, frying pan with egg and sausage, grill pan with sausages, oven with roast chicken, oven with loaf/bread; numbers 1-5 with dotted lines below"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 62,\n \"testNumber\": \"59\",\n \"testTitle\": \"Cooking and restaurants\",\n \"exercises\": [\n  {\"id\": \"59.1\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Label the pictures with the different ways of cooking.\",\n   \"items\": [\"1 ........................ \", \" 2 ......................... \", \" 3 ................... \", \" 4 ......................... \", \" 5 ....................... \"]},\n  {\"id\": \"59.2\",\n   \"marks\": \"14 marks\",\n   \"instruction\": \"Fill the gaps in these sentences with the correct noun, verb or adjective.\",\n   \"items\": [\"1  You will need to put the meat in the ................................. for half an hour at 200 degrees centigrade, then reduce the temperature to 180 for the rest of the cooking time.\",\n    \"2  When people go out for a meal in Britain, they often have three .............................. : a .................................. , a ................................. , and a dessert.\",\n    \"3  If you are cooking steak, you need to turn up the ................................. so that your pan i[?] really hot before you put the meat in.\",\n    \"4  When I pay for my meal, I usually leave 10% for the waiter if .................................. is no[?] included.\",\n    \"5  There are basically four ways of cooking steak: ................................. , medium- .................................. , medium, or ................................. . I like my steak medium.\",\n    \"6  The trouble with fattening food is that it makes you ................................. weight if you're not very careful.\",\n    \"7  Have you asked the waiter for the ................................. and the wine list?\",\n    \"8  I'm not very keen on curry: it's too hot and ................................. for me.\",\n    \"9  The chicken is cooked in a white wine and cream ................................. .\",\n    \"10  It's a very simple restaurant but the food is delicious and everything is .................................-made.\"]},\n  {\"id\": \"59.3\",\n   \"marks\": \"6 marks\",\n   \"instruction\": \"Complete Column 2 with a word that is the opposite of the word in Column 1. The first one has been done for you.\",\n   \"items\": [\"Column 1                                                Column 2\",\n    \"  strong coffee                                    weak ................. coffee\",\n    \"1  tough meat                                     ......................... meat\",\n    \"2  fatty meat                                     ......................... meat\",\n    \"3  sweet oranges     is/are the opposite of     ......................... oranges\",\n    \"4  tasteless food                                 ......................... food\",\n    \"5  cooked onions                                  ......................... onions\",\n    \"6  stale bread                                    ......................... bread\"]},\n  {\"id\": \"59.4\",\n   \"marks\": \"5 marks\",\n   \"instruction\": \"Replace the underlined word(s) in these sentences with (an)other word(s) with the same meaning.\",\n   \"items\": [\"1  Do you always leave money for the waiter?\",\n    \"2  It's a very popular restaurant, so you may need to reserve a table one or two weeks before you go there.\",\n    \"3  Do you want a drink before the meal?\",\n    \"4  Have you already paid the money for the meal?\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"row of 5 line drawings of cooking methods: saucepan, frying pan with egg and sausage, grill pan with sausages, oven with roast chicken, oven with loaf/bread; numbers 1-5 with dotted lines below\"],\n \"unclassified\": [\"TEST\", \"Your score\", \"/30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}"
+}

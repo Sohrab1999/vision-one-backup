@@ -1,0 +1,94 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 71,
+    "dpi": 300,
+    "renderSha256": "147ce7ac69c3aded632c87429417e8abdcedcd3844e3561c50fd6ce8cae866fd",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:35:54.385Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 69,
+    "testNumber": "66",
+    "testTitle": "In the office and in the factory",
+    "exercises": [
+      {
+        "id": "66.1",
+        "marks": "12 marks",
+        "instruction": "Label the drawing.",
+        "items": [
+          "1 .....................",
+          "2 .....................",
+          "3 .....................",
+          "4 .....................",
+          "5 .....................",
+          "6 .....................",
+          "7 .....................",
+          "8 ..............................",
+          "9 ..............................",
+          "10 ..............................",
+          "11 ..............................",
+          "12 .............................."
+        ]
+      },
+      {
+        "id": "66.2",
+        "marks": "4 marks",
+        "instruction": "Complete the sentences with an appropriate verb in the correct form. The first letter has been given to you.",
+        "items": [
+          "1 In our office everyone w.......................... at a computer.",
+          "2 The secretary a.......................... phone calls from customers and a.......................... meetings for her boss.",
+          "3 My job is to s.......................... invoices to our customers.",
+          "4 The department manager sometimes has to s.......................... visitors round the factory.",
+          "5 The office assistant d.......................... general paperwork such as f.......................... reports and w.......................... memos."
+        ]
+      },
+      {
+        "id": "66.3",
+        "marks": "6 marks",
+        "instruction": "Match the words with the correct definition.",
+        "items": [
+          "1 the things that are made in a factory to be sold",
+          "2 where the products are manufactured in the factory",
+          "3 where the products are kept when they leave the factory",
+          "4 the people who check the products during manufacture",
+          "5 the process of making goods which is done by machines",
+          "6 the arrangement of the factory where each worker makes part of the product, then passes it to the next worker to continue"
+        ]
+      },
+      {
+        "id": "66.4",
+        "marks": "8 marks",
+        "instruction": "Decide if the underlined word is correct or not. If not, correct it.",
+        "items": [
+          "In my company, we (1) fabricate children's toys. The parts of these toys are often very small, so the workers can find these toys very difficult to (2) assemble. When supervisors (3) control the goods, they have to make sure they meet the required safety (4) standard. It is very important when selling toys that the goods are attractively (5) packeted. The goods are sent to the warehouse where they are (6) stored until the (7) retailers order them. They are usually then (8) carried to the shops by post."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "a assembly line",
+      "b warehouse",
+      "c goods",
+      "d automation",
+      "e the shop floor",
+      "f supervisors"
+    ],
+    "pictures": [
+      "office scene drawing with 12 numbered labels (noticeboard with MAY calendar, computer, desk, swivel chair, filing cabinet, waste bin, diary, briefcase)"
+    ],
+    "unclassified": [
+      "Your score",
+      "/ 30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 69,\n \"testNumber\": \"66\",\n \"testTitle\": \"In the office and in the factory\",\n \"exercises\": [\n   {\"id\": \"66.1\",\n    \"marks\": \"12 marks\",\n    \"instruction\": \"Label the drawing.\",\n    \"items\": [\"1 .....................\", \"2 .....................\", \"3 .....................\", \"4 .....................\", \"5 .....................\", \"6 .....................\", \"7 .....................\", \"8 ..............................\", \"9 ..............................\", \"10 ..............................\", \"11 ..............................\", \"12 ..............................\"]},\n   {\"id\": \"66.2\",\n    \"marks\": \"4 marks\",\n    \"instruction\": \"Complete the sentences with an appropriate verb in the correct form. The first letter has been given to you.\",\n    \"items\": [\"1 In our office everyone w.......................... at a computer.\", \"2 The secretary a.......................... phone calls from customers and a.......................... meetings for her boss.\", \"3 My job is to s.......................... invoices to our customers.\", \"4 The department manager sometimes has to s.......................... visitors round the factory.\", \"5 The office assistant d.......................... general paperwork such as f.......................... reports and w.......................... memos.\"]},\n   {\"id\": \"66.3\",\n    \"marks\": \"6 marks\",\n    \"instruction\": \"Match the words with the correct definition.\",\n    \"items\": [\"1 the things that are made in a factory to be sold\", \"2 where the products are manufactured in the factory\", \"3 where the products are kept when they leave the factory\", \"4 the people who check the products during manufacture\", \"5 the process of making goods which is done by machines\", \"6 the arrangement of the factory where each worker makes part of the product, then passes it to the next worker to continue\"]},\n   {\"id\": \"66.4\",\n    \"marks\": \"8 marks\",\n    \"instruction\": \"Decide if the underlined word is correct or not. If not, correct it.\",\n    \"items\": [\"In my company, we (1) fabricate children's toys. The parts of these toys are often very small, so the workers can find these toys very difficult to (2) assemble. When supervisors (3) control the goods, they have to make sure they meet the required safety (4) standard. It is very important when selling toys that the goods are attractively (5) packeted. The goods are sent to the warehouse where they are (6) stored until the (7) retailers order them. They are usually then (8) carried to the shops by post.\"]}\n ],\n \"boxesAndLists\": [\"a assembly line\", \"b warehouse\", \"c goods\", \"d automation\", \"e the shop floor\", \"f supervisors\"],\n \"pictures\": [\"office scene drawing with 12 numbered labels (noticeboard with MAY calendar, computer, desk, swivel chair, filing cabinet, waste bin, diary, briefcase)\"],\n \"unclassified\": [\"Your score\", \"/ 30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}"
+}

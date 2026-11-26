@@ -1,0 +1,108 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 67,
+    "dpi": 300,
+    "renderSha256": "88773a2bb1b8d4acb35a46de90f4b82ca2b4471e30ed3dba069ab10af6c1ba0d",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:35:12.557Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 65,
+    "testNumber": "62",
+    "testTitle": "Transport",
+    "exercises": [
+      {
+        "id": "52.1",
+        "marks": "6 marks",
+        "instruction": "Label the pictures.",
+        "items": [
+          "1 ........................",
+          "2 .........................",
+          "3 .........................",
+          "4 .........................",
+          "5 .........................",
+          "6 ........................."
+        ]
+      },
+      {
+        "id": "62.2",
+        "marks": "8 marks",
+        "instruction": "Fill the gaps in these sentences.",
+        "items": [
+          "1 A: How often do buses ........................ on Saturdays?",
+          "B: I don't know. Have a look at the timetable.",
+          "2 We wanted to go by plane but we couldn't afford the air ......................... .",
+          "3 It was quite a long way, that's why I came ......................... car.",
+          "4 A couple of them ........................ the bus, so unfortunately they had to walk.",
+          "5 They have just announced that our train will now be leaving from ......................... eleven.",
+          "6 I saw your brother while I was waiting at the bus ......................... near the cinema.",
+          "7 They've just apologised for the late ......................... of our train. They now say it'll be here in twenty minutes.",
+          "8 Announcement: Ladies and gentlemen, we apologise for the earlier delay. This train is now ........................ to arrive at London King's Cross in fifteen minutes."
+        ]
+      },
+      {
+        "id": "62.3",
+        "marks": "1 marks",
+        "instruction": "Complete this table.",
+        "items": [
+          "Train     Plane     Taxi     Bicycle",
+          "driver     ........................     driver     ........................",
+          "drive     ........................     drive     ........................",
+          "get on     ........................     .........................     ........................",
+          "get off     ........................     .........................     ........................",
+          "station     .........................     taxi rank"
+        ]
+      },
+      {
+        "id": "62.4",
+        "marks": "5 marks",
+        "instruction": "Rewrite these sentences, using the words on the right and without changing the meaning.",
+        "items": [
+          "Example: There are too many cars, buses and taxis on the road.",
+          "There are ...too many vehicles on the road....",
+          "1 There were a lot of people waiting for the bus.",
+          "There was ......................................................................................",
+          "2 The buses always arrive on time.",
+          "The buses ........................................................................................",
+          "3 Take this bus, then get on another one at Golden Square.",
+          "Take this bus, then ......................................................................",
+          "4 How much did you pay for your train ticket?",
+          "How much ................................................................................?",
+          "5 There were no places left on the bus.",
+          "The ..........................................................................................",
+          "VEHICLES",
+          "QUEUE",
+          "PUNCTUAL",
+          "CHANGE",
+          "FARE",
+          "FULL"
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "VEHICLES",
+      "QUEUE",
+      "PUNCTUAL",
+      "CHANGE",
+      "FARE",
+      "FULL"
+    ],
+    "pictures": [
+      "line drawings of six vehicles (lorry, coach 'SUN TOURS', van 'ROGER DELIVERY', double-decker bus, bicycle, motorbike) with numbered blanks 1-6"
+    ],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "Your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 65, \"testNumber\": \"62\", \"testTitle\": \"Transport\", \"exercises\": [{\"id\": \"52.1\", \"marks\": \"6 marks\", \"instruction\": \"Label the pictures.\", \"items\": [\"1 ........................\", \"2 .........................\", \"3 .........................\", \"4 .........................\", \"5 .........................\", \"6 .........................\"]}, {\"id\": \"62.2\", \"marks\": \"8 marks\", \"instruction\": \"Fill the gaps in these sentences.\", \"items\": [\"1 A: How often do buses ........................ on Saturdays?\", \"B: I don't know. Have a look at the timetable.\", \"2 We wanted to go by plane but we couldn't afford the air ......................... .\", \"3 It was quite a long way, that's why I came ......................... car.\", \"4 A couple of them ........................ the bus, so unfortunately they had to walk.\", \"5 They have just announced that our train will now be leaving from ......................... eleven.\", \"6 I saw your brother while I was waiting at the bus ......................... near the cinema.\", \"7 They've just apologised for the late ......................... of our train. They now say it'll be here in twenty minutes.\", \"8 Announcement: Ladies and gentlemen, we apologise for the earlier delay. This train is now ........................ to arrive at London King's Cross in fifteen minutes.\"]}, {\"id\": \"62.3\", \"marks\": \"1 marks\", \"instruction\": \"Complete this table.\", \"items\": [\"Train     Plane     Taxi     Bicycle\", \"driver     ........................     driver     ........................\", \"drive     ........................     drive     ........................\", \"get on     ........................     .........................     ........................\", \"get off     ........................     .........................     ........................\", \"station     .........................     taxi rank\"]}, {\"id\": \"62.4\", \"marks\": \"5 marks\", \"instruction\": \"Rewrite these sentences, using the words on the right and without changing the meaning.\", \"items\": [\"Example: There are too many cars, buses and taxis on the road.\", \"There are ...too many vehicles on the road....\", \"1 There were a lot of people waiting for the bus.\", \"There was ......................................................................................\", \"2 The buses always arrive on time.\", \"The buses ........................................................................................\", \"3 Take this bus, then get on another one at Golden Square.\", \"Take this bus, then ......................................................................\", \"4 How much did you pay for your train ticket?\", \"How much ................................................................................?\", \"5 There were no places left on the bus.\", \"The ..........................................................................................\", \"VEHICLES\", \"QUEUE\", \"PUNCTUAL\", \"CHANGE\", \"FARE\", \"FULL\"]}], \"boxesAndLists\": [\"VEHICLES\", \"QUEUE\", \"PUNCTUAL\", \"CHANGE\", \"FARE\", \"FULL\"], \"pictures\": [\"line drawings of six vehicles (lorry, coach 'SUN TOURS', van 'ROGER DELIVERY', double-decker bus, bicycle, motorbike) with numbered blanks 1-6\"], \"unclassified\": [\"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"Your score /30\"]}\n```"
+}

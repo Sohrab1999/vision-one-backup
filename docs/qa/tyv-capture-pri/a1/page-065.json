@@ -1,0 +1,86 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 65,
+    "dpi": 300,
+    "renderSha256": "d08e3130da72da3a39a6ab789b2e86d74d52ef28278f78f83b3b30b8874ceeef",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:34:49.875Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 63,
+    "testNumber": "60",
+    "testTitle": "Town and country",
+    "exercises": [
+      {
+        "id": "60.1",
+        "marks": null,
+        "instruction": "Complete these definitions with a suitable word.",
+        "items": [
+          "1 You can borrow books or study there: .....................................",
+          "2 You can leave your car there with a lot of other cars: .....................................",
+          "3 A place with different kinds of shops, indoors or outdoors: .....................................",
+          "4 A place where goods (washing machines, furniture, etc.) are made: .....................................",
+          "5 The areas outside the city centre where people live: .....................................",
+          "6 An area where there are company offices and banks in a town: ....................................."
+        ]
+      },
+      {
+        "id": "60.2",
+        "marks": null,
+        "instruction": "Complete the sentences using the correct form of the word on the right.",
+        "items": [
+          "1 Some people feel that towns are too ............................ for them to live in. NOISE",
+          "2 Generally, the countryside is less ............................ than towns. POLLUTE",
+          "3 Living in cities can be very ............................ for some people. STRESS",
+          "4 The countryside is much less ............................ than towns. CROWD",
+          "5 Some people enjoy the countryside more because it's ............................ . PEACE",
+          "6 I always feel ............................ in town than in the countryside. SAFE",
+          "7 However, life in town is certainly more ............................ . EXCITE",
+          "8 Some people believe it is more ............................ to live in town. DANGER"
+        ]
+      },
+      {
+        "id": "60.3",
+        "marks": null,
+        "instruction": "Look at the picture, then complete the text below.",
+        "items": [
+          "This is a picture of a scene in the (1)c............................. . In the distance, you can see a church in the (2)v............................. between the two hills, and on the right-hand hill there is a small (3)w............................. . There is a (4)f............................. leading down from the trees back to the road, and there is a hole or space in the (5)h............................. where you can get through. If you walk along the road towards the cows, you pass a wooden (6)g............................. , and in the (7)f............................. behind that, there is a farmer driving a (8)t............................. ."
+        ]
+      },
+      {
+        "id": "60.4",
+        "marks": null,
+        "instruction": "Match the sentence halves.",
+        "items": [
+          "1 There are only        a much better than in the countryside.",
+          "2 There is a wide range        b very little to do in the countryside.",
+          "3 At night there is        c a few shops in the countryside.",
+          "4 There are plenty of        d of shops in town.",
+          "5 There is a lot of        e things to do in town.",
+          "6 The countryside has        f pollution in town.",
+          "7 Living in town can be        g lots of open space.",
+          "8 The nightlife in the city is        h stressful and dangerous."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "line-drawing of a countryside scene with hills, church, wood, fields, cows, fence with wooden gate, tractor and trees"
+    ],
+    "unclassified": [
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "score /30",
+      "TEST"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 63,\n  \"testNumber\": \"60\",\n  \"testTitle\": \"Town and country\",\n  \"exercises\": [\n    {\n      \"id\": \"60.1\",\n      \"marks\": null,\n      \"instruction\": \"Complete these definitions with a suitable word.\",\n      \"items\": [\n        \"1 You can borrow books or study there: .....................................\",\n        \"2 You can leave your car there with a lot of other cars: .....................................\",\n        \"3 A place with different kinds of shops, indoors or outdoors: .....................................\",\n        \"4 A place where goods (washing machines, furniture, etc.) are made: .....................................\",\n        \"5 The areas outside the city centre where people live: .....................................\",\n        \"6 An area where there are company offices and banks in a town: .....................................\"\n      ]\n    },\n    {\n      \"id\": \"60.2\",\n      \"marks\": null,\n      \"instruction\": \"Complete the sentences using the correct form of the word on the right.\",\n      \"items\": [\n        \"1 Some people feel that towns are too ............................ for them to live in. NOISE\",\n        \"2 Generally, the countryside is less ............................ than towns. POLLUTE\",\n        \"3 Living in cities can be very ............................ for some people. STRESS\",\n        \"4 The countryside is much less ............................ than towns. CROWD\",\n        \"5 Some people enjoy the countryside more because it's ............................ . PEACE\",\n        \"6 I always feel ............................ in town than in the countryside. SAFE\",\n        \"7 However, life in town is certainly more ............................ . EXCITE\",\n        \"8 Some people believe it is more ............................ to live in town. DANGER\"\n      ]\n    },\n    {\n      \"id\": \"60.3\",\n      \"marks\": null,\n      \"instruction\": \"Look at the picture, then complete the text below.\",\n      \"items\": [\n        \"This is a picture of a scene in the (1)c............................. . In the distance, you can see a church in the (2)v............................. between the two hills, and on the right-hand hill there is a small (3)w............................. . There is a (4)f............................. leading down from the trees back to the road, and there is a hole or space in the (5)h............................. where you can get through. If you walk along the road towards the cows, you pass a wooden (6)g............................. , and in the (7)f............................. behind that, there is a farmer driving a (8)t............................. .\"\n      ]\n    },\n    {\n      \"id\": \"60.4\",\n      \"marks\": null,\n      \"instruction\": \"Match the sentence halves.\",\n      \"items\": [\n        \"1 There are only        a much better than in the countryside.\",\n        \"2 There is a wide range        b very little to do in the countryside.\",\n        \"3 At night there is        c a few shops in the countryside.\",\n        \"4 There are plenty of        d of shops in town.\",\n        \"5 There is a lot of        e things to do in town.\",\n        \"6 The countryside has        f pollution in town.\",\n        \"7 Living in town can be        g lots of open space.\",\n        \"8 The nightlife in the city is        h stressful and dangerous.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\"line-drawing of a countryside scene with hills, church, wood, fields, cows, fence with wooden gate, tractor and trees\"],\n  \"unclassified\": [\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\",\n    \"score /30\",\n    \"TEST\"\n  ]\n}\n```"
+}

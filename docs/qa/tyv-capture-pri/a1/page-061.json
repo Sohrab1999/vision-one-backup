@@ -1,0 +1,87 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 61,
+    "dpi": 300,
+    "renderSha256": "9bfd639cab9c15c0de2c9b499b58a2a1a229c4da863cb06da86a9908ddfe4458",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:34:01.988Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 59,
+    "testNumber": "56",
+    "testTitle": "Clothes",
+    "exercises": [
+      {
+        "id": "56.1",
+        "marks": "8 marks",
+        "instruction": "Label what the people are wearing in the pictures.",
+        "items": [
+          "1 .....................",
+          "2 .....................",
+          "3 .....................",
+          "4 .....................",
+          "5 .....................",
+          "6 .....................",
+          "7 .....................",
+          "8 .....................",
+          "9 .....................",
+          "10 .....................",
+          "11 .....................",
+          "12 .....................",
+          "13 .....................",
+          "14 .....................",
+          "15 .....................",
+          "16 ....................."
+        ]
+      },
+      {
+        "id": "56.2",
+        "marks": "6 marks",
+        "instruction": "Correct the mistakes in these sentences.",
+        "items": [
+          "Example: When I got home last night, I got dressed and went straight to bed. undressed",
+          "1 I put off my clothes and got into the shower.",
+          "2 I got dress, left the house and drove to the office.",
+          "3 I tried the jacket on but it wasn’t enough big, so I asked for a smaller size.",
+          "4 The trousers were too much long so I didn’t buy them.",
+          "5 He took his jacket off and carefully hung it down in the wardrobe.",
+          "6 The sleeves weren’t long enough, so the jacket didn’t size me very well."
+        ]
+      },
+      {
+        "id": "56.3",
+        "marks": "8 marks",
+        "instruction": "Complete the crossword. When you have finished, the words in the tinted box will spell another word.",
+        "items": [
+          "1 It is the part of a shirt nearest the hands.",
+          "2 This part of a shirt or jacket goes round the neck.",
+          "3 It is where you put money in your trousers or jacket.",
+          "4 These are on the front of your shirt, jacket or coat, and you fasten them.",
+          "5 Women wear these on their legs.",
+          "6 The part of a shirt or jumper that covers your arms.",
+          "7 Oh, no, it’s the wrong ......... . It’s too small."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "56.1: three line-drawing figures (man in suit, woman in jacket and skirt, girl in jumper and trousers) with numbered labels 1–16 to fill in",
+      "56.3: crossword grid with numbered clues 1–7 and a tinted vertical box"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 59,\n  \"testNumber\": \"56\",\n  \"testTitle\": \"Clothes\",\n  \"exercises\": [\n    {\n      \"id\": \"56.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Label what the people are wearing in the pictures.\",\n      \"items\": [\"1 .....................\", \"2 .....................\", \"3 .....................\", \"4 .....................\", \"5 .....................\", \"6 .....................\", \"7 .....................\", \"8 .....................\", \"9 .....................\", \"10 .....................\", \"11 .....................\", \"12 .....................\", \"13 .....................\", \"14 .....................\", \"15 .....................\", \"16 .....................\"]\n    },\n    {\n      \"id\": \"56.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Correct the mistakes in these sentences.\",\n      \"items\": [\"Example: When I got home last night, I got dressed and went straight to bed. undressed\", \"1 I put off my clothes and got into the shower.\", \"2 I got dress, left the house and drove to the office.\", \"3 I tried the jacket on but it wasn’t enough big, so I asked for a smaller size.\", \"4 The trousers were too much long so I didn’t buy them.\", \"5 He took his jacket off and carefully hung it down in the wardrobe.\", \"6 The sleeves weren’t long enough, so the jacket didn’t size me very well.\"]\n    },\n    {\n      \"id\": \"56.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete the crossword. When you have finished, the words in the tinted box will spell another word.\",\n      \"items\": [\"1 It is the part of a shirt nearest the hands.\", \"2 This part of a shirt or jacket goes round the neck.\", \"3 It is where you put money in your trousers or jacket.\", \"4 These are on the front of your shirt, jacket or coat, and you fasten them.\", \"5 Women wear these on their legs.\", \"6 The part of a shirt or jumper that covers your arms.\", \"7 Oh, no, it’s the wrong ......... . It’s too small.\"]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"56.1: three line-drawing figures (man in suit, woman in jacket and skirt, girl in jumper and trousers) with numbered labels 1–16 to fill in\",\n    \"56.3: crossword grid with numbered clues 1–7 and a tinted vertical box\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

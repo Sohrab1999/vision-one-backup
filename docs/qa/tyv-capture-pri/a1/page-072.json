@@ -1,0 +1,82 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 72,
+    "dpi": 300,
+    "renderSha256": "ccd58be6265303258660bfb08ec2c4457b9ae32d5b77a781fd85f141dd0997e4",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:36:07.052Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 70,
+    "testNumber": "67",
+    "testTitle": "Business and finance",
+    "exercises": [
+      {
+        "id": "67.1",
+        "marks": "6 marks",
+        "instruction": "A: Match words on the left with words on the right to form six common word partnerships.",
+        "items": [
+          "1 raw          a cut          ..................................................",
+          "2 interest     b economy      ..................................................",
+          "3 tax          c rate         ..................................................",
+          "4 break        d expenditure  ..................................................",
+          "5 public       e materials    ..................................................",
+          "6 strong       f even         .................................................."
+        ]
+      },
+      {
+        "id": "67.1B",
+        "marks": "4 marks",
+        "instruction": "B: Answer these questions about Part A.",
+        "items": [
+          "1 Which word/phrase above is not directly related to money?",
+          "2 Which word/phrase above refers to a reduction?",
+          "3 Which word/phrase above refers to money spent?",
+          "4 Which word/phrase above is usually expressed as a percentage, which may go up or down:"
+        ]
+      },
+      {
+        "id": "67.2",
+        "marks": "8 marks",
+        "instruction": "Complete these sentences. You need one word only in each sentence.",
+        "items": [
+          "1 Money you borrow from a bank is called a ............................... .",
+          "2 If a company expands, it is getting ............................... .",
+          "3 Money a company earns from selling its products is the ............................... .",
+          "4 If a company is thriving, it is doing ............................... .",
+          "5 The continuous increase in the price of things is known as ............................... .",
+          "6 When there is a period of slow business activity, we say the economy is in ............................... .",
+          "7 The regular costs involved in running a company, e.g. rent, telephone, paper, etc., are called the ............................... .",
+          "8 When you borrow money you have to pay ............................... to the bank."
+        ]
+      },
+      {
+        "id": "67.3",
+        "marks": "12 marks [?]",
+        "instruction": "Fill the gaps in the text. The first letter of each missing word is given, and the picture should help you as well.",
+        "items": [
+          "The year started very badly with a (1) s............................... (2) f............................... in sales in the first quarter. This was largely due to the strength of the pound and very high (3) i............................... (4) r............................... for the business sector. Fortunately there was an improvement in the second half of the year. Sales stopped (5) f............................... by May, they began to (6) r............................... (7) s............................... during the summer and early autumn and then in November and December they (8) r............................... (9) d............................... and left the company feeling much more optimistic about the future. Overall perhaps it had not been a great year, but the chairman thought the company would still (10) m............................... a reasonable (11) p............................... on the trading for the whole year, despite the (12) l............................... suffered in the first quarter."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "line graph chart showing sales over the months Jan Feb Mar Apr May June July Aug Sept Oct Nov Dec, with a man in a suit pointing at the chart with a stick"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score  /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 70,\n  \"testNumber\": \"67\",\n  \"testTitle\": \"Business and finance\",\n  \"exercises\": [\n    {\n      \"id\": \"67.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"A: Match words on the left with words on the right to form six common word partnerships.\",\n      \"items\": [\n        \"1 raw          a cut          ..................................................\",\n        \"2 interest     b economy      ..................................................\",\n        \"3 tax          c rate         ..................................................\",\n        \"4 break        d expenditure  ..................................................\",\n        \"5 public       e materials    ..................................................\",\n        \"6 strong       f even         ..................................................\"\n      ]\n    },\n    {\n      \"id\": \"67.1B\",\n      \"marks\": \"4 marks\",\n      \"instruction\": \"B: Answer these questions about Part A.\",\n      \"items\": [\n        \"1 Which word/phrase above is not directly related to money?\",\n        \"2 Which word/phrase above refers to a reduction?\",\n        \"3 Which word/phrase above refers to money spent?\",\n        \"4 Which word/phrase above is usually expressed as a percentage, which may go up or down:\"\n      ]\n    },\n    {\n      \"id\": \"67.2\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"Complete these sentences. You need one word only in each sentence.\",\n      \"items\": [\n        \"1 Money you borrow from a bank is called a ............................... .\",\n        \"2 If a company expands, it is getting ............................... .\",\n        \"3 Money a company earns from selling its products is the ............................... .\",\n        \"4 If a company is thriving, it is doing ............................... .\",\n        \"5 The continuous increase in the price of things is known as ............................... .\",\n        \"6 When there is a period of slow business activity, we say the economy is in ............................... .\",\n        \"7 The regular costs involved in running a company, e.g. rent, telephone, paper, etc., are called the ............................... .\",\n        \"8 When you borrow money you have to pay ............................... to the bank.\"\n      ]\n    },\n    {\n      \"id\": \"67.3\",\n      \"marks\": \"12 marks [?]\",\n      \"instruction\": \"Fill the gaps in the text. The first letter of each missing word is given, and the picture should help you as well.\",\n      \"items\": [\n        \"The year started very badly with a (1) s............................... (2) f............................... in sales in the first quarter. This was largely due to the strength of the pound and very high (3) i............................... (4) r............................... for the business sector. Fortunately there was an improvement in the second half of the year. Sales stopped (5) f............................... by May, they began to (6) r............................... (7) s............................... during the summer and early autumn and then in November and December they (8) r............................... (9) d............................... and left the company feeling much more optimistic about the future. Overall perhaps it had not been a great year, but the chairman thought the company would still (10) m............................... a reasonable (11) p............................... on the trading for the whole year, despite the (12) l............................... suffered in the first quarter.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [\n    \"line graph chart showing sales over the months Jan Feb Mar Apr May June July Aug Sept Oct Nov Dec, with a man in a suit pointing at the chart with a stick\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score  /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

@@ -1,0 +1,84 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 63,
+    "dpi": 300,
+    "renderSha256": "625e4f553b28aa9fcb852539b4750871965a24a238a3b1d89729e8a9670312e9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:34:24.113Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 61,
+    "testNumber": "58",
+    "testTitle": "Food",
+    "exercises": [
+      {
+        "id": "58.1",
+        "marks": "15 marks",
+        "instruction": "Label the food.",
+        "items": [
+          "1 ..............................",
+          "2 ..............................",
+          "3 ..............................",
+          "4 ..............................",
+          "5 ..............................",
+          "6 ..............................",
+          "7 ..............................",
+          "8 ..............................",
+          "9 ..............................",
+          "10 ..............................",
+          "11 ..............................",
+          "12 ..............................",
+          "13 ..............................",
+          "14 ..............................",
+          "15 .............................."
+        ]
+      },
+      {
+        "id": "58.2",
+        "marks": "8 marks",
+        "instruction": "Complete these sentences with a suitable word. The first letter of the missing word is given.",
+        "items": [
+          "1 There are four vegetables I really hate: peppers, courgettes, m............................. and a............................. .",
+          "2 We had a delicious salad of tomato, cucumber and l............................. .",
+          "3 The dessert was fresh fruit: there was a large bowl of strawberries, peaches, c............................. and p............................. .",
+          "4 I'm always ill if I eat certain shellfish like shrimps, o............................. or m............................. .",
+          "5 I'm a vegetarian, so I don't eat beef, pork, lamb or v............................. ."
+        ]
+      },
+      {
+        "id": "58.3",
+        "marks": "7 marks",
+        "instruction": "Are these sentences true or false? If they are false, correct them.",
+        "items": [
+          "1 Lobster is a kind of fruit.",
+          "2 Salad is usually a mixture of uncooked vegetables.",
+          "3 A lamb is a baby sheep; lamb is also the name of the meat of that animal.",
+          "4 A calf is a young pig.",
+          "5 Salmon is a kind of shellfish.",
+          "6 Oil and vinegar are often used with a green salad.",
+          "7 Peas, courgettes, aubergines and cucumbers are all the same colour."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "illustration of vegetables (cabbage, pepper, mushrooms, carrots, cauliflower, potatoes, peas) with numbered labels 1-7",
+      "illustration of fruits (banana, grapes, melon, pear, orange, apple, strawberries, lemon) with numbered labels 8-15"
+    ],
+    "unclassified": [
+      "TEST",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)",
+      "your score /30"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 61,\n \"testNumber\": \"58\",\n \"testTitle\": \"Food\",\n \"exercises\": [\n  {\"id\": \"58.1\",\n   \"marks\": \"15 marks\",\n   \"instruction\": \"Label the food.\",\n   \"items\": [\"1 ..............................\", \"2 ..............................\", \"3 ..............................\", \"4 ..............................\", \"5 ..............................\", \"6 ..............................\", \"7 ..............................\", \"8 ..............................\", \"9 ..............................\", \"10 ..............................\", \"11 ..............................\", \"12 ..............................\", \"13 ..............................\", \"14 ..............................\", \"15 ..............................\"]},\n  {\"id\": \"58.2\",\n   \"marks\": \"8 marks\",\n   \"instruction\": \"Complete these sentences with a suitable word. The first letter of the missing word is given.\",\n   \"items\": [\"1 There are four vegetables I really hate: peppers, courgettes, m............................. and a............................. .\", \"2 We had a delicious salad of tomato, cucumber and l............................. .\", \"3 The dessert was fresh fruit: there was a large bowl of strawberries, peaches, c............................. and p............................. .\", \"4 I'm always ill if I eat certain shellfish like shrimps, o............................. or m............................. .\", \"5 I'm a vegetarian, so I don't eat beef, pork, lamb or v............................. .\"]},\n  {\"id\": \"58.3\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Are these sentences true or false? If they are false, correct them.\",\n   \"items\": [\"1 Lobster is a kind of fruit.\", \"2 Salad is usually a mixture of uncooked vegetables.\", \"3 A lamb is a baby sheep; lamb is also the name of the meat of that animal.\", \"4 A calf is a young pig.\", \"5 Salmon is a kind of shellfish.\", \"6 Oil and vinegar are often used with a green salad.\", \"7 Peas, courgettes, aubergines and cucumbers are all the same colour.\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"illustration of vegetables (cabbage, pepper, mushrooms, carrots, cauliflower, potatoes, peas) with numbered labels 1-7\", \"illustration of fruits (banana, grapes, melon, pear, orange, apple, strawberries, lemon) with numbered labels 8-15\"],\n \"unclassified\": [\"TEST\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\", \"your score /30\"]}\n```"
+}

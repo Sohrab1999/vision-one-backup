@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 62,
+    "dpi": 300,
+    "renderSha256": "6f1e06ff0cbffe711529847c4ef5aa0a20e651490febddfde7086cfd3ceb3b80",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:34:14.069Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 60,
+    "testNumber": "57",
+    "testTitle": "Shops and shopping",
+    "exercises": [
+      {
+        "id": "57.1",
+        "marks": "6 marks",
+        "instruction": "Add two more examples to each word to form compound nouns or common phrases.",
+        "items": [
+          "shop keeper ... do the ... shopping shopping bag ..."
+        ]
+      },
+      {
+        "id": "57.2",
+        "marks": "6 marks",
+        "instruction": "Complete the sentences below with the correct 'general' word. Look at the example first.",
+        "items": [
+          "Example: It's a very cheap place to buy household goods such as washing powder and other cleaning products.",
+          "1 The wardrobe was full of ......................... : dresses, jackets, trousers and skirts.",
+          "2 There were ......................... all over the children's room: teddy bears, dolls and Lego.",
+          "3 I need to buy some ......................... : a pen, writing paper and envelopes.",
+          "4 There was too much ......................... in the room: tables, chairs, armchairs everywhere.",
+          "5 ......................... ......................... such as TVs, stereos and washing machines are very cheap in this country.",
+          "6 She was wearing beautiful ......................... : a lovely gold necklace and earrings."
+        ]
+      },
+      {
+        "id": "57.3",
+        "marks": "8 marks",
+        "instruction": "What are the names of these shops?",
+        "items": [
+          "1 the place where you can buy furniture, toys, televisions, watches, etc.",
+          "2 the place where you can buy any type of food or household goods",
+          "3 the place where you can just buy meat",
+          "4 the place where you can just buy fruit and vegetables",
+          "5 the place where you can buy fashionable clothes",
+          "6 the place where you can buy medicine",
+          "7 the place where you can buy newspapers and cigarettes",
+          "8 the place where you can buy shoes"
+        ]
+      },
+      {
+        "id": "57.4",
+        "marks": "10 marks",
+        "instruction": "Complete these shopping dialogues. You will need one or two words for each gap.",
+        "items": [
+          "A ASSISTANT: Can I (1).............................. you?",
+          "CUSTOMER: Yes, I'm (2).............................. a pair of trousers.",
+          "ASSISTANT: Right. What (3).............................. are you?",
+          "CUSTOMER: 32 waist and 34 leg.",
+          "B ASSISTANT: Are you OK there?",
+          "CUSTOMER: Yes, I'm just (4).............................. , thanks.",
+          "C ASSISTANT: Do you need any help?",
+          "CUSTOMER: No, it's OK, I'm being (5).............................. , thanks.",
+          "D CUSTOMER: Excuse me. I'd like to (6).............................. these jeans to see if they fit.",
+          "ASSISTANT: Sure. The (7).............................. is along there at the back of the shop.",
+          "E ASSISTANT: Do you want this red jumper as well?",
+          "CUSTOMER: No, I think I'll (8).............................. it, thanks.",
+          "F CUSTOMER: Yes, these trousers are great and fit very well. I'll (9).............................. them.",
+          "ASSISTANT: Fine. Would you like to pay for them over at the (10)..............................?",
+          "CUSTOMER: Sure."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 60,\n  \"testNumber\": \"57\",\n  \"testTitle\": \"Shops and shopping\",\n  \"exercises\": [\n    {\n      \"id\": \"57.1\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Add two more examples to each word to form compound nouns or common phrases.\",\n      \"items\": [\n        \"shop keeper ... do the ... shopping shopping bag ...\"\n      ]\n    },\n    {\n      \"id\": \"57.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Complete the sentences below with the correct 'general' word. Look at the example first.\",\n      \"items\": [\n        \"Example: It's a very cheap place to buy household goods such as washing powder and other cleaning products.\",\n        \"1 The wardrobe was full of ......................... : dresses, jackets, trousers and skirts.\",\n        \"2 There were ......................... all over the children's room: teddy bears, dolls and Lego.\",\n        \"3 I need to buy some ......................... : a pen, writing paper and envelopes.\",\n        \"4 There was too much ......................... in the room: tables, chairs, armchairs everywhere.\",\n        \"5 ......................... ......................... such as TVs, stereos and washing machines are very cheap in this country.\",\n        \"6 She was wearing beautiful ......................... : a lovely gold necklace and earrings.\"\n      ]\n    },\n    {\n      \"id\": \"57.3\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"What are the names of these shops?\",\n      \"items\": [\n        \"1 the place where you can buy furniture, toys, televisions, watches, etc.\",\n        \"2 the place where you can buy any type of food or household goods\",\n        \"3 the place where you can just buy meat\",\n        \"4 the place where you can just buy fruit and vegetables\",\n        \"5 the place where you can buy fashionable clothes\",\n        \"6 the place where you can buy medicine\",\n        \"7 the place where you can buy newspapers and cigarettes\",\n        \"8 the place where you can buy shoes\"\n      ]\n    },\n    {\n      \"id\": \"57.4\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Complete these shopping dialogues. You will need one or two words for each gap.\",\n      \"items\": [\n        \"A ASSISTANT: Can I (1).............................. you?\",\n        \"CUSTOMER: Yes, I'm (2).............................. a pair of trousers.\",\n        \"ASSISTANT: Right. What (3).............................. are you?\",\n        \"CUSTOMER: 32 waist and 34 leg.\",\n        \"B ASSISTANT: Are you OK there?\",\n        \"CUSTOMER: Yes, I'm just (4).............................. , thanks.\",\n        \"C ASSISTANT: Do you need any help?\",\n        \"CUSTOMER: No, it's OK, I'm being (5).............................. , thanks.\",\n        \"D CUSTOMER: Excuse me. I'd like to (6).............................. these jeans to see if they fit.\",\n        \"ASSISTANT: Sure. The (7).............................. is along there at the back of the shop.\",\n        \"E ASSISTANT: Do you want this red jumper as well?\",\n        \"CUSTOMER: No, I think I'll (8).............................. it, thanks.\",\n        \"F CUSTOMER: Yes, these trousers are great and fit very well. I'll (9).............................. them.\",\n        \"ASSISTANT: Fine. Would you like to pay for them over at the (10)..............................?\",\n        \"CUSTOMER: Sure.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

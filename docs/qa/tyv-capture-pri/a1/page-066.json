@@ -1,0 +1,86 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 66,
+    "dpi": 300,
+    "renderSha256": "0eddb9c1df2d089e621aee21d534a0c73151aeb5e55286f2a3a6ae12b2a5d8fc",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-26T17:35:00.827Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 64,
+    "testNumber": "61",
+    "testTitle": "On the road",
+    "exercises": [
+      {
+        "id": "61.1",
+        "marks": "12 marks",
+        "instruction": "Label the picture, using the words in the box.",
+        "items": [
+          "1 ..........................................",
+          "2 ..........................................",
+          "3 ..........................................",
+          "4 ..........................................",
+          "5 ..........................................",
+          "6 ..........................................",
+          "7 ..........................................",
+          "8 ..........................................",
+          "9 ..........................................",
+          "10 ..........................................",
+          "11 ..........................................",
+          "12 .........................................."
+        ]
+      },
+      {
+        "id": "61.2",
+        "marks": "11 marks",
+        "instruction": "Look at the picture again and complete the gaps in the text to see what happened next.",
+        "items": [
+          "Last week there was a serious (1).................................. in the town centre during the",
+          "(2).................................. hour.Where the road bends near the petrol station, there were roadworks which",
+          "(3).................................. a traffic jam, and people in the jam started to get impatient. A young man in a",
+          "sports car at the back decided to (4).................................. the slow-moving traffic, and at the same time a",
+          "lorry which was leaving the petrol station turned left (5).................................. the main road.The sports car",
+          "(6).................................. hard to try to (7).................................. an accident, but the lorry which was",
+          "coming in the opposite (8).................................. was too near, and (9).................................. into him.",
+          "Luckily, nobody was (10).................................. but the sports car was badly (11).................................. ."
+        ]
+      },
+      {
+        "id": "61.3",
+        "marks": "7 marks",
+        "instruction": "Correct the mistake in each sentence.",
+        "items": [
+          "1 Go along of this road and take the first turning on your right.",
+          "2 He got on the car, fastened his seat belt and drove away.",
+          "3 Keep go down here, until you get to the bank.",
+          "4 The lorry broke in the inside lane of the motorway.",
+          "5 If you drive in the fast lane of the motorway, be careful not to break the limit of speed.",
+          "6 He overtake the bicycle on the bridge, which caused a serious accident.",
+          "7 The post office is down there – turn on the left at the traffic lights."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "pedestrians\troad sign\tpedestrian crossing\tmain road\ntraffic jam\tpetrol station\troadworks\tbend\ntraffic lights\tpavement\tjunction\tlorry"
+    ],
+    "pictures": [
+      "Street scene illustration with numbered labels 1–12 pointing to petrol station, lorry, cars, pedestrian crossing, road sign, traffic lights and junction"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "{\"footer\": 64,\n \"testNumber\": \"61\",\n \"testTitle\": \"On the road\",\n \"exercises\": [\n  {\"id\": \"61.1\",\n   \"marks\": \"12 marks\",\n   \"instruction\": \"Label the picture, using the words in the box.\",\n   \"items\": [\"1 ..........................................\", \"2 ..........................................\", \"3 ..........................................\", \"4 ..........................................\", \"5 ..........................................\", \"6 ..........................................\", \"7 ..........................................\", \"8 ..........................................\", \"9 ..........................................\", \"10 ..........................................\", \"11 ..........................................\", \"12 ..........................................\"]},\n  {\"id\": \"61.2\",\n   \"marks\": \"11 marks\",\n   \"instruction\": \"Look at the picture again and complete the gaps in the text to see what happened next.\",\n   \"items\": [\"Last week there was a serious (1).................................. in the town centre during the\", \"(2).................................. hour.Where the road bends near the petrol station, there were roadworks which\", \"(3).................................. a traffic jam, and people in the jam started to get impatient. A young man in a\", \"sports car at the back decided to (4).................................. the slow-moving traffic, and at the same time a\", \"lorry which was leaving the petrol station turned left (5).................................. the main road.The sports car\", \"(6).................................. hard to try to (7).................................. an accident, but the lorry which was\", \"coming in the opposite (8).................................. was too near, and (9).................................. into him.\", \"Luckily, nobody was (10).................................. but the sports car was badly (11).................................. .\"]},\n  {\"id\": \"61.3\",\n   \"marks\": \"7 marks\",\n   \"instruction\": \"Correct the mistake in each sentence.\",\n   \"items\": [\"1 Go along of this road and take the first turning on your right.\", \"2 He got on the car, fastened his seat belt and drove away.\", \"3 Keep go down here, until you get to the bank.\", \"4 The lorry broke in the inside lane of the motorway.\", \"5 If you drive in the fast lane of the motorway, be careful not to break the limit of speed.\", \"6 He overtake the bicycle on the bridge, which caused a serious accident.\", \"7 The post office is down there – turn on the left at the traffic lights.\"]}\n ],\n \"boxesAndLists\": [\"pedestrians\\troad sign\\tpedestrian crossing\\tmain road\\ntraffic jam\\tpetrol station\\troadworks\\tbend\\ntraffic lights\\tpavement\\tjunction\\tlorry\"],\n \"pictures\": [\"Street scene illustration with numbered labels 1–12 pointing to petrol station, lorry, cars, pedestrian crossing, road sign, traffic lights and junction\"],\n \"unclassified\": [\"TEST\", \"Your score\", \"/30\", \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"]\n}"
+}
