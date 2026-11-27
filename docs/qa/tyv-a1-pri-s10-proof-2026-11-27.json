@@ -1,0 +1,52 @@
+{
+ "meta": {
+  "step": "A1-PRI-S10",
+  "book": "tyv-pri",
+  "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+  "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+  "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+  "date": "2026-11-27",
+  "jalali": "۱۴۰۵/۹/۶",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل (متن عین — SHA256 §۱ مرجع 42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8) + قطعهٔ «گام بعدی مجاز» چسبانده‌شده از مالک = A1-PRI-S10 = bun scripts/tyv-a1-vlm-capture.mjs pri 109,110,111,112,113,114,115,116,117,118,119,120 (صفحات ۱۰۹–۱۲۰ — دستهٔ دهم از ۱۲ — بدون skip انتظاری — تداوم Answer key: انتظار testNumber=null و فوتر=pdf−۲ عین یافتهٔ S09) ⇒ سپس S11..S12 (S12 = ۱۳۳–۱۴۲ — ۱۰ صفحهٔ پایانی) ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — گیت‌های A2..A6 و ایستنده‌های R3-e/FA-REVIEWED/G5 دست‌نخورده — توقف گیت‌دار — trace 1a21e60e2359e0e9 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — chat 4253116c-d6ec-4dab-abad-879719cd023a",
+  "sessionPreCheck": "بازیابی ۵۱ صفرتلفاتی پیشا-گام (ریست پنهان ۵۱م — الگوی ۳۱..۵۰ — HEAD محلی بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f دورهٔ O6 درحالی‌که ریموت backup/main = baf72cff915d50afe201c8c22f65be21aa2abd4c پسا-S09 — behind ۲۳۵ / ahead ۰ — ff-only خالص — تنها دلتای stage پسا-fetch = bit مجوز یک فایل نقشه‌راه 100644→100755 آرتیفکت filesystem صفر تفاوت محتوا — chmod 644 + reset mixed به ریموت — porcelain ۰/۰ — HEAD=ریموت ls-remote بایت‌به‌بیت — هوک سالم ee679bc1b642db0f — db 9d1ce7b4…/۲,۵۸۸,۶۷۲B — دیسک‌حقیقت آغاز ۳۰۵/۴۸۹ == رکورد سربرگ ۱۴۳مین — شواهد docs/qa/recovery51-proof-2026-11-27.json) — وجودسنجی پیشا-گام: page-109..120 همگی غایب (دقیق) — SNAPSHOT «گام بعدی مجاز» == A1-PRI-S10 (pri 109..120) عین قطعهٔ مالک"
+ },
+ "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 109,110,111,112,113,114,115,116,117,118,119,120",
+ "runs": [
+  {
+   "stdout": "page 109: ok … page 120: ok — DONE tyv-pri: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-pri/a1",
+   "captured": 12,
+   "skipped": 0,
+   "failed": 0,
+   "verdict": "کل دسته ۱۲/۱۲ ok — تک‌اجرایی هم‌گام تمیز بدون ناهنجاری اجرایی — صفر skip عین انتظار صریح مالک (پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست)"
+  }
+ ],
+ "coverage": {
+  "batchRange": "p109..p120 (دستهٔ دهم از ۱۲ دستهٔ PRI)",
+  "completeNoGap": true,
+  "newFiles": [
+   "docs/qa/tyv-capture-pri/a1/page-109.json",
+   "…",
+   "docs/qa/tyv-capture-pri/a1/page-120.json"
+  ],
+  "skippedExisting": 0,
+  "provenance": "12 JSON NEW page-109..120 (renderSha256 یکتا ۱۲/۱۲ · DPI=300 · promptVersion=tyv-a1-v1 · attempts=≤۳ · status=ok ۱۲/۱۲ · timestamp 2026-11-27T19:02:41.897Z..19:05:16.285Z — پنجرهٔ اجرا ≈ ۲ دقیقه و ۳۴ ثانیه) — a1-index.json به‌روز (capturedNow=12 · skippedExisting=0 · failedTotal=0) — دیسک pri پسا-گام = ۱۲۰ فایل page"
+ },
+ "contractChecks": {
+  "footerOffset": "فوتر = pdfPage−۲ در ۱۲/۱۲ صفحه (107..118 روی p109..p120) — صفر mismatch — صفر footer=null — آفست ناحیهٔ کلید Answer key PRI = pdf−۲ تداوم عین یافتهٔ ساختاری S09 (نه pdf−۱ الگوی ELEM) — هشتمین دستهٔ پیوستهٔ کاملاً سره فوتر",
+  "testNumberExpectation": "انتظار مالک «testNumber=null در صفحات کلید» — واقعیت: ۸/۱۲ null (p109,110,111,112,114,115,116 — صفحات تداوم کلید بدون سرصفحهٔ محدوده) و ۵/۱۲ non-null به‌صورت هدرِ محدودهٔ کلید: p113 «24-26» · p117 «35» · p118 «38-40» · p119 «41-43» · p120 «44» (+testTitle «Test 44»)",
+  "noTestPatternInKey": "هیچ‌یک از ۵ testNumber non-null الگوی test=pdfPage−۵ را برآورده نمی‌کنند (p113→108 ✗ · p117→112 ✗ · p118→113 ✗ · p119→114 ✗ · p120→115 ✗) — صفر تطابق — عین انتظار «بدون الگوی test=pdf−۵ پس از پایان ۱۰۰ تست در p105» — الگوی test=pdf−۵ فقط در ناحیهٔ تست p92..p105 معتبر بود و در ناحیهٔ کلید منتفی است",
+  "keyRangeContinuity": "تداوم Answer key از S09 (کلید Tests 8–10 در p108) به‌صورت پیوسته بدون شکاف: id-پیشوند واقعی هر صفحه = p109=[11,12,13] · p110=[13,14,15,16] · p111=[17,18,19,20] · p112=[21,22,23] · p113=[24,25,26] · p114=[26,27,28] · p115=[28,29,30,31] · p116=[31,32,33,34] · p117=[34,35,36,37] · p118=[38,39,40] · p119=[41,42,43] · p120=[44]+[45,46,47 در unc] — زنجیرهٔ کلید Tests 11..47 پیوسته — بخش‌های کلیدیِ رَسِ مرز صفحه دوصفحه‌ای طبیعی (مثل Test 13 در p110 · Test 26 در p114 · Test 28 در p115 · Test 31 در p116 · Test 34 در p117)",
+  "testNumberSemanticsNuance": "نکتهٔ ساختاری ثبت‌شده: در ناحیهٔ کلید، testNumber صفحه فقط هدرِ محدودهٔ صریحِ داخل صفحه را بازتاب می‌دهد نه پوشش کامل صفحه — گواه: p117 testNumber=«35» درحالی‌که id-پیشوند واقعی صفحه = 34..37 (Test 34 تداوم از p116 + سرصفحهٔ صریح Test 35 + بخش‌های 36/37 بدون سرصفحهٔ صریح captured) — مرجع پوشش واقعی = id-پیشوندها — لایهٔ خام A1 بدون داوری باقی مانده؛ پالایش طبقه‌بندی به فازهای بعدی تعلق دارد",
+  "p120ClassificationVariance": "واریانس طبقه‌بندی خام ثبت‌شده p120: کلید Test 44 به exercises (44.1/44.2/44.3) رفت اما بلوک‌های کامل کلید Tests 45/46/47 (45.1..47.2 با آوانگاری کامل) در unclassified (۱۴ unc) — نشانهٔ مرز دشوار طبقه‌بندی سرصفحه‌های کلید — صفر اتلاف محتوا (متن کامل در unc موجود) — مورد پالایش فاز بعد",
+  "ocrVariance": "صفر واریانس OCR رقم (برخلاف p89 در S08) — صفر کاندید جدید دوگذر G1 — [؟]=۲: p111 ×۱ انتهای سطر آیتم «leave/miss out [?]» (عین الگوی p86 در S08) + p114 ×۱ روی شناسهٔ تمرین «26.1 [?]» (Test 26 کلید رَسِ مرز p113/p114 — نشانهٔ عدم‌قطعیت مدل روی id ادامه — وقوع قرینه در rawModelText «\"id\": \"26.1 [?]\"» — عین الگوی stre[?] p108 در S09) · [N/A]=صفر",
+  "totals": "۱۳۲ تمرین/۶۲۳ آیتم/۰ باکس/۱ تصویر/۵۸ unc — صفر صفحهٔ تصویرمحور (تنها تصویر p118 = جدول کلمات‌پازل کلید 40.3 با واژه‌های حلق‌ه‌زده — محتوای مشروع ناحیهٔ کلید — صفر کاندید رأی G3) — سرصفحهٔ کتاب «Test your English Vocabulary in Use (pre-intermediate and intermediate)» در unc چند صفحه (الگوی نرمال سرصفحه)"
+ },
+ "diskTruthAfterStep": {
+  "biz": "98/98 کامل",
+  "elem": "96/96 کامل",
+  "pri": "120/142 (بستهٔ دهم کامل — S11 = 121..132 · S12 = 133..142 — ۱۰ صفحهٔ پایانی باقی)",
+  "upp": "3/153",
+  "totalA1": "317/489"
+ },
+ "nextStep": "A1-PRI-S11 = bun scripts/tyv-a1-vlm-capture.mjs pri 121,122,123,124,125,126,127,128,129,130,131,132 (صفحات ۱۲۱–۱۳۲ — دستهٔ یازدهم از ۱۲ — بدون skip انتظاری — تداوم Answer key در ناحیهٔ کلید پسا-تست: انتظار تداوم کلید Tests 48..~59 — testNumber فقط جایی که هدرِ محدودهٔ صریح داخل صفحه باشد وگرنه null — فوتر=pdf−۲ عین یافتهٔ ساختاری S09/S10 — بدون الگوی test=pdf−۵)"
+}

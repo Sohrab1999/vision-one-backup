@@ -1,0 +1,27 @@
+{
+ "meta": {
+  "event": "بازیابی ۵۱ — رسیدگی ریست پنهان ۵۱م (الگوی ۳۱..۵۰)",
+  "date": "2026-11-27",
+  "jalali": "۱۴۰۵/۹/۶",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل (متن عین — SHA256 §۱ مرجع 42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8) + قطعهٔ «گام بعدی مجاز» چسبانده‌شده از مالک = A1-PRI-S10 = bun scripts/tyv-a1-vlm-capture.mjs pri 109,110,111,112,113,114,115,116,117,118,119,120 (صفحات ۱۰۹–۱۲۰ — دستهٔ دهم از ۱۲ — بدون skip انتظاری — تداوم Answer key: انتظار testNumber=null و فوتر=pdf−۲ عین یافتهٔ S09) ⇒ سپس S11..S12 (S12 = ۱۳۳–۱۴۲ — ۱۰ صفحهٔ پایانی) ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — گیت‌های A2..A6 و ایستنده‌های R3-e/FA-REVIEWED/G5 دست‌نخورده — توقف گیت‌دار — trace 1a21e60e2359e0e9 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — chat 4253116c-d6ec-4dab-abad-879719cd023a",
+  "hiddenReset": "HEAD محلی بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f (دورهٔ O6 — ۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت backup/main = baf72cff915d50afe201c8c22f65be21aa2abd4c پسا-S09 (ثبت اثبات §۱۰-۷ گام A1-PRI-S09، روی 7b02fa4 محتوایی S09، روی e021d81 ثبت-اثبات S08) — ریموت صحیح = backup — git log محلی سرِ فهرست = 193269b با تاریخ‌های ۲۰۲۶-۱۱-۰۸ (کل .git محلی به عقب برگشته — عین الگوی ریست‌های پنهان ۴۳..۵۰) — درخت کار پسا-S09 روی دیسک باقی بود (SNAPSHOT سربرگ ۱۴۳مین + کپچرهای pri ۰۰۱..۱۰۸ + biz ۹۸ + elem ۹۶ + upp ۳)"
+ },
+ "divergence": {
+  "count": "۰/۲۳۵",
+  "detail": "behind = ۲۳۵ (193269b..baf72cf: کامیت‌های دورهٔ Dictionary Upgrade + وضعیت پسا-S01 طبق بازیابی ۴۶ + کامیت اتوماسیون + کامیت‌های S02..S09 محتوایی/ثبت-اثبات + بازیابی‌های ۴۷..۵۰ + کامیت‌های اتوماسیون میانی) — ahead = ۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only خالص، صفر reset/rebase/force",
+  "coreFilemode": "false (تنظیم مخزن — تغییر bit مجوز فایل نادیده گرفته می‌شود؛ عامل رفتار stale-mode در add پسا-chmod)"
+ },
+ "audit": {
+  "method": "git fetch backup main ⇒ git add -A (stage کامل) ⇒ git diff --cached FETCH_HEAD ⇒ تنها دلتا = bit مجوز یک فایل نقشه‌راه (old mode 100644 → new mode 100755 — «نقشه راه ها/نقشه-راه-چند-جزوه-ای.md» — آرتیفکت filesystem — صفر تفاوت محتوا — عین آرتیفکت بازیابی ۴۹ و ۵۰) ⇒ chmod 644 همان فایل ⇒ git add -A ⇒ git reset --mixed به ریموت baf72cff ⇒ git status --porcelain = ۰ سطر (۰ modified / ۰ untracked)",
+  "diskTruthAtStart": "دیسک‌حقیقت آغاز = ۳۰۵/۴۸۹ (biz ۹۸/۹۸ · elem ۹۶/۹۶ · pri ۱۰۸/۱۴۲ با page-001..108 موجود و page-109..120 غایب · upp ۳/۱۵۳) == رکورد سربرگ ۱۴۳مین SNAPSHOT",
+  "dbCheck": "git hash-object db/custom.db = 9d1ce7b4… (سایز ۲,۵۸۸,۶۷۲ بایت) == رکورد بازیابی ۵۰ — بایت‌به‌بیت دست‌نخورده",
+  "hookCheck": ".git/hooks/post-commit سالم — sha256 پیشوند ee679bc1b642db0f == رکورد ایستنده"
+ },
+ "postState": {
+  "HEAD": "baf72cff915d50afe201c8c22f65be21aa2abd4c",
+  "remoteBackupMain": "baf72cff915d50afe201c8c22f65be21aa2abd4c",
+  "equality": "HEAD == backup/main با git ls-remote — بایت‌به‌بیت",
+  "porcelain": "۰/۰",
+  "verdict": "بازیابی ۵۱ صفرتلفاتی کامل — هیچ پیشرفت تأییدشده‌ای از دست نرفت — صفر بازگشت عقب"
+ }
+}

@@ -1,0 +1,154 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 109,
+    "dpi": 300,
+    "renderSha256": "264a3227918dd630a05c6198c5cccdd7a93e69977d8868d915fc1119a9c8f3c9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T19:02:41.897Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 107,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "11.1",
+        "marks": "(8 marks)",
+        "instruction": "",
+        "items": [
+          "1 mother tongue   4 baby-sitter   7 income tax",
+          "2 science fiction   5 traffic jam   8 brother-in-law",
+          "3 box office   6 dining room"
+        ]
+      },
+      {
+        "id": "11.2",
+        "marks": "(8 marks)",
+        "instruction": "",
+        "items": [
+          "1 traffic lights   3 earrings   5 credit card   7 T-shirt",
+          "2 sunglasses   4 alarm clock   6 tin opener   8 pedestrian crossing"
+        ]
+      },
+      {
+        "id": "11.3",
+        "marks": "(4 marks: ½ for each correct answer)",
+        "instruction": "",
+        "items": [
+          "1 jam, congestion, warden",
+          "2 post, ticket",
+          "3 dining, living, sitting, waiting, bath, spare",
+          "4 sister, mother, father, son, daughter"
+        ]
+      },
+      {
+        "id": "11.4",
+        "marks": "(6 marks)",
+        "instruction": "",
+        "items": [
+          "1 first aid   3 film star   5 parking meter",
+          "2 cheque book   4 washing machine   6 writing paper"
+        ]
+      },
+      {
+        "id": "11.5",
+        "marks": "(4 marks)",
+        "instruction": "",
+        "items": [
+          "1 pop/rock stars   3 hairdryer (or hair drier)",
+          "2 toothpaste /ˈtu:θpeɪst/   4 table tennis"
+        ]
+      },
+      {
+        "id": "12.1",
+        "marks": "(8 marks)",
+        "instruction": "",
+        "items": [
+          "1 well-known   3 badly-paid   5 badly-off   7 well-dressed",
+          "2 good-looking   4 easy-going   6 full-time   8 well-behaved"
+        ]
+      },
+      {
+        "id": "12.2",
+        "marks": "(5 marks)",
+        "instruction": "",
+        "items": [
+          "1 I found a fifty-dollar bill in the street yesterday. / Yesterday I found a fifty-dollar bill in the street.",
+          "2 It is only a ten-minute drive to my office.",
+          "3 Unfortunately we had a three-hour delay at the airport (unfortunately).",
+          "4 Movie stars often stay in five-star hotels.",
+          "5 You can't expect a three-year-old child to understand."
+        ]
+      },
+      {
+        "id": "12.3",
+        "marks": "(10 marks)",
+        "instruction": "",
+        "items": [
+          "1 part-time   4 brand-new   7 well-behaved   10 badly-paid",
+          "2 easy-going   5 four-month-old   8 south-west",
+          "3 well-off   6 six-year-old   9 five-minute"
+        ]
+      },
+      {
+        "id": "12.4",
+        "marks": "(7 marks)",
+        "instruction": "",
+        "items": [
+          "1 second-hand; badly-made   3 left-handed   5 first-class",
+          "2 well-acted; badly-directed   4 short-sleeved"
+        ]
+      },
+      {
+        "id": "13.1",
+        "marks": "(8 marks)",
+        "instruction": "",
+        "items": [
+          "1 He missed the bus   5 broad shoulders",
+          "2 I make a lot of mistakes   6 Don't get in the car",
+          "3 she told a lie   7 My father tells",
+          "4 I missed the lesson   8 a serious illness"
+        ]
+      },
+      {
+        "id": "13.2",
+        "marks": "(7 marks)",
+        "instruction": "",
+        "items": [
+          "1 aware /ə'weə/   4 success /sək'ses/   7 important",
+          "2 unlikely /ʌn'laɪkli/   5 range",
+          "3 work   6 majority /mə'dʒɒrəti/"
+        ]
+      },
+      {
+        "id": "13.3",
+        "marks": null,
+        "instruction": "",
+        "items": [
+          "1 false (the opposite of a dry wine is a sweet wine)",
+          "2 true",
+          "3 true",
+          "4 false (the opposite of a soft drink is an alcoholic drink)"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 11",
+      "Test 12",
+      "Test 13",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 107,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\n      \"id\": \"11.1\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 mother tongue   4 baby-sitter   7 income tax\",\n        \"2 science fiction   5 traffic jam   8 brother-in-law\",\n        \"3 box office   6 dining room\"\n      ]\n    },\n    {\n      \"id\": \"11.2\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 traffic lights   3 earrings   5 credit card   7 T-shirt\",\n        \"2 sunglasses   4 alarm clock   6 tin opener   8 pedestrian crossing\"\n      ]\n    },\n    {\n      \"id\": \"11.3\",\n      \"marks\": \"(4 marks: ½ for each correct answer)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 jam, congestion, warden\",\n        \"2 post, ticket\",\n        \"3 dining, living, sitting, waiting, bath, spare\",\n        \"4 sister, mother, father, son, daughter\"\n      ]\n    },\n    {\n      \"id\": \"11.4\",\n      \"marks\": \"(6 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 first aid   3 film star   5 parking meter\",\n        \"2 cheque book   4 washing machine   6 writing paper\"\n      ]\n    },\n    {\n      \"id\": \"11.5\",\n      \"marks\": \"(4 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 pop/rock stars   3 hairdryer (or hair drier)\",\n        \"2 toothpaste /ˈtu:θpeɪst/   4 table tennis\"\n      ]\n    },\n    {\n      \"id\": \"12.1\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 well-known   3 badly-paid   5 badly-off   7 well-dressed\",\n        \"2 good-looking   4 easy-going   6 full-time   8 well-behaved\"\n      ]\n    },\n    {\n      \"id\": \"12.2\",\n      \"marks\": \"(5 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 I found a fifty-dollar bill in the street yesterday. / Yesterday I found a fifty-dollar bill in the street.\",\n        \"2 It is only a ten-minute drive to my office.\",\n        \"3 Unfortunately we had a three-hour delay at the airport (unfortunately).\",\n        \"4 Movie stars often stay in five-star hotels.\",\n        \"5 You can't expect a three-year-old child to understand.\"\n      ]\n    },\n    {\n      \"id\": \"12.3\",\n      \"marks\": \"(10 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 part-time   4 brand-new   7 well-behaved   10 badly-paid\",\n        \"2 easy-going   5 four-month-old   8 south-west\",\n        \"3 well-off   6 six-year-old   9 five-minute\"\n      ]\n    },\n    {\n      \"id\": \"12.4\",\n      \"marks\": \"(7 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 second-hand; badly-made   3 left-handed   5 first-class\",\n        \"2 well-acted; badly-directed   4 short-sleeved\"\n      ]\n    },\n    {\n      \"id\": \"13.1\",\n      \"marks\": \"(8 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 He missed the bus   5 broad shoulders\",\n        \"2 I make a lot of mistakes   6 Don't get in the car\",\n        \"3 she told a lie   7 My father tells\",\n        \"4 I missed the lesson   8 a serious illness\"\n      ]\n    },\n    {\n      \"id\": \"13.2\",\n      \"marks\": \"(7 marks)\",\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 aware /ə'weə/   4 success /sək'ses/   7 important\",\n        \"2 unlikely /ʌn'laɪkli/   5 range\",\n        \"3 work   6 majority /mə'dʒɒrəti/\"\n      ]\n    },\n    {\n      \"id\": \"13.3\",\n      \"marks\": null,\n      \"instruction\": \"\",\n      \"items\": [\n        \"1 false (the opposite of a dry wine is a sweet wine)\",\n        \"2 true\",\n        \"3 true\",\n        \"4 false (the opposite of a soft drink is an alcoholic drink)\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 11\",\n    \"Test 12\",\n    \"Test 13\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

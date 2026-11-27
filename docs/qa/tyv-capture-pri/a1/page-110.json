@@ -1,0 +1,155 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 110,
+    "dpi": 300,
+    "renderSha256": "181d19702d1268a89d9508454890cc95a97eee211b9b440cc1537df25b4650be",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T19:02:55.510Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 108,
+    "testNumber": null,
+    "testTitle": null,
+    "exercises": [
+      {
+        "id": "13.4",
+        "marks": "(7 marks)",
+        "instruction": "The following are not correct:",
+        "items": [
+          "5 true",
+          "6 false (the opposite of a strong accent is a slight accent)",
+          "7 false (the opposite of a light smoker is a heavy smoker)",
+          "8 true",
+          "(8 marks)",
+          "1 to start a bicycle    4 all correct    7 to run a joke",
+          "2 a heavy lesson    5 to get on/off a taxi",
+          "3 get into/out of a bike    6 all correct"
+        ]
+      },
+      {
+        "id": "14.1",
+        "marks": "(10 marks",
+        "instruction": null,
+        "items": [
+          "1 listening to the radio    6 suffering from shock",
+          "2 it depends on the weather    7 apply for that job",
+          "3 different from    8 good at maths",
+          "4 shouted at me    9 waiting for a call",
+          "5 interested in sport    10 spending money on things"
+        ]
+      },
+      {
+        "id": "14.2",
+        "marks": "(8 marks",
+        "instruction": null,
+        "items": [
+          "1 at    3 of    5 with    7 to",
+          "2 to    4 at/by    6 of    8 to"
+        ]
+      },
+      {
+        "id": "14.3",
+        "marks": "(12 marks",
+        "instruction": null,
+        "items": [
+          "1 She apologised for the mistake.",
+          "2 I agree with you.",
+          "3 This car belongs to me.",
+          "4 He is aware of the problem.",
+          "5 This book is similar to the other one.",
+          "6 I am not very keen on football."
+        ]
+      },
+      {
+        "id": "15.1",
+        "marks": "(12 marks",
+        "instruction": null,
+        "items": [
+          "1 by    3 in    5 on    7 by    9 in    11 for",
+          "2 on    4 by    6 in, for    8 by    10 at"
+        ]
+      },
+      {
+        "id": "15.2",
+        "marks": "(8 marks",
+        "instruction": null,
+        "items": [
+          "1 on holiday    5 by chance",
+          "2 by accident; on purpose /'pɜ:pəs/    6 on my own",
+          "3 on strike /straɪk/    7 on foot",
+          "4 by mistake (by accident is possible)"
+        ]
+      },
+      {
+        "id": "15.3",
+        "marks": "(4 marks",
+        "instruction": null,
+        "items": [
+          "1 on time    2 in time    3 at least    4 out of work"
+        ]
+      },
+      {
+        "id": "15.4",
+        "marks": "(6 marks",
+        "instruction": null,
+        "items": [
+          "1 on business    3 in a moment    5 at the end",
+          "2 in the end    4 on the radio    6 in business"
+        ]
+      },
+      {
+        "id": "16.1",
+        "marks": "(12 marks",
+        "instruction": null,
+        "items": [
+          "1 up    3 up    5 down    7 down/over    9 off",
+          "2 up; off    4 out    6 up    8 up    10 up; down"
+        ]
+      },
+      {
+        "id": "16.2",
+        "marks": "(5 marks",
+        "instruction": null,
+        "items": [
+          "1 c    2 c    3 a    4 d    5 c"
+        ]
+      },
+      {
+        "id": "16.3",
+        "marks": "(8 marks",
+        "instruction": null,
+        "items": [
+          "1 look it up    3 gave it up    5 get through    7 get on ... with",
+          "2 carry on    4 pick it up    6 takes off    8 run out of"
+        ]
+      },
+      {
+        "id": "16.4",
+        "marks": "(5 marks",
+        "instruction": null,
+        "items": [
+          "1 pick up    3 get through    5 go off",
+          "2 went off    4 take off"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 14",
+      "Test 15",
+      "Test 16",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 108,\n  \"testNumber\": null,\n  \"testTitle\": null,\n  \"exercises\": [\n    {\"id\": \"13.4\", \"marks\": \"(7 marks)\", \"instruction\": \"The following are not correct:\", \"items\": [\n      \"5 true\",\n      \"6 false (the opposite of a strong accent is a slight accent)\",\n      \"7 false (the opposite of a light smoker is a heavy smoker)\",\n      \"8 true\",\n      \"(8 marks)\",\n      \"1 to start a bicycle    4 all correct    7 to run a joke\",\n      \"2 a heavy lesson    5 to get on/off a taxi\",\n      \"3 get into/out of a bike    6 all correct\"\n    ]},\n    {\"id\": \"14.1\", \"marks\": \"(10 marks\", \"instruction\": null, \"items\": [\n      \"1 listening to the radio    6 suffering from shock\",\n      \"2 it depends on the weather    7 apply for that job\",\n      \"3 different from    8 good at maths\",\n      \"4 shouted at me    9 waiting for a call\",\n      \"5 interested in sport    10 spending money on things\"\n    ]},\n    {\"id\": \"14.2\", \"marks\": \"(8 marks\", \"instruction\": null, \"items\": [\n      \"1 at    3 of    5 with    7 to\",\n      \"2 to    4 at/by    6 of    8 to\"\n    ]},\n    {\"id\": \"14.3\", \"marks\": \"(12 marks\", \"instruction\": null, \"items\": [\n      \"1 She apologised for the mistake.\",\n      \"2 I agree with you.\",\n      \"3 This car belongs to me.\",\n      \"4 He is aware of the problem.\",\n      \"5 This book is similar to the other one.\",\n      \"6 I am not very keen on football.\"\n    ]},\n    {\"id\": \"15.1\", \"marks\": \"(12 marks\", \"instruction\": null, \"items\": [\n      \"1 by    3 in    5 on    7 by    9 in    11 for\",\n      \"2 on    4 by    6 in, for    8 by    10 at\"\n    ]},\n    {\"id\": \"15.2\", \"marks\": \"(8 marks\", \"instruction\": null, \"items\": [\n      \"1 on holiday    5 by chance\",\n      \"2 by accident; on purpose /'pɜ:pəs/    6 on my own\",\n      \"3 on strike /straɪk/    7 on foot\",\n      \"4 by mistake (by accident is possible)\"\n    ]},\n    {\"id\": \"15.3\", \"marks\": \"(4 marks\", \"instruction\": null, \"items\": [\n      \"1 on time    2 in time    3 at least    4 out of work\"\n    ]},\n    {\"id\": \"15.4\", \"marks\": \"(6 marks\", \"instruction\": null, \"items\": [\n      \"1 on business    3 in a moment    5 at the end\",\n      \"2 in the end    4 on the radio    6 in business\"\n    ]},\n    {\"id\": \"16.1\", \"marks\": \"(12 marks\", \"instruction\": null, \"items\": [\n      \"1 up    3 up    5 down    7 down/over    9 off\",\n      \"2 up; off    4 out    6 up    8 up    10 up; down\"\n    ]},\n    {\"id\": \"16.2\", \"marks\": \"(5 marks\", \"instruction\": null, \"items\": [\n      \"1 c    2 c    3 a    4 d    5 c\"\n    ]},\n    {\"id\": \"16.3\", \"marks\": \"(8 marks\", \"instruction\": null, \"items\": [\n      \"1 look it up    3 gave it up    5 get through    7 get on ... with\",\n      \"2 carry on    4 pick it up    6 takes off    8 run out of\"\n    ]},\n    {\"id\": \"16.4\", \"marks\": \"(5 marks\", \"instruction\": null, \"items\": [\n      \"1 pick up    3 get through    5 go off\",\n      \"2 went off    4 take off\"\n    ]}\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 14\",\n    \"Test 15\",\n    \"Test 16\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

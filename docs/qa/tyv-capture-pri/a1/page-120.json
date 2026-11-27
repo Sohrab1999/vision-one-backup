@@ -1,0 +1,92 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 120,
+    "dpi": 300,
+    "renderSha256": "4d1678053d6ca07600297a4149d5a885c2767fa0a042459c40c8ab4e879480f9",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T19:05:16.285Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 118,
+    "testNumber": "44",
+    "testTitle": "Test 44",
+    "exercises": [
+      {
+        "id": "44.1",
+        "marks": "(6 marks)",
+        "instruction": null,
+        "items": [
+          "clever/bright; horrible/unpleasant; nervous/tense; easy-going/relaxed;",
+          "pleasant/nice; stupid/thick"
+        ]
+      },
+      {
+        "id": "44.2",
+        "marks": "(6 marks)",
+        "instruction": null,
+        "items": [
+          "1 ambitious",
+          "2 unpleasant",
+          "3 cheerful",
+          "4 inflexible",
+          "5 unreliable /ˌʌnrɪ'laɪəbl/",
+          "6 insensitive/inconsiderate"
+        ]
+      },
+      {
+        "id": "44.3",
+        "marks": "(6 marks)",
+        "instruction": null,
+        "items": [
+          "1 dishonest",
+          "2 mean",
+          "3 unkind /ˌʌn'kaɪnd/",
+          "4 unfriendly",
+          "5 weak",
+          "6 pessimistic"
+        ]
+      },
+      {
+        "id": "44.4",
+        "marks": "(12 marks: 2 for each)",
+        "instruction": null,
+        "items": [
+          "1 punctual",
+          "2 sense",
+          "3 shy",
+          "4 confident",
+          "5 initiative",
+          "6 miserable /'mɪzrəbl/"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Test 45",
+      "45.1 1 upset 2 proud 3 frightened 4 embarrassed 5 jealous /'dʒeləs/ (5 marks)",
+      "45.2 1 happiness 2 embarrassing 3 pride /praɪd/ 4 jealousy 5 anger 6 sadness 7 embarrassed 8 embarrassment (8 marks)",
+      "45.3 1 whispered 2 shout /ʃaʊt/ 3 march 4 glanced 5 stroll 6 staring /'steərɪŋ/ (6 marks)",
+      "45.4 1 c 2 c 3 f 4 a 5 b 6 d (6 marks)",
+      "45.5 1 of 2 on 3 at 4 of 5 at (5 marks)",
+      "Test 46",
+      "46.1 1 first 2 full 3 middle 4 surname /'sɜːneɪm/ / family name 5 only 6 inherited 7 widower 8 single-parent / one-parent 9 partner/girlfriend 10 close/old/good 11 step (11 marks)",
+      "46.2 1 uncles /'ʌŋklz/ 2 aunts /ɑːnts/ 3 brother-in-law 4 sister-in-law 5 mother-in-law 6 cousins /'kʌzənz/ 7 grandparents 8 nieces /'niːsɪz/ 9 nephews /'nefjuːz/ 10 ex-wife 11 widow 12 step-father 13 relatives/relations (13 marks)",
+      "46.3 1 e 2 f 3 b 4 a 5 d 6 c (6 marks)",
+      "Test 47",
+      "47.1 1 born 2 grew / was brought 3 met/saw 4 went out 5 split up / broke up 6 went 7 met 8 fell 9 got 10 had 11 born 12 expecting (12 marks)",
+      "47.2 1 toddler 2 child 3 a teenager / an adolescent 4 adult 5 early twenties 6 mid thirties 7 late forties (10 marks)",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 118,\n  \"testNumber\": \"44\",\n  \"testTitle\": \"Test 44\",\n  \"exercises\": [\n    {\"id\": \"44.1\", \"marks\": \"(6 marks)\", \"instruction\": null, \"items\": [\"clever/bright; horrible/unpleasant; nervous/tense; easy-going/relaxed;\", \"pleasant/nice; stupid/thick\"]},\n    {\"id\": \"44.2\", \"marks\": \"(6 marks)\", \"instruction\": null, \"items\": [\"1 ambitious\", \"2 unpleasant\", \"3 cheerful\", \"4 inflexible\", \"5 unreliable /ˌʌnrɪ'laɪəbl/\", \"6 insensitive/inconsiderate\"]},\n    {\"id\": \"44.3\", \"marks\": \"(6 marks)\", \"instruction\": null, \"items\": [\"1 dishonest\", \"2 mean\", \"3 unkind /ˌʌn'kaɪnd/\", \"4 unfriendly\", \"5 weak\", \"6 pessimistic\"]},\n    {\"id\": \"44.4\", \"marks\": \"(12 marks: 2 for each)\", \"instruction\": null, \"items\": [\"1 punctual\", \"2 sense\", \"3 shy\", \"4 confident\", \"5 initiative\", \"6 miserable /'mɪzrəbl/\"]}\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Test 45\",\n    \"45.1 1 upset 2 proud 3 frightened 4 embarrassed 5 jealous /'dʒeləs/ (5 marks)\",\n    \"45.2 1 happiness 2 embarrassing 3 pride /praɪd/ 4 jealousy 5 anger 6 sadness 7 embarrassed 8 embarrassment (8 marks)\",\n    \"45.3 1 whispered 2 shout /ʃaʊt/ 3 march 4 glanced 5 stroll 6 staring /'steərɪŋ/ (6 marks)\",\n    \"45.4 1 c 2 c 3 f 4 a 5 b 6 d (6 marks)\",\n    \"45.5 1 of 2 on 3 at 4 of 5 at (5 marks)\",\n    \"Test 46\",\n    \"46.1 1 first 2 full 3 middle 4 surname /'sɜːneɪm/ / family name 5 only 6 inherited 7 widower 8 single-parent / one-parent 9 partner/girlfriend 10 close/old/good 11 step (11 marks)\",\n    \"46.2 1 uncles /'ʌŋklz/ 2 aunts /ɑːnts/ 3 brother-in-law 4 sister-in-law 5 mother-in-law 6 cousins /'kʌzənz/ 7 grandparents 8 nieces /'niːsɪz/ 9 nephews /'nefjuːz/ 10 ex-wife 11 widow 12 step-father 13 relatives/relations (13 marks)\",\n    \"46.3 1 e 2 f 3 b 4 a 5 d 6 c (6 marks)\",\n    \"Test 47\",\n    \"47.1 1 born 2 grew / was brought 3 met/saw 4 went out 5 split up / broke up 6 went 7 met 8 fell 9 got 10 had 11 born 12 expecting (12 marks)\",\n    \"47.2 1 toddler 2 child 3 a teenager / an adolescent 4 adult 5 early twenties 6 mid thirties 7 late forties (10 marks)\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}
