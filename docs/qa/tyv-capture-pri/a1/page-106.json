@@ -1,0 +1,116 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 106,
+    "dpi": 300,
+    "renderSha256": "67d1f6ec815f05f8b0b26c6d855fd4d781f430f285e8b6606cc0b15850b0fe89",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T12:25:40.123Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 104,
+    "testNumber": null,
+    "testTitle": "Answer key",
+    "exercises": [
+      {
+        "id": "1–3.1",
+        "marks": "(5 marks",
+        "instruction": null,
+        "items": [
+          "[picture-based exercise: saucepan, knife, pointing finger, thumbs up, smiling face]"
+        ]
+      },
+      {
+        "id": "1–3.2",
+        "marks": "(5 marks",
+        "instruction": null,
+        "items": [
+          "1 lost   2 dirty   3 fall   4 rude/impolite   5 ugly /'ʌgli/"
+        ]
+      },
+      {
+        "id": "1–3.3",
+        "marks": "(4 marks",
+        "instruction": null,
+        "items": [
+          "1 put on: weight /weıt/, your gloves   3 do: homework, an exercise",
+          "2 take: half an hour, a photo   4 make: a mistake, a mess"
+        ]
+      },
+      {
+        "id": "1–3.4",
+        "marks": "(5 marks",
+        "instruction": null,
+        "items": [
+          "1 without a noise   2 a lot   3 study it again   4 is",
+          "5 unhappy because you are away from home"
+        ]
+      },
+      {
+        "id": "1–3.5",
+        "marks": "(5 marks",
+        "instruction": null,
+        "items": [
+          "Verb        Noun",
+          "explain      explanation",
+          "choose       choice",
+          "define       definition",
+          "translate    translation",
+          "pronounce    pronunciation"
+        ]
+      },
+      {
+        "id": "1–3.6",
+        "marks": "(6 marks",
+        "instruction": null,
+        "items": [
+          "1 different   2 same   3 same   4 different   5 different   6 same"
+        ]
+      },
+      {
+        "id": "4.1",
+        "marks": "(12 marks",
+        "instruction": null,
+        "items": [
+          "1 noun   4 preposition   7 noun   10 pronoun",
+          "2 definite article   5 adjective   8 adverb   11 preposition",
+          "3 verb   6 indefinite article   9 adjective   12 verb"
+        ]
+      },
+      {
+        "id": "4.2",
+        "marks": "(6 marks",
+        "instruction": null,
+        "items": [
+          "1 an uncountable noun   3 an uncountable noun   5 an infinitive",
+          "2 a plural noun   4 phrasal verbs   6 an idiom"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [
+      "line drawings: saucepan with lid, knife, hand with pointing index finger, thumbs-up hand, lower half of a smiling face"
+    ],
+    "unclassified": [
+      "Notes on the answer key and marking",
+      "1 Each test has a total of 30 marks.",
+      "2 There is one mark for each correct answer in most exercises. Sometimes there is half a mark or two marks for each correct answer. You will find the total marks for each exercise below the exercise number on the test page, and on the right hand side in the answer key.",
+      "3 If two answers are given in the key (separated by a slash /), both answers are correct.",
+      "Example: Remove writing from the board = ...................................... it off",
+      "Answer: rub/clean",
+      "4 Words which are particularly difficult to pronounce are given in phonetic script in the Answer key. Words which cause difficulties with word stress have the stressed syllable in bold print.",
+      "Tests 1–3",
+      "Test 4",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\"footer\": 104,\n \"testNumber\": null,\n \"testTitle\": \"Answer key\",\n \"exercises\": [\n   {\"id\": \"1–3.1\", \"marks\": \"(5 marks\", \"instruction\": null,\n    \"items\": [\"[picture-based exercise: saucepan, knife, pointing finger, thumbs up, smiling face]\"]},\n   {\"id\": \"1–3.2\", \"marks\": \"(5 marks\", \"instruction\": null,\n    \"items\": [\"1 lost   2 dirty   3 fall   4 rude/impolite   5 ugly /'ʌgli/\"]},\n   {\"id\": \"1–3.3\", \"marks\": \"(4 marks\", \"instruction\": null,\n    \"items\": [\"1 put on: weight /weıt/, your gloves   3 do: homework, an exercise\",\n              \"2 take: half an hour, a photo   4 make: a mistake, a mess\"]},\n   {\"id\": \"1–3.4\", \"marks\": \"(5 marks\", \"instruction\": null,\n    \"items\": [\"1 without a noise   2 a lot   3 study it again   4 is\",\n              \"5 unhappy because you are away from home\"]},\n   {\"id\": \"1–3.5\", \"marks\": \"(5 marks\", \"instruction\": null,\n    \"items\": [\"Verb        Noun\",\n              \"explain      explanation\",\n              \"choose       choice\",\n              \"define       definition\",\n              \"translate    translation\",\n              \"pronounce    pronunciation\"]},\n   {\"id\": \"1–3.6\", \"marks\": \"(6 marks\", \"instruction\": null,\n    \"items\": [\"1 different   2 same   3 same   4 different   5 different   6 same\"]},\n   {\"id\": \"4.1\", \"marks\": \"(12 marks\", \"instruction\": null,\n    \"items\": [\"1 noun   4 preposition   7 noun   10 pronoun\",\n              \"2 definite article   5 adjective   8 adverb   11 preposition\",\n              \"3 verb   6 indefinite article   9 adjective   12 verb\"]},\n   {\"id\": \"4.2\", \"marks\": \"(6 marks\", \"instruction\": null,\n    \"items\": [\"1 an uncountable noun   3 an uncountable noun   5 an infinitive\",\n              \"2 a plural noun   4 phrasal verbs   6 an idiom\"]}\n ],\n \"boxesAndLists\": [],\n \"pictures\": [\"line drawings: saucepan with lid, knife, hand with pointing index finger, thumbs-up hand, lower half of a smiling face\"],\n \"unclassified\": [\n   \"Notes on the answer key and marking\",\n   \"1 Each test has a total of 30 marks.\",\n   \"2 There is one mark for each correct answer in most exercises. Sometimes there is half a mark or two marks for each correct answer. You will find the total marks for each exercise below the exercise number on the test page, and on the right hand side in the answer key.\",\n   \"3 If two answers are given in the key (separated by a slash /), both answers are correct.\",\n   \"Example: Remove writing from the board = ...................................... it off\",\n   \"Answer: rub/clean\",\n   \"4 Words which are particularly difficult to pronounce are given in phonetic script in the Answer key. Words which cause difficulties with word stress have the stressed syllable in bold print.\",\n   \"Tests 1–3\",\n   \"Test 4\",\n   \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n ]\n}\n```"
+}

@@ -1,0 +1,90 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 105,
+    "dpi": 300,
+    "renderSha256": "095a8d1ae26acd6dada46237b8829005eaccc4a04c44c0c8cc9fa1705b49a6c7",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T12:25:26.335Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 103,
+    "testNumber": "100",
+    "testTitle": "Abbreviations and abbreviated words",
+    "exercises": [
+      {
+        "id": "100.1",
+        "marks": "8 marks",
+        "instruction": "What do these abbreviations stand for?",
+        "items": [
+          "1 UK = ............................  ............................",
+          "2 UN = ............................  ............................",
+          "3 BBC = ............................  ............................  ............................",
+          "4 PM = ............................  ............................",
+          "5 MP = ............................ of ............................",
+          "6 EU = ............................  ............................",
+          "7 VAT = ............................  ............................  ............................",
+          "8 asap = .............  .............  .............  ............."
+        ]
+      },
+      {
+        "id": "100.2",
+        "marks": "6 marks",
+        "instruction": "Answer these questions.",
+        "items": [
+          "1 There is a special abbreviation used to describe an organisation of the countries that export oil. What is the abbreviation?",
+          "2 There is also an abbreviation to describe the very serious illness that develops from the HIV virus. What is it?",
+          "3 We use the written abbreviation Mrs for a married woman. What abbreviation can we also use for a woman that does not specify whether she is marrried or single?",
+          "4 The abbreviation St can have two meanings. What are they?",
+          "5 What written abbreviation is used for 'Doctor'?",
+          "6 People often talk about their PC, but what exactly are they referring to?"
+        ]
+      },
+      {
+        "id": "100.3",
+        "marks": "6 marks",
+        "instruction": "How would we express these written abbreviations in spoken English?",
+        "items": [
+          "1 etc.  = and ............................  ............................",
+          "2 e.g.  = ............................  ............................",
+          "3 i.e.  = ............................  ............................ words"
+        ]
+      },
+      {
+        "id": "100.4",
+        "marks": "10 marks",
+        "instruction": "Some English words are often shortened, e.g. 'telephone' to 'phone'. In the following sentences find other words that can also be shortened, underline them, and then write the short form at the end of the sentence.",
+        "items": [
+          "Example: Could you help me with my suitcase? It's very heavy.     case",
+          "1 When did your brother decide that he wanted to become a veterinary surgeon?",
+          "2 I've got a very nice photograph of the team which was taken just after they won the cup.",
+          "3 If I were you, I'd put an advertisement in the local paper and see what response you get.",
+          "4 People often say they've got influenza when, in fact, they've got nothing more than a common cold.",
+          "5 The trouble with our teacher is that she puts things on the blackboard then rubs it off before we've had time to write it all down.",
+          "6 There should be some butter on the table, but if not, get some from the refrigerator.",
+          "7 I think Pete must be mad to ride his bicycle through central London during the rush hour.",
+          "8 He's down in the laboratory, doing an experiment.",
+          "9 He's a sales representative for a big pharmaceutical company.",
+          "10 They went by aeroplane but came back in a helicopter."
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "TEST",
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 103,\n  \"testNumber\": \"100\",\n  \"testTitle\": \"Abbreviations and abbreviated words\",\n  \"exercises\": [\n    {\n      \"id\": \"100.1\",\n      \"marks\": \"8 marks\",\n      \"instruction\": \"What do these abbreviations stand for?\",\n      \"items\": [\n        \"1 UK = ............................  ............................\",\n        \"2 UN = ............................  ............................\",\n        \"3 BBC = ............................  ............................  ............................\",\n        \"4 PM = ............................  ............................\",\n        \"5 MP = ............................ of ............................\",\n        \"6 EU = ............................  ............................\",\n        \"7 VAT = ............................  ............................  ............................\",\n        \"8 asap = .............  .............  .............  .............\"\n      ]\n    },\n    {\n      \"id\": \"100.2\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Answer these questions.\",\n      \"items\": [\n        \"1 There is a special abbreviation used to describe an organisation of the countries that export oil. What is the abbreviation?\",\n        \"2 There is also an abbreviation to describe the very serious illness that develops from the HIV virus. What is it?\",\n        \"3 We use the written abbreviation Mrs for a married woman. What abbreviation can we also use for a woman that does not specify whether she is marrried or single?\",\n        \"4 The abbreviation St can have two meanings. What are they?\",\n        \"5 What written abbreviation is used for 'Doctor'?\",\n        \"6 People often talk about their PC, but what exactly are they referring to?\"\n      ]\n    },\n    {\n      \"id\": \"100.3\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"How would we express these written abbreviations in spoken English?\",\n      \"items\": [\n        \"1 etc.  = and ............................  ............................\",\n        \"2 e.g.  = ............................  ............................\",\n        \"3 i.e.  = ............................  ............................ words\"\n      ]\n    },\n    {\n      \"id\": \"100.4\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Some English words are often shortened, e.g. 'telephone' to 'phone'. In the following sentences find other words that can also be shortened, underline them, and then write the short form at the end of the sentence.\",\n      \"items\": [\n        \"Example: Could you help me with my suitcase? It's very heavy.     case\",\n        \"1 When did your brother decide that he wanted to become a veterinary surgeon?\",\n        \"2 I've got a very nice photograph of the team which was taken just after they won the cup.\",\n        \"3 If I were you, I'd put an advertisement in the local paper and see what response you get.\",\n        \"4 People often say they've got influenza when, in fact, they've got nothing more than a common cold.\",\n        \"5 The trouble with our teacher is that she puts things on the blackboard then rubs it off before we've had time to write it all down.\",\n        \"6 There should be some butter on the table, but if not, get some from the refrigerator.\",\n        \"7 I think Pete must be mad to ride his bicycle through central London during the rush hour.\",\n        \"8 He's down in the laboratory, doing an experiment.\",\n        \"9 He's a sales representative for a big pharmaceutical company.\",\n        \"10 They went by aeroplane but came back in a helicopter.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

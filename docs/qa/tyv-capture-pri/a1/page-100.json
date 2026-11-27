@@ -1,0 +1,86 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 100,
+    "dpi": 300,
+    "renderSha256": "711800549de2266cdbb9ca22f6c2b036810ee0ab0f02b19602c2a59c9c0d3a38",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T12:24:24.875Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 98,
+    "testNumber": "95",
+    "testTitle": "The senses",
+    "exercises": [
+      {
+        "id": "95.1",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps with the correct sense word from the box, in the correct form.",
+        "items": [
+          "1 I thought she was English at first, but when she spoke, she ........................ American.",
+          "2 This material is very soft; it almost ........................ like silk.",
+          "3 Did you see those guard dogs? I didn't like the ........................ of them at all.",
+          "4 These flowers ........................ fantastic; the scent fills the whole room.",
+          "5 He said the drink was mostly orange juice, but it didn't ........................ very nice.",
+          "6 When I went into the kitchen there was a strong ........................ of gas.",
+          "7 When he first told me, it ........................ like a great idea, but I'm not so sure now.",
+          "8 I've just had a foot massage. It ........................ wonderful.",
+          "9 That boy ........................ just like my brother: the same hair and a similar-shaped face.",
+          "10 I don't like the ........................ of this soup; I think it's got too much salt in it."
+        ]
+      },
+      {
+        "id": "95.2",
+        "marks": "5 marks",
+        "instruction": "Complete the sentences with the correct sense verb and a suitable adjective.",
+        "items": [
+          "1 This girl ........................ ........................ .",
+          "2 This music ........................ ........................ .",
+          "3 This bed ........................ ........................ .",
+          "4 This perfume ........................ ........................ .",
+          "5 This drink ........................ ........................ ."
+        ]
+      },
+      {
+        "id": "95.3",
+        "marks": "15 marks",
+        "instruction": "Fill the gaps using verbs from the box, in the correct form.",
+        "items": [
+          "1 Did you ........................ that noise?",
+          "2 There was a big man standing in front of me so I couldn't ........................ a thing.",
+          "3 I never ........................ pop music on the radio, except when I'm in the car.",
+          "4 The cooker gets very hot, so don't ........................ it under any circumstances.",
+          "5 One of the teachers said she would ........................ my letter and correct it.",
+          "6 My cat loves to sit in the window and ........................ the birds in the tree outside.",
+          "7 I gave the instructions twice, but he still got them wrong; he wasn't ........................ .",
+          "8 ........................ my arm and you won't fall, I promise.",
+          "9 We went to the cinema last night to ........................ that new comedy.",
+          "10 I put my money in and ........................ that button, but nothing happened.",
+          "11 I must have ........................ the wall before the paint was completely dry.",
+          "12 If you ........................ the carpet closely, you can ........................ how dirty it is.",
+          "13 I ........................ the announcement but I couldn't tell you what he said because I wasn't really ........................ ."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "look    sound    taste    feel    smell",
+      "see    look (at)    watch    hear    listen (to)    press    touch    hold"
+    ],
+    "pictures": [
+      "line-drawing of five numbered scenes (1-5): a girl holding her head, a boy listening to a radio, a woman sitting on a bed, a person smelling something, a boy drinking"
+    ],
+    "unclassified": [
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 98,\n  \"testNumber\": \"95\",\n  \"testTitle\": \"The senses\",\n  \"exercises\": [\n    {\n      \"id\": \"95.1\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Fill the gaps with the correct sense word from the box, in the correct form.\",\n      \"items\": [\n        \"1 I thought she was English at first, but when she spoke, she ........................ American.\",\n        \"2 This material is very soft; it almost ........................ like silk.\",\n        \"3 Did you see those guard dogs? I didn't like the ........................ of them at all.\",\n        \"4 These flowers ........................ fantastic; the scent fills the whole room.\",\n        \"5 He said the drink was mostly orange juice, but it didn't ........................ very nice.\",\n        \"6 When I went into the kitchen there was a strong ........................ of gas.\",\n        \"7 When he first told me, it ........................ like a great idea, but I'm not so sure now.\",\n        \"8 I've just had a foot massage. It ........................ wonderful.\",\n        \"9 That boy ........................ just like my brother: the same hair and a similar-shaped face.\",\n        \"10 I don't like the ........................ of this soup; I think it's got too much salt in it.\"\n      ]\n    },\n    {\n      \"id\": \"95.2\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Complete the sentences with the correct sense verb and a suitable adjective.\",\n      \"items\": [\n        \"1 This girl ........................ ........................ .\",\n        \"2 This music ........................ ........................ .\",\n        \"3 This bed ........................ ........................ .\",\n        \"4 This perfume ........................ ........................ .\",\n        \"5 This drink ........................ ........................ .\"\n      ]\n    },\n    {\n      \"id\": \"95.3\",\n      \"marks\": \"15 marks\",\n      \"instruction\": \"Fill the gaps using verbs from the box, in the correct form.\",\n      \"items\": [\n        \"1 Did you ........................ that noise?\",\n        \"2 There was a big man standing in front of me so I couldn't ........................ a thing.\",\n        \"3 I never ........................ pop music on the radio, except when I'm in the car.\",\n        \"4 The cooker gets very hot, so don't ........................ it under any circumstances.\",\n        \"5 One of the teachers said she would ........................ my letter and correct it.\",\n        \"6 My cat loves to sit in the window and ........................ the birds in the tree outside.\",\n        \"7 I gave the instructions twice, but he still got them wrong; he wasn't ........................ .\",\n        \"8 ........................ my arm and you won't fall, I promise.\",\n        \"9 We went to the cinema last night to ........................ that new comedy.\",\n        \"10 I put my money in and ........................ that button, but nothing happened.\",\n        \"11 I must have ........................ the wall before the paint was completely dry.\",\n        \"12 If you ........................ the carpet closely, you can ........................ how dirty it is.\",\n        \"13 I ........................ the announcement but I couldn't tell you what he said because I wasn't really ........................ .\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"look    sound    taste    feel    smell\",\n    \"see    look (at)    watch    hear    listen (to)    press    touch    hold\"\n  ],\n  \"pictures\": [\n    \"line-drawing of five numbered scenes (1-5): a girl holding her head, a boy listening to a radio, a woman sitting on a bed, a person smelling something, a boy drinking\"\n  ],\n  \"unclassified\": [\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

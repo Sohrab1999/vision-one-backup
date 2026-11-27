@@ -1,0 +1,93 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 104,
+    "dpi": 300,
+    "renderSha256": "95710aaf7169cfcc573e3365b0925892b3cb4499b93f9e90d4729a7817f8f4b1",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T12:25:13.109Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 102,
+    "testNumber": "99",
+    "testTitle": "Formal and informal English",
+    "exercises": [
+      {
+        "id": "99.1",
+        "marks": "7 marks",
+        "instruction": "The first line in each situation below is in formal English, and the second line expresses the same meaning in more informal English. Fill the gaps with appropriate words, but do not repeat words already used in the first sentences.",
+        "items": [
+          "1 A LETTER",
+          "I .................................. to .................................. you that we are .................................. to offer you any more ...",
+          "I am sorry to say that we can't offer you any more ...",
+          "2 SIGN IN CAFE",
+          "Only food .................................. here may be consumed on the .................................. .",
+          "Only food bought here can be eaten here (in the cafe).",
+          "3",
+          "If you .................................. any further .................................. , please remember to ...",
+          "If you need any more help, please remember to ..."
+        ]
+      },
+      {
+        "id": "99.2",
+        "marks": "5 marks",
+        "instruction": "Replace the words in italics with a less formal alternative that has the same meaning.",
+        "items": [
+          "1 This is for hotel patrons only.",
+          "2 I believe it is due to commence in ten minutes.",
+          "3 They've taken a break for lunch but I understand the meeting will resume afterwards if there are further issues to discuss.",
+          "4 Where was this man apprehended?",
+          "5 It was dark at the time, thus the witness was unable to identify the man."
+        ]
+      },
+      {
+        "id": "99.3",
+        "marks": "12 marks",
+        "instruction": "Replace the word in italics with a less informal alternative that has the same meaning.",
+        "items": [
+          "1 His last film was terrific.",
+          "2 She is one of the brightest students in the class.",
+          "3 When can I pick up the photos?",
+          "4 I got it for twenty quid in the end.",
+          "5 Did you manage to fix up a meeting for next week?",
+          "6 I'm going to the loo. I won't be a minute.",
+          "7 They should be here pretty soon.",
+          "8 Where have the kids gone?",
+          "9 This place is very handy for the underground.",
+          "10 What time do you reckon we should leave?",
+          "11 He's a very nice guy.",
+          "12 What time did you get there?"
+        ]
+      },
+      {
+        "id": "99.4",
+        "marks": "6 marks",
+        "instruction": "Rewrite these sentences in less formal English by including the words on the right. Add or change any words that are necessary, but keep the meaning the same.",
+        "items": [
+          "1 Would you like to go out? ...........................................................................................",
+          "Do ................................................................................................................................... ?   FANCY",
+          "2 We must contact them soon. .........................................................................................",
+          "We ....................................................................................................................................   TOUCH",
+          "3 I'm going to talk to him. .................................................................................................",
+          "I'm going ........................................................................................................................   A WORD"
+        ]
+      }
+    ],
+    "boxesAndLists": [],
+    "pictures": [],
+    "unclassified": [
+      "Your score",
+      "/30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 102,\n  \"testNumber\": \"99\",\n  \"testTitle\": \"Formal and informal English\",\n  \"exercises\": [\n    {\n      \"id\": \"99.1\",\n      \"marks\": \"7 marks\",\n      \"instruction\": \"The first line in each situation below is in formal English, and the second line expresses the same meaning in more informal English. Fill the gaps with appropriate words, but do not repeat words already used in the first sentences.\",\n      \"items\": [\n        \"1 A LETTER\",\n        \"I .................................. to .................................. you that we are .................................. to offer you any more ...\",\n        \"I am sorry to say that we can't offer you any more ...\",\n        \"2 SIGN IN CAFE\",\n        \"Only food .................................. here may be consumed on the .................................. .\",\n        \"Only food bought here can be eaten here (in the cafe).\",\n        \"3\",\n        \"If you .................................. any further .................................. , please remember to ...\",\n        \"If you need any more help, please remember to ...\"\n      ]\n    },\n    {\n      \"id\": \"99.2\",\n      \"marks\": \"5 marks\",\n      \"instruction\": \"Replace the words in italics with a less formal alternative that has the same meaning.\",\n      \"items\": [\n        \"1 This is for hotel patrons only.\",\n        \"2 I believe it is due to commence in ten minutes.\",\n        \"3 They've taken a break for lunch but I understand the meeting will resume afterwards if there are further issues to discuss.\",\n        \"4 Where was this man apprehended?\",\n        \"5 It was dark at the time, thus the witness was unable to identify the man.\"\n      ]\n    },\n    {\n      \"id\": \"99.3\",\n      \"marks\": \"12 marks\",\n      \"instruction\": \"Replace the word in italics with a less informal alternative that has the same meaning.\",\n      \"items\": [\n        \"1 His last film was terrific.\",\n        \"2 She is one of the brightest students in the class.\",\n        \"3 When can I pick up the photos?\",\n        \"4 I got it for twenty quid in the end.\",\n        \"5 Did you manage to fix up a meeting for next week?\",\n        \"6 I'm going to the loo. I won't be a minute.\",\n        \"7 They should be here pretty soon.\",\n        \"8 Where have the kids gone?\",\n        \"9 This place is very handy for the underground.\",\n        \"10 What time do you reckon we should leave?\",\n        \"11 He's a very nice guy.\",\n        \"12 What time did you get there?\"\n      ]\n    },\n    {\n      \"id\": \"99.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Rewrite these sentences in less formal English by including the words on the right. Add or change any words that are necessary, but keep the meaning the same.\",\n      \"items\": [\n        \"1 Would you like to go out? ...........................................................................................\",\n        \"Do ................................................................................................................................... ?   FANCY\",\n        \"2 We must contact them soon. .........................................................................................\",\n        \"We ....................................................................................................................................   TOUCH\",\n        \"3 I'm going to talk to him. .................................................................................................\",\n        \"I'm going ........................................................................................................................   A WORD\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [],\n  \"pictures\": [],\n  \"unclassified\": [\n    \"Your score\",\n    \"/30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}

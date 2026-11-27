@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "step": "A1-PRI-S09",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP — ISBN جلد پشتی 0-521-77980-4)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "date": "2026-11-27",
+    "jalali": "۱۴۰۵/۹/۶",
+    "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل (متن عین — SHA256 §۱ مرجع 42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8) — بدون چسباندن قطعهٔ «گام بعدی مجاز» در این نوبت ⇒ گام بعدی مجاز از مرجع ثبت‌شدهٔ سربرگ ۱۴۲مین SNAPSHOT استخراج شد = A1-PRI-S09 (صفحات ۹۷–۱۰۸ — دستهٔ نهم از ۱۲ — بدون skip انتظاری — انتظار Tests 92..100 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — تداوم Notional concepts (Tests 92..95) + آغاز Varieties of English از Test 96 + پایان ۱۰۰ تست در p105 + p106..p108 ناحیهٔ گذار پسا-تست) ⇒ سپس PRI S10..S12 (S12 = ۱۳۳–۱۴۲ — ۱۰ صفحهٔ پایانی) ⇒ UPP S01..S13 تا ۴۸۹/۴۸۹ ⇒ سند دروازهٔ G1 — A2..A6 گیت‌دار مالک — گیت‌های ایستندهٔ R3-e/FA-REVIEWED/G5 دست‌نخورده — توقف گیت‌دار — trace 1a21cee4c8741ac9 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — chat 4253116c-d6ec-4dab-abad-879719cd023a",
+    "sessionPreCheck": "بازیابی ۵۰ صفرتلفاتی پیشا-گام (ریست پنهان ۵۰م — الگوی ۳۱..۴۹ — سندباکس بازسازی و HEAD محلی بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f دورهٔ O6 درحالی‌که ریموت = e021d819d9ed529f17344b06d7f73388ae4578aa پسا-S08 — remote origin غایب در config تازهٔ سندباکس — ریموت صحیح = backup — ۳۲ modified + ۴۱۹ untracked روی دیسک — اثبات برابری بایت‌به‌بیت درخت stage شده با backup/main — تنها دلتا bit مجوز یک فایل نقشه‌راه (100644→100755 — آرتیفکت filesystem — صفر تفاوت محتوا — عین آرتیفکت بازیابی ۴۹) — db بایت‌به‌بیت == ریموت (git hash-object 9d1ce7b4… — سایز ۲,۵۸۸,۶۷۲B هر دو طرف) — chmod + reset mixed به ریموت e021d81 — porcelain ۰/۰ — HEAD=ریموت ls-remote بایت‌به‌بیت — هوک سالم ee679bc1b642db0f — دیسک‌حقیقت آغاز ۲۹۳/۴۸۹ == رکورد سربرگ ۱۴۲مین — شواهد docs/qa/recovery50-proof-2026-11-27.json) — وجودسنجی پیشا-گام: page-097..108 همگی غایب (دقیق) — SNAPSHOT «گام بعدی مجاز» == A1-PRI-S09 (pri 97..108)"
+  },
+  "command": "bun scripts/tyv-a1-vlm-capture.mjs pri 97,98,99,100,101,102,103,104,105,106,107,108",
+  "runs": [
+    {
+      "stdout": "page 97: ok … page 108: ok — DONE tyv-pri: captured=12 skipped=0 failed=0 → docs/qa/tyv-capture-pri/a1",
+      "captured": 12,
+      "skipped": 0,
+      "failed": 0,
+      "verdict": "کل دسته ۱۲/۱۲ ok — تک‌اجرایی هم‌گام تمیز بدون ناهنجاری اجرایی — صفر skip عین انتظار صریح مالک (پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست)"
+    }
+  ],
+  "coverage": {
+    "batchRange": "p97..p108 (دستهٔ نهم از ۱۲ دستهٔ PRI)",
+    "completeNoGap": true,
+    "newFiles": ["docs/qa/tyv-capture-pri/a1/page-097.json", "…", "docs/qa/tyv-capture-pri/a1/page-108.json"],
+    "skippedExisting": 0,
+    "provenance": "12 JSON NEW page-097..108 (renderSha256 یکتا ۱۲/۱۲ · DPI=300 · tyv-a1-v1 · attempts=≤۳ · status=ok ۱۲/۱۲ · timestamp 2026-11-27T12:23:47.650Z..12:26:13.383Z)"
+  },
+  "patternCheck": {
+    "expected": "Tests 92..100 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — تداوم Notional concepts (Tests 92..95 — Distance, size and dimension عین Contents p4 [25]) + آغاز Varieties of English از Test 96 عین Contents p4 [26] + پایان ۱۰۰ تست در p105 (Test 100 «Abbreviations and abbreviated words» عین Contents p4) + صفحات p106..p108 ناحیهٔ گذار پسا-تست (کلید عین Introduction p6 از کتاب ۱۰۴ آغاز می‌شود — ساختار و آفست فوتر واقعی در اجرا ثبت می‌شود)",
+    "result": "test=pdfPage−۵: ۹/۹ دقیق صفر واریانس (Tests 92..100 روی p97..p105) — نهمین تأیید مستقل الگوی سه‌ضابطه‌ای — فوتر=pdf−۲: ۱۲/۱۲ دقیق (۹۵..۱۰۶ شامل ناحیهٔ کلید) · صفر mismatch · صفر footer=null — هفتمین دستهٔ پیوستهٔ کاملاً سره فوتر پس از S03..S08",
+    "footers": "p97→95 · p98→96 · p99→97 · p100→98 · p101→99 · p102→100 · p103→101 · p104→102 · p105→103 · p106→104 · p107→105 · p108→106 — فوترهای تستی دقیقاً == شمارهٔ صفحهٔ کتاب Contents p4 · فوترهای ناحیهٔ کلید == pdf−۲ (نه pdf−۱ الگوی ELEM — یافتهٔ ساختاری ثبت‌شده)",
+    "anchors": {
+      "notionalConceptsContinuation": "p97..p100 = Tests 92..95 عین Contents p4 [25] (Distance, size and dimension · Shapes, colours and patterns · Partitives · The senses) — با یک تفاوت ساختاری عنوان (نه OCR): Test 94 روی صفحه = «Partitives (e.g. a bowl of, a piece of)» در برابر فهرست «Partitives» — افزونگی پارانتستیک مثال‌ها در عنوان واقعی صفحه",
+      "varietiesOfEnglishStart": "p101 = Test 96 «Notices and warnings» عین Contents p4 [26] (ادامه: Vague language p102 · American English p103 · Formal and informal English p104 · Abbreviations and abbreviated words p105 — تطبیق بیت‌به‌بیت عناوین ۹/۹ با محتوای کپچر صفحهٔ ۴)",
+      "test100EndsAtP105": "p105 = Test 100 «Abbreviations and abbreviated words» عین Contents p4 — پایان ۱۰۰ تست در p105 عین انتظار",
+      "answerKeyZone": "p106 = آغاز Answer key — فوتر ۱۰۴ == کتاب ۱۰۴ عین Introduction p6 («کلید از کتاب ۱۰۴ آغاز می‌شود» — لنگر دقیق) — p106 = «Notes on the answer key and marking» + قواعد نمره‌دهی (۱ هر تست /۳۰ نمره …) + کلید Tests 1–3/4 (ids 1–3.1..1–3.6 · 4.1 · 4.2) · p107 = کلید Tests 4–7 (ids 4.3..7.4 + سرصفحه‌های Test 5/6/7 در unc) · p108 = کلید Tests 8–10 (ids 8.1..8.4 · 9.1..9.5 · 10.1..10.3 + سرصفحه‌های Test 8/9/10 در unc) — آفست فوتر واقعی ناحیهٔ کلید PRI = pdf−۲ ثبت شد"
+    }
+  },
+  "counts": {
+    "exercises": 71,
+    "items": 363,
+    "boxesAndLists": 10,
+    "pictures": 15,
+    "unclassified": 43,
+    "questionMarks": "۲ (هر دو p108: خط راهنمای نمره‌دهی کلید 8.3 «1/2 mark for the correct word, 1/2 for the correct stre[?]» — واژهٔ stress — در transcription + وقوع قرینهٔ همان نشانه در rawModelText)",
+    "notApplicable": 0
+  },
+  "quality": {
+    "ocrVariance": "صفر واریانس OCR در شمارهٔ تست (92..100 دقیق ۹/۹) و صفر واریانس OCR عنوان",
+    "structuralTitleNote": "۱ تفاوت ساختاری عنوان-صفحه/عنوان-فهرست (Test 94 پارانتستیک مثال‌ها — نه خطای OCR — صادقانه ثبت شد)",
+    "g1Candidates": "صفر کاندید جدید دوگذر G1",
+    "g3Candidates": "صفر صفحهٔ تصویرمحور (بیشینهٔ تصویر = ۵ در p101 «Notices and warnings» — صفر کاندید رأی G3)"
+  },
+  "diskTruth": {
+    "pri": "۱۰۸/۱۴۲ (page-001..108 — آخرین page-108)",
+    "biz": "۹۸/۹۸",
+    "elem": "۹۶/۹۶",
+    "upp": "۳/۱۵۳",
+    "total": "۳۰۵/۴۸۹"
+  },
+  "nextStep": "A1-PRI-S10 = bun scripts/tyv-a1-vlm-capture.mjs pri 109,110,111,112,113,114,115,116,117,118,119,120 (صفحات ۱۰۹–۱۲۰ — دستهٔ دهم از ۱۲ — بدون skip انتظاری — پراب‌ها فقط ۷/۱۰/۴۱ و هیچ‌کدام در این دسته نیست — تداوم Answer key در ناحیهٔ کلید پسا-تست: انتظار testNumber=null در صفحات کلید و فوتر=pdf−۲ عین یافتهٔ ساختاری S09 — بدون الگوی test=pdf−۵ پس از پایان ۱۰۰ تست در p105)"
+}

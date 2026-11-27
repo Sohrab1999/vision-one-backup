@@ -1,0 +1,31 @@
+{
+ "meta": {
+  "event": "بازیابی ۵۰ — رسیدگی ریست پنهان ۵۰م (الگوی ۳۱..۴۹)",
+  "date": "2026-11-27",
+  "jalali": "۱۴۰۵/۹/۶",
+  "ownerCommand": "«گام بعدی رو شروع کن و نقشه راه رو آپدیت کن و در انتها» + الزام حیاتی پایداری ۱۰بندی کامل (متن عین، SHA256 §۱ مرجع 42747cb62b9be7f810c3655c790b45f2e732cc88381454fce46eadb5c6b6acf8) — بدون چسباندن قطعهٔ «گام بعدی مجاز» از مالک در این نوبت ⇒ گام بعدی مجاز از مرجع ثبت‌شدهٔ سربرگ ۱۴۲مین SNAPSHOT استخراج شد = A1-PRI-S09 = bun scripts/tyv-a1-vlm-capture.mjs pri 97,98,99,100,101,102,103,104,105,106,107,108 — trace 1a21cee4c8741ac9 — channel zai-web — session web-db5d9cf8-c8eb-44ee-996c-ef41ac30f574 — chat 4253116c-d6ec-4dab-abad-879719cd023a",
+  "hiddenReset": "HEAD محلی بازگشته 193269b76cf46f9dcb210c71953bd1614c4dc45f (دورهٔ O6 — ۲۰۲۶-۱۱-۰۸) درحالی‌که ریموت = e021d819d9ed529f17344b06d7f73388ae4578aa پسا-S08 (ثبت اثبات §۱۰-۷ گام A1-PRI-S08، روی 492b642 محتوایی S08، روی 5965e6c ثبت-اثبات S07، روی 140e71d محتوایی S07) — remote origin ناموجود در config تازهٔ سندباکس (git ls-remote origin = fatal) و ریموت صحیح = backup — reflog محلی صفر اثر پسا-O6 (کل .git به عقب برگشته — عین الگوی ریست‌های پنهان ۴۳..۴۹) — درخت کار پسا-S08 روی دیسک باقی بود (SNAPSHOT سربرگ ۱۴۲مین + کپچرهای pri ۰۰۱..۰۹۶ + biz ۹۸ + elem ۹۶ + upp ۳)"
+ },
+ "divergence": {
+  "count": "۰/۲۳۳",
+  "detail": "behind = ۲۳۳ (193269b..e021d81: کامیت‌های O3/O4/O5/O6 دورهٔ Dictionary Upgrade + وضعیت پسا-S01 طبق بازیابی ۴۶ + کامیت اتوماسیون پسا-نشست 82f472e + کامیت‌های S02..S08 محتوایی/ثبت-اثبات + بازیابی‌های ۴۷..۴۹ + کامیت‌های اتوماسیون میانی) — ahead = ۰ صفر کامیت یکتای محلی ⇒ مسیر ff-only خالص، صفر reset/rebase/force"
+ },
+ "audit": {
+  "method": "stage کامل git add -A ⇒ مقایسهٔ درخت stage شده (git write-tree = c196134c16d04dcf9329f697e8835613c48857dd) با درخت tip ریموت (backup/main^{tree} = 8f4457bf15ee1e7a6137ef4a5c08baf647a879a0) با core.quotepath=false",
+  "beforeReset": "porcelain ظاهری نسبت به HEAD کهنهٔ 193269b: ۳۲ M + ۴۱۹ untracked (جمع ۴۵۱) — git diff --cached backup/main --summary = تنها «mode change 100644 => 100755 نقشه راه ها/نقشه-راه-چند-جزوه-ای.md» — stat کل: «۱ file changed, 0 insertions(+), 0 deletions(-)» ⇒ صفر دلتای محتوا؛ تنها دلتا bit مجوز یک فایل نقشه‌راه — آرتیفکت filesystem — عین آرتیفکت بازیابی ۴۹",
+  "untrackedAudit": "هر ۴۱۹ فایل untracked پس از reset mixed tracked == tip ریموت شدند و صفر فایل untracked باقی ماند ⇒ ۴۱۹/۴۱۹ ARCHIVED بایت‌به‌بیت · LOCAL-ONLY = ۰ · differ(محتوا) = ۰ · deleted = ۰ — اثبات ساختاری: reset mixed فایل‌های درخت کار را بازنویسی نمی‌کند؛ porcelain پسا-ریست ۰/۰ یعنی هر فایل درخت کار == index == درخت tip ریموت و هیچ فایل محلی-یگانه‌ای باقی نمانده",
+  "dbAudit": "db/custom.db: git hash-object محلی = 9d1ce7b4b3e542e9230dcdc229f9ab1ef0add606 == blob-OID ریموت backup/main:db/custom.db — سایز ۲,۵۸۸,۶۷۲B هر دو طرف — برابری بایت‌به‌بیت (یادداشت روش‌شناختی: مقایسهٔ sha256sum فایل با blob-OID گیت معتبر نیست — دو تابع هش متفاوت؛ سنجش صحیح با git hash-object انجام شد)",
+  "resetMethod": "chmod 644 «نقشه راه ها/نقشه-راه-چند-جزوه-ای.md» + git reset e021d819d9ed529f17344b06d7f73388ae4578aa (mixed — هرگز فایل‌های درخت کار را بازنویسی نمی‌کند — ایمن‌تر از --hard؛ چون پیشا-ممیزی صفر دلتای محتوا نشان داد) ⇒ HEAD = e021d81 = ریموت"
+ },
+ "postState": {
+  "head": "e021d819d9ed529f17344b06d7f73388ae4578aa",
+  "remote": "backup/main = e021d819d9ed529f17344b06d7f73388ae4578aa (git ls-remote پسا-ریست بایت‌به‌بیت == HEAD)",
+  "porcelain": "صفر untracked · صفر modified · صفر deleted — درخت کاملاً پاک",
+  "gitDiffCheck": "پاک",
+  "stashStack": "خالی (۰)",
+  "hookSha256": "ee679bc1b642db0f5ecc206544d1c10daf71cffe3827dad33d3b0177c58aed71 == ثبت‌شدهٔ SNAPSHOT (هوک post-commit سالم — پیشوند ۱۶ کاراکتری مطابق ثبت سربرگ)",
+  "diskTruth": "بازشماری ls: biz=98 · elem=96 · pri=96 (۰۰۱..۰۹۶ — شامل دستهٔ S08 صفحات ۸۵..۹۶) · upp=3 ⇒ ۲۹۳/۴۸۹ == رکورد سربرگ ۱۴۲مین — دقیق",
+  "fetchNote": "git fetch backup سه شاخهٔ ریموت جدید بازیابی rc43/rc44/rc45 (pre-ff-stash-2026-11-25) را آورد — صفر اثر بر main"
+ },
+ "conclusion": "بازیابی ۵۰ کامل و صفرتلفاتی — وضعیت آغاز گام A1-PRI-S09 دقیقاً == وضعیت ثبت‌شدهٔ پسا-S08 (سربرگ ۱۴۲مین) — گام بعدی مجاز طبق SNAPSHOT ۱۴۲مین: A1-PRI-S09 = bun scripts/tyv-a1-vlm-capture.mjs pri 97,98,99,100,101,102,103,104,105,106,107,108 (صفحات ۹۷–۱۰۸ — دستهٔ نهم از ۱۲ — بدون skip انتظاری — انتظار Tests 92..100 با test=pdfPage−۵ و فوتر pdf−۲ هرجا موجود — تداوم Notional concepts (Tests 92..95) + آغاز Varieties of English از Test 96 + پایان ۱۰۰ تست در p105 + p106..p108 ناحیهٔ گذار پسا-تست)"
+}

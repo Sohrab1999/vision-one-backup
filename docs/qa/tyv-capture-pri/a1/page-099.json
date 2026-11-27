@@ -1,0 +1,95 @@
+{
+  "provenance": {
+    "phase": "A1 — لایهٔ استخراج خام (رونویسی VLM صفحه‌محور)",
+    "book": "tyv-pri",
+    "title": "Test Your English Vocabulary in Use — pre-intermediate & intermediate (Stuart Redman & Ruth Gairns — CUP)",
+    "pdf": "upload/Test Your English Vocabulary in Use-Pre & Int.pdf",
+    "pdfSha256": "89a8cd2c8dba7c58c994c91877a9fc07e3b656d0412ded3c900440071b2f9071",
+    "pdfPage": 99,
+    "dpi": 300,
+    "renderSha256": "a07dace65ca2a29aea5eabc3dc58a8026b86a6120e3245530e9bf354591bfa37",
+    "model": "z-ai vision CLI",
+    "promptVersion": "tyv-a1-v1",
+    "ownerCommand": "«این کتاب ها رو بررسی کن برای هر کدوم یک نقشه راه بنویس و یک استخراج با کیفیت رو باید شروع کنیم» — trace 1a20458b14c63e71",
+    "attempts": "≤3",
+    "timestamp": "2026-11-27T12:24:11.353Z"
+  },
+  "status": "ok",
+  "transcription": {
+    "footer": 97,
+    "testNumber": "94",
+    "testTitle": "Partitives (e.g. a bowl of, a piece of)",
+    "exercises": [
+      {
+        "id": "94.1",
+        "marks": "2 marks",
+        "instruction": "Here are definitions of two words beginning with the letters 'cont'. What are the words?",
+        "items": [
+          "1 A cont.......................... is something, such as a box, that can be used for keeping things in.",
+          "2 The cont.......................... are the things that you find inside a box, bag, room, etc."
+        ]
+      },
+      {
+        "id": "94.2",
+        "marks": "12 marks",
+        "instruction": "Complete the descriptions under each picture.",
+        "items": [
+          "1 a ................ of shopping",
+          "5 a ................ of beer",
+          "9 a ................ of chocolates",
+          "2 a ................ of sugar",
+          "6 a ................ of coffee",
+          "10 a ................ of milk",
+          "3 a ................ of flowers",
+          "7 a ................ of soup",
+          "11 a ................ of coffee",
+          "4 a ................ of water",
+          "8 a ................ of toothpaste",
+          "12 a ................ of cola"
+        ]
+      },
+      {
+        "id": "94.3",
+        "marks": "10 marks",
+        "instruction": "Fill the gaps using the words in the box. You mustn't use any word more than twice.",
+        "items": [
+          "1 We'll need another .......................... of wood.",
+          "2 I only want a .......................... of butter on my bread.",
+          "3 Could I have another .......................... of paper?",
+          "4 How much is that .......................... of grapes?",
+          "5 I'll have to buy another .......................... of tights.",
+          "6 We've still got a .......................... of time so there's no hurry.",
+          "7 If we're going to make sandwiches, we'll need at least ten ..........................s of bread.",
+          "8 Anyone like another .......................... of cake?",
+          "9 I'm just going to put on a clean .......................... of socks.",
+          "10 She gave me a lovely .......................... of flowers when I was in hospital."
+        ]
+      },
+      {
+        "id": "94.4",
+        "marks": "6 marks",
+        "instruction": "Fill the gaps with a suitable word.",
+        "items": [
+          "1 You left a .......................... of cigarettes on the table in the other room.",
+          "2 I went on a sailing course and I was with a very interesting .......................... of people.",
+          "3 We opened the gate and there was a great big .......................... of cows in front of us.",
+          "4 Oh, look! $10 on the floor – what a .......................... of luck!",
+          "5 She doesn't like walking through the town centre at night because it is full of .......................... of teenagers who are looking for trouble.",
+          "6 I don't know why she told us that, but it was a useful .......................... of information."
+        ]
+      }
+    ],
+    "boxesAndLists": [
+      "piece    pair    bit    slice    sheet    bunch"
+    ],
+    "pictures": [
+      "Exercise 94.2: twelve line drawings — bag of shopping, beer bottle, box of chocolates, bowl of sugar, coffee jar, milk carton, vase of flowers, soup tin, cup of coffee, jug of water, toothpaste tube, cola can"
+    ],
+    "unclassified": [
+      "TEST",
+      "Your score /30",
+      "Test your English Vocabulary in Use (pre-intermediate and intermediate)"
+    ]
+  },
+  "rawModelText": "```json\n{\n  \"footer\": 97,\n  \"testNumber\": \"94\",\n  \"testTitle\": \"Partitives (e.g. a bowl of, a piece of)\",\n  \"exercises\": [\n    {\n      \"id\": \"94.1\",\n      \"marks\": \"2 marks\",\n      \"instruction\": \"Here are definitions of two words beginning with the letters 'cont'. What are the words?\",\n      \"items\": [\n        \"1 A cont.......................... is something, such as a box, that can be used for keeping things in.\",\n        \"2 The cont.......................... are the things that you find inside a box, bag, room, etc.\"\n      ]\n    },\n    {\n      \"id\": \"94.2\",\n      \"marks\": \"12 marks\",\n      \"instruction\": \"Complete the descriptions under each picture.\",\n      \"items\": [\n        \"1 a ................ of shopping\",\n        \"5 a ................ of beer\",\n        \"9 a ................ of chocolates\",\n        \"2 a ................ of sugar\",\n        \"6 a ................ of coffee\",\n        \"10 a ................ of milk\",\n        \"3 a ................ of flowers\",\n        \"7 a ................ of soup\",\n        \"11 a ................ of coffee\",\n        \"4 a ................ of water\",\n        \"8 a ................ of toothpaste\",\n        \"12 a ................ of cola\"\n      ]\n    },\n    {\n      \"id\": \"94.3\",\n      \"marks\": \"10 marks\",\n      \"instruction\": \"Fill the gaps using the words in the box. You mustn't use any word more than twice.\",\n      \"items\": [\n        \"1 We'll need another .......................... of wood.\",\n        \"2 I only want a .......................... of butter on my bread.\",\n        \"3 Could I have another .......................... of paper?\",\n        \"4 How much is that .......................... of grapes?\",\n        \"5 I'll have to buy another .......................... of tights.\",\n        \"6 We've still got a .......................... of time so there's no hurry.\",\n        \"7 If we're going to make sandwiches, we'll need at least ten ..........................s of bread.\",\n        \"8 Anyone like another .......................... of cake?\",\n        \"9 I'm just going to put on a clean .......................... of socks.\",\n        \"10 She gave me a lovely .......................... of flowers when I was in hospital.\"\n      ]\n    },\n    {\n      \"id\": \"94.4\",\n      \"marks\": \"6 marks\",\n      \"instruction\": \"Fill the gaps with a suitable word.\",\n      \"items\": [\n        \"1 You left a .......................... of cigarettes on the table in the other room.\",\n        \"2 I went on a sailing course and I was with a very interesting .......................... of people.\",\n        \"3 We opened the gate and there was a great big .......................... of cows in front of us.\",\n        \"4 Oh, look! $10 on the floor – what a .......................... of luck!\",\n        \"5 She doesn't like walking through the town centre at night because it is full of .......................... of teenagers who are looking for trouble.\",\n        \"6 I don't know why she told us that, but it was a useful .......................... of information.\"\n      ]\n    }\n  ],\n  \"boxesAndLists\": [\n    \"piece    pair    bit    slice    sheet    bunch\"\n  ],\n  \"pictures\": [\n    \"Exercise 94.2: twelve line drawings — bag of shopping, beer bottle, box of chocolates, bowl of sugar, coffee jar, milk carton, vase of flowers, soup tin, cup of coffee, jug of water, toothpaste tube, cola can\"\n  ],\n  \"unclassified\": [\n    \"TEST\",\n    \"Your score /30\",\n    \"Test your English Vocabulary in Use (pre-intermediate and intermediate)\"\n  ]\n}\n```"
+}
